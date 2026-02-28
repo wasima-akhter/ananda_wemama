@@ -1,0 +1,104 @@
+import '../../../../app/controller_export.dart';
+
+class ChangePasswordController extends GetxController {
+  /// Text Controllers
+  final oldPassCtrl = TextEditingController();
+  final newPassCtrl = TextEditingController();
+  final confirmPassCtrl = TextEditingController();
+
+  /// Focus Nodes
+  final oldPassFocus = FocusNode();
+  final newPassFocus = FocusNode();
+  final confirmPassFocus = FocusNode();
+
+  /// Loading State
+  final isLoading_ = false.obs;
+  bool get isLoading => isLoading_.value;
+
+  ///
+
+  var showPassword = false.obs;
+  var showConPassword = false.obs;
+
+  IconData get newPasswordIcon => !showPassword.value ? Icons.visibility_off : Icons.visibility;
+  bool get isNewPassHidden => showPassword.value;
+  IconData get conPassIcon => !showConPassword.value ? Icons.visibility_off : Icons.visibility;
+  bool get isConPassHidden => showConPassword.value;
+
+  void toggleNewPass() {
+    showPassword.value = !showPassword.value;
+  }
+
+  void toggleConPass() {
+    showConPassword.value = !showConPassword.value;
+  }
+
+  /// Unfocus all fields
+  void unfocusAll() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    oldPassFocus.unfocus();
+    newPassFocus.unfocus();
+    confirmPassFocus.unfocus();
+  }
+
+  /// Clear all fields + unfocus
+  void clearForm() {
+    oldPassCtrl.clear();
+    newPassCtrl.clear();
+    confirmPassCtrl.clear();
+
+    oldPassFocus.unfocus();
+    newPassFocus.unfocus();
+    confirmPassFocus.unfocus();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    /// Dispose controllers
+    oldPassCtrl.dispose();
+    newPassCtrl.dispose();
+    confirmPassCtrl.dispose();
+
+    /// Dispose focus nodes
+    oldPassFocus.dispose();
+    newPassFocus.dispose();
+    confirmPassFocus.dispose();
+
+    super.onClose();
+  }
+
+  Future<void> onTapUpdatePassword({required GlobalKey<FormState> formKey}) async {
+    final isValid = validateForm(formKey);
+
+    if (!isValid || isLoading_.value) return;
+    print("validated both email and password");
+    unfocusAll();
+    isLoading_.value = true;
+
+    // final success = await ChangePasswordService().changePassword(
+    //   oldPassword: oldPassCtrl.text,
+    //   newPassword: newPassCtrl.text,
+    //   confirmPassword: confirmPassCtrl.text,
+    // );
+
+    // isLoading_.value = false;
+
+    // if (success) {
+    //   GNav.pushNamedReplace(
+    //     RoutePaths.success,
+    //     arguments: SuccessViewDataModel(
+    //       title: Strings.passwordChangedSuccessfully,
+    //       subtitle: Strings.continueLoginAgain,
+    //       btnTxt: Strings.continueTxt,
+    //     ),
+    //   );
+
+    //   clearForm();
+    // }
+  }
+}

@@ -1,0 +1,190 @@
+import '../../../app/controller_export.dart';
+import '../../../core/network/helpers/location_helpers.dart';
+import '../../../core/services/location/location_service.dart';
+
+class StationLocationController extends GetxController {
+  // Location data
+  final selectedCity = "".obs;
+  final selectedAddress = "".obs;
+  final latitude = 0.0.obs;
+  final longitude = 0.0.obs;
+  final isLoadingLocation = false.obs;
+
+  // List of predefined cities with coordinates
+  final Map<String, Map<String, double>> cityCoordinates = {
+    "Lagos": {"lat": 6.5244, "lng": 3.3792},
+    "Kano": {"lat": 12.0022, "lng": 8.5919},
+    "Ibadan": {"lat": 7.3775, "lng": 3.9470},
+    "Abuja": {"lat": 9.0765, "lng": 7.3986},
+    "Port Harcourt": {"lat": 4.8156, "lng": 7.0498},
+    "Benin City": {"lat": 6.3350, "lng": 5.6258},
+    "Maiduguri": {"lat": 11.8333, "lng": 13.1500},
+    "Zaria": {"lat": 11.1113, "lng": 7.7228},
+    "Abeokuta": {"lat": 7.1510, "lng": 3.3452},
+    "Jos": {"lat": 9.8965, "lng": 8.8583},
+    "Ilorin": {"lat": 8.5000, "lng": 4.5500},
+    "Oyo": {"lat": 7.8500, "lng": 3.9333},
+    "Enugu": {"lat": 6.4550, "lng": 7.5486},
+    "Owerri": {"lat": 5.4850, "lng": 7.0350},
+    "Calabar": {"lat": 4.9500, "lng": 8.3200},
+    "Uyo": {"lat": 5.0333, "lng": 7.9167},
+    "Bauchi": {"lat": 10.3100, "lng": 9.8400},
+    "Kaduna": {"lat": 10.5100, "lng": 7.4400},
+    "Akure": {"lat": 7.2500, "lng": 5.2000},
+    "Makurdi": {"lat": 7.7333, "lng": 8.5333},
+    "Sokoto": {"lat": 13.0627, "lng": 5.2435},
+    "Warri": {"lat": 5.5167, "lng": 5.7500},
+    "Onitsha": {"lat": 6.1667, "lng": 6.7833},
+    "Ado Ekiti": {"lat": 7.6231, "lng": 5.2200},
+    "Ilesa": {"lat": 7.6248, "lng": 4.7451},
+    "Minna": {"lat": 9.6139, "lng": 6.5564},
+    "Lokoja": {"lat": 7.8000, "lng": 6.7333},
+    "Umuahia": {"lat": 5.5239, "lng": 7.4869},
+    "Akwanga": {"lat": 8.9333, "lng": 8.5333},
+    "Gombe": {"lat": 10.2898, "lng": 11.1675},
+  };
+
+  List<String> get cities => cityCoordinates.keys.toList();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadSavedLocation();
+  }
+
+  // Load saved location
+  void _loadSavedLocation() {
+    final savedLocation = storage.getUserAddress;
+    final savedLat = storage.getUserLatitude;
+    final savedLng = storage.getUserLongitude;
+
+    if (savedLocation.isNotEmpty) {
+      selectedAddress.value = savedLocation;
+    }
+    if (savedLat != null && savedLat != 0.0) {
+      latitude.value = savedLat;
+    }
+    if (savedLng != null && savedLng != 0.0) {
+      longitude.value = savedLng;
+    }
+  }
+
+  Future<void> getAndSaveInBackendCurrLoc() async {
+    try {
+      isLoadingLocation.value = true;
+
+      final location = await LocationHelper.getCurrentLocation();
+
+      if (location == null) {
+        // 🚫 Location not received (GPS off / permission / error)
+        // Location not updated (warning)
+        Snack.showWarning(
+          Strings.locationServicesOff.capEachWord(),
+          title: Strings.locationNotUpdated.capEachWord(),
+        );
+
+        return;
+      }
+
+      // if not null
+
+      latitude.value = location.latitude;
+      longitude.value = location.longitude;
+      selectedAddress.value = location.address;
+      selectedCity.value = location.city ?? '';
+
+      await _saveLocationToBackend();
+
+      // Location updated (success)
+      Snack.showSuccess(
+        Strings.locationUpdated.capEachWord(),
+        title: Strings.success.capEachWord(),
+      );
+    } catch (e) {
+      // Location error (error)
+      Snack.showError(e.toString(), title: Strings.locationError.capEachWord());
+    } finally {
+      isLoadingLocation.value = false;
+    }
+  }
+
+  // Select city manually
+  Future<void> selectCity(String city) async {
+    try {
+      isLoadingLocation.value = true;
+      selectedCity.value = city;
+
+      // Get coordinates from predefined map
+      final coords = cityCoordinates[city];
+      if (coords != null) {
+        latitude.value = coords['lat']!;
+        longitude.value = coords['lng']!;
+        selectedAddress.value = city;
+
+        // Save to backend
+        await _saveLocationToBackend();
+      }
+    } catch (e) {
+      debugPrint("Error selecting city: $e");
+      // Failed to set location (error)
+      Snack.showError(
+        Strings.failedToSetLocation.capEachWord(),
+        title: Strings.error.capEachWord(),
+      );
+    } finally {
+      isLoadingLocation.value = false;
+    }
+  }
+
+  // Save to backend
+  Future<void> _saveLocationToBackend() async {
+    try {
+      debugPrint("📤 Saving to backend...");
+      debugPrint("Address: ${selectedAddress.value}");
+      debugPrint("Lat: ${latitude.value}");
+      debugPrint("Lng: ${longitude.value}");
+
+      // Call API service
+      final locationService = Get.find<LocationService>();
+      final success = await locationService.updateLocation(
+        address: selectedAddress.value,
+        latitude: latitude.value,
+        longitude: longitude.value,
+        city: selectedCity.value.isNotEmpty ? selectedCity.value : null,
+      );
+
+      if (!success) {
+        throw Exception("API call failed");
+      }
+
+      // Save locally
+      storage.setUserAddress(selectedAddress.value);
+
+      if (selectedCity.value.isNotEmpty) {
+        storage.setUserCity(selectedCity.value);
+      }
+
+      debugPrint("✅ Location saved successfully");
+    } catch (e) {
+      debugPrint("❌ Error saving: $e");
+      // Don't rethrow - show user it was saved locally at least
+
+      // Saved locally but failed to sync (warning)
+      Snack.showWarning(
+        Strings.savedLocallyButFailedToSync.capEachWord(),
+        title: Strings.warning.capEachWord(),
+      );
+    }
+  }
+
+  // Get display location
+  String get displayLocation {
+    if (selectedAddress.value.isNotEmpty) {
+      return selectedAddress.value;
+    }
+    return Strings.select;
+  }
+
+  // Check if has location
+  bool get hasLocation => latitude.value != 0.0 && longitude.value != 0.0;
+}

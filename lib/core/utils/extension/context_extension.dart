@@ -1,0 +1,567 @@
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:mama_app/core/enums/app_enums.dart';
+
+import '../../themes/color/color_model.dart';
+import '../../themes/theme_service.dart';
+
+/// --------------------
+/// SCREEN HELPER (No BuildContext required)
+/// --------------------
+class S {
+  /// Screen width
+  static double get w => 1.sw;
+
+  /// Screen height
+  static double get h => 1.sh;
+
+  /// Screen height
+  static double get itemGap => 1.sh * 0.01;
+
+  /// Safe area bottom (padding)
+  static double get viewPaddingBottom => ScreenUtil().bottomBarHeight;
+
+  /// Keyboard inset (from MediaQuery window)
+  static double get bottomInset =>
+      MediaQueryData.fromView(WidgetsBinding.instance.window).viewInsets.bottom;
+
+  /// Orientation
+  static bool get isPortrait => ScreenUtil().orientation == Orientation.portrait;
+  static bool get isLandscape => ScreenUtil().orientation == Orientation.landscape;
+
+  /// Screen padding top (status bar)
+  static double get topPadding => ScreenUtil().statusBarHeight;
+
+  /// Screen padding top + notch (viewPadding)
+  static double get viewPaddingTop =>
+      MediaQueryData.fromView(WidgetsBinding.instance.window).padding.top;
+}
+
+/// --------------------
+/// THEME COLORS
+/// --------------------
+extension ColorsX on ThemeController {
+  ColorModel get c => selectedColorTheme;
+}
+
+// usage
+final c = Get.find<ThemeController>().c;
+
+/// --------------------
+/// STRING HELPERS
+/// --------------------
+extension StringExtension_ on String {
+  String get cap {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
+  }
+
+  String toLowerCaseFirst() {
+    if (isEmpty) return this;
+    return '${this[0].toLowerCase()}${substring(1)}';
+  }
+
+  String capEachWord() {
+    if (isEmpty) return this;
+
+    return split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) {
+          final cleaned = word.replaceAll('"', '');
+          return word.replaceFirst(
+            cleaned,
+            '${cleaned[0].toUpperCase()}${cleaned.substring(1).toLowerCase()}',
+          );
+        })
+        .join(' ');
+  }
+
+  String lowerEachWord() {
+    if (isEmpty) return this;
+    return split(' ').where((word) => word.isNotEmpty).map((word) => word.toLowerCase()).join(' ');
+  }
+}
+
+extension BorderRadiusExt on num {
+  BorderRadius get brdrRad => BorderRadius.circular(toDouble().r);
+}
+
+// extension EdgeExt on num {
+//   BorderRadius get brdrRad => BorderRadius.circular(toDouble().r);
+// }
+
+/// --------------------
+/// SNACKBARS
+/// --------------------
+class Snack {
+  static void show(String message, {String? title}) {
+    Get.closeCurrentSnackbar();
+    Get.showSnackbar(
+      GetSnackBar(
+        // Full custom content
+        messageText: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: S.w * 0.15,
+              child: SvgIcon(
+                iconPath: IconsPath.successTick,
+                height: 30, // fixed icon height
+              ),
+            ),
+            Gap(itemGap),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title ?? '', style: TxtStyle.inter(color: c.primary, w: 600)),
+                  Text(message, style: TxtStyle.inter(color: c.secondary)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: bgClr.withOpacity(0.2),
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        borderRadius: 8.r,
+        padding: EdgeInsets.all(12.w),
+        duration: const Duration(seconds: 3),
+        animationDuration: const Duration(milliseconds: 300),
+        isDismissible: true,
+      ),
+    );
+  }
+
+  static void showError(String message, {String? title}) {
+    Get.closeCurrentSnackbar();
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: Row(
+          children: [
+            SizedBox(
+              width: S.w * 0.15,
+              child: SvgIcon(iconPath: IconsPath.smallTick, height: 30),
+            ),
+            Gap(itemGap),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title ?? '',
+                    style: TxtStyle.norTxt.copyWith(
+                      color: snackErrTxtClr,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: snackErrBg,
+        borderRadius: 12.r,
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 3),
+        isDismissible: true,
+        padding: EdgeInsets.all(12.w),
+        animationDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+
+  /// Success snackbar with green check icon
+  static void showSuccess(String message, {String? title}) {
+    Get.closeCurrentSnackbar();
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: S.w * 0.15,
+              child: SvgIcon(
+                iconPath: IconsPath.successTick,
+                height: 30, // fixed icon height
+              ),
+            ),
+            Gap(itemGap),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title ?? '',
+                    style: TxtStyle.norTxt.copyWith(
+                      color: snackSuccessTxtClr,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackSuccessTxtClr)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: snackSuccessBg,
+        // backgroundColor: c.secondary.withOpacity(0.2),
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        padding: EdgeInsets.all(12.w),
+        borderRadius: 8.r,
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        isDismissible: true,
+        animationDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+
+  /// Warning snackbar with info icon
+  static void showWarning(String message, {String? title}) {
+    Get.closeCurrentSnackbar();
+    Get.showSnackbar(
+      GetSnackBar(
+        messageText: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: S.w * 0.15,
+              child: SvgIcon(
+                iconPath: IconsPath.closeCircle,
+                height: 30, // fixed icon height
+              ),
+            ),
+            Gap(itemGap),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title ?? '',
+                    style: TxtStyle.norTxt.copyWith(
+                      color: snackWarningTxtClr,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackWarningTxtClr)),
+                ],
+              ),
+            ),
+          ],
+        ),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: snackWarningBg,
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        padding: EdgeInsets.all(12.w),
+        borderRadius: 8.r,
+        duration: const Duration(seconds: 3),
+        snackStyle: SnackStyle.FLOATING,
+        isDismissible: true,
+        animationDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+}
+
+/// --------------------
+/// GETX NAVIGATION
+/// --------------------
+class GNav {
+  static Future<T?> pushNamed<T extends Object?>(
+    String routeName, {
+    Object? arguments,
+    void Function(T?)? thenEvent,
+  }) async {
+    return Get.toNamed<T>(routeName, arguments: arguments)?.then((value) {
+      if (thenEvent != null) thenEvent(value);
+      return value;
+    });
+  }
+
+  static Future<T?> pushNamedReplace<T extends Object?, TO extends Object?>(
+    String routeName, {
+    Object? arguments,
+  }) async {
+    return Get.offNamed<T>(routeName, arguments: arguments) as Future<T?>;
+  }
+
+  static Future<T?> pushNamedRemoveUntil<T extends Object?, TO extends Object?>(
+    String routeName, {
+    Object? arguments,
+    bool Function(Route<dynamic>)? predicate,
+  }) async {
+    return Get.offAllNamed<T>(routeName, arguments: arguments, predicate: predicate ?? (_) => false)
+        as Future<T?>;
+  }
+
+  static void pop<T extends Object?>([T? result]) {
+    Get.back<T>(result: result);
+  }
+}
+
+/// --------------------
+/// TEXT STYLES (context-free)
+/// --------------------
+class TxtStyle {
+  static TextTheme get textThemeInter => GoogleFonts.interTextTheme();
+  static TextTheme get textThemeUrbanist => GoogleFonts.urbanistTextTheme();
+  static TextTheme get textThemeOutfit => GoogleFonts.outfitTextTheme();
+
+  static FontWeight getFontWeight(int weight) => FontWeight.values[(weight ~/ 100) - 1];
+
+  static TextStyle inter({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => textThemeInter.bodyMedium!.copyWith(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? c.primary,
+    height: h,
+    decoration: dec,
+  );
+
+  static TextStyle interSemiB({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => GoogleFonts.inter(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? black,
+    height: h,
+    decoration: dec,
+  );
+
+  static TextStyle get txtMclr => inter(fs: 14, w: 400, color: c.primary);
+  static TextStyle get txtSclr => inter(fs: 14, w: 400, color: c.textSecondary);
+  static TextStyle get txtSclrSm => inter(fs: 12, w: 400, color: c.textSecondary);
+  static TextStyle get txtSmMclr => inter(fs: 13, w: 400, color: c.primary);
+  static TextStyle get titleMclr => inter(fs: 17, w: 600, color: c.primary);
+
+  static TextStyle get norTxt => inter(fs: 14, w: 400);
+  static TextStyle get fs18 => inter(fs: 18, w: 600);
+  static TextStyle get errTxt => inter(fs: 11, color: c.primary);
+  static TextStyle get priClrTxt => inter(fs: 11, color: c.primary);
+  static TextStyle get txtGrey => inter(fs: 11, color: greyLoc, w: 500);
+  static TextStyle get confirmTxt => inter(fs: 11, color: c.secondary);
+  static TextStyle get btnTxt => inter(fs: 13, w: 600, color: c.textPrimary);
+  static TextStyle get italicInter => inter(fs: 17, w: 600).copyWith(fontStyle: FontStyle.italic);
+
+  static TextStyle get titleBPri => inter(fs: 16, w: 600, color: c.primary);
+
+  static TextStyle get normRPri => inter(fs: 16, w: 400, color: c.primary);
+
+  static TextStyle get normRsmPri => inter(fs: 14, w: 400, color: c.primary);
+  static TextStyle get normRsmSec => inter(fs: 14, w: 400, color: c.textSecondary);
+
+  static TextStyle get normSmBPri => inter(fs: 14, w: 500, color: c.primary);
+  ///////////////////////////////////////////////////////////
+
+  ///             Urbanist
+
+  /////////////////////////////////////////////////////
+
+  static TextStyle urbanist({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => textThemeUrbanist.bodyMedium!.copyWith(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? black,
+    height: h,
+    decoration: dec,
+  );
+
+  static TextStyle urbanistSemiB({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => GoogleFonts.urbanist(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? black,
+    height: h,
+    decoration: dec,
+  );
+
+  ///////////////////////////Outfit
+  static TextStyle outfit({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => textThemeOutfit.bodyMedium!.copyWith(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? c.primary,
+    height: h,
+    decoration: dec,
+    decorationColor: color ?? c.primary,
+  );
+
+  static TextStyle outfitSemiB({
+    double fs = 13,
+    int w = 500,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => GoogleFonts.outfit(
+    fontSize: fs.sp,
+    fontWeight: getFontWeight(w),
+    letterSpacing: ls,
+    color: color ?? black,
+    height: h,
+    decoration: dec,
+  );
+
+  static TextStyle get outfitUnderLTxt =>
+      outfit(fs: 14, w: 400, color: c.textSecondary, dec: TextDecoration.underline);
+}
+
+/// --------------------
+/// BOX DECORATION HELPERS (context-free)
+/// --------------------
+class BoxDeco {
+  static BoxDecoration decRadiusUp(double rad, {Color? clr}) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(rad.r),
+      topRight: Radius.circular(rad.r),
+    ),
+  );
+
+  static BoxDecoration decRadiusDown(double rad, {Color? clr}) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(rad.r),
+      bottomRight: Radius.circular(rad.r),
+    ),
+  );
+
+  static BoxDecoration decRadiusLeft(double rad, {Color? clr}) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(rad.r),
+      bottomLeft: Radius.circular(rad.r),
+    ),
+  );
+
+  static BoxDecoration decRadiusDownBrderAll(double rad, {Color? clr, Color? brdrClr}) =>
+      BoxDecoration(
+        color: clr ?? bgClr,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(rad.r),
+          bottomRight: Radius.circular(rad.r),
+        ),
+        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+      );
+
+  static BoxDecoration decRadiusUpBrderAll(double rad, {Color? clr, Color? brdrClr}) =>
+      BoxDecoration(
+        color: clr ?? bgClr,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(rad.r),
+          topRight: Radius.circular(rad.r),
+        ),
+        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+      );
+
+  static BoxDecoration decRadiusAll(double rad, {Color? clr}) =>
+      BoxDecoration(color: clr ?? bgClr, borderRadius: (rad).brdrRad);
+
+  static BoxDecoration decRadAllBorderedAll(double rad, {Color? clr, Color? brdrClr}) =>
+      BoxDecoration(
+        color: clr ?? bgClr,
+        borderRadius: rad.brdrRad,
+        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+      );
+
+  static BoxDecoration decBrdrBottom({Color? brdrClr, double? w}) => BoxDecoration(
+    border: Border(
+      bottom: BorderSide(color: brdrClr ?? c.inputBorder, width: (w ?? 1).w),
+    ),
+  );
+
+  static BoxDecoration decBrdrTop({Color? brdrClr, double? w, double? rad, Color? clr}) =>
+      BoxDecoration(
+        color: clr ?? bgClr,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular((rad ?? 4).r),
+          topRight: Radius.circular((rad ?? 4).r),
+        ),
+        border: Border(
+          top: BorderSide(color: brdrClr ?? c.inputBorder, width: (w ?? 1).w),
+        ),
+      );
+
+  static BoxDecoration decBrdrOneSide({Color? brdrClr, double? w, required BrdrSideType side}) {
+    Border getBorder() {
+      switch (side) {
+        case BrdrSideType.bottom:
+          return Border(
+            bottom: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
+          );
+        case BrdrSideType.top:
+          return Border(
+            top: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
+          );
+        case BrdrSideType.right:
+          return Border(
+            right: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
+          );
+        case BrdrSideType.left:
+          return Border(
+            left: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
+          );
+      }
+    }
+
+    return BoxDecoration(border: getBorder());
+  }
+
+  static BoxDecoration decRadCus({
+    Color? clr,
+    double? rad,
+    bool? bleft,
+    bool? bRight,
+    bool? tleft,
+    bool? tRight,
+  }) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(bleft == false ? 0 : (rad ?? 4).r),
+      bottomRight: Radius.circular(bRight == false ? 0 : (rad ?? 4).r),
+      topLeft: Radius.circular(tleft == false ? 0 : (rad ?? 4).r),
+      topRight: Radius.circular(tRight == false ? 0 : (rad ?? 4).r),
+    ),
+  );
+}
