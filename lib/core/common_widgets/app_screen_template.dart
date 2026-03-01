@@ -1,0 +1,87 @@
+import '../../app/helper_widgets_export.dart';
+
+class AppScreenTemplate extends StatelessWidget {
+  final Widget child;
+  final PreferredSizeWidget? appBar;
+  final bool resizeToAvoidBottomInset;
+  final Color? backgroundColor;
+  final EdgeInsets? padding;
+  final Widget? bottomWidget;
+  final bool? extendBodyBehindAppBar;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final bool safeAreaTop;
+  final bool safeAreaBottom;
+  final bool? extendBody;
+  final bool? isScrollable;
+
+  const AppScreenTemplate({
+    super.key,
+    required this.child,
+    this.appBar,
+    this.resizeToAvoidBottomInset = true,
+    this.backgroundColor,
+    this.padding,
+    this.bottomWidget,
+    this.extendBodyBehindAppBar,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.drawer,
+    this.endDrawer,
+    this.safeAreaTop = false,
+    this.safeAreaBottom = true,
+    this.extendBody,
+    this.isScrollable,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      top: safeAreaTop,
+      child: Scaffold(
+        backgroundColor: backgroundColor ?? bgClr,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        appBar: appBar,
+        extendBodyBehindAppBar: extendBodyBehindAppBar ?? false,
+        extendBody: extendBody ?? false,
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation:
+            floatingActionButtonLocation ?? FloatingActionButtonLocation.centerDocked,
+        drawer: drawer,
+        endDrawer: endDrawer,
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            if (isScrollable == false) {
+              return Column(
+                children: [
+                  Expanded(child: child),
+                  if (bottomWidget != null) ...[bottomWidget!.getcm, Gap(itemGap * 3)],
+                ],
+              );
+            }
+            return BounceSingleChildScrollView(
+              padding: padding ?? EdgeInsets.zero,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: bottomWidget == null
+                      ? child
+                      : Column(
+                          children: [
+                            child,
+                            Spacer(),
+                            bottomWidget?.getcm ?? SizedBox.shrink(),
+                            Gap(itemGap * 3),
+                          ],
+                        ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

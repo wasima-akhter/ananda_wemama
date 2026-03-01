@@ -5,6 +5,9 @@ import 'package:mama_app/views/auth/signin/screen/signin_screen.dart';
 import 'package:mama_app/views/auth/signup/screen/signup_screen.dart';
 import 'package:mama_app/views/onboard/screens/onboard_screen2.dart';
 import 'package:mama_app/views/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
+import 'package:mama_app/views/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
+import 'package:mama_app/views/post_auth_setup/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
+import 'package:mama_app/views/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
 import 'package:mama_app/views/video_meeting/screen/home_screen.dart';
 import 'package:mama_app/views/video_meeting/screen/meeting_screen.dart';
 
@@ -12,6 +15,7 @@ import '../core/bind/all_bindings.dart';
 import '../core/state_screens/not_found/not_found_page.dart';
 import '../core/state_screens/offline/offline_screen.dart';
 import '../views/onboard/screens/onboard_screen.dart';
+import '../views/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
 import '../views/post_auth_setup/photo_and_bio/screen/photo_and_bio_screen.dart';
 import '../views/post_auth_setup/setup_profile/screen/setup_profile_screen.dart';
 import '../views/splash/screen/splash_screen.dart';
@@ -55,10 +59,10 @@ class RoutePageList {
       transition: RouteTransitions.byName(RoutePaths.meetingScreen),
     ),
     GetPage(
-      name: RoutePaths.homeScreen,
+      name: RoutePaths.home,
       page: () => const HomeScreen(),
       binding: HomeBinding(),
-      transition: RouteTransitions.byName(RoutePaths.homeScreen),
+      transition: RouteTransitions.byName(RoutePaths.home),
     ),
 
     GetPage(
@@ -104,6 +108,22 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.lifeStyleAndInterests,
       page: () => const LifestyleAndInterestsScreen(),
+      binding: PostSigupScreensAllBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.mumsStage,
+      page: () => const MumsStageScreen(),
+      binding: PostSigupScreensAllBinding(),
+    ),
+    GetPage(name: RoutePaths.mumsStageFinish, page: () => const MumsStageFinishScreen()),
+    GetPage(
+      name: RoutePaths.subChoosePlan,
+      page: () => const SubscriptionChoosePlanScreen(),
+      binding: PostSigupScreensAllBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.welcomeFundingMum,
+      page: () => const WelcomeFundingMumScreen(),
       binding: PostSigupScreensAllBinding(),
     ),
   ];

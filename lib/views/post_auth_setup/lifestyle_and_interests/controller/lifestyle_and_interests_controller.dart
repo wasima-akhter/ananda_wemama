@@ -49,14 +49,17 @@ class LifestyleAndInterestsController extends GetxController {
       selectedInterests.add(interest);
     }
 
-    // Update warning
-    if (selectedInterests.length < 3) {
-      warningText.value = 'Select at least 3 interests';
-    } else if (selectedInterests.length > 10) {
-      warningText.value = 'You can select up to 10 interests only';
-    } else {
-      warningText.value = '';
-    }
+    // // Update warning
+    // if (selectedInterests.length < 3) {
+    //   warningText.value = 'Select at least 3 interests';
+
+    //   Snack.showWarning('Select at least 3 interests');
+    // } else if (selectedInterests.length > 10) {
+    //   warningText.value = 'You can select up to 10 interests only';
+    //   Snack.showWarning('You can select up to 10 interests only');
+    // } else {
+    //   warningText.value = '';
+    // }
   }
 
   /// 🔹 Clear all selections
@@ -84,5 +87,17 @@ class LifestyleAndInterestsController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+  }
+
+  void onTapContinue() {
+    // Update warning
+    if (selectedInterests.length < 3) {
+      Snack.showWarning('Select at least 3 interests');
+    } else if (selectedInterests.length > 10) {
+      Snack.showWarning('You can select up to 10 interests only');
+    } else {
+      // go to next page
+      Get.toNamed(RoutePaths.mumsStage);
+    }
   }
 }

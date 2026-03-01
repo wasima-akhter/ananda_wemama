@@ -20,8 +20,8 @@ Color get snackErrTxtClr => Color(0xFFcf071b);
 Color get snackSuccessBg => Color.fromARGB(255, 252, 255, 253);
 Color get snackSuccessTxtClr => Color(0xFF23B133);
 
-Color get snackWarningBg => Color.fromARGB(255, 255, 249, 244);
-Color get snackWarningTxtClr => Color(0xFFCF5707);
+Color get snackWarningBg => c.scaffoldBackground;
+Color get snackWarningTxtClr => c.primary;
 
 Color get bgClr => c.scaffoldBackground;
 

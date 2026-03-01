@@ -51,15 +51,13 @@ class ForgotPasswordController extends GetxController {
   bool get isSendOtpLoading => isSendOtpLoading_.value;
 
   void onTapSendOtp({required GlobalKey<FormState> formKey}) async {
-    final isValid = validateForm(formKey);
-    if (!isValid || isSendOtpLoading_.value) return;
+    // final isValid = validateForm(formKey);
+    // if (!isValid || isSendOtpLoading_.value) return;
 
     unfocusAll();
     isSendOtpLoading_.value = true;
 
     // final success = await ForgotPasswordService().sendOtp(email: emailCtrl.text.trim());
-
-    isSendOtpLoading_.value = false;
 
     // if (success) {
     //   final result = await GNav.pushNamed(
@@ -72,6 +70,17 @@ class ForgotPasswordController extends GetxController {
     //     showPassSection.value = true;
     //   }
     // }
+
+    final isVerifiedValueTrue = await Get.toNamed(
+      RoutePaths.verifyOtp,
+      arguments: {'flow': OtpFlowType.forgotPassword, 'email': emailCtrl.text.trim()},
+    );
+
+    if (isVerifiedValueTrue == true) {
+      showPassSection.value = true;
+    }
+
+    isSendOtpLoading_.value = false;
   }
 
   // ================= RESET PASSWORD =================
@@ -79,8 +88,8 @@ class ForgotPasswordController extends GetxController {
   bool get isResetPassLoading => isResetPassLoading_.value;
 
   Future<void> onTapResetPass({required GlobalKey<FormState> formKey}) async {
-    final isValid = validateForm(formKey);
-    if (!isValid || isResetPassLoading_.value) return;
+    // final isValid = validateForm(formKey);
+    // if (!isValid || isResetPassLoading_.value) return;
 
     unfocusAll();
     isResetPassLoading_.value = true;
@@ -94,8 +103,20 @@ class ForgotPasswordController extends GetxController {
     isResetPassLoading_.value = false;
 
     // if (success) {
-    //   showContinueBtn.value = true;
+    markVerificationComplete();
     // }
+  }
+
+  /// Marks that after verification is complete and last continue button should show
+  void markVerificationComplete() {
+    showPassSection.value = false;
+    showContinueBtn.value = true;
+  }
+
+  bool get showLastContBtn {
+    showContinueBtn.value = true;
+    showPassSection.value = false;
+    return true;
   }
 
   /// ================= LIFECYCLE CLEANUP =================
@@ -110,5 +131,15 @@ class ForgotPasswordController extends GetxController {
     confirmPassFocus.dispose();
 
     super.onClose();
+  }
+
+  void onTapContinueToLogin() async {
+    // optional: clear all fields before leaving
+    // clearAllFields();
+    unfocusAll(); // from your controller
+
+    // Step 2: wait a tiny bit to ensure TextField updates finish
+    await Future.delayed(const Duration(milliseconds: 50));
+    Get.offAllNamed(RoutePaths.signin);
   }
 }

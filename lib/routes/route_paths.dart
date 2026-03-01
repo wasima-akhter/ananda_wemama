@@ -3,7 +3,6 @@ class RoutePaths {
   static const splashScreen = '/splashScreen';
   static const mainNav = '/mainNav';
   static const meetingScreen = '/meetingScreen';
-  static const homeScreen = '/homeScreen';
 
   static const notfound = '/notFound';
   static const offlineScreen = '/offlineScreen';
@@ -21,12 +20,16 @@ class RoutePaths {
   static const setupProfile = '/setupProfile';
   static const photoAndBio = '/photoAndBio';
   static const lifeStyleAndInterests = '/lifeStyleAndInterests';
+  static const mumsStage = '/mumsStage';
+  static const mumsStageFinish = '/mumsStageFinish';
+  static const subChoosePlan = '/subChoosePlan';
+
+  static const welcomeFundingMum = '/welcomeFundingMum';
 
   static const bankDetails = '/bankDetails';
   static const changePassword = '/changePassword';
   static const contactSupport = '/contactSupport';
   static const home = '/home';
-  static const homeSupplier = '/homeSupplier';
 
   static const notification = '/notification';
   static const googleMap = '/googleMap';

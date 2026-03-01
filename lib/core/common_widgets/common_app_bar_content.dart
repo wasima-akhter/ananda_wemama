@@ -6,6 +6,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
   final Widget? suffix;
   final VoidCallback? onTapBack;
   final bool? hasBackNavArrow;
+  final bool? isBgTransp;
 
   const CommonAppBarContent({
     super.key,
@@ -13,17 +14,19 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
     this.suffix,
     this.onTapBack,
     this.hasBackNavArrow,
+    this.isBgTransp,
   });
 
   @override
   Widget build(BuildContext context) {
+    final finalBg = isBgTransp == true ? ctransp : bgClr;
     return AppBar(
-      backgroundColor: bgClr,
+      backgroundColor: finalBg,
       leading: SizedBox.shrink(),
 
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          color: bgClr,
+          color: finalBg,
           padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,7 +39,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
 
               Expanded(
                 child: Text(
-                  title,
+                  title.capEachWord(),
                   overflow: TextOverflow.ellipsis,
                   softWrap: true,
                   textAlign: TextAlign.center,

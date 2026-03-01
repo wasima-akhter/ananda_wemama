@@ -33,19 +33,17 @@ class VerifyOtpController extends GetxController {
     // if (success) {
     //   showTimer_.value = true;
 
-    //   /// 🔥 FLOW BASED NAVIGATION
-    //   if (flowType == OtpFlowType.signup) {
-    //     // Existing behavior (UNCHANGED)
-    //     Get.offAllNamed(RoutePaths.mainNav);
-    //     storage.setLoggedIn(true);
-    //   } else if (flowType == OtpFlowType.forgotPassword) {
-    //     // 👈 NEW BEHAVIOR
-    //     Get.back(result: true); // go back and tell previous screen OTP verified
-    //   }
+    /// 🔥 FLOW BASED NAVIGATION
+    if (flowType == OtpFlowType.signup) {
+      // Existing behavior (UNCHANGED)
+      // mock code for design
+      Get.offAllNamed(RoutePaths.setupProfile);
+      storage.setLoggedIn(true);
+    } else if (flowType == OtpFlowType.forgotPassword) {
+      // 👈 NEW BEHAVIOR
+      Get.back(result: true); // go back and tell previous screen OTP verified
+    }
     // }
-
-    // mock code for design
-    Get.offAllNamed(RoutePaths.setupProfile);
   }
 
   void onTapResendOtp() async {

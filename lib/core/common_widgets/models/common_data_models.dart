@@ -153,3 +153,11 @@ class SingleOrderSupplierData {
     );
   }
 }
+
+class CommonTitleIconpathModel {
+  final String title;
+  final String? subtitle;
+  final String iconPath;
+
+  CommonTitleIconpathModel({required this.title, required this.iconPath, this.subtitle});
+}

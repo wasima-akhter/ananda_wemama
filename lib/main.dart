@@ -43,7 +43,7 @@ void main() async {
           // If there is NO previous route in stack
           if (!(Get.key.currentState?.canPop() ?? false)) {
             // Offline was the first screen → start app from splash
-            Get.offAllNamed(RoutePaths.homeScreen);
+            Get.offAllNamed(RoutePaths.home);
           } else {
             // There are routes under it → just go back
             Get.close(1);

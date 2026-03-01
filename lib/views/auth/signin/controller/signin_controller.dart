@@ -40,13 +40,13 @@ class SigninController extends GetxController {
   }
 
   Future<void> onTapLogin(GlobalKey<FormState> signInFormKey) async {
-    final isValid = validateForm(signInFormKey);
-    if (!isValid || isLoading_.value) return;
+    // final isValid = validateForm(signInFormKey);
+    // if (!isValid || isLoading_.value) return;
 
     unfocusAll(); // 👈 important
 
     print("LOGIN STARTED");
-    roleId = 1;
+
     isLoading_.value = true;
 
     try {
@@ -59,8 +59,9 @@ class SigninController extends GetxController {
 
       // if (success) {
       //   storage.setLoggedIn(true);
-      //   clearFields();
-      //   Get.offAllNamed(RoutePaths.mainNav);
+      clearFields();
+      unfocusAll();
+      Get.offAllNamed(RoutePaths.mainNav);
       // } else {
       //   print("LOGIN FAILED");
       // }

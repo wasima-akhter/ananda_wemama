@@ -56,8 +56,9 @@ class PhotoAndBioScreen extends StatelessWidget {
                         Gap(itemGap),
                         CustomBtnWTxt(
                           isSmall: true,
-
-                          btnColor: c.secondary,
+                          outlined: true,
+                          borderClr: c.secondary,
+                          txtClr: c.primary,
                           fs: 11,
                           padding: const EdgeInsets.all(5),
                           onTap: () async {

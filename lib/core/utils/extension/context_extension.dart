@@ -99,27 +99,30 @@ class Snack {
     Get.showSnackbar(
       GetSnackBar(
         // Full custom content
-        messageText: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        messageText: Column(
           children: [
-            SizedBox(
-              width: S.w * 0.15,
-              child: SvgIcon(
-                iconPath: IconsPath.successTick,
-                height: 30, // fixed icon height
-              ),
-            ),
-            Gap(itemGap),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: S.w * 0.15,
+                  child: SvgIcon(
+                    iconPath: IconsPath.leaf,
+                    height: 30, // fixed icon height
+                  ),
+                ),
+                Gap(itemGap),
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title ?? '', style: TxtStyle.inter(color: c.primary, w: 600)),
-                  Text(message, style: TxtStyle.inter(color: c.secondary)),
-                ],
-              ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [Text(title ?? '', style: TxtStyle.inter(color: c.primary, w: 600))],
+                  ),
+                ),
+              ],
             ),
+
+            Text(message, style: TxtStyle.inter(color: c.secondary)),
           ],
         ),
         snackPosition: SnackPosition.BOTTOM,
@@ -227,13 +230,15 @@ class Snack {
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(
+        borderColor: snackWarningTxtClr.withOpacity(0.5),
+        boxShadows: boxShadowAllSides,
         messageText: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: S.w * 0.15,
               child: SvgIcon(
-                iconPath: IconsPath.closeCircle,
+                iconPath: IconsPath.info,
                 height: 30, // fixed icon height
               ),
             ),
@@ -243,14 +248,9 @@ class Snack {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title ?? '',
-                    style: TxtStyle.norTxt.copyWith(
-                      color: snackWarningTxtClr,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackWarningTxtClr)),
+                  if (title != null)
+                    Text(title, style: TxtStyle.outfit(color: snackWarningTxtClr, w: 600)),
+                  Text(message, style: TxtStyle.outfit(color: snackWarningTxtClr)),
                 ],
               ),
             ),
@@ -258,7 +258,7 @@ class Snack {
         ),
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: snackWarningBg,
-        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+        margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 80.h),
         padding: EdgeInsets.all(12.w),
         borderRadius: 8.r,
         duration: const Duration(seconds: 3),

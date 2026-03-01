@@ -1,9 +1,7 @@
-import 'package:mama_app/core/helpers/string_helper.dart';
+import 'package:mama_app/views/auth/forgot_password/widgets/forgot_pass_after_verify.dart';
+import 'package:mama_app/views/auth/forgot_password/widgets/forgot_pass_before_verify.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_pass_type_text_form_field.dart';
-import '../../../../core/common_widgets/visibility_suffix.dart';
-import '../../../../core/utils/validator/validators.dart';
 import '../controller/forgot_password_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -11,11 +9,9 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01;
-
     final fpc = Get.find<ForgotPasswordController>();
 
-    final sendOtpKey = GlobalKey<FormState>();
+    final sendVerificationKey = GlobalKey<FormState>();
     final resetPassFormKey = GlobalKey<FormState>();
 
     return SafeArea(
@@ -23,121 +19,56 @@ class ForgotPasswordScreen extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: bgClr,
-        appBar: CommonAppBarContent(title: Strings.forgotPassword),
+        appBar: CommonAppBarContent(title: ''),
         body: Center(
           child: SingleChildScrollView(
             child: Obx(() {
               final showPassSection = fpc.showPassSection.value;
-              final showContinueBtn = fpc.showContinueBtn.value;
+
+              final beforeVerification =
+                  (showPassSection == false && fpc.showContinueBtn.value == false);
+              final afterVerification =
+                  (showPassSection == true && fpc.showContinueBtn.value == false);
+
+              final showLastContinueBtn = fpc.showContinueBtn.value && showPassSection == false;
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+
                 children: [
-                  // Welcome tetxt
-                  Text(
-                    (showPassSection == false && showContinueBtn == false)
-                        ? Strings.forgotPassword.capEachWord()
-                        : Strings.welcomeBackUser.capEachWord(),
-                    style: title_600_mClr_Outfit,
-                  ),
-                  Gap(itemGap),
+                  if (beforeVerification)
+                    ForgotPassBeforeVerify(fpc: fpc, sendVerificationKey: sendVerificationKey),
 
-                  Text(
-                    (showPassSection == false && showContinueBtn == false)
-                        ? Strings.sendVerificationEmail.capEachWord()
-                        : Strings.passwordChangedContinueLogin,
-                    style: TxtStyle.inter(w: 500),
-                  ),
-                  Gap(itemGap * 5),
+                  if (afterVerification)
+                    // Form section
+                    ForgotPassAfterVerify(fpc: fpc, resetPassFormKey: resetPassFormKey),
 
-                  Column(
-                    children: [
-                      showPassSection == false
-                          ? Form(
-                              key: sendOtpKey,
-                              child: Column(
-                                children: [
-                                  CusNameTypeTextFormField(
-                                    controller: fpc.emailCtrl,
-                                    focusNode: fpc.emailFocus,
-                                    hintText: Strings.enterEmailAddress,
-                                    validator: (value) => validateEmail(value),
-                                    hintW: 600,
-                                  ),
+                  if (showLastContinueBtn)
+                    // last continue button
+                    Column(
+                      children: [
+                        // Main title
+                        Text(Strings.gladToSeeUAgain.capEachWord(), style: 22.titleMclrCusFSOutfit),
+                        Gap(itemGap),
 
-                                  Gap(itemGap * 3),
-                                  CustomBtnWTxt(
-                                    btnTxt: Strings.verify,
-                                    isLoading: fpc.isSendOtpLoading,
-                                    onTap: () => fpc.onTapSendOtp(formKey: sendOtpKey),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : SizedBox.shrink(),
-
-                      if (showPassSection == true && showContinueBtn == false)
-                        Form(
-                          key: resetPassFormKey,
-                          child: Column(
-                            children: [
-                              CusPassTypeTextFormField(
-                                controller: fpc.newPassCtrl,
-                                focusNode: fpc.newPassFocus,
-                                hintText: Strings.newPassword,
-                                obscureText: fpc.isNewPassHidden,
-                                suffix: VisibilitySuffix(
-                                  onTap: fpc.toggleNewPass,
-                                  icon: fpc.newPasswordIcon,
-                                ),
-                                validator: (value) => validatePassword(value),
-
-                                hintW: 600,
-                              ),
-                              Gap(itemGap * 1.5),
-
-                              CusPassTypeTextFormField(
-                                controller: fpc.confirmPassCtrl,
-                                focusNode: fpc.confirmPassFocus,
-                                hintText: Strings.confirmPassword,
-
-                                obscureText: fpc.isConPassHidden,
-                                suffix: VisibilitySuffix(
-                                  onTap: fpc.toggleConPass,
-                                  icon: fpc.conPassIcon,
-                                ),
-                                validator: (value) => validateConfirmPass(
-                                  confirmPass: value,
-                                  password: fpc.newPassCtrl.text,
-                                ),
-                                hintW: 600,
-                              ),
-                              Gap(itemGap * 2),
-                              CustomBtnWTxt(
-                                btnTxt: Strings.resetPassword,
-                                isLoading: fpc.isResetPassLoading,
-                                onTap: () => fpc.onTapResetPass(formKey: resetPassFormKey),
-                              ),
-                              Gap(itemGap * 1.5),
-                            ],
-                          ),
+                        // Subtitle
+                        Text(
+                          Strings.passwordChangedContinueLogin,
+                          textAlign: TextAlign.center,
+                          style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary),
                         ),
-                      if (showContinueBtn == true)
-                        Column(
-                          children: [
-                            CustomBtnWTxt(
-                              btnTxt: Strings.continueTxt,
-                              isLoading: false,
-                              onTap: () {
-                                GNav.pushNamedReplace(RoutePaths.signin);
-                              },
-                            ),
-                            Gap(itemGap * 1.5),
-                          ],
+                        Gap(itemGap * 3),
+                        CustomBtnWTxt(
+                          rad: 30,
+                          isSmall: true,
+                          btnTxt: Strings.continueTxt,
+                          isLoading: false,
+                          onTap: fpc.onTapContinueToLogin,
                         ),
-                    ],
-                  ),
+                        Gap(itemGap * 1.5),
+                      ],
+                    ),
                 ],
               ).getcm;
             }),

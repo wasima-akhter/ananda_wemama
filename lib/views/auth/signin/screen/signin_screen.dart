@@ -21,7 +21,7 @@ class SigninScreen extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: bgClr,
-        appBar: CommonAppBarContent(title: ''),
+        appBar: CommonAppBarContent(title: '', hasBackNavArrow: false),
 
         body: LayoutBuilder(
           builder: (context, constraints) {

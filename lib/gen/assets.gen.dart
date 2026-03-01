@@ -14,9 +14,6 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/anxious.svg
-  String get anxious => 'assets/icons/anxious.svg';
-
   /// File path: assets/icons/apple.svg
   String get apple => 'assets/icons/apple.svg';
 
@@ -53,9 +50,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bookmark_outlined.svg
   String get bookmarkOutlined => 'assets/icons/bookmark_outlined.svg';
 
-  /// File path: assets/icons/calm.svg
-  String get calm => 'assets/icons/calm.svg';
-
   /// File path: assets/icons/camera.svg
   String get camera => 'assets/icons/camera.svg';
 
@@ -73,6 +67,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/circle_check.svg
   String get circleCheck => 'assets/icons/circle_check.svg';
+
+  /// File path: assets/icons/circle_check_bold.svg
+  String get circleCheckBold => 'assets/icons/circle_check_bold.svg';
 
   /// File path: assets/icons/close_circle_outlined.svg
   String get closeCircleOutlined => 'assets/icons/close_circle_outlined.svg';
@@ -92,14 +89,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/email.svg
   String get email => 'assets/icons/email.svg';
 
+  /// File path: assets/icons/emoji_with_heart.svg
+  String get emojiWithHeart => 'assets/icons/emoji_with_heart.svg';
+
   /// File path: assets/icons/experts.svg
   String get experts => 'assets/icons/experts.svg';
 
   /// File path: assets/icons/eye_visible.svg
   String get eyeVisible => 'assets/icons/eye_visible.svg';
-
-  /// File path: assets/icons/founding_mum.svg
-  String get foundingMum => 'assets/icons/founding_mum.svg';
 
   /// File path: assets/icons/gallery.svg.svg
   String get gallerySvg => 'assets/icons/gallery.svg.svg';
@@ -200,9 +197,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/star_filled.svg
   String get starFilled => 'assets/icons/star_filled.svg';
 
-  /// File path: assets/icons/stressed.svg
-  String get stressed => 'assets/icons/stressed.svg';
-
   /// File path: assets/icons/tick_l.svg
   String get tickL => 'assets/icons/tick_l.svg';
 
@@ -211,9 +205,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/tick_sm.svg
   String get tickSm => 'assets/icons/tick_sm.svg';
-
-  /// File path: assets/icons/tired.svg
-  String get tired => 'assets/icons/tired.svg';
 
   /// File path: assets/icons/ttc_magnet.svg
   String get ttcMagnet => 'assets/icons/ttc_magnet.svg';
@@ -260,12 +251,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/visibility_on.svg
   String get visibilityOn => 'assets/icons/visibility_on.svg';
 
+  /// File path: assets/icons/warning_.svg
+  String get warning => 'assets/icons/warning_.svg';
+
   /// File path: assets/icons/we_mama_logo.svg
   String get weMamaLogo => 'assets/icons/we_mama_logo.svg';
 
   /// List of all assets
   List<String> get values => [
-    anxious,
     apple,
     appleBg,
     arrowBackL,
@@ -278,22 +271,22 @@ class $AssetsIconsGen {
     blockedUser,
     bookmarkFilled,
     bookmarkOutlined,
-    calm,
     camera,
     chartFilled,
     chat,
     chatCircleOutlined,
     checkIn,
     circleCheck,
+    circleCheckBold,
     closeCircleOutlined,
     closeRedFilled,
     community,
     crown,
     currencyNSvg,
     email,
+    emojiWithHeart,
     experts,
     eyeVisible,
-    foundingMum,
     gallerySvg,
     google,
     heartHalfFilled,
@@ -327,11 +320,9 @@ class $AssetsIconsGen {
     sendSmW,
     share,
     starFilled,
-    stressed,
     tickL,
     tickL2,
     tickSm,
-    tired,
     ttcMagnet,
     twoLeaf,
     userDemo1L,
@@ -347,6 +338,7 @@ class $AssetsIconsGen {
     verifiedTick,
     visibilityOff,
     visibilityOn,
+    warning,
     weMamaLogo,
   ];
 }
@@ -354,11 +346,21 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/anxious.png
+  AssetGenImage get anxious => const AssetGenImage('assets/images/anxious.png');
+
+  /// File path: assets/images/calm.png
+  AssetGenImage get calm => const AssetGenImage('assets/images/calm.png');
+
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
 
   /// File path: assets/images/done_animation.json
   String get doneAnimation => 'assets/images/done_animation.json';
+
+  /// File path: assets/images/founding_mum.png
+  AssetGenImage get foundingMum =>
+      const AssetGenImage('assets/images/founding_mum.png');
 
   /// File path: assets/images/gallery.png
   AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
@@ -427,18 +429,6 @@ class $AssetsImagesGen {
   AssetGenImage get refuelSplashImage =>
       const AssetGenImage('assets/images/refuel_splash_image.png');
 
-  /// File path: assets/images/splash_1_image.png
-  AssetGenImage get splash1Image =>
-      const AssetGenImage('assets/images/splash_1_image.png');
-
-  /// File path: assets/images/splash_2_image.png
-  AssetGenImage get splash2Image =>
-      const AssetGenImage('assets/images/splash_2_image.png');
-
-  /// File path: assets/images/splash_3_image.png
-  AssetGenImage get splash3Image =>
-      const AssetGenImage('assets/images/splash_3_image.png');
-
   /// File path: assets/images/splash_image.png
   AssetGenImage get splashImage =>
       const AssetGenImage('assets/images/splash_image.png');
@@ -446,6 +436,13 @@ class $AssetsImagesGen {
   /// File path: assets/images/splash_whole_screen.png
   AssetGenImage get splashWholeScreen =>
       const AssetGenImage('assets/images/splash_whole_screen.png');
+
+  /// File path: assets/images/stressed.png
+  AssetGenImage get stressed =>
+      const AssetGenImage('assets/images/stressed.png');
+
+  /// File path: assets/images/tired.png
+  AssetGenImage get tired => const AssetGenImage('assets/images/tired.png');
 
   /// File path: assets/images/user_placeholder.png
   AssetGenImage get userPlaceholder =>
@@ -457,8 +454,11 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    anxious,
+    calm,
     camera,
     doneAnimation,
+    foundingMum,
     gallery,
     imagePlaceholder,
     loadingGray,
@@ -477,11 +477,10 @@ class $AssetsImagesGen {
     profileDemoPic3,
     profileDemoPic4,
     refuelSplashImage,
-    splash1Image,
-    splash2Image,
-    splash3Image,
     splashImage,
     splashWholeScreen,
+    stressed,
+    tired,
     userPlaceholder,
     weMamaLogoPng,
   ];

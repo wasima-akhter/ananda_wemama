@@ -1,5 +1,8 @@
 import 'package:get/get.dart';
+import 'package:mama_app/views/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
 import 'package:mama_app/views/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
+import 'package:mama_app/views/post_auth_setup/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
+import 'package:mama_app/views/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
 
 import '../../views/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../views/account_overview/change_password/controller/change_password_controller.dart';
@@ -78,6 +81,9 @@ class PostSigupScreensAllBinding extends Bindings {
     Get.lazyPut<SetupProfileController>(() => SetupProfileController());
     Get.lazyPut<PhotoAndBioController>(() => PhotoAndBioController());
     Get.lazyPut<LifestyleAndInterestsController>(() => LifestyleAndInterestsController());
+    Get.lazyPut<MumsStageController>(() => MumsStageController());
+    Get.lazyPut<SubscriptionChoosePlanController>(() => SubscriptionChoosePlanController());
+    Get.lazyPut<WelcomeFundingMumController>(() => WelcomeFundingMumController());
   }
 }
 

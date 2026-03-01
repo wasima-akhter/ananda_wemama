@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../app/helper_widgets_export.dart';
 import '../common_widgets/image_error_builder.dart';
-import '../constants/icon_and_image_paths.dart';
-import '../utils/extension/context_extension.dart';
 
 Image get mamaLogoWithoutTxtImage =>
     Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.2);
@@ -22,3 +20,10 @@ Future<String> svgPathWNewWidth({required String iconPath, required double strok
 
   return modifiedSvg;
 }
+
+Column get weMamaLogoWithTxt => Column(
+  children: [
+    Gap(itemGap * 3),
+    Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+  ],
+);

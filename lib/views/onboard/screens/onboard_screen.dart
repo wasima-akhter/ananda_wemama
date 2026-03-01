@@ -1,4 +1,7 @@
+import 'package:mama_app/core/helpers/image_helper.dart';
+
 import '../../../app/helper_widgets_export.dart';
+import '../../../core/common_widgets/common_components/bg_image_container.dart';
 import '../controller/onboard_controller.dart';
 
 class OnboardScreen extends StatelessWidget {
@@ -14,13 +17,9 @@ class OnboardScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: bgClr,
 
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(ImagesPath.onboardingBgImage),
-              fit: BoxFit.cover,
-            ),
-          ),
+        extendBodyBehindAppBar: true,
+
+        body: BgImageContainer(
           child: BounceSingleChildScrollView(
             child: Column(
               spacing: itemGap,
@@ -28,8 +27,7 @@ class OnboardScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Gap(itemGap * 3),
-                Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+                weMamaLogoWithTxt,
                 Gap(itemGap * 3),
                 FittedBox(
                   child: Text(

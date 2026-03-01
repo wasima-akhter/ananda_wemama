@@ -19,6 +19,7 @@ class IconsPath {
   // Status / Feedback
   static String get successTick => Assets.icons.tickL;
   static String get smallTick => Assets.icons.tickSm;
+  static String get smallTickBold => Assets.icons.circleCheck;
   static String get doubleTick => Assets.icons.tickL2;
   static String get closeCircle => Assets.icons.closeCircleOutlined;
   static String get closeRed => Assets.icons.closeRedFilled;
@@ -69,12 +70,6 @@ class IconsPath {
   static String get liveDot => Assets.icons.liveDot;
   static String get mutedAudio => Assets.icons.mutedAudio;
 
-  // Health / Mood
-  static String get anxious => Assets.icons.anxious;
-  static String get calm => Assets.icons.calm;
-  static String get stressed => Assets.icons.stressed;
-  static String get tired => Assets.icons.tired;
-
   // Special / Objects
   static String get crown => Assets.icons.crown;
   static String get leaf => Assets.icons.leaf;
@@ -82,6 +77,7 @@ class IconsPath {
   static String get twoLeaf => Assets.icons.twoLeaf;
   static String get heartHand => Assets.icons.heartHand;
   static String get checkIn => Assets.icons.checkIn;
+  static String get emojiWithHeart => Assets.icons.emojiWithHeart;
   static String get listen => Assets.icons.listen;
   static String get restSit => Assets.icons.restSit;
 
@@ -90,7 +86,6 @@ class IconsPath {
   static String get appleBg => Assets.icons.appleBg;
   static String get apple => Assets.icons.apple;
   static String get imagePlaceholder => Assets.icons.imagePlaceholderIcon;
-  static String get foundingMom => Assets.icons.foundingMum;
 
   // Auth / Login
   static String get google => Assets.icons.google;
@@ -134,6 +129,15 @@ class ImagesPath {
 
   // Group / Community images
   static String get momsGroupPhoto => Assets.images.momsGroupPhoto.path;
+
+  // Health / Mood
+  static String get anxious => Assets.images.anxious.path;
+  static String get calm => Assets.images.calm.path;
+  static String get stressed => Assets.images.stressed.path;
+  static String get tired => Assets.images.tired.path;
+
+  // onboarding after signup
+  static String get foundingMom => Assets.images.foundingMum.path;
 
   // Net Images/json animation
 

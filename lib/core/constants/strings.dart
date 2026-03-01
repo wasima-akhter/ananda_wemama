@@ -48,8 +48,11 @@ class Strings {
   static const String retypePassword = "Retype Password";
   static const String resetPassword = "Reset Password";
   static const String enter6DigitCode = "Enter your 6 digit code";
+  static const String gladToSeeUAgain = "Glad to see you again";
+  static const String passwordChangedContinueLogin =
+      "Your password has been changed, continue to login";
   static const String enterCodeSentToMail = "Enter the code we've sent to your mail";
-  static const String welcomeUser = "Welcome user....";
+
   static const String verificationSuccessfulSetLocation =
       "Verification successful set location & continue to login";
   static const String setLocation = "Set Location";
@@ -63,9 +66,7 @@ class Strings {
   static const String sendConfirmation = "Send confirmation";
   static const String newPassword = "New password";
   static const String changePassword = "Change password";
-  static const String welcomeBackUser = "Welcome back user....";
-  static const String passwordChangedContinueLogin =
-      "Your password has been changed continue to login";
+  static const String addSpecialChar = "Add Special Characters to make it Strong";
 
   // ===========================
   // Home / Dashboard
@@ -220,6 +221,7 @@ class Strings {
   static const String addDetails = "Add details";
   static const String selectPhoto = "Select Photo";
   static const String continueLoginAgain = "Continue to login again";
+  static const String createNewPassword = "Create New Password";
 
   // ===========================
   // Input Hints
@@ -424,6 +426,21 @@ class Strings {
   static const String babyCare = "Baby care";
   static const String stayAtHome = "Stay-at-home";
   static const String ttc = "TTC (Trying to Conceive)";
+
+  static const String mustSelectOne = "Must Select One";
+
+  static const String newMum = "New Mum";
+  static const String newMumAge = "(Baby age: 0-3 months)";
+
+  static const String infantMum = "Infant Mum";
+  static const String infantMumAge = "(Baby age: 3-12 months)";
+
+  static const String toddlerMum = "Toddler Mum";
+  static const String toddlerMumAge = "(Child age: 1-3 years)";
+
+  static const String kindergartenMum = "Kindergarten Mum";
+  static const String kindergartenMumAge = "(Child age: 4-5 years)";
+
   static const String respectfulParenting = "respectful parenting";
   static const String minimalistLifestyle = "Minimalist lifestyle";
   static const String pregnant = "Pregnant";
@@ -431,7 +448,7 @@ class Strings {
   static const String educationalPlay = "Educational play";
   static const String artsCrafts = "Arts & crafts";
   static const String reading = "Reading";
-  static const String accountCreated = "Account created successfully";
+  static const String accountCreatedSuccessfully = "Account created successfully";
   static const String personalizedSpaceReady = "Your personalized motherhood space is ready.";
   static const String sleeping = "Sleeping";
   static const String writing = "writing";
@@ -451,6 +468,28 @@ class Strings {
   static const String supportConnectionGuidance =
       "Support, connection, and expert guidance - on your terms";
   static const String free = "FREE";
+  static const String premium = "PREMIUM";
+
+  static const String month = "month";
+  static const String dailySupportInfo = "Less than ₦170 per day for daily support ♡";
+
+  static const String moodSelfCare = "MOOD & SELF-CARE";
+
+  static const String attendLiveExpertSessions = "Attend Live Expert Sessions";
+  static const String watchSessionsReplay = "Watch Sessions Replay";
+  static const String moodAndSelfCare = "MOOD & SELF-CARE";
+  static const String fullMoodLibrary = "Full Mood Library";
+  static const String expertAccess = "EXPERT ACCESS";
+  static const String attendLiveSessions = "Attend live expert sessions";
+  static const String mostPopular = "MOST POPULAR";
+  static const String cancelAnytime = "Cancel anytime";
+  static const String lessThanPerDay = "Less than ₦170 per day for daily support ♡";
+  static const String unlockEverything = "Unlock Everything";
+  static const String unlimitedWaves = "Unlimited Waves";
+  static const String saveMoodEntries = "Save Mood Entries";
+  static const String submitQuestions = "Submit Questions";
+  //
+
   static const String verificationCodeSent =
       "We will sent you a verification code to your email address";
   static const String connection = "CONNECTION";
@@ -459,24 +498,12 @@ class Strings {
   static const String commentAndReply = "Comment & reply";
   static const String limitedDailyWaves = "Send  Limited Daily Waves";
   static const String sendVerification = "Send Verification";
-  static const String moodAndSelfCare = "MOOD & SELF-CARE";
-  static const String fullMoodLibrary = "Full Mood Library";
-  static const String expertAccess = "EXPERT ACCESS";
-  static const String attendLiveSessions = "Attend live expert sessions";
-  static const String mostPopular = "MOST POPULAR";
-  static const String priceMonthly = "₦5,000 / month";
-  static const String cancelAnytime = "Cancel anytime";
-  static const String lessThanPerDay = "Less than ₦170 per day for daily support ♡";
-  static const String unlockEverything = "Unlock Everything";
-  static const String unlimitedWaves = "Unlimited Waves";
-  static const String saveMoodEntries = "Save Mood Entries";
-  static const String watchSessionReplay = "Watch Sessions Replay";
-  static const String submitQuestions = "Submit Questions";
+
   static const String enterSixDigitCode = "Enter your 6 digit code";
   static const String welcomeBack = "Glad to see you again";
   static const String welcomeFoundingMum = "Welcome, Founding Mum";
   static const String whatThisMeans = "What This Means";
-  static const String howMumsUse = "How most mums use WeMama";
+  static const String howMumsUse = "How Most Mums Use WeMama";
   static const String ourPromise = "Our Promise To You";
   static const String passwordChangedContinue = "Your password has been changed continue to login";
   static const String thankYouEarly = "Thank you for joining early.";

@@ -1,3 +1,5 @@
+import 'package:mama_app/views/post_auth_setup/lifestyle_and_interests/widgets/lifestyle_tag.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/lifestyle_and_interests_controller.dart';
 
@@ -55,6 +57,7 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
                           direction: Axis.horizontal,
                           spacing: 12.w,
                           runSpacing: 14.w,
+                          alignment: WrapAlignment.center,
                           children: [
                             ...List.generate(lic.interestsList.length, (index) {
                               final item = lic.interestsList[index];
@@ -63,37 +66,18 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
                                 final isSelected = lic.selectedInterests.contains(item);
 
                                 return IntrinsicWidth(
-                                  child: GestureDetector(
+                                  child: LifestyleTag(
+                                    item: item,
                                     onTap: () => lic.toggleInterest(item),
-                                    child: ContainerBordered(
-                                      hp: 10,
-                                      vp: 6,
-                                      rad: 30,
-                                      contClr: isSelected ? c.primary : c.cardPrimary,
-                                      child: Text(
-                                        item,
-                                        style: TxtStyle.outfit(
-                                          fs: 12,
-                                          w: 500,
-                                          color: isSelected ? Colors.white : c.textPrimary,
-                                        ),
-                                      ),
-                                    ),
+                                    isSelected: isSelected,
                                   ),
                                 );
                               });
                             }),
                           ],
-                        ),
+                        ).mHV(10, 0),
                         Gap(itemGap),
-                        Obx(
-                          () => lic.warningText.value.isEmpty
-                              ? const SizedBox.shrink()
-                              : Text(
-                                  lic.warningText.value,
-                                  style: TxtStyle.outfit(fs: 12, color: c.error),
-                                ),
-                        ),
+
                         // 👇 THIS PUSHES BOTTOM SECTION DOWN
                         const Spacer(),
 
@@ -105,9 +89,7 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
                               () => filledBtnWTxt(
                                 btnTxt: Strings.continueTxt,
                                 isLoading: lic.isLoading,
-                                onTap: () async {
-                                  Get.toNamed(RoutePaths.lifeStyleAndInterests);
-                                },
+                                onTap: lic.onTapContinue,
 
                                 //  await lic.onTapSignup(photoAndBioFormKey),
                               ),
