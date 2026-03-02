@@ -409,6 +409,13 @@ class TxtStyle {
     decoration: dec,
   );
 
+  static TextStyle get urbanistSmTitle600 =>
+      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary);
+  static TextStyle get urbanistSmTitle => TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary);
+  static TextStyle get urbanistSmTitleSec =>
+      TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.secondary);
+  static TextStyle get urbanistSmSecNor => TxtStyle.urbanist(fs: 13, color: c.secondary);
+
   ///////////////////////////Outfit
   static TextStyle outfit({
     double fs = 13,
@@ -445,6 +452,12 @@ class TxtStyle {
 
   static TextStyle get outfitUnderLTxt =>
       outfit(fs: 14, w: 400, color: c.textSecondary, dec: TextDecoration.underline);
+
+  static TextStyle get outfitLarTitle => TxtStyle.outfitSemiB(fs: 18, w: 500, color: c.primary);
+  static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
+  static TextStyle get outfitSmTitleSec => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
+  static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);
+  static TextStyle get outfitSmSecNor => TxtStyle.outfit(fs: 13, color: c.secondary);
 }
 
 /// --------------------
@@ -523,29 +536,44 @@ class BoxDeco {
         ),
       );
 
-  static BoxDecoration decBrdrOneSide({Color? brdrClr, double? w, required BrdrSideType side}) {
+  static BoxDecoration decBrdrOneSideCustom({
+    Color? brdrClr,
+    Color? clr,
+    double? w,
+    List<BrdrCorner>? radiusCorners, // corners to round
+    double? rad,
+    BrdrSideType? side, // optional side for border
+  }) {
+    // Build the border dynamically
     Border getBorder() {
-      switch (side) {
-        case BrdrSideType.bottom:
-          return Border(
-            bottom: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
-          );
-        case BrdrSideType.top:
-          return Border(
-            top: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
-          );
-        case BrdrSideType.right:
-          return Border(
-            right: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
-          );
-        case BrdrSideType.left:
-          return Border(
-            left: BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 1).w),
-          );
-      }
+      return Border(
+        top: (side == BrdrSideType.top)
+            ? BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 0.6).w)
+            : BorderSide.none,
+        bottom: (side == BrdrSideType.bottom)
+            ? BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 0.6).w)
+            : BorderSide.none,
+        left: (side == BrdrSideType.left)
+            ? BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 0.6).w)
+            : BorderSide.none,
+        right: (side == BrdrSideType.right)
+            ? BorderSide(color: brdrClr ?? c.textPrimary, width: (w ?? 0.6).w)
+            : BorderSide.none,
+      );
     }
 
-    return BoxDecoration(border: getBorder());
+    // Build radius according to user selection
+    Radius r = Radius.circular(rad ?? 0);
+    return BoxDecoration(
+      color: clr ?? bgClr,
+      border: getBorder(),
+      borderRadius: BorderRadius.only(
+        topLeft: radiusCorners?.contains(BrdrCorner.topLeft) ?? false ? r : Radius.zero,
+        topRight: radiusCorners?.contains(BrdrCorner.topRight) ?? false ? r : Radius.zero,
+        bottomLeft: radiusCorners?.contains(BrdrCorner.bottomLeft) ?? false ? r : Radius.zero,
+        bottomRight: radiusCorners?.contains(BrdrCorner.bottomRight) ?? false ? r : Radius.zero,
+      ),
+    );
   }
 
   static BoxDecoration decRadCus({

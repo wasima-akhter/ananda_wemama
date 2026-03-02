@@ -14,3 +14,31 @@ class CircleImage extends StatelessWidget {
     );
   }
 }
+
+class IconInCircleBrdr extends StatelessWidget {
+  final String iconPath;
+  final String goToPath;
+  final double? radius;
+  const IconInCircleBrdr({super.key, required this.iconPath, required this.goToPath, this.radius});
+
+  @override
+  Widget build(BuildContext context) {
+    return CusGestureDetector(
+      onTap: () {
+        GNav.pushNamed(goToPath);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: c.secondary),
+          color: c.inputBackground,
+        ),
+        child: CircleAvatar(
+          radius: radius ?? 17.r,
+          backgroundColor: c.inputBackground,
+          child: SvgIcon(iconPath: iconPath),
+        ),
+      ),
+    );
+  }
+}

@@ -22,5 +22,3 @@ enum CustomerOrderCategory {
 }
 
 enum SupplierOrderAction { accept, onTheWay, complete, delete, confirm, reject, cancel }
-
-enum WelcomePageType { intro, meaning, usage, confirmation, finalImage }

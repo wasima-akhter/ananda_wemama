@@ -22,7 +22,10 @@ class CusSearchBar extends StatelessWidget {
         children: [
           Container(
             height: 50,
-            decoration: BoxDeco.decBrdrOneSide(side: BrdrSideType.right, brdrClr: c.inputBorder),
+            decoration: BoxDeco.decBrdrOneSideCustom(
+              side: BrdrSideType.right,
+              brdrClr: c.inputBorder,
+            ),
             child: Row(
               children: [
                 ContainerBordered(

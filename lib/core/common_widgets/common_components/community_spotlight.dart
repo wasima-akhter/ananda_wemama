@@ -10,6 +10,7 @@ class CommunitySpotlight extends StatelessWidget {
     return ContainerBordered(
       vp: 10,
       hp: 10,
+      boxShadow: boxShadowBottom(),
 
       contClr: c.cardOngoing,
       child: Column(
@@ -57,38 +58,30 @@ class StackOfImages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50.h,
-      width: 120.w,
+      width: 110.w,
 
       child: Stack(
         alignment: Alignment.centerLeft,
         children: [
           Positioned(
             left: 0, // overlap amount
-            child: _buildImage(IconsPath.userDemo1Sm),
+            child: _buildImage(),
           ),
           Positioned(
             left: 35, // overlap amount
-            child: _buildImage(IconsPath.userDemo1Sm),
+            child: _buildImage(),
           ),
           Positioned(
             left: 70, // overlap amount
-            child: _buildImage(IconsPath.userDemo1Sm),
+            child: _buildImage(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildImage(String path) {
-    return Container(
-      width: 50,
-      height: 50,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white, width: 2),
-      ),
-      child: SvgIcon(iconPath: path),
-    );
+  Widget _buildImage({String? path}) {
+    return circledImageBgComponent(radius: 20, imagePath: path);
   }
 }
 

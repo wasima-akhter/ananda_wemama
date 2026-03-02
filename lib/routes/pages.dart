@@ -1,29 +1,42 @@
 import 'package:get/get.dart';
-import 'package:mama_app/views/auth/forgot_password/screen/forgot_password_screen.dart';
-import 'package:mama_app/views/auth/otp/screen/verify_otp_screen.dart';
-import 'package:mama_app/views/auth/signin/screen/signin_screen.dart';
-import 'package:mama_app/views/auth/signup/screen/signup_screen.dart';
-import 'package:mama_app/views/onboard/screens/onboard_screen2.dart';
-import 'package:mama_app/views/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
-import 'package:mama_app/views/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
-import 'package:mama_app/views/post_auth_setup/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
-import 'package:mama_app/views/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
-import 'package:mama_app/views/video_meeting/screen/home_screen.dart';
-import 'package:mama_app/views/video_meeting/screen/meeting_screen.dart';
+import 'package:mama_app/features/main_tabs/chat/screen/chat_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/community_screen.dart';
+import 'package:mama_app/features/main_tabs/experts/screen/experts_screen.dart';
+import 'package:mama_app/features/main_tabs/match/screen/match_screen.dart';
+import 'package:mama_app/features/main_tabs/profile/screen/profile_screen.dart';
+import 'package:mama_app/features/more/notification/screen/notification_screen.dart';
+import 'package:mama_app/features/shared/mood_insights/screen/mood_insights_screen.dart';
+import 'package:mama_app/features/shared/mood_library/screen/mood_library_screen.dart';
 
 import '../core/bind/all_bindings.dart';
 import '../core/state_screens/not_found/not_found_page.dart';
 import '../core/state_screens/offline/offline_screen.dart';
-import '../views/onboard/screens/onboard_screen.dart';
-import '../views/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
-import '../views/post_auth_setup/photo_and_bio/screen/photo_and_bio_screen.dart';
-import '../views/post_auth_setup/setup_profile/screen/setup_profile_screen.dart';
-import '../views/splash/screen/splash_screen.dart';
+import '../features/auth/forgot_password/screen/forgot_password_screen.dart';
+import '../features/auth/otp/screen/verify_otp_screen.dart';
+import '../features/auth/signin/screen/signin_screen.dart';
+import '../features/auth/signup/screen/signup_screen.dart';
+import '../features/entry/onboard/screens/onboard_screen.dart';
+import '../features/entry/onboard/screens/onboard_screen2.dart';
+import '../features/entry/splash/screen/splash_screen.dart';
+import '../features/main_nav/screen/main_nav_screen.dart';
+import '../features/main_tabs/home/screen/home_screen.dart';
+import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
+import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
+import '../features/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
+import '../features/post_auth_setup/photo_and_bio/screen/photo_and_bio_screen.dart';
+import '../features/post_auth_setup/setup_profile/screen/setup_profile_screen.dart';
+import '../features/post_auth_setup/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
+import '../features/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
+import '../features/shared/bookmark/screen/bookmark_screen.dart';
+import '../features/video_meeting/screen/meeting_screen.dart';
 import 'route_paths.dart';
 import 'route_transition.dart';
 
 class RoutePageList {
   static final List<GetPage> appPages = [
+    // ─────────────────────────────
+    // 🔹 Splash & Onboarding
+    // ─────────────────────────────
     GetPage(
       name: RoutePaths.splashScreen,
       page: () => const SplashScreen(),
@@ -36,9 +49,9 @@ class RoutePageList {
       transition: RouteTransitions.byName(RoutePaths.offlineScreen),
     ),
     GetPage(
-      name: RoutePaths.notfound,
+      name: RoutePaths.notFound,
       page: () => const RouteNotFoundPage(),
-      transition: RouteTransitions.byName(RoutePaths.notfound),
+      transition: RouteTransitions.byName(RoutePaths.notFound),
     ),
     GetPage(
       name: RoutePaths.onboardScreen,
@@ -52,29 +65,60 @@ class RoutePageList {
       binding: SplashScreenBinding(),
       transition: RouteTransitions.byName(RoutePaths.onboardScreen2),
     ),
+
+    // ─────────────────────────────
+    // 🔹 Meeting
+    // ─────────────────────────────
     GetPage(
       name: RoutePaths.meetingScreen,
       page: () => const MeetingScreen(),
       binding: MeetingBinding(),
       transition: RouteTransitions.byName(RoutePaths.meetingScreen),
     ),
+
+    // ─────────────────────────────
+    // 🔹 Main Navigation / Tabs Flow
+    // ─────────────────────────────
+    GetPage(
+      name: RoutePaths.mainNav,
+      page: () => const MainNavScreen(),
+      binding: MainNavBinding(),
+      transition: RouteTransitions.byName(RoutePaths.mainNav),
+    ),
     GetPage(
       name: RoutePaths.home,
       page: () => const HomeScreen(),
-      binding: HomeBinding(),
+      binding: MainNavBinding(),
       transition: RouteTransitions.byName(RoutePaths.home),
     ),
+    GetPage(
+      name: RoutePaths.chat,
+      page: () => const ChatScreen(),
+      binding: MainNavBinding(),
+      transition: RouteTransitions.byName(RoutePaths.chat),
+    ),
+    GetPage(
+      name: RoutePaths.match,
+      page: () => const MatchScreen(),
+      binding: MainNavBinding(),
+      transition: RouteTransitions.byName(RoutePaths.match),
+    ),
+    GetPage(
+      name: RoutePaths.communities,
+      page: () => const CommunityScreen(),
+      binding: MainNavBinding(),
+      transition: RouteTransitions.byName(RoutePaths.communities),
+    ),
+    GetPage(
+      name: RoutePaths.experts,
+      page: () => const ExpertsScreen(),
+      binding: MainNavBinding(),
+      transition: RouteTransitions.byName(RoutePaths.experts),
+    ),
 
-    GetPage(
-      name: RoutePaths.offlineScreen,
-      page: () => const OfflineScreen(),
-      transition: RouteTransitions.byName(RoutePaths.offlineScreen),
-    ),
-    GetPage(
-      name: RoutePaths.notfound,
-      page: () => const RouteNotFoundPage(),
-      transition: RouteTransitions.byName(RoutePaths.notfound),
-    ),
+    // ─────────────────────────────
+    // 🔹 Auth Flow
+    // ─────────────────────────────
     GetPage(
       name: RoutePaths.signin,
       page: () => const SigninScreen(),
@@ -95,36 +139,69 @@ class RoutePageList {
       page: () => const VerifyOtpScreen(),
       binding: OtpScreenBinding(),
     ),
+
+    // ─────────────────────────────
+    // 🔹 Post-Signup / Profile Setup Flow
+    // ─────────────────────────────
     GetPage(
       name: RoutePaths.setupProfile,
       page: () => const SetupProfileScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.photoAndBio,
       page: () => const PhotoAndBioScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.lifeStyleAndInterests,
       page: () => const LifestyleAndInterestsScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.mumsStage,
       page: () => const MumsStageScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(name: RoutePaths.mumsStageFinish, page: () => const MumsStageFinishScreen()),
     GetPage(
       name: RoutePaths.subChoosePlan,
       page: () => const SubscriptionChoosePlanScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.welcomeFundingMum,
       page: () => const WelcomeFundingMumScreen(),
-      binding: PostSigupScreensAllBinding(),
+      binding: PostSignupScreensBinding(),
+    ),
+
+    // ─────────────────────────────
+    // 🔹 More
+    // ─────────────────────────────
+    GetPage(
+      name: RoutePaths.notification,
+      page: () => const NotificationScreen(),
+      binding: NotificationBinding(),
+    ),
+    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: ProfileBinding()),
+
+    // ─────────────────────────────
+    // 🔹 Individual but Shared
+    // ─────────────────────────────
+    GetPage(
+      name: RoutePaths.moodLibrary,
+      page: () => const MoodLibraryScreen(),
+      binding: MoodLibraryBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.bookmark,
+      page: () => const BookmarkScreen(),
+      binding: BookmarkBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.moodInsight,
+      page: () => const MoodInsightsScreen(),
+      binding: MoodInsightBinding(),
     ),
   ];
 }

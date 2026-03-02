@@ -72,7 +72,10 @@ class Strings {
   // Home / Dashboard
   // ===========================
   static const String welcome = "Welcome";
-  static const String fakeName = "Tiago Felipe";
+  static const String fakeDrName = "Dr. Amelia Carter";
+  static const String fakeDrSpecialty = "Child Health Specialist";
+  static const String fakeTime = "7:30 pm";
+  static const String fakeDate = "20 Feb 2026";
   static const String fakePhoneNum = "+234 54564 5565";
   static const String fakeEmail = "electenergynltd@email.com";
   static const String fakeLocationName = "Lagos";
@@ -102,6 +105,9 @@ class Strings {
   static const String searchLocation = "Search Location";
   static const String searchCityOrRegion = "Search City or region";
   static const String nearestSupplierAndPriceStats = "Nearest Suppliers And Price Stats";
+
+  // Indiv pages
+  static const String bookmark = "Bookmark";
 
   // ===========================
   // Order Details
@@ -445,6 +451,8 @@ class Strings {
   static const String minimalistLifestyle = "Minimalist lifestyle";
   static const String pregnant = "Pregnant";
   static const String writeBioHere = "Write your bio here";
+
+  // tags in lifestyle & interests
   static const String educationalPlay = "Educational play";
   static const String artsCrafts = "Arts & crafts";
   static const String reading = "Reading";
@@ -464,6 +472,8 @@ class Strings {
   static const String learning = "learning";
   static const String workingMomLife = "Working mom life";
   static const String childDevelopment = "Child development";
+
+  // Subscription
   static const String chooseYourPlan = "Choose your plan";
   static const String supportConnectionGuidance =
       "Support, connection, and expert guidance - on your terms";
@@ -540,7 +550,6 @@ class Strings {
   static const String search = "search";
   static const String unblock = "Unblock";
   static const String subscription = "Subscription";
-  static const String ongoingExpertSession = "Ongoing expert session";
   static const String subscribe = "Subscribe";
   static const String like = "Like";
   static const String comment = "Comment";
@@ -552,10 +561,24 @@ class Strings {
   static const String stressed = "Stressed";
   static const String goodEveningAda = "Good evening, Ada";
   static const String howIsYourFeeling = "how is your feeling?";
-  static const String checkInStreak =
-      "❤️ 3-days check-in streak 🌿 Great to see you are calm today";
-  static const String todaysReminder = "Today’s gentle reminder";
-  static const String restCounts = "You don’t have to fix everything today. rest counts.";
+  static const String howAreYourFeeling = "How are your feeling?";
+  static const String checkInStreak1 = "❤️ 3-days check-in streak";
+  static const String checkInStreak2 = "🌿 Great to see you are calm today";
+  static const String todaysReminder = "Today's gentle reminder";
+  static const String restCounts = "You don't have to fix everything today. rest counts.";
+
+  // ongoing expert session card
+
+  static const String live = "LIVE";
+  static const String ongoingExpertSession = "Ongoing expert session";
+  static const String babySleepSession = "Baby Sleep Session";
+  static const String gentleRoutines =
+      "Gentle routines for restful night to keep your baby peaceful";
+  static const String joinLive = "Join Live";
+
+  // mood library
+  static const String openMoodLibrary = "Open Mood Library";
+  static const String moodLibrary = "Mood Library";
 
   static const String searching = "Searching";
 

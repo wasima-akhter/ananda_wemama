@@ -22,8 +22,8 @@ class BackArrowInCircle extends StatelessWidget {
       child: Container(
         // decoration: BoxDecoration(shape: BoxShape.circle, color: c.buttonPrimary),
         child: SvgIcon(
-          width: 45,
-          height: 45,
+          width: 42,
+          height: 42,
           iconPath: IconsPath.backNavArrow,
           // iconColor: c.textPrimary,
         ),

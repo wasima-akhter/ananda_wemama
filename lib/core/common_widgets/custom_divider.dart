@@ -17,12 +17,12 @@ class CustomDivider extends StatelessWidget {
         ? Container(
             height: isFullWidth ? double.infinity : (h ?? S.h * 0.05),
             width: w ?? 1,
-            color: clr ?? c.primary,
+            color: clr ?? c.secondary,
           )
         : Container(
             width: isFullWidth ? double.infinity : (w ?? S.w * 0.35),
             height: h ?? 1,
-            color: clr ?? c.primary,
+            color: clr ?? c.secondary,
           );
   }
 }

@@ -34,7 +34,7 @@ class App extends StatelessWidget {
 
           getPages: RoutePageList.appPages,
           unknownRoute: RoutePageList.appPages.firstWhere(
-            (page) => page.name == RoutePaths.notfound,
+            (page) => page.name == RoutePaths.notFound,
           ),
           defaultTransition: Transition.fade,
           transitionDuration: const Duration(milliseconds: 400),

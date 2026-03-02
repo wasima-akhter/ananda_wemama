@@ -26,10 +26,7 @@ class IconsPath {
   static String get verified => Assets.icons.verifiedTick;
 
   // User / Profile
-  static String get userDemo1L => Assets.icons.userDemo1L;
-  static String get userDemo1Sm => Assets.icons.userDemo1Sm;
-  static String get userDemo2L => Assets.icons.userDemo2L;
-  static String get userDemo2Sm => Assets.icons.userDemo2Sm;
+
   static String get userOutlined => Assets.icons.userIconOutlined;
   static String get userGroup => Assets.icons.usersGroup;
   static String get userStack1 => Assets.icons.userStack1;
@@ -37,7 +34,6 @@ class IconsPath {
   static String get userStack3 => Assets.icons.userStack3;
 
   // Social / Interaction
-  static String get chat => Assets.icons.chat;
   static String get chatCircleOutlined => Assets.icons.chatCircleOutlined;
   static String get likeFilled => Assets.icons.likeFilled;
   static String get heartOutlined => Assets.icons.heartOutlined;
@@ -51,7 +47,9 @@ class IconsPath {
 
   // Home / General
   static String get home => Assets.icons.home;
+  static String get chat => Assets.icons.chat;
   static String get match => Assets.icons.match;
+  static String get community => Assets.icons.community;
   static String get experts => Assets.icons.experts;
   static String get search => Assets.icons.search;
   static String get locationOutlined => Assets.icons.locationOutlined;
@@ -126,6 +124,10 @@ class ImagesPath {
   static String get profileDemo2 => Assets.images.profileDemoPic2.path;
   static String get profileDemo3 => Assets.images.profileDemoPic3.path;
   static String get profileDemo4 => Assets.images.profileDemoPic4.path;
+
+  // Avatar demo pictures
+  static String get userDemoL => Assets.images.userDemoL.path;
+  static String get userDemoSm => Assets.images.userDemoSm.path;
 
   // Group / Community images
   static String get momsGroupPhoto => Assets.images.momsGroupPhoto.path;

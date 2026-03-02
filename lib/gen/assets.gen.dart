@@ -77,6 +77,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/close_red_filled.svg
   String get closeRedFilled => 'assets/icons/close_red_filled.svg';
 
+  /// File path: assets/icons/communities.svg
+  String get communities => 'assets/icons/communities.svg';
+
   /// File path: assets/icons/community.svg
   String get community => 'assets/icons/community.svg';
 
@@ -212,18 +215,6 @@ class $AssetsIconsGen {
   /// File path: assets/icons/two_leaf.svg
   String get twoLeaf => 'assets/icons/two_leaf.svg';
 
-  /// File path: assets/icons/user_demo1_l.svg
-  String get userDemo1L => 'assets/icons/user_demo1_l.svg';
-
-  /// File path: assets/icons/user_demo1_sm.svg
-  String get userDemo1Sm => 'assets/icons/user_demo1_sm.svg';
-
-  /// File path: assets/icons/user_demo2_l.svg
-  String get userDemo2L => 'assets/icons/user_demo2_l.svg';
-
-  /// File path: assets/icons/user_demo2_sm.svg
-  String get userDemo2Sm => 'assets/icons/user_demo2_sm.svg';
-
   /// File path: assets/icons/user_icon_outlined.svg
   String get userIconOutlined => 'assets/icons/user_icon_outlined.svg';
 
@@ -280,6 +271,7 @@ class $AssetsIconsGen {
     circleCheckBold,
     closeCircleOutlined,
     closeRedFilled,
+    communities,
     community,
     crown,
     currencyNSvg,
@@ -325,10 +317,6 @@ class $AssetsIconsGen {
     tickSm,
     ttcMagnet,
     twoLeaf,
-    userDemo1L,
-    userDemo1Sm,
-    userDemo2L,
-    userDemo2Sm,
     userIconOutlined,
     userStack1,
     userStack2,
@@ -444,6 +432,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/tired.png
   AssetGenImage get tired => const AssetGenImage('assets/images/tired.png');
 
+  /// File path: assets/images/user_demo_l.png
+  AssetGenImage get userDemoL =>
+      const AssetGenImage('assets/images/user_demo_l.png');
+
+  /// File path: assets/images/user_demo_sm.png
+  AssetGenImage get userDemoSm =>
+      const AssetGenImage('assets/images/user_demo_sm.png');
+
   /// File path: assets/images/user_placeholder.png
   AssetGenImage get userPlaceholder =>
       const AssetGenImage('assets/images/user_placeholder.png');
@@ -481,6 +477,8 @@ class $AssetsImagesGen {
     splashWholeScreen,
     stressed,
     tired,
+    userDemoL,
+    userDemoSm,
     userPlaceholder,
     weMamaLogoPng,
   ];

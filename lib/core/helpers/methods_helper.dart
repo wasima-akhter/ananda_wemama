@@ -27,16 +27,24 @@ List<BoxShadow> get boxShadowAllSides => [
     blurRadius: 10, // blur
     spreadRadius: 0, // same as Figma
   ),
+];
 
-  //         offset: Offset(x, y)
+List<BoxShadow> get boxShadowTopOnly => [
+  BoxShadow(
+    color: Colors.black.withOpacity(0.1), // intensity: 10%
+    offset: const Offset(0, -3), // negative y moves shadow upward
+    blurRadius: 6, // smoothness
+    spreadRadius: 0, // no extra spread
+  ),
+];
 
-  // x > 0 → shadow goes to the right
-
-  // y > 0 → shadow goes to the bottom
-
-  // blurRadius: 6 → softness of the shadow edges
-
-  // Lower opacity = softer/lighter shadow
+List<BoxShadow> boxShadowBottom({Color? color}) => [
+  BoxShadow(
+    color: color ?? c.secondary.withOpacity(0.25), // use your secondary color
+    offset: const Offset(0, 3), // positive y moves shadow downward
+    blurRadius: 2, // no blur
+    spreadRadius: 0, // no extra spread
+  ),
 ];
 List<BoxShadow> boxShadowAllSide({double? shadowIntensity}) => [
   BoxShadow(
