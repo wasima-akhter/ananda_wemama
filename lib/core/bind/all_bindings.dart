@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../features/account_overview/change_password/controller/change_password_controller.dart';
@@ -11,6 +12,8 @@ import '../../features/entry/onboard/controller/onboard_controller.dart';
 import '../../features/entry/splash/controller/splash_controller.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_controller.dart';
+import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
+import '../../features/main_tabs/chat/controller/chat_report_controller.dart';
 import '../../features/main_tabs/community/controller/community_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
@@ -132,6 +135,28 @@ class MainNavBinding extends Bindings {
 }
 
 // ─────────────────────────────
+// 🔹 Main Tab's extended pages
+// ─────────────────────────────
+class ChatInboxBinding extends Bindings {
+  @override
+  void dependencies() {
+    ///////////
+    final args = Get.arguments;
+    print("--> args: $args");
+
+    if (args == null || args is! String) {
+      throw Exception("ChatInboxController requires a String argument!");
+    }
+
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => ChatInboxController(args));
+    Get.lazyPut(() => ChatReportController());
+  }
+}
+
+// ─────────────────────────────
 // 🔹 Account & Profile Settings
 // ─────────────────────────────
 class AccountSettingsBinding extends Bindings {
@@ -227,6 +252,15 @@ class MoodInsightBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
     Get.put<MoodInsightsController>(MoodInsightsController(args));
+  }
+}
+
+class WaveRequestBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+    Get.lazyPut<WaveRequestController>(() => WaveRequestController());
   }
 }
 

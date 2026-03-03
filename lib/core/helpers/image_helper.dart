@@ -1,7 +1,9 @@
 import 'package:flutter/services.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../common_widgets/file_picker_bottom_sheet.dart';
 import '../common_widgets/image_error_builder.dart';
+import '../common_widgets/image_picker_bottom_sheet.dart';
 
 Image get mamaLogoWithoutTxtImage =>
     Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.2);
@@ -42,5 +44,66 @@ CircleAvatar circledImageBgComponent({String? imagePath, double? radius}) {
         image: DecorationImage(image: AssetImage(imagePath ?? ImagesPath.userDemoL)),
       ),
     ),
+  );
+}
+
+Future<dynamic> showPickImageBottomSheet({
+  double? heightFactor,
+  bool isScrollControlled = true,
+  final void Function()? onTapGallery,
+  final void Function()? onTapCamera,
+}) {
+  return Get.bottomSheet(
+    ignoreSafeArea: false,
+    isDismissible: true,
+    enableDrag: true,
+
+    AnimatedPadding(
+      duration: const Duration(milliseconds: 250),
+      padding: EdgeInsets.only(bottom: S.bottomInset),
+
+      child: Container(
+        height: bSheetH * 0.5 * (heightFactor ?? 1),
+
+        // width: 1.sw,
+        child: PickImageBottomSheet(onTapGallery: onTapGallery, onTapCamera: onTapCamera),
+      ).getBtmSheetM,
+    ),
+
+    isScrollControlled: isScrollControlled,
+    backgroundColor: bgClr, // needed for rounded corners
+  );
+}
+
+Future<dynamic> showPickAnyFileBottomSheet({
+  double? heightFactor,
+  bool isScrollControlled = true,
+  final void Function()? onTapGallery,
+  final void Function()? onTapCamera,
+  final void Function()? onTapFile,
+}) {
+  return Get.bottomSheet(
+    ignoreSafeArea: false,
+    isDismissible: true,
+    enableDrag: true,
+
+    AnimatedPadding(
+      duration: const Duration(milliseconds: 250),
+      padding: EdgeInsets.only(bottom: S.bottomInset),
+
+      child: Container(
+        height: bSheetH * 0.45 * (heightFactor ?? 1),
+
+        // width: 1.sw,
+        child: FilePickerBottomSheet(
+          onTapFile: onTapFile,
+          onTapGallery: onTapGallery,
+          onTapCamera: onTapCamera,
+        ),
+      ).getBtmSheetM,
+    ),
+
+    isScrollControlled: isScrollControlled,
+    backgroundColor: bgClr, // needed for rounded corners
   );
 }

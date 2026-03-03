@@ -7,6 +7,8 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
   final VoidCallback? onTapBack;
   final bool? hasBackNavArrow;
   final bool? isBgTransp;
+  final bool? titleInLeft;
+  final Widget? titleLeftWidget;
 
   const CommonAppBarContent({
     super.key,
@@ -15,6 +17,8 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
     this.onTapBack,
     this.hasBackNavArrow,
     this.isBgTransp,
+    this.titleInLeft,
+    this.titleLeftWidget,
   });
 
   @override
@@ -27,7 +31,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           color: finalBg,
-          padding: const EdgeInsets.only(top: 30, left: 25, right: 25, bottom: 10),
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,14 +42,30 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
               else if (hasBackNavArrow == false)
                 const SizedBox(width: 40),
 
+              titleInLeft == true ? Gap(itemGap * 2) : const SizedBox.shrink(),
+
               Expanded(
-                child: Text(
-                  title.capEachWord(),
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: 18.titleMclrCusFSOutfit,
-                ),
+                child: titleInLeft == true
+                    ? Row(
+                        children: [
+                          titleLeftWidget ?? const SizedBox.shrink(),
+                          titleLeftWidget != null ? Gap(itemGap) : const SizedBox.shrink(),
+                          Text(
+                            title.capEachWord(),
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            textAlign: TextAlign.left,
+                            style: 18.titleMclrCusFSOutfit,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        title.capEachWord(),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        textAlign: TextAlign.center,
+                        style: 18.titleMclrCusFSOutfit,
+                      ),
               ),
 
               suffix ?? const SizedBox(width: 40),

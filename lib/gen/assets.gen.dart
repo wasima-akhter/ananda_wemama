@@ -14,6 +14,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/add_plus_circle.svg
+  String get addPlusCircle => 'assets/icons/add_plus_circle.svg';
+
   /// File path: assets/icons/apple.svg
   String get apple => 'assets/icons/apple.svg';
 
@@ -62,6 +65,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/chat_circle_outlined.svg
   String get chatCircleOutlined => 'assets/icons/chat_circle_outlined.svg';
 
+  /// File path: assets/icons/chat_w_dot.svg
+  String get chatWDot => 'assets/icons/chat_w_dot.svg';
+
   /// File path: assets/icons/check_in.svg
   String get checkIn => 'assets/icons/check_in.svg';
 
@@ -106,6 +112,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/google.svg
   String get google => 'assets/icons/google.svg';
+
+  /// File path: assets/icons/hand_wave.svg
+  String get handWave => 'assets/icons/hand_wave.svg';
 
   /// File path: assets/icons/heart_half_filled.svg
   String get heartHalfFilled => 'assets/icons/heart_half_filled.svg';
@@ -250,6 +259,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
+    addPlusCircle,
     apple,
     appleBg,
     arrowBackL,
@@ -266,6 +276,7 @@ class $AssetsIconsGen {
     chartFilled,
     chat,
     chatCircleOutlined,
+    chatWDot,
     checkIn,
     circleCheck,
     circleCheckBold,
@@ -281,6 +292,7 @@ class $AssetsIconsGen {
     eyeVisible,
     gallerySvg,
     google,
+    handWave,
     heartHalfFilled,
     heartHand,
     heartOutlined,
@@ -345,6 +357,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/done_animation.json
   String get doneAnimation => 'assets/images/done_animation.json';
+
+  /// File path: assets/images/folder_attach.png
+  AssetGenImage get folderAttach =>
+      const AssetGenImage('assets/images/folder_attach.png');
 
   /// File path: assets/images/founding_mum.png
   AssetGenImage get foundingMum =>
@@ -454,6 +470,7 @@ class $AssetsImagesGen {
     calm,
     camera,
     doneAnimation,
+    folderAttach,
     foundingMum,
     gallery,
     imagePlaceholder,

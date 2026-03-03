@@ -16,6 +16,9 @@ class AppScreenTemplate extends StatelessWidget {
   final bool safeAreaBottom;
   final bool? extendBody;
   final bool? isScrollable;
+  final Future<void> Function()? onRefresh;
+  final GlobalKey<RefreshIndicatorState>? refreshKey;
+  final bool? getcmLess;
 
   const AppScreenTemplate({
     super.key,
@@ -34,6 +37,9 @@ class AppScreenTemplate extends StatelessWidget {
     this.safeAreaBottom = true,
     this.extendBody,
     this.isScrollable,
+    this.onRefresh,
+    this.refreshKey,
+    this.getcmLess,
   });
 
   @override
@@ -61,21 +67,37 @@ class AppScreenTemplate extends StatelessWidget {
                 ],
               );
             }
-            return BounceSingleChildScrollView(
-              padding: padding ?? EdgeInsets.zero,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: bottomWidget == null
-                      ? child
-                      : Column(
-                          children: [
-                            child,
-                            Spacer(),
-                            bottomWidget?.getcm ?? SizedBox.shrink(),
-                            Gap(itemGap * 3),
-                          ],
-                        ),
+            return CusRefreshIndicator(
+              refreshKey: refreshKey,
+              onRefresh: () async {
+                if (onRefresh != null) {
+                  await onRefresh?.call();
+                }
+              },
+              child: BounceSingleChildScrollView(
+                padding: padding ?? EdgeInsets.zero,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: bottomWidget == null
+                        ? child
+                        : Column(
+                            children: [
+                              child,
+                              Spacer(),
+                              ...[
+                                if (bottomWidget != null) ...[
+                                  if (getcmLess == true)
+                                    bottomWidget!.get10cm
+                                  else
+                                    bottomWidget!.getcm,
+                                ] else
+                                  const SizedBox.shrink(),
+                                Gap(itemGap * 3),
+                              ],
+                            ],
+                          ),
+                  ),
                 ),
               ),
             );

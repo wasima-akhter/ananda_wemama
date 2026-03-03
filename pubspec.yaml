@@ -113,6 +113,8 @@ dependencies:
   # 🛠 Code Generation
   # -----------------------------
   flutter_gen: ^5.12.0          # Asset & font code generation
+  file_picker: ^10.3.10
+  #  file_picker: ^10.3.3
 
 dev_dependencies:
   flutter_lints: ^6.0.0

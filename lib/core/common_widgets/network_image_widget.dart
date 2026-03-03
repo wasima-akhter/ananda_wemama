@@ -23,7 +23,7 @@ class NetworkImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double fallbackRadius = radius ?? 45.r;
+    final double fallbackRadius = radius ?? 12.r;
     final double size = fallbackRadius * 2;
 
     /// ------------------ CIRCLE MODE ------------------
@@ -34,110 +34,60 @@ class NetworkImageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(color: c.inputBorder),
-          color: c.inputBackground, // background for placeholders & errors
+          color: c.inputBackground,
         ),
         clipBehavior: Clip.antiAlias,
-        child: _buildCircleContent(fallbackRadius),
+        child: _buildImageContent(isCircle: true, radius: fallbackRadius),
       );
     }
 
     /// ------------------ NORMAL RECT MODE ------------------
-    if (imageUrl == null || imageUrl!.isEmpty || !isImageUrl(imageUrl!)) {
-      return Container(
-        width: width ?? 30.w,
-        height: height ?? 30.w,
-        padding: EdgeInsets.all(8.w), // surrounding padding
-        decoration: BoxDecoration(
-          color: c.inputBackground,
-          image: DecorationImage(
-            image: Assets.images.imagePlaceholder.image().image,
-            colorFilter: ColorFilter.mode(c.primary, BlendMode.srcIn),
-            fit: BoxFit.cover,
-          ),
-        ),
-      );
-    }
-
     return Container(
-      decoration: 0.circle(),
-      child: Image.network(
-        imageUrl!,
-        width: width ?? 30.w,
-        height: height ?? 30.w,
-        fit: BoxFit.cover,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(shape: BoxShape.circle, color: c.inputBackground),
-            child: CircleAvatar(
-              radius: 20.r,
-              backgroundColor: c.inputBackground,
-              child: Padding(padding: EdgeInsets.all(12.0.w), child: Loading()),
-            ),
-          );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              //     shape: BoxShape.circle,
-              color: c.inputBackground,
-              image: DecorationImage(
-                image: Assets.images.imagePlaceholder.image().image,
-                colorFilter: ColorFilter.mode(c.primary, BlendMode.srcIn),
-                fit: BoxFit.cover,
-              ),
-            ),
-          );
-        },
-      ),
+      width: width ?? 30.w,
+      height: height ?? 30.w,
+      decoration: BoxDecoration(color: c.inputBackground, borderRadius: fallbackRadius.brdrRad),
+      clipBehavior: Clip.antiAlias,
+      child: _buildImageContent(isCircle: false, radius: fallbackRadius),
     );
   }
 
-  /// Builds everything that appears INSIDE the circle
-  Widget _buildCircleContent(double fallbackRadius) {
+  /// Builds image content, circle or rect
+  Widget _buildImageContent({required bool isCircle, required double radius}) {
     if (imageUrl == null || imageUrl!.isEmpty || !isImageUrl(imageUrl!)) {
       return Container(
-        padding: EdgeInsets.all(4.w), // surrounding padding
         decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
           color: c.inputBackground,
           image: DecorationImage(
             image: Assets.images.imagePlaceholder.image().image,
             colorFilter: ColorFilter.mode(c.primary, BlendMode.srcIn),
             fit: BoxFit.cover,
           ),
+          borderRadius: isCircle ? null : radius.brdrRad,
         ),
-      ).mAll(30);
+      );
     }
 
     return Image.network(
       imageUrl!,
       fit: BoxFit.cover,
+      width: isCircle ? null : double.infinity,
+      height: isCircle ? null : double.infinity,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
-        return Container(
-          padding: EdgeInsets.all(4.w),
-          decoration: BoxDecoration(shape: BoxShape.circle, color: c.inputBackground),
-          child: CircleAvatar(
-            radius: 20.r,
-            backgroundColor: c.inputBackground,
-            child: Padding(padding: EdgeInsets.all(12.0.w), child: Loading()),
-          ),
+        return Center(
+          child: SizedBox(width: 24.r, height: 24.r, child: Loading()),
         );
       },
       errorBuilder: (context, error, stackTrace) {
         return Container(
-          padding: EdgeInsets.all(4.w),
           decoration: BoxDecoration(
-            //     shape: BoxShape.circle,
             color: c.inputBackground,
             image: DecorationImage(
               image: Assets.images.imagePlaceholder.image().image,
               colorFilter: ColorFilter.mode(c.primary, BlendMode.srcIn),
               fit: BoxFit.cover,
             ),
+            borderRadius: isCircle ? null : radius.brdrRad,
           ),
         );
       },

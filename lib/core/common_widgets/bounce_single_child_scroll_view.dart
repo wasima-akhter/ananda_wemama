@@ -11,7 +11,7 @@ class BounceSingleChildScrollView extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: padding,
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       child: child,
     );
   }

@@ -23,7 +23,7 @@ class IconsPath {
   static String get doubleTick => Assets.icons.tickL2;
   static String get closeCircle => Assets.icons.closeCircleOutlined;
   static String get closeRed => Assets.icons.closeRedFilled;
-  static String get verified => Assets.icons.verifiedTick;
+  static String get verifiedTick => Assets.icons.verifiedTick;
 
   // User / Profile
 
@@ -35,11 +35,14 @@ class IconsPath {
 
   // Social / Interaction
   static String get chatCircleOutlined => Assets.icons.chatCircleOutlined;
+  static String get chatWDot => Assets.icons.chatWDot;
   static String get likeFilled => Assets.icons.likeFilled;
   static String get heartOutlined => Assets.icons.heartOutlined;
   static String get heartHalfFilled => Assets.icons.heartHalfFilled;
   static String get bookmarkFilled => Assets.icons.bookmarkFilled;
   static String get bookmarkOutlined => Assets.icons.bookmarkOutlined;
+  static String get addPlusCircle => Assets.icons.addPlusCircle;
+  static String get handWave => Assets.icons.handWave;
   static String get sendSmallWhite => Assets.icons.sendSmW;
   static String get sendLargeWhite => Assets.icons.sendLW;
   static String get share => Assets.icons.share;
@@ -153,4 +156,5 @@ class ImagesPath {
 
   static String get gallery => Assets.images.gallery.path;
   static String get camera => Assets.images.camera.path;
+  static String get folderAttach => Assets.images.folderAttach.path;
 }

@@ -44,6 +44,12 @@ class RoutePaths {
   static const experts = '/experts';
 
   // ─────────────────────────────
+  // 🔹 main tab's extended pages >
+  // ─────────────────────────────
+
+  static const chatInbox = '/chatInbox';
+
+  // ─────────────────────────────
   // 🔹 Experts >
   // ─────────────────────────────
   static const meetingScreen = '/meetingScreen';
@@ -65,6 +71,7 @@ class RoutePaths {
   static const moodLibrary = '/moodLibrary';
   static const bookmark = '/bookmark';
   static const moodInsight = '/moodInsight';
+  static const waveRequest = '/waveRequest';
 
   // ─────────────────────────────
   // 🔹 Profile / User

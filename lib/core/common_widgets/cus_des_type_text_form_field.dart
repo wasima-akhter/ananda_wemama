@@ -22,6 +22,10 @@ class CusDesTypeTextFormField extends StatelessWidget {
   final bool? readOnly;
   final bool? isNoBrder;
   final bool? isReq;
+  final bool? isPaddingLess;
+  final Color? brdrClr;
+  final Color? bgClr;
+  final double? rad;
 
   const CusDesTypeTextFormField({
     super.key,
@@ -46,6 +50,10 @@ class CusDesTypeTextFormField extends StatelessWidget {
     this.readOnly,
     this.isNoBrder,
     this.isReq,
+    this.brdrClr,
+    this.rad,
+    this.bgClr,
+    this.isPaddingLess,
   });
 
   @override
@@ -67,9 +75,12 @@ class CusDesTypeTextFormField extends StatelessWidget {
           textInputAction: TextInputAction.newline,
           decoration: InputDecoration(
             filled: true,
-            fillColor: c.inputBackground, // background color
+            fillColor: bgClr ?? c.inputBackground, // background color
             contentPadding:
-                contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                contentPadding ??
+                (isPaddingLess == true
+                    ? EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h)
+                    : EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h)),
             hint: Text(
               hintText,
               style: hintStyle ?? TxtStyle.outfit(fs: 13, color: c.primary.withOpacity(0.6)),
@@ -78,32 +89,37 @@ class CusDesTypeTextFormField extends StatelessWidget {
             prefix: prefix,
             focusedBorder: isNoBrder == true
                 ? InputBorder.none
-                : focusedBorder ??
-                      OutlineInputBorder(
-                        borderSide: BorderSide(color: c.primary, width: 1.5.w),
-                        borderRadius: 12.brdrRad,
-                      ),
-            enabledBorder: isNoBrder == true
-                ? InputBorder.none
-                : enabledBorder ??
-                      OutlineInputBorder(
-                        borderSide: BorderSide(color: c.inputBorder, width: 1.2.w),
-                        borderRadius: 12.brdrRad,
-                      ),
-            errorBorder: isNoBrder == true
-                ? InputBorder.none
-                : errorBorder ??
-                      OutlineInputBorder(
-                        borderSide: BorderSide(color: c.error, width: 1.5.w),
-                        borderRadius: 12.brdrRad,
-                      ),
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: brdrClr ?? c.inputBorder,
+                      width: brdrClr != null ? 0.5 : 0.6,
+                    ),
+                    borderRadius: (rad ?? 30).brdrRad,
+                  ),
+            errorBorder:
+                errorBorder ??
+                (isNoBrder == true
+                    ? InputBorder.none
+                    : OutlineInputBorder(
+                        borderSide: BorderSide(color: c.error, width: 0.6),
+                        borderRadius: (rad ?? 30).brdrRad,
+                      )),
             focusedErrorBorder: isNoBrder == true
                 ? InputBorder.none
-                : errorBorder ??
-                      OutlineInputBorder(
-                        borderSide: BorderSide(color: c.error, width: 1.5.w),
-                        borderRadius: 12.brdrRad,
-                      ),
+                : OutlineInputBorder(
+                    borderSide: BorderSide(color: c.error, width: 0.6),
+                    borderRadius: (rad ?? 30).brdrRad,
+                  ),
+
+            enabledBorder: isNoBrder == true
+                ? InputBorder.none
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: brdrClr ?? c.inputBorder,
+                      width: brdrClr != null ? 0.8 : 0.6,
+                    ),
+                    borderRadius: (rad ?? 30).brdrRad,
+                  ),
           ),
           onChanged: onChanged,
           validator: validator,

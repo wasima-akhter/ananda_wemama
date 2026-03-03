@@ -51,7 +51,11 @@ extension RadiusExtension_ on num {
 /// BOX DECORATION EXTENSIONS
 /// --------------------
 extension BoxdecorationExtension on num {
-  BoxDecoration circle({Color? clr}) => BoxDecoration(shape: BoxShape.circle, color: clr);
+  BoxDecoration circleBrdr({Color? clr, Color? brdrClr, double? brdrW}) => BoxDecoration(
+    shape: BoxShape.circle,
+    color: clr,
+    border: Border.all(color: brdrClr ?? c.primary, width: brdrW ?? 0.6),
+  );
 }
 
 /// --------------------
@@ -150,7 +154,7 @@ extension MarginExtensions on Widget {
   );
 
   Widget get getBtmSheetM => Container(
-    margin: EdgeInsets.only(left: 30.w, right: 30.w, top: 10.h),
+    margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
     child: this,
   );
 }

@@ -3,7 +3,6 @@ import 'package:mama_app/core/config/app_info.dart';
 
 import '../../app/helper_widgets_export.dart';
 import '../common_widgets/custom_divider.dart';
-import '../common_widgets/image_picker_bottom_sheet.dart';
 
 T findCont<T extends GetxController>() {
   return Get.find<T>();
@@ -71,34 +70,6 @@ CustomBtnWTxt filledBtnWTxt({
   required String btnTxt,
   required bool isLoading,
 }) => CustomBtnWTxt(onTap: onTap, isSmall: true, btnTxt: btnTxt, isLoading: isLoading);
-
-Future<dynamic> showPickImageBottomSheet({
-  double? heightFactor,
-  bool isScrollControlled = true,
-  final void Function()? onTapGallery,
-  final void Function()? onTapCamera,
-}) {
-  return Get.bottomSheet(
-    ignoreSafeArea: false,
-    isDismissible: true,
-    enableDrag: true,
-
-    AnimatedPadding(
-      duration: const Duration(milliseconds: 250),
-      padding: EdgeInsets.only(bottom: S.bottomInset),
-
-      child: Container(
-        height: bSheetH * 0.5 * (heightFactor ?? 1),
-
-        // width: 1.sw,
-        child: PickImageBottomSheet(onTapGallery: onTapGallery, onTapCamera: onTapCamera),
-      ).getBtmSheetM,
-    ),
-
-    isScrollControlled: isScrollControlled,
-    backgroundColor: bgClr, // needed for rounded corners
-  );
-}
 
 // open gallery
 

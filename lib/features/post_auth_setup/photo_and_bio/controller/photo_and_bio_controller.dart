@@ -35,6 +35,8 @@ class PhotoAndBioController extends GetxController {
     selectedState.value = '';
     selectedCity.value = '';
 
+    fileImage.value = null;
+
     unfocusAll();
   }
 

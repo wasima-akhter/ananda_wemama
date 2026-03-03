@@ -19,6 +19,7 @@ import '../features/entry/onboard/screens/onboard_screen.dart';
 import '../features/entry/onboard/screens/onboard_screen2.dart';
 import '../features/entry/splash/screen/splash_screen.dart';
 import '../features/main_nav/screen/main_nav_screen.dart';
+import '../features/main_tabs/chat/screen/chat_inbox_screen.dart';
 import '../features/main_tabs/home/screen/home_screen.dart';
 import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
@@ -28,6 +29,7 @@ import '../features/post_auth_setup/setup_profile/screen/setup_profile_screen.da
 import '../features/post_auth_setup/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
 import '../features/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
 import '../features/shared/bookmark/screen/bookmark_screen.dart';
+import '../features/shared/wave_request/screen/wave_request_screen.dart';
 import '../features/video_meeting/screen/meeting_screen.dart';
 import 'route_paths.dart';
 import 'route_transition.dart';
@@ -97,6 +99,7 @@ class RoutePageList {
       binding: MainNavBinding(),
       transition: RouteTransitions.byName(RoutePaths.chat),
     ),
+
     GetPage(
       name: RoutePaths.match,
       page: () => const MatchScreen(),
@@ -116,6 +119,15 @@ class RoutePageList {
       transition: RouteTransitions.byName(RoutePaths.experts),
     ),
 
+    // ─────────────────────────────
+    // 🔹 Main Tab's extended Pages
+    // ─────────────────────────────
+    GetPage(
+      name: RoutePaths.chatInbox,
+      page: () => const ChatInboxScreen(),
+      binding: ChatInboxBinding(),
+      transition: RouteTransitions.byName(RoutePaths.chatInbox),
+    ),
     // ─────────────────────────────
     // 🔹 Auth Flow
     // ─────────────────────────────
@@ -202,6 +214,11 @@ class RoutePageList {
       name: RoutePaths.moodInsight,
       page: () => const MoodInsightsScreen(),
       binding: MoodInsightBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.waveRequest,
+      page: () => const WaveRequestScreen(),
+      binding: WaveRequestBinding(),
     ),
   ];
 }

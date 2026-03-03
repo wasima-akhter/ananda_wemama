@@ -1,6 +1,7 @@
 import 'package:mama_app/app/service_export.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
 import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
 import 'popup_widgets/delivery_feedback_dialog.dart';
@@ -15,7 +16,7 @@ class Popups {
       barrierDismissible: true,
       builder: (_) {
         return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
+          insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
           backgroundColor: Colors.transparent,
           clipBehavior: Clip.none,
           child: Container(
@@ -32,6 +33,32 @@ class Popups {
     );
   }
 }
+
+/// 🔹 Awaiting Verification Popup
+Future<void> newWavesUserDetailsDialog({
+  required BuildContext context,
+  required bool isLoading,
+  required Future<void> Function() onTapDeclineOrAccept,
+  required RxBool isSeeMore,
+  required void Function() onTapSeeMoreTxt,
+}) async {
+  await Popups().baseAlert(
+    context: context,
+    content: NewWavesUserDetailsPopup(
+      isLoading: isLoading,
+      onTapDeclineOrAccept: onTapDeclineOrAccept,
+      isSeeMore: isSeeMore,
+      onTapSeeMoreTxt: onTapSeeMoreTxt,
+    ),
+  );
+}
+
+//////////////////////////////////////////
+///
+///  new waves popup
+///
+///
+/////////////////////////////////////////
 
 Future<void> showLoading({required BuildContext context, required RxBool isupdateIsSeenLoading}) {
   return showDialog(

@@ -80,6 +80,8 @@ class Strings {
   static const String fakeEmail = "electenergynltd@email.com";
   static const String fakeLocationName = "Lagos";
   static const String fakeImageUrl =
+      "https://cdn.pixabay.com/photo/2024/06/08/11/57/woman-8816636_1280.png";
+  static const String fakeImageUrl2 =
       "https://www.gardenia.net/wp-content/uploads/2023/05/types-of-flowers.webp";
   static const String searchSupplies = "Search supplies";
   static const String suppliers = "Suppliers";
@@ -226,6 +228,7 @@ class Strings {
   static const String editDetails = "Edit details";
   static const String addDetails = "Add details";
   static const String selectPhoto = "Select Photo";
+  static const String selectPhotoOrFile = "Select Photo Or Any File";
   static const String continueLoginAgain = "Continue to login again";
   static const String createNewPassword = "Create New Password";
 
@@ -287,6 +290,7 @@ class Strings {
   static const String deliveryConfirmation = "Delivery Confirmation";
   static const String platformUpdate = "Platform Update";
   static const String reportFeedback = "Report & Feedback";
+
   static const String seeAll = "See all";
   static const String goToOrders = "Go to orders";
   static const String loadFuel = "Load Fuel";
@@ -544,6 +548,9 @@ class Strings {
 
   static const String blockedUser = "Blocked User";
   static const String security = "Security";
+  static const String securityAlert = "Security Alert";
+  static const String securityAlertMsg =
+      "For your safety, never share your bank details. You can block or report Sarah by tapping the menu above.";
   static const String about = "About";
 
   static const String termsAndConditions = "Terms & conditions";
@@ -580,12 +587,40 @@ class Strings {
   static const String openMoodLibrary = "Open Mood Library";
   static const String moodLibrary = "Mood Library";
 
+  // Chat
+  static const String typeSomething = "Type something...";
   static const String searching = "Searching";
 
   static const String tryAgain = "try again";
   static const String read = "Read";
   static const String waveSent = "wave sent";
   static const String waveBackToChat = "If they wave back, you can start chatting.";
+
+  // Report
+  static const String addPhotos = "Add Photos";
+  static const String addPhoto = "Add Photo";
+  static const String note = "Note...";
+  static const String reportUser = "Report User";
+  static const String whyReUReporting =
+      "Why are you reporting this user? Our Safety Team will review it within 24 hours.";
+
+  static const String harassment = "Harassment";
+  static const String bullying = "Bullying";
+  static const String medicalMisinformation = "Medical misinformation";
+  static const String spam = "Spam";
+  static const String inappropriateContent = "Inappropriate content";
+  static const String hateSpeech = "Hate speech";
+  static const String privacyViolation = "Privacy violation";
+  static const String other = "Other";
+
+  // Waves
+  static const String newWaves = "New Waves";
+  static const String decline = "Decline";
+  static const String accept = "Accept";
+  static const String children = "Children";
+  static const String aboutMe = "About Me";
+  static const String seeMore = "See More";
+  static const String seeLess = "See Less";
 }
 
 //

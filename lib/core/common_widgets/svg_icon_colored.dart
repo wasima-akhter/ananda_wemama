@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../app/helper_widgets_export.dart';
@@ -19,7 +18,7 @@ class SvgIconColored extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor_ = iconColor ?? Colors.white;
+    final iconColor_ = iconColor ?? c.primary;
     return SvgPicture.asset(
       iconPath,
       colorFilter: ColorFilter.mode(iconColor_, BlendMode.srcIn),

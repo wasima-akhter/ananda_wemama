@@ -1,4 +1,4 @@
-package com.example.mama_app
+package com.app.wemama
 
 import io.flutter.embedding.android.FlutterActivity
 

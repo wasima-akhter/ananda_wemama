@@ -51,6 +51,8 @@
 	<string>Need microphone for audio</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Need access to save recording</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App needs access to photos to select images</string> 
 
 </dict>
 </plist>
