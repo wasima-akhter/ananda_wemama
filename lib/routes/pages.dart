@@ -7,7 +7,7 @@ import 'package:mama_app/features/main_tabs/profile/screen/profile_screen.dart';
 import 'package:mama_app/features/more/notification/screen/notification_screen.dart';
 import 'package:mama_app/features/shared/mood_insights/screen/mood_insights_screen.dart';
 import 'package:mama_app/features/shared/mood_library/screen/mood_library_screen.dart';
-
+import 'package:mama_app/features/main_tabs/community/screen/create_community_screen.dart';
 import '../core/bind/all_bindings.dart';
 import '../core/state_screens/not_found/not_found_page.dart';
 import '../core/state_screens/offline/offline_screen.dart';
@@ -219,6 +219,12 @@ class RoutePageList {
       name: RoutePaths.waveRequest,
       page: () => const WaveRequestScreen(),
       binding: WaveRequestBinding(),
+    ),
+
+    GetPage(
+      name: RoutePaths.createCommunity,
+      page: () => const CreateCommunityScreen(),
+      binding: CreateCommunityBinding(),
     ),
   ];
 }

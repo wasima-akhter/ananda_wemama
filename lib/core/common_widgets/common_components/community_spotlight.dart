@@ -20,7 +20,10 @@ class CommunitySpotlight extends StatelessWidget {
 
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Strings.communitySpotlight.capEachWord(), style: 13.titleMclrCusFSsemi),
+              Text(
+                Strings.communitySpotlight.capEachWord(),
+                style: 13.titleMclrCusFSsemi,
+              ),
 
               ContainerBordered(
                 hasBrdr: true,
@@ -30,7 +33,10 @@ class CommunitySpotlight extends StatelessWidget {
                 vp: 8,
                 hp: 18,
 
-                child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),
+                child: Text(
+                  Strings.joinDiscussion.capEachWord(),
+                  style: 12.titleMclrCusFSURB,
+                ),
               ),
             ],
           ),
@@ -40,7 +46,14 @@ class CommunitySpotlight extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               StackOfImages(),
-              Container(child: Text("42 " + Strings.mumsAreDiscussingThis, style: normRsmSecURB)),
+
+              Gap(itemGap),
+              Container(
+                child: Text(
+                  "42 " + Strings.mumsAreDiscussingThis,
+                  style: normRsmSecURB,
+                ),
+              ),
             ],
           ),
 
@@ -56,26 +69,17 @@ class StackOfImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50.h,
-      width: 110.w,
-
+    const double radius = 20;
+    const double overlap =25;
+    return SizedBox(
+      width: (radius * 2) + (overlap * 2), // total visual width
+      height: radius * 2,
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.centerLeft,
-        children: [
-          Positioned(
-            left: 0, // overlap amount
-            child: _buildImage(),
-          ),
-          Positioned(
-            left: 35, // overlap amount
-            child: _buildImage(),
-          ),
-          Positioned(
-            left: 70, // overlap amount
-            child: _buildImage(),
-          ),
-        ],
+        children: List.generate(3, (index) {
+          return Positioned(left: index * overlap, child: _buildImage());
+        }),
       ),
     );
   }
@@ -97,11 +101,17 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
       contClr: c.cardMood,
       child: Column(
         children: [
-          Text(Strings.emotionalPostpartumQuestion.capEachWord(), style: normRsmPriURB),
+          Text(
+            Strings.emotionalPostpartumQuestion.capEachWord(),
+            style: normRsmPriURB,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Strings.postpartumRecovery.capEachWord(), style: titleBPriURB),
+              Text(
+                Strings.postpartumRecovery.capEachWord(),
+                style: titleBPriURB,
+              ),
               Text(Strings.repliesTimeAgo, style: normRsmPriURB),
             ],
           ),

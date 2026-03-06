@@ -14,6 +14,9 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/add_plus.svg
+  String get addPlus => 'assets/icons/add_plus.svg';
+
   /// File path: assets/icons/add_plus_circle.svg
   String get addPlusCircle => 'assets/icons/add_plus_circle.svg';
 
@@ -164,6 +167,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/logout.svg
   String get logout => 'assets/icons/logout.svg';
 
+  /// File path: assets/icons/map_pin.svg
+  String get mapPin => 'assets/icons/map_pin.svg';
+
   /// File path: assets/icons/match.svg
   String get match => 'assets/icons/match.svg';
 
@@ -259,6 +265,7 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
+    addPlus,
     addPlusCircle,
     apple,
     appleBg,
@@ -309,6 +316,7 @@ class $AssetsIconsGen {
     lock,
     lockOutlined,
     logout,
+    mapPin,
     match,
     moreVertical,
     mutedAudio,
@@ -375,6 +383,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/loading_gray.json
   String get loadingGray => 'assets/images/loading_gray.json';
+
+  /// File path: assets/images/location_map.png
+  AssetGenImage get locationMap =>
+      const AssetGenImage('assets/images/location_map.png');
 
   /// File path: assets/images/mama_logo_without_txt.png
   AssetGenImage get mamaLogoWithoutTxt =>
@@ -475,6 +487,7 @@ class $AssetsImagesGen {
     gallery,
     imagePlaceholder,
     loadingGray,
+    locationMap,
     mamaLogoWithoutTxt,
     momsGroupPhoto,
     noNet,

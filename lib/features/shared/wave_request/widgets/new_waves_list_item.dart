@@ -20,11 +20,12 @@ class NewWavesListItem extends StatelessWidget {
       onTap: () {
         // show a pop up with wave details
         newWavesUserDetailsDialog(
-          context: context,
-          isLoading: false,
-          onTapDeclineOrAccept: () async {},
+          
+          isLoading: wrc.isLoading_,
+          onTapAction: wrc.onTapAction ,
           isSeeMore: wrc.isSeeMore,
           onTapSeeMoreTxt: wrc.toggleSeeMore,
+          user: wrc.fakeUserDetails  
         );
       },
       child: ContainerBordered(

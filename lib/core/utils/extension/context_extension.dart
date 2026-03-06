@@ -342,8 +342,8 @@ class TxtStyle {
   }) => GoogleFonts.inter(
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
-    letterSpacing: ls,
-    color: color ?? black,
+    letterSpacing: ls  ,
+    color: color ?? c.primary,
     height: h,
     decoration: dec,
   );

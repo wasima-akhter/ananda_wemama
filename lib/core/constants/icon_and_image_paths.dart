@@ -17,10 +17,10 @@ class IconsPath {
   static String get visibilityOn => Assets.icons.visibilityOn;
 
   // Status / Feedback
-  static String get successTick => Assets.icons.tickL;
+  static String get largeTick  => Assets.icons.tickL;
   static String get smallTick => Assets.icons.tickSm;
   static String get smallTickBold => Assets.icons.circleCheck;
-  static String get doubleTick => Assets.icons.tickL2;
+  static String get successTick  => Assets.icons.tickL2;
   static String get closeCircle => Assets.icons.closeCircleOutlined;
   static String get closeRed => Assets.icons.closeRedFilled;
   static String get verifiedTick => Assets.icons.verifiedTick;
@@ -42,6 +42,7 @@ class IconsPath {
   static String get bookmarkFilled => Assets.icons.bookmarkFilled;
   static String get bookmarkOutlined => Assets.icons.bookmarkOutlined;
   static String get addPlusCircle => Assets.icons.addPlusCircle;
+   static String get addPlus => Assets.icons.addPlus;
   static String get handWave => Assets.icons.handWave;
   static String get sendSmallWhite => Assets.icons.sendSmW;
   static String get sendLargeWhite => Assets.icons.sendLW;
@@ -143,6 +144,10 @@ class ImagesPath {
 
   // onboarding after signup
   static String get foundingMom => Assets.images.foundingMum.path;
+
+  // Location
+  static String get locationMap => Assets.images.locationMap.path;
+
 
   // Net Images/json animation
 

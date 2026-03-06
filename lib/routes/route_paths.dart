@@ -48,6 +48,7 @@ class RoutePaths {
   // ─────────────────────────────
 
   static const chatInbox = '/chatInbox';
+   static const createCommunity = '/createCommunity';
 
   // ─────────────────────────────
   // 🔹 Experts >

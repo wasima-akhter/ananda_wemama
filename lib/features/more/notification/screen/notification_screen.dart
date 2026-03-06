@@ -45,7 +45,7 @@ class NotificationScreen extends StatelessWidget {
 
                           // Show loading popup
                           showLoading(
-                            context: context,
+                            
                             isupdateIsSeenLoading: nc.isupdateIsSeenLoading_,
                           );
 

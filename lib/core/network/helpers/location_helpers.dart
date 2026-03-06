@@ -35,6 +35,7 @@ class LocationHelper {
                   onTap: () => Get.back(),
                   rad: 8,
                 ),
+                Gap(itemGap*2),
                 CustomBtnWTxt(
                   btnTxt: Strings.turnOn.capEachWord(),
                   isLoading: false,

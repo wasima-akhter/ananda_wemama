@@ -15,6 +15,7 @@ import '../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_report_controller.dart';
 import '../../features/main_tabs/community/controller/community_controller.dart';
+import '../../features/main_tabs/community/controller/create_community_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
 import '../../features/main_tabs/match/controller/match_controller.dart';
@@ -153,6 +154,16 @@ class ChatInboxBinding extends Bindings {
 
     Get.lazyPutFenix(() => ChatInboxController(args));
     Get.lazyPut(() => ChatReportController());
+  }
+}
+
+class CreateCommunityBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => CreateCommunityController());
   }
 }
 

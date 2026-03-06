@@ -61,10 +61,11 @@ class CustomBtnWTxt extends StatelessWidget {
     final bool isOutlined = outlined == true;
 
     final BoxDecoration btnDecoration = BoxDecoration(
-      color: isOutlined ? c.inputBackground : btnColor ?? c.primary,
+      color: btnColor ?? (isOutlined ? c.inputBackground : c.primary),
       border: Border.all(
         color: isOutlined ? borderClr ?? c.inputBorder : borderClr ?? ctransp,
-        width: ((isOutlined && borderClr == c.inputBorder) ? 0.7 : (brdrW ?? 1)).w,
+        width:
+            ((isOutlined && borderClr == c.inputBorder) ? 0.7 : (brdrW ?? 1)).w,
       ),
       borderRadius: (rad ?? (isSmall == true ? 30 : 8)).brdrRad,
     );
@@ -82,7 +83,12 @@ class CustomBtnWTxt extends StatelessWidget {
     final double fontSize = isOutlined ? 13 : (fs ?? 15);
 
     final textStyle = isSmall == true
-        ? style ?? TxtStyle.outfitSemiB(fs: (fs ?? 14), color: txtClr ?? c.textOnPrimary, w: 600)
+        ? style ??
+              TxtStyle.outfitSemiB(
+                fs: (fs ?? 14),
+                color: txtClr ?? c.textOnPrimary,
+                w: 600,
+              )
         : style ??
               TxtStyle.inter(
                 fs: fontSize,

@@ -54,6 +54,22 @@ double measureTextHeight(String text, TextStyle style) {
   return textPainter.height;
 }
 
+
+bool  isTextOverflowing({
+  required String text,
+  required TextStyle style,
+  required double maxWidth,
+  required int maxLines,
+}) {
+  final textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: maxLines,
+    textDirection: TextDirection.ltr,
+  )..layout(maxWidth: maxWidth);
+
+  return textPainter.didExceedMaxLines;
+}
+
 class StateAndCityData {
   /// 🇳🇬 All 36 States + FCT
   static const List<String> states = [

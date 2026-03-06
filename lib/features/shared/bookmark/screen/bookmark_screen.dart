@@ -45,7 +45,7 @@ class BookmarkScreen extends StatelessWidget {
 
                           // Show loading popup
                           showLoading(
-                            context: context,
+                            
                             isupdateIsSeenLoading: nc.isupdateIsSeenLoading_,
                           );
 

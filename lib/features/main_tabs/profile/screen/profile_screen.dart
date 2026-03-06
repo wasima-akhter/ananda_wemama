@@ -120,7 +120,7 @@ class ProfileScreen extends StatelessWidget {
                 iconColor: c.primary,
                 onTap: () {
                   logoutConfirmDialog(
-                    context: context,
+                    
                     isLoading: psc.isSignOutLoading_,
                     onConfirm: () async => await psc.onTapLogout(),
                   );
