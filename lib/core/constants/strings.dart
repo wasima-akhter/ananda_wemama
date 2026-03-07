@@ -699,6 +699,10 @@ class Strings {
   static const String reply = "Reply";
   static const String maximum4Photos = "**Maximum 4 Photos";
   static const String update = "Update";
+
+  //
+  static const String moodChipLibrary = "Mood Chip Library";
+  static const String subscribeToAccessOurLibrary = "Subscribe To Access Our Library";
 }
 
 //

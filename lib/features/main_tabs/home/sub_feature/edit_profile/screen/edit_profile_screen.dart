@@ -31,7 +31,7 @@ class EditProfileScreen extends StatelessWidget {
           btnTxt: Strings.update,
           isLoading: epc.isLoading,
           onTap: () async {
-            Get.toNamed(RoutePaths.photoAndBio);
+            // Get.toNamed(RoutePaths.photoAndBio);
           },
 
           //  await epc.onTapSignup(setupProfileFormKey),

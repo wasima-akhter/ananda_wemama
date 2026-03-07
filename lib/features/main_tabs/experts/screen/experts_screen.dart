@@ -1,5 +1,7 @@
 import 'package:mama_app/core/common_widgets/cus_search_bar.dart';
 import 'package:mama_app/core/components/ongoing_sessions/ongoing_expert_session_card.dart';
+import 'package:mama_app/core/components/ongoing_sessions/past_sessions_library_card.dart';
+import 'package:mama_app/features/shared/mood_library/widgets/mood_library_chip_card.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/experts_controller.dart';
@@ -9,7 +11,7 @@ class ExpertsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mc = Get.find<ExpertsController>();
+    final ec = Get.find<ExpertsController>();
     final matchRefreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
@@ -26,7 +28,13 @@ class ExpertsScreen extends StatelessWidget {
           }),
 
           // show past sessions
+          PastSessionsLibraryCard(),
           // show mood chip librtary
+
+          MoodLibraryChipCard(
+           moodDataList: ec.moodDataList,
+            
+            onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),)
         ],
       ).getcm,
     );
