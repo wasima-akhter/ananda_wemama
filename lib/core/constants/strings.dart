@@ -685,6 +685,7 @@ class Strings {
   static const String checkBackLater = "Check back later — new mums join every day.";
 
   // community
+  static const String managePassword = "Manage Password";
   static const String manage = "Manage";
   static const String visit = "Visit";
   static const String join = "Join";
@@ -696,6 +697,8 @@ class Strings {
   // Comments
 
   static const String reply = "Reply";
+  static const String maximum4Photos = "**Maximum 4 Photos";
+  static const String update = "Update";
 }
 
 //

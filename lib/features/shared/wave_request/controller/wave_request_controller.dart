@@ -2,34 +2,8 @@ import 'package:mama_app/core/common_widgets/popups.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../app/helper_widgets_export.dart';
-
-class FakeUserDetailsModel {
-  final String name;
-  final int age;
-  final String imageUrl;
-  final String aboutMe;
-  final List<UiInfoItem> infoList;
-  final List<String> galleryImages;
-  final List<String> children;
-
-  FakeUserDetailsModel({
-    required this.name,
-    required this.age,
-    required this.imageUrl,
-    required this.aboutMe,
-    required this.infoList,
-    required this.galleryImages,
-    required this.children,
-  });
-}
-
-class UiInfoItem {
-  final String iconPath;
-  final String text;
-
-  UiInfoItem({required this.iconPath, required this.text});
-}
-
+import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
+ 
 class WaveRequestController extends GetxController {
   var fakeNewWavesList = [
     FakeNewWavesModel(
@@ -77,34 +51,11 @@ class WaveRequestController extends GetxController {
     ),
   ];
 
-  FakeUserDetailsModel? fakeUserDetails;
-  RxBool isSeeMore = false.obs;
-
-  void toggleSeeMore() {
-    isSeeMore.value = !isSeeMore.value;
-  }
-
-  void initFakeInfo() {
-    fakeUserDetails = FakeUserDetailsModel(
-      name: "John Doe",
-      age: 24,
-      imageUrl: Strings.fakeImageUrl,
-      aboutMe:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nunc nisl aliquam nisl, eget aliquam nunc nisl eget nunc.",
-      infoList: listOfInfo,
-      galleryImages: [
-        Strings.fakeImageUrl,
-        Strings.fakeImageUrl,
-        Strings.fakeImageUrl,
-        Strings.fakeImageUrl,
-      ],
-      children: ["👶11 Months", "👶11 Months", "👶11 Months"],
-    );
-  }
-
+  
+ 
+ 
   @override
   void onInit() {
-    initFakeInfo();
     super.onInit();
   }
 

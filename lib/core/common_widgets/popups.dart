@@ -6,6 +6,7 @@ import '../../features/main_tabs/community/widgets/community_guildline.dart';
 import '../../features/shared/wave_request/controller/wave_request_controller.dart';
 import '../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
+import 'common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
 import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
 import 'popup_widgets/delivery_feedback_dialog.dart';

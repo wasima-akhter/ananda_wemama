@@ -1,5 +1,5 @@
-import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/helpers/string_helper.dart';
+import '../../../../app/helper_widgets_export.dart';
+import '../../../helpers/string_helper.dart';
 
 class UserAboutSection extends StatelessWidget {
   final String aboutText;

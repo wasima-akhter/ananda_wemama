@@ -4,7 +4,7 @@ import 'package:mama_app/features/shared/wave_request/controller/wave_request_co
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../features/account_overview/change_password/controller/change_password_controller.dart';
-import '../../features/account_overview/edit_profile/controller/edit_profile_controller.dart';
+import '../../features/main_tabs/home/sub_feature/edit_profile/controller/edit_profile_controller.dart';
 import '../../features/auth/forgot_password/controller/forgot_password_controller.dart';
 import '../../features/auth/otp/controller/verify_otp_controller.dart';
 import '../../features/auth/signin/controller/signin_controller.dart';
@@ -21,7 +21,7 @@ import '../../features/main_tabs/community/controller/create_community_controlle
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
 import '../../features/main_tabs/match/controller/match_controller.dart';
-import '../../features/main_tabs/profile/controller/profile_controller.dart';
+import '../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../features/more/legal/privacy_policy/controller/privacy_policy_controller.dart';
 import '../../features/more/legal/terms_and_conditions/controller/terms_and_conditions_controller.dart';
 import '../../features/more/notification/controller/notification_controller.dart';
@@ -262,7 +262,8 @@ class ProfileBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<ProfileController>(() => ProfileController());
-  }
+    Get.lazyPut<EditProfileController>(() => EditProfileController());
+ }
 }
 
 // ─────────────────────────────

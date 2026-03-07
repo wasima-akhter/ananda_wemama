@@ -4,7 +4,7 @@ import 'package:mama_app/core/common_widgets/cus_des_type_text_form_field.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/network/helpers/network_helpers.dart';
 import '../../../../core/utils/validator/validators.dart';
-import '../../../account_overview/edit_profile/widgets/user_photo_widget.dart';
+import '../../../main_tabs/home/sub_feature/edit_profile/widgets/user_photo_widget.dart';
 import '../controller/photo_and_bio_controller.dart';
 
 class PhotoAndBioScreen extends StatelessWidget {
@@ -54,6 +54,7 @@ class PhotoAndBioScreen extends StatelessWidget {
                           );
                         }),
                         Gap(itemGap),
+
                         CustomBtnWTxt(
                           isSmall: true,
                           outlined: true,

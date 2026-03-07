@@ -1,6 +1,7 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart' ;
 import '../../../main_tabs/chat/widgets/chat_user_image.dart';
 import '../controller/wave_request_controller.dart';
 
@@ -16,16 +17,20 @@ class NewWavesListItem extends StatelessWidget {
     final name = chatModel.name;
     final time = chatModel.time;
 
+
+    final udc = Get.find<UserDetailController>();
+
+
     return CusGestureDetector(
       onTap: () {
         // show a pop up with wave details
         newWavesUserDetailsDialog(
           
-          isLoading: wrc.isLoading_,
+          isLoading: udc.isLoading_,
           onTapAction: wrc.onTapAction ,
-          isSeeMore: wrc.isSeeMore,
-          onTapSeeMoreTxt: wrc.toggleSeeMore,
-          user: wrc.fakeUserDetails  
+          isSeeMore: udc.isSeeMore,
+          onTapSeeMoreTxt: udc.toggleSeeMore,
+          user: udc.fakeUserDetails  
         );
       },
       child: ContainerBordered(

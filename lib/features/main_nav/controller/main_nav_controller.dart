@@ -7,7 +7,7 @@ import '../../../app/helper_widgets_export.dart';
 import '../../../core/state_screens/not_found/not_found_page.dart';
 import '../../main_tabs/home/controller/home_controller.dart';
 import '../../main_tabs/home/screen/home_screen.dart';
-import '../../main_tabs/profile/controller/profile_controller.dart';
+import '../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../station_location/controller/station_location_controller.dart';
 
 class MainNavController extends GetxController {

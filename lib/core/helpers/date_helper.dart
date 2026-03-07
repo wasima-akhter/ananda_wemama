@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../common_widgets/common_components/set_children_bottom_sheet.dart';
 import '../common_widgets/common_components/state_city_bottom_sheet.dart';
 
 class DateHelper {
@@ -25,17 +26,29 @@ class DateHelper {
   DateAndTimeMap formatUTCtimestamp(String? timestamp) {
     // Handle null or empty timestamp
     if (timestamp == null || timestamp.trim().isEmpty) {
-      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: 'N/A',
+        dateYear: 'N/A',
+        fullDate: 'N/A',
+      );
     }
 
     try {
       // Detect if timestamp is UTC (has Z or ±hh:mm)
-      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc =
+          timestamp.endsWith('Z') ||
+          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       // Try to parse safely
       DateTime? dt = DateTime.tryParse(timestamp);
       if (dt == null) {
-        return DateAndTimeMap(date: 'N/A', time: '', dateYear: 'N/A', fullDate: 'N/A');
+        return DateAndTimeMap(
+          date: 'N/A',
+          time: '',
+          dateYear: 'N/A',
+          fullDate: 'N/A',
+        );
       }
 
       if (isUtc) dt = dt.toLocal(); // Convert to local if UTC
@@ -47,7 +60,9 @@ class DateHelper {
 
       final formattedDateYear = DateFormat('MMM yyyy').format(dt); // Nov 2026
 
-      final formattedFullDate = DateFormat('d MMM yyyy').format(dt); // 8 Nov 2026
+      final formattedFullDate = DateFormat(
+        'd MMM yyyy',
+      ).format(dt); // 8 Nov 2026
 
       return DateAndTimeMap(
         date: formattedDate,
@@ -57,7 +72,12 @@ class DateHelper {
       );
     } catch (e) {
       debugPrint('❌ formatUTCtimestamp failed for "$timestamp": $e');
-      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: 'N/A',
+        dateYear: 'N/A',
+        fullDate: 'N/A',
+      );
     }
   }
 
@@ -74,7 +94,8 @@ class DateHelper {
       if (timeSegments.length < 2) return '--:--';
 
       int hour = int.tryParse(timeSegments[0]) ?? 0;
-      final minute = int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
+      final minute =
+          int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
       final second = timeSegments.length > 2
           ? (int.tryParse(timeSegments[2])?.toString().padLeft(2, '0') ?? '00')
           : '00';
@@ -117,7 +138,9 @@ class DateHelper {
       }
 
       // Convert to local if UTC
-      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc =
+          timestamp.endsWith('Z') ||
+          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       if (isUtc) dt = dt.toLocal();
 
@@ -167,7 +190,12 @@ class DateAndTimeMap {
   final String dateYear;
   final String? fullDate;
 
-  DateAndTimeMap({required this.date, required this.time, required this.dateYear, this.fullDate});
+  DateAndTimeMap({
+    required this.date,
+    required this.time,
+    required this.dateYear,
+    this.fullDate,
+  });
 }
 
 bool isIso8601Utc(String input) {
@@ -178,6 +206,75 @@ bool isIso8601Utc(String input) {
   } catch (e) {
     return false;
   }
+}
+
+////////////////////////////////
+///
+///
+Future<DateTime?> pickDateGeneric({
+  DateTime? initialDate,
+  DateTime? firstDate,
+  DateTime? lastDate,
+  Color? primaryColor,
+  Color? backgroundColor,
+  TextStyle? headerTextStyle,
+  TextStyle? dayTextStyle,
+  void Function()? unfocusAll,
+}) {
+  unfocusAll?.call();
+
+  final now = DateTime.now();
+
+  final picked = showDatePicker(
+    context: Get.context!,
+    initialDate: initialDate ?? now.subtract(const Duration(days: 365 * 18)),
+    firstDate: firstDate ?? DateTime(1950),
+    lastDate: lastDate ?? now,
+    builder: (context, child) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          colorScheme: ColorScheme.light(
+            primary: primaryColor ?? c.primary, // header/date circle
+            onPrimary: c.secondary, // text on selected day
+            surface:
+                backgroundColor ?? c.inputBackground, // calendar background
+            onSurface: c.textPrimary, // normal day text
+          ),
+          textTheme: TextTheme(
+            headlineLarge: headerTextStyle, // Month header
+            bodyLarge: dayTextStyle, // Day numbers
+          ),
+
+          primaryTextTheme: TextTheme(
+            titleMedium: TxtStyle.outfit(
+              fs: 14,
+              color: c.primary,
+            ), // typed text color
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            hintStyle: TxtStyle.outfit(
+              fs: 14,
+              color: c.primary.withOpacity(0.6),
+            ),
+            labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: c.primary),
+            ),
+          ),
+          //   Forces the typed input text color
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: c.primary,
+            selectionColor: c.primary.withOpacity(0.3),
+            selectionHandleColor: c.primary,
+          ),
+          dialogBackgroundColor: backgroundColor ?? c.inputBackground,
+        ),
+        child: child!,
+      );
+    },
+  );
+
+  return picked;
 }
 
 Future<void> pickDate({
@@ -195,46 +292,16 @@ Future<void> pickDate({
 
   final now = DateTime.now();
 
-  final picked = await showDatePicker(
-    context: Get.context!,
-    initialDate: initialDate ?? now.subtract(const Duration(days: 365 * 18)),
-    firstDate: firstDate ?? DateTime(1950),
-    lastDate: lastDate ?? now,
-    builder: (context, child) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: ColorScheme.light(
-            primary: primaryColor ?? c.primary, // header/date circle
-            onPrimary: c.secondary, // text on selected day
-            surface: backgroundColor ?? c.inputBackground, // calendar background
-            onSurface: c.textPrimary, // normal day text
-          ),
-          textTheme: TextTheme(
-            headlineLarge: headerTextStyle, // Month header
-            bodyLarge: dayTextStyle, // Day numbers
-          ),
-
-          primaryTextTheme: TextTheme(
-            titleMedium: TxtStyle.outfit(fs: 14, color: c.primary), // typed text color
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
-            labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: c.primary)),
-          ),
-          //   Forces the typed input text color
-          textSelectionTheme: TextSelectionThemeData(
-            cursorColor: c.primary,
-            selectionColor: c.primary.withOpacity(0.3),
-            selectionHandleColor: c.primary,
-          ),
-          dialogBackgroundColor: backgroundColor ?? c.inputBackground,
-        ),
-        child: child!,
-      );
-    },
+  final picked = await pickDateGeneric(
+    initialDate: initialDate,
+    firstDate: firstDate,
+    lastDate: lastDate,
+    primaryColor: primaryColor,
+    backgroundColor: backgroundColor,
+    headerTextStyle: headerTextStyle,
+    dayTextStyle: dayTextStyle,
+    unfocusAll: unfocusAll,
   );
-
   if (picked != null) {
     selectedDate.value = formatDate(picked);
   }
@@ -270,7 +337,11 @@ Future<dynamic> showSelectionBottomSheet({
       child: Container(
         // color: Colors.amber,
         height: bSheetH * 1 * (heightFactor ?? 1),
-        child: SelectListBottomSheet(title: title, items: items, selectedValue: selectedValue),
+        child: SelectListBottomSheet(
+          title: title,
+          items: items,
+          selectedValue: selectedValue,
+        ),
       ),
     ),
   );

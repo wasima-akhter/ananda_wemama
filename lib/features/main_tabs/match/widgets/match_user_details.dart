@@ -1,9 +1,10 @@
  
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
 import '../../../shared/wave_request/controller/wave_request_controller.dart';
-import '../../../shared/wave_request/widgets/new_waves_popup_widgets/user_about_section.dart';
-import '../../../shared/wave_request/widgets/new_waves_popup_widgets/user_avatar.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/user_about_section.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/user_avatar.dart';
  
 
 class  MatchUserDetails extends StatelessWidget {

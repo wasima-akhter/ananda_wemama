@@ -457,7 +457,8 @@ class TxtStyle {
   static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
   static TextStyle get outfitSmTitleSec => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);
-  static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11);
+  static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11, );
+  static TextStyle get outfitxSmNorSec => TxtStyle.outfit(fs: 11, color: c.secondary);
   static TextStyle get outfitxSmNor500 => TxtStyle.outfitSemiB(fs: 10, w: 500);
   static TextStyle get outfitSmSecNor => TxtStyle.outfit(fs: 13, color: c.secondary);
   static TextStyle get outfitSmSecNor500 =>

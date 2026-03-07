@@ -9,10 +9,11 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<SignupController>();
     final formKey = GlobalKey<FormState>();
-    final itemGap = 1.sh * 0.01;
-
+ 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: ""),
+
+      bottomWidget:    SignupSocialSection(itemGap: itemGap),
       child: SignupBody(controller: controller, formKey: formKey, itemGap: itemGap),
     );
   }
@@ -39,8 +40,8 @@ class SignupBody extends StatelessWidget {
         children: [
           SignupHeaderSection(itemGap: itemGap),
           SignupFormSection(controller: controller, formKey: formKey, itemGap: itemGap),
-          const Spacer(),
-          SignupSocialSection(itemGap: itemGap),
+       
+       
         ],
       ).getcm,
     );

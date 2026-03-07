@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../gen/assets.gen.dart';
-import '../../../main_tabs/profile/widgets/profile/profile_tile.dart';
+import '../../../main_tabs/home/modules/profile_tile.dart'; 
 import '../controller/account_settings_controller.dart';
 
 class AccountSettingsScreen extends StatelessWidget {

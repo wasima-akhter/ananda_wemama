@@ -1,4 +1,4 @@
-import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../../app/helper_widgets_export.dart';
 
 class ProfileTile extends StatelessWidget {
   final String title;
@@ -25,7 +25,8 @@ class ProfileTile extends StatelessWidget {
       onTap: onTap,
       child: ContainerBordered(
         hp: 12,
-        vp: 12,
+        vp: 12, hasBrdr: true,
+        brdrClr: c.secondary.withOpacity(0.3),
 
         boxShadow: boxShadowAllSides,
         child: Row(
@@ -38,6 +39,7 @@ class ProfileTile extends StatelessWidget {
                   child: Container(
                     height: 30,
                     width: 30,
+                 
                     color: tileClr ?? bgClr,
                     padding: const EdgeInsets.all(5),
                     child: SvgIconColored(
@@ -52,7 +54,7 @@ class ProfileTile extends StatelessWidget {
                 Text(title, style: TxtStyle.inter(fs: 11, w: 600)),
               ],
             ),
-            if (iconColor != c.primary)
+    
               SvgIconColored(
                 iconColor: iconColor ?? c.primary,
                 iconPath: IconsPath.arrowForwardSmall,

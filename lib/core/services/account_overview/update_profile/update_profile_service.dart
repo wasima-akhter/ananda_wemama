@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../app/service_export.dart';
-import '../../../../features/main_tabs/profile/model/profile_model.dart';
+import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart'; 
 
 class UpdateProfileService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();

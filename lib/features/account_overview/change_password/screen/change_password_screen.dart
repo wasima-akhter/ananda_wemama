@@ -10,8 +10,6 @@ class ChangePasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01;
-
     final cpc = Get.find<ChangePasswordController>();
 
     final cngPassFormKey = GlobalKey<FormState>();
@@ -31,48 +29,42 @@ class ChangePasswordScreen extends StatelessWidget {
                 child: Column(
                   spacing: itemGap * 2,
                   children: [
-                    TitleTile(
-                      child: CusPassTypeTextFormField(
-                        controller: cpc.oldPassCtrl,
-                        focusNode: cpc.oldPassFocus,
-                        hintText: Strings.oldPassword,
-                        hintW: 600,
-                        isNoBrder: true,
-                      ),
+                    CusPassTypeTextFormField(
+                      controller: cpc.oldPassCtrl,
+                      focusNode: cpc.oldPassFocus,
+                      hintText: Strings.oldPassword,
+                      hintW: 600,
                     ),
 
                     Obx(() {
-                      return TitleTile(
-                        child: CusPassTypeTextFormField(
-                          controller: cpc.newPassCtrl,
-                          hintText: Strings.newPassword,
-                          hintW: 600,
-                          isNoBrder: true,
-                          focusNode: cpc.newPassFocus,
-                          obscureText: cpc.isNewPassHidden,
-                          suffix: VisibilitySuffix(
-                            onTap: cpc.toggleNewPass,
-                            icon: cpc.newPasswordIcon,
-                          ),
-                          validator: (value) => validatePassword(value),
+                      return CusPassTypeTextFormField(
+                        controller: cpc.newPassCtrl,
+                        hintText: Strings.newPassword,
+                        hintW: 600,
+                        focusNode: cpc.newPassFocus,
+                        obscureText: cpc.isNewPassHidden,
+                        suffix: VisibilitySuffix(
+                          onTap: cpc.toggleNewPass,
+                          icon: cpc.newPasswordIcon,
                         ),
+                        validator: (value) => validatePassword(value),
                       );
                     }),
 
                     Obx(
-                      () => TitleTile(
-                        child: CusPassTypeTextFormField(
-                          controller: cpc.confirmPassCtrl,
-                          focusNode: cpc.confirmPassFocus,
-                          hintText: Strings.confirmPassword,
-                          hintW: 600,
-                          isNoBrder: true,
-                          obscureText: cpc.isConPassHidden,
-                          suffix: VisibilitySuffix(onTap: cpc.toggleConPass, icon: cpc.conPassIcon),
-                          validator: (value) => validateConfirmPass(
-                            confirmPass: value,
-                            password: cpc.newPassCtrl.text,
-                          ),
+                      () => CusPassTypeTextFormField(
+                        controller: cpc.confirmPassCtrl,
+                        focusNode: cpc.confirmPassFocus,
+                        hintText: Strings.confirmPassword,
+                        hintW: 600,
+                        obscureText: cpc.isConPassHidden,
+                        suffix: VisibilitySuffix(
+                          onTap: cpc.toggleConPass,
+                          icon: cpc.conPassIcon,
+                        ),
+                        validator: (value) => validateConfirmPass(
+                          confirmPass: value,
+                          password: cpc.newPassCtrl.text,
                         ),
                       ),
                     ),
@@ -82,7 +74,8 @@ class ChangePasswordScreen extends StatelessWidget {
 
               Obx(
                 () => CustomBtnWTxt(
-                  outlined: true,
+                  isSmall: true,
+                  
                   isLoading: cpc.isLoading,
                   onTap: () async {
                     // later you’ll call API here

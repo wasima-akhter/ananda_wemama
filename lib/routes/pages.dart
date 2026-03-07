@@ -5,6 +5,7 @@ import 'package:mama_app/features/shared/subscription_upgrade/screen/subscriptio
 import '../core/bind/all_bindings.dart';
 import '../core/state_screens/not_found/not_found_page.dart';
 import '../core/state_screens/offline/offline_screen.dart';
+import '../features/account_overview/change_password/screen/change_password_screen.dart';
 import '../features/auth/forgot_password/screen/forgot_password_screen.dart';
 import '../features/auth/otp/screen/verify_otp_screen.dart';
 import '../features/auth/signin/screen/signin_screen.dart';
@@ -19,8 +20,9 @@ import '../features/main_tabs/community/screen/community_screen.dart';
 import '../features/main_tabs/community/screen/create_community_screen.dart';
 import '../features/main_tabs/experts/screen/experts_screen.dart';
 import '../features/main_tabs/home/screen/home_screen.dart';
+import '../features/main_tabs/home/sub_feature/edit_profile/screen/edit_profile_screen.dart';
 import '../features/main_tabs/match/screen/match_screen.dart';
-import '../features/main_tabs/profile/screen/profile_screen.dart';
+import '../features/main_tabs/home/sub_feature/profile/screen/profile_screen.dart';
 import '../features/more/notification/screen/notification_screen.dart';
 import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
@@ -185,7 +187,10 @@ class RoutePageList {
       page: () => const MumsStageScreen(),
       binding: PostSignupScreensBinding(),
     ),
-    GetPage(name: RoutePaths.mumsStageFinish, page: () => const MumsStageFinishScreen()),
+    GetPage(
+      name: RoutePaths.mumsStageFinish,
+      page: () => const MumsStageFinishScreen(),
+    ),
     GetPage(
       name: RoutePaths.subChoosePlan,
       page: () => const SubscriptionChoosePlanScreen(),
@@ -205,7 +210,21 @@ class RoutePageList {
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: ProfileBinding()),
+    GetPage(
+      name: RoutePaths.profile,
+      page: () => const ProfileScreen(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.editProfile,
+      page: () => const EditProfileScreen(),
+      binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.changePassword,
+      page: () => const ChangePasswordScreen(),
+      binding: ChangePasswordBinding(),
+    ),
 
     // ─────────────────────────────
     // 🔹 Individual but Shared

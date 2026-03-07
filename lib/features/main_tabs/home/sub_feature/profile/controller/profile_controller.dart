@@ -1,9 +1,19 @@
-import '../../../../app/controller_export.dart';
-import '../../../../core/services/auth/signout_service.dart';
-import '../../../../core/services/profile/profile_info_service.dart';
+import '../../../../../../../app/controller_export.dart';
+import '../../../../../../../core/services/auth/signout_service.dart';
+import '../../../../../../../core/services/profile/profile_info_service.dart';
+ 
 import '../model/profile_model.dart';
 
 class ProfileController extends GetxController {
+ 
+  
+ 
+ 
+ 
+ 
+ 
+ 
+  
   // Observable fields for UI
   final username = "".obs;
   final phone = "".obs;

@@ -28,3 +28,28 @@ class SmallPopupDialog extends StatelessWidget {
     );
   }
 }
+
+class LargePopupDialog extends StatelessWidget {
+  final Widget child; // <-- the content to show
+
+  const LargePopupDialog({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      // center ensures dialog content wraps naturally
+      child: Material(
+        color: Colors.transparent, // remove default material color
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 20.w),
+          decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
+          width: double.infinity,
+         
+
+          child:  child
+          
+        ).get10cm,
+      ),
+    );
+  }
+}
