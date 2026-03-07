@@ -29,6 +29,7 @@ class ChatScreen extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           CusSearchBar(controller: cc.searchController),
 

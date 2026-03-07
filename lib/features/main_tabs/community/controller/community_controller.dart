@@ -1,3 +1,5 @@
+import 'package:mama_app/core/common_widgets/popups.dart';
+
 import '../../../../app/controller_export.dart';
 
 class CommunityController extends GetxController {
@@ -29,6 +31,9 @@ class CommunityController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
+  ScrollController get myCommunityScrlCtrl => ScrollController();
+  ScrollController get suggCommunityScrlCtrl => ScrollController();
+
   /// Fetch the latest  data from API
   Future<void> getChatList() async {
     if (isLoading_.value) return; // Prevent duplicate calls
@@ -48,6 +53,26 @@ class CommunityController extends GetxController {
       isLoading_.value = false;
 
       unFocusAll();
+    }
+  }
+
+  void onTapItem() {
+    Get.toNamed(RoutePaths.communitiyDetail);
+  }
+
+  void onTapItemBtn(bool isJoin) {
+    if (isJoin) {
+      // show popup
+      // communityguidline.
+      communityGuidlineDialog(
+        isLoading: isLoading,
+        onTapAction: () async {
+          Get.back();
+          Get.toNamed(RoutePaths.communitiyDetail);
+        },
+      );
+    } else {
+      Get.toNamed(RoutePaths.communitiyDetail);
     }
   }
 }

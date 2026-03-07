@@ -4,6 +4,7 @@ class CusGestureDetector extends StatelessWidget {
   final void Function()? onTap;
   final HitTestBehavior? behavior;
   final Widget child;
+
   const CusGestureDetector({super.key, this.onTap, this.behavior, required this.child});
 
   @override
@@ -17,12 +18,15 @@ class CusCircleIconButton extends StatelessWidget {
   final HitTestBehavior? behavior;
   final Widget child;
   final double? radius;
+  final Color? backgroundColor;
+
   const CusCircleIconButton({
     super.key,
     this.onTap,
     this.behavior,
     required this.child,
     this.radius,
+    this.backgroundColor,
   });
 
   @override
@@ -30,7 +34,11 @@ class CusCircleIconButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
-      child: CircleAvatar(radius: (radius ?? 25).r, backgroundColor: ctransp, child: child),
+      child: CircleAvatar(
+        radius: (radius ?? 25).r,
+        backgroundColor: backgroundColor ?? ctransp,
+        child: child,
+      ),
     );
   }
 }

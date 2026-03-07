@@ -2,7 +2,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/controller_export.dart';
 
-class ChatReportController extends GetxController {
+class ReportController extends GetxController {
   final noteCtrl = TextEditingController();
 
   final noteFocus = FocusNode();

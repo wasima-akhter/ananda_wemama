@@ -1,5 +1,3 @@
-import 'package:mama_app/core/common_widgets/app_screen_template.dart';
-
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/subscription_choose_plan_controller.dart';
 import '../widgets/subscription_card.dart';

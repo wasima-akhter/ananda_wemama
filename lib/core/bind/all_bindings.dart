@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mama_app/features/shared/subscription_upgrade/controller/subscription_upgrade_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
@@ -13,8 +14,9 @@ import '../../features/entry/splash/controller/splash_controller.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
-import '../../features/main_tabs/chat/controller/chat_report_controller.dart';
+import '../../features/main_tabs/community/controller/comment_controller.dart';
 import '../../features/main_tabs/community/controller/community_controller.dart';
+import '../../features/main_tabs/community/controller/community_detail_controller.dart';
 import '../../features/main_tabs/community/controller/create_community_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
@@ -35,6 +37,7 @@ import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_fu
 import '../../features/shared/bookmark/controller/bookmark_controller.dart';
 import '../../features/shared/mood_insights/controller/mood_insights_controller.dart';
 import '../../features/shared/mood_library/controller/mood_library_controller.dart';
+import '../../features/shared/report_sheet/controller/report_controller.dart';
 import '../../features/station_location/controller/station_location_controller.dart';
 import '../../features/video_meeting/controller/meeting_controller.dart';
 import '../components/mood_check_in/mood_check_in_controller.dart';
@@ -153,7 +156,6 @@ class ChatInboxBinding extends Bindings {
     // while arguments are still available in binding context
 
     Get.lazyPutFenix(() => ChatInboxController(args));
-    Get.lazyPut(() => ChatReportController());
   }
 }
 
@@ -164,6 +166,37 @@ class CreateCommunityBinding extends Bindings {
     // while arguments are still available in binding context
 
     Get.lazyPutFenix(() => CreateCommunityController());
+  }
+}
+
+class ReportControllerBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+    // Use Get.put for global, immediate instantiation
+    Get.put(ReportController(), permanent: true);
+  }
+}
+
+class CommunityDetailBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => CommunityDetailController());
+    Get.lazyPutFenix(() => CommentController());
+  }
+}
+
+class SubscriptionUpgradeBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => SubscriptionUpgradeController());
   }
 }
 

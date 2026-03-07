@@ -1,8 +1,8 @@
 import 'package:pinput/pinput.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../../features/main_tabs/chat/controller/chat_report_controller.dart';
-import '../../features/main_tabs/chat/widgets/report_bottom_sheet.dart';
+import '../../features/main_tabs/community/model/comments_bottom_sheet.dart';
+import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
 
 PinTheme? defaultPinTheme = PinTheme(
   width: 56.w,
@@ -42,8 +42,6 @@ PinTheme? followingPinTheme = defaultPinTheme?.copyWith(
 ///////////////////////////////////////////////////////////////
 
 Future<dynamic> showReportBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
-  final crc = Get.find<ChatReportController>();
-
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
@@ -58,6 +56,29 @@ Future<dynamic> showReportBottomSheet({double? heightFactor, bool isScrollContro
 
         // width: 1.sw,
         child: ReportBottomSheet(),
+      ).getBtmSheetM,
+    ),
+
+    isScrollControlled: isScrollControlled,
+    backgroundColor: bgClr, // needed for rounded corners
+  );
+}
+
+Future<dynamic> showCommentsBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
+  return Get.bottomSheet(
+    ignoreSafeArea: false,
+    isDismissible: true,
+    enableDrag: true,
+
+    AnimatedPadding(
+      duration: const Duration(milliseconds: 250),
+      padding: EdgeInsets.only(bottom: S.bottomInset),
+
+      child: Container(
+        height: S.h * 0.9 * (heightFactor ?? 1),
+
+        // width: 1.sw,
+        child: CommentsBottomSheet(),
       ).getBtmSheetM,
     ),
 

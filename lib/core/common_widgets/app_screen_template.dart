@@ -79,24 +79,19 @@ class AppScreenTemplate extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
-                    child: bottomWidget == null
-                        ? child
-                        : Column(
-                            children: [
-                              child,
-                              Spacer(),
-                              ...[
-                                if (bottomWidget != null) ...[
-                                  if (getcmLess == true)
-                                    bottomWidget!.get10cm
-                                  else
-                                    bottomWidget!.getcm,
-                                ] else
-                                  const SizedBox.shrink(),
-                                Gap(itemGap * 3),
-                              ],
-                            ],
-                          ),
+                    // ← makes Column respect minHeight
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        child,
+                        if (bottomWidget != null) ...[
+                          const Spacer(), // ← now safe because height is bounded by IntrinsicHeight
+                          if (getcmLess == true) bottomWidget!.get10cm else bottomWidget!.getcm,
+                        ] else
+                          const SizedBox.shrink(),
+                        Gap(itemGap * 3),
+                      ],
+                    ),
                   ),
                 ),
               ),

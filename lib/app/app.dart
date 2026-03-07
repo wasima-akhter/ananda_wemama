@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mama_app/features/shared/report_sheet/controller/report_controller.dart';
 import 'package:mama_app/routes/pages.dart';
 import 'package:mama_app/routes/route_paths.dart';
 
@@ -41,7 +42,7 @@ class App extends StatelessWidget {
 
           /// ✅ GLOBAL DEPENDENCIES HERE
           initialBinding: BindingsBuilder(() {
-            // Get.lazyPut(() => SplashController());
+            Get.put(ReportController(), permanent: true);
           }),
         );
       },

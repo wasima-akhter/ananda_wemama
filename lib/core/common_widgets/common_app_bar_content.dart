@@ -96,3 +96,31 @@ class AppBarLikeTitle extends StatelessWidget {
     );
   }
 }
+
+class CommunityTopbarContent extends StatelessWidget {
+  final Widget? suffix;
+  final VoidCallback? onTapBack;
+  final bool? isBgTransp;
+
+  const CommunityTopbarContent({super.key, this.suffix, this.onTapBack, this.isBgTransp});
+
+  @override
+  Widget build(BuildContext context) {
+    final finalBg = isBgTransp == true ? ctransp : bgClr;
+    return Container(
+      color: ctransp,
+      padding: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
+
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+
+        children: [
+          BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop()),
+
+          suffix ?? const SizedBox(width: 40),
+        ],
+      ),
+    );
+  }
+}

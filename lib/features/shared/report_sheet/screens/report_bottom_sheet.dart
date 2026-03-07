@@ -1,14 +1,14 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/common_components/add_photos_card.dart';
 import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
-import '../controller/chat_report_controller.dart';
+import '../controller/report_controller.dart';
 
-class ReportBottomSheet extends GetView<ChatReportController> {
+class ReportBottomSheet extends GetView<ReportController> {
   const ReportBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<ChatReportController>();
+    final controller = Get.find<ReportController>();
 
     return SafeArea(
       top: false,

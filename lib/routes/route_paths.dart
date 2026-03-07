@@ -48,7 +48,8 @@ class RoutePaths {
   // ─────────────────────────────
 
   static const chatInbox = '/chatInbox';
-   static const createCommunity = '/createCommunity';
+  static const createCommunity = '/createCommunity';
+  static const communitiyDetail = '/communitiyDetail';
 
   // ─────────────────────────────
   // 🔹 Experts >
@@ -73,6 +74,7 @@ class RoutePaths {
   static const bookmark = '/bookmark';
   static const moodInsight = '/moodInsight';
   static const waveRequest = '/waveRequest';
+  static const subscriptionUpgrade = '/subscriptionUpgrade';
 
   // ─────────────────────────────
   // 🔹 Profile / User

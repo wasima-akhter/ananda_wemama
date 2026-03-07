@@ -52,17 +52,14 @@ class ChatInboxScreen extends StatelessWidget {
           final msgList = cic.fakeChatInbox?.msgList;
 
           if (msgList == null) return Text("Loading...");
-
           if (msgList.isEmpty) return EmptyWidget(title: "No messages yet");
+
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               ChatInboxSecurityAlert(),
-
               Gap(itemGap * 2),
-
-              ...msgList.map((e) {
-                return ChatBubbleCont(message: e);
-              }),
+              ...msgList.map((e) => ChatBubbleCont(message: e)),
             ],
           );
         },

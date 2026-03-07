@@ -12,14 +12,12 @@ import 'popup_widgets/delivery_feedback_dialog.dart';
 import 'popup_widgets/edit_fuel_diesel_rate_popup.dart';
 import 'popup_widgets/loading_popup.dart';
 import 'popup_widgets/logout_confirm_dialog.dart';
+import 'popup_widgets/wave_sent_popup.dart';
 
 class Popups {
-  Future<void> baseAlert({
-    required BuildContext context,
-    required Widget content,
-  }) async {
+  Future<void> baseAlert({required BuildContext context, required Widget content}) async {
     await showDialog(
-       context:  context ,
+      context: context,
       barrierDismissible: true,
       builder: (_) {
         return Dialog(
@@ -41,7 +39,6 @@ class Popups {
   }
 }
 
-
 Future<void> communityGuidlineDialog({
   required bool isLoading,
   required Future<void> Function() onTapAction,
@@ -54,7 +51,6 @@ Future<void> communityGuidlineDialog({
 
 /// 🔹 newWavesUserDetailsDialog Popup
 Future<void> newWavesUserDetailsDialog({
-  
   required RxBool isLoading,
   required Future<void> Function(bool isAccepted) onTapAction,
   required RxBool isSeeMore,
@@ -62,7 +58,7 @@ Future<void> newWavesUserDetailsDialog({
   required FakeUserDetailsModel? user,
 }) async {
   await Popups().baseAlert(
-     context: Get.context!,
+    context: Get.context!,
     content: NewWavesUserDetailsPopup(
       isLoading: isLoading,
       onTapAction: onTapAction,
@@ -74,15 +70,20 @@ Future<void> newWavesUserDetailsDialog({
 }
 
 Future<void> showReqAcceptedDialog() async {
-  await Popups().baseAlert(
-    context: Get.context!,
-    content: NewWavesReqAcceptPopup(),
-  );
+  await Popups().baseAlert(context: Get.context!, content: NewWavesReqAcceptPopup());
 }
+
 Future<void> showBothConnectedDialog() async {
-  await Popups().baseAlert(
+  await Popups().baseAlert(context: Get.context!, content: NewWavesReqConnectedPopup());
+}
+
+Future<void> showWaveSenDialog() {
+  return showDialog(
     context: Get.context!,
-    content: NewWavesReqConnectedPopup(),
+    barrierDismissible: false,
+    builder: (_) {
+      return WaveSentPopup();
+    },
   );
 }
 //////////////////////////////////////////
@@ -92,18 +93,13 @@ Future<void> showBothConnectedDialog() async {
 ///
 /////////////////////////////////////////
 
-Future<void> showLoading({
-  
-  required RxBool isupdateIsSeenLoading,
-}) {
+Future<void> showLoading({required RxBool isupdateIsSeenLoading}) {
   return showDialog(
-     context: Get.context!,
+    context: Get.context!,
     barrierDismissible: false,
     builder: (_) {
       return Obx(() {
-        return isupdateIsSeenLoading.value
-            ? const LoadingPopup()
-            : const SizedBox.shrink();
+        return isupdateIsSeenLoading.value ? const LoadingPopup() : const SizedBox.shrink();
       });
     },
   );
@@ -111,7 +107,6 @@ Future<void> showLoading({
 
 /// 🔹 editFuelDieselRate Popup
 Future<void> editFuelDieselRate({
-  
   required String title,
   required FuelType type,
   required TextEditingController controller,
@@ -123,7 +118,7 @@ Future<void> editFuelDieselRate({
   required GlobalKey<FormState> updatePriceFormKey,
 }) async {
   await Popups().baseAlert(
-     context: Get.context!,
+    context: Get.context!,
 
     content: EditFuelDieselRatePopup(
       title: title,
@@ -139,46 +134,37 @@ Future<void> editFuelDieselRate({
 }
 
 /// 🔹 Awaiting Verification Popup
-Future<void> awaitingVerification({
-  
-  required VoidCallback onBackToLogin,
-}) async {
+Future<void> awaitingVerification({required VoidCallback onBackToLogin}) async {
   await Popups().baseAlert(
-     context: Get.context!,
+    context: Get.context!,
     content: AwaitingVerificationPopup(onBackToLogin: onBackToLogin),
   );
 }
 
 /// 🔹 Awaiting Verification Popup
 Future<void> cancelOrderDialog({
-  
   required bool isLoading,
   required Future<void> Function() onCancelOrder,
 }) async {
   await Popups().baseAlert(
-     context: Get.context!,
-    content: CancelOrderDialog(
-      isLoading: isLoading,
-      onCancelOrder: onCancelOrder,
-    ),
+    context: Get.context!,
+    content: CancelOrderDialog(isLoading: isLoading, onCancelOrder: onCancelOrder),
   );
 }
 
 /// 🔹 Awaiting Verification Popup
 Future<void> logoutConfirmDialog({
-  
   required RxBool isLoading,
   required Future<void> Function() onConfirm,
 }) async {
   await Popups().baseAlert(
-     context: Get.context!,
+    context: Get.context!,
     content: LogoutConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
   );
 }
 
 /// 🔹 deliveryFeedbackDialog Popup
 Future<void> deliveryFeedbackDialog({
-  
   required RxBool isLoading,
   required RxInt selRatingNum,
   required void Function(int) onRatingChanged,
@@ -189,7 +175,7 @@ Future<void> deliveryFeedbackDialog({
   required FocusNode descriptionFocusNode,
 }) async {
   await Popups().baseAlert(
-     context: Get.context!,
+    context: Get.context!,
     content: Container(
       // color: Colors.amber,
       height: 1.sh * 0.5,
