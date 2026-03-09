@@ -25,96 +25,123 @@ class SetChildrenBottomSheet extends StatelessWidget {
             Gap(itemGap * 3),
 
             /// Title
-            Text(
-              "Set Children",
-              style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Gap(30.w),
+                Text("Set Children", style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary)),
+                CusGestureDetector(
+                  onTap: () => Get.back(),
+                  child: SvgIcon(iconPath: IconsPath.closeCircle, height: 22),
+                ),
+              ],
             ),
 
-            Gap(itemGap * 3),
+            Gap(itemGap),
 
-            /// Children List
+            /// Children list
             Obx(() {
-              return ListView.separated(
-                shrinkWrap: true,
-                itemCount: controller.childrenDob.length,
-                separatorBuilder: (_, __) => Gap(itemGap),
-                itemBuilder: (context, index) {
-                  final child = controller.childrenDob[index];
+              return Column(
+                children: [
+                  ...List.generate(controller.children.length, (index) {
+                    final child = controller.children[index];
 
-                  return Obx(() {
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 14,
-                      ),
-                      decoration: BoxDecoration(
-                        color: c.cardPrimary,
-                        borderRadius: 35.brdrRad,
-                      ),
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(color: c.cardPrimary, borderRadius: 20.brdrRad),
                       child: Row(
                         children: [
-                          /// Label
-                          Text(
-                            "Children ${index + 1}",
-                            style: TxtStyle.outfitSemiB(
-                              fs: 14,
-                              color: c.textPrimary,
+                          /// Left section
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Children ${index + 1}",
+                                  style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+                                ),
+
+                                Gap(4),
+
+                                /// DOB
+                                Obx(() {
+                                  return CusGestureDetector(
+                                    onTap: () async {
+                                      final picked = await pickDateGeneric();
+
+                                      if (picked != null) {
+                                        controller.updateDob(
+                                          index,
+                                          DateFormat("dd-MM-yyyy").format(picked),
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      child.dob.value.isEmpty
+                                          ? "${Strings.select} ${Strings.dateOfBirth.capEachWord()}"
+                                          : child.dob.value,
+                                      style: TxtStyle.outfit(
+                                        fs: 13,
+                                        color: child.dob.value.isEmpty
+                                            ? c.textSecondary
+                                            : c.textPrimary,
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ],
                             ),
                           ),
 
-                          const Spacer(),
+                          Gap(10),
 
-                          /// Editable DOB
-                          CusGestureDetector(
-                            onTap: () async {
-                              final picked = await pickDateGeneric();
-
-                              if (picked != null) {
-                                controller.updateDob(
-                                  index,
-                                  DateFormat("dd-MM-yyyy").format(picked),
+                          /// Male
+                          Row(
+                            children: [
+                              Obx(() {
+                                return Radio<bool>(
+                                  value: true,
+                                  groupValue: child.gender.value == "male",
+                                  activeColor: c.primary,
+                                  onChanged: (_) => controller.updateGender(index, "male"),
                                 );
-                              }
-                            },
-                            child: Text(
-                              child.value.isEmpty
-                                  ? "Date Of Birth"
-                                  : child.value,
-                              style: TxtStyle.outfit(
-                                fs: 14,
-                                color: child.value.isEmpty
-                                    ? c.textSecondary
-                                    : c.textPrimary,
-                              ),
-                            ),
+                              }),
+                              Text("Male", style: TxtStyle.outfit(fs: 13)),
+                            ],
+                          ),
+
+                          /// Female
+                          Row(
+                            children: [
+                              Obx(() {
+                                return Radio<bool>(
+                                  value: true,
+                                  groupValue: child.gender.value == "female",
+                                  activeColor: c.primary,
+                                  onChanged: (_) => controller.updateGender(index, "female"),
+                                );
+                              }),
+                              Text("Female", style: TxtStyle.outfit(fs: 13)),
+                            ],
                           ),
                         ],
                       ),
-                    );
-                  });
-                },
+                    ).mB(12);
+                  }),
+                ],
               );
             }),
 
             Gap(itemGap * 2),
 
-            /// Add Children Button
+            /// Add children
             Align(
               alignment: Alignment.centerRight,
               child: CusGestureDetector(
-                onTap: () {
-                  controller.addChild();
-                },
+                onTap: controller.addChild,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 12,
-                  ),
-                  decoration: BoxDecoration(
-                    color: c.cardPrimary,
-                    borderRadius: 30.brdrRad,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                  decoration: BoxDecoration(color: c.cardPrimary, borderRadius: 30.brdrRad),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -123,13 +150,8 @@ class SetChildrenBottomSheet extends StatelessWidget {
                         iconColor: c.primary,
                         height: 18,
                       ),
-
                       Gap(itemGap),
-
-                      Text(
-                        "Add Children",
-                        style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                      ),
+                      Text("Add Children", style: TxtStyle.outfitSemiB(fs: 14, color: c.primary)),
                     ],
                   ),
                 ),

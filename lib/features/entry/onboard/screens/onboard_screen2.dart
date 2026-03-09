@@ -11,68 +11,41 @@ class OnboardScreen2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final oc = findCont<OnboardController>();
 
-    return SafeArea(
-      top: false,
-
-      child: Scaffold(
-        backgroundColor: bgClr,
-
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(ImagesPath.onboardingBgImage),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: BounceSingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Gap(itemGap * 5),
-                Container(
-                  child: Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
-                ),
-
-                Container(child: Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3)),
-
-                Gap(itemGap),
-                FittedBox(
-                  child: Text(
-                    Strings.findMumsNearYou,
-                    textAlign: TextAlign.center,
-                    style: 17.titleMclrCusFS,
-                  ).mHV(20, 0),
-                ),
-                Gap(itemGap),
-                Text(
-                  Strings.friendshipSupportUnderstanding,
-                  textAlign: TextAlign.center,
-                  style: 12.titleMclrCusFS,
-                ).mHV(40, 0),
-                Gap(itemGap),
-                Image.asset(ImagesPath.onboarding2),
-
-                Gap(itemGap * 2),
-
-                CommunitySpotlight(),
-
-                Gap(itemGap * 2),
-
-                CustomBtnWTxt(
-                  btnTxt: Strings.continueTxt,
-                  isSmall: true,
-                  onTap: () {
-                    Get.toNamed(RoutePaths.signin);
-                  },
-                  isLoading: false,
-                ),
-                Gap(itemGap * 2),
-              ],
-            ).getcm,
-          ),
-        ),
+    return AppScreenTemplate(
+      bottomWidget: CustomBtnWTxt(
+        btnTxt: Strings.continueTxt,
+        isSmall: true,
+        onTap: () => Get.toNamed(RoutePaths.onboardScreen3),
+        isLoading: false,
       ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Gap(itemGap * 5),
+          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
+          Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+          Gap(itemGap),
+          FittedBox(
+            child: Text(
+              Strings.findMumsNearYou,
+              textAlign: TextAlign.center,
+              style: 17.titleMclrCusFS,
+            ).mHV(20, 0),
+          ),
+          Gap(itemGap),
+          Text(
+            Strings.friendshipSupportUnderstanding,
+            textAlign: TextAlign.center,
+            style: 12.titleMclrCusFS,
+          ).mHV(40, 0),
+          Gap(itemGap),
+          Image.asset(ImagesPath.onboarding2),
+          Gap(itemGap * 2),
+          CommunitySpotlight(),
+
+          Gap(itemGap * 4),
+        ],
+      ).getcm,
     );
   }
 }

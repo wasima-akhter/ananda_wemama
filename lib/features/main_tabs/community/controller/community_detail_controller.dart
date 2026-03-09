@@ -1,12 +1,68 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/enums/ui_enums.dart';
+
+class PostItemState {
+  final int id;
+  final isCommentLocked = false.obs;
+  final isLiked = false.obs; // ← add
+  final isPinned = false.obs; // ← add
+
+  PostItemState({required this.id});
+}
 
 class CommunityDetailController extends GetxController {
+  final Rx<MyCommunityBtnState> args;
+  CommunityDetailController(MyCommunityBtnState initialArgs) : args = initialArgs.obs;
   final postCtrl = TextEditingController();
   final searchFocus = FocusNode();
 
+  // replace getBtnTxt() local function with this
+  String getBtnTxt() {
+    switch (args.value) {
+      // ← .value
+      case MyCommunityBtnState.join:
+        return Strings.join;
+      case MyCommunityBtnState.manage:
+        return Strings.manage;
+      case MyCommunityBtnState.visit:
+        return Strings.joined;
+    }
+  }
+
+  // in CommunityDetailController
+  var posts = <PostItemState>[].obs;
+
+  void toggleLike(int postId) {
+    posts.firstWhere((p) => p.id == postId).isLiked.toggle();
+  }
+
+  void togglePin(int postId) {
+    posts.firstWhere((p) => p.id == postId).isPinned.toggle();
+  }
+
+  String getPinBtnTxt(int postId) {
+    final post = posts.firstWhere((p) => p.id == postId);
+    return post.isPinned.value ? Strings.unpinPost.capEachWord() : Strings.pinPost.capEachWord();
+  }
+
   @override
   void onInit() {
+    // initialize with fake data
+    posts.value = List.generate(10, (index) => PostItemState(id: index));
+    print("args: ${args.value.name}");
     super.onInit();
+  }
+
+  void toggleCommentLock(int postId) {
+    final post = posts.firstWhere((p) => p.id == postId);
+    post.isCommentLocked.toggle();
+  }
+
+  String getLockBtnTxt(int postId) {
+    final post = posts.firstWhere((p) => p.id == postId);
+    return post.isCommentLocked.value
+        ? Strings.unlockComment.capEachWord()
+        : Strings.lockComment.capEachWord();
   }
 
   @override

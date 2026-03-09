@@ -20,22 +20,20 @@ class CommunitySpotlight extends StatelessWidget {
 
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                Strings.communitySpotlight.capEachWord(),
-                style: 13.titleMclrCusFSsemi,
-              ),
+              Text(Strings.communitySpotlight.capEachWord(), style: 13.titleMclrCusFSsemi),
 
-              ContainerBordered(
-                hasBrdr: true,
-                contClr: c.inputBackground,
+              CusGestureDetector(
+                onTap: () =>
+                    Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.join),
+                child: ContainerBordered(
+                  hasBrdr: true,
+                  contClr: c.inputBackground,
 
-                rad: 16,
-                vp: 8,
-                hp: 18,
+                  rad: 16,
+                  vp: 8,
+                  hp: 18,
 
-                child: Text(
-                  Strings.joinDiscussion.capEachWord(),
-                  style: 12.titleMclrCusFSURB,
+                  child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),
                 ),
               ),
             ],
@@ -48,14 +46,11 @@ class CommunitySpotlight extends StatelessWidget {
               StackOfImages(),
 
               Gap(itemGap),
-              Container(
-                child: Text(
-                  "42 " + Strings.mumsAreDiscussingThis,
-                  style: normRsmSecURB,
-                ),
-              ),
+              Container(child: Text("42 " + Strings.mumsAreDiscussingThis, style: normRsmSecURB)),
             ],
           ),
+
+          Gap(itemGap),
 
           CommunitySpotlightInsideCard(),
         ],
@@ -69,8 +64,8 @@ class StackOfImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double radius = 20;
-    const double overlap =25;
+    const double radius = 15;
+    const double overlap = 25;
     return SizedBox(
       width: (radius * 2) + (overlap * 2), // total visual width
       height: radius * 2,
@@ -78,14 +73,17 @@ class StackOfImages extends StatelessWidget {
         clipBehavior: Clip.none,
         alignment: Alignment.centerLeft,
         children: List.generate(3, (index) {
-          return Positioned(left: index * overlap, child: _buildImage());
+          return Positioned(
+            left: index * overlap,
+            child: _buildImage(radius: radius),
+          );
         }),
       ),
     );
   }
 
-  Widget _buildImage({String? path}) {
-    return circledImageBgComponent(radius: 20, imagePath: path);
+  Widget _buildImage({String? path, double? radius}) {
+    return circledImageBgComponent(radius: radius, imagePath: path);
   }
 }
 
@@ -97,21 +95,15 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
     return ContainerBordered(
       hp: 10,
       vp: 10,
-      mv: 8,
+
       contClr: c.cardMood,
       child: Column(
         children: [
-          Text(
-            Strings.emotionalPostpartumQuestion.capEachWord(),
-            style: normRsmPriURB,
-          ),
+          Text(Strings.emotionalPostpartumQuestion.capEachWord(), style: normRsmPriURB),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                Strings.postpartumRecovery.capEachWord(),
-                style: titleBPriURB,
-              ),
+              Text(Strings.postpartumRecovery.capEachWord(), style: titleBPriURB),
               Text(Strings.repliesTimeAgo, style: normRsmPriURB),
             ],
           ),

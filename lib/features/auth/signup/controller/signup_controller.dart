@@ -18,14 +18,18 @@ class SignupController extends GetxController {
   // ─────────────────────────────
   // 🔹 UI State
   // ─────────────────────────────
+
+  final agreedToTerms = false.obs;
+  void toggleAgreement() => agreedToTerms.toggle();
+
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
   final showPassword = false.obs;
   final showConPassword = false.obs;
 
-  bool get isPassHidden => showPassword.value;
-  bool get isConPassHidden => showConPassword.value;
+  bool get isPassHidden => !showPassword.value;
+  bool get isConPassHidden => !showConPassword.value;
 
   IconData get passwordIcon => showPassword.value ? Icons.visibility : Icons.visibility_off;
 
@@ -69,9 +73,14 @@ class SignupController extends GetxController {
   // 🔹 Actions
   // ─────────────────────────────
   Future<void> onTapSignup(GlobalKey<FormState> formKey) async {
-    final isValid = validateForm(formKey);
+    // final isValid = validateForm(formKey);
 
-    if (!isValid || isLoading_.value) return;
+    // if (!isValid || isLoading_.value) return;
+
+    if (!agreedToTerms.value) {
+      Snack.showWarning("Please agree to the Terms of Service to continue.");
+      return;
+    }
 
     unfocusAll();
     isLoading_.value = true;
@@ -88,6 +97,8 @@ class SignupController extends GetxController {
       //   goToVerifyOtp();
       // }
       print("Signup logic placeholder executed");
+
+      goToVerifyOtp();
     } catch (e, s) {
       print("Signup error: $e");
       print(s);

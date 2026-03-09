@@ -49,6 +49,7 @@ class WelFundMumPage2 extends StatelessWidget {
             contClr: c.inputBackground,
             hasBrdr: true,
             brdrClr: c.inputBorder,
+
             vp: 20,
             hp: 18,
             child: Row(

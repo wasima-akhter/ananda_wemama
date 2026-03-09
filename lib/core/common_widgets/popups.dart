@@ -3,26 +3,31 @@ import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_acce
 
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_tabs/community/widgets/community_guildline.dart';
-import '../../features/shared/wave_request/controller/wave_request_controller.dart';
 import '../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
 import 'common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
 import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
+import 'popup_widgets/delete_confirm_dialog.dart';
 import 'popup_widgets/delivery_feedback_dialog.dart';
 import 'popup_widgets/edit_fuel_diesel_rate_popup.dart';
 import 'popup_widgets/loading_popup.dart';
+import 'popup_widgets/lock_comment_popup.dart';
 import 'popup_widgets/logout_confirm_dialog.dart';
 import 'popup_widgets/wave_sent_popup.dart';
 
 class Popups {
-  Future<void> baseAlert({required BuildContext context, required Widget content}) async {
+  Future<void> baseAlert({
+    required BuildContext context,
+    EdgeInsets? insetPadding,
+    required Widget content,
+  }) async {
     await showDialog(
       context: context,
       barrierDismissible: true,
       builder: (_) {
         return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          insetPadding: insetPadding ?? EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
           backgroundColor: Colors.transparent,
           clipBehavior: Clip.none,
           child: Container(
@@ -46,6 +51,7 @@ Future<void> communityGuidlineDialog({
 }) async {
   await Popups().baseAlert(
     context: Get.context!,
+    insetPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
     content: CommunityGuildline(isLoading: isLoading, onTapAction: onTapAction),
   );
 }
@@ -75,7 +81,11 @@ Future<void> showReqAcceptedDialog() async {
 }
 
 Future<void> showBothConnectedDialog() async {
-  await Popups().baseAlert(context: Get.context!, content: NewWavesReqConnectedPopup());
+  await Popups().baseAlert(
+    insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+    context: Get.context!,
+    content: NewWavesReqConnectedPopup(),
+  );
 }
 
 Future<void> showWaveSenDialog() {
@@ -85,6 +95,26 @@ Future<void> showWaveSenDialog() {
     builder: (_) {
       return WaveSentPopup();
     },
+  );
+}
+
+Future<void> showLockCommentialog() {
+  return showDialog(
+    context: Get.context!,
+    barrierDismissible: false,
+    builder: (_) {
+      return LockCommentPopup();
+    },
+  );
+}
+
+Future<void> deletePostConfirmDialog({
+  required RxBool isLoading,
+  required Future<void> Function() onConfirm,
+}) async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    content: DeleteConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
   );
 }
 //////////////////////////////////////////

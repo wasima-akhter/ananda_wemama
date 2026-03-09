@@ -13,6 +13,8 @@ class CusNameTypeTextFormField extends StatelessWidget {
   final Widget? prefix;
   final Widget? hint;
   final double? h;
+  final double? rad;
+  final double? brdrW;
   final bool? isDense;
   final TextStyle? hintStyle;
   final TextStyle? style;
@@ -23,6 +25,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
   final InputBorder? errorBorder;
   final Color? brdrClr;
   final Color? txtClr;
+  final Color? fillColor;
   final double? fs;
   final RegExp? regExp;
   final double? prefixSize;
@@ -65,12 +68,16 @@ class CusNameTypeTextFormField extends StatelessWidget {
     this.cursorHeight,
     this.cursorWidth,
     this.textAlign,
+    this.rad,
+    this.brdrW,
+    this.fillColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: h,
+      decoration: BoxDecoration(borderRadius: (rad ?? 30).r.brdrRad),
       child: TextFormField(
         controller: controller,
         textInputAction: textInputAction ?? TextInputAction.done,
@@ -92,7 +99,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
 
         decoration: InputDecoration(
           filled: true,
-          fillColor: c.inputBackground,
+          fillColor: fillColor ?? c.inputBackground,
           contentPadding:
               contentPadding ?? const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
           isDense: isDense, // reduces default vertical padding
@@ -119,23 +126,29 @@ class CusNameTypeTextFormField extends StatelessWidget {
               : OutlineInputBorder(
                   borderSide: BorderSide(
                     color: brdrClr ?? c.inputBorder,
-                    width: brdrClr != null ? 0.5 : 1.5,
+                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
                   ),
-                  borderRadius: 30.brdrRad,
+                  borderRadius: (rad ?? 30).brdrRad,
                 ),
           errorBorder:
               errorBorder ??
               (isNoBrder == true
                   ? InputBorder.none
                   : OutlineInputBorder(
-                      borderSide: BorderSide(color: c.error, width: 1.5),
-                      borderRadius: 30.brdrRad,
+                      borderSide: BorderSide(
+                        color: c.error,
+                        width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
+                      ),
+                      borderRadius: (rad ?? 30).brdrRad,
                     )),
           focusedErrorBorder: isNoBrder == true
               ? InputBorder.none
               : OutlineInputBorder(
-                  borderSide: BorderSide(color: c.error, width: 1.5),
-                  borderRadius: 30.brdrRad,
+                  borderSide: BorderSide(
+                    color: c.error,
+                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
+                  ),
+                  borderRadius: (rad ?? 30).brdrRad,
                 ),
 
           enabledBorder: isNoBrder == true
@@ -143,9 +156,9 @@ class CusNameTypeTextFormField extends StatelessWidget {
               : OutlineInputBorder(
                   borderSide: BorderSide(
                     color: brdrClr ?? c.inputBorder,
-                    width: brdrClr != null ? 0.8 : 1.5,
+                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
                   ),
-                  borderRadius: 30.brdrRad,
+                  borderRadius: (rad ?? 30).brdrRad,
                 ),
         ),
         onChanged: onChanged,

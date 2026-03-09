@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/network_image_widget.dart';
 
 class UserPhotoWidget extends StatelessWidget {
   final XFile? selImage;
@@ -22,7 +21,7 @@ class UserPhotoWidget extends StatelessWidget {
             image: FileImage(File(selImage!.path)), // FIX
             fit: BoxFit.cover,
           ),
-      
+
           color: bgClr, // fallback background color
         ),
       );
@@ -30,6 +29,7 @@ class UserPhotoWidget extends StatelessWidget {
       return NetworkImageWidget(
         imageUrl: imageUrl,
         // imageUrl: Strings.fakeImageUrl,
+        radius: 30,
         isCircle: true,
       );
     }

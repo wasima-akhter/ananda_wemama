@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
+import 'package:mama_app/features/shared/date_picker/widgets/date_picker_widget.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../common_widgets/common_components/set_children_bottom_sheet.dart';
 import '../common_widgets/common_components/state_city_bottom_sheet.dart';
 
 class DateHelper {
@@ -26,29 +26,17 @@ class DateHelper {
   DateAndTimeMap formatUTCtimestamp(String? timestamp) {
     // Handle null or empty timestamp
     if (timestamp == null || timestamp.trim().isEmpty) {
-      return DateAndTimeMap(
-        date: 'N/A',
-        time: 'N/A',
-        dateYear: 'N/A',
-        fullDate: 'N/A',
-      );
+      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
     }
 
     try {
       // Detect if timestamp is UTC (has Z or ±hh:mm)
-      final bool isUtc =
-          timestamp.endsWith('Z') ||
-          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       // Try to parse safely
       DateTime? dt = DateTime.tryParse(timestamp);
       if (dt == null) {
-        return DateAndTimeMap(
-          date: 'N/A',
-          time: '',
-          dateYear: 'N/A',
-          fullDate: 'N/A',
-        );
+        return DateAndTimeMap(date: 'N/A', time: '', dateYear: 'N/A', fullDate: 'N/A');
       }
 
       if (isUtc) dt = dt.toLocal(); // Convert to local if UTC
@@ -60,9 +48,7 @@ class DateHelper {
 
       final formattedDateYear = DateFormat('MMM yyyy').format(dt); // Nov 2026
 
-      final formattedFullDate = DateFormat(
-        'd MMM yyyy',
-      ).format(dt); // 8 Nov 2026
+      final formattedFullDate = DateFormat('d MMM yyyy').format(dt); // 8 Nov 2026
 
       return DateAndTimeMap(
         date: formattedDate,
@@ -72,12 +58,7 @@ class DateHelper {
       );
     } catch (e) {
       debugPrint('❌ formatUTCtimestamp failed for "$timestamp": $e');
-      return DateAndTimeMap(
-        date: 'N/A',
-        time: 'N/A',
-        dateYear: 'N/A',
-        fullDate: 'N/A',
-      );
+      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
     }
   }
 
@@ -94,8 +75,7 @@ class DateHelper {
       if (timeSegments.length < 2) return '--:--';
 
       int hour = int.tryParse(timeSegments[0]) ?? 0;
-      final minute =
-          int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
+      final minute = int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
       final second = timeSegments.length > 2
           ? (int.tryParse(timeSegments[2])?.toString().padLeft(2, '0') ?? '00')
           : '00';
@@ -138,9 +118,7 @@ class DateHelper {
       }
 
       // Convert to local if UTC
-      final bool isUtc =
-          timestamp.endsWith('Z') ||
-          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       if (isUtc) dt = dt.toLocal();
 
@@ -190,12 +168,7 @@ class DateAndTimeMap {
   final String dateYear;
   final String? fullDate;
 
-  DateAndTimeMap({
-    required this.date,
-    required this.time,
-    required this.dateYear,
-    this.fullDate,
-  });
+  DateAndTimeMap({required this.date, required this.time, required this.dateYear, this.fullDate});
 }
 
 bool isIso8601Utc(String input) {
@@ -209,6 +182,48 @@ bool isIso8601Utc(String input) {
 }
 
 ////////////////////////////////
+///
+Theme buildDatePickerTheme({
+  required Widget child,
+  required BuildContext context,
+  Color? primaryColor,
+  Color? backgroundColor,
+  TextStyle? headerTextStyle,
+  TextStyle? dayTextStyle,
+}) {
+  return Theme(
+    data: Theme.of(context).copyWith(
+      colorScheme: ColorScheme.light(
+        primary: primaryColor ?? c.primary, // header/date circle
+        onPrimary: c.secondary, // text on selected day
+        surface: backgroundColor ?? c.inputBackground, // calendar background
+        onSurface: c.textPrimary, // normal day text
+      ),
+      textTheme: TextTheme(
+        headlineLarge: headerTextStyle, // Month header
+        bodyLarge: dayTextStyle, // Day numbers
+      ),
+
+      primaryTextTheme: TextTheme(
+        titleMedium: TxtStyle.outfit(fs: 14, color: c.primary), // typed text color
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
+        labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: c.primary)),
+      ),
+      //   Forces the typed input text color
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: c.primary,
+        selectionColor: c.primary.withOpacity(0.3),
+        selectionHandleColor: c.primary,
+      ),
+      dialogBackgroundColor: backgroundColor ?? c.inputBackground,
+    ),
+    child: child,
+  );
+}
+
 ///
 ///
 Future<DateTime?> pickDateGeneric({
@@ -236,8 +251,7 @@ Future<DateTime?> pickDateGeneric({
           colorScheme: ColorScheme.light(
             primary: primaryColor ?? c.primary, // header/date circle
             onPrimary: c.secondary, // text on selected day
-            surface:
-                backgroundColor ?? c.inputBackground, // calendar background
+            surface: backgroundColor ?? c.inputBackground, // calendar background
             onSurface: c.textPrimary, // normal day text
           ),
           textTheme: TextTheme(
@@ -246,20 +260,12 @@ Future<DateTime?> pickDateGeneric({
           ),
 
           primaryTextTheme: TextTheme(
-            titleMedium: TxtStyle.outfit(
-              fs: 14,
-              color: c.primary,
-            ), // typed text color
+            titleMedium: TxtStyle.outfit(fs: 14, color: c.primary), // typed text color
           ),
           inputDecorationTheme: InputDecorationTheme(
-            hintStyle: TxtStyle.outfit(
-              fs: 14,
-              color: c.primary.withOpacity(0.6),
-            ),
+            hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
             labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: c.primary),
-            ),
+            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: c.primary)),
           ),
           //   Forces the typed input text color
           textSelectionTheme: TextSelectionThemeData(
@@ -307,6 +313,28 @@ Future<void> pickDate({
   }
 }
 
+///
+
+Future<void> pickDateWithOptions({
+  required RxString selectedDate,
+  required RxBool keepPrivate,
+  void Function()? unfocusAll,
+  DateTime? firstDate,
+  DateTime? lastDate,
+}) async {
+  unfocusAll?.call();
+
+  await Get.dialog(
+    buildDatePickerTheme(
+      child: DatePickerWithPrivacy(selectedDate: selectedDate, keepPrivate: keepPrivate),
+
+      context: Get.context!,
+    ),
+    barrierDismissible: true,
+  );
+}
+
+///
 String formatDate(DateTime date) {
   return "${date.day.toString().padLeft(2, '0')}/"
       "${date.month.toString().padLeft(2, '0')}/"
@@ -337,11 +365,7 @@ Future<dynamic> showSelectionBottomSheet({
       child: Container(
         // color: Colors.amber,
         height: bSheetH * 1 * (heightFactor ?? 1),
-        child: SelectListBottomSheet(
-          title: title,
-          items: items,
-          selectedValue: selectedValue,
-        ),
+        child: SelectListBottomSheet(title: title, items: items, selectedValue: selectedValue),
       ),
     ),
   );

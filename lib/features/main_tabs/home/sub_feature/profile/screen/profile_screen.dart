@@ -44,37 +44,46 @@ class ProfileScreen extends StatelessWidget {
 
           ProfileTile(
             title: Strings.managePassword,
-            iconPath: IconsPath.security, 
+            iconPath: IconsPath.security,
+            tileClr: c.inputBackground,
+
             onTap: () => Get.toNamed(RoutePaths.changePassword),
           ),
-          Gap(itemGap ),
+          Gap(itemGap),
           ProfileTile(
             title: Strings.blockedUser,
-            iconPath: IconsPath.userOutlined, 
-            onTap: () => Get.toNamed(RoutePaths.changePassword),
+            tileClr: c.inputBackground,
+            iconPath: IconsPath.userOutlined,
+            onTap: () => Get.toNamed(RoutePaths.blockedUser),
           ),
-          Gap(itemGap ),
+          Gap(itemGap),
           ProfileTile(
             title: Strings.subscription,
-            iconPath: IconsPath.starFilled, 
-            onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+            tileClr: c.inputBackground,
+            iconPath: IconsPath.starFilled,
+            onTap: () => Get.toNamed(RoutePaths.subscriptionInfo),
           ),
-          Gap(itemGap ),
+          Gap(itemGap),
+          ProfileTile(
+            title: Strings.about,
+            tileClr: c.inputBackground,
+            iconPath: IconsPath.info,
+            onTap: () => Get.toNamed(RoutePaths.about),
+          ),
+          Gap(itemGap),
           ProfileTile(
             title: Strings.logOut,
+            tileClr: c.inputBackground,
             iconPath: IconsPath.logout,
-            iconColor: c.error, 
+            iconColor: c.error,
             onTap: () {
-                  logoutConfirmDialog(
-                    
-                    isLoading: pc.isSignOutLoading_,
-                    onConfirm: () async => await pc.onTapLogout(),
-                  );
+              logoutConfirmDialog(
+                isLoading: pc.isSignOutLoading_,
+                onConfirm: () async => await pc.onTapLogout(),
+              );
             },
           ),
-          Gap(itemGap ),
-           
-
+          Gap(itemGap),
         ],
       ).getcm,
     );

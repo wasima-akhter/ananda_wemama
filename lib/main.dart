@@ -1,13 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:mama_app/app/helper_widgets_export.dart';
 
 import 'app/app.dart';
 import 'core/local/app_storage.dart';
 import 'core/network/network_manager.dart';
 import 'core/themes/theme_service.dart';
-import 'routes/route_paths.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +16,7 @@ void main() async {
   ]);
 
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: Colors.white, statusBarIconBrightness: Brightness.light),
+    SystemUiOverlayStyle(statusBarColor: ctransp, statusBarIconBrightness: Brightness.light),
   );
 
   // Initialize LocalStorageService singleton

@@ -54,7 +54,7 @@ class MainNavController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initializeAppData();
+    // _initializeAppData();
   }
 
   /// Loads initial profile and location data

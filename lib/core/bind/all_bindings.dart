@@ -1,10 +1,13 @@
 import 'package:get/get.dart';
+import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
+import 'package:mama_app/features/main_tabs/community/controller/post_in_community_controller.dart';
+import 'package:mama_app/features/more/about/controller/about_controller.dart';
+import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/controller/subscription_upgrade_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../features/account_overview/change_password/controller/change_password_controller.dart';
-import '../../features/main_tabs/home/sub_feature/edit_profile/controller/edit_profile_controller.dart';
 import '../../features/auth/forgot_password/controller/forgot_password_controller.dart';
 import '../../features/auth/otp/controller/verify_otp_controller.dart';
 import '../../features/auth/signin/controller/signin_controller.dart';
@@ -18,10 +21,13 @@ import '../../features/main_tabs/community/controller/comment_controller.dart';
 import '../../features/main_tabs/community/controller/community_controller.dart';
 import '../../features/main_tabs/community/controller/community_detail_controller.dart';
 import '../../features/main_tabs/community/controller/create_community_controller.dart';
+import '../../features/main_tabs/community/controller/member_management_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
+import '../../features/main_tabs/experts/controller/past_sessions_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
-import '../../features/main_tabs/match/controller/match_controller.dart';
+import '../../features/main_tabs/home/sub_feature/edit_profile/controller/edit_profile_controller.dart';
 import '../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../../features/main_tabs/match/controller/match_controller.dart';
 import '../../features/more/legal/privacy_policy/controller/privacy_policy_controller.dart';
 import '../../features/more/legal/terms_and_conditions/controller/terms_and_conditions_controller.dart';
 import '../../features/more/notification/controller/notification_controller.dart';
@@ -35,10 +41,12 @@ import '../../features/post_auth_setup/setup_profile/controller/setup_profile_co
 import '../../features/post_auth_setup/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
 import '../../features/shared/bookmark/controller/bookmark_controller.dart';
-import '../../features/shared/mood_insights/controller/mood_insights_controller.dart';
-import '../../features/shared/mood_library/controller/mood_library_controller.dart';
+import '../../features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
+import '../../features/shared/mood/mood_library/controller/mood_library_controller.dart';
 import '../../features/shared/report_sheet/controller/report_controller.dart';
+import '../../features/shared/subscription_info/controller/subscription_info_controller.dart';
 import '../../features/station_location/controller/station_location_controller.dart';
+import '../../features/video_meeting/controller/meeting_comment_controller.dart';
 import '../../features/video_meeting/controller/meeting_controller.dart';
 import '../components/mood_check_in/mood_check_in_controller.dart';
 import '../enums/app_enums.dart';
@@ -124,6 +132,8 @@ class MainNavBinding extends Bindings {
     Get.putPermanent(HomeController());
     Get.putPermanent(MainNavController());
 
+    Get.putPermanent(BookmarkController());
+
     // Lazy (auto recreate if disposed)
     Get.lazyPutFenix(() => ChatController());
     Get.lazyPutFenix(() => MatchController());
@@ -169,6 +179,26 @@ class CreateCommunityBinding extends Bindings {
   }
 }
 
+class ManageCommunityBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => ManageCommunityController());
+  }
+}
+
+class MemberManagementBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => MemberManagementController());
+  }
+}
+
 class ReportControllerBinding extends Bindings {
   @override
   void dependencies() {
@@ -185,8 +215,37 @@ class CommunityDetailBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    Get.lazyPutFenix(() => CommunityDetailController());
+    final args = Get.arguments;
+
+    print("--> args: $args");
+
+    if (args == null || args is! MyCommunityBtnState) {
+      throw Exception("MoodInsightsController requires a MoodType argument!");
+    }
+
+    // ✅ Fix — use fenix or delete old instance before creating new
+    Get.lazyPut(() => CommunityDetailController(Get.arguments), fenix: true);
     Get.lazyPutFenix(() => CommentController());
+  }
+}
+
+class PostInCommunityBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => PostInCommunityController());
+  }
+}
+
+class PastSessionsBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => PastSessionsController());
   }
 }
 
@@ -197,6 +256,16 @@ class SubscriptionUpgradeBinding extends Bindings {
     // while arguments are still available in binding context
 
     Get.lazyPutFenix(() => SubscriptionUpgradeController());
+  }
+}
+
+class SubscriptionInfoBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => SubscriptionInfoController());
   }
 }
 
@@ -221,6 +290,20 @@ class ChangePasswordBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<ChangePasswordController>(() => ChangePasswordController());
+  }
+}
+
+class BlockedUserBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<BlockedUserController>(() => BlockedUserController());
+  }
+}
+
+class AboutBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<AboutController>(() => AboutController());
   }
 }
 
@@ -263,7 +346,7 @@ class ProfileBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<ProfileController>(() => ProfileController());
     Get.lazyPut<EditProfileController>(() => EditProfileController());
- }
+  }
 }
 
 // ─────────────────────────────
@@ -276,27 +359,15 @@ class MoodLibraryBinding extends Bindings {
   }
 }
 
-class BookmarkBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<BookmarkController>(() => BookmarkController());
-  }
-}
-
 class MoodInsightBinding extends Bindings {
   @override
   void dependencies() {
-    final args = Get.arguments;
+    final args = Get.arguments as Map<String, dynamic>;
+    final mood = args['mood'] as MoodType;
+    final item = args['item'] as MoodReadingItem;
 
-    print("--> args: $args");
-
-    if (args == null || args is! MoodType) {
-      throw Exception("MoodInsightsController requires a MoodType argument!");
-    }
-
-    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
-    // while arguments are still available in binding context
-    Get.put<MoodInsightsController>(MoodInsightsController(args));
+    Get.put<MoodInsightsController>(MoodInsightsController(mood, item));
+    Get.lazyPutFenix(() => BookmarkController());
   }
 }
 
@@ -351,5 +422,6 @@ class MeetingBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MeetingController>(() => MeetingController(), fenix: true);
+    Get.lazyPut<MeetingCommentController>(() => MeetingCommentController(), fenix: true);
   }
 }

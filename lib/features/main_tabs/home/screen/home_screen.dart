@@ -17,9 +17,8 @@ class HomeScreen extends StatelessWidget {
     return AppScreenTemplate(
       appBar: HomeAppBarContent(),
       child: Column(
-        spacing: itemGap * 2,
+        spacing: itemGap * 1.2,
         children: [
-          Gap(itemGap),
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),
@@ -38,9 +37,8 @@ class GentleReminderCard extends StatelessWidget {
     return ContainerBordered(
       contClr: c.cardReminder,
       rad: 20,
-      mv: 8,
       hp: 16,
-      vp: 16,
+      vp: 12,
       boxShadow: boxShadowBottom(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -12,7 +12,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       color: bgClr,
       // padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 8.h),
-      padding: EdgeInsets.only(top: itemGap * 6),
+      padding: EdgeInsets.only(top: itemGap * 6, bottom: itemGap),
 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

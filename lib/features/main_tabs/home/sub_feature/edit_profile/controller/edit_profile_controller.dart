@@ -1,16 +1,20 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/controller_export.dart';
-import '../../../../../../core/helpers/widgets_helper.dart';
-import '../../../../../../core/utils/extension/string_extension.dart';
-import '../../../../../../app/controller_export.dart';
 import '../../../../../../core/helpers/date_helper.dart';
 import '../../../../../../core/helpers/string_helper.dart';
+import '../../../../../../core/helpers/widgets_helper.dart';
 import '../../../../../../core/services/account_overview/update_profile/update_profile_service.dart';
 import '../../../../../../core/utils/extension/string_extension.dart';
 import '../../profile/controller/profile_controller.dart';
-import '../../profile/model/profile_model.dart'; 
- 
+import '../../profile/model/profile_model.dart';
+
+class ChildModel {
+  RxString dob = "".obs;
+  RxString gender = "male".obs;
+}
+
+RxList<ChildModel> children = <ChildModel>[].obs;
 
 class EditProfileController extends GetxController {
   // 🔹 Text Controller (only for name input field)
@@ -57,22 +61,27 @@ class EditProfileController extends GetxController {
       selectedValue: selectedCity,
     );
   }
+
   void openChildrenBottomSheet() {
     showChildrenBottomSheet();
   }
 
-    RxList<RxString> childrenDob = <RxString>[].obs;
+  RxList<ChildModel> children = <ChildModel>[].obs;
 
   void addChild() {
-    childrenDob.add("".obs);
+    children.add(ChildModel());
   }
 
   void removeChild(int index) {
-    childrenDob.removeAt(index);
+    children.removeAt(index);
   }
 
   void updateDob(int index, String value) {
-    childrenDob[index].value = value;
+    children[index].dob.value = value;
+  }
+
+  void updateGender(int index, String value) {
+    children[index].gender.value = value;
   }
 
   @override
@@ -139,31 +148,31 @@ class EditProfileController extends GetxController {
     final remaining = 4 - current.length;
 
     if (remaining <= 0) {
-      "You can't add more than 4 images"
-          .showToast(); // ← replace with your toast util
+      "You can't add more than 4 images".showToast();
       return;
     }
 
-    final List<XFile> selectedImages = await picker.pickMultiImage(
-      limit: remaining,
-    );
+    List<XFile> selectedImages = [];
+
+    if (remaining == 1) {
+      // pick single image
+      final XFile? img = await picker.pickImage(source: ImageSource.gallery);
+      if (img != null) {
+        selectedImages = [img];
+      }
+    } else {
+      // pick multiple images
+      selectedImages = await picker.pickMultiImage(limit: remaining);
+    }
 
     if (selectedImages.isEmpty) return;
 
-    // Merge old + new, cap at 4
     final merged = [...current, ...selectedImages];
     final capped = merged.take(4).toList();
-
-    if (merged.length > 4) {
-      "Max 4 images allowed. Only ${remaining} image(s) were added."
-          .showToast();
-    }
 
     fileImages.value = capped;
 
     print("Total images: ${capped.length}");
-    print("files.first.name: ${capped.first.name}");
-    print("files.first.path: ${capped.first.path}");
   }
 
   ///
@@ -184,7 +193,7 @@ class EditProfileController extends GetxController {
 
   Future<void> updateProfileDetails({
     required String name,
- 
+
     XFile? profileImage,
     required GlobalKey<FormState> formkey,
   }) async {
@@ -194,11 +203,7 @@ class EditProfileController extends GetxController {
     errorMessage.value = null;
     isLoading_.value = true;
 
-    final data = await _service.updateProfile(
-      name: name,
-      
-      profileImage: profileImage,
-    );
+    final data = await _service.updateProfile(name: name, profileImage: profileImage);
 
     if (data != null) {
       // Save updated data to storage
@@ -209,7 +214,7 @@ class EditProfileController extends GetxController {
       // storage.setUserTotalRating((data.totalRating ?? 0).toString());
 
       // Update controllers immediately
-      nameCtrl.text = data.name ?? ''; 
+      nameCtrl.text = data.name ?? '';
       fileImage.value = null;
 
       // Update reactive data
@@ -226,6 +231,4 @@ class EditProfileController extends GetxController {
 
     isLoading_.value = false;
   }
-
-   
 }

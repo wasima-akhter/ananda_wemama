@@ -1,8 +1,10 @@
+import 'package:image_picker/image_picker.dart';
+
 import '../../../../app/controller_export.dart';
 
 class CreateCommunityController extends GetxController {
-  final searchController = TextEditingController();
-  final searchFocus = FocusNode();
+  final nameCtrl = TextEditingController();
+  final nameFocus = FocusNode();
 
   @override
   void onInit() {
@@ -11,18 +13,36 @@ class CreateCommunityController extends GetxController {
 
   @override
   void onClose() {
-    searchController.dispose();
-    searchFocus.dispose();
+    nameCtrl.dispose();
+    nameFocus.dispose();
     super.onClose();
   }
 
   void clearAll() {
-    searchController.clear();
+    nameCtrl.clear();
+    fileImage.value = null;
   }
 
   void unFocusAll() {
-    searchFocus.unfocus();
+    nameFocus.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  var fileImage = Rxn<XFile>();
+  Future<void> pickSingleImage(ImageSource source) async {
+    final picker = ImagePicker();
+
+    final XFile? selectedImage = await picker.pickImage(
+      source: source,
+      preferredCameraDevice: CameraDevice.front,
+    );
+
+    if (selectedImage != null) {
+      fileImage.value = selectedImage;
+
+      print("file.name: ${selectedImage.name}");
+      print("file.path: ${selectedImage.path}");
+    }
   }
 
   // API loading state

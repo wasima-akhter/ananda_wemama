@@ -67,7 +67,7 @@ class StationLocationScreen extends StatelessWidget {
             Obx(
               () => CustomBtnWTxt(
                 isLoading: slc.isLoadingLocation.value,
-                onTap: slc.getAndSaveInBackendCurrLoc,
+                // onTap: slc.getAndSaveInBackendCurrLoc,
                 btnTxt: Strings.useYourCurrentLocation,
                 outlined: true,
               ),

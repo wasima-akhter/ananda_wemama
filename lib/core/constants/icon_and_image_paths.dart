@@ -17,10 +17,10 @@ class IconsPath {
   static String get visibilityOn => Assets.icons.visibilityOn;
 
   // Status / Feedback
-  static String get largeTick  => Assets.icons.tickL;
+  static String get largeTick => Assets.icons.tickL;
   static String get smallTick => Assets.icons.tickSm;
   static String get smallTickBold => Assets.icons.circleCheck;
-  static String get successTick  => Assets.icons.tickL2;
+  static String get successTick => Assets.icons.tickL2;
   static String get closeCircle => Assets.icons.closeCircleOutlined;
   static String get closeRed => Assets.icons.closeRedFilled;
   static String get verifiedTick => Assets.icons.verifiedTick;
@@ -33,21 +33,32 @@ class IconsPath {
   static String get userStack2 => Assets.icons.userStack2;
   static String get userStack3 => Assets.icons.userStack3;
 
+  // More
+  static String get blockedUser => Assets.icons.blockedUser;
+  static String get termsConditions => Assets.icons.termsConditions;
+  static String get quesContact => Assets.icons.quesContact;
+
   // Social / Interaction
   static String get chatCircleOutlined => Assets.icons.chatCircleOutlined;
   static String get chatWDot => Assets.icons.chatWDot;
   static String get likeFilled => Assets.icons.likeFilled;
+  static String get like => Assets.icons.like;
   static String get heartOutlined => Assets.icons.heartOutlined;
   static String get heartHalfFilled => Assets.icons.heartHalfFilled;
   static String get bookmarkFilled => Assets.icons.bookmarkFilled;
   static String get bookmarkOutlined => Assets.icons.bookmarkOutlined;
   static String get addPlusCircle => Assets.icons.addPlusCircle;
-   static String get addPlus => Assets.icons.addPlus;
+  static String get addPlus => Assets.icons.addPlus;
   static String get handWave => Assets.icons.handWave;
   static String get sendSmallWhite => Assets.icons.sendSmW;
   static String get sendLargeWhite => Assets.icons.sendLW;
   static String get share => Assets.icons.share;
   static String get starFilled => Assets.icons.starFilled;
+
+  static String get pin => Assets.icons.pin;
+  static String get likeHeartFilled => Assets.icons.likeHeartFilled;
+  static String get reminderBellStraignt => Assets.icons.reminderBellStraignt;
+  static String get reminderBellSkew => Assets.icons.reminderBellSkew;
 
   // Home / General
   static String get home => Assets.icons.home;
@@ -67,10 +78,14 @@ class IconsPath {
   // Setup profie
   static String get verifiedSafety => Assets.icons.verifiedSecurity;
   static String get security => Assets.icons.security;
+  static String get shieldFill => Assets.icons.shieldFill;
+  static String get shieldCheck => Assets.icons.shieldCheck;
 
   // Live / Status
   static String get liveDot => Assets.icons.liveDot;
   static String get mutedAudio => Assets.icons.mutedAudio;
+  static String get handRaise => Assets.icons.handRaise;
+  static String get leave => Assets.icons.leave;
 
   // Special / Objects
   static String get crown => Assets.icons.crown;
@@ -147,7 +162,6 @@ class ImagesPath {
 
   // Location
   static String get locationMap => Assets.images.locationMap.path;
-
 
   // Net Images/json animation
 

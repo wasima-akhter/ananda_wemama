@@ -188,6 +188,8 @@ class FreeSubCard extends StatelessWidget {
           title: Strings.fullMoodLibrary,
           isIncluded: false,
           textColor: rowTextClr,
+
+          isCloseWhite: isSelected ? true : false,
         ),
 
         Gap(10),
@@ -197,6 +199,7 @@ class FreeSubCard extends StatelessWidget {
           title: Strings.attendLiveSessions,
           isIncluded: false,
           textColor: rowTextClr,
+          isCloseWhite: isSelected ? true : false,
         ),
       ],
     );

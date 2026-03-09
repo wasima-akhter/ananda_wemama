@@ -21,9 +21,9 @@ class ChangePasswordController extends GetxController {
   var showConPassword = false.obs;
 
   IconData get newPasswordIcon => !showPassword.value ? Icons.visibility_off : Icons.visibility;
-  bool get isNewPassHidden => showPassword.value;
+  bool get isNewPassHidden => !showPassword.value;
   IconData get conPassIcon => !showConPassword.value ? Icons.visibility_off : Icons.visibility;
-  bool get isConPassHidden => showConPassword.value;
+  bool get isConPassHidden => !showConPassword.value;
 
   void toggleNewPass() {
     showPassword.value = !showPassword.value;

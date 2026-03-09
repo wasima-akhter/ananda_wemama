@@ -13,69 +13,123 @@ class OnboardScreen extends StatelessWidget {
       top: false,
 
       child: Scaffold(
-        backgroundColor: bgClr,
+        backgroundColor: c.scaffoldBackground,
 
         extendBodyBehindAppBar: true,
 
         body: BgImageContainer(
-          child: BounceSingleChildScrollView(
-            child: Column(
-              spacing: itemGap,
+          child: Container(
+            color: c.scaffoldBackground,
+            child: BounceSingleChildScrollView(
+              child: Column(
+                spacing: itemGap,
 
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                weMamaLogoWithTxt,
-                Gap(itemGap * 3),
-                FittedBox(
-                  child: Text(
-                    Strings.motherhoodSupportLine,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Gap(itemGap * 4),
+
+                  weMamaLogoWithTxt,
+                  Gap(itemGap),
+
+                  SecurityText(iconPath: IconsPath.shieldFill, text: Strings.womenOnlySpace),
+
+                  Gap(itemGap),
+                  FittedBox(
+                    child: Text(
+                      Strings.motherhoodSupportLine,
+                      textAlign: TextAlign.center,
+                      style: 17.titleMclrCusFS,
+                    ).mHV(20, 0),
+                  ),
+                  Text(
+                    Strings.builtForMotherhoodStages,
                     textAlign: TextAlign.center,
-                    style: 17.titleMclrCusFS,
-                  ).mHV(20, 0),
-                ),
-                Text(
-                  Strings.builtForMotherhoodStages,
-                  textAlign: TextAlign.center,
-                  style: 12.titleMclrCusFS,
-                ).mHV(40, 0),
+                    style: 12.titleMclrCusFS,
+                  ).mHV(40, 0),
 
-                Gap(itemGap * 5),
+                  Gap(itemGap * 2),
 
-                Image.asset(ImagesPath.onboardingImage),
+                  Image.asset(ImagesPath.onboardingImage),
 
-                Gap(itemGap * 3),
+                  Gap(itemGap),
 
-                CustomBtnWTxt(
-                  w: S.w * 0.6,
-                  btnTxt: Strings.getStarted,
-                  isUppCase: true,
-                  onTap: () {
-                    Get.toNamed(RoutePaths.onboardScreen2);
-                  },
-                  isLoading: false,
-                ),
-                Gap(itemGap),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  CustomBtnWTxt(
+                    w: S.w * 0.6,
+                    btnTxt: Strings.getStarted,
+                    isUppCase: true,
+                    onTap: () {
+                      Get.toNamed(RoutePaths.onboardScreen2);
+                    },
+                    isLoading: false,
+                  ),
 
-                  children: [
-                    Text(Strings.alreadyHaveAnAccount, style: TxtStyle.norTxt),
-                    Gap(itemGap),
-                    CusGestureDetector(
-                      onTap: () {
-                        //
-                        Get.toNamed(RoutePaths.signin);
-                      },
-                      child: ContainerBordered(
-                        child: Text(Strings.loginWithSpace.capEachWord(), style: 12.titleMclrCusFS),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+
+                    children: [
+                      Text(
+                        Strings.alreadyHaveAnAccount,
+                        style: TxtStyle.outfit(fs: 15, color: black, w: 500),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      Gap(itemGap),
+                      CusGestureDetector(
+                        onTap: () {
+                          //
+                          Get.toNamed(RoutePaths.signin);
+                        },
+                        child: ContainerBordered(
+                          child: Text(
+                            Strings.loginWithSpace.capEachWord(),
+                            style: 12.titleMclrCusFS,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SecurityText(
+                    iconPath: IconsPath.shieldCheck,
+                    text: Strings.yourPrivacyIsOurPriority,
+                  ),
+                  Gap(itemGap * 3),
+                ],
+              ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class SecurityText extends StatelessWidget {
+  final String iconPath;
+  final String text;
+  const SecurityText({super.key, required this.iconPath, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return IntrinsicWidth(
+      child: ContainerBordered(
+        vp: 2,
+        hp: 10,
+        rad: 30,
+        contClr: c.primary.withOpacity(0.05),
+        child: Row(
+          children: [
+            SvgIcon(iconPath: iconPath, height: 28),
+
+            Gap(4),
+            Expanded(
+              child: Text(
+                text.toUpperCase(),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                style: TxtStyle.inter(fs: 12, color: c.secondary),
+              ),
+            ),
+          ],
         ),
       ),
     );

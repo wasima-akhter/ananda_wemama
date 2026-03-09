@@ -8,7 +8,15 @@ class PopupInputTile extends StatelessWidget {
   final double? brdrW;
   final Color? brdrClr;
 
-  const PopupInputTile({super.key, required this.hintText, this.value, this.onTap, this.height, this.brdrW, this.brdrClr});
+  const PopupInputTile({
+    super.key,
+    required this.hintText,
+    this.value,
+    this.onTap,
+    this.height,
+    this.brdrW,
+    this.brdrClr,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +29,9 @@ class PopupInputTile extends StatelessWidget {
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
         decoration: BoxDecoration(
-          color: c.inputBackground,
+          color: c.cardPrimary,
           borderRadius: 30.brdrRad,
-          border: Border.all(color: brdrClr?? c.inputBorder, width: brdrW?? 1.5),
+          border: Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 1.5),
         ),
         child: Row(
           children: [

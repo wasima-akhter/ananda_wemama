@@ -1,6 +1,14 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/components/mood_check_in/mood_row_model.dart';
+import '../../../../core/enums/ui_enums.dart';
 
 class OnboardController extends GetxController {
+  var moodDataList = [
+    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
+    MoodRowModel(name: Strings.tired, moodType: MoodType.tired),
+    MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 8),
+    MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 8),
+  ];
   var currPage = 0.obs;
   var isLastPage__ = false.obs;
 
@@ -16,7 +24,7 @@ class OnboardController extends GetxController {
   void _finishOnboarding() {
     if (isLastPage__.value == false) return; // extra safety
 
-    storage.setSeenOnboarding(true);
+    storage.setSeenOnboarding(false); // make true late
     debugPrint("Seen onboarding saved: ${storage.getSeenOnboarding}");
 
     // Unfocus anything just in case

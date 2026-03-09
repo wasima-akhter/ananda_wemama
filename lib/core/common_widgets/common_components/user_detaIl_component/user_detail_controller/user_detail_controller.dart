@@ -1,7 +1,5 @@
-import 'package:mama_app/core/common_widgets/popups.dart';
-
 import '../../../../../app/controller_export.dart';
-import '../../../../constants/icon_and_image_paths.dart'; 
+import '../../../../constants/icon_and_image_paths.dart';
 
 class FakeUserDetailsModel {
   final String name;
@@ -31,17 +29,12 @@ class UiInfoItem {
 }
 
 class UserDetailController extends GetxController {
- 
   final listOfInfo = [
     UiInfoItem(iconPath: IconsPath.locationBold, text: 'Ikeja, Lagos'),
-    UiInfoItem(
-      iconPath: IconsPath.chartFilled,
-      text: 'TTC:  Trying to conceive',
-    ),
+    UiInfoItem(iconPath: IconsPath.chartFilled, text: 'Trying to conceive'),
     UiInfoItem(
       iconPath: IconsPath.heartHalfFilled,
-      text:
-          'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
+      text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
     ),
   ];
 
@@ -58,7 +51,7 @@ class UserDetailController extends GetxController {
       age: 24,
       imageUrl: Strings.fakeImageUrl,
       aboutMe:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nunc nisl aliquam nisl, eget aliquam nunc nisl eget nunc.",
+          "Lorem ipsum dolor sit amet, consectetur sauydcg sdiysdiuc iysdc siudcg isydgc isdgc adipiscing elit. Donec auctor, nisl eget ultricies lacinia, nunc nisl aliquam nisl, eget aliquam nunc nisl eget nunc.",
       infoList: listOfInfo,
       galleryImages: [
         Strings.fakeImageUrl,
@@ -91,11 +84,8 @@ class UserDetailController extends GetxController {
     Get.back();
 
     if (isAccepted) {
-      
-     
       Future.delayed(Duration(seconds: 1), () {
         Get.back();
- 
       });
     }
   }
@@ -126,5 +116,3 @@ class UserDetailController extends GetxController {
     }
   }
 }
-
- 

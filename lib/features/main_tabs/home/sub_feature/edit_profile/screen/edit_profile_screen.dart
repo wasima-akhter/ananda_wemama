@@ -45,9 +45,7 @@ class EditProfileScreen extends StatelessWidget {
             final selImage = epc.fileImage.value;
             return UserPhotoWidget(
               // imageUrl: "http://10.10.20.57:8001/${storage.getUserInfo.imageUrl}",
-              imageUrl: makeImageUrl(
-                imageUrl: storage.getUserInfo.imageUrl ?? '',
-              ),
+              imageUrl: makeImageUrl(imageUrl: storage.getUserInfo.imageUrl ?? ''),
               selImage: selImage,
             );
           }),
@@ -93,7 +91,6 @@ class EditProfileScreen extends StatelessWidget {
               ],
             );
           }),
- 
 
           Form(
             key: formkey,
@@ -107,7 +104,8 @@ class EditProfileScreen extends StatelessWidget {
                   hintText: Strings.name,
                   hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
                   style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                  brdrClr: c.inputBorder ,
+                  brdrClr: c.inputBorder,
+                  fillColor: c.cardPrimary,
 
                   focusNode: epc.nameFocus,
                   validator: (value) => validateName(value),
@@ -117,7 +115,9 @@ class EditProfileScreen extends StatelessWidget {
                 Obx(() {
                   return PopupInputTile(
                     hintText: Strings.dateOfBirth.cap,
-                    value: epc.selectedDob.value,  brdrClr: c.inputBorder ,brdrW: 0.6,
+                    value: epc.selectedDob.value,
+                    brdrClr: c.inputBorder,
+                    brdrW: 0.6,
                     onTap: () {
                       pickDate(
                         selectedDate: epc.selectedDob,
@@ -130,7 +130,9 @@ class EditProfileScreen extends StatelessWidget {
                 Obx(() {
                   return PopupInputTile(
                     hintText: Strings.state.cap,
-                    value: epc.selectedState.value,brdrClr: c.inputBorder ,brdrW: 0.6,
+                    value: epc.selectedState.value,
+                    brdrClr: c.inputBorder,
+                    brdrW: 0.6,
                     onTap: () {
                       epc.openStateBottomSheet();
                     },
@@ -140,35 +142,38 @@ class EditProfileScreen extends StatelessWidget {
                 Obx(() {
                   return PopupInputTile(
                     hintText: Strings.city.cap,
-                    value: epc.selectedCity.value,brdrClr: c.inputBorder ,brdrW: 0.6,
+                    value: epc.selectedCity.value,
+                    brdrClr: c.inputBorder,
+                    brdrW: 0.6,
                     onTap: () {
                       epc.openCityBottomSheet();
                     },
                   );
                 }),
                 Gap(itemGap),
-                Obx(() {
-                  return PopupInputTile(
-                    hintText: Strings.children.cap,
-                    value: epc.selectedCity.value,brdrClr: c.inputBorder ,brdrW: 0.6,
-                    onTap: () {
-                      epc.openChildrenBottomSheet();
-                    },
-                  );
-                }),
+
+                PopupInputTile(
+                  hintText: Strings.children.cap,
+                  value: Strings.children.cap,
+                  brdrClr: c.inputBorder,
+                  brdrW: 0.6,
+                  onTap: () {
+                    epc.openChildrenBottomSheet();
+                  },
+                ),
+
                 Gap(itemGap),
-               CusDesTypeTextFormField(
+                CusDesTypeTextFormField(
                   controller: epc.bioCtrl,
                   hintText: Strings.writeBioHere,
                   hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
                   style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
                   rad: 12,
                   focusNode: epc.bioFocus,
+                  bgClr: c.cardPrimary,
                   validator: (value) => validateDescription(value),
                 ),
                 Gap(itemGap * 2.5),
-
-            
               ],
             ),
           ),
@@ -190,7 +195,7 @@ class EditProfileScreen extends StatelessWidget {
 
     // Calculate size: screen width minus screen horizontal margins from getcm, divided by 4 max slots
     final double hPadding = S.w * 0.05 * 2; // getcm padding both sides
-    final double totalSpacing = 8.w * 3; // spacing between 4 items
+    final double totalSpacing = 8.w * 4; // spacing between 4 items
     final double imageSize = (S.w - hPadding - totalSpacing) / 4;
 
     return Align(
@@ -220,8 +225,7 @@ class EditProfileScreen extends StatelessWidget {
                   top: 2,
                   right: 2,
                   child: CusGestureDetector(
-                    onTap: () =>
-                        removeImage(index), // ← pass epc or use callback
+                    onTap: () => removeImage(index), // ← pass epc or use callback
                     child: CircleAvatar(
                       radius: 8.r,
                       backgroundColor: black.withOpacity(0.6),

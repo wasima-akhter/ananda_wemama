@@ -50,7 +50,7 @@ class SubscriptionCard extends StatelessWidget {
             ),
           if (pricingSection != null) pricingSection!,
 
-          Text(title.capEachWord(), style: TxtStyle.outfit(fs: 20, w: 700, color: txtClr)),
+          Text(title.toUpperCase(), style: TxtStyle.outfit(fs: 20, w: 700, color: txtClr)),
           Gap(18),
           ...children,
         ],
@@ -188,6 +188,7 @@ class FreeSubCard extends StatelessWidget {
           title: Strings.fullMoodLibrary,
           isIncluded: false,
           textColor: rowTextClr,
+          isCloseWhite: isSelected ? true : false,
         ),
 
         Gap(10),
@@ -197,6 +198,7 @@ class FreeSubCard extends StatelessWidget {
           title: Strings.attendLiveSessions,
           isIncluded: false,
           textColor: rowTextClr,
+          isCloseWhite: isSelected ? true : false,
         ),
       ],
     );

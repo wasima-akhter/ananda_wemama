@@ -25,21 +25,21 @@ class CustomToggleButton extends StatelessWidget {
     this.duration = const Duration(milliseconds: 250),
     this.activeChild,
     this.inactiveChild,
-    this.borderRadius = 30,
+    this.borderRadius = 12,
   });
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = grey200;
-    final inactiveColor = grey200;
-    final thumbColor = value ? greyLoc : c.textSecondary;
+    final activeColor = c.inputBackground;
+    final inactiveColor = c.inputBackground;
+    final thumbColor = value ? c.secondary : c.bottomSheetBackground;
 
     return GestureDetector(
       onTap: () => onChanged(!value),
       child: AnimatedContainer(
         duration: duration,
         width: width ?? 60,
-        height: height ?? 22,
+        height: height ?? 28,
         // padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           color: value ? activeColor : inactiveColor,
@@ -70,8 +70,9 @@ class CustomToggleButton extends StatelessWidget {
               duration: duration,
               alignment: value ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: height ?? 22 + 8,
-                height: height ?? 22 - 1,
+                width: 30 + 8,
+                height: height ?? 28 - 1,
+
                 decoration: BoxDecoration(
                   color: thumbColor,
                   borderRadius: (borderRadius.brdrRad),
@@ -84,7 +85,7 @@ class CustomToggleButton extends StatelessWidget {
                   child: Text(
                     value ? Strings.on : Strings.off,
 
-                    style: TxtStyle.inter(w: 600, fs: 11),
+                    style: TxtStyle.inter(w: 500, fs: 11, color: value ? white : c.secondary),
                   ),
                 ),
               ),

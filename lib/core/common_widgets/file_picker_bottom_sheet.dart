@@ -9,12 +9,12 @@ class FilePickerBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = S.w * 0.2;
+    double height = S.w * 0.13;
     return Column(
       children: [
         DragHandleForSheets(),
         Gap(itemGap * 2),
-        Text(Strings.selectPhotoOrFile, style: TxtStyle.inter(fs: 22, w: 600)),
+        Text(Strings.selectPhotoOrFile, style: TxtStyle.inter(fs: 16, w: 600)),
         Gap(itemGap * 5.5),
 
         Row(
@@ -23,7 +23,11 @@ class FilePickerBottomSheet extends StatelessWidget {
             Expanded(
               child: CusGestureDetector(
                 onTap: onTapGallery,
-                child: Image.asset(ImagesPath.gallery, height: height),
+                child: CircleAvatar(
+                  backgroundColor: grey200,
+                  radius: S.w * 0.13 * 0.6,
+                  child: Image.asset(ImagesPath.gallery, height: height),
+                ),
               ),
             ),
             Expanded(
@@ -35,7 +39,7 @@ class FilePickerBottomSheet extends StatelessWidget {
             Expanded(
               child: CusGestureDetector(
                 onTap: onTapFile,
-                child: Image.asset(ImagesPath.camera, height: height),
+                child: Image.asset(ImagesPath.folderAttach, height: height),
               ),
             ),
           ],

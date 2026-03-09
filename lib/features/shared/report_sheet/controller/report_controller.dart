@@ -96,5 +96,7 @@ class ReportController extends GetxController {
     }
   }
 
-  void onTapAddPhotoCard() {}
+  void onTapAddPhotoCard() {
+    pickSingleImageOrFile(ImageSource.gallery);
+  }
 }

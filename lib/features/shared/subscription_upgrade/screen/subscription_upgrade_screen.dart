@@ -41,7 +41,6 @@ class SubscriptionUpgradeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Gap(itemGap * 7),
             Text(
               Strings.chooseYourPlan.capEachWord(),
               textAlign: TextAlign.center,

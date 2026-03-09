@@ -3,6 +3,8 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../utils/extension/context_extension.dart';
+
 /*
 class SafeAutoHeightWebView extends StatelessWidget {
   final String htmlContent;
@@ -147,7 +149,7 @@ class SafeAutoHeightWebView extends StatelessWidget {
           padding: HtmlPaddings.zero,
           fontSize: FontSize(14),
           lineHeight: LineHeight(1.6),
-          fontFamily: GoogleFonts.inter().fontFamily,
+          fontFamily: GoogleFonts.outfit(color: c.secondary).fontFamily,
         ),
         "p": Style(margin: Margins.symmetric(vertical: 8)),
         "img": Style(width: Width(100, Unit.percent), height: Height.auto()),

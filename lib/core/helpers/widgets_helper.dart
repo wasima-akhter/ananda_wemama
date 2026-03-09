@@ -3,6 +3,7 @@ import 'package:pinput/pinput.dart';
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_tabs/community/model/comments_bottom_sheet.dart';
 import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
+import '../../features/video_meeting/modules/meeting_comments_bottom_sheet.dart';
 import '../common_widgets/common_components/set_children_bottom_sheet.dart';
 
 PinTheme? defaultPinTheme = PinTheme(
@@ -23,11 +24,7 @@ PinTheme? focusedPinTheme = defaultPinTheme?.copyWith(
     borderRadius: 30.brdrRad,
     border: Border.all(color: c.primary, width: 2),
     boxShadow: [
-      BoxShadow(
-        color: c.primary.withOpacity(0.15),
-        blurRadius: 8,
-        offset: const Offset(0, 3),
-      ),
+      BoxShadow(color: c.primary.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 3)),
     ],
   ),
 );
@@ -46,10 +43,7 @@ PinTheme? followingPinTheme = defaultPinTheme?.copyWith(
 ///
 ///////////////////////////////////////////////////////////////
 
-Future<dynamic> showReportBottomSheet({
-  double? heightFactor,
-  bool isScrollControlled = true,
-}) {
+Future<dynamic> showReportBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
@@ -75,33 +69,48 @@ Future<dynamic> showReportBottomSheet({
 Future<dynamic> showCommentsBottomSheet({
   double? heightFactor,
   bool isScrollControlled = true,
+  required int postId, // ← add
 }) {
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
     enableDrag: true,
-
     AnimatedPadding(
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
-
       child: Container(
         height: S.h * 0.9 * (heightFactor ?? 1),
-
-        // width: 1.sw,
-        child: CommentsBottomSheet(),
+        child: CommentsBottomSheet(postId: postId), // ← pass postId
       ).getBtmSheetM,
     ),
-
     isScrollControlled: isScrollControlled,
-    backgroundColor: bgClr, // needed for rounded corners
+    backgroundColor: bgClr,
   );
 }
 
-Future<dynamic> showChildrenBottomSheet({
+Future<dynamic> showLiveCommentsBottomSheet({
   double? heightFactor,
   bool isScrollControlled = true,
+  required int postId, // ← add
 }) {
+  return Get.bottomSheet(
+    ignoreSafeArea: false,
+    isDismissible: true,
+    enableDrag: true,
+    AnimatedPadding(
+      duration: const Duration(milliseconds: 250),
+      padding: EdgeInsets.only(bottom: S.bottomInset),
+      child: Container(
+        height: bSheetH * (heightFactor ?? 1),
+        child: MeetingCommentsBottomSheet(postId: postId), // ← pass postId
+      ).getBtmSheetM,
+    ),
+    isScrollControlled: isScrollControlled,
+    backgroundColor: bgClr,
+  );
+}
+
+Future<dynamic> showChildrenBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
@@ -116,7 +125,7 @@ Future<dynamic> showChildrenBottomSheet({
 
         // width: 1.sw,
         child: SetChildrenBottomSheet(),
-      ) ,
+      ),
     ),
 
     isScrollControlled: isScrollControlled,

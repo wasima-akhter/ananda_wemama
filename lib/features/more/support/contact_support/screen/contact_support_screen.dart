@@ -8,8 +8,6 @@ class ContactSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01;
-
     final csc = Get.find<ContactSupportController>();
 
     // Form key
@@ -47,6 +45,7 @@ class ContactSupportScreen extends StatelessWidget {
                   controller: csc.messageCtrl,
                   focusNode: csc.messageFocus,
                   hintText: Strings.writeHere,
+                  rad: 12,
                   validator: (v) => validateDescription(v), // or create custom
                 ),
 
@@ -54,9 +53,9 @@ class ContactSupportScreen extends StatelessWidget {
 
                 Obx(() {
                   return CustomBtnWTxt(
-                    outlined: true,
                     onTap: () => csc.onTapSubmit(formKey: formKey),
                     btnTxt: Strings.submit,
+                    rad: 30,
                     isLoading: csc.isLoading,
                   );
                 }),

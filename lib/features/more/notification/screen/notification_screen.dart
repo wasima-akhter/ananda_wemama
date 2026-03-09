@@ -23,7 +23,7 @@ class NotificationScreen extends StatelessWidget {
           child: CusRefreshIndicator(
             refreshKey: refreshKey,
             onRefresh: () async {
-              await nc.loadNotifications();
+              // await nc.loadNotifications();
             },
             child: Obx(() {
               if (nc.isLoading) {
@@ -44,10 +44,7 @@ class NotificationScreen extends StatelessWidget {
                           if (n.isSeen == true) return;
 
                           // Show loading popup
-                          showLoading(
-                            
-                            isupdateIsSeenLoading: nc.isupdateIsSeenLoading_,
-                          );
+                          showLoading(isupdateIsSeenLoading: nc.isupdateIsSeenLoading_);
 
                           await nc.updateIsSeen(notificationId: notificationId);
 

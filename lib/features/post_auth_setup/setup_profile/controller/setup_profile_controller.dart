@@ -12,6 +12,9 @@ class SetupProfileController extends GetxController {
   final selectedState = ''.obs;
   final selectedCity = ''.obs;
 
+  final keepDobPrivate = false.obs;
+  void toggleKeepDobPrivate() => keepDobPrivate.toggle();
+
   // Focus Node (only needed for actual text field)
   final nameFocus = FocusNode();
 

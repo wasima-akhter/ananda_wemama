@@ -28,20 +28,23 @@ class CommunityScreen extends StatelessWidget {
           onTap: () {
             communityGuidlineDialog(
               isLoading: false,
-              onTapAction: () async => Get.toNamed(RoutePaths.createCommunity),
+              onTapAction: () async {
+                Get.back();
+                Get.toNamed(RoutePaths.createCommunity);
+              },
             );
           },
           child: SvgIcon(iconPath: IconsPath.addPlus, height: 30),
         ),
       ),
       child: Column(
-        // ← Remove Flexible wrapper, AppScreenTemplate handles it via Expanded
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CusSearchBar(controller: cc.searchController),
           Gap(itemGap),
 
           TextFit(Strings.myCommunity, style: TxtStyle.outfitSmTitle),
+          Gap(itemGap),
 
           Expanded(
             child: CusScrollbarWidget(
@@ -54,8 +57,12 @@ class CommunityScreen extends StatelessWidget {
                     (index) => CommunityItem(
                       btnTxt: index < 2 ? Strings.manage : Strings.visit,
                       isLoading: false,
-                      onTapItem: cc.onTapItem,
-                      onTapItemBtn: () => cc.onTapItemBtn(false),
+                      onTapItem: () => cc.onTapItemBtn(
+                        index < 2 ? MyCommunityBtnState.manage : MyCommunityBtnState.visit,
+                      ),
+                      onTapItemBtn: () => cc.onTapItemBtn(
+                        index < 2 ? MyCommunityBtnState.manage : MyCommunityBtnState.visit,
+                      ),
                     ).mB(itemGap),
                   ),
                 ],
@@ -66,7 +73,7 @@ class CommunityScreen extends StatelessWidget {
           Gap(itemGap * 2),
 
           TextFit(Strings.suggestedCommunity, style: TxtStyle.outfitSmTitle),
-
+          Gap(itemGap),
           Expanded(
             child: CusScrollbarWidget(
               controller: cc.suggCommunityScrlCtrl,
@@ -77,8 +84,8 @@ class CommunityScreen extends StatelessWidget {
                     (index) => CommunityItem(
                       btnTxt: Strings.join,
                       isLoading: false,
-                      onTapItem: cc.onTapItem,
-                      onTapItemBtn: () => cc.onTapItemBtn(true),
+                      onTapItem: () => cc.onTapItemBtn(MyCommunityBtnState.join),
+                      onTapItemBtn: () => cc.onTapItemBtn(MyCommunityBtnState.join),
                     ).mB(itemGap),
                   ),
                 ],

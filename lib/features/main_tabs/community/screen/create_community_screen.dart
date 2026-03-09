@@ -1,3 +1,6 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/core/common_widgets/common_components/add_photo_widget.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/create_community_controller.dart';
 
@@ -6,7 +9,7 @@ class CreateCommunityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mc = Get.find<CreateCommunityController>();
+    final ccc = Get.find<CreateCommunityController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
@@ -15,7 +18,42 @@ class CreateCommunityScreen extends StatelessWidget {
         print("communities refreshed");
       },
       appBar: CommonAppBarContent(title: Strings.createCommunity),
-      child: Column(children: []).getcm,
+
+      bottomWidget: Obx(
+        () => filledBtnWTxt(
+          btnTxt: Strings.create,
+          isLoading: ccc.isLoading,
+          onTap: () async {
+            // Get.toNamed(RoutePaths.photoAndBio);
+          },
+
+          //  await epc.onTapSignup(setupProfileFormKey),
+        ),
+      ),
+      child: Column(
+        children: [
+          Obx(() {
+            return AddPhotoWidget(
+              onTapAddPhoto: () async => await ccc.pickSingleImage(ImageSource.gallery),
+
+              selImage: ccc.fileImage.value,
+            );
+          }),
+
+          Gap(itemGap * 3),
+
+          CusNameTypeTextFormField(
+            controller: ccc.nameCtrl,
+            focusNode: ccc.nameFocus,
+
+            rad: 8,
+            brdrW: 0.6,
+            fillColor: ctransp,
+
+            hintText: Strings.communityName,
+          ),
+        ],
+      ).getcm,
     );
   }
 }

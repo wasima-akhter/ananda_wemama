@@ -73,7 +73,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                     title: Strings.lastUpdated,
                     content: Text(
                       data.updatedAt?.toString() ?? "N/A",
-                      style: TxtStyle.inter(fs: 11),
+                      style: TxtStyle.outfit(fs: 11),
                     ),
                   ),
 

@@ -36,19 +36,16 @@ class UserDetailComponent extends StatelessWidget {
       spacing: itemGap,
       children: [
         // user details here
-        if (isFromProfile ==null)
+        if (isFromProfile == null)
           Align(
             alignment: Alignment.centerRight,
             child: CusGestureDetector(
               onTap: () => Get.back(),
-              child: SvgIcon(
-                iconPath: IconsPath.closeCircle,
-                height: 20,
-              ).mOnly(top: 2, right: 10),
+              child: SvgIcon(iconPath: IconsPath.closeCircle, height: 20).mOnly(top: 2, right: 10),
             ),
           ),
 
-        UserAvatar(imageUrl: Strings.fakeImageUrl, isFromProfile: isFromProfile,),
+        UserAvatar(imageUrl: Strings.fakeImageUrl, isFromProfile: isFromProfile),
 
         _getUserName(),
 
@@ -62,10 +59,7 @@ class UserDetailComponent extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              Strings.children.cap,
-              style: TxtStyle.outfitSemiB(fs: 15, w: 500),
-            ),
+            Text(Strings.children.cap, style: TxtStyle.outfitSemiB(fs: 15, w: 500)),
             Gap(itemGap),
             _getChildrenRow(),
           ],
@@ -90,10 +84,7 @@ class UserDetailComponent extends StatelessWidget {
         vp: 0,
         child: Row(
           children: [
-            Text(
-              'Ananda, 21',
-              style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary),
-            ),
+            Text('Ananda, 21', style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary)),
             Gap(3),
             SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
           ],
@@ -106,17 +97,23 @@ class UserDetailComponent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ...listOfInfo.map(
-          (e) => Row(
+        ...listOfInfo.asMap().entries.map((entry) {
+          final index = entry.key;
+          final e = entry.value;
+
+          return Row(
             children: [
               SvgIconColored(iconPath: e.iconPath, height: 18),
               Gap(itemGap),
               Expanded(
-                child: Text(e.text.capEachWord(), style: TxtStyle.outfitSmNor),
+                child: Text(
+                  index == 1 ? "TTC: ${e.text.capEachWord()}" : e.text.capEachWord(),
+                  style: TxtStyle.outfitSmNor,
+                ),
               ),
             ],
-          ).mB(3),
-        ),
+          ).mB(3);
+        }),
       ],
     ).mHV(20, 0);
   }
@@ -129,10 +126,7 @@ class UserDetailComponent extends StatelessWidget {
             aspectRatio: 1, // 1:1 square
             child: Padding(
               padding: 4.pa,
-              child: NetworkImageWidget(
-                radius: 8,
-                imageUrl: user?.galleryImages[index],
-              ),
+              child: NetworkImageWidget(radius: 8, imageUrl: user?.galleryImages[index]),
             ),
           ),
         );
@@ -153,10 +147,10 @@ class UserDetailComponent extends StatelessWidget {
                 rad: 30,
                 hp: 12,
                 vp: 6,
-                contClr: c.secondary.withOpacity(0.2),
+                contClr: c.scaffoldBackground,
                 child: Text(
                   (user?.children[index] ?? '').capEachWord(),
-                  style: TxtStyle.outfitSmSecNor,
+                  style: TxtStyle.outfitxSmNorSec,
                 ),
               ),
             ),

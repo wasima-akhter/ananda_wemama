@@ -17,6 +17,7 @@ class ContainerBordered extends StatelessWidget {
   final AlignmentGeometry? alignment;
   final BoxDecoration? cusDec;
   final List<BoxShadow>? boxShadow;
+  final Clip? clipBehavior;
 
   const ContainerBordered({
     super.key,
@@ -37,11 +38,13 @@ class ContainerBordered extends StatelessWidget {
     this.boxShadow,
     this.mv,
     this.mh,
+    this.clipBehavior,
   });
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
+      clipBehavior: clipBehavior ?? Clip.none,
       alignment: alignment ?? Alignment.center,
       duration: Duration(milliseconds: duration ?? 0),
       margin: EdgeInsets.symmetric(horizontal: (mh ?? 0.0).w, vertical: (mv ?? 0).h),

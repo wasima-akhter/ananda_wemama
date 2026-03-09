@@ -1,12 +1,35 @@
 import 'package:get/get.dart';
 
 import '../../../../core/services/more/notification/notification_service.dart';
-import '../model/bookmark_model.dart';
+import '../../../../core/utils/extension/string_extension.dart';
+
+class BookmarkModel {
+  final String id;
+  final String title;
+  final List<String> bullets;
+
+  BookmarkModel({required this.id, required this.title, required this.bullets});
+}
 
 class BookmarkController extends GetxController {
+  final bookmarks = <BookmarkModel>[].obs; // ← start empty, filled by real data
+
+  bool isBookmarked(String id) => bookmarks.any((b) => b.id == id);
+
+  void addBookmark(BookmarkModel item) {
+    if (!isBookmarked(item.id)) {
+      bookmarks.add(item);
+      "Bookmarked!".showToast(); // ← replace with your toast util
+    } else {
+      bookmarks.removeWhere((b) => b.id == item.id);
+      "Removed from bookmarks".showToast();
+    }
+  }
+
   final NotificationService _service = NotificationService();
 
-  final notifications = <NotificationsDataModel>[].obs;
+  // final notifications = <NotificationsDataModel>[].obs;
+
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
@@ -27,6 +50,7 @@ class BookmarkController extends GetxController {
 
   final isupdateIsSeenLoading_ = false.obs;
   bool get isupdateIsSeenLoading => isupdateIsSeenLoading_.value;
+
   Future<void> updateIsSeen({required String notificationId}) async {
     isupdateIsSeenLoading_.value = true;
 
@@ -34,11 +58,6 @@ class BookmarkController extends GetxController {
 
     if (isSuccess) {
       // 🔥 Update local list
-      final index = notifications.indexWhere((e) => e.id == notificationId);
-
-      if (index != -1) {
-        notifications[index] = notifications[index].copyWith(isSeen: true);
-      }
     }
 
     isupdateIsSeenLoading_.value = false;

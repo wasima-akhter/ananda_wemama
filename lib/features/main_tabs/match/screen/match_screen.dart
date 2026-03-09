@@ -2,7 +2,6 @@ import 'package:mama_app/features/main_tabs/match/modules/upgrade_now_module.dar
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
-import '../../../shared/wave_request/controller/wave_request_controller.dart';
 import '../controller/match_controller.dart';
 import '../modules/searching_cancel_btn.dart';
 import '../widgets/match_user_details.dart';
@@ -49,7 +48,7 @@ class MatchScreen extends StatelessWidget {
           ContainerBordered(
             contClr: white,
             hp: 12,
-            vp: 22,
+            vp: 12,
             child: Column(
               children: [
                 Text(

@@ -40,7 +40,7 @@ class WelcomeFundingMumBody extends StatelessWidget {
           /// Paged Content
           Expanded(
             child: PageView(
-              physics: const BouncingScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               controller: controller.pageController,
               onPageChanged: controller.onPageChanged,
               children: [

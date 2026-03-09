@@ -15,8 +15,8 @@ class SmallNavBtn extends StatelessWidget {
           contClr: c.buttonPrimary,
           rad: 30,
           hp: 40,
-          vp: 10,
-          child: Text(text, style: TxtStyle.inter(fs: 14, w: 600, color: c.textOnPrimary)),
+          vp: 8,
+          child: Text(text, style: TxtStyle.inter(fs: 12, w: 600, color: c.textOnPrimary)),
         ),
       ),
     );

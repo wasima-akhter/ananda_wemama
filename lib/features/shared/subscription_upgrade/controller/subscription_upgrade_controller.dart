@@ -35,10 +35,6 @@ class SubscriptionUpgradeController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
-    //backend stuff
-
-    Get.toNamed(RoutePaths.welcomeFundingMum);
-
     isLoading_.value = false;
   }
 

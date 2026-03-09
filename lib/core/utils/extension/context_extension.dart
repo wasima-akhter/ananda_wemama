@@ -1,5 +1,6 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:mama_app/core/common_widgets/common_components/founding_mum_badge_snack.dart';
 import 'package:mama_app/core/enums/app_enums.dart';
 
 import '../../themes/color/color_model.dart';
@@ -94,7 +95,48 @@ extension BorderRadiusExt on num {
 /// SNACKBARS
 /// --------------------
 class Snack {
-  static void show(String message, {String? title}) {
+  static void showFoundingMumBadge(
+    String message, {
+    String? title,
+    Duration duration = const Duration(seconds: 3),
+  }) {
+    Get.generalDialog(
+      barrierDismissible: true,
+      barrierLabel: "Snack",
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) {
+        Future.delayed(duration, () {
+          if (Get.isDialogOpen ?? false) Get.back();
+        });
+
+        return SafeArea(
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: FoundingMumBadgeSnack(title: title ?? '', message: message),
+              ),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final offsetAnimation = Tween(
+          begin: const Offset(0, 1),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+    );
+  }
+
+  static void show(
+    String message, {
+    String? title,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(
@@ -126,11 +168,11 @@ class Snack {
           ],
         ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: bgClr.withOpacity(0.2),
+        backgroundColor: bgClr,
         margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         borderRadius: 8.r,
         padding: EdgeInsets.all(12.w),
-        duration: const Duration(seconds: 3),
+        duration: duration,
         animationDuration: const Duration(milliseconds: 300),
         isDismissible: true,
       ),
@@ -226,7 +268,11 @@ class Snack {
   }
 
   /// Warning snackbar with info icon
-  static void showWarning(String message, {String? title}) {
+  static void showWarning(
+    String message, {
+    String? title,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(
@@ -261,7 +307,7 @@ class Snack {
         margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 80.h),
         padding: EdgeInsets.all(12.w),
         borderRadius: 8.r,
-        duration: const Duration(seconds: 3),
+        duration: duration,
         snackStyle: SnackStyle.FLOATING,
         isDismissible: true,
         animationDuration: const Duration(milliseconds: 300),
@@ -342,7 +388,7 @@ class TxtStyle {
   }) => GoogleFonts.inter(
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
-    letterSpacing: ls  ,
+    letterSpacing: ls,
     color: color ?? c.primary,
     height: h,
     decoration: dec,
@@ -457,7 +503,7 @@ class TxtStyle {
   static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
   static TextStyle get outfitSmTitleSec => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);
-  static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11, );
+  static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11);
   static TextStyle get outfitxSmNorSec => TxtStyle.outfit(fs: 11, color: c.secondary);
   static TextStyle get outfitxSmNor500 => TxtStyle.outfitSemiB(fs: 10, w: 500);
   static TextStyle get outfitSmSecNor => TxtStyle.outfit(fs: 13, color: c.secondary);

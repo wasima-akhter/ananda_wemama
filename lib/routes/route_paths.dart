@@ -12,6 +12,7 @@ class RoutePaths {
   static const splashScreen = '/splashScreen';
   static const onboardScreen = '/onboardScreen';
   static const onboardScreen2 = '/onboardScreen2';
+  static const onboardScreen3 = '/onboardScreen3';
 
   // ─────────────────────────────
   // 🔹 Authentication
@@ -49,7 +50,11 @@ class RoutePaths {
 
   static const chatInbox = '/chatInbox';
   static const createCommunity = '/createCommunity';
-  static const communitiyDetail = '/communitiyDetail';
+  static const communityDetail = '/communityDetail';
+  static const manageCommunity = '/manageCommunity';
+  static const memberManagement = '/memberManagement';
+  static const postInCommunity = '/postInCommunity';
+  static const pastSessions = '/pastSessions';
 
   // ─────────────────────────────
   // 🔹 Experts >
@@ -66,6 +71,8 @@ class RoutePaths {
   static const privacyPolicy = '/privacyPolicy';
   static const termsAndConditions = '/termsAndConditions';
   static const notification = '/notification';
+  static const blockedUser = '/blockedUser';
+  static const about = '/about';
 
   // ─────────────────────────────
   // 🔹 Individual but Shared
@@ -75,6 +82,7 @@ class RoutePaths {
   static const moodInsight = '/moodInsight';
   static const waveRequest = '/waveRequest';
   static const subscriptionUpgrade = '/subscriptionUpgrade';
+  static const subscriptionInfo = '/subscriptionInfo';
 
   // ─────────────────────────────
   // 🔹 Profile / User

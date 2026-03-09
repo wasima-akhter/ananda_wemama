@@ -27,8 +27,7 @@ class LogoutConfirmDialog extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomBtnWTxt(
-                  btnColor: greyLoc,
-                  // borderClr: c.primary,
+                  outlined: true,
                   txtClr: c.textPrimary,
                   btnTxt: Strings.cancel,
                   isLoading: false,
@@ -44,7 +43,7 @@ class LogoutConfirmDialog extends StatelessWidget {
                   () => CustomBtnWTxt(
                     btnColor: c.primary,
                     borderClr: c.primary,
-                    txtClr: c.textSecondary,
+                    txtClr: white,
                     btnTxt: Strings.confirm,
                     isLoading: isLoading.value,
                     rad: 30,

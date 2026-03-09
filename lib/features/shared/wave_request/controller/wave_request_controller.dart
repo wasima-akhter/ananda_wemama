@@ -1,59 +1,26 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 
-import '../../../../app/controller_export.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
- 
+
 class WaveRequestController extends GetxController {
   var fakeNewWavesList = [
-    FakeNewWavesModel(
-      id: "1",
-      name: "Alice",
-      time: "2h ago",
-      imageUrl: Strings.fakeImageUrl,
-    ),
-    FakeNewWavesModel(
-      id: "2",
-      name: "Bob",
-      time: "4min ago",
-      imageUrl: Strings.fakeImageUrl,
-    ),
-    FakeNewWavesModel(
-      id: "3",
-      name: "Charlie",
-      time: "yesterday",
-      imageUrl: Strings.fakeImageUrl,
-    ),
-    FakeNewWavesModel(
-      id: "4",
-      name: "Diana",
-      time: "22 Jan 2026",
-      imageUrl: Strings.fakeImageUrl,
-    ),
-    FakeNewWavesModel(
-      id: "5",
-      name: "Eve",
-      time: "1 Jan 2026",
-      imageUrl: Strings.fakeImageUrl,
-    ),
+    FakeNewWavesModel(id: "1", name: "Alice", time: "2h ago", imageUrl: Strings.fakeImageUrl),
+    FakeNewWavesModel(id: "2", name: "Bob", time: "4min ago", imageUrl: Strings.fakeImageUrl),
+    FakeNewWavesModel(id: "3", name: "Charlie", time: "yesterday", imageUrl: Strings.fakeImageUrl),
+    FakeNewWavesModel(id: "4", name: "Diana", time: "22 Jan 2026", imageUrl: Strings.fakeImageUrl),
+    FakeNewWavesModel(id: "5", name: "Eve", time: "1 Jan 2026", imageUrl: Strings.fakeImageUrl),
   ];
 
   final listOfInfo = [
     UiInfoItem(iconPath: IconsPath.locationBold, text: 'Ikeja, Lagos'),
-    UiInfoItem(
-      iconPath: IconsPath.chartFilled,
-      text: 'TTC:  Trying to conceive',
-    ),
+    UiInfoItem(iconPath: IconsPath.chartFilled, text: 'TTC:  Trying to conceive'),
     UiInfoItem(
       iconPath: IconsPath.heartHalfFilled,
-      text:
-          'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
+      text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
     ),
   ];
 
-  
- 
- 
   @override
   void onInit() {
     super.onInit();
@@ -76,14 +43,11 @@ class WaveRequestController extends GetxController {
     if (isAccepted) {
       // show popup
       showReqAcceptedDialog();
-      Future.delayed(Duration(seconds: 1), ()  {
-        
-         Get.back();
-         
-         showBothConnectedDialog();
-         });
+      Future.delayed(Duration(seconds: 3), () {
+        Get.back();
 
-      
+        showBothConnectedDialog();
+      });
     }
   }
 

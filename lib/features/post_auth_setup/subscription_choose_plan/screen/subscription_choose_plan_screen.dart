@@ -13,16 +13,22 @@ class SubscriptionChoosePlanScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       floatingActionButton: IntrinsicHeight(
-        child: Obx(
-          () => Container(
-            padding: 20.pa,
-            color: c.buttonText,
-            child: filledBtnWTxt(
-              btnTxt: Strings.continueTxt,
-              isLoading: scpc.isLoading,
-              onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
-
-              //  await scpc.onTapSignup(chooseSubPlanFormKey),
+        child: ContainerBordered(
+          rad: 0,
+          contClr: c.inputBackground,
+          boxShadow: boxShadowTopOnly,
+          vp: 14,
+          child: Obx(
+            () => IgnorePointer(
+              ignoring: !scpc.hasSelectedPlan || scpc.isLoading,
+              child: Opacity(
+                opacity: scpc.hasSelectedPlan ? 1 : 0.5,
+                child: filledBtnWTxt(
+                  btnTxt: Strings.continueTxt,
+                  isLoading: scpc.isLoading,
+                  onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
+                ).getcm,
+              ),
             ),
           ),
         ),
@@ -70,7 +76,7 @@ class SubscriptionChoosePlanScreen extends StatelessWidget {
               );
             }),
 
-            Gap(itemGap * 2.5),
+            Gap(itemGap * 15),
           ],
         ).getcm,
       ),

@@ -1,8 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/empty_widget.dart';
-import '../../../../core/common_widgets/popups.dart';
 import '../controller/bookmark_controller.dart';
 import '../model/bookmark_model.dart';
+import '../modules/bookmark_reading_item.dart';
 
 class BookmarkScreen extends StatelessWidget {
   const BookmarkScreen({super.key});
@@ -13,60 +12,26 @@ class BookmarkScreen extends StatelessWidget {
 
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: CommonAppBarContent(title: Strings.bookmark),
-        backgroundColor: bgClr,
-        resizeToAvoidBottomInset: true,
-        body: Center(
-          child: CusRefreshIndicator(
-            refreshKey: refreshKey,
-            onRefresh: () async {
-              await nc.loadNotifications();
-            },
-            child: Obx(() {
-              if (nc.isLoading) {
-                return const Center(child: Loading());
-              }
+    return AppScreenTemplate(
+      appBar: CommonAppBarContent(title: Strings.bookmark),
 
-              if (nc.notifications.isEmpty) {
-                return EmptyWidgetScrollable(title: Strings.noNotificationFound);
-              }
-
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ...nc.notifications.map((n) {
-                      return NotificationItemCard(
-                        n: n,
-                        onTapNItem: (notificationId) async {
-                          if (n.isSeen == true) return;
-
-                          // Show loading popup
-                          showLoading(
-                            
-                            isupdateIsSeenLoading: nc.isupdateIsSeenLoading_,
-                          );
-
-                          await nc.updateIsSeen(notificationId: notificationId);
-
-                          // update the seen logic
-                          // In the UI
-
-                          // Close popup AFTER update finishes
-
-                          Get.back();
-                        },
-                      );
-                    }).toList(),
-                  ],
-                ),
-              );
-            }).get10cm,
-          ),
-        ),
-      ),
+      child: Column(
+        children: [
+          ...nc.bookmarks.map((b) {
+            return MoodBookMarkReadingItem(
+              title: b.title,
+              onTapRead: () => Get.toNamed(
+                RoutePaths.moodInsight,
+                arguments: {
+                  'mood': MoodType.anxious,
+                  'item': "item", // ← pass the specific item
+                },
+              ),
+              bullets: b.bullets,
+            );
+          }).toList(),
+        ],
+      ).getcm,
     );
   }
 }

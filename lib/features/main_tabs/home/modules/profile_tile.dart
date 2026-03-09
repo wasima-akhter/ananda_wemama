@@ -25,8 +25,11 @@ class ProfileTile extends StatelessWidget {
       onTap: onTap,
       child: ContainerBordered(
         hp: 12,
-        vp: 12, hasBrdr: true,
+        vp: 12,
+        hasBrdr: true,
         brdrClr: c.secondary.withOpacity(0.3),
+
+        contClr: tileClr ?? ctransp,
 
         boxShadow: boxShadowAllSides,
         child: Row(
@@ -39,8 +42,8 @@ class ProfileTile extends StatelessWidget {
                   child: Container(
                     height: 30,
                     width: 30,
-                 
-                    color: tileClr ?? bgClr,
+
+                    color: ctransp,
                     padding: const EdgeInsets.all(5),
                     child: SvgIconColored(
                       height: iconH ?? 20,
@@ -51,15 +54,15 @@ class ProfileTile extends StatelessWidget {
                   ),
                 ),
                 Gap(4),
-                Text(title, style: TxtStyle.inter(fs: 11, w: 600)),
+                Text(title, style: TxtStyle.outfitSemiB(fs: 14, w: 600)),
               ],
             ),
-    
-              SvgIconColored(
-                iconColor: iconColor ?? c.primary,
-                iconPath: IconsPath.arrowForwardSmall,
-                height: 24,
-              ),
+
+            SvgIconColored(
+              iconColor: iconColor ?? c.primary,
+              iconPath: IconsPath.arrowForwardSmall,
+              height: 24,
+            ),
           ],
         ),
       ),

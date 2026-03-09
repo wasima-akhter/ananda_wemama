@@ -1,7 +1,6 @@
 import 'package:mama_app/app/helper_widgets_export.dart';
 
 import '../../../../core/common_widgets/models/common_data_models.dart';
-import '../../../../core/enums/ui_enums.dart';
 
 class WelcomeFundingMumController extends GetxController {
   // ─────────────────────────────
@@ -88,16 +87,22 @@ class WelcomeFundingMumController extends GetxController {
   // ─────────────────────────────
   // 🔹 Final Step Handler
   // ─────────────────────────────
-
   void _handleFinalStep() {
     if (_hasTriggeredFinal) return;
     _hasTriggeredFinal = true;
 
+    const snackDuration = Duration(seconds: 4); // ← control duration here
+
     Future.delayed(const Duration(milliseconds: 800), () {
-      Snack.show(Strings.foundingBadgeAdded, title: Strings.earlyMemberHelpingShape);
+      Snack.showFoundingMumBadge(
+        Strings.foundingBadgeAdded,
+        title: Strings.earlyMemberHelpingShape.capEachWord(),
+        duration: snackDuration, // ← pass duration as param
+      );
     });
 
-    Future.delayed(const Duration(milliseconds: 1800), () {
+    // 800 delay + 4000 snack + 300 close animation
+    Future.delayed(const Duration(milliseconds: 5100), () {
       Get.offAllNamed(RoutePaths.mainNav);
     });
   }

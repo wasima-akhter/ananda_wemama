@@ -8,89 +8,125 @@ class MoodCheckInCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerBordered(
-      contClr: c.cardOngoing,
-      rad: 20,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              Strings.goodEveningAda.capEachWord(),
+              style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
+            ),
+            Gap(4),
 
-      hp: 14,
-      vp: 16,
-      boxShadow: boxShadowBottom(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            Strings.howAreYourFeeling.capEachWord(),
-            style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-          ),
-          itemGap.verticalSpace,
+            SvgIcon(iconPath: IconsPath.leaf),
+          ],
+        ).mL(4),
+        Gap(6.h),
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            spacing: itemGap * 0.4,
-
+        // how are you feeling card
+        ContainerBordered(
+          contClr: c.cardOngoing,
+          rad: 20,
+          hp: 14,
+          vp: 12,
+          boxShadow: boxShadowBottom(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...mcc.moodDataList.map((dataModel) {
-                return Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => mcc.selectMood(dataModel.moodType),
-                        child: Obx(() {
-                          final isSelected = mcc.selectedMood.value == dataModel.moodType;
+              Text(
+                Strings.howAreYourFeeling.capEachWord(),
+                style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+              ),
+              itemGap.verticalSpace,
 
-                          return MoodChip(
-                            title: dataModel.name,
-                            hp: dataModel.hp,
-                            isSelected: isSelected,
-                          );
-                        }),
-                      ),
+              _SelectMoodANdIllustration(mcc: mcc),
 
-                      MoodChipAnimation(moodType: dataModel.moodType),
-                    ],
-                  ),
-                );
+              itemGap.verticalSpace,
+
+              _CheckInStreakRow(),
+
+              // open mood library link
+              Obx(() {
+                if (mcc.selectedMood.value == null) {
+                  return const SizedBox();
+                }
+
+                return _OpenMoodLibrary();
               }),
             ],
           ),
-          itemGap.verticalSpace,
+        ),
+      ],
+    );
+  }
+}
 
-          _CheckInStreakRow(),
+class _SelectMoodANdIllustration extends StatelessWidget {
+  final MoodCheckInController mcc;
+  const _SelectMoodANdIllustration({super.key, required this.mcc});
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-          Obx(() {
-            if (mcc.selectedMood.value == null) {
-              return const SizedBox();
-            }
-
-            return Column(
+      spacing: itemGap * 0.5,
+      children: [
+        ...mcc.moodDataList.map((dataModel) {
+          return Expanded(
+            flex: 1,
+            child: Column(
               children: [
-                itemGap.verticalSpace,
                 GestureDetector(
-                  onTap: () {
-                    // Navigate to mood library here
+                  onTap: () => mcc.selectMood(dataModel.moodType),
+                  child: Obx(() {
+                    final isSelected = mcc.selectedMood.value == dataModel.moodType;
 
-                    // Get.find<MainNavController>().goToTab(4);
-
-                    Get.toNamed(RoutePaths.moodLibrary);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        Strings.openMoodLibrary,
-                        style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary),
-                      ),
-                      Gap(itemGap),
-                      const Icon(Icons.arrow_forward_ios, size: 14),
-                    ],
-                  ),
+                    return MoodChip(
+                      title: dataModel.name,
+                      hp: dataModel.hp,
+                      isSelected: isSelected,
+                    );
+                  }),
                 ),
+
+                MoodChipAnimation(moodType: dataModel.moodType),
               ],
-            );
-          }),
-        ],
-      ),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+}
+
+class _OpenMoodLibrary extends StatelessWidget {
+  const _OpenMoodLibrary({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        itemGap.verticalSpace,
+        GestureDetector(
+          onTap: () {
+            // Navigate to mood library here
+
+            Get.toNamed(RoutePaths.moodLibrary);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                Strings.openMoodLibrary,
+                style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary),
+              ),
+              Gap(itemGap),
+              const Icon(Icons.arrow_forward_ios, size: 14),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -137,8 +173,8 @@ class MoodChip extends StatelessWidget {
       contClr: isSelected ? c.primary : c.moodTagBackground,
       rad: 20,
       hp: hp ?? 10,
-      mv: 4,
-      vp: 6,
+      mv: 2,
+      vp: 5,
       hasBrdr: true,
       brdrClr: isSelected ? c.primary : c.textPrimary,
       brdrW: 0.3,

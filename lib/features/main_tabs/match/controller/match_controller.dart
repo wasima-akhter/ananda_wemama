@@ -22,7 +22,7 @@ class MatchController extends GetxController {
   bool isPaidUser = false;
 
   /// free user limit
-  int freeDailyLimit = 3;
+  int freeDailyLimit = 1;
 
   /// how many searches done today
   int searchesToday = 0;
@@ -31,6 +31,19 @@ class MatchController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    cancelSearch();
+    resetState();
+    super.onClose();
+  }
+
+  @override
+  void dispose() {
+    cancelSearch(); // cancel when leaving page
+    super.dispose();
   }
 
   /// ---------------- SEARCH ----------------

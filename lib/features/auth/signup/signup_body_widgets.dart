@@ -98,7 +98,7 @@ class SignupFormSection extends StatelessWidget {
           return filledBtnWTxt(
             btnTxt: Strings.continueTxt,
             isLoading: controller.isLoading,
-            onTap: () => controller.goToVerifyOtp(),
+            onTap: () => controller.onTapSignup(formKey),
           );
         }),
       ],

@@ -22,7 +22,7 @@ class CusFlexibleDropdown extends StatelessWidget {
           width: width,
           padding: 6.pa,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: c.scaffoldBackground,
             borderRadius: 10.brdrRad,
             boxShadow: boxShadowAllSides,
           ),
@@ -36,7 +36,7 @@ class CusFlexibleDropdown extends StatelessWidget {
                 },
                 borderRadius: 6.brdrRad,
                 child: ContainerBordered(
-                  vp: 8,
+                  vp: 5,
                   hp: 14,
                   rad: 8,
                   mv: 2,
@@ -52,15 +52,16 @@ class CusFlexibleDropdown extends StatelessWidget {
                       ),
                     ],
                   ),
-                ),
+                ).mR(22),
               );
             }).toList(),
           ),
         ),
       ),
 
-      barrierColor: ctransp,
-      barrierShape: BarrierShape.headerTrans,
+      barrierColor: black.withOpacity(0.15), // ← light shaded dismissable overlay
+
+      barrierShape: BarrierShape.normal,
       offset: const Offset(0, 8),
       duration: const Duration(milliseconds: 200),
 

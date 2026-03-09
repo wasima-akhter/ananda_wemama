@@ -71,14 +71,14 @@ class MeetingController extends GetxController {
     token = AgoraConfig.token;
     channelName = AgoraConfig.channelName;
 
-    await initAgora();
+    // await initAgora();
   }
 
   Future<void> startMeeting({required String channel, required String meetingToken}) async {
     channelName = channel;
     token = meetingToken;
 
-    await initAgora();
+    // await initAgora();
   }
 
   String generateMeetingLink({String? userId}) {

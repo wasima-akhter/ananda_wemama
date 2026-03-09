@@ -110,6 +110,8 @@ class Strings {
 
   // Indiv pages
   static const String bookmark = "Bookmark";
+  static const String communityName = "Community Name";
+  static const String create = "Create";
 
   // ===========================
   // Order Details
@@ -187,7 +189,7 @@ class Strings {
   static const String readAllReviews = "Read all reviews";
   static const String howWasYourDelivery = "How was your delivery";
   static const String writeYourFeedback = "Write your feedback";
-  static const String areYouSure = "Are you sure !";
+  static const String areYouSure = "Are you sure!";
   static const String doUWantToCancelOrder = "Do You Want To Cancel The Order?";
   static const String confirmToLogout = "Confirm To Logout?";
   static const String doYouWantToCancelOrder = "Do you want to cancel the order?";
@@ -393,6 +395,10 @@ class Strings {
   static const String motherhoodSupportLine = "You don't have to do motherhood alone";
   static const String friendshipSupportUnderstanding = "Friendship . Support. Understanding";
 
+  static const String feelBetterTogether = "Feel better, together";
+  static const String moodToolsExpertSessionsRealCommunity =
+      "Mood tools. Expert Sessions. Real Community";
+
   static const String enterEmail = "Enter Email";
 
   static const String builtForMotherhoodStages =
@@ -456,6 +462,8 @@ class Strings {
   static const String pregnant = "Pregnant";
   static const String writeBioHere = "Write your bio here";
 
+  static const String keepPrivate = "Keep Private";
+
   // tags in lifestyle & interests
   static const String educationalPlay = "Educational play";
   static const String artsCrafts = "Arts & crafts";
@@ -482,13 +490,16 @@ class Strings {
   static const String supportConnectionGuidance =
       "Support, connection, and expert guidance - on your terms";
   static const String free = "FREE";
-  static const String premium = "PREMIUM";
+  static const String premium = "Premium";
 
   static const String month = "month";
   static const String dailySupportInfo = "Less than ₦170 per day for daily support ♡";
 
   static const String moodSelfCare = "MOOD & SELF-CARE";
 
+  static const String watchAll = "Watch All";
+  static const String pastSessions = "Past Sessions";
+  static const String libraryOfPastSessions = "library Of Past Sessions";
   static const String attendLiveExpertSessions = "Attend Live Expert Sessions";
   static const String watchSessionsReplay = "Watch Sessions Replay";
   static const String moodAndSelfCare = "MOOD & SELF-CARE";
@@ -524,12 +535,12 @@ class Strings {
   static const String checkIn = "Check In";
   static const String spaceBuiltOnKindness =
       "This is a space built on kindness, privacy, and respect.";
-  static const String calmSpaceForMums = "WeMama is a calm space for mums to connect";
+  static const String calmSpaceForMums = "WeMama is a calm space for mums to connect.";
   static const String firstCircle = "You are part of our first circle";
   static const String tapHowFeeling = "Tap how you are feeling today";
-  static const String honestlyNoPressure = "Honestly - without noise or pressure";
+  static const String honestlyNoPressure = "Honestly - without noise or pressure.";
   static const String neverPressured = "You will never be pressured to share more than you want";
-  static const String presenceSetsTone = "Your presence helps set the tone";
+  static const String presenceSetsTone = "Your presence helps set the tone.";
   static const String shapeCommunityTone = "You help shape the tone of the community";
   static const String listen = "Listen";
   static const String readOrReply = "Read or reply when it resonates";
@@ -547,6 +558,7 @@ class Strings {
   static const String waveRequest = "Wave request";
 
   static const String blockedUser = "Blocked User";
+  static const String blocked = "Blocked";
   static const String security = "Security";
   static const String securityAlert = "Security Alert";
   static const String securityAlertMsg =
@@ -577,6 +589,7 @@ class Strings {
   // ongoing expert session card
 
   static const String live = "LIVE";
+  static const String liveChat = "Live Chat";
   static const String ongoingExpertSession = "Ongoing expert session";
   static const String babySleepSession = "Baby Sleep Session";
   static const String gentleRoutines =
@@ -586,6 +599,7 @@ class Strings {
   // mood library
   static const String openMoodLibrary = "Open Mood Library";
   static const String moodLibrary = "Mood Library";
+  static const String moodInsights = "Mood Insights";
 
   // Chat
   static const String typeSomething = "Type something...";
@@ -593,6 +607,7 @@ class Strings {
 
   static const String tryAgain = "try again";
   static const String read = "Read";
+  static const String goToExpertCategory = "Go To Expert Category";
   static const String waveSent = "wave sent";
   static const String waveBackToChat = "If they wave back, you can start chatting.";
 
@@ -629,6 +644,8 @@ class Strings {
 
   static const String groupRulesDescription =
       "Women-only space. Be kind, no self-promotion, and keep personal details private.";
+
+  static const String yourPrivacyIsOurPriority = "Your privacy is our priority";
 
   static const String womenOnlySpace = "Women-Only Space";
   static const String womenOnlySpaceDesc =
@@ -689,6 +706,7 @@ class Strings {
   static const String manage = "Manage";
   static const String visit = "Visit";
   static const String join = "Join";
+  static const String joined = "Joined";
   static const String members = "Members";
   static const String writeSomething = "Write Something";
   static const String myCommunity = "My Community";
@@ -699,6 +717,29 @@ class Strings {
   static const String reply = "Reply";
   static const String maximum4Photos = "**Maximum 4 Photos";
   static const String update = "Update";
+
+  static const String reportContent = "Report Content";
+
+  static const String manageCommunity = "Manage community";
+
+  static const String mute = "Mute";
+  static const String suspend = "Suspend";
+  static const String ban = "Ban";
+
+  static const String post = "Post";
+  static const String pinPost = "Pin Post";
+  static const String unpinPost = "Unpin Post";
+  static const String deletePost = "Delete Post";
+
+  static const String lockComment = "Lock Comment";
+  static const String unlockComment = "Unock Comment";
+  static const String lock = "Lock";
+
+  static const String memberManagement = "Member Management";
+
+  static const String commentLocked = "Comment has been locked. No one can comment now.";
+
+  static const String confirmDeletePost = "Do you want to delete this post?";
 
   //
   static const String moodChipLibrary = "Mood Chip Library";

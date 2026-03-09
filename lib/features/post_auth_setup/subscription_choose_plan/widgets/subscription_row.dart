@@ -3,6 +3,7 @@ import '../../../../app/helper_widgets_export.dart';
 class SubscriptionFeatureRow extends StatelessWidget {
   final String title;
   final bool isIncluded;
+  final bool? isCloseWhite;
   final Color? textColor;
 
   const SubscriptionFeatureRow({
@@ -10,6 +11,7 @@ class SubscriptionFeatureRow extends StatelessWidget {
     required this.title,
     required this.isIncluded,
     this.textColor,
+    this.isCloseWhite,
   });
 
   @override
@@ -18,7 +20,13 @@ class SubscriptionFeatureRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgIcon(height: 20, iconPath: isIncluded ? IconsPath.smallTickBold : IconsPath.closeCircle),
+        isIncluded
+            ? SvgIcon(height: 24, iconPath: IconsPath.smallTickBold)
+            : SvgIconColored(
+                height: 18,
+                iconColor: isCloseWhite == true ? white : null,
+                iconPath: IconsPath.closeCircle,
+              ),
         Gap(itemGap),
         Expanded(
           child: Text(title.capEachWord(), style: TxtStyle.outfit(fs: 13, w: 500, color: clr)),

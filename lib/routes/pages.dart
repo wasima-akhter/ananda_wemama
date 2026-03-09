@@ -1,5 +1,13 @@
 import 'package:get/get.dart';
 import 'package:mama_app/features/main_tabs/community/screen/community_details_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/manage_community_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/member_management_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/post_in_community_screen.dart';
+import 'package:mama_app/features/main_tabs/experts/screen/past_sessions_screen%20.dart';
+import 'package:mama_app/features/more/about/screen/about_screen.dart';
+import 'package:mama_app/features/more/blocked_user/screen/blocked_user_screen.dart';
+import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_and_conditions_screen.dart';
+import 'package:mama_app/features/more/support/contact_support/screen/contact_support_screen.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_upgrade_screen.dart';
 
 import '../core/bind/all_bindings.dart';
@@ -12,6 +20,7 @@ import '../features/auth/signin/screen/signin_screen.dart';
 import '../features/auth/signup/screen/signup_screen.dart';
 import '../features/entry/onboard/screens/onboard_screen.dart';
 import '../features/entry/onboard/screens/onboard_screen2.dart';
+import '../features/entry/onboard/screens/onboard_screen3.dart';
 import '../features/entry/splash/screen/splash_screen.dart';
 import '../features/main_nav/screen/main_nav_screen.dart';
 import '../features/main_tabs/chat/screen/chat_inbox_screen.dart';
@@ -21,8 +30,8 @@ import '../features/main_tabs/community/screen/create_community_screen.dart';
 import '../features/main_tabs/experts/screen/experts_screen.dart';
 import '../features/main_tabs/home/screen/home_screen.dart';
 import '../features/main_tabs/home/sub_feature/edit_profile/screen/edit_profile_screen.dart';
-import '../features/main_tabs/match/screen/match_screen.dart';
 import '../features/main_tabs/home/sub_feature/profile/screen/profile_screen.dart';
+import '../features/main_tabs/match/screen/match_screen.dart';
 import '../features/more/notification/screen/notification_screen.dart';
 import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
@@ -32,8 +41,9 @@ import '../features/post_auth_setup/setup_profile/screen/setup_profile_screen.da
 import '../features/post_auth_setup/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
 import '../features/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
 import '../features/shared/bookmark/screen/bookmark_screen.dart';
-import '../features/shared/mood_insights/screen/mood_insights_screen.dart';
-import '../features/shared/mood_library/screen/mood_library_screen.dart';
+import '../features/shared/mood/mood_insights/screen/mood_insights_screen.dart';
+import '../features/shared/mood/mood_library/screen/mood_library_screen.dart';
+import '../features/shared/subscription_info/screen/subscription_info_screen.dart';
 import '../features/shared/wave_request/screen/wave_request_screen.dart';
 import '../features/video_meeting/screen/meeting_screen.dart';
 import 'route_paths.dart';
@@ -71,6 +81,12 @@ class RoutePageList {
       page: () => const OnboardScreen2(),
       binding: SplashScreenBinding(),
       transition: RouteTransitions.byName(RoutePaths.onboardScreen2),
+    ),
+    GetPage(
+      name: RoutePaths.onboardScreen3,
+      page: () => const OnboardScreen3(),
+      binding: SplashScreenBinding(),
+      transition: RouteTransitions.byName(RoutePaths.onboardScreen3),
     ),
 
     // ─────────────────────────────
@@ -135,10 +151,10 @@ class RoutePageList {
     ),
 
     GetPage(
-      name: RoutePaths.communitiyDetail,
+      name: RoutePaths.communityDetail,
       page: () => const CommunityDetailsScreen(),
       binding: CommunityDetailBinding(),
-      transition: RouteTransitions.byName(RoutePaths.communitiyDetail),
+      transition: RouteTransitions.byName(RoutePaths.communityDetail),
     ),
     // ─────────────────────────────
     // 🔹 Auth Flow
@@ -187,10 +203,7 @@ class RoutePageList {
       page: () => const MumsStageScreen(),
       binding: PostSignupScreensBinding(),
     ),
-    GetPage(
-      name: RoutePaths.mumsStageFinish,
-      page: () => const MumsStageFinishScreen(),
-    ),
+    GetPage(name: RoutePaths.mumsStageFinish, page: () => const MumsStageFinishScreen()),
     GetPage(
       name: RoutePaths.subChoosePlan,
       page: () => const SubscriptionChoosePlanScreen(),
@@ -210,11 +223,7 @@ class RoutePageList {
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-    GetPage(
-      name: RoutePaths.profile,
-      page: () => const ProfileScreen(),
-      binding: ProfileBinding(),
-    ),
+    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: ProfileBinding()),
     GetPage(
       name: RoutePaths.editProfile,
       page: () => const EditProfileScreen(),
@@ -224,6 +233,22 @@ class RoutePageList {
       name: RoutePaths.changePassword,
       page: () => const ChangePasswordScreen(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.blockedUser,
+      page: () => const BlockedUserScreen(),
+      binding: BlockedUserBinding(),
+    ),
+    GetPage(name: RoutePaths.about, page: () => const AboutScreen(), binding: AboutBinding()),
+    GetPage(
+      name: RoutePaths.contactSupport,
+      page: () => const ContactSupportScreen(),
+      binding: ContactSupportBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.termsAndConditions,
+      page: () => const TermsAndConditionsScreen(),
+      binding: TermsAndConditionsBinding(),
     ),
 
     // ─────────────────────────────
@@ -237,7 +262,7 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.bookmark,
       page: () => const BookmarkScreen(),
-      binding: BookmarkBinding(),
+      binding: MainNavBinding(),
     ),
     GetPage(
       name: RoutePaths.moodInsight,
@@ -256,9 +281,34 @@ class RoutePageList {
       binding: CreateCommunityBinding(),
     ),
     GetPage(
+      name: RoutePaths.postInCommunity,
+      page: () => const PostInCommunityScreen(),
+      binding: PostInCommunityBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.pastSessions,
+      page: () => const PastSessionsScreen(),
+      binding: PastSessionsBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.manageCommunity,
+      page: () => const ManageCommunityScreen(),
+      binding: ManageCommunityBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.memberManagement,
+      page: () => const MemberManagementScreen(),
+      binding: MemberManagementBinding(),
+    ),
+    GetPage(
       name: RoutePaths.subscriptionUpgrade,
       page: () => const SubscriptionUpgradeScreen(),
       binding: SubscriptionUpgradeBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.subscriptionInfo,
+      page: () => const SubscriptionInfoScreen(),
+      binding: SubscriptionInfoBinding(),
     ),
   ];
 }

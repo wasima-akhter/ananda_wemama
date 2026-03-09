@@ -1,6 +1,7 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/enums/ui_enums.dart';
 
 class CommunityController extends GetxController {
   final searchController = TextEditingController();
@@ -15,6 +16,8 @@ class CommunityController extends GetxController {
   void onClose() {
     searchController.dispose();
     searchFocus.dispose();
+    myCommunityScrlCtrl.dispose(); // ← add
+    suggCommunityScrlCtrl.dispose(); // ← add
     super.onClose();
   }
 
@@ -31,8 +34,8 @@ class CommunityController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
-  ScrollController get myCommunityScrlCtrl => ScrollController();
-  ScrollController get suggCommunityScrlCtrl => ScrollController();
+  final ScrollController myCommunityScrlCtrl = ScrollController();
+  final ScrollController suggCommunityScrlCtrl = ScrollController();
 
   /// Fetch the latest  data from API
   Future<void> getChatList() async {
@@ -56,23 +59,21 @@ class CommunityController extends GetxController {
     }
   }
 
-  void onTapItem() {
-    Get.toNamed(RoutePaths.communitiyDetail);
-  }
-
-  void onTapItemBtn(bool isJoin) {
-    if (isJoin) {
+  void onTapItemBtn(MyCommunityBtnState btnState) {
+    if (btnState == MyCommunityBtnState.join) {
       // show popup
       // communityguidline.
       communityGuidlineDialog(
         isLoading: isLoading,
         onTapAction: () async {
           Get.back();
-          Get.toNamed(RoutePaths.communitiyDetail);
+          Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.join);
         },
       );
-    } else {
-      Get.toNamed(RoutePaths.communitiyDetail);
+    } else if (btnState == MyCommunityBtnState.manage) {
+      Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.manage);
+    } else if (btnState == MyCommunityBtnState.visit) {
+      Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.visit);
     }
   }
 }

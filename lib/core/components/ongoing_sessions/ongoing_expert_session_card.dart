@@ -10,9 +10,9 @@ class OngoingSessionCard extends StatelessWidget {
     return ContainerBordered(
       contClr: c.cardOngoing,
       rad: 20,
-      mv: 8,
+
       hp: 16,
-      vp: 16,
+      vp: 12,
       boxShadow: boxShadowBottom(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class OngoingSessionCard extends StatelessWidget {
 
           Text(Strings.gentleRoutines.cap, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
 
-          Gap(itemGap * 2.5),
+          Gap(itemGap),
 
           Row(
             children: [
@@ -103,14 +103,17 @@ class OngoingSessionCard extends StatelessWidget {
               ),
               Gap(itemGap),
               Expanded(
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  vp: 8,
-                  child: Text(
-                    Strings.joinLive.capEachWord(),
-                    textAlign: TextAlign.center,
-                    style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.textOnPrimary),
+                child: CusGestureDetector(
+                  onTap: () => Get.toNamed(RoutePaths.meetingScreen),
+                  child: ContainerBordered(
+                    contClr: c.buttonPrimary,
+                    rad: 30,
+                    vp: 8,
+                    child: Text(
+                      Strings.joinLive.capEachWord(),
+                      textAlign: TextAlign.center,
+                      style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.textOnPrimary),
+                    ),
                   ),
                 ),
               ),

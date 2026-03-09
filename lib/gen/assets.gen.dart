@@ -65,6 +65,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/chat.svg
   String get chat => 'assets/icons/chat.svg';
 
+  /// File path: assets/icons/chat_circle.svg
+  String get chatCircle => 'assets/icons/chat_circle.svg';
+
   /// File path: assets/icons/chat_circle_outlined.svg
   String get chatCircleOutlined => 'assets/icons/chat_circle_outlined.svg';
 
@@ -116,6 +119,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/google.svg
   String get google => 'assets/icons/google.svg';
 
+  /// File path: assets/icons/hand_raise.svg
+  String get handRaise => 'assets/icons/hand_raise.svg';
+
   /// File path: assets/icons/hand_wave.svg
   String get handWave => 'assets/icons/hand_wave.svg';
 
@@ -143,8 +149,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/leaf_in_hand.svg
   String get leafInHand => 'assets/icons/leaf_in_hand.svg';
 
+  /// File path: assets/icons/leave.svg
+  String get leave => 'assets/icons/leave.svg';
+
+  /// File path: assets/icons/like.svg
+  String get like => 'assets/icons/like.svg';
+
   /// File path: assets/icons/like_filled.svg
   String get likeFilled => 'assets/icons/like_filled.svg';
+
+  /// File path: assets/icons/like_heart_filled.svg
+  String get likeHeartFilled => 'assets/icons/like_heart_filled.svg';
 
   /// File path: assets/icons/listen.svg
   String get listen => 'assets/icons/listen.svg';
@@ -176,6 +191,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/more_vertical.svg
   String get moreVertical => 'assets/icons/more_vertical.svg';
 
+  /// File path: assets/icons/mute_audio.svg
+  String get muteAudio => 'assets/icons/mute_audio.svg';
+
   /// File path: assets/icons/muted_audio.svg
   String get mutedAudio => 'assets/icons/muted_audio.svg';
 
@@ -188,11 +206,23 @@ class $AssetsIconsGen {
   /// File path: assets/icons/password.svg
   String get password => 'assets/icons/password.svg';
 
+  /// File path: assets/icons/pin.svg
+  String get pin => 'assets/icons/pin.svg';
+
   /// File path: assets/icons/pregnant.svg
   String get pregnant => 'assets/icons/pregnant.svg';
 
   /// File path: assets/icons/profile_selected.svg
   String get profileSelected => 'assets/icons/profile_selected.svg';
+
+  /// File path: assets/icons/ques_contact.svg
+  String get quesContact => 'assets/icons/ques_contact.svg';
+
+  /// File path: assets/icons/reminder_bell_skew.svg
+  String get reminderBellSkew => 'assets/icons/reminder_bell_skew.svg';
+
+  /// File path: assets/icons/reminder_bell_straignt.svg
+  String get reminderBellStraignt => 'assets/icons/reminder_bell_straignt.svg';
 
   /// File path: assets/icons/rest_sit.svg
   String get restSit => 'assets/icons/rest_sit.svg';
@@ -212,8 +242,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/share.svg
   String get share => 'assets/icons/share.svg';
 
+  /// File path: assets/icons/shield_check.svg
+  String get shieldCheck => 'assets/icons/shield_check.svg';
+
+  /// File path: assets/icons/shield_fill.svg
+  String get shieldFill => 'assets/icons/shield_fill.svg';
+
   /// File path: assets/icons/star_filled.svg
   String get starFilled => 'assets/icons/star_filled.svg';
+
+  /// File path: assets/icons/terms_conditions.svg
+  String get termsConditions => 'assets/icons/terms_conditions.svg';
 
   /// File path: assets/icons/tick_l.svg
   String get tickL => 'assets/icons/tick_l.svg';
@@ -282,6 +321,7 @@ class $AssetsIconsGen {
     camera,
     chartFilled,
     chat,
+    chatCircle,
     chatCircleOutlined,
     chatWDot,
     checkIn,
@@ -299,6 +339,7 @@ class $AssetsIconsGen {
     eyeVisible,
     gallerySvg,
     google,
+    handRaise,
     handWave,
     heartHalfFilled,
     heartHand,
@@ -308,7 +349,10 @@ class $AssetsIconsGen {
     info,
     leaf,
     leafInHand,
+    leave,
+    like,
     likeFilled,
+    likeHeartFilled,
     listen,
     liveDot,
     locationBold,
@@ -319,19 +363,27 @@ class $AssetsIconsGen {
     mapPin,
     match,
     moreVertical,
+    muteAudio,
     mutedAudio,
     newMum,
     notification,
     password,
+    pin,
     pregnant,
     profileSelected,
+    quesContact,
+    reminderBellSkew,
+    reminderBellStraignt,
     restSit,
     search,
     security,
     sendLW,
     sendSmW,
     share,
+    shieldCheck,
+    shieldFill,
     starFilled,
+    termsConditions,
     tickL,
     tickL2,
     tickSm,

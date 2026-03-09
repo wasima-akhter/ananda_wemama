@@ -2,6 +2,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:mama_app/core/config/app_info.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../common_widgets/custom_divider.dart';
 
 T findCont<T extends GetxController>() {
@@ -43,6 +44,15 @@ List<BoxShadow> boxShadowBottom({Color? color}) => [
     offset: const Offset(0, 3), // positive y moves shadow downward
     blurRadius: 2, // no blur
     spreadRadius: 0, // no extra spread
+  ),
+];
+
+List<BoxShadow> boxShadowBottomRight({Color? color}) => [
+  BoxShadow(
+    color: color ?? c.secondary.withOpacity(0.25),
+    offset: const Offset(1, 1), // right (x) and bottom (y)
+    blurRadius: 1,
+    spreadRadius: 0,
   ),
 ];
 List<BoxShadow> boxShadowAllSide({double? shadowIntensity}) => [
@@ -194,3 +204,9 @@ String getTypeOfFilterTime(String criteria) {
 }
 
 String get generateChannel => DateTime.now().millisecondsSinceEpoch.toString();
+
+void goToMainNavWithTab(int tabIndex) {
+  GNav.pushNamed(RoutePaths.mainNav);
+
+  Get.find<MainNavController>().goToTab(tabIndex);
+}
