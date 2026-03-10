@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
+import 'package:mama_app/features/main_tabs/community/controller/post_details_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_in_community_controller.dart';
 import 'package:mama_app/features/more/about/controller/about_controller.dart';
 import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
@@ -17,7 +18,6 @@ import '../../features/entry/splash/controller/splash_controller.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
-import '../../features/main_tabs/community/controller/comment_controller.dart';
 import '../../features/main_tabs/community/controller/community_controller.dart';
 import '../../features/main_tabs/community/controller/community_detail_controller.dart';
 import '../../features/main_tabs/community/controller/create_community_controller.dart';
@@ -209,23 +209,20 @@ class ReportControllerBinding extends Bindings {
   }
 }
 
+// CommunityDetailBinding:
 class CommunityDetailBinding extends Bindings {
   @override
   void dependencies() {
-    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
-    // while arguments are still available in binding context
+    final args = Get.arguments as Map<String, dynamic>;
+    final btnState = args['btnState'] as MyCommunityBtnState;
+    final isAlreadyMember = args['isAlreadyMember'] as bool;
 
-    final args = Get.arguments;
-
-    print("--> args: $args");
-
-    if (args == null || args is! MyCommunityBtnState) {
-      throw Exception("MoodInsightsController requires a MoodType argument!");
+    // ← delete old instance first, then create fresh
+    if (Get.isRegistered<CommunityDetailController>()) {
+      Get.delete<CommunityDetailController>(force: true);
     }
 
-    // ✅ Fix — use fenix or delete old instance before creating new
-    Get.lazyPut(() => CommunityDetailController(Get.arguments), fenix: true);
-    Get.lazyPutFenix(() => CommentController());
+    Get.put(CommunityDetailController(btnState, isAlreadyMember)); // ← put, not lazyPut
   }
 }
 
@@ -236,6 +233,16 @@ class PostInCommunityBinding extends Bindings {
     // while arguments are still available in binding context
 
     Get.lazyPutFenix(() => PostInCommunityController());
+  }
+}
+
+class PostDetailsBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => PostDetailsController());
   }
 }
 

@@ -5,12 +5,19 @@ import 'package:mama_app/core/helpers/string_helper.dart';
 class BounceSingleChildScrollView extends StatelessWidget {
   final Widget child;
   final EdgeInsets? padding;
-  const BounceSingleChildScrollView({super.key, required this.child, this.padding});
+  final ScrollController? scrollController;
+  const BounceSingleChildScrollView({
+    super.key,
+    required this.child,
+    this.padding,
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: padding,
+      controller: scrollController,
       physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       child: child,
     );

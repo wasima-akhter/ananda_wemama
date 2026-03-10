@@ -54,6 +54,7 @@ class RoutePaths {
   static const manageCommunity = '/manageCommunity';
   static const memberManagement = '/memberManagement';
   static const postInCommunity = '/postInCommunity';
+  static const postDetails = '/postDetails';
   static const pastSessions = '/pastSessions';
 
   // ─────────────────────────────

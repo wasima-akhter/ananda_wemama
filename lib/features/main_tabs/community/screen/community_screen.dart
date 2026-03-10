@@ -57,10 +57,12 @@ class CommunityScreen extends StatelessWidget {
                     (index) => CommunityItem(
                       btnTxt: index < 2 ? Strings.manage : Strings.visit,
                       isLoading: false,
-                      onTapItem: () => cc.onTapItemBtn(
+                      onTapItem: () => cc.onTapItem(
+                        // ← item tap
                         index < 2 ? MyCommunityBtnState.manage : MyCommunityBtnState.visit,
                       ),
                       onTapItemBtn: () => cc.onTapItemBtn(
+                        // ← button tap
                         index < 2 ? MyCommunityBtnState.manage : MyCommunityBtnState.visit,
                       ),
                     ).mB(itemGap),
@@ -81,11 +83,12 @@ class CommunityScreen extends StatelessWidget {
                 children: [
                   ...List.generate(
                     10,
-                    (index) => CommunityItem(
+                    (index) => // suggested list:
+                    CommunityItem(
                       btnTxt: Strings.join,
                       isLoading: false,
-                      onTapItem: () => cc.onTapItemBtn(MyCommunityBtnState.join),
-                      onTapItemBtn: () => cc.onTapItemBtn(MyCommunityBtnState.join),
+                      onTapItem: () => cc.onTapItem(MyCommunityBtnState.join), // ← item tap
+                      onTapItemBtn: () => cc.onTapItemBtn(MyCommunityBtnState.join), // ← button tap
                     ).mB(itemGap),
                   ),
                 ],

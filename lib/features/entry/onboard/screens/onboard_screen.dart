@@ -27,7 +27,7 @@ class OnboardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Gap(itemGap * 4),
+                  Gap(itemGap * 3),
 
                   weMamaLogoWithTxt,
                   Gap(itemGap),
@@ -48,7 +48,7 @@ class OnboardScreen extends StatelessWidget {
                     style: 12.titleMclrCusFS,
                   ).mHV(40, 0),
 
-                  Gap(itemGap * 2),
+                  Gap(itemGap),
 
                   Image.asset(ImagesPath.onboardingImage),
 
@@ -126,6 +126,7 @@ class SecurityText extends StatelessWidget {
                 text.toUpperCase(),
                 textAlign: TextAlign.center,
                 maxLines: 1,
+                overflow: TextOverflow.visible,
                 style: TxtStyle.inter(fs: 12, color: c.secondary),
               ),
             ),

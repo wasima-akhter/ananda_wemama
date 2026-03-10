@@ -86,6 +86,7 @@ class CusDesTypeTextFormField extends StatelessWidget {
               style: hintStyle ?? TxtStyle.outfit(fs: 13, color: c.primary.withOpacity(0.6)),
             ),
             suffixIcon: suffix,
+
             prefix: prefix,
             focusedBorder: isNoBrder == true
                 ? InputBorder.none

@@ -60,7 +60,8 @@ class CommunitySpotlight extends StatelessWidget {
 }
 
 class StackOfImages extends StatelessWidget {
-  const StackOfImages({super.key});
+  final int? numOfImage;
+  const StackOfImages({super.key, this.numOfImage});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class StackOfImages extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.centerLeft,
-        children: List.generate(3, (index) {
+        children: List.generate(numOfImage ?? 3, (index) {
           return Positioned(
             left: index * overlap,
             child: _buildImage(radius: radius),

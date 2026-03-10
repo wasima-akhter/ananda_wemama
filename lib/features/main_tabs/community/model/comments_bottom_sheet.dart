@@ -1,5 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
+import '../../../../core/common_widgets/items/comment_item_w_reply.dart';
 import '../controller/comment_controller.dart';
 import '../controller/community_detail_controller.dart';
 
@@ -97,38 +98,6 @@ class CommentsBottomSheet extends StatelessWidget {
             }),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CommentItem extends StatelessWidget {
-  final FakeCommentModel item;
-  const CommentItem({super.key, required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    return ContainerBordered(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NetworkImageWidget(imageUrl: Strings.fakeImageUrl, radius: 20),
-
-          Gap(itemGap),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(item.userName, style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary)),
-                Text(item.comment, style: TxtStyle.outfit(fs: 13, w: 400)),
-                CusGestureDetector(
-                  onTap: () {},
-                  child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }

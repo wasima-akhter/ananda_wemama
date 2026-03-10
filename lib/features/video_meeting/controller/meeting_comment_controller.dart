@@ -1,12 +1,5 @@
 import '../../../../app/controller_export.dart';
-
-class FakeCommentModel {
-  final String userName;
-  final String time;
-  final String comment;
-
-  FakeCommentModel({required this.userName, required this.time, required this.comment});
-}
+import '../../../core/models/ui/fake_comment_item_model.dart';
 
 class MeetingCommentController extends GetxController {
   final commentCtrl = TextEditingController();

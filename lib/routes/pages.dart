@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mama_app/features/main_tabs/community/screen/community_details_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/manage_community_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/member_management_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/post_details_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/post_in_community_screen.dart';
 import 'package:mama_app/features/main_tabs/experts/screen/past_sessions_screen%20.dart';
 import 'package:mama_app/features/more/about/screen/about_screen.dart';
@@ -284,6 +285,11 @@ class RoutePageList {
       name: RoutePaths.postInCommunity,
       page: () => const PostInCommunityScreen(),
       binding: PostInCommunityBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.postDetails,
+      page: () => const PostDetailsScreen(),
+      binding: PostDetailsBinding(),
     ),
     GetPage(
       name: RoutePaths.pastSessions,

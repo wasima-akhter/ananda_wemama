@@ -22,6 +22,7 @@ class IconsPath {
   static String get smallTickBold => Assets.icons.circleCheck;
   static String get successTick => Assets.icons.tickL2;
   static String get closeCircle => Assets.icons.closeCircleOutlined;
+  static String get closeWhite => Assets.icons.closeWhite;
   static String get closeRed => Assets.icons.closeRedFilled;
   static String get verifiedTick => Assets.icons.verifiedTick;
 

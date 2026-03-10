@@ -12,16 +12,25 @@ class PostItemState {
 
 class CommunityDetailController extends GetxController {
   final Rx<MyCommunityBtnState> args;
-  CommunityDetailController(MyCommunityBtnState initialArgs) : args = initialArgs.obs;
+
+  late final RxBool isAlreadyMember_; // ← observable
+
+  CommunityDetailController(MyCommunityBtnState initialArgs, bool isAlreadyMember)
+    : args = initialArgs.obs {
+    isAlreadyMember_ = isAlreadyMember.obs; // ← init in constructor body
+  }
+
+  bool get isAlreadyMember => isAlreadyMember_.value;
+
+  ////
   final postCtrl = TextEditingController();
   final searchFocus = FocusNode();
 
   // replace getBtnTxt() local function with this
   String getBtnTxt() {
     switch (args.value) {
-      // ← .value
       case MyCommunityBtnState.join:
-        return Strings.join;
+        return isAlreadyMember_.value ? Strings.joined : Strings.join;
       case MyCommunityBtnState.manage:
         return Strings.manage;
       case MyCommunityBtnState.visit:

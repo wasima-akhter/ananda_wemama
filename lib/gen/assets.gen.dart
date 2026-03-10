@@ -89,6 +89,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/close_red_filled.svg
   String get closeRedFilled => 'assets/icons/close_red_filled.svg';
 
+  /// File path: assets/icons/close_white.svg
+  String get closeWhite => 'assets/icons/close_white.svg';
+
   /// File path: assets/icons/communities.svg
   String get communities => 'assets/icons/communities.svg';
 
@@ -329,6 +332,7 @@ class $AssetsIconsGen {
     circleCheckBold,
     closeCircleOutlined,
     closeRedFilled,
+    closeWhite,
     communities,
     community,
     crown,

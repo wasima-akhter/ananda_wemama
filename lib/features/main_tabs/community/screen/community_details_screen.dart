@@ -1,11 +1,9 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
 import 'package:mama_app/features/main_tabs/community/modules/join_btn.dart';
-import 'package:mama_app/features/main_tabs/community/modules/user_short_detail_widget.dart';
+import 'package:mama_app/features/main_tabs/community/widgets/post_item_widget.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_flexible_dropdown.dart';
-import '../../../../core/helpers/widgets_helper.dart';
 
 class CommunityDetailsScreen extends StatelessWidget {
   const CommunityDetailsScreen({super.key});
@@ -150,7 +148,7 @@ class CommunityDetailsScreen extends StatelessWidget {
             () => Column(
               children: List.generate(
                 cc.posts.length,
-                (index) => _PostItem(
+                (index) => PostItemWidget(
                   btnState: cc.args.value,
                   postId: cc.posts[index].id, // ← pass postId
                 ).mB(itemGap),
@@ -165,135 +163,138 @@ class CommunityDetailsScreen extends StatelessWidget {
   }
 }
 
-class _PostItem extends StatelessWidget {
-  final MyCommunityBtnState btnState;
-  final int postId; // ← add
-  const _PostItem({super.key, required this.btnState, required this.postId});
+// class _PostItem extends StatelessWidget {
+//   final MyCommunityBtnState btnState;
+//   final int postId; // ← add
+//   const _PostItem({super.key, required this.btnState, required this.postId});
 
-  @override
-  Widget build(BuildContext context) {
-    final cc = Get.find<CommunityDetailController>(); // ← find here
+//   @override
+//   Widget build(BuildContext context) {
+//     final cc = Get.find<CommunityDetailController>(); // ← find here
 
-    return ContainerBordered(
-      vp: 12,
-      hp: 12,
-      hasBrdr: true,
-      brdrClr: c.inputBorder.withOpacity(0.3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              UserShortDetailWidget(),
+//     return ContainerBordered(
+//       vp: 12,
+//       hp: 12,
+//       hasBrdr: true,
+//       brdrClr: c.inputBorder.withOpacity(0.3),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               UserShortDetailWidget(),
 
-              Row(
-                children: [
-                  // at top of post content, after the user row
-                  Obx(() {
-                    final isPinned = cc.posts.firstWhere((p) => p.id == postId).isPinned.value;
-                    if (!isPinned) return const SizedBox.shrink();
-                    return SvgIcon(iconPath: IconsPath.smallTickBold, height: 22);
-                  }),
+//               Row(
+//                 children: [
+//                   // at top of post content, after the user row
+//                   Obx(() {
+//                     final isPinned = cc.posts.firstWhere((p) => p.id == postId).isPinned.value;
+//                     if (!isPinned) return const SizedBox.shrink();
+//                     return SvgIcon(iconPath: IconsPath.pin, height: 22);
+//                   }),
 
-                  ///
-                  if (btnState == MyCommunityBtnState.visit)
-                    CusFlexibleDropdown(
-                      items: [
-                        CusDropdownItem(
-                          title: Strings.reportContent,
-                          onTap: () async => await showReportBottomSheet(),
-                        ),
-                      ],
-                      child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-                    ),
+//                   ///
+//                   if (btnState == MyCommunityBtnState.visit)
+//                     CusFlexibleDropdown(
+//                       items: [
+//                         CusDropdownItem(
+//                           title: Strings.reportContent,
+//                           onTap: () async => await showReportBottomSheet(),
+//                         ),
+//                       ],
+//                       child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+//                     ),
 
-                  if (btnState == MyCommunityBtnState.manage)
-                    Obx(
-                      () => CusFlexibleDropdown(
-                        items: [
-                          CusDropdownItem(
-                            title: cc.getPinBtnTxt(postId), // ← reactive pin text
-                            onTap: () async {
-                              cc.togglePin(postId); // ← toggle pin
-                            },
-                          ),
-                          CusDropdownItem(
-                            title: cc.getLockBtnTxt(postId),
-                            onTap: () async {
-                              showLockCommentialog();
-                              Future.delayed(Duration(seconds: 1));
-                              Get.back();
-                              cc.toggleCommentLock(postId);
-                            },
-                          ),
-                          CusDropdownItem(
-                            title: Strings.deletePost.capEachWord(),
-                            onTap: () async {
-                              deletePostConfirmDialog(
-                                onConfirm: () async => Get.back(),
-                                isLoading: RxBool(false),
-                              );
-                            },
-                          ),
-                        ],
-                        child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-                      ),
-                    ),
-                ],
-              ),
-            ],
-          ),
+//                   if (btnState == MyCommunityBtnState.manage)
+//                     Obx(
+//                       () => CusFlexibleDropdown(
+//                         items: [
+//                           CusDropdownItem(
+//                             title: cc.getPinBtnTxt(postId), // ← reactive pin text
+//                             onTap: () async {
+//                               cc.togglePin(postId); // ← toggle pin
+//                             },
+//                           ),
+//                           CusDropdownItem(
+//                             title: cc.getLockBtnTxt(postId),
+//                             onTap: () async {
+//                               showLockCommentialog();
+//                               Future.delayed(Duration(seconds: 1));
+//                               Get.back();
+//                               cc.toggleCommentLock(postId);
+//                             },
+//                           ),
+//                           CusDropdownItem(
+//                             title: Strings.deletePost.capEachWord(),
+//                             onTap: () async {
+//                               deletePostConfirmDialog(
+//                                 onConfirm: () async => Get.back(),
+//                                 isLoading: RxBool(false),
+//                               );
+//                             },
+//                           ),
+//                         ],
+//                         child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+//                       ),
+//                     ),
+//                 ],
+//               ),
+//             ],
+//           ),
 
-          Gap(itemGap * 2),
+//           Gap(itemGap * 2),
 
-          Text(
-            "Is it normal for my 2-month-old to want to feed every hour at night? I feel exhausted and keep wondering if I'm doing something wrong 😔",
-            style: TxtStyle.outfit(fs: 13, w: 400),
-          ),
+//           Text(
+//             "Is it normal for my 2-month-old to want to feed every hour at night? I feel exhausted and keep wondering if I'm doing something wrong 😔",
+//             style: TxtStyle.outfit(fs: 13, w: 400),
+//           ),
 
-          Gap(itemGap * 2.5),
+//           Gap(itemGap * 2.5),
 
-          // ── Like & Comment row ──
-          Obx(() {
-            final post = cc.posts.firstWhere((p) => p.id == postId);
-            return Row(
-              children: [
-                CusGestureDetector(
-                  onTap: () => cc.toggleLike(postId),
-                  child: Row(
-                    children: [
-                      // ← swap icon based on isLiked
-                      SvgIcon(
-                        iconPath: post.isLiked.value
-                            ? IconsPath
-                                  .likeHeartFilled // ← filled
-                            : IconsPath.like, // ← outlined
-                        height: 22,
-                      ),
-                      Gap(4),
-                      TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
-                    ],
-                  ),
-                ),
-                Gap(itemGap * 2),
-                Row(
-                  children: [
-                    SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
-                    Gap(4),
-                    CusGestureDetector(
-                      onTap: () async => await showCommentsBottomSheet(postId: postId),
-                      child: TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-        ],
-      ),
-    );
-  }
-}
+//           // ── Like & Comment row ──
+//           Obx(() {
+//             final post = cc.posts.firstWhere((p) => p.id == postId);
+//             return Row(
+//               children: [
+//                 CusGestureDetector(
+//                   onTap: () => cc.toggleLike(postId),
+//                   child: Row(
+//                     children: [
+//                       // ← swap icon based on isLiked
+//                       SvgIcon(
+//                         iconPath: post.isLiked.value
+//                             ? IconsPath
+//                                   .likeHeartFilled // ← filled
+//                             : IconsPath.like, // ← outlined
+//                         height: 22,
+//                       ),
+//                       Gap(4),
+//                       TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
+//                     ],
+//                   ),
+//                 ),
+//                 Gap(itemGap * 2),
+//                 Row(
+//                   children: [
+//                     SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
+//                     Gap(4),
+//                     CusGestureDetector(
+//                       onTap: () => Get.toNamed(
+//                         RoutePaths.postDetails,
+//                         arguments: {'postId': postId, 'btnState': btnState},
+//                       ),
+//                       child: TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             );
+//           }),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 //

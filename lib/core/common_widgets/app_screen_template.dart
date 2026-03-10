@@ -19,6 +19,7 @@ class AppScreenTemplate extends StatelessWidget {
   final Future<void> Function()? onRefresh;
   final GlobalKey<RefreshIndicatorState>? refreshKey;
   final bool? getcmLess;
+  final ScrollController? scrollController;
 
   const AppScreenTemplate({
     super.key,
@@ -40,10 +41,12 @@ class AppScreenTemplate extends StatelessWidget {
     this.onRefresh,
     this.refreshKey,
     this.getcmLess,
+    this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
+    final _fabHeight = ValueNotifier<double>(0);
     return SafeArea(
       top: safeAreaTop,
       child: Scaffold(
@@ -52,7 +55,12 @@ class AppScreenTemplate extends StatelessWidget {
         appBar: appBar,
         extendBodyBehindAppBar: extendBodyBehindAppBar ?? false,
         extendBody: extendBody ?? false,
-        floatingActionButton: floatingActionButton,
+        floatingActionButton: floatingActionButton == null
+            ? null
+            : MeasuredWidget(
+                onMeasured: (size) => _fabHeight.value = size.height,
+                child: floatingActionButton!.mB(4),
+              ),
         floatingActionButtonLocation:
             floatingActionButtonLocation ?? FloatingActionButtonLocation.centerDocked,
         drawer: drawer,
@@ -76,6 +84,8 @@ class AppScreenTemplate extends StatelessWidget {
               },
               child: BounceSingleChildScrollView(
                 padding: padding ?? EdgeInsets.zero,
+
+                scrollController: scrollController,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
@@ -90,6 +100,18 @@ class AppScreenTemplate extends StatelessWidget {
                         ] else
                           const SizedBox.shrink(),
                         Gap(itemGap * 3),
+
+                        if (floatingActionButton != null)
+                          ValueListenableBuilder<double>(
+                            valueListenable: _fabHeight,
+                            builder: (_, height, __) {
+                              final keyboardHeight = S.bottomInset;
+                              final totalGap = keyboardHeight > 0
+                                  ? height // ← keyboard open: keyboard + fab
+                                  : height + 30.h; // ← keyboard closed: fab + margin
+                              return Gap(totalGap);
+                            },
+                          ),
                       ],
                     ),
                   ),
@@ -101,4 +123,29 @@ class AppScreenTemplate extends StatelessWidget {
       ),
     );
   }
+}
+
+class MeasuredWidget extends StatefulWidget {
+  final Widget child;
+  final void Function(Size) onMeasured;
+  const MeasuredWidget({super.key, required this.child, required this.onMeasured});
+
+  @override
+  State<MeasuredWidget> createState() => _MeasuredWidgetState();
+}
+
+class _MeasuredWidgetState extends State<MeasuredWidget> {
+  final _key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final box = _key.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null) widget.onMeasured(box.size);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => KeyedSubtree(key: _key, child: widget.child);
 }

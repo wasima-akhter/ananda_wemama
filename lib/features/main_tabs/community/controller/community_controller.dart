@@ -61,19 +61,43 @@ class CommunityController extends GetxController {
 
   void onTapItemBtn(MyCommunityBtnState btnState) {
     if (btnState == MyCommunityBtnState.join) {
-      // show popup
-      // communityguidline.
       communityGuidlineDialog(
         isLoading: isLoading,
         onTapAction: () async {
           Get.back();
-          Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.join);
+          Get.toNamed(
+            RoutePaths.communityDetail,
+            arguments: {
+              'btnState': MyCommunityBtnState.join,
+              'isAlreadyMember': true, // ← came via join button = now member
+            },
+          );
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {
-      Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.manage);
+      Get.toNamed(
+        RoutePaths.communityDetail,
+        arguments: {'btnState': MyCommunityBtnState.manage, 'isAlreadyMember': true},
+      );
     } else if (btnState == MyCommunityBtnState.visit) {
-      Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.visit);
+      Get.toNamed(
+        RoutePaths.communityDetail,
+        arguments: {
+          'btnState': MyCommunityBtnState.visit,
+          'isAlreadyMember': false, // ← just visiting, not member
+        },
+      );
     }
+  }
+
+  // ← tapping the item row (not the button) = just viewing
+  void onTapItem(MyCommunityBtnState btnState) {
+    Get.toNamed(
+      RoutePaths.communityDetail,
+      arguments: {
+        'btnState': btnState,
+        'isAlreadyMember': false, // ← came via item tap = not joined yet
+      },
+    );
   }
 }
