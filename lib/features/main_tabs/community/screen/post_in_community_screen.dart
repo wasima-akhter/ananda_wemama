@@ -53,6 +53,8 @@ class PostInCommunityScreen extends StatelessWidget {
                 Obx(
                   () => CustomToggleButton(
                     value: pcc.postAnonymously.value,
+                    inactiveColor: c.scaffoldBackground,
+                    activeColor: c.scaffoldBackground,
                     onChanged: pcc.toggleAnonymous,
                   ),
                 ),

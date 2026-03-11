@@ -21,10 +21,8 @@ class OnboardController extends GetxController {
   /// 👉 Called when swiping pages
 
   /// 👉 Final navigation (safe & smooth)
-  void _finishOnboarding() {
-    if (isLastPage__.value == false) return; // extra safety
-
-    storage.setSeenOnboarding(false); // make true late
+  void finishOnboarding() {
+    storage.setSeenOnboarding(false); // make true later
     debugPrint("Seen onboarding saved: ${storage.getSeenOnboarding}");
 
     // Unfocus anything just in case

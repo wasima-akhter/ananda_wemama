@@ -3,7 +3,8 @@ import 'package:mama_app/core/helpers/string_helper.dart';
 import '../../../app/helper_widgets_export.dart';
 
 class CommunitySpotlight extends StatelessWidget {
-  const CommunitySpotlight({super.key});
+  final bool? isFromOnboardScreen;
+  const CommunitySpotlight({super.key, this.isFromOnboardScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +24,20 @@ class CommunitySpotlight extends StatelessWidget {
               Text(Strings.communitySpotlight.capEachWord(), style: 13.titleMclrCusFSsemi),
 
               CusGestureDetector(
-                onTap: () =>
-                    Get.toNamed(RoutePaths.communityDetail, arguments: MyCommunityBtnState.join),
+                onTap: () => isFromOnboardScreen == true
+                    ? {}
+                    : Get.toNamed(
+                        RoutePaths.communityDetail,
+                        arguments: {
+                          'btnState': MyCommunityBtnState.join,
+                          'isAlreadyMember': false, // ← came via join button = now member
+                        },
+                      ),
                 child: ContainerBordered(
                   hasBrdr: true,
                   contClr: c.inputBackground,
 
-                  rad: 16,
+                  rad: 18,
                   vp: 8,
                   hp: 18,
 

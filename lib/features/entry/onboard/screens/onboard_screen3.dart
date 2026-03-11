@@ -15,7 +15,7 @@ class OnboardScreen3 extends StatelessWidget {
       bottomWidget: CustomBtnWTxt(
         btnTxt: Strings.continueTxt,
         isSmall: true,
-        onTap: () => Get.toNamed(RoutePaths.signin),
+        onTap: () => oc.finishOnboarding(),
         isLoading: false,
       ),
       child: Column(
@@ -24,7 +24,7 @@ class OnboardScreen3 extends StatelessWidget {
           Gap(itemGap * 5),
           Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
           Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
-          Gap(itemGap * 2),
+          Gap(itemGap * 1.5),
           FittedBox(
             child: Text(
               Strings.feelBetterTogether,
@@ -38,9 +38,9 @@ class OnboardScreen3 extends StatelessWidget {
             textAlign: TextAlign.center,
             style: 13.norMclrCusFS,
           ).mHV(40, 0),
-          Gap(itemGap * 2),
+          Gap(itemGap),
           MoodLibrarySample(moodDataList: oc.moodDataList),
-          Gap(itemGap * 3),
+          Gap(itemGap * 1.5),
           Container(
             decoration: BoxDeco.decRadAllBorderedAll(12, brdrClr: c.primary),
             child: Image.asset(ImagesPath.onboarding3),

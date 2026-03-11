@@ -744,6 +744,7 @@ class Strings {
   static const String commentLocked = "Comment has been locked. No one can comment now.";
 
   static const String confirmDeletePost = "Do you want to delete this post?";
+  static const String noBookmarks = "noBookmarks";
 
   //
   static const String moodChipLibrary = "Mood Chip Library";

@@ -81,6 +81,8 @@ class SetupProfileScreen extends StatelessWidget {
               Obx(() {
                 return PopupInputTile(
                   hintText: Strings.dateOfBirth.cap,
+                  bgClr: c.inputBackground,
+
                   value: spc.selectedDob.value,
                   onTap: () async {
                     await pickDateWithOptions(
@@ -96,6 +98,7 @@ class SetupProfileScreen extends StatelessWidget {
                 return PopupInputTile(
                   hintText: Strings.state.cap,
                   value: spc.selectedState.value,
+                  bgClr: c.inputBackground,
                   onTap: () {
                     spc.openStateBottomSheet();
                   },
@@ -106,6 +109,7 @@ class SetupProfileScreen extends StatelessWidget {
                 return PopupInputTile(
                   hintText: Strings.city.cap,
                   value: spc.selectedCity.value,
+                  bgClr: c.inputBackground,
                   onTap: () {
                     spc.openCityBottomSheet();
                   },

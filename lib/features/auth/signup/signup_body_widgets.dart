@@ -23,7 +23,7 @@ class SignupHeaderSection extends StatelessWidget {
         ContainerBordered(
           mh: 20,
           rad: 6,
-          contClr: white,
+          contClr: c.inputBackground,
           child: Text(Strings.joinOurSafeCommunity, style: 12.norSecclrCusFSoutfit),
         ),
 

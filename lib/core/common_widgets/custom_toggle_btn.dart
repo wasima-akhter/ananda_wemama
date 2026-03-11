@@ -30,8 +30,8 @@ class CustomToggleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeColor = c.inputBackground;
-    final inactiveColor = c.inputBackground;
+    final activeColor_ = activeColor ?? c.inputBackground;
+    final inactiveColor_ = inactiveColor ?? c.inputBackground;
     final thumbColor = value ? c.secondary : c.bottomSheetBackground;
 
     return GestureDetector(
@@ -42,7 +42,7 @@ class CustomToggleButton extends StatelessWidget {
         height: height ?? 28,
         // padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: value ? activeColor : inactiveColor,
+          color: value ? activeColor_ : inactiveColor_,
           borderRadius: (borderRadius.brdrRad),
         ),
         child: Stack(

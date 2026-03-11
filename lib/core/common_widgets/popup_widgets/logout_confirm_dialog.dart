@@ -43,6 +43,7 @@ class LogoutConfirmDialog extends StatelessWidget {
                   () => CustomBtnWTxt(
                     btnColor: c.primary,
                     borderClr: c.primary,
+                    isSmall: true,
                     txtClr: white,
                     btnTxt: Strings.confirm,
                     isLoading: isLoading.value,

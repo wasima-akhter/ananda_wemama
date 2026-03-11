@@ -31,32 +31,36 @@ class ForgotPassAfterVerify extends StatelessWidget {
           key: resetPassFormKey,
           child: Column(
             children: [
-              CusPassTypeTextFormField(
-                controller: fpc.newPassCtrl,
-                focusNode: fpc.newPassFocus,
-                hintText: Strings.newPassword,
-                obscureText: fpc.isNewPassHidden,
-                prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
-                prefixSize: 48,
-                suffix: VisibilitySuffix(onTap: fpc.toggleNewPass, icon: fpc.newPasswordIcon),
-                validator: (value) => validatePassword(value),
-                hintW: 600,
+              Obx(
+                () => CusPassTypeTextFormField(
+                  controller: fpc.newPassCtrl,
+                  focusNode: fpc.newPassFocus,
+                  hintText: Strings.newPassword,
+                  obscureText: fpc.isNewPassHidden,
+                  prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
+                  prefixSize: 48,
+                  suffix: VisibilitySuffix(onTap: fpc.toggleNewPass, icon: fpc.newPasswordIcon),
+                  validator: (value) => validatePassword(value),
+                  hintW: 600,
+                ),
               ),
               Gap(itemGap * 1.5),
-              CusPassTypeTextFormField(
-                controller: fpc.confirmPassCtrl,
-                focusNode: fpc.confirmPassFocus,
-                hintText: Strings.confirmPassword,
-                obscureText: fpc.isConfirmPassHidden,
-                prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
-                prefixSize: 48,
-                suffix: VisibilitySuffix(
-                  onTap: fpc.toggleConfirmPass,
-                  icon: fpc.confirmPasswordIcon,
+              Obx(
+                () => CusPassTypeTextFormField(
+                  controller: fpc.confirmPassCtrl,
+                  focusNode: fpc.confirmPassFocus,
+                  hintText: Strings.confirmPassword,
+                  obscureText: fpc.isConfirmPassHidden,
+                  prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
+                  prefixSize: 48,
+                  suffix: VisibilitySuffix(
+                    onTap: fpc.toggleConfirmPass,
+                    icon: fpc.confirmPasswordIcon,
+                  ),
+                  validator: (value) =>
+                      validateConfirmPass(confirmPass: value, password: fpc.newPassCtrl.text),
+                  hintW: 600,
                 ),
-                validator: (value) =>
-                    validateConfirmPass(confirmPass: value, password: fpc.newPassCtrl.text),
-                hintW: 600,
               ),
               Gap(itemGap * 2),
               CustomBtnWTxt(

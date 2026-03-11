@@ -4,9 +4,15 @@ import '../../../../../core/components/mood_check_in/mood_check_in_controller.da
 import '../../../../../core/enums/ui_enums.dart';
 
 class MoodReadingItem {
+  final String id; // ← add
   final String title;
   final List<String> bullets;
-  MoodReadingItem({required this.title, required this.bullets});
+
+  MoodReadingItem({
+    required this.id, // ← add
+    required this.title,
+    required this.bullets,
+  });
 }
 
 class MoodLibraryController extends GetxController {
@@ -29,32 +35,66 @@ class MoodLibraryController extends GetxController {
   final Map<MoodType, List<MoodReadingItem>> moodReadingItems = {
     MoodType.calm: [
       MoodReadingItem(
+        id: "calm_0",
         title: "Deep Breathing",
         bullets: ["Take a few deep breaths and relax your shoulders."],
       ),
-      MoodReadingItem(title: "Calm Visualization", bullets: ["Focus on a calming visualization."]),
+      MoodReadingItem(
+        id: "calm_1",
+        title: "Calm Visualization",
+        bullets: ["Focus on a calming visualization."],
+      ),
     ],
     MoodType.tired: [
-      MoodReadingItem(title: "Rest & Recovery", bullets: ["Pause and allow yourself to rest."]),
-      MoodReadingItem(title: "Hydration Reset", bullets: ["Hydrate and stretch lightly."]),
-      MoodReadingItem(title: "Body Restore", bullets: ["Pause and allow yourself to rest."]),
-      MoodReadingItem(title: "Light Movement", bullets: ["Hydrate and stretch lightly."]),
+      MoodReadingItem(
+        id: "tired_0",
+        title: "Rest & Recovery",
+        bullets: ["Pause and allow yourself to rest."],
+      ),
+      MoodReadingItem(
+        id: "tired_1",
+        title: "Hydration Reset",
+        bullets: ["Hydrate and stretch lightly."],
+      ),
+      MoodReadingItem(
+        id: "tired_2",
+        title: "Body Restore",
+        bullets: ["Pause and allow yourself to rest."],
+      ),
+      MoodReadingItem(
+        id: "tired_3",
+        title: "Light Movement",
+        bullets: ["Hydrate and stretch lightly."],
+      ),
     ],
     MoodType.anxious: [
       MoodReadingItem(
+        id: "anxious_0",
         title: "Mindful Awareness",
         bullets: ["Pause and notice your thoughts without judgment."],
       ),
       MoodReadingItem(
+        id: "anxious_1",
         title: "Grounding Exercise",
         bullets: ["Take a brief walk or grounding exercise."],
       ),
     ],
     MoodType.stressed: [
-      MoodReadingItem(title: "Take Control", bullets: ["Identify one thing you can control now."]),
-      MoodReadingItem(title: "Mindfulness Break", bullets: ["Try a short mindfulness exercise."]),
+      MoodReadingItem(
+        id: "stressed_0",
+        title: "Take Control",
+        bullets: ["Identify one thing you can control now."],
+      ),
+      MoodReadingItem(
+        id: "stressed_1",
+        title: "Mindfulness Break",
+        bullets: ["Try a short mindfulness exercise."],
+      ),
     ],
   };
+
+  ///
+  ///
   var isLoading = false.obs;
   bool get loading => isLoading.value;
 

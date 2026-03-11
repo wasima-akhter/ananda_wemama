@@ -41,7 +41,7 @@ class OnboardScreen2 extends StatelessWidget {
           Gap(itemGap),
           Image.asset(ImagesPath.onboarding2),
           Gap(itemGap * 2),
-          CommunitySpotlight(),
+          CommunitySpotlight(isFromOnboardScreen: true),
 
           Gap(itemGap * 4),
         ],

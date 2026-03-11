@@ -7,6 +7,7 @@ class PopupInputTile extends StatelessWidget {
   final double? height;
   final double? brdrW;
   final Color? brdrClr;
+  final Color? bgClr;
 
   const PopupInputTile({
     super.key,
@@ -16,6 +17,7 @@ class PopupInputTile extends StatelessWidget {
     this.height,
     this.brdrW,
     this.brdrClr,
+    this.bgClr,
   });
 
   @override
@@ -29,7 +31,7 @@ class PopupInputTile extends StatelessWidget {
         height: height,
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
         decoration: BoxDecoration(
-          color: c.cardPrimary,
+          color: bgClr ?? c.cardPrimary,
           borderRadius: 30.brdrRad,
           border: Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 1.5),
         ),

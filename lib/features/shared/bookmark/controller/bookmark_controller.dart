@@ -2,24 +2,17 @@ import 'package:get/get.dart';
 
 import '../../../../core/services/more/notification/notification_service.dart';
 import '../../../../core/utils/extension/string_extension.dart';
-
-class BookmarkModel {
-  final String id;
-  final String title;
-  final List<String> bullets;
-
-  BookmarkModel({required this.id, required this.title, required this.bullets});
-}
+import '../../mood/mood_library/controller/mood_library_controller.dart';
 
 class BookmarkController extends GetxController {
-  final bookmarks = <BookmarkModel>[].obs; // ← start empty, filled by real data
+  final bookmarks = <MoodReadingItem>[].obs;
 
   bool isBookmarked(String id) => bookmarks.any((b) => b.id == id);
 
-  void addBookmark(BookmarkModel item) {
+  void addBookmark(MoodReadingItem item) {
     if (!isBookmarked(item.id)) {
       bookmarks.add(item);
-      "Bookmarked!".showToast(); // ← replace with your toast util
+      "Bookmarked!".showToast();
     } else {
       bookmarks.removeWhere((b) => b.id == item.id);
       "Removed from bookmarks".showToast();

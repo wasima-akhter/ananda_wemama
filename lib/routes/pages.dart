@@ -48,7 +48,6 @@ import '../features/shared/subscription_info/screen/subscription_info_screen.dar
 import '../features/shared/wave_request/screen/wave_request_screen.dart';
 import '../features/video_meeting/screen/meeting_screen.dart';
 import 'route_paths.dart';
-import 'route_transition.dart';
 
 class RoutePageList {
   static final List<GetPage> appPages = [
@@ -59,35 +58,35 @@ class RoutePageList {
       name: RoutePaths.splashScreen,
       page: () => const SplashScreen(),
       binding: SplashScreenBinding(),
-      transition: RouteTransitions.byName(RoutePaths.splashScreen),
+      // transition RouteTransitions.byName(RoutePaths.splashScreen),
     ),
     GetPage(
       name: RoutePaths.offlineScreen,
       page: () => const OfflineScreen(),
-      transition: RouteTransitions.byName(RoutePaths.offlineScreen),
+      // transition RouteTransitions.byName(RoutePaths.offlineScreen),
     ),
     GetPage(
       name: RoutePaths.notFound,
       page: () => const RouteNotFoundPage(),
-      transition: RouteTransitions.byName(RoutePaths.notFound),
+      // transition RouteTransitions.byName(RoutePaths.notFound),
     ),
     GetPage(
       name: RoutePaths.onboardScreen,
       page: () => const OnboardScreen(),
       binding: SplashScreenBinding(),
-      transition: RouteTransitions.byName(RoutePaths.onboardScreen),
+      // transition RouteTransitions.byName(RoutePaths.onboardScreen),
     ),
     GetPage(
       name: RoutePaths.onboardScreen2,
       page: () => const OnboardScreen2(),
       binding: SplashScreenBinding(),
-      transition: RouteTransitions.byName(RoutePaths.onboardScreen2),
+      // transition RouteTransitions.byName(RoutePaths.onboardScreen2),
     ),
     GetPage(
       name: RoutePaths.onboardScreen3,
       page: () => const OnboardScreen3(),
       binding: SplashScreenBinding(),
-      transition: RouteTransitions.byName(RoutePaths.onboardScreen3),
+      // transition RouteTransitions.byName(RoutePaths.onboardScreen3),
     ),
 
     // ─────────────────────────────
@@ -97,7 +96,7 @@ class RoutePageList {
       name: RoutePaths.meetingScreen,
       page: () => const MeetingScreen(),
       binding: MeetingBinding(),
-      transition: RouteTransitions.byName(RoutePaths.meetingScreen),
+      // transition RouteTransitions.byName(RoutePaths.meetingScreen),
     ),
 
     // ─────────────────────────────
@@ -107,38 +106,38 @@ class RoutePageList {
       name: RoutePaths.mainNav,
       page: () => const MainNavScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.mainNav),
+      // transition RouteTransitions.byName(RoutePaths.mainNav),
     ),
     GetPage(
       name: RoutePaths.home,
       page: () => const HomeScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.home),
+      // transition RouteTransitions.byName(RoutePaths.home),
     ),
     GetPage(
       name: RoutePaths.chat,
       page: () => const ChatScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.chat),
+      // transition RouteTransitions.byName(RoutePaths.chat),
     ),
 
     GetPage(
       name: RoutePaths.match,
       page: () => const MatchScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.match),
+      // transition RouteTransitions.byName(RoutePaths.match),
     ),
     GetPage(
       name: RoutePaths.communities,
       page: () => const CommunityScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.communities),
+      // transition RouteTransitions.byName(RoutePaths.communities),
     ),
     GetPage(
       name: RoutePaths.experts,
       page: () => const ExpertsScreen(),
       binding: MainNavBinding(),
-      transition: RouteTransitions.byName(RoutePaths.experts),
+      // transition RouteTransitions.byName(RoutePaths.experts),
     ),
 
     // ─────────────────────────────
@@ -148,14 +147,14 @@ class RoutePageList {
       name: RoutePaths.chatInbox,
       page: () => const ChatInboxScreen(),
       binding: ChatInboxBinding(),
-      transition: RouteTransitions.byName(RoutePaths.chatInbox),
+      // transition RouteTransitions.byName(RoutePaths.chatInbox),
     ),
 
     GetPage(
       name: RoutePaths.communityDetail,
       page: () => const CommunityDetailsScreen(),
       binding: CommunityDetailBinding(),
-      transition: RouteTransitions.byName(RoutePaths.communityDetail),
+      // transition RouteTransitions.byName(RoutePaths.communityDetail),
     ),
     // ─────────────────────────────
     // 🔹 Auth Flow

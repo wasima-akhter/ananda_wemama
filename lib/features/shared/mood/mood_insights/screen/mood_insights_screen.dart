@@ -28,15 +28,11 @@ class MoodInsightsScreen extends StatelessWidget {
           if (item != null)
             Obx(
               () => MoodTypeInsightDesItem(
-                id: itemId,
+                id: item.id, // ← use item.id
                 title: item.title,
                 bullets: item.bullets,
-                isBookmarked: bc.isBookmarked(itemId),
-                onTapBookmark: () {
-                  bc.addBookmark(
-                    BookmarkModel(id: itemId, title: item.title, bullets: item.bullets),
-                  );
-                },
+                isBookmarked: bc.isBookmarked(item.id),
+                onTapBookmark: () => bc.addBookmark(item), // ← pass item directly
                 onTapExpertBtn: () => goToMainNavWithTab(4),
               ),
             ),

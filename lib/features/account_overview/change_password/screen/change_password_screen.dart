@@ -1,6 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/cus_pass_type_text_form_field.dart';
-import '../../../../core/common_widgets/title_tile.dart';
 import '../../../../core/common_widgets/visibility_suffix.dart';
 import '../../../../core/utils/validator/validators.dart';
 import '../controller/change_password_controller.dart';
@@ -27,7 +26,7 @@ class ChangePasswordScreen extends StatelessWidget {
               Form(
                 key: cngPassFormKey,
                 child: Column(
-                  spacing: itemGap * 2,
+                  spacing: itemGap * 1.5,
                   children: [
                     CusPassTypeTextFormField(
                       controller: cpc.oldPassCtrl,
@@ -58,14 +57,9 @@ class ChangePasswordScreen extends StatelessWidget {
                         hintText: Strings.confirmPassword,
                         hintW: 600,
                         obscureText: cpc.isConPassHidden,
-                        suffix: VisibilitySuffix(
-                          onTap: cpc.toggleConPass,
-                          icon: cpc.conPassIcon,
-                        ),
-                        validator: (value) => validateConfirmPass(
-                          confirmPass: value,
-                          password: cpc.newPassCtrl.text,
-                        ),
+                        suffix: VisibilitySuffix(onTap: cpc.toggleConPass, icon: cpc.conPassIcon),
+                        validator: (value) =>
+                            validateConfirmPass(confirmPass: value, password: cpc.newPassCtrl.text),
                       ),
                     ),
                   ],
@@ -75,7 +69,7 @@ class ChangePasswordScreen extends StatelessWidget {
               Obx(
                 () => CustomBtnWTxt(
                   isSmall: true,
-                  
+
                   isLoading: cpc.isLoading,
                   onTap: () async {
                     // later you’ll call API here
