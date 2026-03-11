@@ -8,6 +8,7 @@ import '../../features/shared/wave_request/widgets/new_waves_user_details_popup.
 import 'common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
 import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
+import 'popup_widgets/daily_limit_popup.dart';
 import 'popup_widgets/delete_confirm_dialog.dart';
 import 'popup_widgets/delivery_feedback_dialog.dart';
 import 'popup_widgets/edit_fuel_diesel_rate_popup.dart';
@@ -94,6 +95,16 @@ Future<void> showWaveSenDialog() {
     barrierDismissible: false,
     builder: (_) {
       return WaveSentPopup();
+    },
+  );
+}
+
+Future<void> showDailyLimitDialog() {
+  return showDialog(
+    context: Get.context!,
+    barrierDismissible: false,
+    builder: (_) {
+      return DailyLimitPopup();
     },
   );
 }

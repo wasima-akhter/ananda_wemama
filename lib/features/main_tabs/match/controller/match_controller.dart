@@ -22,7 +22,7 @@ class MatchController extends GetxController {
   bool isPaidUser = false;
 
   /// free user limit
-  int freeDailyLimit = 1;
+  int freeDailyLimit = 10;
 
   /// how many searches done today
   int searchesToday = 0;
@@ -54,6 +54,12 @@ class MatchController extends GetxController {
     /// ---------- CHECK SUBSCRIPTION ----------
     if (!isPaidUser && searchesToday >= freeDailyLimit) {
       subUpgradeNeeded.value = true;
+
+      showDailyLimitDialog();
+
+      ///     delay
+      await Future.delayed(const Duration(seconds: 2));
+      Get.back();
       Get.toNamed(RoutePaths.subscriptionUpgrade);
       return;
     }

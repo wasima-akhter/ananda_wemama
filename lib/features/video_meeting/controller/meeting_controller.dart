@@ -5,6 +5,7 @@ import '../../../core/config/agora_config.dart';
 import '../../../core/helpers/permission_helper.dart';
 
 class MeetingController extends GetxController {
+  ///////////////////////////////
   String appId = "";
   String token = "";
   String channelName = "";

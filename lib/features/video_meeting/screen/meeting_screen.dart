@@ -199,47 +199,13 @@ class MeetingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
     return AppScreenTemplate(
       isScrollable: false,
       backgroundColor: c.cardPrimary,
 
-      floatingActionButton:
-          /// BOTTOM ACTIONS
-          /// BOTTOM ACTIONS
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Gap(8),
-              _MsgInputRow().get10cm,
-              Gap(itemGap * 1.5),
-
-              // ← hide when keyboard is open
-              // if (S.bottomInset == 0)
-              Container(
-                padding: 20.pa,
-                decoration: BoxDeco.decRadiusUpBrderAll(30, brdrClr: ctransp, clr: c.cardPrimary),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CusGestureDetector(
-                      onTap: () => Get.back(),
-                      child: _BottomAction(
-                        iconPath: IconsPath.closeWhite,
-                        backgroundColor: Colors.red,
-                        size: 13,
-                        text: "Leave",
-                        color: white,
-                      ),
-                    ),
-                    _BottomAction(iconPath: IconsPath.mutedAudio, text: "Mute Audio"),
-                    _BottomAction(iconPath: IconsPath.likeHeartFilled, text: "React"),
-                    _BottomAction(iconPath: IconsPath.handRaise, text: "Ask Questions"),
-                  ],
-                ).getcm,
-              ),
-            ],
-          ),
-
+      floatingActionButton: _FloatingActionBtn(keyboardOpen: keyboardOpen),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -347,6 +313,122 @@ class MeetingScreen extends StatelessWidget {
   }
 }
 
+class _FloatingActionBtn extends StatelessWidget {
+  final bool keyboardOpen;
+  const _FloatingActionBtn({super.key, required this.keyboardOpen});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: bgClr,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Input row - no rounded corners, flat bottom
+          Container(
+            color: bgClr,
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: Column(children: [Gap(itemGap * 1.5), _MsgInputRow()]),
+          ),
+
+          // Bottom actions - rounded TOP corners only
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            transitionBuilder: (child, animation) => SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 1),
+                end: Offset.zero,
+              ).animate(animation),
+              child: FadeTransition(opacity: animation, child: child),
+            ),
+            child: keyboardOpen
+                ? const SizedBox.shrink()
+                : ClipRRect(
+                    key: const ValueKey('bottom_actions'),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                      margin: EdgeInsets.only(top: itemGap),
+
+                      color: c.cardPrimary, // flat color, no borderRadius here
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CusGestureDetector(
+                            onTap: () => Get.back(),
+                            child: _BottomAction(
+                              iconPath: IconsPath.closeWhite,
+                              backgroundColor: Colors.red,
+                              size: 13,
+                              text: "Leave",
+                              color: white,
+                            ),
+                          ),
+                          _BottomAction(iconPath: IconsPath.mutedAudio, text: "Mute Audio"),
+
+                          /////////////
+                          _ReactButton(),
+
+                          ////
+                          _BottomAction(iconPath: IconsPath.handRaise, text: "Ask Questions"),
+                        ],
+                      ).getcm,
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReactButton extends StatelessWidget {
+  const _ReactButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final overlayKey = GlobalKey();
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Height = emoji text(18.sp) + vertical padding(8.h * 2) + decoration insets
+        final overlayHeight = 18.sp + (8.h * 2) + 80.h;
+
+        return CusFlexibleDropdown(
+          items: const [],
+          offset: Offset(0, -overlayHeight),
+          customOverlay: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            decoration: BoxDecoration(
+              color: c.scaffoldBackground,
+              borderRadius: 30.brdrRad,
+              boxShadow: boxShadowAllSides,
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: ["❤️", "😂", "😮", "😢", "😡", "👍", "🙏"]
+                  .map(
+                    (emoji) => GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
+                        child: Text(emoji, style: TextStyle(fontSize: 18.sp)),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          child: _BottomAction(iconPath: IconsPath.likeHeartFilled, text: "React"),
+        );
+      },
+    );
+  }
+}
+
+////
 class _MsgInputRow extends StatelessWidget {
   const _MsgInputRow({super.key});
 

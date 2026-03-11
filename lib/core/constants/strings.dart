@@ -695,6 +695,10 @@ class Strings {
   static const String pass = "Pass";
   static const String wave = "Wave";
 
+  static const String dailyWaveLimitReached = "Daily wave limit reached!";
+  static const String waveResetAtMidnight = "Resets at midnight.";
+  static const String getPremiumUnlimitedWaves = "Get Premium for unlimited waves.";
+
   // Subscription
   static const String subscriptionUpgrade = "Subscription Upgrade";
 

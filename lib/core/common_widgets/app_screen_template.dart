@@ -20,6 +20,7 @@ class AppScreenTemplate extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState>? refreshKey;
   final bool? getcmLess;
   final ScrollController? scrollController;
+  final bool? fabSpacerOnFixed;
 
   const AppScreenTemplate({
     super.key,
@@ -42,6 +43,7 @@ class AppScreenTemplate extends StatelessWidget {
     this.refreshKey,
     this.getcmLess,
     this.scrollController,
+    this.fabSpacerOnFixed,
   });
 
   @override
@@ -59,7 +61,7 @@ class AppScreenTemplate extends StatelessWidget {
             ? null
             : MeasuredWidget(
                 onMeasured: (size) => _fabHeight.value = size.height,
-                child: floatingActionButton!.mB(4),
+                child: floatingActionButton!.mB(0),
               ),
         floatingActionButtonLocation:
             floatingActionButtonLocation ?? FloatingActionButtonLocation.centerDocked,
@@ -68,11 +70,18 @@ class AppScreenTemplate extends StatelessWidget {
         body: LayoutBuilder(
           builder: (context, constraints) {
             if (isScrollable == false) {
-              return Column(
-                children: [
-                  Expanded(child: child),
-                  if (bottomWidget != null) ...[bottomWidget!.getcm, Gap(itemGap * 3)],
-                ],
+              return ValueListenableBuilder<double>(
+                valueListenable: _fabHeight,
+                builder: (_, height, __) {
+                  return Column(
+                    children: [
+                      Expanded(child: child),
+                      if (bottomWidget != null) ...[bottomWidget!.getcm, Gap(itemGap * 3)],
+                      // ← pushes content above the FAB
+                      if (floatingActionButton != null) Gap(height),
+                    ],
+                  );
+                },
               );
             }
             return CusRefreshIndicator(
