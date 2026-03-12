@@ -39,6 +39,9 @@ class IconsPath {
   static String get termsConditions => Assets.icons.termsConditions;
   static String get quesContact => Assets.icons.quesContact;
 
+  // no ques empty icon
+  static String get noQues => Assets.icons.noQues;
+
   // Social / Interaction
   static String get chatCircleOutlined => Assets.icons.chatCircleOutlined;
   static String get chatWDot => Assets.icons.chatWDot;
@@ -177,4 +180,12 @@ class ImagesPath {
   static String get gallery => Assets.images.gallery.path;
   static String get camera => Assets.images.camera.path;
   static String get folderAttach => Assets.images.folderAttach.path;
+
+  static String get likeEmoji => Assets.images.likeEmoji.path;
+  static String get heartEmoji => Assets.images.heartEmoji.path;
+  static String get careEmoji => Assets.images.careEmoji.path;
+  static String get hahaEmoji => Assets.images.hahaEmoji.path;
+  static String get wowEmoji => Assets.images.wowEmoji.path;
+  static String get sadEmoji => Assets.images.sadEmoji.path;
+  static String get angryEmoji => Assets.images.angryEmoji.path;
 }

@@ -1,3 +1,5 @@
+import 'package:mama_app/core/common_widgets/back_arrow_in_circle.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/welcome_funding_mum_controller.dart';
 import '../widgets/wel_fund_mum_bottom_sec.dart';
@@ -13,6 +15,7 @@ class WelcomeFundingMumScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       isScrollable: false,
+
       bottomWidget: WelcomeFundingMumBottomSection(controller: controller),
       child: WelcomeFundingMumBody(controller: controller, formKey: formKey),
     );
@@ -34,8 +37,9 @@ class WelcomeFundingMumBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Gap(itemGap * 5),
-          weMamaLogoWithTxt,
-          Gap(itemGap * 3),
+          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
+          Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+          Gap(itemGap * 1.5),
 
           /// Paged Content
           Expanded(

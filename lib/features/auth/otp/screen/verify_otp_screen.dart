@@ -89,7 +89,7 @@ class VerifyOtpScreen extends StatelessWidget {
                               ? Strings
                                     .youCanReqOTP // While timer running
                               : Strings.youHaventGotOTP,
-                          style: TxtStyle.outfit(w: 600, color: c.primary),
+                          style: TxtStyle.outfit(w: 500, color: c.secondary),
                         ),
                       ),
                       otpc.showTimer

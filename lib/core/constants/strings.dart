@@ -749,6 +749,9 @@ class Strings {
   //
   static const String moodChipLibrary = "Mood Chip Library";
   static const String subscribeToAccessOurLibrary = "Subscribe To Access Our Library";
+
+  static const String noQuestionYet = "No question yet.";
+  static const String beTheFirstToAsk = "Be the first to ask the expert";
 }
 
 //

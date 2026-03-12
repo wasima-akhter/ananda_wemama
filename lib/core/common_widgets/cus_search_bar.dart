@@ -7,30 +7,18 @@ class CusSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerBordered(
-      hasBrdr: true,
-
-      contClr: c.inputBackground,
-      hp: 14,
+    return CusNameTypeTextFormField(
       rad: 30,
+      isNoBrder: false,
       brdrClr: c.inputBorder,
-      vp: 0,
-      child: Row(
-        children: [
-          Expanded(
-            child: CusNameTypeTextFormField(
-              isNoBrder: true,
-              contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 8),
-              prefix: SvgIcon(iconPath: IconsPath.search),
-              prefixSize: 22,
-              controller: controller,
-              onTap: onTap,
-              hintText: Strings.search.cap,
-              hintStyle: TxtStyle.outfitSmTitle,
-            ),
-          ),
-        ],
-      ),
+      fillColor: c.inputBackground,
+      contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 8),
+      prefix: SvgIcon(iconPath: IconsPath.search, height: 22).mL(15),
+      prefixSize: 22,
+      controller: controller,
+      onTap: onTap,
+      hintText: Strings.search.cap,
+      hintStyle: TxtStyle.outfitSmTitle,
     );
   }
 }

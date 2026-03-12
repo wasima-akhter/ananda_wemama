@@ -21,6 +21,7 @@ class AppScreenTemplate extends StatelessWidget {
   final bool? getcmLess;
   final ScrollController? scrollController;
   final bool? fabSpacerOnFixed;
+  final Widget? bottomNavigationBar;
 
   const AppScreenTemplate({
     super.key,
@@ -44,6 +45,7 @@ class AppScreenTemplate extends StatelessWidget {
     this.getcmLess,
     this.scrollController,
     this.fabSpacerOnFixed,
+    this.bottomNavigationBar,
   });
 
   @override
@@ -57,6 +59,8 @@ class AppScreenTemplate extends StatelessWidget {
         appBar: appBar,
         extendBodyBehindAppBar: extendBodyBehindAppBar ?? false,
         extendBody: extendBody ?? false,
+
+        bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton == null
             ? null
             : MeasuredWidget(
@@ -65,6 +69,7 @@ class AppScreenTemplate extends StatelessWidget {
               ),
         floatingActionButtonLocation:
             floatingActionButtonLocation ?? FloatingActionButtonLocation.centerDocked,
+
         drawer: drawer,
         endDrawer: endDrawer,
         body: LayoutBuilder(

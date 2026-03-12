@@ -117,17 +117,21 @@ class SecurityText extends StatelessWidget {
         rad: 30,
         contClr: c.primary.withOpacity(0.05),
         child: Row(
+          mainAxisSize: MainAxisSize.max, // add this
           children: [
             SvgIcon(iconPath: iconPath, height: 28),
-
             Gap(4),
-            Text(
-              text.toUpperCase(),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.visible,
-              style: TxtStyle.inter(fs: 12, color: c.secondary),
+            Flexible(
+              // add this
+              child: Text(
+                text.toUpperCase(),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TxtStyle.inter(fs: 12, color: c.secondary),
+              ),
             ),
+            Gap(4),
           ],
         ),
       ),

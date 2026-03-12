@@ -190,6 +190,7 @@ class MeetingScreen extends StatelessWidget {
 import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:mama_app/core/common_widgets/common_components/community_spotlight.dart';
 import 'package:mama_app/core/helpers/widgets_helper.dart';
+import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
 import '../../../core/common_widgets/cus_des_type_text_form_field.dart';
 import '../../../core/common_widgets/cus_flexible_dropdown.dart';
@@ -201,11 +202,19 @@ class MeetingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
 
+    final mc = Get.find<MeetingController>();
+
     return AppScreenTemplate(
       isScrollable: false,
       backgroundColor: c.cardPrimary,
+      resizeToAvoidBottomInset: true,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _FloatingActionBtn(
+        keyboardOpen: keyboardOpen,
 
-      floatingActionButton: _FloatingActionBtn(keyboardOpen: keyboardOpen),
+        inputMsgCtrl: mc.inputMsgCtrl,
+        inputMsgFocus: mc.inputMsgFocus,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -315,20 +324,27 @@ class MeetingScreen extends StatelessWidget {
 
 class _FloatingActionBtn extends StatelessWidget {
   final bool keyboardOpen;
-  const _FloatingActionBtn({super.key, required this.keyboardOpen});
+  final TextEditingController inputMsgCtrl;
+  final FocusNode inputMsgFocus;
+  const _FloatingActionBtn({
+    super.key,
+    required this.keyboardOpen,
+    required this.inputMsgCtrl,
+    required this.inputMsgFocus,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: bgClr,
+      color: keyboardOpen ? ctransp : bgClr,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Input row - no rounded corners, flat bottom
+          keyboardOpen ? SizedBox.shrink() : Gap(itemGap * 1.5),
           Container(
-            color: bgClr,
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            child: Column(children: [Gap(itemGap * 1.5), _MsgInputRow()]),
+            color: Colors.transparent,
+            child: _MsgInputRow(inputMsgCtrl: inputMsgCtrl, inputMsgFocus: inputMsgFocus),
           ),
 
           // Bottom actions - rounded TOP corners only
@@ -394,6 +410,16 @@ class _ReactButton extends StatelessWidget {
         // Height = emoji text(18.sp) + vertical padding(8.h * 2) + decoration insets
         final overlayHeight = 18.sp + (8.h * 2) + 80.h;
 
+        final reactionList = [
+          ImagesPath.likeEmoji,
+          ImagesPath.heartEmoji,
+          ImagesPath.careEmoji,
+          ImagesPath.hahaEmoji,
+          ImagesPath.wowEmoji,
+          ImagesPath.sadEmoji,
+          ImagesPath.angryEmoji,
+        ];
+
         return CusFlexibleDropdown(
           items: const [],
           offset: Offset(0, -overlayHeight),
@@ -408,13 +434,13 @@ class _ReactButton extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: ["❤️", "😂", "😮", "😢", "😡", "👍", "🙏"]
+              children: reactionList
                   .map(
                     (emoji) => GestureDetector(
                       onTap: () => Get.back(),
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: Text(emoji, style: TextStyle(fontSize: 18.sp)),
+                        child: Image.asset(emoji, height: 22.h),
                       ),
                     ),
                   )
@@ -430,34 +456,28 @@ class _ReactButton extends StatelessWidget {
 
 ////
 class _MsgInputRow extends StatelessWidget {
-  const _MsgInputRow({super.key});
+  final TextEditingController inputMsgCtrl;
+  final FocusNode inputMsgFocus;
+  const _MsgInputRow({super.key, required this.inputMsgCtrl, required this.inputMsgFocus});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          child: CusDesTypeTextFormField(
-            controller: TextEditingController(),
-            focusNode: FocusNode(),
-            hintText: Strings.typeSomething,
-            minLines: 1,
-            minHeight: 40,
-            bgClr: c.textOnPrimary,
-            suffix: CusCircleIconButton(
-              radius: 15,
-              backgroundColor: c.primary,
-              onTap: () async {
-                // open picker for image or file
-              },
-              child: SvgIcon(iconPath: IconsPath.sendLargeWhite, height: 20),
-            ).mAll(4),
-          ),
-        ),
-      ],
-    );
+    return CusDesTypeTextFormField(
+      controller: inputMsgCtrl,
+      focusNode: inputMsgFocus,
+      hintText: Strings.typeSomething,
+      minLines: 1,
+      minHeight: 40,
+      bgClr: c.textOnPrimary,
+      suffix: CusCircleIconButton(
+        radius: 15,
+        backgroundColor: c.primary,
+        onTap: () async {
+          // open picker for image or file
+        },
+        child: SvgIcon(iconPath: IconsPath.sendLargeWhite, height: 20),
+      ).mAll(4),
+    ).mHV(10, 0);
   }
 }
 

@@ -203,6 +203,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/new_mum.svg
   String get newMum => 'assets/icons/new_mum.svg';
 
+  /// File path: assets/icons/no_ques.svg
+  String get noQues => 'assets/icons/no_ques.svg';
+
   /// File path: assets/icons/notification.svg
   String get notification => 'assets/icons/notification.svg';
 
@@ -370,6 +373,7 @@ class $AssetsIconsGen {
     muteAudio,
     mutedAudio,
     newMum,
+    noQues,
     notification,
     password,
     pin,
@@ -410,6 +414,10 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
+  /// File path: assets/images/angry_emoji.png
+  AssetGenImage get angryEmoji =>
+      const AssetGenImage('assets/images/angry_emoji.png');
+
   /// File path: assets/images/anxious.png
   AssetGenImage get anxious => const AssetGenImage('assets/images/anxious.png');
 
@@ -418,6 +426,10 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/camera.png
   AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
+
+  /// File path: assets/images/care_emoji.png
+  AssetGenImage get careEmoji =>
+      const AssetGenImage('assets/images/care_emoji.png');
 
   /// File path: assets/images/done_animation.json
   String get doneAnimation => 'assets/images/done_animation.json';
@@ -433,9 +445,21 @@ class $AssetsImagesGen {
   /// File path: assets/images/gallery.png
   AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
 
+  /// File path: assets/images/haha_emoji.png
+  AssetGenImage get hahaEmoji =>
+      const AssetGenImage('assets/images/haha_emoji.png');
+
+  /// File path: assets/images/heart_emoji.png
+  AssetGenImage get heartEmoji =>
+      const AssetGenImage('assets/images/heart_emoji.png');
+
   /// File path: assets/images/image_placeholder.png
   AssetGenImage get imagePlaceholder =>
       const AssetGenImage('assets/images/image_placeholder.png');
+
+  /// File path: assets/images/like_emoji.png
+  AssetGenImage get likeEmoji =>
+      const AssetGenImage('assets/images/like_emoji.png');
 
   /// File path: assets/images/loading_gray.json
   String get loadingGray => 'assets/images/loading_gray.json';
@@ -501,6 +525,10 @@ class $AssetsImagesGen {
   AssetGenImage get refuelSplashImage =>
       const AssetGenImage('assets/images/refuel_splash_image.png');
 
+  /// File path: assets/images/sad_emoji.png
+  AssetGenImage get sadEmoji =>
+      const AssetGenImage('assets/images/sad_emoji.png');
+
   /// File path: assets/images/splash_image.png
   AssetGenImage get splashImage =>
       const AssetGenImage('assets/images/splash_image.png');
@@ -532,16 +560,25 @@ class $AssetsImagesGen {
   AssetGenImage get weMamaLogoPng =>
       const AssetGenImage('assets/images/we_mama_logo_png.png');
 
+  /// File path: assets/images/wow_emoji.png
+  AssetGenImage get wowEmoji =>
+      const AssetGenImage('assets/images/wow_emoji.png');
+
   /// List of all assets
   List<dynamic> get values => [
+    angryEmoji,
     anxious,
     calm,
     camera,
+    careEmoji,
     doneAnimation,
     folderAttach,
     foundingMum,
     gallery,
+    hahaEmoji,
+    heartEmoji,
     imagePlaceholder,
+    likeEmoji,
     loadingGray,
     locationMap,
     mamaLogoWithoutTxt,
@@ -559,6 +596,7 @@ class $AssetsImagesGen {
     profileDemoPic3,
     profileDemoPic4,
     refuelSplashImage,
+    sadEmoji,
     splashImage,
     splashWholeScreen,
     stressed,
@@ -567,6 +605,7 @@ class $AssetsImagesGen {
     userDemoSm,
     userPlaceholder,
     weMamaLogoPng,
+    wowEmoji,
   ];
 }
 

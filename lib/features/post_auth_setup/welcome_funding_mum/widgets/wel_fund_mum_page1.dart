@@ -43,7 +43,7 @@ class WelFundMumPage2 extends StatelessWidget {
           textAlign: TextAlign.center,
           style: 21.titleMclrCusFS,
         ),
-        Gap(itemGap),
+
         ...wfmc.page2ItemList.map(
           (item) => ContainerBordered(
             contClr: c.inputBackground,
@@ -139,7 +139,7 @@ class WelFundMumPage4 extends StatelessWidget {
           (txt) => Text(
             txt.cap,
             textAlign: TextAlign.center,
-            style: TxtStyle.urbanistSemiB(fs: 18, w: 500, color: c.primary),
+            style: TxtStyle.urbanistSemiB(fs: 16, w: 500, color: c.primary),
           ),
         ),
       ],

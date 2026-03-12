@@ -14,7 +14,11 @@ class WelcomeFundingMumBottomSection extends StatelessWidget {
         children: [
           if (controller.isIntroPage) _IntroMessage(),
 
-          if (controller.isConfirmationPage) _ConfirmationCheckbox(controller: controller),
+          if (controller.isConfirmationPage)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _ConfirmationCheckbox(controller: controller),
+            ),
 
           if (controller.shouldShowButton)
             filledBtnWTxt(
@@ -49,29 +53,32 @@ class _ConfirmationCheckbox extends StatelessWidget {
       () => CusGestureDetector(
         // ← wrap with Obx
         onTap: controller.toggleReady,
-        child: ContainerBordered(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IgnorePointer(
-                // ← prevent checkbox eating the tap
-                child: CustomCheckBox(
-                  value: controller.isReady.value,
-                  onChanged: (_) {}, // ← no-op, parent handles it
-                  borderColor: c.primary,
-                  activeColor: c.primary,
-                  checkColor: c.scaffoldBackground,
+        child: IntrinsicWidth(
+          child: ContainerBordered(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IgnorePointer(
+                  // ← prevent checkbox eating the tap
+                  child: CustomCheckBox(
+                    value: controller.isReady.value,
+                    onChanged: (_) {}, // ← no-op, parent handles it
+                    borderColor: c.primary,
+                    activeColor: c.primary,
+                    checkColor: c.scaffoldBackground,
+                  ),
                 ),
-              ),
-              Gap(itemGap),
-              IntrinsicWidth(
-                child: Text(
-                  Strings.firstMumsMessage.cap,
-                  textAlign: TextAlign.center,
-                  style: TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary),
+                Gap(itemGap),
+                IntrinsicWidth(
+                  child: Text(
+                    Strings.readyToJoin.cap,
+                    textAlign: TextAlign.left,
+                    style: TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -80,7 +80,7 @@ class PhotoAndBioScreen extends StatelessWidget {
           children: [
             Gap(itemGap * 3),
             Text(
-              Strings.addPhotoAndBio.capEachWord(),
+              Strings.addPhotoAndBio.cap,
               textAlign: TextAlign.center,
               style: 13.titleMclrCusFSOutfit,
             ),
@@ -90,7 +90,6 @@ class PhotoAndBioScreen extends StatelessWidget {
             Obx(() {
               final selImage = pbc.fileImage.value;
               return UserPhotoWidget(
-                // imageUrl: "http://10.10.20.57:8001/${storage.getUserInfo.imageUrl}",
                 imageUrl: makeImageUrl(imageUrl: storage.getUserInfo.imageUrl ?? ''),
                 selImage: selImage,
               );

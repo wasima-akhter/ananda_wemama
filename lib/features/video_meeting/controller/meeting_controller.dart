@@ -5,6 +5,9 @@ import '../../../core/config/agora_config.dart';
 import '../../../core/helpers/permission_helper.dart';
 
 class MeetingController extends GetxController {
+  final inputMsgCtrl = TextEditingController();
+  final inputMsgFocus = FocusNode();
+
   ///////////////////////////////
   String appId = "";
   String token = "";
@@ -109,6 +112,11 @@ class MeetingController extends GetxController {
   void onClose() {
     agoraEngine?.leaveChannel();
     agoraEngine?.release();
+
+    ////
+    ///
+    inputMsgCtrl.dispose();
+    inputMsgFocus.dispose();
     super.onClose();
   }
 }
