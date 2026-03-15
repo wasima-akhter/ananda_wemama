@@ -20,14 +20,17 @@ class PostInCommunityScreen extends StatelessWidget {
       },
       appBar: CommonAppBarContent(
         title: "",
-        suffix: IntrinsicHeight(
-          child: CustomBtnWTxt(
-            rad: 30,
-            padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-            isSmall: true,
-            btnTxt: Strings.post.cap,
-            isLoading: false,
-          ),
+        suffix: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomBtnWTxt(
+              rad: 30,
+              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+              isSmall: true,
+              btnTxt: Strings.post.cap,
+              isLoading: false,
+            ),
+          ],
         ),
       ),
 

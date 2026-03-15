@@ -1,64 +1,69 @@
 import '../../../../app/service_export.dart';
+import '../../../features/auth/signin/model/signin_model.dart';
+import '../../../features/auth/signup/model/signin_model.dart';
+import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class SignupService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
-  // Future<bool> signUp({
-  //   required String name,
-  //   required String phone,
-  //   required String email,
-  //   required String password,
-  //   required String conPassword,
-  // }) async {
-  //   //
+  Future<bool> signUp({
+    required String email,
+    required String password,
+    required String conPassword,
+  }) async {
+    //
 
-  //   apiCall() {
-  //     return ApiClient().post(
-  //       Endpoints.register.getUrl,
-  //       headers: HeaderHelpers.getAuthHeader(),
-  //       data: {
-  //         "name": name,
-  //         "phone": phone,
-  //         "email": email,
-  //         "password": password,
-  //         "confirmPassword": conPassword,
-  //         "role": roleFromChooseScreen,
-  //       },
-  //     );
-  //   }
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.register.getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
 
-  //   final response = await _apiHelper.request<SignupModelData>(
-  //     apiCall: apiCall,
-  //     parser: (data) => SignupModelData.fromJson(data),
-  //   );
+        //         {
+        //     "email": "ananda@yopmail.com",
+        //     "password": "123456",
+        //     "confirmPassword": "123456"
+        // }
+        data: {"email": email, "password": password, "confirmPassword": conPassword},
+      );
+    }
 
-  //   if (response == null) return false;
+    final response = await _apiHelper.request<SignUpModelData>(
+      apiCall: apiCall,
+      parser: (data) => SignUpModelData.fromJson(data),
+    );
 
-  //   // You can access user like:
-  //   if (response.success) {
-  //     _saveUserDataAfterSignUp(response: response);
-  //     print("response.data?.user.name : ${response.data?.newUser?.name}");
-  //   }
+    if (response == null) return false;
 
-  //   return response.success;
-  // }
+    // You can access user like:
+    if (response.success) {
+      // _saveUserDataAfterSignUp(response: response);
+      print("response.data?.user.name : ${response.data?.email}");
+    }
 
-  // void _saveUserDataAfterSignUp({required BaseResponse<SignupModelData> response}) {
-  //   // as success,
-  //   // save the access token in app storage
-  //   // save the user info in appstorage
-  //   if (response.data != null) {
-  //     final user = response.data?.newUser;
-  //     final fetchedEmail = user?.email;
-  //     final fetchedname = user?.name;
-  //     final fetchedPhone = user?.phone;
-  //     final fetchedRole = user?.role;
-  //     storage.setUserInfo(
-  //       email: fetchedEmail,
-  //       name: fetchedname,
-  //       phone: fetchedPhone,
-  //       role: fetchedRole,
-  //     );
-  //   }
-  // }
+    return response.success;
+  }
+
+  void _saveUserDataAfterSignUp({required BaseResponse<SigninModelData> response}) {
+    // as success,
+    // save the access token in app storage
+    // save the user info in appstorage
+    if (response.data != null) {
+      final user = response.data?.user;
+      final fetchedEmail = user?.email;
+
+      storage.setUserInfo(email: fetchedEmail);
+
+      // set user role
+      // UserRole
+
+      // token
+      storage.setToken(response.data!.accessToken);
+
+      // ✅ Now call ProfileController to refresh the profile
+      if (Get.isRegistered<ProfileController>()) {
+        final profileController = Get.find<ProfileController>();
+        profileController.fetchMyProfile(); // fetch latest profile data
+      }
+    }
+  }
 }

@@ -19,7 +19,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
         body: Obx(() {
           /// 🔄 LOADING
           if (tc.isLoading.value) {
-            return Center(child: Loading());
+            return Center(child: LoadingWhite());
           }
 
           /// ❌ ERROR

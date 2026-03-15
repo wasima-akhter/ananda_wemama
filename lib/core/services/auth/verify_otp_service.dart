@@ -1,81 +1,78 @@
 import '../../../../app/service_export.dart';
+import '../../../features/auth/otp/model/verify_otp_model.dart';
+import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class VerifyOtpService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
-  // Future<bool> verify({required String email, required String otp}) async {
-  //   //
+  Future<bool> verify({required String email, required String otp}) async {
+    //
 
-  //   apiCall() {
-  //     return ApiClient().post(
-  //       Endpoints.verifyCode.getUrl,
-  //       headers: HeaderHelpers.getAuthHeader(),
-  //       data: {"email": email, "verifyCode": otp},
-  //     );
-  //   }
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.verifyCode.getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
+        data: {"email": email, "verifyCode": otp},
+      );
+    }
 
-  //   final response = await _apiHelper.request<VerifyOtpDataModel>(
-  //     apiCall: apiCall,
-  //     parser: (data) => VerifyOtpDataModel.fromJson(data),
-  //   );
+    final response = await _apiHelper.request<VerifyOtpDataModel>(
+      apiCall: apiCall,
+      parser: (data) => VerifyOtpDataModel.fromJson(data),
+    );
 
-  //   if (response == null) return false;
+    if (response == null) return false;
 
-  //   // You can access user like:
-  //   if (response.success) {
-  //     _saveUserDataAfterVerify(response: response);
-  //     print("response.data?.user.email : ${response.data?.user?.email}");
-  //   }
+    // You can access user like:
+    if (response.success) {
+      _saveUserDataAfterVerify(response: response);
+      print("response.data?.user.email : ${response.data?.user?.email}");
+    }
 
-  //   return response.success;
-  // }
+    return response.success;
+  }
 
-  // void _saveUserDataAfterVerify({required BaseResponse<VerifyOtpDataModel> response}) {
-  //   // as success,
-  //   // save the access token in app storage
-  //   // save the user info in appstorage
-  //   if (response.data != null) {
-  //     final user = response.data?.user;
+  void _saveUserDataAfterVerify({required BaseResponse<VerifyOtpDataModel> response}) {
+    // as success,
+    // save the access token in app storage
+    // save the user info in appstorage
+    if (response.data != null) {
+      // token
+      storage.setToken(response.data?.accessToken ?? '');
 
-  //     // set user role
-  //     // UserRole
+      print("after verify access token: ${response.data?.accessToken}");
 
-  //     storage.setUserRole(user?.role?.toUserRole() ?? UserRole.customer);
+      // ✅ Now call ProfileController to refresh the profile
+      if (Get.isRegistered<ProfileController>()) {
+        final profileController = Get.find<ProfileController>();
+        profileController.fetchMyProfile(); // fetch latest profile data
+      }
+    }
+  }
 
-  //     // token
-  //     storage.setToken(response.data?.accessToken ?? '');
+  ///=============================RESEND OTP ===================================///
+  ///
+  ///
+  Future<bool> resendOtp({required String email}) async {
+    //
 
-  //     // ✅ Now call ProfileController to refresh the profile
-  //     if (Get.isRegistered<ProfileController>()) {
-  //       final profileController = Get.find<ProfileController>();
-  //       profileController.fetchMyProfile(); // fetch latest profile data
-  //     }
-  //   }
-  // }
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.resendCode.getUrl,
+        headers: HeaderHelpers.jsonHeader(),
+        data: {"email": email},
+      );
+    }
 
-  // ///=============================RESEND OTP ===================================///
-  // ///
-  // ///
-  // Future<bool> resendOtp({required String email}) async {
-  //   //
+    final response = await _apiHelper.request<void>(apiCall: () => apiCall());
 
-  //   apiCall() {
-  //     return ApiClient().post(
-  //       Endpoints.resendCode.getUrl,
-  //       headers: HeaderHelpers.jsonHeader(),
-  //       data: {"email": email},
-  //     );
-  //   }
+    if (response == null) return false;
 
-  //   final response = await _apiHelper.request<void>(apiCall: () => apiCall());
+    // You can access user like:
+    if (response.success) {
+      print("Resend otp is success!");
+    }
 
-  //   if (response == null) return false;
-
-  //   // You can access user like:
-  //   if (response.success) {
-  //     print("Resend otp is success!");
-  //   }
-
-  //   return response.success;
-  // }
+    return response.success;
+  }
 }

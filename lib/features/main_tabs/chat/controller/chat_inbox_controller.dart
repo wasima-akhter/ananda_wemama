@@ -55,10 +55,23 @@ class ChatInboxController extends GetxController {
 
   final msgInputFocus = FocusNode();
 
+  final scrollController = ScrollController();
+
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      }
+    });
+  }
+
   @override
   void onInit() {
     print("chatId: $chatId");
     initFakeData(chatId);
+
+    //
+    scrollToBottom();
     super.onInit();
   }
 

@@ -19,7 +19,7 @@ class LoadingPopup extends StatelessWidget {
               padding: (S.w * 0.1).pv,
               margin: (S.w * 0.2).ph,
               decoration: BoxDecoration(color: bgClr, borderRadius: BorderRadius.circular(20)),
-              child: Column(mainAxisSize: MainAxisSize.min, children: [Loading()]),
+              child: Column(mainAxisSize: MainAxisSize.min, children: [LoadingWhite()]),
             ),
           ),
         ),

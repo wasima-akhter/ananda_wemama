@@ -62,6 +62,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/chart_filled.svg
   String get chartFilled => 'assets/icons/chart_filled.svg';
 
+  /// File path: assets/icons/chat-dot-square.svg
+  String get chatDotSquare => 'assets/icons/chat-dot-square.svg';
+
   /// File path: assets/icons/chat.svg
   String get chat => 'assets/icons/chat.svg';
 
@@ -326,6 +329,7 @@ class $AssetsIconsGen {
     bookmarkOutlined,
     camera,
     chartFilled,
+    chatDotSquare,
     chat,
     chatCircle,
     chatCircleOutlined,
@@ -461,6 +465,9 @@ class $AssetsImagesGen {
   AssetGenImage get likeEmoji =>
       const AssetGenImage('assets/images/like_emoji.png');
 
+  /// File path: assets/images/loading_dots_default.json
+  String get loadingDotsDefault => 'assets/images/loading_dots_default.json';
+
   /// File path: assets/images/loading_gray.json
   String get loadingGray => 'assets/images/loading_gray.json';
 
@@ -504,6 +511,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
+
+  /// File path: assets/images/primary_loading.json
+  String get primaryLoading => 'assets/images/primary_loading.json';
 
   /// File path: assets/images/profile_demo_pic_1.png
   AssetGenImage get profileDemoPic1 =>
@@ -560,6 +570,9 @@ class $AssetsImagesGen {
   AssetGenImage get weMamaLogoPng =>
       const AssetGenImage('assets/images/we_mama_logo_png.png');
 
+  /// File path: assets/images/white_loading.json
+  String get whiteLoading => 'assets/images/white_loading.json';
+
   /// File path: assets/images/wow_emoji.png
   AssetGenImage get wowEmoji =>
       const AssetGenImage('assets/images/wow_emoji.png');
@@ -579,6 +592,7 @@ class $AssetsImagesGen {
     heartEmoji,
     imagePlaceholder,
     likeEmoji,
+    loadingDotsDefault,
     loadingGray,
     locationMap,
     mamaLogoWithoutTxt,
@@ -591,6 +605,7 @@ class $AssetsImagesGen {
     onboarding3,
     onboardingBg,
     onboardingImage,
+    primaryLoading,
     profileDemoPic1,
     profileDemoPic2,
     profileDemoPic3,
@@ -605,6 +620,7 @@ class $AssetsImagesGen {
     userDemoSm,
     userPlaceholder,
     weMamaLogoPng,
+    whiteLoading,
     wowEmoji,
   ];
 }

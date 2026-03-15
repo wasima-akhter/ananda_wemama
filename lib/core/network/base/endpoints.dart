@@ -11,6 +11,7 @@ class Endpoints {
 
   static const profileDetail = "profile/get-profile-detail";
   static const updateProfile = "profile/update-profile";
+  static const completeProfile = "profile/complete-profile";
   static const changePassword = "profile/change-password";
   static const resetPassword = "auth/reset-password";
 

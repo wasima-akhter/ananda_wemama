@@ -8,19 +8,22 @@ class JoinBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicWidth(
-      child: CustomBtnWTxt(
-        txtClr: white,
-        style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: white),
-        rad: 8,
-        borderClr: white,
-        padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 18.w),
-        btnTxt: btnTxt.capEachWord(),
-        isLoading: isLoading,
-        btnColor: ctransp,
-        onTap: onTap,
-        outlined: true,
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomBtnWTxt(
+          txtClr: white,
+          style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: white),
+          rad: 8,
+          borderClr: white,
+          padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 18.w),
+          btnTxt: btnTxt.capEachWord(),
+          isLoading: isLoading,
+          btnColor: ctransp,
+          onTap: onTap,
+          outlined: true,
+        ),
+      ],
     );
   }
 }

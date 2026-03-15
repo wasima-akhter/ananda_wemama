@@ -12,7 +12,7 @@ extension ShowToastExtension on String {
     Fluttertoast.cancel();
     Fluttertoast.showToast(
       msg: this,
-      backgroundColor: bgColor ?? Colors.grey[300],
+      backgroundColor: bgColor ?? c.cardPrimary,
       fontSize: 16,
       gravity: ToastGravity.BOTTOM,
       textColor: txtColor ?? Colors.black54,

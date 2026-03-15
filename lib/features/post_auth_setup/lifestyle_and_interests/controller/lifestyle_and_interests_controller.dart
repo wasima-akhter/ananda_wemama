@@ -20,7 +20,7 @@ class LifestyleAndInterestsController extends GetxController {
     "Sleep routines",
     "Budgeting",
     "Baby care",
-    "Stay-at-home",
+    "Stay-At-Home",
     "Respectful parenting",
     "Minimalist lifestyle",
     "Educational play",
@@ -49,7 +49,7 @@ class LifestyleAndInterestsController extends GetxController {
       selectedInterests.add(interest);
     }
 
-    // // Update warning
+    // Update warning
     // if (selectedInterests.length < 3) {
     //   warningText.value = 'Select at least 3 interests';
 

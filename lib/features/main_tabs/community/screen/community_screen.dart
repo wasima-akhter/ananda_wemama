@@ -38,6 +38,7 @@ class CommunityScreen extends StatelessWidget {
         ),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CusSearchBar(controller: cc.searchController),
@@ -46,7 +47,7 @@ class CommunityScreen extends StatelessWidget {
           TextFit(Strings.myCommunity, style: TxtStyle.outfitSmTitle),
           Gap(itemGap),
 
-          Expanded(
+          Flexible(
             child: CusScrollbarWidget(
               controller: cc.myCommunityScrlCtrl,
 

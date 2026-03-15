@@ -5,6 +5,7 @@ import 'package:mama_app/features/main_tabs/home/modules/profile_tile.dart';
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../../core/common_widgets/popups.dart';
 import '../controller/profile_controller.dart';
+import '../widgets/profile_shimmer.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -18,23 +19,53 @@ class ProfileScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: Strings.profile),
+      onRefresh: () async {
+        pc.fetchMyProfile();
+      },
 
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ContainerBordered(
-            hasBrdr: true,
-            brdrClr: c.secondary.withOpacity(0.3),
-            contClr: c.inputBackground,
-            child: UserDetailComponent(
-              isLoading: udc.isLoading_,
-              onTapSeeMore: udc.toggleSeeMore,
-              onTapAction: (isAccepted) async {},
-              isSeeMore: udc.isSeeMore,
-              user: udc.fakeUserDetails,
-              isFromProfile: true,
-            ),
-          ),
+          Obx(() {
+            // ✅ show shimmer while loading
+            if (pc.isLoading_.value) return const ProfileShimmer();
+
+            final data = pc.userProfileData.value;
+
+            return ContainerBordered(
+              hasBrdr: true,
+              brdrClr: c.secondary.withOpacity(0.3),
+              contClr: c.inputBackground,
+              child: UserDetailComponent(
+                isLoading: udc.isLoading_,
+                onTapSeeMore: udc.toggleSeeMore,
+                onTapAction: (isAccepted) async {},
+                isSeeMore: udc.isSeeMore,
+                isFromProfile: true,
+                user: data == null
+                    ? null
+                    : FakeUserDetailsModel(
+                        imageUrl: '',
+                        name: data.name ?? '',
+                        age: _getAge(data.dob),
+                        aboutMe: data.bio ?? '',
+                        galleryImages: data.images,
+                        children: data.children.map((e) => e.toString()).toList(),
+                        infoList: [
+                          if (data.address?.isNotEmpty == true)
+                            UiInfoItem(iconPath: IconsPath.locationBold, text: data.address!),
+                          if (data.mumStage?.isNotEmpty == true)
+                            UiInfoItem(iconPath: IconsPath.chartFilled, text: data.mumStage!),
+                          if (data.interesteds.isNotEmpty)
+                            UiInfoItem(
+                              iconPath: IconsPath.heartHalfFilled,
+                              text: data.interesteds.join(', '),
+                            ),
+                        ],
+                      ),
+              ),
+            );
+          }),
 
           Gap(itemGap * 2),
 
@@ -121,5 +152,13 @@ class ProfileScreen extends StatelessWidget {
         // ),
       ],
     );
+  }
+
+  int _getAge(DateTime? dob) {
+    if (dob == null) return 0;
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
+    return age;
   }
 }

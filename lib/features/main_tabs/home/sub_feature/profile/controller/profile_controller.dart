@@ -1,19 +1,9 @@
 import '../../../../../../../app/controller_export.dart';
 import '../../../../../../../core/services/auth/signout_service.dart';
 import '../../../../../../../core/services/profile/profile_info_service.dart';
- 
 import '../model/profile_model.dart';
 
 class ProfileController extends GetxController {
- 
-  
- 
- 
- 
- 
- 
- 
-  
   // Observable fields for UI
   final username = "".obs;
   final phone = "".obs;
@@ -26,7 +16,7 @@ class ProfileController extends GetxController {
   bool get isLoading => isLoading_.value;
 
   // User model
-  final user = Rxn<ProfileDataModel>();
+  final userProfileData = Rxn<ProfileDataModel>();
 
   // Sign out loading state
   var isSignOutLoading_ = false.obs;
@@ -56,21 +46,17 @@ class ProfileController extends GetxController {
       final data = await ProfileInfoService().fetchProfile();
 
       if (data != null) {
-        user.value = data; // <-- triggers HomeSupplierController's ever()
+        userProfileData.value = data; // <-- triggers HomeSupplierController's ever()
+
+        print("data fetching profile: ${(data)}");
 
         // Save to local storage
         storage.setUserInfo(
           email: data.email,
           name: data.name,
           phone: data.phone,
-          imageUrl: data.image,
           address: data.address,
         );
-
-        // if supplier,
-        // then store in storage too (supp info)
-        storage.setUserAvgRating((data.averageRating ?? 0.0).toString());
-        storage.setUserTotalRating((data.totalRating ?? 0).toString());
 
         // also save the lat long
         if (data.location != null) {
@@ -82,12 +68,6 @@ class ProfileController extends GetxController {
         username.value = data.name ?? '';
         phone.value = data.phone ?? '';
         email.value = data.email ?? '';
-        avgRating.value = data.averageRating.toString();
-
-        totalRating.value = (data.totalRating ?? 0.0).toString();
-
-        print(" fetched averageRating rating: ${data.averageRating}");
-        print(" fetched totalRating rating: ${data.totalRating}");
       }
     } catch (e) {
       print("Error fetching profile: $e");

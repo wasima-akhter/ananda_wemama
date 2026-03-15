@@ -119,7 +119,7 @@ class MatchController extends GetxController {
 
     if (hasWaved) {
       /// show wave sent popup
-      showWaveSenDialog();
+      showWaveSentDialog();
 
       /// search again after delay
       Future.delayed(const Duration(seconds: 1), () async {

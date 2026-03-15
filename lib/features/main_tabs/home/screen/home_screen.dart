@@ -3,7 +3,7 @@ import 'package:mama_app/core/common_widgets/home_app_bar_content.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/mood_check_in/mood_chip_card.dart';
-import '../../../../core/components/ongoing_sessions/ongoing_expert_session_card.dart';
+import '../../../../core/components/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../controller/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,13 +16,14 @@ class HomeScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       appBar: HomeAppBarContent(),
+
       child: Column(
         spacing: itemGap * 1.2,
         children: [
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),
-          OngoingSessionCard(),
+          LiveOngoingSessionCard(),
         ],
       ).getcm,
     );

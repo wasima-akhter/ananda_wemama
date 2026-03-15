@@ -30,44 +30,49 @@ class CusFlexibleDropdown extends StatelessWidget {
     return FlexibleDropdown(
       overlayChild:
           customOverlay ??
-          IntrinsicWidth(
-            child: Container(
-              width: width,
-              padding: 6.pa,
-              decoration: BoxDecoration(
-                color: c.scaffoldBackground,
-                borderRadius: 10.brdrRad,
-                boxShadow: boxShadowAllSides,
+          UnconstrainedBox(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                // maxWidth: width ?? MediaQuery.of(context).size.width * 0.5, // 👈 cap width
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: items.map((item) {
-                  return InkWell(
-                    onTap: () {
-                      Get.back(); // close dropdown
-                      item.onTap?.call();
-                    },
-                    borderRadius: 6.brdrRad,
-                    child: ContainerBordered(
-                      vp: 5,
-                      hp: 14,
-                      rad: 8,
-                      mv: 2,
-                      contClr: ctransp,
-                      child: Row(
-                        children: [
-                          if (item.icon != null) ...[item.icon!, Gap(10.w)],
-                          Expanded(
-                            child: Text(
+              child: Container(
+                // width: width,
+                padding: 6.pa,
+                decoration: BoxDecoration(
+                  color: c.scaffoldBackground,
+                  borderRadius: 10.brdrRad,
+                  boxShadow: boxShadowAllSides,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start, // items fill the column width
+                  children: items.map((item) {
+                    return InkWell(
+                      onTap: () {
+                        Get.back(); // close dropdown
+                        item.onTap?.call();
+                      },
+                      borderRadius: 6.brdrRad,
+                      child: ContainerBordered(
+                        vp: 5,
+                        hp: 6,
+                        rad: 8,
+
+                        contClr: ctransp,
+                        child: Row(
+                          children: [
+                            if (item.icon != null) ...[item.icon!, Gap(10.w)],
+                            Text(
                               item.title,
                               style: item.textStyle ?? TxtStyle.outfit(fs: 13, w: 500),
+                              overflow: TextOverflow.clip,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ).mR(22),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),

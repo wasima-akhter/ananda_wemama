@@ -42,56 +42,55 @@ class MatchScreen extends StatelessWidget {
 
   //
   Widget _tapToSearchUI(MatchController mc) {
-    return IntrinsicHeight(
-      child: Column(
-        children: [
-          ContainerBordered(
-            contClr: white,
-            hp: 12,
-            vp: 12,
-            child: Column(
-              children: [
-                Text(
-                  textAlign: TextAlign.center,
-                  Strings.tapToFindNearbyMums,
-                  style: TxtStyle.outfitSmNor500,
-                ),
-                Gap(itemGap * 2),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ContainerBordered(
+          contClr: white,
+          hp: 12,
+          vp: 12,
+          child: Column(
+            children: [
+              Text(
+                textAlign: TextAlign.center,
+                Strings.tapToFindNearbyMums,
+                style: TxtStyle.outfitSmNor500,
+              ),
+              Gap(itemGap * 2),
 
-                GestureDetector(
-                  onTap: mc.startSearching,
-                  child: Container(
-                    decoration: 0.circleBrdr(
-                      brdrW: 4,
-                      brdrClr: mc.subUpgradeNeeded.value ? grey200 : c.inputBackground,
-                    ),
-                    padding: 6.pa,
-                    child: CircleAvatar(
-                      radius: 35.r,
-                      backgroundColor: mc.subUpgradeNeeded.value ? grey200 : c.inputBackground,
-                      child: Text(
-                        Strings.tap,
-                        style: TxtStyle.outfitSemiB(
-                          fs: 13,
-                          w: mc.subUpgradeNeeded.value ? 700 : 400,
-                          color: mc.subUpgradeNeeded.value ? white : c.secondary,
-                        ),
+              GestureDetector(
+                onTap: mc.startSearching,
+                child: Container(
+                  decoration: 0.circleBrdr(
+                    brdrW: 4,
+                    brdrClr: mc.subUpgradeNeeded.value ? grey200 : c.inputBackground,
+                  ),
+                  padding: 6.pa,
+                  child: CircleAvatar(
+                    radius: 35.r,
+                    backgroundColor: mc.subUpgradeNeeded.value ? grey200 : c.inputBackground,
+                    child: Text(
+                      Strings.tap,
+                      style: TxtStyle.outfitSemiB(
+                        fs: 13,
+                        w: mc.subUpgradeNeeded.value ? 700 : 400,
+                        color: mc.subUpgradeNeeded.value ? white : c.secondary,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
 
-          Gap(itemGap),
-          Image.asset(ImagesPath.locationMap),
+        Gap(itemGap),
+        Image.asset(ImagesPath.locationMap),
 
-          Gap(itemGap),
-          UpgradeNowModule(onTapUgradeNow: mc.onTapUpgradeNow),
-          Gap(itemGap * 3),
-        ],
-      ),
+        Gap(itemGap),
+        UpgradeNowModule(onTapUgradeNow: mc.onTapUpgradeNow),
+        Gap(itemGap * 3),
+      ],
     );
   }
 
@@ -115,82 +114,84 @@ class MatchScreen extends StatelessWidget {
   }
 
   Widget _matchFoundUI(MatchController mc) {
-    return IntrinsicHeight(
-      child: Column(
-        children: [
-          MatchUserDetails(
-            user: FakeUserDetailsModel(
-              name: "John Doe",
-              age: 24,
-              imageUrl: Strings.fakeImageUrl,
-              aboutMe: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-              infoList: [
-                UiInfoItem(iconPath: IconsPath.locationBold, text: 'Ikeja, Lagos'),
-                UiInfoItem(iconPath: IconsPath.chartFilled, text: 'TTC: Trying to conceive'),
-                UiInfoItem(
-                  iconPath: IconsPath.heartHalfFilled,
-                  text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
-                ),
-              ],
-              galleryImages: [
-                Strings.fakeImageUrl,
-                Strings.fakeImageUrl,
-                Strings.fakeImageUrl,
-                Strings.fakeImageUrl,
-              ],
-              children: ["👶11 Months", "👶11 Months"],
-            ),
-
-            isLoading: mc.isLoading,
-            isSeeMore: mc.isSeeMore,
-
-            onTapSeeMore: mc.toggleSeeMore,
-
-            onTapAction: (hasWaved) async {
-              await mc.onAction(hasWaved);
-            },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        MatchUserDetails(
+          user: FakeUserDetailsModel(
+            name: "John Doe",
+            age: 24,
+            imageUrl: Strings.fakeImageUrl,
+            aboutMe: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            infoList: [
+              UiInfoItem(iconPath: IconsPath.locationBold, text: 'Ikeja, Lagos'),
+              UiInfoItem(iconPath: IconsPath.chartFilled, text: 'TTC: Trying to conceive'),
+              UiInfoItem(
+                iconPath: IconsPath.heartHalfFilled,
+                text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
+              ),
+            ],
+            galleryImages: [
+              Strings.fakeImageUrl,
+              Strings.fakeImageUrl,
+              Strings.fakeImageUrl,
+              Strings.fakeImageUrl,
+            ],
+            children: ["👶11 Months", "👶11 Months"],
           ),
 
-          Gap(itemGap * 2),
+          isLoading: mc.isLoading,
+          isSeeMore: mc.isSeeMore,
 
-          UpgradeNowModule(onTapUgradeNow: mc.onTapUpgradeNow),
-          Gap(itemGap * 3),
-        ],
-      ),
+          onTapSeeMore: mc.toggleSeeMore,
+
+          onTapAction: (hasWaved) async {
+            await mc.onAction(hasWaved);
+          },
+        ),
+
+        Gap(itemGap * 2),
+
+        UpgradeNowModule(onTapUgradeNow: mc.onTapUpgradeNow),
+        Gap(itemGap * 3),
+      ],
     );
   }
 
   Widget _noMatchUI(MatchController mc) {
-    return IntrinsicHeight(
-      child: ContainerBordered(
-        contClr: white,
-        hp: 12,
-        vp: 22,
-        child: Column(
-          children: [
-            Text(
-              Strings.noWeMamasNearby,
-              textAlign: TextAlign.center,
-              style: TxtStyle.outfitSmTitleSec,
-            ),
-            Text(
-              Strings.checkBackLater,
-              textAlign: TextAlign.center,
-              style: TxtStyle.outfitSmSecNor,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ContainerBordered(
+          contClr: white,
+          hp: 12,
+          vp: 22,
+          child: Column(
+            children: [
+              Text(
+                Strings.noWeMamasNearby,
+                textAlign: TextAlign.center,
+                style: TxtStyle.outfitSmTitleSec,
+              ),
+              Text(
+                Strings.checkBackLater,
+                textAlign: TextAlign.center,
+                style: TxtStyle.outfitSmSecNor,
+              ),
 
-            Gap(itemGap * 3),
+              Gap(itemGap * 3),
 
-            CustomBtnWTxt(
-              btnTxt: Strings.tryAgain.capEachWord(),
-              onTap: mc.startSearching,
-              isLoading: false,
-            ),
+              CustomBtnWTxt(
+                btnTxt: Strings.tryAgain.capEachWord(),
+                onTap: mc.startSearching,
+                isLoading: false,
+              ),
 
-            Gap(itemGap * 2),
-          ],
+              Gap(itemGap * 2),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 

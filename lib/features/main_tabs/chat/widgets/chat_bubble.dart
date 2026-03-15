@@ -25,21 +25,25 @@ class ChatBubbleCont extends StatelessWidget {
   }
 
   Widget _bubble() {
-    return IntrinsicWidth(
-      child: ContainerBordered(
-        rad: 12,
-        vp: 10,
-        hp: 12,
-        contClr: _isMe ? c.secondary : ctransp,
-        child: Align(
-          alignment: Alignment.centerLeft,
+    return UnconstrainedBox(
+      alignment: _isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: _isMe ? S.w * 0.7 : double.infinity),
+        child: ContainerBordered(
+          rad: 12,
+          vp: 10,
+          hp: 12,
+          contClr: _isMe ? c.secondary : ctransp,
+          alignment: _isMe ? null : Alignment.centerLeft,
           child: Row(
+            mainAxisSize: MainAxisSize.min, // 👈
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Expanded(
+              Flexible(
+                // 👈 not Expanded
                 child: Text(
                   message.msg,
-                  textAlign: TextAlign.left, // Always start from left
+                  textAlign: TextAlign.left,
                   style: TxtStyle.outfit(w: _isMe ? 500 : 400, color: _isMe ? white : c.secondary),
                 ),
               ),

@@ -45,6 +45,7 @@ class IconsPath {
   // Social / Interaction
   static String get chatCircleOutlined => Assets.icons.chatCircleOutlined;
   static String get chatWDot => Assets.icons.chatWDot;
+  static String get chatDotSquare => Assets.icons.chatDotSquare;
   static String get likeFilled => Assets.icons.likeFilled;
   static String get like => Assets.icons.like;
   static String get heartOutlined => Assets.icons.heartOutlined;
@@ -172,6 +173,9 @@ class ImagesPath {
   static String get noNet => Assets.images.noNet.path;
   static String get noNet2 => Assets.images.noNet2.path;
   static String get loadingJson => Assets.images.loadingGray;
+  static String get loadingDotsDefault => Assets.images.loadingDotsDefault;
+  static String get whiteLoading => Assets.images.whiteLoading;
+  static String get primaryLoading => Assets.images.primaryLoading;
 
   //
   static String get nothingYetJson => Assets.images.nothingYet;

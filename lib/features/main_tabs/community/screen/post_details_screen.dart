@@ -60,14 +60,17 @@ class PostDetailsScreen extends StatelessWidget {
           controller: pcc.commentCtrl,
           focusNode: pcc.commentFocus,
           hintText: Strings.writeSomething,
-          suffix: IntrinsicWidth(
-            child: CusGestureDetector(
-              onTap: () {},
-              child: CircleAvatar(
-                backgroundColor: c.primary,
-                child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
-              ),
-            ).mAll(5),
+          suffix: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CusGestureDetector(
+                onTap: () {},
+                child: CircleAvatar(
+                  backgroundColor: c.primary,
+                  child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
+                ),
+              ).mAll(5),
+            ],
           ),
         ).getcm;
       }),

@@ -1,7 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/controller_export.dart';
-import '../../../../../../core/helpers/date_helper.dart';
+import '../../../../../../core/helpers/bottom_sheet_helper.dart';
 import '../../../../../../core/helpers/string_helper.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
 import '../../../../../../core/services/account_overview/update_profile/update_profile_service.dart';
@@ -25,6 +25,9 @@ class EditProfileController extends GetxController {
   final selectedDob = ''.obs;
   final selectedState = ''.obs;
   final selectedCity = ''.obs;
+
+  final keepDobPrivate = false.obs;
+  void toggleKeepDobPrivate() => keepDobPrivate.toggle();
 
   // Focus Node (only needed for actual text field)
   final nameFocus = FocusNode();

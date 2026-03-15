@@ -5,85 +5,92 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IntrinsicHeight(
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 10.w),
-        decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
-        child: BounceSingleChildScrollView(
-          child: Column(
-            children: [
-              _TopImageRow(),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedContainer(
+          duration: Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 10.w),
+          decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
+          child: BounceSingleChildScrollView(
+            child: Column(
+              children: [
+                _TopImageRow(),
 
-              Gap(itemGap * 2),
+                Gap(itemGap * 2),
 
-              Text(
-                "${Strings.youAnd} Sarah \n${Strings.connected}",
-                textAlign: TextAlign.center,
-                style: TxtStyle.outfitSemiB(fs: 25, w: 500, color: c.primary),
-              ),
-              Gap(itemGap * 2),
-
-              CustomBtnWTxt(
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                style: TxtStyle.outfitSemiB(fs: 12, color: c.textOnPrimary, w: 500),
-                onTap: () {
-                  Get.back();
-                  Get.offAndToNamed(RoutePaths.chatInbox, arguments: "chatId");
-                },
-                btnTxt: Strings.sayHello,
-                isLoading: false,
-                rad: 12,
-              ),
-              Gap(itemGap * 1.5),
-              CustomBtnWTxt(
-                outlined: true,
-                borderClr: c.secondary,
-                onTap: () => Get.back(),
-
-                padding: EdgeInsets.symmetric(vertical: 12.h),
-                btnTxt: Strings.keepBrowsing,
-                btnColor: ctransp,
-                style: TxtStyle.outfitSemiB(fs: 12, color: c.primary, w: 500),
-
-                isLoading: false,
-                rad: 12,
-              ),
-
-              Gap(itemGap * 3),
-              ContainerBordered(
-                contClr: c.cardPrimary,
-                hp: 12,
-                vp: 12,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      Strings.chatUnlock,
-                      style: TxtStyle.interSemiB(fs: 12, w: 500, color: c.primary.withOpacity(0.5)),
-                    ),
-                    Gap(itemGap),
-                    _makeChatUnlockMsges(
-                      title: Strings.directMessaging,
-                      subtitle: Strings.unlimitedMessagesInfo,
-                      iconPath: IconsPath.lockOutlined,
-                    ),
-                    Gap(itemGap * 1.5),
-                    _makeChatUnlockMsges(
-                      title: Strings.safeEnvironment,
-                      subtitle: Strings.verifiedMembersOnly,
-                      iconPath: IconsPath.security,
-                    ),
-                    Gap(4),
-                  ],
+                Text(
+                  "${Strings.youAnd} Sarah \n${Strings.connected}",
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.outfitSemiB(fs: 25, w: 500, color: c.primary),
                 ),
-              ),
-            ],
-          ).getcm,
+                Gap(itemGap * 2),
+
+                CustomBtnWTxt(
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  style: TxtStyle.outfitSemiB(fs: 12, color: c.textOnPrimary, w: 500),
+                  onTap: () {
+                    Get.back();
+                    Get.offAndToNamed(RoutePaths.chatInbox, arguments: "chatId");
+                  },
+                  btnTxt: Strings.sayHello,
+                  isLoading: false,
+                  rad: 12,
+                ),
+                Gap(itemGap * 1.5),
+                CustomBtnWTxt(
+                  outlined: true,
+                  borderClr: c.secondary,
+                  onTap: () => Get.back(),
+
+                  padding: EdgeInsets.symmetric(vertical: 12.h),
+                  btnTxt: Strings.keepBrowsing,
+                  btnColor: ctransp,
+                  style: TxtStyle.outfitSemiB(fs: 12, color: c.primary, w: 500),
+
+                  isLoading: false,
+                  rad: 12,
+                ),
+
+                Gap(itemGap * 3),
+                ContainerBordered(
+                  contClr: c.cardPrimary,
+                  hp: 12,
+                  vp: 12,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Strings.chatUnlock,
+                        style: TxtStyle.interSemiB(
+                          fs: 12,
+                          w: 500,
+                          color: c.primary.withOpacity(0.5),
+                        ),
+                      ),
+                      Gap(itemGap),
+                      _makeChatUnlockMsges(
+                        title: Strings.directMessaging,
+                        subtitle: Strings.unlimitedMessagesInfo,
+                        iconPath: IconsPath.lockOutlined,
+                      ),
+                      Gap(itemGap * 1.5),
+                      _makeChatUnlockMsges(
+                        title: Strings.safeEnvironment,
+                        subtitle: Strings.verifiedMembersOnly,
+                        iconPath: IconsPath.security,
+                      ),
+                      Gap(4),
+                    ],
+                  ),
+                ),
+              ],
+            ).getcm,
+          ),
         ),
-      ),
+      ],
     );
   }
 

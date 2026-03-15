@@ -1,7 +1,6 @@
 import 'package:mama_app/core/common_widgets/common_components/bg_image_container.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/helpers/image_helper.dart';
 import '../controller/mums_stage_controller.dart';
 
 class MumsStageFinishScreen extends StatelessWidget {
@@ -25,55 +24,46 @@ class MumsStageFinishScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: BgImageContainer(
-                    bgPath: ImagesPath.splashImage,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              weMamaLogoWithTxt,
-                              Gap(itemGap * 3),
-                              FittedBox(
-                                child: Text(
-                                  Strings.accountCreatedSuccessfully.capEachWord(),
-                                  textAlign: TextAlign.center,
-                                  style: TxtStyle.urbanistSemiB(fs: 18, w: 700, color: c.primary),
-                                ),
-                              ),
-                              Gap(itemGap),
-                              Text(
-                                Strings.personalizedSpaceReady,
-                                textAlign: TextAlign.center,
-                                style: 11.titleMclrCusFS,
-                              ),
+                child: BgImageContainer(
+                  bgPath: ImagesPath.splashImage,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min, // ✅
+                    children: [
+                      Gap(itemGap * 6), // top breathing room instead of Expanded
 
-                              Gap(itemGap * 3),
-                              CustomBtnWTxt(
-                                w: S.w * 0.6,
-                                btnTxt: Strings.finish,
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                style: TxtStyle.urbanistSemiB(fs: 14, color: white, w: 700),
-                                isUppCase: true,
-                                onTap: msc.onTapFinish,
-                                isLoading: false,
-                              ),
-                            ],
-                          ),
+                      weMamaLogoWithTxt,
+                      Gap(itemGap * 3),
+                      FittedBox(
+                        child: Text(
+                          Strings.accountCreatedSuccessfully.capEachWord(),
+                          textAlign: TextAlign.center,
+                          style: TxtStyle.urbanistSemiB(fs: 18, w: 700, color: c.primary),
                         ),
+                      ),
+                      Gap(itemGap),
+                      Text(
+                        Strings.personalizedSpaceReady,
+                        textAlign: TextAlign.center,
+                        style: 11.titleMclrCusFS,
+                      ),
+                      Gap(itemGap * 3),
+                      CustomBtnWTxt(
+                        w: S.w * 0.6,
+                        btnTxt: Strings.finish,
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        style: TxtStyle.urbanistSemiB(fs: 14, color: white, w: 700),
+                        isUppCase: true,
+                        onTap: msc.onTapFinish,
+                        isLoading: false,
+                      ),
 
-                        // ===== BOTTOM SECTION =====
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [Image.asset(ImagesPath.momsGroupPhoto)],
-                        ),
-                      ],
-                    ),
+                      Gap(itemGap * 4),
+
+                      // ===== BOTTOM SECTION =====
+                      Image.asset(ImagesPath.momsGroupPhoto),
+                    ],
                   ),
                 ),
               ),

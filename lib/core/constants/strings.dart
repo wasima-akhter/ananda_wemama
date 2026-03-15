@@ -591,6 +591,7 @@ class Strings {
   static const String live = "LIVE";
   static const String liveChat = "Live Chat";
   static const String ongoingExpertSession = "Ongoing expert session";
+  static const String upcomingExpertSession = "Upcoming expert session";
   static const String babySleepSession = "Baby Sleep Session";
   static const String gentleRoutines =
       "Gentle routines for restful night to keep your baby peaceful";
@@ -713,6 +714,7 @@ class Strings {
   static const String joined = "Joined";
   static const String members = "Members";
   static const String writeSomething = "Write Something";
+  static const String writeQuestion = "Write Question";
   static const String myCommunity = "My Community";
   static const String suggestedCommunity = "Suggested Community";
 
@@ -752,6 +754,8 @@ class Strings {
 
   static const String noQuestionYet = "No question yet.";
   static const String beTheFirstToAsk = "Be the first to ask the expert";
+
+  static const String askYourQuestions = "Ask Your Questions";
 }
 
 //

@@ -36,17 +36,20 @@ class SubscriptionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (isPopular)
-            IntrinsicWidth(
-              child: ContainerBordered(
-                contClr: textColor,
-                rad: 18,
-                vp: 6,
-                hp: 16,
-                child: Text(
-                  Strings.mostPopular.toUpperCase(),
-                  style: TxtStyle.outfit(fs: 13, w: 600, color: popularTxtColor),
-                ),
-              ).mB(10),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ContainerBordered(
+                  contClr: textColor,
+                  rad: 18,
+                  vp: 6,
+                  hp: 16,
+                  child: Text(
+                    Strings.mostPopular.toUpperCase(),
+                    style: TxtStyle.outfit(fs: 13, w: 600, color: popularTxtColor),
+                  ),
+                ).mB(10),
+              ],
             ),
           if (pricingSection != null) pricingSection!,
 

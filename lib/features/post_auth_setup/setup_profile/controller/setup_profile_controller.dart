@@ -1,7 +1,7 @@
-import 'package:mama_app/core/helpers/date_helper.dart';
 import 'package:mama_app/core/helpers/string_helper.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/helpers/bottom_sheet_helper.dart';
 
 class SetupProfileController extends GetxController {
   // 🔹 Text Controller (only for name input field)
@@ -38,10 +38,17 @@ class SetupProfileController extends GetxController {
     unfocusAll();
   }
 
-  Future<void> onTapSignup(GlobalKey<FormState> signUpFormKey) async {
-    final isValid = validateForm(signUpFormKey);
+  Future<void> onTapContinueSetUp(GlobalKey<FormState> formKey) async {
+    final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
+
+    if (selectedDob.value.trim().isEmpty ||
+        selectedState.value.trim().isEmpty ||
+        selectedCity.value.trim().isEmpty) {
+      Snack.showWarning("All Fields must be filled");
+      return;
+    }
 
     unfocusAll();
     isLoading_.value = true;
@@ -49,6 +56,8 @@ class SetupProfileController extends GetxController {
     print("DOB: ${selectedDob.value}");
     print("State: ${selectedState.value}");
     print("City: ${selectedCity.value}");
+
+    Get.toNamed(RoutePaths.photoAndBio);
 
     isLoading_.value = false;
   }

@@ -21,23 +21,13 @@ class PickImageBottomSheet extends StatelessWidget {
             Expanded(
               child: CusGestureDetector(
                 onTap: onTapGallery,
-                child: Container(
-                  child: Image.asset(ImagesPath.gallery, height: 1.sw * 0.2),
-                  // SvgIcon(iconPath: IconsPath.gallery, height: 1.sw * 0.2),
-                ),
+                child: Container(child: Image.asset(ImagesPath.gallery, height: 1.sw * 0.2)),
               ),
             ),
             Expanded(
               child: CusGestureDetector(
                 onTap: onTapCamera,
                 child: Image.asset(ImagesPath.camera, height: 1.sw * 0.18),
-
-                // Icon(Icons.camera, color: grey200, size: 1.sw * 0.2),
-
-                //  SvgIcon(
-                //   iconPath: IconsPath.camera,
-                //   height: 1.sw * 0.2,
-                // ),
               ),
             ),
           ],

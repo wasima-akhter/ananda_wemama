@@ -32,6 +32,7 @@ class ChangePasswordScreen extends StatelessWidget {
                       controller: cpc.oldPassCtrl,
                       focusNode: cpc.oldPassFocus,
                       hintText: Strings.oldPassword,
+                      validator: (value) => validatePassword(value),
                       hintW: 600,
                     ),
 

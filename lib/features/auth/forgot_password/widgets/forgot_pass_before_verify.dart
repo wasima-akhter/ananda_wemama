@@ -1,6 +1,7 @@
 import 'package:mama_app/features/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/utils/validator/validators.dart';
 
 class ForgotPassBeforeVerify extends StatelessWidget {
   final ForgotPasswordController fpc;
@@ -33,15 +34,17 @@ class ForgotPassBeforeVerify extends StatelessWidget {
                 hintText: Strings.email,
                 prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
                 prefixSize: 45,
-                // validator: (value) => validateEmail(value),
+                validator: (value) => validateEmail(value),
                 hintW: 600,
               ),
               Gap(itemGap * 3),
-              CustomBtnWTxt(
-                rad: 30,
-                btnTxt: Strings.sendVerification,
-                isLoading: fpc.isSendOtpLoading,
-                onTap: () => fpc.onTapSendOtp(formKey: sendVerificationKey),
+              Obx(
+                () => CustomBtnWTxt(
+                  rad: 30,
+                  btnTxt: Strings.sendVerification,
+                  isLoading: fpc.isSendOtpLoading,
+                  onTap: () => fpc.onTapSendOtp(formKey: sendVerificationKey),
+                ),
               ),
             ],
           ),

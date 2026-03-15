@@ -2,8 +2,9 @@ import '../../app/helper_widgets_export.dart';
 
 class SmallPopupDialog extends StatelessWidget {
   final Widget child; // <-- the content to show
+  final double? hm;
 
-  const SmallPopupDialog({super.key, required this.child});
+  const SmallPopupDialog({super.key, required this.child, this.hm});
 
   @override
   Widget build(BuildContext context) {
@@ -12,10 +13,10 @@ class SmallPopupDialog extends StatelessWidget {
       child: Material(
         color: Colors.transparent, // remove default material color
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 20.w),
+          padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: (15).w),
           decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
           width: double.infinity,
-          margin: EdgeInsets.symmetric(horizontal: 30.w),
+          margin: EdgeInsets.symmetric(horizontal: (hm ?? 30).w),
 
           child: Column(
             mainAxisSize: MainAxisSize.min, // <-- keeps height to content
@@ -44,10 +45,8 @@ class LargePopupDialog extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 20.w, horizontal: 20.w),
           decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
           width: double.infinity,
-         
 
-          child:  child
-          
+          child: child,
         ).get10cm,
       ),
     );

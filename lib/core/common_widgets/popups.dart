@@ -1,4 +1,5 @@
 import 'package:mama_app/app/service_export.dart';
+import 'package:mama_app/core/common_widgets/popup_widgets/ask_ques_popup.dart';
 import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
 
 import '../../app/helper_widgets_export.dart';
@@ -23,27 +24,81 @@ class Popups {
     EdgeInsets? insetPadding,
     required Widget content,
   }) async {
-    await showDialog(
+    await showGeneralDialog(
       context: context,
       barrierDismissible: true,
-      builder: (_) {
-        return Dialog(
-          insetPadding: insetPadding ?? EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
-          backgroundColor: Colors.transparent,
-          clipBehavior: Clip.none,
-          child: Container(
-            // width: S.w - 60,
-            // constraints: const BoxConstraints(maxWidth: 480),
-
-            // padding: const EdgeInsets.all(20),
-            // decoration: BoxDecoration(color: bgClr, borderRadius: (20).brdrRad),
-            // child: content,
-            child: content,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 280),
+      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+      transitionBuilder: (_, animation, __, ___) {
+        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
+        return ScaleTransition(
+          scale: Tween<double>(begin: 0.85, end: 1.0).animate(curved),
+          child: FadeTransition(
+            opacity: animation,
+            child: Dialog(
+              insetPadding: insetPadding ?? EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
+              backgroundColor: Colors.transparent,
+              clipBehavior: Clip.none,
+              child: content,
+            ),
           ),
         );
       },
     );
   }
+}
+
+Future<T?> _showAnimatedDialog<T>({
+  required BuildContext context,
+  required Widget child,
+  bool barrierDismissible = false,
+}) {
+  return showGeneralDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    barrierLabel: '',
+    barrierColor: Colors.black54,
+    transitionDuration: const Duration(milliseconds: 280),
+    pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+    transitionBuilder: (_, animation, __, ___) {
+      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
+      return ScaleTransition(
+        scale: Tween<double>(begin: 0.85, end: 1.0).animate(curved),
+        child: FadeTransition(opacity: animation, child: child),
+      );
+    },
+  );
+}
+
+//
+Future<void> showWaveSentDialog() {
+  return _showAnimatedDialog(context: Get.context!, child: WaveSentPopup());
+}
+
+Future<void> showDailyLimitDialog() {
+  return _showAnimatedDialog(context: Get.context!, child: DailyLimitPopup());
+}
+
+Future<void> showLockCommentialog() {
+  return _showAnimatedDialog(context: Get.context!, child: LockCommentPopup());
+}
+
+Future<void> showAskYourQuesDialog({
+  required void Function()? onTap,
+  required TextEditingController writeQuesCtrl,
+  required FocusNode writeQuesFocusNode,
+}) {
+  return _showAnimatedDialog(
+    context: Get.context!,
+    barrierDismissible: true,
+    child: AskQuesPopup(
+      onTap: onTap,
+      writeQuesCtrl: writeQuesCtrl,
+      writeQuesFocusNode: writeQuesFocusNode,
+    ),
+  );
 }
 
 Future<void> communityGuidlineDialog({
@@ -89,36 +144,6 @@ Future<void> showBothConnectedDialog() async {
   );
 }
 
-Future<void> showWaveSenDialog() {
-  return showDialog(
-    context: Get.context!,
-    barrierDismissible: false,
-    builder: (_) {
-      return WaveSentPopup();
-    },
-  );
-}
-
-Future<void> showDailyLimitDialog() {
-  return showDialog(
-    context: Get.context!,
-    barrierDismissible: false,
-    builder: (_) {
-      return DailyLimitPopup();
-    },
-  );
-}
-
-Future<void> showLockCommentialog() {
-  return showDialog(
-    context: Get.context!,
-    barrierDismissible: false,
-    builder: (_) {
-      return LockCommentPopup();
-    },
-  );
-}
-
 Future<void> deletePostConfirmDialog({
   required RxBool isLoading,
   required Future<void> Function() onConfirm,
@@ -128,6 +153,7 @@ Future<void> deletePostConfirmDialog({
     content: DeleteConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
   );
 }
+
 //////////////////////////////////////////
 ///
 ///  new waves popup
@@ -201,6 +227,7 @@ Future<void> logoutConfirmDialog({
 }) async {
   await Popups().baseAlert(
     context: Get.context!,
+    insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     content: LogoutConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
   );
 }

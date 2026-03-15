@@ -31,17 +31,20 @@ class CurrentSubscriptionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// CURRENT PLAN BADGE
-          IntrinsicWidth(
-            child: ContainerBordered(
-              contClr: c.primary,
-              rad: 20,
-              hp: 16,
-              vp: 6,
-              child: Text(
-                "Current Plan",
-                style: TxtStyle.outfit(fs: 13, w: 600, color: c.scaffoldBackground),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ContainerBordered(
+                contClr: c.primary,
+                rad: 20,
+                hp: 16,
+                vp: 6,
+                child: Text(
+                  "Current Plan",
+                  style: TxtStyle.outfit(fs: 13, w: 600, color: c.scaffoldBackground),
+                ),
               ),
-            ),
+            ],
           ),
 
           Gap(14),

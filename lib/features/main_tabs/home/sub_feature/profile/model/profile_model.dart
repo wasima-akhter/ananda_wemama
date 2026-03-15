@@ -1,125 +1,133 @@
 class ProfileDataModel {
   ProfileDataModel({
     this.id,
-    this.user,
+    this.auth,
     this.name,
     this.email,
     this.phone,
-    this.image,
+    this.images = const [],
+    this.location,
     this.address,
-    this.latitude,
-    this.longitude,
-    this.document,
-    this.todayFuelRate,
-    this.todayDieselRate,
-    this.todayFuelLoad,
-    this.previousDayFuelLoadRemain,
-    this.todayCompletedFuelDelivery,
-    this.todayReservedFuelForDelivery,
-    this.todayFuelStock,
-    this.todayDieselLoad,
-    this.previousDayDieselLoadRemain,
-    this.todayCompletedDieselDelivery,
-    this.todayReservedDieselForDelivery,
-    this.todayDieselStock,
-    this.bankName,
-    this.accountName,
-    this.accountNumber,
-    this.isApproved,
+    this.children = const [],
+    this.dob,
+    this.state,
+    this.city,
+    this.bio,
+    this.interesteds = const [],
+    this.mumStage,
+    this.subscription,
+    this.matchCount,
     this.createdAt,
     this.updatedAt,
     this.v,
-    this.averageRating,
-    this.totalRating,
-    this.location,
   });
 
   final String? id;
-  final String? user;
+  final String? auth;
   final String? name;
   final String? email;
   final String? phone;
-  final String? image;
-  final String? address;
+
+  final List<String> images;
   final LocationCordsDataModel? location;
-  final String? latitude;
-  final String? longitude;
-  final String? document;
-  final dynamic todayFuelRate;
-  final dynamic todayDieselRate;
-  final dynamic todayFuelLoad;
-  final dynamic previousDayFuelLoadRemain;
-  final dynamic todayCompletedFuelDelivery;
-  final dynamic todayReservedFuelForDelivery;
-  final dynamic todayFuelStock;
-  final dynamic todayDieselLoad;
-  final dynamic previousDayDieselLoadRemain;
-  final dynamic todayCompletedDieselDelivery;
-  final dynamic todayReservedDieselForDelivery;
-  final dynamic todayDieselStock;
-  final String? bankName;
-  final String? accountName;
-  final String? accountNumber;
-  final bool? isApproved;
+
+  final String? address;
+  final List<dynamic> children;
+
+  final DateTime? dob;
+
+  final String? state;
+  final String? city;
+  final String? bio;
+
+  final List<String> interesteds;
+
+  final String? mumStage;
+
+  final ProfileSubscriptionModel? subscription;
+
+  final int? matchCount;
+
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final dynamic averageRating;
-  final dynamic totalRating;
-  final dynamic v;
+
+  final int? v;
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) {
     return ProfileDataModel(
       id: json["_id"],
-      user: json["user"],
+      auth: json["auth"],
       name: json["name"],
       email: json["email"],
       phone: json["phone"],
-      image: json["image"],
-      address: json["address"].toString(),
-      location: json["location"] == null ? null : LocationCordsDataModel.fromJson(json["location"]),
-      latitude: json["latitude"],
-      longitude: json["longitude"],
-      document: json["document"],
-      todayFuelRate: json["todayFuelRate"],
-      todayDieselRate: json["todayDieselRate"],
-      todayFuelLoad: json["todayFuelLoad"],
-      previousDayFuelLoadRemain: json["previousDayFuelLoadRemain"],
-      todayCompletedFuelDelivery: json["todayCompletedFuelDelivery"],
-      todayReservedFuelForDelivery: json["todayReservedFuelForDelivery"],
-      todayFuelStock: json["todayFuelStock"],
-      todayDieselLoad: json["todayDieselLoad"],
-      previousDayDieselLoadRemain: json["previousDayDieselLoadRemain"],
-      todayCompletedDieselDelivery: json["todayCompletedDieselDelivery"],
-      todayReservedDieselForDelivery: json["todayReservedDieselForDelivery"],
-      todayDieselStock: json["todayDieselStock"],
-      bankName: json["bankName"],
-      accountName: json["accountName"],
-      accountNumber: json["accountNumber"],
-      isApproved: json["isApproved"],
 
-      averageRating: json["averageRating"],
-      totalRating: json["totalRating"],
+      images: json["images"] == null
+          ? []
+          : List<String>.from(json["images"].map((x) => x.toString())),
+
+      location: json["location"] == null ? null : LocationCordsDataModel.fromJson(json["location"]),
+
+      address: json["address"]?.toString(),
+
+      children: json["children"] == null ? [] : List<dynamic>.from(json["children"]),
+
+      dob: json["DOB"] != null ? DateTime.tryParse(json["DOB"].toString()) : null,
+
+      state: json["state"],
+      city: json["city"],
+      bio: json["bio"],
+
+      interesteds: json["interesteds"] == null
+          ? []
+          : List<String>.from(json["interesteds"].map((x) => x.toString())),
+
+      mumStage: json["mumStage"],
+
+      subscription: json["subscription"] == null
+          ? null
+          : ProfileSubscriptionModel.fromJson(json["subscription"]),
+
+      matchCount: json["matchCount"],
 
       createdAt: json["createdAt"] != null ? DateTime.tryParse(json["createdAt"].toString()) : null,
 
       updatedAt: json["updatedAt"] != null ? DateTime.tryParse(json["updatedAt"].toString()) : null,
+
       v: json["__v"],
     );
   }
 }
 
 class LocationCordsDataModel {
-  LocationCordsDataModel({this.type, this.coordinates});
+  LocationCordsDataModel({this.type, this.coordinates = const []});
 
   final String? type;
-  final List<double>? coordinates;
+  final List<double> coordinates;
 
   factory LocationCordsDataModel.fromJson(Map<String, dynamic> json) {
     return LocationCordsDataModel(
       type: json["type"],
       coordinates: json["coordinates"] == null
           ? []
-          : List<double>.from(json["coordinates"]!.map((x) => x)),
+          : List<double>.from(json["coordinates"].map((x) => (x as num).toDouble())),
+    );
+  }
+}
+
+class ProfileSubscriptionModel {
+  ProfileSubscriptionModel({this.isSubscribed, this.subscribedAt, this.expiredAt});
+
+  final bool? isSubscribed;
+  final DateTime? subscribedAt;
+  final DateTime? expiredAt;
+
+  factory ProfileSubscriptionModel.fromJson(Map<String, dynamic> json) {
+    return ProfileSubscriptionModel(
+      isSubscribed: json["isSubscribed"],
+      subscribedAt: json["subscribedAt"] != null
+          ? DateTime.tryParse(json["subscribedAt"].toString())
+          : null,
+      expiredAt: json["expiredAt"] != null ? DateTime.tryParse(json["expiredAt"].toString()) : null,
     );
   }
 }

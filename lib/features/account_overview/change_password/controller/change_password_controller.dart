@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/services/account_overview/change_password/change_password_service.dart';
 
 class ChangePasswordController extends GetxController {
   /// Text Controllers
@@ -80,25 +81,25 @@ class ChangePasswordController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
-    // final success = await ChangePasswordService().changePassword(
-    //   oldPassword: oldPassCtrl.text,
-    //   newPassword: newPassCtrl.text,
-    //   confirmPassword: confirmPassCtrl.text,
-    // );
+    final success = await ChangePasswordService().changePassword(
+      oldPassword: oldPassCtrl.text,
+      newPassword: newPassCtrl.text,
+      confirmPassword: confirmPassCtrl.text,
+    );
 
-    // isLoading_.value = false;
+    isLoading_.value = false;
 
-    // if (success) {
-    //   GNav.pushNamedReplace(
-    //     RoutePaths.success,
-    //     arguments: SuccessViewDataModel(
-    //       title: Strings.passwordChangedSuccessfully,
-    //       subtitle: Strings.continueLoginAgain,
-    //       btnTxt: Strings.continueTxt,
-    //     ),
-    //   );
+    if (success) {
+      // GNav.pushNamedReplace(
+      //   RoutePaths.success,
+      //   arguments: SuccessViewDataModel(
+      //     title: Strings.passwordChangedSuccessfully,
+      //     subtitle: Strings.continueLoginAgain,
+      //     btnTxt: Strings.continueTxt,
+      //   ),
+      // );
 
-    //   clearForm();
-    // }
+      clearForm();
+    }
   }
 }

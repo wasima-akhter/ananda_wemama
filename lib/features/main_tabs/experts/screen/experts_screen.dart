@@ -1,9 +1,9 @@
-import 'package:mama_app/core/common_widgets/cus_search_bar.dart';
-import 'package:mama_app/core/components/ongoing_sessions/ongoing_expert_session_card.dart';
-import 'package:mama_app/core/components/ongoing_sessions/past_sessions_library_card.dart';
-import 'package:mama_app/features/shared/mood/mood_library/widgets/mood_library_chip_card.dart';
-
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/common_widgets/cus_search_bar.dart';
+import '../../../../core/components/ongoing_sessions/live_ongoing_expert_session_card.dart';
+import '../../../../core/components/ongoing_sessions/past_sessions_library_card.dart';
+import '../../../../core/components/ongoing_sessions/upcoming_expert_session_card.dart';
+import '../../../shared/mood/mood_library/widgets/mood_library_chip_card.dart';
 import '../controller/experts_controller.dart';
 import '../widgets/paid_past_sessions_component.dart';
 
@@ -26,7 +26,16 @@ class ExpertsScreen extends StatelessWidget {
 
           Gap(itemGap),
           ...List.generate(3, (index) {
-            return OngoingSessionCard().mB(4);
+            return LiveOngoingSessionCard().mB(4);
+          }),
+
+          Gap(itemGap),
+          ...List.generate(1, (index) {
+            return UpcomingExpertSessionCard(
+              writeQuesCtrl: ec.writeQuesCtrl,
+              writeQuesFocusNode: ec.writeQuesFocusNode,
+              onTapQues: ec.onTapQues,
+            ).mB(4);
           }),
 
           // show past sessions

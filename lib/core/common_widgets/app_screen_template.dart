@@ -80,56 +80,73 @@ class AppScreenTemplate extends StatelessWidget {
                 builder: (_, height, __) {
                   return Column(
                     children: [
-                      Expanded(child: child),
-                      if (bottomWidget != null) ...[bottomWidget!.getcm, Gap(itemGap * 3)],
-                      // ← pushes content above the FAB
+                      Expanded(child: child), // 👈 bounded height — Expanded/PageView works here
+                      if (bottomWidget != null) ...[
+                        if (getcmLess == true) bottomWidget!.get10cm else bottomWidget!.getcm,
+                        Gap(itemGap * 3),
+                      ],
                       if (floatingActionButton != null) Gap(height),
                     ],
                   );
                 },
               );
             }
+
             return CusRefreshIndicator(
               refreshKey: refreshKey,
               onRefresh: () async {
-                if (onRefresh != null) {
-                  await onRefresh?.call();
-                }
+                if (onRefresh != null) await onRefresh?.call();
               },
-              child: BounceSingleChildScrollView(
-                padding: padding ?? EdgeInsets.zero,
-
-                scrollController: scrollController,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child: IntrinsicHeight(
-                    // ← makes Column respect minHeight
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        child,
-                        if (bottomWidget != null) ...[
-                          const Spacer(), // ← now safe because height is bounded by IntrinsicHeight
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverPadding(
+                    padding: padding ?? EdgeInsets.zero,
+                    sliver: SliverToBoxAdapter(child: child),
+                  ),
+                  if (bottomWidget != null)
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
                           if (getcmLess == true) bottomWidget!.get10cm else bottomWidget!.getcm,
-                        ] else
-                          const SizedBox.shrink(),
-                        Gap(itemGap * 3),
-
-                        if (floatingActionButton != null)
-                          ValueListenableBuilder<double>(
-                            valueListenable: _fabHeight,
-                            builder: (_, height, __) {
-                              final keyboardHeight = S.bottomInset;
-                              final totalGap = keyboardHeight > 0
-                                  ? height // ← keyboard open: keyboard + fab
-                                  : height + 30.h; // ← keyboard closed: fab + margin
-                              return Gap(totalGap);
+                          Builder(
+                            builder: (context) {
+                              final kb = MediaQuery.of(context).viewInsets.bottom;
+                              return Gap(kb > 0 ? 0 : itemGap * 3);
                             },
                           ),
-                      ],
+                          if (floatingActionButton != null)
+                            ValueListenableBuilder<double>(
+                              valueListenable: _fabHeight,
+                              builder: (_, height, __) {
+                                final kb = MediaQuery.of(context).viewInsets.bottom;
+                                final totalGap = kb > 0 ? height + kb : height + 30.h;
+                                return Gap(totalGap);
+                              },
+                            ),
+                        ],
+                      ),
+                    )
+                  else
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          Gap(itemGap * 3),
+                          if (floatingActionButton != null)
+                            ValueListenableBuilder<double>(
+                              valueListenable: _fabHeight,
+                              builder: (_, height, __) {
+                                final kb = MediaQuery.of(context).viewInsets.bottom;
+                                final totalGap = kb > 0 ? height + kb : height + 30.h;
+                                return Gap(totalGap);
+                              },
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
+                ],
               ),
             );
           },

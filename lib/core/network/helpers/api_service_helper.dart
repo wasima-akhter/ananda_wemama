@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
-import '../../../app/helper_widgets_export.dart';
+import '../../../app/helper_widgets_export.dart' hide Response;
 import '../base/api_client.dart';
 import '../models/base_response_model.dart';
 
@@ -16,12 +16,23 @@ class ApiServiceHelper {
   }) async {
     try {
       final res = await apiCall();
-      log("res before calling BaseResponse: ${res}");
 
+      //
       if (res == null) {
         "No response from server".showToast();
         return null;
       }
+      // ✅ extract .data if it's a Dio Response
+      final Map<String, dynamic> json;
+      if (res is Response) {
+        json = res.data as Map<String, dynamic>;
+      } else if (res is Map<String, dynamic>) {
+        json = res;
+      } else {
+        json = res;
+      }
+
+      log("res before calling BaseResponse: $json");
 
       final response = BaseResponse<T>.fromJson(res, parser);
 

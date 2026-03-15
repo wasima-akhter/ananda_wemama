@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/services/auth/verify_otp_service.dart';
 
 class VerifyOtpController extends GetxController {
   VerifyOtpController({this.flowType = OtpFlowType.signup, required this.email});
@@ -26,24 +27,27 @@ class VerifyOtpController extends GetxController {
 
     isLoading_.value = true;
 
-    // final success = await VerifyOtpService().verify(email: email, otp: otpCntrler.text);
+    final success = await VerifyOtpService().verify(email: email, otp: otpCntrler.text);
 
     isLoading_.value = false;
 
-    // if (success) {
-    //   showTimer_.value = true;
+    if (success) {
+      showTimer_.value = true;
 
-    /// 🔥 FLOW BASED NAVIGATION
-    if (flowType == OtpFlowType.signup) {
-      // Existing behavior (UNCHANGED)
-      // mock code for design
-      Get.offAllNamed(RoutePaths.setupProfile);
-      storage.setLoggedIn(true);
-    } else if (flowType == OtpFlowType.forgotPassword) {
-      // 👈 NEW BEHAVIOR
-      Get.back(result: true); // go back and tell previous screen OTP verified
+      /// 🔥 FLOW BASED NAVIGATION
+      if (flowType == OtpFlowType.signup) {
+        // Existing behavior (UNCHANGED)
+
+        // save the access token in storage
+
+        // mock code for design
+        Get.offAllNamed(RoutePaths.setupProfile);
+        storage.setLoggedIn(true);
+      } else if (flowType == OtpFlowType.forgotPassword) {
+        // 👈 NEW BEHAVIOR
+        Get.back(result: true); // go back and tell previous screen OTP verified
+      }
     }
-    // }
   }
 
   void onTapResendOtp() async {

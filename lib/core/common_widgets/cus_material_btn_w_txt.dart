@@ -57,11 +57,8 @@ class CusMaterialBtnWTxt extends StatelessWidget {
               height: h ?? 40,
               child: Center(
                 child: value
-                    ? Loading()
-                    : Text(
-                        btnTxt,
-                        style: TxtStyle.inter(fs: 13, color: txtClr ?? c.textSecondary),
-                      ),
+                    ? LoadingWhite()
+                    : Text(btnTxt, style: TxtStyle.inter(fs: 13, color: txtClr ?? c.textSecondary)),
               ),
             ).mHV(hp ?? 0, vp ?? 0),
           ),

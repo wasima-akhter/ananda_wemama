@@ -21,4 +21,19 @@ class ExpertsController extends GetxController {
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
   ];
+
+  final writeQuesCtrl = TextEditingController();
+
+  final writeQuesFocusNode = FocusNode();
+
+  @override
+  void onClose() {
+    writeQuesCtrl.dispose();
+    writeQuesFocusNode.dispose();
+    super.onClose();
+  }
+
+  void onTapQues() {
+    Get.back();
+  }
 }

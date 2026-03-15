@@ -21,20 +21,23 @@ class SubscriptionUpgradeScreen extends StatelessWidget {
           MatchController.to.resetState();
         },
       ),
-      floatingActionButton: IntrinsicHeight(
-        child: Obx(
-          () => Container(
-            padding: 20.pa,
-            color: c.buttonText,
-            child: filledBtnWTxt(
-              btnTxt: Strings.continueTxt,
-              isLoading: scpc.isLoading,
-              onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Obx(
+            () => Container(
+              padding: 20.pa,
+              color: c.buttonText,
+              child: filledBtnWTxt(
+                btnTxt: Strings.continueTxt,
+                isLoading: scpc.isLoading,
+                onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
 
-              //  await scpc.onTapSignup(chooseSubPlanFormKey),
+                //  await scpc.onTapSignup(chooseSubPlanFormKey),
+              ),
             ),
           ),
-        ),
+        ],
       ),
       child: Form(
         key: chooseSubPlanFormKey,

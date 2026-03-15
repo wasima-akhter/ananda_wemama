@@ -33,16 +33,16 @@ class WelcomeFundingMumBody extends StatelessWidget {
     return Form(
       key: formKey,
       child: Column(
-        spacing: itemGap,
+        // no MainAxisSize.min 👈
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Gap(itemGap * 5),
-          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
+          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()).getcm,
           Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
           Gap(itemGap * 1.5),
 
-          /// Paged Content
           Expanded(
+            // 👈 works because AppScreenTemplate isScrollable:false gives bounded height
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: controller.pageController,

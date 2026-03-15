@@ -125,13 +125,14 @@ class PhotoAndBioScreen extends StatelessWidget {
             Gap(itemGap * 3),
             // ===== Your Form Fields =====
             CusDesTypeTextFormField(
-              controller: pbc.nameCtrl,
+              controller: pbc.bioDesCtrl,
               hintText: Strings.writeBioHere,
               hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
               style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+              rad: 12,
 
-              focusNode: pbc.nameFocus,
-              validator: (value) => validateName(value),
+              focusNode: pbc.bioDesFocus,
+              validator: (value) => validateDescription(value),
             ),
 
             Gap(itemGap * 2.5),
@@ -140,11 +141,7 @@ class PhotoAndBioScreen extends StatelessWidget {
               () => filledBtnWTxt(
                 btnTxt: Strings.continueTxt,
                 isLoading: pbc.isLoading,
-                onTap: () async {
-                  Get.toNamed(RoutePaths.lifeStyleAndInterests);
-                },
-
-                //  await pbc.onTapSignup(photoAndBioFormKey),
+                onTap: () => pbc.onTapContinuePhotoBio(photoAndBioFormKey),
               ),
             ),
 

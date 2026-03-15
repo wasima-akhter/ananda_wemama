@@ -64,8 +64,7 @@ class CustomBtnWTxt extends StatelessWidget {
       color: btnColor ?? (isOutlined ? c.inputBackground : c.primary),
       border: Border.all(
         color: isOutlined ? borderClr ?? c.inputBorder : borderClr ?? ctransp,
-        width:
-            ((isOutlined && borderClr == c.inputBorder) ? 0.7 : (brdrW ?? 1)).w,
+        width: ((isOutlined && borderClr == c.inputBorder) ? 0.7 : (brdrW ?? 1)).w,
       ),
       borderRadius: (rad ?? (isSmall == true ? 30 : 8)).brdrRad,
     );
@@ -83,12 +82,7 @@ class CustomBtnWTxt extends StatelessWidget {
     final double fontSize = isOutlined ? 13 : (fs ?? 15);
 
     final textStyle = isSmall == true
-        ? style ??
-              TxtStyle.outfitSemiB(
-                fs: (fs ?? 14),
-                color: txtClr ?? c.textOnPrimary,
-                w: 600,
-              )
+        ? style ?? TxtStyle.outfitSemiB(fs: (fs ?? 14), color: txtClr ?? c.textOnPrimary, w: 600)
         : style ??
               TxtStyle.inter(
                 fs: fontSize,
@@ -98,10 +92,10 @@ class CustomBtnWTxt extends StatelessWidget {
 
     return Center(
       child: isLoading
-          ? Padding(
-              padding: 2.pv,
+          ? Container(
+              // padding: 2.pv,
               // width: 18.w, height: 18.w,
-              child: const Loading(),
+              child: const LoadingWhite(),
             )
           : FittedBox(
               child: Text(

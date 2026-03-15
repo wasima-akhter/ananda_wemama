@@ -6,8 +6,6 @@ class CusBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01;
-
     return SafeArea(
       top: false,
       child: Column(

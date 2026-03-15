@@ -78,18 +78,21 @@ class UserDetailComponent extends StatelessWidget {
   }
 
   Widget _getUserName() {
-    return IntrinsicWidth(
-      child: ContainerBordered(
-        contClr: ctransp,
-        vp: 0,
-        child: Row(
-          children: [
-            Text('Ananda, 21', style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary)),
-            Gap(3),
-            SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
-          ],
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ContainerBordered(
+          contClr: ctransp,
+          vp: 0,
+          child: Row(
+            children: [
+              Text('Ananda, 21', style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary)),
+              Gap(3),
+              SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -126,7 +129,10 @@ class UserDetailComponent extends StatelessWidget {
             aspectRatio: 1, // 1:1 square
             child: Padding(
               padding: 4.pa,
-              child: NetworkImageWidget(radius: 8, imageUrl: user?.galleryImages[index]),
+              child: NetworkImageWidget(
+                radius: 8,
+                imageUrl: makeImageUrl(imageUrl: user?.galleryImages[index].trim() ?? ''),
+              ),
             ),
           ),
         );
@@ -142,21 +148,32 @@ class UserDetailComponent extends StatelessWidget {
         children: List.generate(user!.children.length, (index) {
           return Padding(
             padding: EdgeInsets.only(right: 8.w), // spacing between items
-            child: IntrinsicWidth(
-              child: ContainerBordered(
-                rad: 30,
-                hp: 12,
-                vp: 6,
-                contClr: c.scaffoldBackground,
-                child: Text(
-                  (user?.children[index] ?? '').capEachWord(),
-                  style: TxtStyle.outfitxSmNorSec,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ContainerBordered(
+                  rad: 30,
+                  hp: 12,
+                  vp: 6,
+                  contClr: c.scaffoldBackground,
+                  child: Text(
+                    (user?.children[index] ?? '').capEachWord(),
+                    style: TxtStyle.outfitxSmNorSec,
+                  ),
                 ),
-              ),
+              ],
             ),
           );
         }),
       ),
     );
+  }
+
+  int _getAge(DateTime? dob) {
+    if (dob == null) return 0;
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
+    return age;
   }
 }

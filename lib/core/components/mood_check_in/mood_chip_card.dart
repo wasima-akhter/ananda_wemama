@@ -205,6 +205,6 @@ class MoodChipAnimation extends StatelessWidget {
       }
     }();
 
-    return IntrinsicWidth(child: ImageDotAsset(path: path));
+    return ImageDotAsset(path: path);
   }
 }

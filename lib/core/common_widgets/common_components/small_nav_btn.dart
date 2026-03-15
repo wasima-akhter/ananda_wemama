@@ -10,14 +10,17 @@ class SmallNavBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return CusGestureDetector(
       onTap: onTap ?? () => Get.toNamed(goToPath ?? ''),
-      child: IntrinsicWidth(
-        child: ContainerBordered(
-          contClr: c.buttonPrimary,
-          rad: 30,
-          hp: 40,
-          vp: 8,
-          child: Text(text, style: TxtStyle.inter(fs: 12, w: 600, color: c.textOnPrimary)),
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ContainerBordered(
+            contClr: c.buttonPrimary,
+            rad: 30,
+            hp: 40,
+            vp: 8,
+            child: Text(text, style: TxtStyle.inter(fs: 12, w: 600, color: c.textOnPrimary)),
+          ),
+        ],
       ),
     );
   }

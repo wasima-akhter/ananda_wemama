@@ -21,15 +21,19 @@ class UpgradeNowModule extends StatelessWidget {
 
           Gap(itemGap * 2),
 
-          IntrinsicWidth(
-            child: CustomBtnWTxt(
-              isSmall: true,
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-              btnTxt: Strings.upgradeNow,
-              isLoading: false,
-              onTap: onTapUgradeNow,
-              rad: 4,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CustomBtnWTxt(
+                isSmall: true,
+                style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: bgClr),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 14),
+                btnTxt: Strings.upgradeNow,
+                isLoading: false,
+                onTap: onTapUgradeNow,
+                rad: 4,
+              ),
+            ],
           ),
         ],
       ),

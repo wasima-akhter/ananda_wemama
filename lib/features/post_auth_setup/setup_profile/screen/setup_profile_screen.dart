@@ -122,9 +122,7 @@ class SetupProfileScreen extends StatelessWidget {
                 () => filledBtnWTxt(
                   btnTxt: Strings.continueTxt,
                   isLoading: spc.isLoading,
-                  onTap: () async {
-                    Get.toNamed(RoutePaths.photoAndBio);
-                  },
+                  onTap: () => spc.onTapContinueSetUp(setupProfileFormKey),
 
                   //  await spc.onTapSignup(setupProfileFormKey),
                 ),

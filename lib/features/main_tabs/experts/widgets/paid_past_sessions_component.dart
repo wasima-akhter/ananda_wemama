@@ -44,18 +44,21 @@ class PaidPastSessionsComponent extends StatelessWidget {
 
           /// watch all button
           Center(
-            child: IntrinsicWidth(
-              child: CustomBtnWTxt(
-                btnTxt: Strings.watchAll,
-                isSmall: true,
-                isLoading: false,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomBtnWTxt(
+                  btnTxt: Strings.watchAll,
+                  isSmall: true,
+                  isLoading: false,
 
-                rad: 30,
-                padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
-                onTap: () {
-                  Get.toNamed(RoutePaths.pastSessions);
-                },
-              ),
+                  rad: 30,
+                  padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
+                  onTap: () {
+                    Get.toNamed(RoutePaths.pastSessions);
+                  },
+                ),
+              ],
             ),
           ),
         ],

@@ -1,9 +1,7 @@
-import 'package:mama_app/core/common_widgets/app_screen_template.dart';
-
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/signin_controller.dart';
 import '../widgets/signin_body_widgets.dart';
- 
+
 class SigninScreen extends StatelessWidget {
   const SigninScreen({super.key});
 
@@ -13,15 +11,11 @@ class SigninScreen extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return AppScreenTemplate(
-
-      bottomWidget:  const SocialSection(),
+      bottomWidget: const SocialSection(),
       appBar: CommonAppBarContent(title: '', hasBackNavArrow: false),
-      child: 
-      
-       // Text("data")
-      
-      
-      _SigninBody(controller: controller, formKey: formKey),
+      child:
+          //  Text("data"),
+          _SigninBody(controller: controller, formKey: formKey),
     );
   }
 }
@@ -42,8 +36,6 @@ class _SigninBody extends StatelessWidget {
         children: [
           HeaderSection(controller: controller),
           FormSection(controller: controller, formKey: formKey),
-    
-         
         ],
       ).getcm,
     );

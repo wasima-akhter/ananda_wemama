@@ -7,6 +7,9 @@ class ImageDotAsset extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(path, height: (height)?.h, fit: BoxFit.cover);
+    return AspectRatio(
+      aspectRatio: 1.2,
+      child: Image.asset(path, height: (height)?.h, fit: BoxFit.cover),
+    );
   }
 }

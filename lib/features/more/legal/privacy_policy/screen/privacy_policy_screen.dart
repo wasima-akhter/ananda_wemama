@@ -21,7 +21,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
         body: Obx(() {
           /// 🔄 LOADING
           if (epc.isLoading.value) {
-            return Center(child: Loading());
+            return Center(child: LoadingWhite());
           }
 
           /// ❌ ERROR

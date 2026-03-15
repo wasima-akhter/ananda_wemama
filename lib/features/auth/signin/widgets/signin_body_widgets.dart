@@ -1,13 +1,12 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/cus_pass_type_text_form_field.dart';
 import '../../../../core/common_widgets/visibility_suffix.dart';
-import '../../../../core/helpers/image_helper.dart';
 import '../../../../core/utils/validator/validators.dart';
 import '../controller/signin_controller.dart';
 
 class HeaderSection extends StatelessWidget {
   final SigninController controller;
-  const HeaderSection({required this.controller});
+  const HeaderSection({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +38,7 @@ class FormSection extends StatelessWidget {
   final SigninController controller;
   final GlobalKey<FormState> formKey;
 
-  const FormSection({required this.controller, required this.formKey});
+  const FormSection({super.key, required this.controller, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +73,9 @@ class FormSection extends StatelessWidget {
         Gap(itemGap * 2.5),
 
         Obx(() {
-          return filledBtnWTxt(
+          return CustomBtnWTxt(
+            rad: 30,
+            isSmall: true,
             onTap: () => controller.onTapLogin(formKey),
             btnTxt: Strings.login,
             isLoading: controller.isLoading,
@@ -93,11 +94,12 @@ class FormSection extends StatelessWidget {
 }
 
 class SocialSection extends StatelessWidget {
-  const SocialSection();
+  const SocialSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(Strings.signUpWith, style: 13.norSecclrCusFSoutfit),
         Row(

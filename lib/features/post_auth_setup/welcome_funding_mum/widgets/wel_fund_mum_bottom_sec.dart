@@ -10,6 +10,7 @@ class WelcomeFundingMumBottomSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 2,
         children: [
           if (controller.isIntroPage) _IntroMessage(),
@@ -53,33 +54,39 @@ class _ConfirmationCheckbox extends StatelessWidget {
       () => CusGestureDetector(
         // ← wrap with Obx
         onTap: controller.toggleReady,
-        child: IntrinsicWidth(
-          child: ContainerBordered(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IgnorePointer(
-                  // ← prevent checkbox eating the tap
-                  child: CustomCheckBox(
-                    value: controller.isReady.value,
-                    onChanged: (_) {}, // ← no-op, parent handles it
-                    borderColor: c.primary,
-                    activeColor: c.primary,
-                    checkColor: c.scaffoldBackground,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ContainerBordered(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IgnorePointer(
+                    // ← prevent checkbox eating the tap
+                    child: CustomCheckBox(
+                      value: controller.isReady.value,
+                      onChanged: (_) {}, // ← no-op, parent handles it
+                      borderColor: c.primary,
+                      activeColor: c.primary,
+                      checkColor: c.scaffoldBackground,
+                    ),
                   ),
-                ),
-                Gap(itemGap),
-                IntrinsicWidth(
-                  child: Text(
-                    Strings.readyToJoin.cap,
-                    textAlign: TextAlign.left,
-                    style: TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary),
+                  Gap(itemGap),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        Strings.readyToJoin.cap,
+                        textAlign: TextAlign.left,
+                        style: TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

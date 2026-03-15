@@ -85,14 +85,17 @@ class CommentsBottomSheet extends StatelessWidget {
                 controller: controller.commentCtrl,
                 focusNode: controller.commentFocus,
                 hintText: Strings.writeSomething,
-                suffix: IntrinsicWidth(
-                  child: CusGestureDetector(
-                    onTap: () {},
-                    child: CircleAvatar(
-                      backgroundColor: c.primary,
-                      child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
-                    ),
-                  ).mAll(5),
+                suffix: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CusGestureDetector(
+                      onTap: () {},
+                      child: CircleAvatar(
+                        backgroundColor: c.primary,
+                        child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
+                      ),
+                    ).mAll(5),
+                  ],
                 ),
               );
             }),

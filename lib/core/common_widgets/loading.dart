@@ -2,20 +2,51 @@ import 'package:lottie/lottie.dart';
 
 import '../../app/helper_widgets_export.dart';
 
-class Loading extends StatelessWidget {
+class LoadingWhite extends StatelessWidget {
   final double? size;
-  const Loading({super.key, this.size});
+  const LoadingWhite({super.key, this.size});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Lottie.asset(
-        ImagesPath.loadingJson,
+    return SizedBox(
+      width: (size ?? 40).w,
+      height: (size ?? 20).w, // half height to clip letterbox padding
+      child: OverflowBox(
+        maxWidth: (size ?? 40).w * 2,
+        maxHeight: (size ?? 40).w,
+        child: Lottie.asset(
+          ImagesPath.whiteLoading,
+          width: (size ?? 40).w * 2,
+          height: (size ?? 40).w,
+          fit: BoxFit.contain,
+          repeat: true,
+          animate: true,
+        ),
+      ),
+    );
+  }
+}
 
-        width: size ?? 21,
-        height: size ?? 21,
-        repeat: true,
-        animate: true,
+class LoadingPrimary extends StatelessWidget {
+  final double? size;
+  const LoadingPrimary({super.key, this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: (size ?? 40).w,
+      height: (size ?? 20).w, // half height to clip letterbox padding
+      child: OverflowBox(
+        maxWidth: (size ?? 40).w * 2,
+        maxHeight: (size ?? 40).w,
+        child: Lottie.asset(
+          ImagesPath.primaryLoading,
+          width: (size ?? 40).w * 2,
+          height: (size ?? 40).w,
+          fit: BoxFit.contain,
+          repeat: true,
+          animate: true,
+        ),
       ),
     );
   }

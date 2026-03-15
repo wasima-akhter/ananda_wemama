@@ -26,81 +26,66 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Form(
-                    key: photoAndBioFormKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              Strings.selectYourLikes.capEachWord(),
+                child: Form(
+                  key: photoAndBioFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min, // ✅ min, not max
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            Strings.selectYourLikes.capEachWord(),
+                            textAlign: TextAlign.center,
+                            style: 13.titleMclrCusFSOutfit,
+                          ),
+                          Gap(itemGap),
+                          Obx(
+                            () => Text(
+                              "${lic.selectedInterests.length}/10",
                               textAlign: TextAlign.center,
                               style: 13.titleMclrCusFSOutfit,
                             ),
-                            Gap(itemGap),
-                            Obx(
-                              () => Text(
-                                "${lic.selectedInterests.length}/10",
-                                textAlign: TextAlign.center,
-                                style: 13.titleMclrCusFSOutfit,
-                              ),
-                            ),
-                          ],
+                          ),
+                        ],
+                      ),
+
+                      Gap(itemGap * 5),
+
+                      Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 12.w,
+                        runSpacing: 14.w,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          ...List.generate(lic.interestsList.length, (index) {
+                            final item = lic.interestsList[index];
+                            return Obx(() {
+                              final isSelected = lic.selectedInterests.contains(item);
+                              return LifestyleTag(
+                                item: item,
+                                onTap: () => lic.toggleInterest(item),
+                                isSelected: isSelected,
+                              );
+                            });
+                          }),
+                        ],
+                      ).mHV(10, 0),
+
+                      Gap(itemGap * 5), // ✅ fixed gap instead of Spacer
+                      // ===== BOTTOM SECTION =====
+                      Obx(
+                        () => filledBtnWTxt(
+                          btnTxt: Strings.continueTxt,
+                          isLoading: lic.isLoading,
+                          onTap: lic.onTapContinue,
                         ),
+                      ),
 
-                        Gap(itemGap * 5),
-
-                        Wrap(
-                          direction: Axis.horizontal,
-                          spacing: 12.w,
-                          runSpacing: 14.w,
-                          alignment: WrapAlignment.center,
-                          children: [
-                            ...List.generate(lic.interestsList.length, (index) {
-                              final item = lic.interestsList[index];
-
-                              return Obx(() {
-                                final isSelected = lic.selectedInterests.contains(item);
-
-                                return IntrinsicWidth(
-                                  child: LifestyleTag(
-                                    item: item,
-                                    onTap: () => lic.toggleInterest(item),
-                                    isSelected: isSelected,
-                                  ),
-                                );
-                              });
-                            }),
-                          ],
-                        ).mHV(10, 0),
-                        Gap(itemGap),
-
-                        // 👇 THIS PUSHES BOTTOM SECTION DOWN
-                        const Spacer(),
-
-                        // ===== BOTTOM SECTION =====
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Obx(
-                              () => filledBtnWTxt(
-                                btnTxt: Strings.continueTxt,
-                                isLoading: lic.isLoading,
-                                onTap: lic.onTapContinue,
-
-                                //  await lic.onTapSignup(photoAndBioFormKey),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        Gap(itemGap * 3),
-                      ],
-                    ).getcm,
-                  ),
+                      Gap(itemGap * 3),
+                    ],
+                  ).getcm,
                 ),
               ),
             );

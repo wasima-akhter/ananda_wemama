@@ -2,7 +2,6 @@ import 'package:intl/intl.dart';
 import 'package:mama_app/features/shared/date_picker/widgets/date_picker_widget.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../common_widgets/common_components/state_city_bottom_sheet.dart';
 
 class DateHelper {
   String yMdToDMY(String inputDate) {
@@ -324,11 +323,33 @@ Future<void> pickDateWithOptions({
 }) async {
   unfocusAll?.call();
 
+  // ✅ parse dd/MM/yyyy format correctly
+  DateTime? parsedDate;
+  if (selectedDate.value.isNotEmpty) {
+    try {
+      final parts = selectedDate.value.split('/');
+      if (parts.length == 3) {
+        parsedDate = DateTime(
+          int.parse(parts[2]), // year
+          int.parse(parts[1]), // month
+          int.parse(parts[0]), // day
+        );
+      }
+    } catch (_) {}
+  }
+
+  final tempSelected = (parsedDate ?? DateTime.now()).obs;
+
   await Get.dialog(
     buildDatePickerTheme(
-      child: DatePickerWithPrivacy(selectedDate: selectedDate, keepPrivate: keepPrivate),
-
       context: Get.context!,
+      child: DatePickerWithPrivacy(
+        selectedDate: selectedDate,
+        tempSelected: tempSelected,
+        keepPrivate: keepPrivate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+      ),
     ),
     barrierDismissible: true,
   );
@@ -339,34 +360,4 @@ String formatDate(DateTime date) {
   return "${date.day.toString().padLeft(2, '0')}/"
       "${date.month.toString().padLeft(2, '0')}/"
       "${date.year}";
-}
-
-///////////////////////////////////////
-///
-///     select state
-///
-///////////////////////////////////////
-Future<dynamic> showSelectionBottomSheet({
-  required String title,
-  required List<String> items,
-  required RxString selectedValue,
-  double? heightFactor,
-}) {
-  return Get.bottomSheet(
-    ignoreSafeArea: false,
-    isDismissible: true,
-    enableDrag: true,
-    isScrollControlled: true,
-    backgroundColor: bgClr,
-
-    AnimatedPadding(
-      duration: const Duration(milliseconds: 250),
-      padding: EdgeInsets.only(bottom: S.bottomInset),
-      child: Container(
-        // color: Colors.amber,
-        height: bSheetH * 1 * (heightFactor ?? 1),
-        child: SelectListBottomSheet(title: title, items: items, selectedValue: selectedValue),
-      ),
-    ),
-  );
 }

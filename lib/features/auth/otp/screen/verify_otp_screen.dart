@@ -120,7 +120,7 @@ class VerifyOtpScreen extends StatelessWidget {
                           : CusGestureDetector(
                               onTap: otpc.onTapResendOtp,
                               child: otpc.isResendLoading
-                                  ? Loading()
+                                  ? LoadingWhite()
                                   : Text(
                                       Strings.resendOTP,
                                       style: TxtStyle.outfit(w: 600, color: c.primary),

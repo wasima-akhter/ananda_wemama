@@ -1,5 +1,8 @@
+import 'package:mama_app/core/services/auth/forgot_password_service.dart';
+
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../../../../core/services/auth/verify_otp_service.dart';
 import '../../signin/controller/signin_controller.dart';
 
 class ForgotPasswordController extends GetxController {
@@ -44,34 +47,48 @@ class ForgotPasswordController extends GetxController {
   /// ================= ACTIONS =================
 
   Future<void> onTapSendOtp({required GlobalKey<FormState> formKey}) async {
-    if (_isSendOtpLoading.value) return;
+    final isValid = validateForm(formKey);
+    if (!isValid || _isSendOtpLoading.value) return;
 
     unfocusAll();
     _isSendOtpLoading.value = true;
 
-    final result = await Get.toNamed(
-      RoutePaths.verifyOtp,
-      arguments: {'flow': OtpFlowType.forgotPassword, 'email': emailCtrl.text.trim()},
-    );
+    final success = await VerifyOtpService().resendOtp(email: emailCtrl.text.trim());
 
-    if (result == true) {
-      step.value = ForgotPasswordStep.resetPassword;
+    if (success) {
+      final result = await Get.toNamed(
+        RoutePaths.verifyOtp,
+        arguments: {'flow': OtpFlowType.forgotPassword, 'email': emailCtrl.text.trim()},
+      );
+
+      if (result == true) {
+        step.value = ForgotPasswordStep.resetPassword;
+      }
     }
 
     _isSendOtpLoading.value = false;
   }
 
   Future<void> onTapResetPass({required GlobalKey<FormState> formKey}) async {
-    if (_isResetPassLoading.value) return;
+    final isValid = validateForm(formKey);
+    if (!isValid || _isResetPassLoading.value) return;
 
     unfocusAll();
     _isResetPassLoading.value = true;
 
     // Call API here
+    final success = await ForgotPasswordService().resetPassword(
+      email: emailCtrl.text.trim(),
+
+      newPassword: newPassCtrl.text,
+      confirmPassword: confirmPassCtrl.text,
+    );
 
     _isResetPassLoading.value = false;
 
-    step.value = ForgotPasswordStep.completed;
+    if (success) {
+      step.value = ForgotPasswordStep.completed;
+    }
   }
 
   Future<void> onTapContinueToLogin() async {
@@ -80,6 +97,7 @@ class ForgotPasswordController extends GetxController {
 
     // ✅ Delete old instance so onInit() runs fresh on next Get.find
     Get.find<SigninController>().clearFields();
+    clearAllFields();
     Get.toNamed(RoutePaths.signin);
   }
 

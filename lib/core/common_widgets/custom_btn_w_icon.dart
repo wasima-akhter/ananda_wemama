@@ -96,7 +96,7 @@ class CustomBtnWIcon extends StatelessWidget {
                 color: btnTxtClr ?? (isOutlined ? c.primary : c.textPrimary),
               );
 
-    if (loading) return const Loading();
+    if (loading) return const LoadingWhite();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

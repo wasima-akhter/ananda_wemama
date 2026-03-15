@@ -5,27 +5,21 @@ class DatePickerWithPrivacy extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final RxString selectedDate;
+  final Rx<DateTime> tempSelected; // ✅ reactive
   final RxBool keepPrivate;
 
   const DatePickerWithPrivacy({
     super.key,
-
     this.firstDate,
     this.lastDate,
     required this.selectedDate,
+    required this.tempSelected,
     required this.keepPrivate,
   });
 
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-
-    // Parse previously selected date or fallback
-    final initial = selectedDate.value.isNotEmpty
-        ? DateTime.tryParse(selectedDate.value) ?? now
-        : now;
-
-    DateTime tempSelected = initial;
 
     return Dialog(
       backgroundColor: bgClr,
@@ -39,17 +33,19 @@ class DatePickerWithPrivacy extends StatelessWidget {
             Text(Strings.dateOfBirth.cap, style: TxtStyle.outfitSemiB(fs: 16, color: c.primary)),
             Gap(itemGap),
 
-            // ── Calendar ──
-            CalendarDatePicker(
-              initialDate: tempSelected,
-              firstDate: firstDate ?? DateTime(1900),
-              lastDate: lastDate ?? now,
-              onDateChanged: (date) => tempSelected = date,
-            ),
+            Obx(() {
+              print("tempSelected.value : ${tempSelected.value}");
+              return CalendarDatePicker(
+                key: ValueKey(tempSelected.value), // ✅ redraws on change
+                initialDate: tempSelected.value,
+                firstDate: firstDate ?? DateTime(1900),
+                lastDate: lastDate ?? now,
+                onDateChanged: (date) => tempSelected.value = date,
+              );
+            }),
 
             Gap(itemGap),
 
-            // ── Keep Private toggle ──
             CusGestureDetector(
               onTap: () => keepPrivate.toggle(),
               child: Obx(
@@ -75,7 +71,6 @@ class DatePickerWithPrivacy extends StatelessWidget {
 
             Gap(itemGap * 2),
 
-            // ── Buttons ──
             Row(
               children: [
                 Expanded(
@@ -99,7 +94,7 @@ class DatePickerWithPrivacy extends StatelessWidget {
                     btnColor: c.secondary,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     onTap: () {
-                      selectedDate.value = formatDate(tempSelected);
+                      selectedDate.value = formatDate(tempSelected.value);
                       Get.back();
                     },
                     style: TxtStyle.outfit(fs: 14, w: 500, color: white),

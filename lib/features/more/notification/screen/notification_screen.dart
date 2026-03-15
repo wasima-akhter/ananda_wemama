@@ -27,7 +27,7 @@ class NotificationScreen extends StatelessWidget {
             },
             child: Obx(() {
               if (nc.isLoading) {
-                return const Center(child: Loading());
+                return const Center(child: LoadingWhite());
               }
 
               if (nc.notifications.isEmpty) {

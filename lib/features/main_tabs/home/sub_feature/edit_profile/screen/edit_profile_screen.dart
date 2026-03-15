@@ -81,6 +81,7 @@ class EditProfileScreen extends StatelessWidget {
 
           Obx(() {
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _getRowOfImages(
                   fileImages: epc.fileImages,
@@ -119,10 +120,13 @@ class EditProfileScreen extends StatelessWidget {
                     brdrClr: c.inputBorder,
                     brdrW: 0.6,
                     onTap: () {
-                      pickDate(
+                      // your date picker method
+
+                      pickDateWithOptions(
                         selectedDate: epc.selectedDob,
+                        keepPrivate: epc.keepDobPrivate,
                         unfocusAll: epc.unfocusAll,
-                      ); // your date picker method
+                      );
                     },
                   );
                 }),

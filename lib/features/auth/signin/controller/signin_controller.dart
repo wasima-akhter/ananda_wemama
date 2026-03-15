@@ -1,5 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
+import '../../../../core/services/auth/signin_service.dart';
 
 class SigninController extends GetxController {
   /// ================= FORM CONTROLLERS =================
@@ -28,8 +29,8 @@ class SigninController extends GetxController {
 
   /// ================= LOGIN ACTION =================
   Future<void> onTapLogin(GlobalKey<FormState> formKey) async {
-    // final isValid = validateForm(formKey);
-    // if (!isValid || _isLoading.value) return;
+    final isValid = validateForm(formKey);
+    if (!isValid || _isLoading.value) return;
 
     if (_isLoading.value) return;
 
@@ -40,12 +41,9 @@ class SigninController extends GetxController {
       final email = emailCtrler.text.trim();
       final password = passwordCtrler.text.trim();
 
-      // final success = await SigninService().signIn(
-      //   email: email,
-      //   password: password,
-      // );
+      final success = await SigninService().signIn(email: email, password: password);
 
-      // if (!success) return;
+      if (!success) return;
 
       _handleLoginSuccess();
     } catch (e) {

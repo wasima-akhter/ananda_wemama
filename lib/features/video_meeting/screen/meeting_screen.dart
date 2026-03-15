@@ -35,7 +35,7 @@ class MeetingScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Expanded(
+          Flexible(
             child: Obx(() {
               if (!mc.isEngineReady.value || mc.agoraEngine == null) {
                 return const Center(child: CircularProgressIndicator());
@@ -150,7 +150,7 @@ class MeetingScreen extends StatelessWidget {
                     right: 0,
                     child: Row(
                       children: [
-                        Expanded(
+                        Flexible(
                           child: TextField(
                             controller: mc.chatController,
                             style: const TextStyle(color: Colors.white),
@@ -187,382 +187,69 @@ class MeetingScreen extends StatelessWidget {
 }
 */
 
-import 'package:mama_app/app/helper_widgets_export.dart';
-import 'package:mama_app/core/common_widgets/common_components/community_spotlight.dart';
-import 'package:mama_app/core/helpers/widgets_helper.dart';
 import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
-import '../../../core/common_widgets/cus_des_type_text_form_field.dart';
-import '../../../core/common_widgets/cus_flexible_dropdown.dart';
+import '../../../app/helper_widgets_export.dart';
+import '../modules/meet_bottom_action.dart';
+import '../modules/meet_comment_item.dart';
+import '../modules/meet_msg_input_row.dart';
+import '../modules/meet_react_button.dart';
+import '../modules/meet_top_content.dart';
+import '../widgets/meeting_screen_template.dart';
 
 class MeetingScreen extends StatelessWidget {
   const MeetingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final keyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
-
     final mc = Get.find<MeetingController>();
 
-    return AppScreenTemplate(
-      isScrollable: false,
+    return MeetingScreenTemplate(
       backgroundColor: c.cardPrimary,
-      resizeToAvoidBottomInset: true,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: _FloatingActionBtn(
-        keyboardOpen: keyboardOpen,
+      inputFocus: mc.inputMsgFocus,
+      topContent: TopContent(),
 
-        inputMsgCtrl: mc.inputMsgCtrl,
-        inputMsgFocus: mc.inputMsgFocus,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Gap(50.h),
-          //// title + LIVE badge
-          /// LIVE BADGE
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      commentList: ListView.separated(
+        padding: EdgeInsets.only(top: itemGap * 1.5),
+        itemCount: 10,
+        separatorBuilder: (_, __) => Gap(14),
+        itemBuilder: (_, index) => CommentItem(),
+      ).get10cm,
+
+      inputRow: MsgInputRow(inputMsgCtrl: mc.inputMsgCtrl, inputMsgFocus: mc.inputMsgFocus),
+
+      bottomActions: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+          color: c.cardPrimary,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Gap(50.w),
-
-                  /// TITLE
-                  Column(
-                    children: [
-                      Text("Breastfeeding Basic", style: TxtStyle.outfit(fs: 16, w: 600)),
-                      Text("With Dr. Adebayo", style: TxtStyle.outfit(fs: 13, color: c.secondary)),
-                    ],
-                  ),
-                  ContainerBordered(
-                    rad: 8,
-                    hp: 16,
-                    hasBrdr: true,
-                    brdrClr: c.primary,
-                    vp: 6,
-                    contClr: c.error,
-                    child: Text("LIVE", style: TxtStyle.inter(fs: 12, w: 600, color: white)),
-                  ),
-                ],
-              ).get10cm,
-              Gap(itemGap * 1.5),
-
-              /// TOP HOST CARD
-              ContainerBordered(
-                rad: 20,
-                hp: 0,
-                vp: 0,
-
-                clipBehavior: Clip.antiAlias,
-                child: Stack(
-                  children: [
-                    NetworkImageWidget(
-                      imageUrl: Strings.fakeImageUrl,
-                      width: double.infinity,
-                      height: S.h * 0.26,
-                    ),
-
-                    /// VIEWERS
-                    Positioned(
-                      right: 12,
-                      top: 12,
-                      child: ContainerBordered(
-                        rad: 30,
-                        hp: 10,
-                        vp: 6,
-                        contClr: white.withOpacity(.9),
-                        child: Row(
-                          children: [
-                            Icon(Icons.visibility, size: 16, color: c.secondary),
-                            Gap(6),
-                            Text("520", style: TxtStyle.inter(fs: 13, w: 600)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+              CusGestureDetector(
+                onTap: () => Get.back(),
+                child: BottomAction(
+                  iconPath: IconsPath.closeWhite,
+                  backgroundColor: Colors.red,
+                  size: 13,
+                  text: "Leave",
+                  color: white,
                 ),
               ),
-
-              Gap(itemGap * 1.5),
-
-              /// AVATAR LIST
-              StackOfImages(numOfImage: 6),
+              BottomAction(iconPath: IconsPath.mutedAudio, text: "Mute Audio"),
+              ReactButton(),
+              BottomAction(iconPath: IconsPath.handRaise, text: "Ask Questions"),
             ],
-          ).get10cm,
-
-          Gap(itemGap * 1.5),
-
-          Expanded(
-            child: Container(
-              color: bgClr,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.separated(
-                      padding: EdgeInsets.only(top: itemGap * 1.5),
-                      itemCount: 10,
-                      separatorBuilder: (_, __) => Gap(14),
-                      itemBuilder: (_, index) {
-                        return _CommentItem();
-                      },
-                    ).get10cm,
-                  ),
-
-                  //
-                ],
-              ),
-            ),
-          ),
-        ],
+          ).getcm,
+        ),
       ),
     );
   }
 }
 
-class _FloatingActionBtn extends StatelessWidget {
-  final bool keyboardOpen;
-  final TextEditingController inputMsgCtrl;
-  final FocusNode inputMsgFocus;
-  const _FloatingActionBtn({
-    super.key,
-    required this.keyboardOpen,
-    required this.inputMsgCtrl,
-    required this.inputMsgFocus,
-  });
+// extract top section as its own widget
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: keyboardOpen ? ctransp : bgClr,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Input row - no rounded corners, flat bottom
-          keyboardOpen ? SizedBox.shrink() : Gap(itemGap * 1.5),
-          Container(
-            color: Colors.transparent,
-            child: _MsgInputRow(inputMsgCtrl: inputMsgCtrl, inputMsgFocus: inputMsgFocus),
-          ),
-
-          // Bottom actions - rounded TOP corners only
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (child, animation) => SlideTransition(
-              position: Tween<Offset>(
-                begin: const Offset(0, 1),
-                end: Offset.zero,
-              ).animate(animation),
-              child: FadeTransition(opacity: animation, child: child),
-            ),
-            child: keyboardOpen
-                ? const SizedBox.shrink()
-                : ClipRRect(
-                    key: const ValueKey('bottom_actions'),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                      margin: EdgeInsets.only(top: itemGap),
-
-                      color: c.cardPrimary, // flat color, no borderRadius here
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CusGestureDetector(
-                            onTap: () => Get.back(),
-                            child: _BottomAction(
-                              iconPath: IconsPath.closeWhite,
-                              backgroundColor: Colors.red,
-                              size: 13,
-                              text: "Leave",
-                              color: white,
-                            ),
-                          ),
-                          _BottomAction(iconPath: IconsPath.mutedAudio, text: "Mute Audio"),
-
-                          /////////////
-                          _ReactButton(),
-
-                          ////
-                          _BottomAction(iconPath: IconsPath.handRaise, text: "Ask Questions"),
-                        ],
-                      ).getcm,
-                    ),
-                  ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReactButton extends StatelessWidget {
-  const _ReactButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final overlayKey = GlobalKey();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Height = emoji text(18.sp) + vertical padding(8.h * 2) + decoration insets
-        final overlayHeight = 18.sp + (8.h * 2) + 80.h;
-
-        final reactionList = [
-          ImagesPath.likeEmoji,
-          ImagesPath.heartEmoji,
-          ImagesPath.careEmoji,
-          ImagesPath.hahaEmoji,
-          ImagesPath.wowEmoji,
-          ImagesPath.sadEmoji,
-          ImagesPath.angryEmoji,
-        ];
-
-        return CusFlexibleDropdown(
-          items: const [],
-          offset: Offset(0, -overlayHeight),
-          customOverlay: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            margin: EdgeInsets.symmetric(horizontal: 20.w),
-            decoration: BoxDecoration(
-              color: c.scaffoldBackground,
-              borderRadius: 30.brdrRad,
-              boxShadow: boxShadowAllSides,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: reactionList
-                  .map(
-                    (emoji) => GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: Image.asset(emoji, height: 22.h),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-          child: _BottomAction(iconPath: IconsPath.likeHeartFilled, text: "React"),
-        );
-      },
-    );
-  }
-}
 
 ////
-class _MsgInputRow extends StatelessWidget {
-  final TextEditingController inputMsgCtrl;
-  final FocusNode inputMsgFocus;
-  const _MsgInputRow({super.key, required this.inputMsgCtrl, required this.inputMsgFocus});
 
-  @override
-  Widget build(BuildContext context) {
-    return CusDesTypeTextFormField(
-      controller: inputMsgCtrl,
-      focusNode: inputMsgFocus,
-      hintText: Strings.typeSomething,
-      minLines: 1,
-      minHeight: 40,
-      bgClr: c.textOnPrimary,
-      suffix: CusCircleIconButton(
-        radius: 15,
-        backgroundColor: c.primary,
-        onTap: () async {
-          // open picker for image or file
-        },
-        child: SvgIcon(iconPath: IconsPath.sendLargeWhite, height: 20),
-      ).mAll(4),
-    ).mHV(10, 0);
-  }
-}
 
-class _CommentItem extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        NetworkImageWidget(imageUrl: Strings.fakeImageUrl, isCircle: true, radius: 18),
-
-        Gap(10),
-
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text("Darrell Steward", style: TxtStyle.outfit(fs: 13, w: 600)),
-                  Gap(6),
-                  Text("11:16 pm", style: TxtStyle.outfit(fs: 11, color: c.textSecondary)),
-                ],
-              ),
-
-              Gap(4),
-
-              Text(
-                "However Rare Side Effects Observed Among Children Can Be Metabolic Acidosis, Coma, Respiratory Depression",
-                style: TxtStyle.outfit(fs: 12),
-              ),
-            ],
-          ),
-        ),
-
-        CusFlexibleDropdown(
-          items: [
-            CusDropdownItem(
-              title: Strings.reportContent,
-              onTap: () async => await showReportBottomSheet(),
-            ),
-          ],
-          child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-        ),
-      ],
-    );
-  }
-}
-
-class _BottomAction extends StatelessWidget {
-  final String iconPath;
-  final String text;
-  final Color? color;
-  final double? size;
-  final Color? backgroundColor;
-
-  const _BottomAction({
-    required this.iconPath,
-    required this.text,
-    this.color,
-    this.backgroundColor,
-    this.size,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: 0.circleBrdr(brdrClr: c.secondary),
-          child: CircleAvatar(
-            radius: 18.r,
-            backgroundColor: (backgroundColor ?? c.scaffoldBackground),
-
-            child: SvgIconColored(
-              iconPath: iconPath,
-
-              height: size ?? 22,
-              iconColor: color ?? c.primary,
-            ),
-          ),
-        ),
-        Gap(6),
-        Text(text, style: TxtStyle.inter(fs: 11)),
-      ],
-    );
-  }
-}
