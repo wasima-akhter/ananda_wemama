@@ -90,7 +90,7 @@ class PhotoAndBioScreen extends StatelessWidget {
             Obx(() {
               final selImage = pbc.fileImage.value;
               return UserPhotoWidget(
-                imageUrl: makeImageUrl(imageUrl: storage.getUserInfo.imageUrl ?? ''),
+                imageUrl: storage.getUserInfo.imageUrl ?? '',
                 selImage: selImage,
               );
             }),

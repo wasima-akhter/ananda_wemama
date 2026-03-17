@@ -72,7 +72,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
                   /// 🗓 LAST UPDATED
                   PassageComponent(
-                    title: Strings.lastUpdated,
+                    title: Strings.lastUpdatedAt,
                     content: Text(
                       data.updatedAt?.toString() ?? "N/A",
                       style: TxtStyle.inter(fs: 11),

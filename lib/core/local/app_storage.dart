@@ -14,8 +14,6 @@ class AppStorage extends GetxService {
   static const _userNameKey = 'userName';
   static const _userEmailKey = 'userEmail';
   static const _userPhoneKey = 'userPhone';
-  static const _userAvgRatingKey = 'userAvgRating';
-  static const _userTotalRatingKey = 'userTotalRating';
   static const _userRoleKey = 'userRole';
 
   // User Bank info keys
@@ -47,9 +45,9 @@ class AppStorage extends GetxService {
   AppStorage._();
 
   // ---------------------------  Init  ---------------------------
-  static AppStorage init() {
+  static Future<AppStorage> init() async {
     final service = AppStorage._();
-    GetStorage.init(); // Initialize storage
+    await GetStorage.init(); // Initialize storage
     service._storage = GetStorage();
 
     // Initialize reactive values
@@ -184,13 +182,6 @@ class AppStorage extends GetxService {
   );
 
   ////
-
-  void setUserAvgRating(String userAvgRating) => _storage.write(_userAvgRatingKey, userAvgRating);
-  String get getUserAvgRating => _storage.read(_userAvgRatingKey) ?? '';
-
-  void setUserTotalRating(String userTotalRating) =>
-      _storage.write(_userTotalRatingKey, userTotalRating);
-  String get getUserTotalRating => _storage.read(_userTotalRatingKey) ?? '';
 
   void setUserImageUrl(String userImageUrl) => _storage.write(_imageUrlKey, userImageUrl);
   String get getUserImageUrl => _storage.read(_imageUrlKey) ?? '';

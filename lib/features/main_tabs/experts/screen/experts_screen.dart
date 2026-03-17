@@ -22,7 +22,7 @@ class ExpertsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap,
         children: [
-          CusSearchBar(controller: TextEditingController()),
+          CusSearchBar(controller: ec.searchCtrl, focusNode: ec.searchFocusNode),
 
           Gap(itemGap),
           ...List.generate(3, (index) {

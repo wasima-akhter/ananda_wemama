@@ -1,10 +1,8 @@
-import 'package:mama_app/core/common_widgets/common_components/user_detaIl_component/user_detail_component.dart';
+import 'package:mama_app/core/common_widgets/common_components/user_detaIl_component/ui/user_detail_component.dart';
 
- 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../../../../core/common_widgets/small_popup_dialog.dart';
-import '../controller/wave_request_controller.dart';
 
 class NewWavesUserDetailsPopup extends StatelessWidget {
   final FakeUserDetailsModel? user;
@@ -24,8 +22,6 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- 
-
     if (user == null) {
       return SizedBox.shrink();
     }
@@ -85,7 +81,6 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
       ],
     );
   }
-
 }
 
 class _InfoRow {

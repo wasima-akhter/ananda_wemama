@@ -22,7 +22,7 @@ class OnboardController extends GetxController {
 
   /// 👉 Final navigation (safe & smooth)
   void finishOnboarding() {
-    storage.setSeenOnboarding(false); // make true later
+    storage.setSeenOnboarding(true); // make true later
     debugPrint("Seen onboarding saved: ${storage.getSeenOnboarding}");
 
     // Unfocus anything just in case

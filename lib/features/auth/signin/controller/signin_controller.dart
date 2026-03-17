@@ -45,6 +45,9 @@ class SigninController extends GetxController {
 
       if (!success) return;
 
+      storage.setLoggedIn(true);
+      storage.setSeenOnboarding(true);
+
       _handleLoginSuccess();
     } catch (e) {
       debugPrint('Login Error: $e');
@@ -76,6 +79,9 @@ class SigninController extends GetxController {
   @override
   void onInit() {
     debugPrint('Base URL: $baseUrl');
+
+    emailCtrler.text = "ananda@yopmail.com";
+    passwordCtrler.text = "123456";
     super.onInit();
   }
 

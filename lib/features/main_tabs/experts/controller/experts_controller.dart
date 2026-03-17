@@ -26,6 +26,10 @@ class ExpertsController extends GetxController {
 
   final writeQuesFocusNode = FocusNode();
 
+  final searchCtrl = TextEditingController();
+
+  final searchFocusNode = FocusNode();
+
   @override
   void onClose() {
     writeQuesCtrl.dispose();

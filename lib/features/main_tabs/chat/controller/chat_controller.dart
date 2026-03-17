@@ -17,10 +17,35 @@ class FakeChatModel {
 }
 
 class ChatController extends GetxController {
+  // ─────────────────────────────────────────────
+  // Search
+  // ─────────────────────────────────────────────
+
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
 
-  var fakeChatList = [
+  @override
+  void onClose() {
+    searchController.dispose();
+    searchFocus.dispose();
+    super.onClose();
+  }
+
+  void clearAll() => searchController.clear();
+
+  void unFocusAll() {
+    searchFocus.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  // ─────────────────────────────────────────────
+  // State
+  // ─────────────────────────────────────────────
+
+  final isLoading_ = false.obs;
+  bool get isLoading => isLoading_.value;
+
+  final fakeChatList = <FakeChatModel>[
     FakeChatModel(
       id: "1",
       name: "Alice",
@@ -57,50 +82,24 @@ class ChatController extends GetxController {
       imageUrl: Strings.fakeImageUrl,
     ),
   ];
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
-  @override
-  void onClose() {
-    searchController.dispose();
-    searchFocus.dispose();
-    super.onClose();
-  }
+  // ─────────────────────────────────────────────
+  // Actions
+  // ─────────────────────────────────────────────
 
-  void clearAll() {
-    searchController.clear();
-  }
-
-  void unFocusAll() {
-    searchFocus.unfocus();
-    FocusManager.instance.primaryFocus?.unfocus();
-  }
-
-  // API loading state
-  var isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-
-  /// Fetch the latest  data from API
   Future<void> getChatList() async {
-    if (isLoading_.value) return; // Prevent duplicate calls
+    if (isLoading_.value) return;
     isLoading_.value = true;
 
     try {
-      // final data = await ChatService().fetchChatList(
-
-      // );
-
-      // if (data != null) {
-
-      // }
-    } catch (e) {
-      print("Error fetching profile: $e");
+      // TODO: replace with real API call
+      // final data = await ChatService().fetchChatList();
+      // if (data != null) { ... }
     } finally {
       isLoading_.value = false;
-
       unFocusAll();
     }
   }
+
+  void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);
 }

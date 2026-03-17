@@ -5,6 +5,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/mood_check_in/mood_chip_card.dart';
 import '../../../../core/components/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../controller/home_controller.dart';
+import '../modules/gentle_reminder_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hc = Get.find<HomeController>();
-    final homeRefreshKey = GlobalKey<RefreshIndicatorState>();
+    final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
       appBar: HomeAppBarContent(),
@@ -26,29 +27,6 @@ class HomeScreen extends StatelessWidget {
           LiveOngoingSessionCard(),
         ],
       ).getcm,
-    );
-  }
-}
-
-class GentleReminderCard extends StatelessWidget {
-  const GentleReminderCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ContainerBordered(
-      contClr: c.cardReminder,
-      rad: 20,
-      hp: 16,
-      vp: 12,
-      boxShadow: boxShadowBottom(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(Strings.todaysReminder.capEachWord(), style: TxtStyle.outfitSmTitle),
-          Gap(4),
-          Text(Strings.restCounts.capEachWord(), style: TxtStyle.outfitSmSecNor),
-        ],
-      ),
     );
   }
 }

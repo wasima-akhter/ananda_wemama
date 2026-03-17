@@ -7,6 +7,7 @@ class NetworkImageWidget extends StatelessWidget {
   final double? height;
   final bool isCircle;
   final double? radius;
+  final Animation<double>? opacity;
 
   const NetworkImageWidget({
     super.key,
@@ -15,6 +16,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.height,
     this.isCircle = false,
     this.radius,
+    this.opacity,
   });
 
   bool isImageUrl(String url) {
@@ -57,15 +59,18 @@ class NetworkImageWidget extends StatelessWidget {
       );
     }
 
+    print("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
+
     return Image.network(
-      imageUrl!,
+      makeImageUrl(imageUrl: imageUrl ?? ''),
+      opacity: opacity,
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         return Center(
-          child: SizedBox(width: 24.r, height: 24.r, child: LoadingWhite()),
+          child: SizedBox(width: 24.r, height: 24.r, child: LoadingPrimary()),
         );
       },
       errorBuilder: (context, error, stackTrace) {

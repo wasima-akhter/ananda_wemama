@@ -21,4 +21,8 @@ class PastSessionsController extends GetxController {
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
   ];
+
+  final searchCtrl = TextEditingController();
+
+  final searchFocusNode = FocusNode();
 }

@@ -4,7 +4,7 @@ import 'package:mama_app/features/shared/report_sheet/controller/report_controll
 import 'package:mama_app/routes/pages.dart';
 import 'package:mama_app/routes/route_paths.dart';
 
-import '../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
+import '../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../core/config/app_info.dart';
 
 class App extends StatelessWidget {

@@ -22,6 +22,10 @@ class SplashController extends GetxController {
     // ✅ Has internet → wait 2 seconds
     await Future.delayed(const Duration(seconds: 1));
 
+    print("seenOnboarding: ${AppStorage.to.getSeenOnboarding}");
+    print("loggedIn: ${AppStorage.to.getLoggedIn}");
+    print("token: ${AppStorage.to.getToken}");
+
     // Check if user has seen onboarding
     if (AppStorage.to.getSeenOnboarding) {
       // Already seen + signed in → go to Sign In

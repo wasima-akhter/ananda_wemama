@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:mama_app/features/shared/date_picker/widgets/date_picker_widget.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../../features/main_tabs/home/sub_feature/edit_profile/model/child_model.dart';
 
 class DateHelper {
   String yMdToDMY(String inputDate) {
@@ -182,6 +183,7 @@ bool isIso8601Utc(String input) {
 
 ////////////////////////////////
 ///
+
 Theme buildDatePickerTheme({
   required Widget child,
   required BuildContext context,
@@ -282,8 +284,10 @@ Future<DateTime?> pickDateGeneric({
   return picked;
 }
 
-Future<void> pickDate({
-  DateTime? initialDate,
+///
+
+Future<DateTime?> pickDatePickerForChildren({
+  ChildModel? child, // null = new child → default to now()
   DateTime? firstDate,
   DateTime? lastDate,
   Color? primaryColor,
@@ -291,27 +295,41 @@ Future<void> pickDate({
   TextStyle? headerTextStyle,
   TextStyle? dayTextStyle,
   void Function()? unfocusAll,
-  required RxString selectedDate,
-}) async {
+}) {
   unfocusAll?.call();
 
   final now = DateTime.now();
 
-  final picked = await pickDateGeneric(
-    initialDate: initialDate,
-    firstDate: firstDate,
-    lastDate: lastDate,
-    primaryColor: primaryColor,
-    backgroundColor: backgroundColor,
-    headerTextStyle: headerTextStyle,
-    dayTextStyle: dayTextStyle,
-    unfocusAll: unfocusAll,
-  );
-  if (picked != null) {
-    selectedDate.value = formatDate(picked);
+  // Parse existing DOB from child if available (format: "dd-MM-yyyy")
+  DateTime? parsedDate;
+  if (child != null && child.dob.value.isNotEmpty) {
+    try {
+      final parts = child.dob.value.split('-');
+      if (parts.length == 3) {
+        parsedDate = DateTime(
+          int.parse(parts[2]), // year
+          int.parse(parts[1]), // month
+          int.parse(parts[0]), // day
+        );
+      }
+    } catch (_) {}
   }
+
+  // New child → now(), existing child → their saved DOB
+  final initialDate = parsedDate ?? now;
+
+  return showDatePicker(
+    context: Get.context!,
+    initialDate: initialDate,
+    firstDate: firstDate ?? DateTime(1950),
+    lastDate: lastDate ?? now,
+    builder: (context, child) {
+      return buildDatePickerTheme(child: child!, context: context);
+    },
+  );
 }
 
+///
 ///
 
 Future<void> pickDateWithOptions({
@@ -353,6 +371,41 @@ Future<void> pickDateWithOptions({
     ),
     barrierDismissible: true,
   );
+}
+
+///
+String convertDobToTimestamp(String dob) {
+  if (dob.isEmpty) return '';
+
+  try {
+    final parts = dob.split('/');
+    final date = DateTime(
+      int.parse(parts[2]), // year
+      int.parse(parts[1]), // month
+      int.parse(parts[0]), // day
+    );
+
+    return date.toUtc().toString();
+  } catch (e) {
+    return '';
+  }
+}
+
+String convertChildDobToTimestamp(String dob) {
+  if (dob.isEmpty) return '';
+
+  try {
+    final parts = dob.split('-');
+    final date = DateTime(
+      int.parse(parts[2]), // year
+      int.parse(parts[1]), // month
+      int.parse(parts[0]), // day
+    );
+
+    return date.toUtc().toString();
+  } catch (e) {
+    return '';
+  }
 }
 
 ///

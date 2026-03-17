@@ -159,15 +159,6 @@ extension MarginExtensions on Widget {
   );
 }
 
-extension NullSafeAndToPointExt on dynamic {
-  String get nullSafeAndPointed2 => double.parse((this ?? 0.0).toString()).toStringAsFixed(2);
-  String get nullSafeAndNoPoint => (this ?? 0).toString();
-}
-
-extension QuantityCheckExt on dynamic {
-  bool get quantityNotNullAndNotZero => this != null && this != '0';
-}
-
 /// --------------------
 /// MAX / MIN EXTENSIONS
 /// --------------------

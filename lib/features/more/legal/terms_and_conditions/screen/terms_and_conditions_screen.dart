@@ -1,3 +1,5 @@
+import 'package:mama_app/core/helpers/date_helper.dart';
+
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/common_widgets/html_viewer_auto_height.dart';
 import '../../../../../core/helpers/string_helper.dart';
@@ -19,7 +21,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
         body: Obx(() {
           /// 🔄 LOADING
           if (tc.isLoading.value) {
-            return Center(child: LoadingWhite());
+            return Center(child: LoadingPrimary());
           }
 
           /// ❌ ERROR
@@ -36,7 +38,10 @@ class TermsAndConditionsScreen extends StatelessWidget {
                       style: TxtStyle.inter(),
                     ),
                     Gap(itemGap * 2),
-                    ElevatedButton(onPressed: () => tc.fetchTerms(), child: Text("Retry")),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [SmallNavBtn(onTap: () => tc.fetchTerms(), text: Strings.retry)],
+                    ),
                   ],
                 ),
               ),
@@ -62,19 +67,22 @@ class TermsAndConditionsScreen extends StatelessWidget {
                 children: [
                   /// 📜 TERMS CONTENT
                   PassageComponent(
-                    title: Strings.termsCondition,
+                    title: '',
                     content: SafeAutoHeightWebView(description: data.description ?? ''),
                   ),
 
                   Gap(itemGap * 4),
 
                   /// 🗓 LAST UPDATED
-                  PassageComponent(
-                    title: Strings.lastUpdated,
-                    content: Text(
-                      data.updatedAt?.toString() ?? "N/A",
-                      style: TxtStyle.outfit(fs: 11),
-                    ),
+                  Builder(
+                    builder: (context) {
+                      final date = DateHelper().formatUTCtimestamp(data.updatedAt.toString()).date;
+                      final time = DateHelper().formatUTCtimestamp(data.updatedAt.toString()).time;
+                      return PassageComponent(
+                        title: Strings.lastUpdatedAt,
+                        content: Text("$date, $time", style: TxtStyle.outfit(fs: 11)),
+                      );
+                    },
                   ),
 
                   Gap(40),
@@ -91,14 +99,15 @@ class TermsAndConditionsScreen extends StatelessWidget {
 class PassageComponent extends StatelessWidget {
   final String title;
   final Widget? content;
-  const PassageComponent({Key? key, required this.title, this.content}) : super(key: key);
+  const PassageComponent({super.key, required this.title, this.content});
 
   @override
   Widget build(BuildContext context) {
     double itemGap = 1.sh * 0.01;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: title_600_mClr_Outfit),
+        if (title.isNotEmpty) Text(title, style: title_600_mClr_Outfit),
         Gap(itemGap * 2),
 
         if (content != null) content!,

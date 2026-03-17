@@ -43,6 +43,7 @@ class VerifyOtpController extends GetxController {
         // mock code for design
         Get.offAllNamed(RoutePaths.setupProfile);
         storage.setLoggedIn(true);
+        storage.setSeenOnboarding(true);
       } else if (flowType == OtpFlowType.forgotPassword) {
         // 👈 NEW BEHAVIOR
         Get.back(result: true); // go back and tell previous screen OTP verified

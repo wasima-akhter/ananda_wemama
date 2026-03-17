@@ -1,0 +1,92 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
+
+import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../../core/common_widgets/common_components/add_photos_card.dart';
+
+class DescriptionImagesGrid extends StatelessWidget {
+  const DescriptionImagesGrid({
+    super.key,
+    required this.images,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  final List<XFile> images;
+  final Future<void> Function() onAdd;
+  final void Function(int index) onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final showAddBtn = images.length < 4;
+    final double imageSize = (S.w - S.w * 0.05 * 2 - 8.w * 4) / 4;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Wrap(
+            spacing: 8.w,
+            runSpacing: 8.w,
+            children: [
+              ...List.generate(
+                images.length,
+                (i) =>
+                    _ImageTile(path: images[i].path, size: imageSize, onRemove: () => onRemove(i)),
+              ),
+              if (showAddBtn)
+                SizedBox(
+                  width: imageSize,
+                  height: imageSize,
+                  child: AddPhotosCard(onTap: onAdd),
+                ),
+            ],
+          ),
+        ),
+        Text(Strings.maximum4Photos, style: TxtStyle.outfitxSmNorSec),
+      ],
+    );
+  }
+}
+
+class _ImageTile extends StatelessWidget {
+  const _ImageTile({required this.path, required this.size, required this.onRemove});
+
+  final String path;
+  final double size;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SizedBox(
+          width: size,
+          height: size,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.r),
+            child: Image.file(
+              File(path),
+              fit: BoxFit.cover,
+              opacity: const AlwaysStoppedAnimation(0.75),
+            ),
+          ),
+        ),
+        Positioned(
+          top: 2,
+          right: 2,
+          child: CusGestureDetector(
+            onTap: onRemove,
+            child: CircleAvatar(
+              radius: 8.r,
+              backgroundColor: black.withOpacity(0.6),
+              child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: white, height: 20),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

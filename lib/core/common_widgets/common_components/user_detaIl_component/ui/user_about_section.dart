@@ -1,5 +1,5 @@
-import '../../../../app/helper_widgets_export.dart';
-import '../../../helpers/string_helper.dart';
+import '../../../../../app/helper_widgets_export.dart';
+import '../../../../helpers/string_helper.dart';
 
 class UserAboutSection extends StatelessWidget {
   final String aboutText;
@@ -18,35 +18,30 @@ class UserAboutSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          Strings.aboutMe.cap,
-          style: TxtStyle.outfitSemiB(fs: 15, w: 500),
-        ),
+        Text(Strings.aboutMe.cap, style: TxtStyle.outfitSemiB(fs: 15, w: 500)),
         Obx(() {
           return Text(
             aboutText,
             style: TxtStyle.outfitSmSecNor,
             maxLines: isExpanded.value ? null : 3,
-            overflow: isExpanded.value
-                ? TextOverflow.visible
-                : TextOverflow.ellipsis,
+            overflow: isExpanded.value ? TextOverflow.visible : TextOverflow.ellipsis,
           );
-        }), 
-        if (_shouldShowButton( ))
+        }),
+        if (_shouldShowButton())
           GestureDetector(
             onTap: onToggle,
-            child: Obx(() => Text(
-                  isExpanded.value
-                      ? Strings.seeLess.cap
-                      : Strings.seeMore.cap,
-                  style: TxtStyle.outfitxSmNor500,
-                ).mHV(0, 2)),
+            child: Obx(
+              () => Text(
+                isExpanded.value ? Strings.seeLess.cap : Strings.seeMore.cap,
+                style: TxtStyle.outfitxSmNor500,
+              ).mHV(0, 2),
+            ),
           ),
       ],
     );
   }
 
-  bool _shouldShowButton( ) {
+  bool _shouldShowButton() {
     return isTextOverflowing(
       text: aboutText,
       style: TxtStyle.outfitSmNor500,

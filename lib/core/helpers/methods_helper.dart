@@ -181,6 +181,37 @@ Future<List<String>> getTwoLineAddress({
   return [line1, line2];
 }
 
+Future<String> getOneLineAddress({
+  required String latitude,
+  required String longitude,
+  String placeholder = "N/A",
+}) async {
+  print("getOneLineAddress called with lat=$latitude, lng=$longitude");
+
+  try {
+    final lat = double.tryParse(latitude);
+    final lng = double.tryParse(longitude);
+
+    if (lat != null && lng != null) {
+      final placemarks = await placemarkFromCoordinates(lat, lng);
+
+      if (placemarks.isNotEmpty) {
+        final p = placemarks.first;
+
+        final parts = [p.street, p.subLocality, p.locality, p.administrativeArea, p.country];
+
+        return parts.where((e) => e != null && e.isNotEmpty).join(", ").capEachWord();
+      }
+    }
+  } catch (e) {
+    print("Reverse geocoding error: $e");
+  }
+
+  return placeholder;
+}
+
+///////////////////////
+
 String makeCurrencyValue(String value) {
   return "${Strings.currency} $value";
 }

@@ -22,16 +22,14 @@ class ChatScreen extends StatelessWidget {
         hasBackNavArrow: false,
 
         suffix: CusCircleIconButton(
-          onTap: () {
-            Get.toNamed(RoutePaths.waveRequest);
-          },
+          onTap: cc.onTapHandWave,
           child: SvgIcon(iconPath: IconsPath.handWave, height: 25),
         ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CusSearchBar(controller: cc.searchController),
+          CusSearchBar(controller: cc.searchController, focusNode: cc.searchFocus),
 
           Gap(itemGap * 2),
           ...cc.fakeChatList.map((e) {

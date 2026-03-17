@@ -1,0 +1,101 @@
+import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../../core/common_widgets/cus_des_type_text_form_field.dart';
+import '../../../../../../core/common_widgets/popup_input_tile.dart';
+import '../../../../../../core/helpers/date_helper.dart';
+import '../../../../../../core/utils/validator/validators.dart';
+import '../controller/edit_profile_controller.dart';
+
+class EditProfileForm extends StatelessWidget {
+  const EditProfileForm({super.key, required this.epc, required this.formKey});
+
+  final EditProfileController epc;
+  final GlobalKey<FormState> formKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          Gap(itemGap * 2),
+
+          CusNameTypeTextFormField(
+            controller: epc.nameCtrl,
+            hintText: Strings.name,
+            hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+            style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
+            brdrClr: c.inputBorder,
+            fillColor: c.cardPrimary,
+            focusNode: epc.nameFocus,
+            validator: (value) => validateName(value),
+          ),
+
+          Gap(itemGap),
+
+          Obx(
+            () => PopupInputTile(
+              hintText: Strings.dateOfBirth.cap,
+              value: epc.selectedDob.value,
+              brdrClr: c.inputBorder,
+              brdrW: 0.6,
+              onTap: () => pickDateWithOptions(
+                selectedDate: epc.selectedDob,
+                keepPrivate: epc.keepDobPrivate,
+                unfocusAll: epc.unfocusAll,
+              ),
+            ),
+          ),
+
+          Gap(itemGap),
+
+          Obx(
+            () => PopupInputTile(
+              hintText: Strings.state.cap,
+              value: epc.selectedState.value,
+              brdrClr: c.inputBorder,
+              brdrW: 0.6,
+              onTap: epc.openStateBottomSheet,
+            ),
+          ),
+
+          Gap(itemGap),
+
+          Obx(
+            () => PopupInputTile(
+              hintText: Strings.city.cap,
+              value: epc.selectedCity.value,
+              brdrClr: c.inputBorder,
+              brdrW: 0.6,
+              onTap: epc.openCityBottomSheet,
+            ),
+          ),
+
+          Gap(itemGap),
+
+          PopupInputTile(
+            hintText: Strings.children.cap,
+            value: Strings.children.cap,
+            brdrClr: c.inputBorder,
+            brdrW: 0.6,
+            onTap: epc.openChildrenBottomSheet,
+          ),
+
+          Gap(itemGap),
+
+          CusDesTypeTextFormField(
+            controller: epc.bioCtrl,
+            hintText: Strings.writeBioHere,
+            hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+            style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
+            rad: 12,
+            focusNode: epc.bioFocus,
+            bgClr: c.cardPrimary,
+            validator: (value) => validateDescription(value),
+          ),
+
+          Gap(itemGap * 2.5),
+        ],
+      ),
+    );
+  }
+}

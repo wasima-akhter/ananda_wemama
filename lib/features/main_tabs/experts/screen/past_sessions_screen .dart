@@ -9,7 +9,7 @@ class PastSessionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ec = Get.find<PastSessionsController>();
+    final psc = Get.find<PastSessionsController>();
     final matchRefreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
@@ -19,7 +19,7 @@ class PastSessionsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap,
         children: [
-          CusSearchBar(controller: TextEditingController()),
+          CusSearchBar(controller: psc.searchCtrl, focusNode: psc.searchFocusNode),
 
           Gap(itemGap),
           Wrap(

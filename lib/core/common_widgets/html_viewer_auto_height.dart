@@ -149,6 +149,7 @@ class SafeAutoHeightWebView extends StatelessWidget {
           padding: HtmlPaddings.zero,
           fontSize: FontSize(14),
           lineHeight: LineHeight(1.6),
+          color: c.secondary,
           fontFamily: GoogleFonts.outfit(color: c.secondary).fontFamily,
         ),
         "p": Style(margin: Margins.symmetric(vertical: 8)),

@@ -1,7 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/user_about_section.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/user_avatar.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_about_section.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_avatar.dart';
 
 class MatchUserDetails extends StatelessWidget {
   final FakeUserDetailsModel? user;

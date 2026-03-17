@@ -40,7 +40,7 @@ class PopupInputTile extends StatelessWidget {
             Expanded(
               child: Text(
                 hasValue ? value! : hintText,
-                style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 14, w: hasValue ? 400 : 500, color: c.primary),
               ),
             ),
 

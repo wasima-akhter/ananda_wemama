@@ -1,4 +1,4 @@
-import '../../../../app/helper_widgets_export.dart';
+import '../../../../../app/helper_widgets_export.dart';
 
 class UserAvatar extends StatelessWidget {
   final String imageUrl;

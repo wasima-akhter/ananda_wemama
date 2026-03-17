@@ -213,7 +213,7 @@ class Strings {
   static const String contactSupport = "Contact & support";
   static const String termsCondition = "Terms & condition";
   static const String privacyPolicy = "Privacy policy";
-  static const String lastUpdated = "Last Updated";
+  static const String lastUpdatedAt = "Last Updated At";
   static const String logOut = "Log Out";
   static const String previousPassword = "Previous Password";
   static const String bankName = "Bank Name";
@@ -756,6 +756,9 @@ class Strings {
   static const String beTheFirstToAsk = "Be the first to ask the expert";
 
   static const String askYourQuestions = "Ask Your Questions";
+
+  //
+  static const String currentPhotos = "Current Photos";
 }
 
 //

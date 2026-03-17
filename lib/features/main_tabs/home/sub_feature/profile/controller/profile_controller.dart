@@ -4,13 +4,6 @@ import '../../../../../../../core/services/profile/profile_info_service.dart';
 import '../model/profile_model.dart';
 
 class ProfileController extends GetxController {
-  // Observable fields for UI
-  final username = "".obs;
-  final phone = "".obs;
-  final email = "".obs;
-  final avgRating = "".obs;
-  final totalRating = "".obs;
-
   // API loading state
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
@@ -22,20 +15,14 @@ class ProfileController extends GetxController {
   var isSignOutLoading_ = false.obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     loadFromStorage(); // Load cached values first
-    fetchMyProfile(); // Then fetch fresh data from API
+    await fetchMyProfile(); // Then fetch fresh data from API
   }
 
   /// Load saved profile from storage for initial UI render
-  void loadFromStorage() {
-    username.value = storage.getUsername;
-    phone.value = storage.getUserPhone;
-    email.value = storage.getUserEmail;
-    avgRating.value = storage.getUserAvgRating;
-    totalRating.value = storage.getUserTotalRating;
-  }
+  void loadFromStorage() {}
 
   /// Fetch the latest profile from API
   Future<void> fetchMyProfile() async {
@@ -56,6 +43,7 @@ class ProfileController extends GetxController {
           name: data.name,
           phone: data.phone,
           address: data.address,
+          imageUrl: data.profileImage,
         );
 
         // also save the lat long
@@ -63,11 +51,6 @@ class ProfileController extends GetxController {
           storage.setUserLongitude(data.location?.coordinates?.first ?? 0.0);
           storage.setUserLatitude(data.location?.coordinates?.last ?? 0.0);
         }
-
-        // Update observables to trigger UI rebuild
-        username.value = data.name ?? '';
-        phone.value = data.phone ?? '';
-        email.value = data.email ?? '';
       }
     } catch (e) {
       print("Error fetching profile: $e");

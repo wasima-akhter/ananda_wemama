@@ -1,153 +1,175 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../app/controller_export.dart';
 import '../../../../../../core/helpers/bottom_sheet_helper.dart';
+import '../../../../../../core/helpers/date_helper.dart';
 import '../../../../../../core/helpers/string_helper.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
 import '../../../../../../core/services/account_overview/update_profile/update_profile_service.dart';
 import '../../../../../../core/utils/extension/string_extension.dart';
 import '../../profile/controller/profile_controller.dart';
 import '../../profile/model/profile_model.dart';
-
-class ChildModel {
-  RxString dob = "".obs;
-  RxString gender = "male".obs;
-}
-
-RxList<ChildModel> children = <ChildModel>[].obs;
+import '../model/child_model.dart';
 
 class EditProfileController extends GetxController {
-  // 🔹 Text Controller (only for name input field)
+  // ─────────────────────────────────────────────
+  // Text Controllers & Focus Nodes
+  // ─────────────────────────────────────────────
+
   final nameCtrl = TextEditingController();
   final bioCtrl = TextEditingController();
-
-  // 🔹 Reactive values (for popup selections)
-  final selectedDob = ''.obs;
-  final selectedState = ''.obs;
-  final selectedCity = ''.obs;
-
-  final keepDobPrivate = false.obs;
-  void toggleKeepDobPrivate() => keepDobPrivate.toggle();
-
-  // Focus Node (only needed for actual text field)
   final nameFocus = FocusNode();
   final bioFocus = FocusNode();
 
-  /// 🔹 Unfocus all fields
+  @override
+  void onClose() {
+    nameCtrl.dispose();
+    bioCtrl.dispose();
+    nameFocus.dispose();
+    bioFocus.dispose();
+    super.onClose();
+  }
+
   void unfocusAll() {
     nameFocus.unfocus();
     bioFocus.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  @override
-  void onClose() {
-    nameCtrl.dispose();
-    nameFocus.dispose();
-    bioCtrl.dispose();
-    bioFocus.dispose();
-    super.onClose();
-  }
+  // ─────────────────────────────────────────────
+  // Reactive State
+  // ─────────────────────────────────────────────
 
-  void openStateBottomSheet() {
-    showSelectionBottomSheet(
-      title: Strings.chooseYourState,
-      items: StateAndCityData.states,
-      selectedValue: selectedState,
-    );
-  }
+  final selectedDob = ''.obs;
+  final selectedState = ''.obs;
+  final selectedCity = ''.obs;
+  final keepDobPrivate = false.obs;
 
-  void openCityBottomSheet() {
-    showSelectionBottomSheet(
-      title: Strings.chooseYourCity,
-      items: StateAndCityData.getCities(selectedState.value),
-      selectedValue: selectedCity,
-    );
-  }
+  final fileImage = Rxn<XFile>();
+  final desImageFiles = Rxn<List<XFile>>([]);
 
-  void openChildrenBottomSheet() {
-    showChildrenBottomSheet();
-  }
+  final children = <ChildModel>[].obs;
 
-  RxList<ChildModel> children = <ChildModel>[].obs;
+  final isLoading_ = false.obs;
+  bool get isLoading => isLoading_.value;
 
-  void addChild() {
-    children.add(ChildModel());
-  }
+  final updatedProfileData = Rxn<ProfileDataModel>();
+  final errorMessage = RxnString();
 
-  void removeChild(int index) {
-    children.removeAt(index);
-  }
+  final existingImageUrls = <String>[].obs; // server images
 
-  void updateDob(int index, String value) {
-    children[index].dob.value = value;
-  }
-
-  void updateGender(int index, String value) {
-    children[index].gender.value = value;
-  }
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
 
   @override
   void onInit() {
     super.onInit();
-
-    // Pre-fill fields with stored user data
-    _initializeFieldsFromStorage();
+    _initializeFields();
   }
 
-  @override
-  void _initializeFieldsFromStorage() {
-    nameCtrl.text = storage.getUsername;
-    fileImage.value = null; // Reset selected image
-    fileImages.value = null;
-  }
+  void _initializeFields() {
+    // ✅ pull from ProfileController if available
+    final profileData = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>().userProfileData.value
+        : null;
 
-  @override
-  void onReady() {
-    super.onReady();
-    _initializeFieldsFromStorage(); // ensures fields are filled
-  }
+    if (profileData != null) {
+      nameCtrl.text = profileData.name ?? storage.getUsername;
+      bioCtrl.text = profileData.bio ?? '';
 
-  void clearForm() {
-    nameCtrl.clear();
-    bioCtrl.clear();
+      // dob — convert DateTime back to display format
+      if (profileData.dob != null) {
+        selectedDob.value = formatDate(profileData.dob!); // your dd/MM/yyyy formatter
+      }
+
+      selectedState.value = profileData.state ?? '';
+      selectedCity.value = profileData.city ?? '';
+
+      // description images — existing server URLs as display
+      // (these are strings, not XFile — handle separately in UI if needed)
+
+      // children
+
+      children.value.assignAll(
+        profileData.children.map((e) {
+          final child = ChildModel();
+
+          debugPrint(' child.gender.value  : ${e.gender}');
+          debugPrint(' child.dob.value  : ${e.dob}');
+          child.gender.value = (e.gender?.toString() ?? '').toLowerCase();
+          // parse timestamp back to display format
+          final dobRaw = e.dob?.toString() ?? '';
+          if (dobRaw.isNotEmpty) {
+            final dt = DateTime.tryParse(dobRaw);
+            if (dt != null) {
+              child.dob.value = DateFormat("dd-MM-yyyy").format(dt);
+            }
+          }
+
+          return child;
+        }).toList(),
+      );
+
+      if (profileData != null) {
+        existingImageUrls.assignAll(profileData.images.where((e) => e.trim().isNotEmpty).toList());
+      }
+    } else {
+      // fallback to storage
+      nameCtrl.text = storage.getUsername;
+    }
 
     fileImage.value = null;
-    fileImages.value = null;
-
-    selectedDob.value = '';
-    selectedState.value = '';
-    selectedCity.value = '';
-
-    unfocusAll();
+    desImageFiles.value = [];
   }
 
-  var fileImage = Rxn<XFile>();
+  // ─────────────────────────────────────────────
+  // Bottom Sheets
+  // ─────────────────────────────────────────────
+
+  void toggleKeepDobPrivate() => keepDobPrivate.toggle();
+
+  void openStateBottomSheet() => showSelectionBottomSheet(
+    title: Strings.chooseYourState,
+    items: StateAndCityData.states,
+    selectedValue: selectedState,
+  );
+
+  void openCityBottomSheet() => showSelectionBottomSheet(
+    title: Strings.chooseYourCity,
+    items: StateAndCityData.getCities(selectedState.value),
+    selectedValue: selectedCity,
+  );
+
+  void openChildrenBottomSheet() => showChildrenBottomSheet();
+
+  // ─────────────────────────────────────────────
+  // Children
+  // ─────────────────────────────────────────────
+
+  void addChild() => children.add(ChildModel());
+  void removeChild(int index) => children.removeAt(index);
+  void updateChildDob(int index, String value) => children[index].dob.value = value;
+  void updateChildGender(int index, String value) => children[index].gender.value = value;
+
+  // ─────────────────────────────────────────────
+  // Image Picking
+  // ─────────────────────────────────────────────
+
   Future<void> pickSingleImage(ImageSource source) async {
     final picker = ImagePicker();
-
-    final XFile? selectedImage = await picker.pickImage(
+    final selected = await picker.pickImage(
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
     GNav.pop();
-
-    if (selectedImage != null) {
-      fileImage.value = selectedImage;
-
-      print("file.name: ${selectedImage.name}");
-      print("file.path: ${selectedImage.path}");
-    }
+    if (selected != null) fileImage.value = selected;
   }
-
-  //////////////////////
-  ///
-  var fileImages = Rxn<List<XFile>>([]);
 
   Future<void> pickMultipleImage() async {
     final picker = ImagePicker();
-
-    final current = fileImages.value ?? [];
+    final current = desImageFiles.value ?? [];
     final remaining = 4 - current.length;
 
     if (remaining <= 0) {
@@ -155,83 +177,152 @@ class EditProfileController extends GetxController {
       return;
     }
 
-    List<XFile> selectedImages = [];
+    final List<XFile> selected = remaining == 1
+        ? [if (await picker.pickImage(source: ImageSource.gallery) case final img?) img]
+        : await picker.pickMultiImage(limit: remaining);
 
-    if (remaining == 1) {
-      // pick single image
-      final XFile? img = await picker.pickImage(source: ImageSource.gallery);
-      if (img != null) {
-        selectedImages = [img];
-      }
-    } else {
-      // pick multiple images
-      selectedImages = await picker.pickMultiImage(limit: remaining);
-    }
+    if (selected.isEmpty) return;
 
-    if (selectedImages.isEmpty) return;
-
-    final merged = [...current, ...selectedImages];
-    final capped = merged.take(4).toList();
-
-    fileImages.value = capped;
-
-    print("Total images: ${capped.length}");
+    desImageFiles.value = [...current, ...selected].take(4).toList();
   }
-
-  ///
 
   void removeImage(int index) {
-    final current = List<XFile>.from(fileImages.value ?? []);
+    final current = List<XFile>.from(desImageFiles.value ?? []);
     current.removeAt(index);
-    fileImages.value = current;
+    desImageFiles.value = current;
   }
-  ////////////////////
 
-  final _service = UpdateProfileService();
+  // ─────────────────────────────────────────────
+  // Form Actions
+  // ─────────────────────────────────────────────
 
-  final isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-  final termsData = Rxn<ProfileDataModel>();
-  final errorMessage = RxnString();
+  void clearForm() {
+    nameCtrl.clear();
+    bioCtrl.clear();
+    fileImage.value = null;
+    desImageFiles.value = [];
+    selectedDob.value = '';
+    selectedState.value = '';
+    selectedCity.value = '';
+    children.clear();
+    unfocusAll();
+  }
 
-  Future<void> updateProfileDetails({
-    required String name,
+  Future<void> updateProfileDetails({required GlobalKey<FormState> formkey}) async {
+    if (isLoading_.value) return;
 
-    XFile? profileImage,
-    required GlobalKey<FormState> formkey,
-  }) async {
-    final isValid = validateForm(formkey);
-    if (!isValid || isLoading_.value) return; // <-- removed termsData check
+    if (!_validateInputs(formkey)) return;
 
     errorMessage.value = null;
     isLoading_.value = true;
 
-    final data = await _service.updateProfile(name: name, profileImage: profileImage);
+    unfocusAll();
+
+    final data = await _service.updateProfileWithChildren(
+      descriptionImages: desImageFiles.value ?? [],
+      dob: convertDobToTimestamp(selectedDob.value),
+      state: selectedState.value,
+      city: selectedCity.value,
+      bio: bioCtrl.text.trim(),
+      profileImage: fileImage.value,
+      children: children.isEmpty
+          ? null
+          : children
+                .map(
+                  (e) => {
+                    "gender": e.gender.value.cap,
+                    "dob": convertChildDobToTimestamp(e.dob.value),
+                  },
+                )
+                .toList(),
+    );
 
     if (data != null) {
-      // Save updated data to storage
-      // storage.setUserImageUrl(data.image ?? '');
-      // storage.setUsername(data.name ?? '');
-      // storage.setUserPhone(data.phone ?? '');
-      // storage.setUserAvgRating((data.averageRating ?? 0.0).toString());
-      // storage.setUserTotalRating((data.totalRating ?? 0).toString());
+      storage.setUserImageUrl(data.profileImage ?? '');
+      storage.setUsername(data.name ?? '');
+      storage.setUserPhone(data.phone ?? '');
 
-      // Update controllers immediately
+      updatedProfileData.value = data;
+      clearForm();
       nameCtrl.text = data.name ?? '';
       fileImage.value = null;
 
-      // Update reactive data
-      termsData.value = data;
-
-      // also fetch getProfile to update any other details
       if (Get.isRegistered<ProfileController>()) {
-        final profileController = Get.find<ProfileController>();
-        profileController.fetchMyProfile(); // fetch latest profile data
+        Get.find<ProfileController>().fetchMyProfile();
       }
+
+      "Profile updated successfully".showToast();
     } else {
-      errorMessage.value = "Failed to load terms. Pull to refresh.";
+      errorMessage.value = "Failed to update data. Pull to refresh.";
     }
 
     isLoading_.value = false;
   }
+
+  // ─────────────────────────────────────────────
+  // Validations before uploading
+  // ─────────────────────────────────────────────
+
+  bool _validateInputs(GlobalKey<FormState> formkey) {
+    /// Form field validation
+    if (!validateForm(formkey)) return false;
+
+    /// Name
+    if (nameCtrl.text.trim().isEmpty) {
+      "Name is required".showToast();
+      return false;
+    }
+
+    /// Bio
+    if (bioCtrl.text.trim().isEmpty) {
+      "Bio is required".showToast();
+      return false;
+    }
+
+    /// DOB
+    if (selectedDob.value.trim().isEmpty) {
+      "Date of birth is required".showToast();
+      return false;
+    }
+
+    /// State
+    if (selectedState.value.trim().isEmpty) {
+      "State is required".showToast();
+      return false;
+    }
+
+    /// City
+    if (selectedCity.value.trim().isEmpty) {
+      "City is required".showToast();
+      return false;
+    }
+
+    /// Children validation (optional but recommended)
+    for (int i = 0; i < children.length; i++) {
+      final child = children[i];
+
+      if (child.gender.value.trim().isEmpty) {
+        "Child ${i + 1}: Gender is required".showToast();
+        return false;
+      }
+
+      if (child.dob.value.trim().isEmpty) {
+        "Child ${i + 1}: DOB is required".showToast();
+        return false;
+      }
+    }
+
+    /// Images validation (optional)
+    // if ((desImageFiles.value ?? []).isEmpty && existingImageUrls.isEmpty) {
+    //   "Please add at least one image".showToast();
+    //   return false;
+    // }
+
+    return true;
+  }
+  // ─────────────────────────────────────────────
+  // Private
+  // ─────────────────────────────────────────────
+
+  final _service = UpdateProfileService();
 }

@@ -1,7 +1,7 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/user_detail_controller/user_detail_controller.dart';
+import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 
 class WaveRequestController extends GetxController {
   var fakeNewWavesList = [
