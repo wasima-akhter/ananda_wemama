@@ -12,13 +12,13 @@ TextStyle get normRsmSec => TxtStyle.inter(fs: 13, w: 400, color: c.textSecondar
 TextStyle get normSmBPri => TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary);
 
 ////////////////Urbanist
-TextStyle get titleBPriURB => TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary);
-TextStyle get titleSmBPriURB => TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary);
+TextStyle get titleBPriURB => TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary);
+TextStyle get titleSmBPriURB => TxtStyle.urbanistSemiB(fs: 12, w: 600, color: c.primary);
 
 TextStyle get normRPriURB => TxtStyle.urbanist(fs: 14, w: 400, color: c.primary);
 
-TextStyle get normRsmPriURB => TxtStyle.urbanist(fs: 13, w: 400, color: c.primary);
-TextStyle get normRsmSecURB => TxtStyle.urbanist(fs: 13, w: 400, color: c.textSecondary);
+TextStyle get normRsmPriURB => TxtStyle.urbanist(fs: 12, w: 400, color: c.primary);
+TextStyle get normRsmSecURB => TxtStyle.urbanist(fs: 12, w: 400, color: c.textSecondary);
 
 TextStyle get normSmBPriURB => TxtStyle.urbanistSemiB(fs: 13, w: 500, color: c.primary);
 
@@ -54,8 +54,7 @@ double measureTextHeight(String text, TextStyle style) {
   return textPainter.height;
 }
 
-
-bool  isTextOverflowing({
+bool isTextOverflowing({
   required String text,
   required TextStyle style,
   required double maxWidth,

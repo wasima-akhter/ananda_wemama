@@ -216,23 +216,7 @@ String makeCurrencyValue(String value) {
   return "${Strings.currency} $value";
 }
 
-bool isRate(String name) {
-  return name.toLowerCase().contains(Strings.rate.toLowerCase());
-}
-
 CustomDivider get greyDividerFull => CustomDivider(clr: grey200, isFullWidth: true, h: 0.6);
-
-String getTypeOfFilterTime(String criteria) {
-  switch (criteria) {
-    case Strings.thisWeek:
-      return "this-week";
-    case Strings.thisMonth:
-      return "this-month";
-    case Strings.thisYear:
-      return "this-year";
-  }
-  return "this-week";
-}
 
 String get generateChannel => DateTime.now().millisecondsSinceEpoch.toString();
 

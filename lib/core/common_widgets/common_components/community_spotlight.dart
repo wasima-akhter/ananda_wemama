@@ -21,7 +21,7 @@ class CommunitySpotlight extends StatelessWidget {
 
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Strings.communitySpotlight.capEachWord(), style: 13.titleMclrCusFSsemi),
+              Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
 
               CusGestureDetector(
                 onTap: () => isFromOnboardScreen == true

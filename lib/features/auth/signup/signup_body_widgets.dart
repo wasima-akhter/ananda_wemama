@@ -54,7 +54,7 @@ class SignupFormSection extends StatelessWidget {
           controller: controller.emailCtrl,
           hintText: Strings.enterEmail,
           prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
-          prefixSize: 45,
+          prefixSize: 45.h,
           focusNode: controller.emailFocus,
           validator: validateEmail,
         ),

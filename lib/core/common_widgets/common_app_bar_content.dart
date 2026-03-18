@@ -30,8 +30,11 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
 
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
-          color: finalBg,
-          padding: const EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 10),
+          decoration: BoxDecoration(
+            // color: Colors.amber,
+            color: finalBg,
+          ),
+          padding: EdgeInsets.only(top: 25.h, left: 20.w, right: 20.w, bottom: 10.h),
 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,12 +76,12 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
           ),
         ),
       ),
-      toolbarHeight: 80,
+      toolbarHeight: 50.h,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => Size.fromHeight(50.h);
 }
 
 class AppBarLikeTitle extends StatelessWidget {

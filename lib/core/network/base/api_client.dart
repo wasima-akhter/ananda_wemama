@@ -89,6 +89,26 @@ class ApiClient {
     }
   }
 
+  Future<dynamic> postWithFile(
+    String url, {
+    String? reqName,
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    // For FormData, don't set Content-Type - let Dio handle it automatically
+    final options = Options(method: 'POST', headers: {"Authorization": "Bearer $getToken"});
+
+    try {
+      print("DATA TYPE: ${data.runtimeType}");
+
+      final response = await _dio.request(url, data: data, options: options);
+      return ApiResponseHandler.handle(response, reqName);
+    } catch (e) {
+      print("PATCH request error: $e");
+      return null;
+    }
+  }
+
   /// PUT request
   Future<dynamic> put(
     String url, {

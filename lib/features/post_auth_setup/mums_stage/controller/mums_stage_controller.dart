@@ -1,3 +1,4 @@
+import 'package:mama_app/core/helpers/date_helper.dart';
 import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
 import 'package:mama_app/features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
 import 'package:mama_app/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
@@ -54,7 +55,6 @@ class MumsStageController extends GetxController {
   final setUpCtrler = findCont<SetupProfileController>();
   final photoAndBioCtrler = findCont<PhotoAndBioController>();
   final lifestyleCtrler = findCont<LifestyleAndInterestsController>();
-  final mumStageCtrler = findCont<MumsStageController>();
 
   /// 🔹 Continue
   void onTapContinue(GlobalKey<FormState> formKey) async {
@@ -70,14 +70,14 @@ class MumsStageController extends GetxController {
     // Call API here
     final success = await PostSignupSetProfileService().uploadCompleteProfile(
       name: setUpCtrler.nameCtrl.text.trim(),
-      dob: setUpCtrler.selectedDob.value,
+      dob: convertDobToTimestamp(setUpCtrler.selectedDob.value),
       state: setUpCtrler.selectedState.value,
       city: setUpCtrler.selectedCity.value,
 
       bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
       profileImage: photoAndBioCtrler.fileImage.value,
       interestedFields: lifestyleCtrler.selectedInterests.value,
-      mumStage: mumStageCtrler.selectedStage.value,
+      mumStage: selectedStage.value,
     );
 
     if (success) {

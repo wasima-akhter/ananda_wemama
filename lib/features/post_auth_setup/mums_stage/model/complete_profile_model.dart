@@ -29,9 +29,9 @@ class CompleteProfileModel {
   final String? name;
   final String? email;
   final String? phone;
-  final List<dynamic> images;
+  final List<String> images;
   final String? address;
-  final List<dynamic> children;
+  final List<ProfileChildren> children;
   final DateTime? dob;
   final String? state;
   final String? city;
@@ -59,11 +59,17 @@ class CompleteProfileModel {
       email: json["email"]?.toString(),
       phone: json["phone"]?.toString(),
 
-      images: json["images"] is List ? List<dynamic>.from(json["images"]) : [],
+      images: json["images"] == null
+          ? []
+          : List<String>.from(json["images"].map((x) => x.toString())),
 
       address: json["address"]?.toString(),
 
-      children: json["children"] is List ? List<dynamic>.from(json["children"]) : [],
+      children: json["children"] == null
+          ? []
+          : List<ProfileChildren>.from(
+              json["children"].map((x) => ProfileChildren.fromJson(x as Map<String, dynamic>)),
+            ),
 
       dob: json["DOB"] != null ? DateTime.tryParse(json["DOB"].toString()) : null,
 
@@ -86,6 +92,22 @@ class CompleteProfileModel {
       updatedAt: json["updatedAt"] != null ? DateTime.tryParse(json["updatedAt"].toString()) : null,
 
       v: json["__v"] is int ? json["__v"] : int.tryParse(json["__v"]?.toString() ?? ""),
+    );
+  }
+}
+
+class ProfileChildren {
+  ProfileChildren({this.gender, this.dob, this.id});
+
+  final String? gender;
+  final DateTime? dob;
+  final String? id;
+
+  factory ProfileChildren.fromJson(Map<String, dynamic> json) {
+    return ProfileChildren(
+      gender: json["gender"],
+      dob: DateTime.tryParse(json["dob"] ?? ""),
+      id: json["_id"],
     );
   }
 }

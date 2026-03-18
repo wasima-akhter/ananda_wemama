@@ -18,37 +18,46 @@ class OnboardScreen3 extends StatelessWidget {
         onTap: () => oc.finishOnboarding(),
         isLoading: false,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          Gap(itemGap * 5),
-          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
-          Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
-          Gap(itemGap * 1.5),
-          FittedBox(
-            child: Text(
-              Strings.feelBetterTogether,
-              textAlign: TextAlign.center,
-              style: 17.titleMclrCusFS,
-            ).mHV(20, 0),
+          Positioned(
+            top: itemGap * 5,
+            left: itemGap * 3,
+            child: Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
           ),
-          Gap(itemGap),
-          Text(
-            Strings.moodToolsExpertSessionsRealCommunity,
-            textAlign: TextAlign.center,
-            style: 13.norMclrCusFS,
-          ).mHV(40, 0),
-          Gap(itemGap),
-          MoodLibrarySample(moodDataList: oc.moodDataList),
-          Gap(itemGap * 1.5),
-          Container(
-            decoration: BoxDeco.decRadAllBorderedAll(12, brdrClr: c.primary),
-            child: Image.asset(ImagesPath.onboarding3),
-          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Gap(itemGap * 7),
+              Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.26),
+              Gap(itemGap * 1.5),
+              FittedBox(
+                child: Text(
+                  Strings.feelBetterTogether,
+                  textAlign: TextAlign.center,
+                  style: 15.titleMclrCusFS,
+                ).mHV(20, 0),
+              ),
+              Gap(itemGap),
+              Text(
+                Strings.moodToolsExpertSessionsRealCommunity,
+                textAlign: TextAlign.center,
+                style: 12.norMclrCusFS,
+              ),
+              Gap(itemGap * 2),
+              MoodLibrarySample(moodDataList: oc.moodDataList),
+              Gap(itemGap * 1.5),
+              Container(
+                decoration: BoxDeco.decRadAllBorderedAll(12, brdrClr: c.primary),
+                child: Image.asset(ImagesPath.onboarding3),
+              ),
 
-          Gap(itemGap * 4),
+              Gap(itemGap * 2),
+            ],
+          ).getcm,
         ],
-      ).getcm,
+      ),
     );
   }
 }

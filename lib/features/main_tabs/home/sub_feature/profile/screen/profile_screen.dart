@@ -21,34 +21,11 @@ class ProfileScreen extends StatelessWidget {
 
           Gap(itemGap * 2),
 
-          _buildEditProfileButton(),
-
-          Gap(itemGap * 2),
-
           ProfileSettingsTiles(pc: pc),
 
           Gap(itemGap),
         ],
       ).getcm,
-    );
-  }
-
-  Widget _buildEditProfileButton() {
-    return Row(
-      children: [
-        Expanded(
-          child: CustomBtnWTxt(
-            isLoading: false,
-            isSmall: true,
-            btnColor: ctransp,
-            borderClr: c.secondary.withOpacity(0.3),
-            txtClr: c.primary,
-            rad: 12,
-            btnTxt: Strings.editProfile,
-            onTap: () => Get.toNamed(RoutePaths.editProfile),
-          ),
-        ),
-      ],
     );
   }
 }

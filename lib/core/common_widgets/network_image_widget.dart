@@ -8,6 +8,7 @@ class NetworkImageWidget extends StatelessWidget {
   final bool isCircle;
   final double? radius;
   final Animation<double>? opacity;
+  final bool? hasBrdr;
 
   const NetworkImageWidget({
     super.key,
@@ -17,6 +18,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.isCircle = false,
     this.radius,
     this.opacity,
+    this.hasBrdr,
   });
 
   bool isImageUrl(String url) {
@@ -34,7 +36,7 @@ class NetworkImageWidget extends StatelessWidget {
         height: circleSize,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: c.inputBorder),
+          border: hasBrdr == false ? null : Border.all(color: c.inputBorder),
           color: c.inputBackground,
         ),
         clipBehavior: Clip.antiAlias,

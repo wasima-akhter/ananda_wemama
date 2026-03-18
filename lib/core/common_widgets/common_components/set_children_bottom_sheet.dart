@@ -32,7 +32,10 @@ class SetChildrenBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Gap(30.w),
-                  Text("Set Children", style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary)),
+                  Text(
+                    Strings.setChildren,
+                    style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary),
+                  ),
                   CusGestureDetector(
                     onTap: () => Get.back(),
                     child: SvgIcon(iconPath: IconsPath.closeCircle, height: 22),
@@ -49,7 +52,7 @@ class SetChildrenBottomSheet extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 20.h),
                       child: Text(
-                        "No children added yet",
+                        Strings.noChildrenAddedYet,
                         style: TxtStyle.outfit(fs: 13, color: c.textSecondary),
                       ),
                     );
@@ -62,133 +65,111 @@ class SetChildrenBottomSheet extends StatelessWidget {
                     itemBuilder: (_, index) {
                       final child = controller.children[index];
 
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        decoration: BoxDecoration(color: c.cardPrimary, borderRadius: 20.brdrRad),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Children ${index + 1}",
-                                    style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
-                                  ),
-                                  Gap(4),
-                                  Obx(
-                                    () => CusGestureDetector(
-                                      onTap: () async {
-                                        final picked = await pickDatePickerForChildren(
-                                          child: child,
-                                        );
-                                        if (picked != null) {
-                                          controller.updateChildDob(
-                                            index,
-                                            DateFormat("dd-MM-yyyy").format(picked),
-                                          );
-                                        }
-                                      },
-                                      child: Text(
-                                        child.dob.value.isEmpty
-                                            ? "${Strings.select} ${Strings.dateOfBirth.capEachWord()}"
-                                            : child.dob.value,
-                                        style: TxtStyle.outfit(
-                                          fs: 12,
-                                          color: child.dob.value.isEmpty
-                                              ? c.textSecondary
-                                              : c.textPrimary,
+                      return Stack(
+                        clipBehavior: Clip.none,
+                        key: ValueKey(child),
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            decoration: BoxDecoration(
+                              color: c.cardPrimary,
+                              borderRadius: 20.brdrRad,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Children ${index + 1}",
+                                        style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+                                      ),
+                                      Gap(4),
+                                      Obx(
+                                        () => CusGestureDetector(
+                                          onTap: () async {
+                                            final picked = await pickDatePickerForChildren(
+                                              child: child,
+                                            );
+                                            if (picked != null) {
+                                              controller.updateChildDob(
+                                                index,
+                                                DateFormat("dd-MM-yyyy").format(picked),
+                                              );
+                                            }
+                                          },
+                                          child: Text(
+                                            child.dob.value.isEmpty
+                                                ? "${Strings.select} ${Strings.dateOfBirth.capEachWord()}"
+                                                : child.dob.value,
+                                            style: TxtStyle.outfit(
+                                              fs: 12,
+                                              color: child.dob.value.isEmpty
+                                                  ? c.textSecondary
+                                                  : c.textPrimary,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
+                                Gap(10),
+
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      CusGestureDetector(
+                                        onTap: () => controller.updateChildGender(index, "male"),
+                                        child: Row(
+                                          children: [
+                                            CustomRadio(isSelected: child.gender.value == "male"),
+                                            Gap(6),
+                                            Text("Male", style: TxtStyle.outfit(fs: 13)),
+                                          ],
+                                        ),
+                                      ),
+                                      Gap(16.w),
+
+                                      CusGestureDetector(
+                                        onTap: () => controller.updateChildGender(index, "female"),
+                                        child: Row(
+                                          children: [
+                                            CustomRadio(isSelected: child.gender.value == "female"),
+                                            Gap(6),
+                                            Text("Female", style: TxtStyle.outfit(fs: 13)),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ).mB(12),
+
+                          Positioned(
+                            top: -7,
+                            right: -7,
+                            child: CusGestureDetector(
+                              onTap: () => controller.removeChild(index),
+                              child: Container(
+                                padding: 3.pa,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white, // background circle
+                                ),
+                                child: SvgIconColored(
+                                  iconPath: IconsPath.minus, // 🔥 your minus icon
+                                  height: 14,
+                                  iconColor: c.secondary,
+                                ),
                               ),
                             ),
-                            Gap(10),
-
-                            // Obx(
-                            //   () => Row(
-                            //     children: [
-                            //       Transform.scale(
-                            //         scale: 0.85, // 🔹 reduces size (radius feel)
-                            //         child: Radio<String>(
-                            //           value: "male",
-                            //           groupValue: child.gender.value,
-
-                            //           /// ✅ inner + active color
-                            //           activeColor: c.primary,
-
-                            //           /// ✅ border color (unselected)
-                            //           fillColor: WidgetStateProperty.resolveWith((states) {
-                            //             if (states.contains(WidgetState.selected)) {
-                            //               return c.primary; // inner color when selected
-                            //             }
-                            //             return Colors.white; // border color when unselected
-                            //           }),
-
-                            //           /// ✅ force white border
-                            //           side: const BorderSide(color: Colors.white, width: 1.5),
-
-                            //           onChanged: (_) => controller.updateChildGender(index, "male"),
-                            //         ),
-                            //       ),
-                            //       Text("Male", style: TxtStyle.outfit(fs: 13)),
-
-                            //       Gap(8),
-
-                            //       Transform.scale(
-                            //         scale: 0.85,
-                            //         child: Radio<String>(
-                            //           value: "female",
-                            //           groupValue: child.gender.value,
-                            //           activeColor: c.primary,
-                            //           fillColor: WidgetStateProperty.resolveWith((states) {
-                            //             if (states.contains(WidgetState.selected)) {
-                            //               return c.primary;
-                            //             }
-                            //             return Colors.white;
-                            //           }),
-                            //           side: const BorderSide(color: Colors.white, width: 1.5),
-                            //           onChanged: (_) =>
-                            //               controller.updateChildGender(index, "female"),
-                            //         ),
-                            //       ),
-                            //       Text("Female", style: TxtStyle.outfit(fs: 13)),
-                            //     ],
-                            //   ),
-                            // ),
-                            Obx(
-                              () => Row(
-                                children: [
-                                  CusGestureDetector(
-                                    onTap: () => controller.updateChildGender(index, "male"),
-                                    child: Row(
-                                      children: [
-                                        CustomRadio(isSelected: child.gender.value == "male"),
-                                        Gap(6),
-                                        Text("Male", style: TxtStyle.outfit(fs: 13)),
-                                      ],
-                                    ),
-                                  ),
-                                  Gap(16.w),
-
-                                  CusGestureDetector(
-                                    onTap: () => controller.updateChildGender(index, "female"),
-                                    child: Row(
-                                      children: [
-                                        CustomRadio(isSelected: child.gender.value == "female"),
-                                        Gap(6),
-                                        Text("Female", style: TxtStyle.outfit(fs: 13)),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).mB(12);
+                          ),
+                        ],
+                      );
                     },
                   );
                 }),

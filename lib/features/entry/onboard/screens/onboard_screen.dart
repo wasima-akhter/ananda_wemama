@@ -1,13 +1,15 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/common_components/bg_image_container.dart';
 import '../controller/onboard_controller.dart';
+import '../widgets/onboard_layout_config.dart';
+import '../widgets/security_text.dart';
 
 class OnboardScreen extends StatelessWidget {
   const OnboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final oc = findCont<OnboardController>();
+    findCont<OnboardController>();
 
     return SafeArea(
       top: false,
@@ -15,111 +17,40 @@ class OnboardScreen extends StatelessWidget {
         backgroundColor: c.scaffoldBackground,
         extendBodyBehindAppBar: true,
         body: BgImageContainer(
-          child: Container(
-            color: c.scaffoldBackground,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final w = constraints.maxWidth;
-                final h = constraints.maxHeight;
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final cfg = OnboardLayoutConfig(
+                width: constraints.maxWidth,
+                height: constraints.maxHeight,
+              );
 
-                final isTablet = w >= 600;
-                final isLarge = w >= 900;
-
-                final hPadding = isLarge
-                    ? w * 0.25
-                    : isTablet
-                    ? w * 0.15
-                    : 0.0;
-                final logoScale = isTablet ? 1.3 : 1.0;
-                final titleFs = isTablet ? 22.0 : 17.0;
-                final subFs = isTablet ? 15.0 : 12.0;
-                final btnW = isTablet ? w * 0.4 : S.w * 0.6;
-                final imageH = isTablet ? h * 0.35 : null;
-
-                return BounceSingleChildScrollView(
+              return BounceSingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: cfg.height),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: hPadding),
+                    padding: EdgeInsets.symmetric(horizontal: cfg.hPadding),
                     child: Column(
-                      spacing: itemGap,
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Gap(itemGap * 3),
+                        _TopSection(cfg: cfg),
 
-                        Transform.scale(scale: logoScale, child: weMamaLogoWithTxt),
-
-                        Gap(itemGap),
-
-                        SecurityText(iconPath: IconsPath.shieldFill, text: Strings.womenOnlySpace),
-
-                        Gap(itemGap),
-
-                        FittedBox(
-                          child: Text(
-                            Strings.motherhoodSupportLine,
-                            textAlign: TextAlign.center,
-                            style: (titleFs).titleMclrCusFS,
-                          ).mHV(20, 0),
+                        Flexible(
+                          child: Image.asset(
+                            ImagesPath.onboardingImage,
+                            width: double.infinity,
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
-
-                        Text(
-                          Strings.builtForMotherhoodStages,
-                          textAlign: TextAlign.center,
-                          style: subFs.titleMclrCusFS,
-                        ).mHV(isTablet ? 80.0 : 40.0, 0),
-
-                        Gap(itemGap),
-
-                        imageH != null
-                            ? Image.asset(
-                                ImagesPath.onboardingImage,
-                                height: imageH,
-                                fit: BoxFit.contain,
-                              )
-                            : Image.asset(ImagesPath.onboardingImage),
-
-                        Gap(itemGap),
-
-                        CustomBtnWTxt(
-                          w: btnW,
-                          btnTxt: Strings.getStarted,
-                          isUppCase: true,
-                          onTap: () => Get.toNamed(RoutePaths.onboardScreen2),
-                          isLoading: false,
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              Strings.alreadyHaveAnAccount,
-                              style: TxtStyle.outfit(fs: isTablet ? 17 : 15, color: black, w: 500),
-                            ),
-                            Gap(itemGap),
-                            CusGestureDetector(
-                              onTap: () => Get.toNamed(RoutePaths.signin),
-                              child: ContainerBordered(
-                                child: Text(
-                                  Strings.loginWithSpace.capEachWord(),
-                                  style: (isTablet ? 14.0 : 12.0).titleMclrCusFS,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SecurityText(
-                          iconPath: IconsPath.shieldCheck,
-                          text: Strings.yourPrivacyIsOurPriority,
-                        ),
-
-                        Gap(itemGap * 3),
+                        Gap(itemGap * 0.5),
+                        _BottomSection(cfg: cfg),
                       ],
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -127,24 +58,100 @@ class OnboardScreen extends StatelessWidget {
   }
 }
 
-class SecurityText extends StatelessWidget {
-  final String iconPath;
-  final String text;
-  const SecurityText({super.key, required this.iconPath, required this.text});
+// ─────────────────────────────────────────────
+// Top Section
+// ─────────────────────────────────────────────
+
+class _TopSection extends StatelessWidget {
+  const _TopSection({required this.cfg});
+
+  final OnboardLayoutConfig cfg;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 10.w),
-      decoration: BoxDecoration(borderRadius: 30.brdrRad, color: c.primary.withOpacity(0.05)),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 4,
-        children: [
-          SvgIcon(iconPath: iconPath, height: 28),
-          Text(text.toUpperCase(), style: TxtStyle.inter(fs: 12, color: c.secondary)),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Gap(itemGap * 2),
+        Transform.scale(scale: cfg.logoScale, child: weMamaLogoWithTxt),
+        Gap(itemGap * 3),
+        SecurityText(iconPath: IconsPath.shieldFill, text: Strings.womenOnlySpace.toUpperCase()),
+        Gap(itemGap),
+        FittedBox(
+          child: Text(
+            Strings.motherhoodSupportLine,
+            textAlign: TextAlign.center,
+            style: cfg.titleFs.titleMclrCusFS,
+          ).mHV(20, 0),
+        ),
+        Gap(itemGap),
+        Text(
+          Strings.builtForMotherhoodStages,
+          textAlign: TextAlign.center,
+          style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
+        ).mHV(cfg.textHMargin, 0),
+        Gap(itemGap),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────
+// Bottom Section
+// ─────────────────────────────────────────────
+
+class _BottomSection extends StatelessWidget {
+  const _BottomSection({required this.cfg});
+
+  final OnboardLayoutConfig cfg;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        CustomBtnWTxt(
+          w: cfg.btnW,
+          btnTxt: Strings.getStarted,
+          isUppCase: true,
+          isLoading: false,
+          fs: 13,
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          onTap: () => Get.toNamed(RoutePaths.onboardScreen2),
+        ),
+        Gap(itemGap * 0.5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              Strings.alreadyHaveAnAccount,
+              style: TxtStyle.outfit(fs: cfg.isTablet ? 17 : 15, color: black, w: 500),
+            ),
+            Gap(itemGap),
+            CusGestureDetector(
+              onTap: () => Get.toNamed(RoutePaths.signin),
+              child: ContainerBordered(
+                child: Text(
+                  Strings.loginWithSpace.capEachWord(),
+                  style: cfg.loginFs.titleMclrCusFS,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Gap(itemGap * 0.5),
+        SecurityText(
+          rad: 8,
+          bgClr: c.inputBackground,
+          fs: 11,
+          iconPath: IconsPath.shieldCheck,
+          text: Strings.yourPrivacyIsOurPriority.capEachWord(),
+        ),
+        Gap(itemGap * 2),
+      ],
     );
   }
 }

@@ -48,7 +48,7 @@ class FormSection extends StatelessWidget {
           controller: controller.emailCtrler,
           hintText: Strings.email,
           prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
-          prefixSize: 45,
+          prefixSize: 45.h,
           focusNode: controller.emailFocus,
           validator: validateEmail,
         ),
@@ -59,7 +59,7 @@ class FormSection extends StatelessWidget {
             controller: controller.passwordCtrler,
             hintText: Strings.password,
             prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
-            prefixSize: 48,
+            prefixSize: 48.h,
             focusNode: controller.passwordFocus,
             obscureText: controller.isPasswordHidden,
             suffix: VisibilitySuffix(

@@ -92,7 +92,7 @@ class EditProfileController extends GetxController {
 
       // children
 
-      children.value.assignAll(
+      children.assignAll(
         profileData.children.map((e) {
           final child = ChildModel();
 

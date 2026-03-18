@@ -11,45 +11,15 @@ class SetupProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final spc = Get.find<SetupProfileController>();
-
-    final setupProfileFormKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return SafeArea(
       top: false,
-
       child: AppScreenTemplate(
         appBar: CommonAppBarContent(title: "", hasBackNavArrow: false),
-        bottomWidget:
-            // ===== BOTTOM SECTION =====
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ContainerBordered(
-                  contClr: c.inputBackground,
-                  vp: 15,
-                  child: Column(
-                    children: [
-                      SvgIcon(iconPath: IconsPath.verifiedSafety, height: S.h * 0.06),
-
-                      Text(Strings.verifiedSafety, style: TxtStyle.inter(w: 500)),
-                      ContainerBordered(
-                        contClr: c.inputBackground,
-                        mh: S.w * 0.1,
-                        child: Text(
-                          textAlign: TextAlign.center,
-
-                          Strings.verifiedSafetyBottomtxt,
-                          style: TxtStyle.inter(fs: 11, ls: -0.5),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
+        bottomWidget: _buildSafetyBadge(),
         child: Form(
-          key: setupProfileFormKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -66,55 +36,51 @@ class SetupProfileScreen extends StatelessWidget {
 
               Gap(itemGap * 5),
 
-              // ===== Your Form Fields =====
               CusNameTypeTextFormField(
                 controller: spc.nameCtrl,
                 hintText: Strings.name,
                 hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
                 style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-
                 focusNode: spc.nameFocus,
                 validator: (value) => validateName(value),
               ),
+
               Gap(itemGap),
 
-              Obx(() {
-                return PopupInputTile(
+              Obx(
+                () => PopupInputTile(
                   hintText: Strings.dateOfBirth.cap,
                   bgClr: c.inputBackground,
-
                   value: spc.selectedDob.value,
-                  onTap: () async {
-                    await pickDateWithOptions(
-                      selectedDate: spc.selectedDob,
-                      keepPrivate: spc.keepDobPrivate,
-                      unfocusAll: spc.unfocusAll,
-                    );
-                  },
-                );
-              }),
+                  onTap: () => pickDateWithOptions(
+                    selectedDate: spc.selectedDob,
+                    keepPrivate: spc.keepDobPrivate,
+                    unfocusAll: spc.unfocusAll,
+                  ),
+                ),
+              ),
+
               Gap(itemGap),
-              Obx(() {
-                return PopupInputTile(
+
+              Obx(
+                () => PopupInputTile(
                   hintText: Strings.state.cap,
                   value: spc.selectedState.value,
                   bgClr: c.inputBackground,
-                  onTap: () {
-                    spc.openStateBottomSheet();
-                  },
-                );
-              }),
+                  onTap: spc.openStateBottomSheet,
+                ),
+              ),
+
               Gap(itemGap),
-              Obx(() {
-                return PopupInputTile(
+
+              Obx(
+                () => PopupInputTile(
                   hintText: Strings.city.cap,
                   value: spc.selectedCity.value,
                   bgClr: c.inputBackground,
-                  onTap: () {
-                    spc.openCityBottomSheet();
-                  },
-                );
-              }),
+                  onTap: spc.openCityBottomSheet,
+                ),
+              ),
 
               Gap(itemGap * 2.5),
 
@@ -122,9 +88,7 @@ class SetupProfileScreen extends StatelessWidget {
                 () => filledBtnWTxt(
                   btnTxt: Strings.continueTxt,
                   isLoading: spc.isLoading,
-                  onTap: () => spc.onTapContinueSetUp(setupProfileFormKey),
-
-                  //  await spc.onTapSignup(setupProfileFormKey),
+                  onTap: () => spc.onTapContinueSetUp(formKey),
                 ),
               ),
 
@@ -132,6 +96,29 @@ class SetupProfileScreen extends StatelessWidget {
             ],
           ).getcm,
         ),
+      ),
+    );
+  }
+
+  Widget _buildSafetyBadge() {
+    return ContainerBordered(
+      contClr: c.inputBackground,
+      vp: 15,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgIcon(iconPath: IconsPath.verifiedSafety, height: S.h * 0.06),
+          Text(Strings.verifiedSafety, style: TxtStyle.inter(w: 500)),
+          ContainerBordered(
+            contClr: c.inputBackground,
+            mh: S.w * 0.1,
+            child: Text(
+              Strings.verifiedSafetyBottomtxt,
+              textAlign: TextAlign.center,
+              style: TxtStyle.inter(fs: 11, ls: -0.5),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -11,7 +11,6 @@ import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
 import 'popup_widgets/daily_limit_popup.dart';
 import 'popup_widgets/delete_confirm_dialog.dart';
-import 'popup_widgets/delivery_feedback_dialog.dart';
 import 'popup_widgets/edit_fuel_diesel_rate_popup.dart';
 import 'popup_widgets/loading_popup.dart';
 import 'popup_widgets/lock_comment_popup.dart';
@@ -50,7 +49,7 @@ class Popups {
   }
 }
 
-Future<T?> _showAnimatedDialog<T>({
+Future<T?> showAnimatedDialog<T>({
   required BuildContext context,
   required Widget child,
   bool barrierDismissible = false,
@@ -74,15 +73,15 @@ Future<T?> _showAnimatedDialog<T>({
 
 //
 Future<void> showWaveSentDialog() {
-  return _showAnimatedDialog(context: Get.context!, child: WaveSentPopup());
+  return showAnimatedDialog(context: Get.context!, child: WaveSentPopup());
 }
 
 Future<void> showDailyLimitDialog() {
-  return _showAnimatedDialog(context: Get.context!, child: DailyLimitPopup());
+  return showAnimatedDialog(context: Get.context!, child: DailyLimitPopup());
 }
 
 Future<void> showLockCommentialog() {
-  return _showAnimatedDialog(context: Get.context!, child: LockCommentPopup());
+  return showAnimatedDialog(context: Get.context!, child: LockCommentPopup());
 }
 
 Future<void> showAskYourQuesDialog({
@@ -90,7 +89,7 @@ Future<void> showAskYourQuesDialog({
   required TextEditingController writeQuesCtrl,
   required FocusNode writeQuesFocusNode,
 }) {
-  return _showAnimatedDialog(
+  return showAnimatedDialog(
     context: Get.context!,
     barrierDismissible: true,
     child: AskQuesPopup(
@@ -229,37 +228,6 @@ Future<void> logoutConfirmDialog({
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     content: LogoutConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
-  );
-}
-
-/// 🔹 deliveryFeedbackDialog Popup
-Future<void> deliveryFeedbackDialog({
-  required RxBool isLoading,
-  required RxInt selRatingNum,
-  required void Function(int) onRatingChanged,
-  required void Function(String) onFeedbackChanged,
-  required Future<void> Function(int rating, String feedback) onSubmit,
-
-  required TextEditingController descriptionCtrl,
-  required FocusNode descriptionFocusNode,
-}) async {
-  await Popups().baseAlert(
-    context: Get.context!,
-    content: Container(
-      // color: Colors.amber,
-      height: 1.sh * 0.5,
-      child: DeliveryFeedbackDialog(
-        descriptionCtrl: descriptionCtrl,
-        descriptionFocusNode: descriptionFocusNode,
-        isLoading: isLoading,
-        selRatingNum: selRatingNum,
-
-        feedback: Strings.writeYourFeedback,
-        onSubmit: onSubmit,
-        onRatingChanged: onRatingChanged,
-        onFeedbackChanged: onFeedbackChanged,
-      ),
-    ),
   );
 }
 

@@ -3,14 +3,25 @@ import '../../../core/network/helpers/location_helpers.dart';
 import '../../../core/services/location/location_service.dart';
 
 class StationLocationController extends GetxController {
-  // Location data
+  // ─────────────────────────────────────────────
+  // State
+  // ─────────────────────────────────────────────
+
   final selectedCity = "".obs;
   final selectedAddress = "".obs;
   final latitude = 0.0.obs;
   final longitude = 0.0.obs;
   final isLoadingLocation = false.obs;
 
-  // List of predefined cities with coordinates
+  String get displayLocation =>
+      selectedAddress.value.isNotEmpty ? selectedAddress.value : Strings.select;
+
+  bool get hasLocation => latitude.value != 0.0 && longitude.value != 0.0;
+
+  // ─────────────────────────────────────────────
+  // City Map
+  // ─────────────────────────────────────────────
+
   final Map<String, Map<String, double>> cityCoordinates = {
     "Lagos": {"lat": 6.5244, "lng": 3.3792},
     "Kano": {"lat": 12.0022, "lng": 8.5919},
@@ -46,47 +57,38 @@ class StationLocationController extends GetxController {
 
   List<String> get cities => cityCoordinates.keys.toList();
 
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
+
   @override
   void onInit() {
     super.onInit();
     _loadSavedLocation();
   }
 
-  // Load saved location
   void _loadSavedLocation() {
-    final savedLocation = storage.getUserAddress;
-    final savedLat = storage.getUserLatitude;
-    final savedLng = storage.getUserLongitude;
+    final address = storage.getUserAddress;
+    final lat = storage.getUserLatitude;
+    final lng = storage.getUserLongitude;
 
-    if (savedLocation.isNotEmpty) {
-      selectedAddress.value = savedLocation;
-    }
-    if (savedLat != null && savedLat != 0.0) {
-      latitude.value = savedLat;
-    }
-    if (savedLng != null && savedLng != 0.0) {
-      longitude.value = savedLng;
-    }
+    if (address.isNotEmpty) selectedAddress.value = address;
+    if (lat != null && lat != 0.0) latitude.value = lat;
+    if (lng != null && lng != 0.0) longitude.value = lng;
   }
 
+  // ─────────────────────────────────────────────
+  // Public Actions
+  // ─────────────────────────────────────────────
+
+  /// Gets current GPS location and syncs to backend silently.
   Future<void> getAndSaveInBackendCurrLoc() async {
+    if (isLoadingLocation.value) return;
+    isLoadingLocation.value = true;
+
     try {
-      isLoadingLocation.value = true;
-
       final location = await LocationHelper.getCurrentLocation();
-
-      if (location == null) {
-        // 🚫 Location not received (GPS off / permission / error)
-        // Location not updated (warning)
-        Snack.showWarning(
-          Strings.locationServicesOff.capEachWord(),
-          title: Strings.locationNotUpdated.capEachWord(),
-        );
-
-        return;
-      }
-
-      // if not null
+      if (location == null) return; // GPS off or denied — overlay handles UI feedback
 
       latitude.value = location.latitude;
       longitude.value = location.longitude;
@@ -94,97 +96,57 @@ class StationLocationController extends GetxController {
       selectedCity.value = location.city ?? '';
 
       await _saveLocationToBackend();
-
-      // Location updated (success)
-      Snack.showSuccess(
-        Strings.locationUpdated.capEachWord(),
-        title: Strings.success.capEachWord(),
-      );
     } catch (e) {
-      // Location error (error)
-      Snack.showError(e.toString(), title: Strings.locationError.capEachWord());
+      debugPrint("❌ getAndSaveInBackendCurrLoc error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
   }
 
-  // Select city manually
+  /// Manually selects a city and syncs to backend.
   Future<void> selectCity(String city) async {
+    if (isLoadingLocation.value) return;
+    isLoadingLocation.value = true;
+
     try {
-      isLoadingLocation.value = true;
-      selectedCity.value = city;
-
-      // Get coordinates from predefined map
       final coords = cityCoordinates[city];
-      if (coords != null) {
-        latitude.value = coords['lat']!;
-        longitude.value = coords['lng']!;
-        selectedAddress.value = city;
+      if (coords == null) return;
 
-        // Save to backend
-        await _saveLocationToBackend();
-      }
+      selectedCity.value = city;
+      selectedAddress.value = city;
+      latitude.value = coords['lat']!;
+      longitude.value = coords['lng']!;
+
+      await _saveLocationToBackend();
     } catch (e) {
-      debugPrint("Error selecting city: $e");
-      // Failed to set location (error)
-      Snack.showError(
-        Strings.failedToSetLocation.capEachWord(),
-        title: Strings.error.capEachWord(),
-      );
+      debugPrint("❌ selectCity error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
   }
 
-  // Save to backend
+  // ─────────────────────────────────────────────
+  // Private
+  // ─────────────────────────────────────────────
+
   Future<void> _saveLocationToBackend() async {
     try {
-      debugPrint("📤 Saving to backend...");
-      debugPrint("Address: ${selectedAddress.value}");
-      debugPrint("Lat: ${latitude.value}");
-      debugPrint("Lng: ${longitude.value}");
-
-      // Call API service
-      final locationService = Get.find<LocationService>();
-      final success = await locationService.updateLocation(
+      final success = await Get.find<LocationService>().updateLocation(
         address: selectedAddress.value,
         latitude: latitude.value,
         longitude: longitude.value,
         city: selectedCity.value.isNotEmpty ? selectedCity.value : null,
       );
 
-      if (!success) {
-        throw Exception("API call failed");
-      }
+      if (!success) throw Exception("API returned failure");
 
-      // Save locally
       storage.setUserAddress(selectedAddress.value);
+      if (selectedCity.value.isNotEmpty) storage.setUserCity(selectedCity.value);
 
-      if (selectedCity.value.isNotEmpty) {
-        storage.setUserCity(selectedCity.value);
-      }
-
-      debugPrint("✅ Location saved successfully");
+      debugPrint("✅ Location saved to backend");
     } catch (e) {
-      debugPrint("❌ Error saving: $e");
-      // Don't rethrow - show user it was saved locally at least
-
-      // Saved locally but failed to sync (warning)
-      Snack.showWarning(
-        Strings.savedLocallyButFailedToSync.capEachWord(),
-        title: Strings.warning.capEachWord(),
-      );
+      debugPrint("❌ _saveLocationToBackend error: $e");
+      // Silent fail — overlay is the only user-facing feedback for location state
     }
   }
-
-  // Get display location
-  String get displayLocation {
-    if (selectedAddress.value.isNotEmpty) {
-      return selectedAddress.value;
-    }
-    return Strings.select;
-  }
-
-  // Check if has location
-  bool get hasLocation => latitude.value != 0.0 && longitude.value != 0.0;
 }

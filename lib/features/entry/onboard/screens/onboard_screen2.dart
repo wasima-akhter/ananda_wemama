@@ -18,34 +18,43 @@ class OnboardScreen2 extends StatelessWidget {
         onTap: () => Get.toNamed(RoutePaths.onboardScreen3),
         isLoading: false,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          Gap(itemGap * 5),
-          Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
-          Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
-          Gap(itemGap),
-          FittedBox(
-            child: Text(
-              Strings.findMumsNearYou,
-              textAlign: TextAlign.center,
-              style: 17.titleMclrCusFS,
-            ).mHV(20, 0),
+          Positioned(
+            top: itemGap * 5,
+            left: itemGap * 3,
+            child: Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
           ),
-          Gap(itemGap),
-          Text(
-            Strings.friendshipSupportUnderstanding,
-            textAlign: TextAlign.center,
-            style: 12.titleMclrCusFS,
-          ).mHV(40, 0),
-          Gap(itemGap),
-          Image.asset(ImagesPath.onboarding2),
-          Gap(itemGap * 2),
-          CommunitySpotlight(isFromOnboardScreen: true),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Gap(itemGap * 7),
+              Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.28),
+              Gap(itemGap * 2),
+              FittedBox(
+                child: Text(
+                  Strings.findMumsNearYou,
+                  textAlign: TextAlign.center,
+                  style: 15.titleMclrCusFS,
+                ).mHV(20, 0),
+              ),
+              Gap(itemGap * 0.5),
+              Text(
+                Strings.friendshipSupportUnderstanding,
+                textAlign: TextAlign.center,
+                style: TxtStyle.outfitSemiB(fs: 12, w: 400, color: c.primary),
+              ).mHV(40, 0),
+              Gap(itemGap * 2),
+              Image.asset(ImagesPath.onboarding2),
+              Gap(itemGap * 2),
+              CommunitySpotlight(isFromOnboardScreen: true),
 
-          Gap(itemGap * 4),
+              Gap(itemGap * 2),
+            ],
+          ).getcm,
         ],
-      ).getcm,
+      ),
     );
   }
 }

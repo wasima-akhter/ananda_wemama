@@ -38,7 +38,7 @@ class ForgotPassAfterVerify extends StatelessWidget {
                   hintText: Strings.newPassword,
                   obscureText: fpc.isNewPassHidden,
                   prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
-                  prefixSize: 48,
+                  prefixSize: 48.h,
                   suffix: VisibilitySuffix(onTap: fpc.toggleNewPass, icon: fpc.newPasswordIcon),
                   validator: (value) => validatePassword(value),
                   hintW: 600,
@@ -52,7 +52,7 @@ class ForgotPassAfterVerify extends StatelessWidget {
                   hintText: Strings.confirmPassword,
                   obscureText: fpc.isConfirmPassHidden,
                   prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
-                  prefixSize: 48,
+                  prefixSize: 48.h,
                   suffix: VisibilitySuffix(
                     onTap: fpc.toggleConfirmPass,
                     icon: fpc.confirmPasswordIcon,

@@ -44,11 +44,10 @@ class MumsStageScreen extends StatelessWidget {
             Gap(itemGap * 3),
 
             // column of rows having left individual icon, middle text and on right, a tick icon
-            Column(
-              children: List.generate(msc.stageList.length, (index) {
-                final item = msc.stageList[index];
-
-                return Obx(() {
+            Obx(() {
+              return Column(
+                children: List.generate(msc.stageList.length, (index) {
+                  final item = msc.stageList[index];
                   final isSelected = msc.selectedStage.value == item.title;
 
                   return GestureDetector(
@@ -64,7 +63,7 @@ class MumsStageScreen extends StatelessWidget {
                       brdrW: 1,
                       child: Row(
                         children: [
-                          /// 🔹 Left Icon
+                          /// Left Icon
                           SvgIconColored(
                             iconPath: item.leftIcon,
                             iconColor: isSelected ? c.scaffoldBackground : c.primary,
@@ -73,7 +72,7 @@ class MumsStageScreen extends StatelessWidget {
 
                           Gap(12),
 
-                          /// 🔹 Middle Text
+                          /// Text
                           Expanded(
                             child: RichText(
                               text: TextSpan(
@@ -85,7 +84,6 @@ class MumsStageScreen extends StatelessWidget {
                                       color: isSelected ? c.scaffoldBackground : c.primary,
                                     ),
                                   ),
-
                                   if (item.info.isNotEmpty)
                                     TextSpan(
                                       text: " ${item.info}",
@@ -101,7 +99,7 @@ class MumsStageScreen extends StatelessWidget {
                             ),
                           ),
 
-                          /// 🔹 Right Tick
+                          /// Tick
                           SvgIconColored(
                             iconPath: IconsPath.smallTick,
                             iconColor: isSelected ? c.scaffoldBackground : c.primary,
@@ -111,9 +109,9 @@ class MumsStageScreen extends StatelessWidget {
                       ),
                     ),
                   );
-                });
-              }),
-            ),
+                }),
+              );
+            }),
             Gap(itemGap * 2.5),
           ],
         ).getcm,

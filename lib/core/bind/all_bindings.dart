@@ -31,7 +31,6 @@ import '../../features/main_tabs/match/controller/match_controller.dart';
 import '../../features/more/legal/privacy_policy/controller/privacy_policy_controller.dart';
 import '../../features/more/legal/terms_and_conditions/controller/terms_and_conditions_controller.dart';
 import '../../features/more/notification/controller/notification_controller.dart';
-import '../../features/more/review_and_rating/controller/review_and_rating_controller.dart';
 import '../../features/more/support/contact_support/controller/contact_support_controller.dart';
 import '../../features/payment/controller/payment_controller.dart';
 import '../../features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
@@ -398,17 +397,6 @@ class OrderDetailsBinding extends Bindings {
     // } else if (args is SupplierOrderDetailsArg_Model) {
     //   Get.lazyPut<SupplierOrderDetailsController>(() => SupplierOrderDetailsController(args));
     // }
-  }
-}
-
-// ─────────────────────────────
-// 🔹 Reviews & Ratings
-// ─────────────────────────────
-class ReviewAndRatingBinding extends Bindings {
-  @override
-  void dependencies() {
-    final supplierId = Get.arguments as String;
-    Get.lazyPut<ReviewAndRatingController>(() => ReviewAndRatingController(supplierId));
   }
 }
 

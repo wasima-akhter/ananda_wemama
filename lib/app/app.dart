@@ -9,7 +9,7 @@ import '../core/config/app_info.dart';
 
 class App extends StatelessWidget {
   final bool hasInternet;
-  const App({Key? key, required this.hasInternet}) : super(key: key);
+  const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
     return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;

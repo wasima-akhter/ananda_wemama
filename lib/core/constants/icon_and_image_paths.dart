@@ -24,6 +24,7 @@ class IconsPath {
   static String get closeCircle => Assets.icons.closeCircleOutlined;
   static String get closeWhite => Assets.icons.closeWhite;
   static String get closeRed => Assets.icons.closeRedFilled;
+  static String get minus => Assets.icons.minus;
   static String get verifiedTick => Assets.icons.verifiedTick;
 
   // User / Profile
@@ -77,6 +78,7 @@ class IconsPath {
   static String get chartFilled => Assets.icons.chartFilled;
   static String get moreVertical => Assets.icons.moreVertical;
   static String get info => Assets.icons.info;
+  static String get curvedInfo => Assets.icons.curvedInfo;
   static String get logout => Assets.icons.logout;
   static String get notification => Assets.icons.notification;
 

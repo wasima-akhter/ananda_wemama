@@ -56,7 +56,7 @@ class CustomBtnWTxt extends StatelessWidget {
         // isSmall == true
         //     ? EdgeInsets.symmetric(horizontal: 9.w, vertical: 9.h)
         //     :
-        padding ?? EdgeInsets.symmetric(horizontal: 12.w, vertical: 16.h);
+        padding ?? EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h);
 
     final bool isOutlined = outlined == true;
 
@@ -79,7 +79,7 @@ class CustomBtnWTxt extends StatelessWidget {
   }
 
   Widget _buildInnerContent(BuildContext context, bool isOutlined) {
-    final double fontSize = isOutlined ? 13 : (fs ?? 15);
+    final double fontSize = isOutlined ? 13 : (fs ?? 14);
 
     final textStyle = isSmall == true
         ? style ?? TxtStyle.outfitSemiB(fs: (fs ?? 14), color: txtClr ?? c.textOnPrimary, w: 600)

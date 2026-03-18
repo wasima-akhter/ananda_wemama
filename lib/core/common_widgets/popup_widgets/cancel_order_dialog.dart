@@ -23,7 +23,7 @@ class CancelOrderDialog extends StatelessWidget {
           Gap(itemGap),
 
           Text(
-            Strings.doUWantToCancelOrder,
+            "Do You Want To Cancel".cap,
             textAlign: TextAlign.center,
             style: TxtStyle.inter(w: 600),
           ),
@@ -33,7 +33,7 @@ class CancelOrderDialog extends StatelessWidget {
             btnColor: c.primary,
             borderClr: c.primary,
             txtClr: c.textSecondary,
-            btnTxt: Strings.cancelOrder,
+            btnTxt: Strings.cancel,
             isLoading: isLoading,
 
             onTap: onCancelOrder,

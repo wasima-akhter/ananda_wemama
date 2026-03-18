@@ -83,7 +83,7 @@ class EditFuelDieselRatePopup extends StatelessWidget {
                                   Strings.currency,
                                   style: TxtStyle.interSemiB(fs: 24, w: 600, color: c.primary),
                                 ),
-                          prefixSize: 26,
+                          prefixSize: 26.h,
 
                           controller: controller,
                           focusNode: focusNode,

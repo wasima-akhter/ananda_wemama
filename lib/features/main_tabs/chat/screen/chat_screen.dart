@@ -23,7 +23,7 @@ class ChatScreen extends StatelessWidget {
 
         suffix: CusCircleIconButton(
           onTap: cc.onTapHandWave,
-          child: SvgIcon(iconPath: IconsPath.handWave, height: 25),
+          child: SvgIcon(iconPath: IconsPath.handWave, height: 22),
         ),
       ),
       child: Column(

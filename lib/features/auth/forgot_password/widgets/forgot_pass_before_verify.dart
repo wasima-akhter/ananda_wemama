@@ -33,7 +33,7 @@ class ForgotPassBeforeVerify extends StatelessWidget {
                 focusNode: fpc.emailFocus,
                 hintText: Strings.email,
                 prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
-                prefixSize: 45,
+                prefixSize: 45.h,
                 validator: (value) => validateEmail(value),
                 hintW: 600,
               ),

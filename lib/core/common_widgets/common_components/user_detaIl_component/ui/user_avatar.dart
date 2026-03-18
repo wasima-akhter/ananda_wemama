@@ -9,10 +9,11 @@ class UserAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: 0.circleBrdr(brdrW: 4, brdrClr: c.secondary.withOpacity(0.5)),
+      decoration: 0.circleBrdr(brdrW: 2.5, brdrClr: c.bottomSheetBackground),
       child: NetworkImageWidget(
         imageUrl: imageUrl,
         isCircle: true,
+        hasBrdr: false,
         radius: isFromProfile == true ? 35 : S.w * 0.15,
       ),
     );

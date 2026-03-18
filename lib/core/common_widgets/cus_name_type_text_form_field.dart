@@ -95,13 +95,12 @@ class CusNameTypeTextFormField extends StatelessWidget {
         scrollController: ScrollController(),
         cursorWidth: cursorWidth ?? 1,
         cursorColor: c.textPrimary,
-        cursorHeight: cursorHeight ?? 18,
+        cursorHeight: cursorHeight ?? 18.h,
 
         decoration: InputDecoration(
           filled: true,
           fillColor: fillColor ?? c.inputBackground,
-          contentPadding:
-              contentPadding ?? const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+          contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
           isDense: isDense, // reduces default vertical padding
           hint:
               hint ??

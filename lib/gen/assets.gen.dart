@@ -107,6 +107,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/currency_n.svg.svg
   String get currencyNSvg => 'assets/icons/currency_n.svg.svg';
 
+  /// File path: assets/icons/curved_info.svg
+  String get curvedInfo => 'assets/icons/curved_info.svg';
+
   /// File path: assets/icons/email.svg
   String get email => 'assets/icons/email.svg';
 
@@ -193,6 +196,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/match.svg
   String get match => 'assets/icons/match.svg';
+
+  /// File path: assets/icons/minus.svg
+  String get minus => 'assets/icons/minus.svg';
 
   /// File path: assets/icons/more_vertical.svg
   String get moreVertical => 'assets/icons/more_vertical.svg';
@@ -344,6 +350,7 @@ class $AssetsIconsGen {
     community,
     crown,
     currencyNSvg,
+    curvedInfo,
     email,
     emojiWithHeart,
     experts,
@@ -373,6 +380,7 @@ class $AssetsIconsGen {
     logout,
     mapPin,
     match,
+    minus,
     moreVertical,
     muteAudio,
     mutedAudio,

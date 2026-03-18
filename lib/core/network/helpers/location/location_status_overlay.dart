@@ -1,0 +1,205 @@
+// lib/features/main_tabs/home/modules/location_status_overlay.dart
+
+import 'package:geolocator/geolocator.dart';
+import 'package:mama_app/core/common_widgets/common_components/tag_type_widgets.dart';
+
+import '../../../../app/helper_widgets_export.dart';
+
+class LocationStatusOverlay extends StatelessWidget {
+  const LocationStatusOverlay({super.key, required this.isActive});
+
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: S.w * 0.07, vertical: 24),
+      child: _OverlayCard(isActive: isActive),
+    );
+  }
+}
+
+class _OverlayCard extends StatefulWidget {
+  const _OverlayCard({required this.isActive});
+  final bool isActive;
+
+  @override
+  State<_OverlayCard> createState() => _OverlayCardState();
+}
+
+class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _scale;
+  late final Animation<double> _fade;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 320));
+    _scale = CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack);
+    _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
+    _ctrl.forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isActive = widget.isActive;
+    final accent = isActive ? Colors.green : Colors.orange;
+
+    return FadeTransition(
+      opacity: _fade,
+      child: ScaleTransition(
+        scale: _scale,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ContainerBordered(
+              vp: 20,
+              hp: 18,
+              contClr: c.scaffoldBackground,
+              rad: 20,
+              boxShadow: boxShadowAllSides,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ── Header ────────────────────────────────────────────────
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: accent.withOpacity(0.12),
+                        radius: 20,
+                        child: Icon(
+                          isActive ? Icons.location_on_rounded : Icons.location_off_rounded,
+                          color: accent,
+                          size: 20,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isActive
+                                  ? Strings.locationEnabled.capEachWord()
+                                  : Strings.youAreInactiveNow,
+                              style: TxtStyle.interSemiB(fs: 14, w: 700, color: c.textPrimary),
+                            ),
+                            SizedBox(height: 3),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [ActiveTag(isActive: isActive)],
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => Get.back(),
+                        child: Icon(Icons.close_rounded, color: c.textSecondary, size: 20),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 14),
+                  Divider(color: c.secondary.withOpacity(0.15), height: 1),
+                  SizedBox(height: 14),
+
+                  // ── Body ──────────────────────────────────────────────────
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: c.bottomSheetBackground.withOpacity(0.5),
+                        radius: 9,
+                        child: SvgIconColored(
+                          iconPath: IconsPath.curvedInfo,
+                          iconColor: c.primary.withOpacity(0.5),
+                          height: 11,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              isActive ? Strings.locationActiveVisible : Strings.inactiveNotVisible,
+                              style: TxtStyle.interSemiB(
+                                fs: 12,
+                                w: 400,
+                                color: c.primary.withOpacity(0.5),
+                              ),
+                            ),
+                            SizedBox(height: 6),
+                            Text(
+                              isActive
+                                  ? Strings.youCanNowFindMatches
+                                  : Strings.enableLocationForMatching,
+                              style: TxtStyle.interSemiB(
+                                fs: 12,
+                                w: 500,
+                                color: isActive ? Colors.green : c.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 16),
+
+                  // ── CTA ───────────────────────────────────────────────────
+                  SizedBox(
+                    width: double.infinity,
+                    child: isActive
+                        ? OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: c.secondary),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            onPressed: () => Get.back(),
+                            child: Text(
+                              Strings.gotIt.capEachWord(),
+                              style: TextStyle(color: c.secondary),
+                            ),
+                          )
+                        : ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: c.secondary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            icon: Icon(Icons.location_on_rounded, color: Colors.white, size: 16),
+                            label: Text(
+                              Strings.enableLocation.capEachWord(),
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () async {
+                              Get.back();
+                              await Geolocator.openLocationSettings();
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

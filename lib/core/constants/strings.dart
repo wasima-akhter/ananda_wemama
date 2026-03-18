@@ -83,11 +83,6 @@ class Strings {
       "https://cdn.pixabay.com/photo/2024/06/08/11/57/woman-8816636_1280.png";
   static const String fakeImageUrl2 =
       "https://www.gardenia.net/wp-content/uploads/2023/05/types-of-flowers.webp";
-  static const String searchSupplies = "Search supplies";
-  static const String suppliers = "Suppliers";
-  static const String sortOf = "Sort Of";
-  static const String lowest = "Lowest";
-  static const String highest = "Highest";
 
   // Main Nav
   static const String home = "Home";
@@ -96,8 +91,52 @@ class Strings {
   static const String community = "Community";
   static const String match = "Match";
 
-  static const String order = "Order";
-  static const String spent = "Spent";
+  // Location texts
+
+  static const String inactive = "Inactive";
+  static const String active = "Active";
+  static const String youAreInactiveNow = "You Are Inactive Now!";
+  static const String youAreActiveNow = "You Are Active Now!";
+
+  static const String visibleForMatching = "You will be visible for matching to others nearby.";
+
+  static const String inactiveNotVisible = "When inactive, you won't appear in match searches.";
+
+  static const String enableLocationForMatching = "**Enable location to appear in match searches.";
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ADD THESE to your existing Strings class / localization file
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Permission flow — rationale dialog
+  static const String locationPermissionRationale =
+      'We need your location to connect you with nearby moms and help you find the best matches.';
+
+  static const String locationBenefitMatching = 'Find moms near you for matching';
+
+  static const String locationBenefitVisibility = 'Appear in other moms\' match results';
+
+  static const String locationBenefitPrivacy = 'Your exact location is never shared';
+
+  static const String allowLocationAccess = 'allow location access';
+  static const String allowLocation = 'allow';
+  static const String notNow = 'not now';
+
+  // Service ON dialog
+  static const String locationNeededForMatchingExplained =
+      'Your location helps you discover nearby moms and be discovered by them.';
+  static const String locationUsedForMatchingOnly =
+      'Used only for matching — never shared publicly.';
+
+  // Overlay strings
+  static const String locationEnabled = 'location enabled';
+  static const String locationActiveVisible = 'You are now visible to nearby moms.';
+  static const String youCanNowFindMatches = 'You can now find and be found for matches!';
+  static const String gotIt = 'got it';
+
+  // locationNeededForMatchingExplained
+
+  //
   static const String profile = "Profile";
   static const String recentSearch = "Recent search";
   static const String findSupplies = "Find supplies";
@@ -114,43 +153,16 @@ class Strings {
   static const String create = "Create";
 
   // ===========================
-  // Order Details
+  // internet
   // ===========================
-  static const String createNewOrder = "Create New Order";
-  static const String creatingNewOrder = "Creating New Order";
-  static const String orderCreationComplete = "Order Creation Complete!";
-  static const String waitUntilNewOrderCreated = "Wait Until the order is being created...";
-  static const String failedToCreateOrder = "Failed to create order";
+
   static const String pleaseCheckYourInternetOrTryAgain =
       "Please check your internet or try again.";
-  static const String paymentRequired = "Payment required";
-  static const String cannotCreateOrderBeforePayment = "Cannot create order before payment";
-  static const String plzSelectADeliveryAddress = "Please select a delivery address";
-  static const String addressIsRequired = "Address is required";
-  static const String orderFailed = "Order Failed";
-  static const String somethingWentWrong = "Something went wrong. Please try again.";
-  static const String orderDetails = "Order details";
-  static const String cancelOrder = "Cancel order";
-  static const String orderDate = "Order date";
-  static const String rate = "Rate";
-  static const String fuelRate = "Fuel Rate";
-  static const String dieselRate = "Diesel Rate";
-  static const String quantity = "Quantity";
-  static const String ratPerLitter = "** Rate per litter";
-  static const String totalPrice = "Total price";
-  static const String price = "Price";
-  static const String orderStatus = "Order status";
-  static const String deliveryAddress = "Delivery address";
-  static const String reject = "Reject";
-  static const String confirmDelivery = "Confirm delivery";
-  static const String deliveryDetails = "Delivery details";
-  static const String newDeliveryDetails = "New Delivery details";
-  static const String giveReviewRatings = "Give review & ratings";
 
+  static const String somethingWentWrong = "Something went wrong. Please try again.";
+  static const String areYouSure = "Are you sure!";
+  static const String confirmToLogout = "Confirm To Logout?";
   static const String available = "Available";
-  static const String outOfStock = "Out Of Stock";
-  static const String chooseOnMap = "Choose on map";
-  static const String viewOnMap = "View on map";
   static const String seen = "Seen";
   static const String unSeen = "Unseen";
 
@@ -169,39 +181,9 @@ class Strings {
   static const String paymentSuccessful = "Payment successful";
   static const String aboutPaymentInfoSent =
       "About this payment information has been sent your email";
+  static const String paymentRequired = "Payment required";
 
-  // ===========================
-  // Orders & Reviews
-  // ===========================
-  static const String orders = "Orders";
-  static const String delivered = "Delivered";
-  static const String allOrder = "All order";
-  static const String allOrders = "All orders";
-  static const String pendingOrders = "Pending Orders";
-  static const String allDelivery = "All delivery";
-  static const String reviewAndRating = "Review and rating";
-  static const String reviewAndRatings = "Review & ratings";
-  static const String whatOthersThinkAboutSupplier = "What others think about the supplier";
-  static const String review = "Review";
-  static const String ratings = "Ratings";
-  static const String rating = "Rating";
-  static const String canceledOrder = "Canceled order";
-  static const String readAllReviews = "Read all reviews";
-  static const String howWasYourDelivery = "How was your delivery";
-  static const String writeYourFeedback = "Write your feedback";
-  static const String areYouSure = "Are you sure!";
-  static const String doUWantToCancelOrder = "Do You Want To Cancel The Order?";
-  static const String confirmToLogout = "Confirm To Logout?";
-  static const String doYouWantToCancelOrder = "Do you want to cancel the order?";
-  static const String submitFeedback = "Submit Feedback";
-  static const String spentAmount = "Spent Amount";
-  static const String amount = "Amount";
-  static const String percentage = "Percentage";
-  static const String thisMonth = "This Month";
-  static const String thisWeek = "This Week";
-  static const String thisYear = "This Year";
-  static const String highToLow = "High to Low";
-  static const String lowToHigh = "Low to High";
+  static const String addressIsRequired = "Address is required";
 
   // ===========================
   // Profile / Settings
@@ -283,57 +265,29 @@ class Strings {
   static const String addAccountNumber = "Enter account number";
 
   // ===========================
-  // Rates / Fuel
+  //
   // ===========================
-  static const String todayFuelRate = "Today fuel rate";
+
   static const String orderRequest = "Order request";
   static const String paymentConfirmation = "Payment Confirmation";
   static const String paymentFailureRefund = "Payment Failure & Refund";
-  static const String deliveryConfirmation = "Delivery Confirmation";
   static const String platformUpdate = "Platform Update";
   static const String reportFeedback = "Report & Feedback";
 
   static const String seeAll = "See all";
-  static const String goToOrders = "Go to orders";
-  static const String loadFuel = "Load Fuel";
-  static const String unableToGetOrderRequest = "Unable to get order request";
-  static const String noFuelStock = "No fuel stock";
-  static const String todayDieselRate = "Today diesel rate";
-  static const String todayOrder = "Today Order";
-  static const String todayDelivery = "Today Delivery";
-  static const String todayRevenue = "Today Revenue";
-  static const String revenueHistory = "Revenue History";
-  static const String accepted = "Accepted";
-  static const String acceptOrder = "Accept Order";
-  static const String acceptedOrder = "Accepted Order";
-  static const String rejectedOrder = "Rejected Order";
+
   static const String request = "Request";
   static const String ready = "Ready";
-  static const String readyToDeliver = "Ready To Deliver";
+
   static const String to = "To";
-  static const String deliveredOrder = "Delivered";
-  static const String completedOrder = "Completed order";
-  static const String onTheWay = "On the way";
+
   static const String on = "On";
   static const String off = "Off";
-  static const String inventory = "Inventory";
-  static const String inventoryDetails = "Inventory Details";
+
   static const String deleted = "Deleted";
   static const String completeDelivery = "Complete delivery";
   static const String complete = "Complete";
   static const String completed = "Completed";
-  static const String fuelLoad = "Fuel load";
-  static const String load = "Load";
-  static const String remaining = "Remaining";
-  static const String fuel = "Fuel";
-  static const String diesel = "Diesel";
-  static const String dieselLoad = "Diesel load";
-  static const String remainsPreviousDay = "Remains (previous day)";
-  static const String remains = "Remains";
-  static const String delivery = "Delivery";
-  static const String reserveForDelivery = "Reserve for delivery";
-  static const String fuelStock = "Fuel stock";
-  static const String dieselStock = "Diesel stock";
 
   // ===========================
   // Notification
@@ -759,6 +713,10 @@ class Strings {
 
   //
   static const String currentPhotos = "Current Photos";
+
+  //
+  static const String setChildren = "Set Children";
+  static const String noChildrenAddedYet = "No children added yet";
 }
 
 //
