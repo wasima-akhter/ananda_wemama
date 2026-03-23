@@ -134,7 +134,57 @@ Future<dynamic> showChildrenBottomSheet({double? heightFactor, bool isScrollCont
 }
 
 //
-String getChildAge(String? dobString, {String placeholder = "N/A"}) {
+// String getChildAge(String? dobString, {String placeholder = "N/A"}) {
+//   if (dobString == null || dobString.isEmpty) return placeholder;
+
+//   try {
+//     final dob = DateTime.parse(dobString).toLocal();
+//     final now = DateTime.now();
+
+//     int years = now.year - dob.year;
+//     int months = now.month - dob.month;
+//     int days = now.day - dob.day;
+
+//     /// adjust days
+//     if (days < 0) {
+//       final prevMonth = DateTime(now.year, now.month, 0);
+//       days += prevMonth.day;
+//       months--;
+//     }
+
+//     /// adjust months
+//     if (months < 0) {
+//       years--;
+//       months += 12;
+//     }
+
+//     /// 🔹 أقل من شهر → show days
+//     if (years == 0 && months == 0) {
+//       return "$days day${days == 1 ? '' : 's'}";
+//     }
+
+//     /// 🔹 أقل من سنة → show months
+//     if (years == 0) {
+//       return "$months month${months == 1 ? '' : 's'}";
+//     }
+
+//     /// 🔹 سنة بدون شهور
+//     if (months == 0) {
+//       return "$years year${years == 1 ? '' : 's'}";
+//     }
+
+//     /// 🔹 سنة + شهور
+//     return "$years year${years == 1 ? '' : 's'} $months month${months == 1 ? '' : 's'}";
+//   } catch (e) {
+//     return placeholder;
+//   }
+// }
+
+String getChildAge(
+  String? dobString, {
+  String placeholder = "N/A",
+  String? gender, // "Male" / "Female"
+}) {
   if (dobString == null || dobString.isEmpty) return placeholder;
 
   try {
@@ -158,23 +208,40 @@ String getChildAge(String? dobString, {String placeholder = "N/A"}) {
       months += 12;
     }
 
-    /// 🔹 أقل من شهر → show days
-    if (years == 0 && months == 0) {
-      return "$days day${days == 1 ? '' : 's'}";
-    }
+    /// 🎯 Decide emoji
+    String emoji;
 
-    /// 🔹 أقل من سنة → show months
     if (years == 0) {
-      return "$months month${months == 1 ? '' : 's'}";
+      // 👶 baby (under 1 year)
+      emoji = "👶";
+    } else {
+      // 🧒 child with gender
+      if (gender?.toLowerCase() == "male") {
+        emoji = "👦";
+      } else if (gender?.toLowerCase() == "female") {
+        emoji = "👧";
+      } else {
+        emoji = "🧒"; // fallback
+      }
     }
 
-    /// 🔹 سنة بدون شهور
+    /// 👶 → days
+    if (years == 0 && months == 0) {
+      return "$emoji $days day${days == 1 ? '' : 's'}";
+    }
+
+    /// 👶 → months
+    if (years == 0) {
+      return "$emoji $months month${months == 1 ? '' : 's'}";
+    }
+
+    /// 👦 / 👧
     if (months == 0) {
-      return "$years year${years == 1 ? '' : 's'}";
+      return "$emoji $years year${years == 1 ? '' : 's'}";
     }
 
-    /// 🔹 سنة + شهور
-    return "$years year${years == 1 ? '' : 's'} $months month${months == 1 ? '' : 's'}";
+    /// 👦 / 👧
+    return "$emoji $years year${years == 1 ? '' : 's'} $months month${months == 1 ? '' : 's'}";
   } catch (e) {
     return placeholder;
   }

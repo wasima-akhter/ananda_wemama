@@ -10,11 +10,11 @@ class TurnOnServiceDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: 20.brdrRad),
       title: Row(
         children: [
           Icon(Icons.location_off_rounded, color: Colors.orange),
-          SizedBox(width: 8),
+          Gap(8.w),
           Expanded(
             child: Text(
               Strings.enableLocation.capEachWord(),
@@ -28,7 +28,7 @@ class TurnOnServiceDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(Strings.locationNeededForMatchingExplained, style: TxtStyle.norTxt),
-          SizedBox(height: 12),
+          Gap(12.w),
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -38,7 +38,7 @@ class TurnOnServiceDialog extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.favorite_rounded, color: c.secondary, size: 16),
-                SizedBox(width: 6),
+                Gap(6.w),
                 Expanded(
                   child: Text(
                     Strings.locationUsedForMatchingOnly,

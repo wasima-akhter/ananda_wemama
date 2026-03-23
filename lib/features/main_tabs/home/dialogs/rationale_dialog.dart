@@ -7,11 +7,11 @@ class RationaleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(borderRadius: 20.brdrRad),
       title: Row(
         children: [
-          Icon(Icons.my_location_rounded, color: Colors.blue),
-          SizedBox(width: 8),
+          Icon(Icons.my_location_rounded, color: c.primary),
+          Gap(8.w),
           Expanded(
             child: Text(
               Strings.allowLocationAccess.capEachWord(),
@@ -24,13 +24,13 @@ class RationaleDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.locationPermissionRationale, style: TxtStyle.norTxt),
-          SizedBox(height: 16),
-          _buildBullet(Icons.people_alt_rounded, Colors.purple, Strings.locationBenefitMatching),
-          SizedBox(height: 8),
-          _buildBullet(Icons.visibility_rounded, Colors.green, Strings.locationBenefitVisibility),
-          SizedBox(height: 8),
-          _buildBullet(Icons.lock_rounded, Colors.orange, Strings.locationBenefitPrivacy),
+          Text(Strings.locationPermissionRationale, style: TxtStyle.inter(fs: 13, w: 400)),
+          Gap(16.w),
+          _buildBullet(Icons.people_alt_rounded, c.primary, Strings.locationBenefitMatching),
+          Gap(4.w),
+          _buildBullet(Icons.visibility_rounded, c.primary, Strings.locationBenefitVisibility),
+          Gap(4.w),
+          _buildBullet(Icons.lock_rounded, c.primary, Strings.locationBenefitPrivacy),
         ],
       ),
       actions: [
@@ -62,8 +62,8 @@ class RationaleDialog extends StatelessWidget {
           ),
           child: Icon(icon, color: color, size: 14),
         ),
-        SizedBox(width: 8),
-        Expanded(child: Text(text, style: TxtStyle.norTxt.copyWith(fontSize: 12))),
+        Gap(8.w),
+        Expanded(child: Text(text, style: TxtStyle.norTxt.copyWith(fontSize: 13))),
       ],
     );
   }

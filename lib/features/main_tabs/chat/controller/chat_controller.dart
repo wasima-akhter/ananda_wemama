@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/services/socket/socket_service.dart';
 
 class FakeChatModel {
   final String id;
@@ -86,7 +87,7 @@ class ChatController extends GetxController {
   // ─────────────────────────────────────────────
   // Actions
   // ─────────────────────────────────────────────
-
+  final socket = Get.find<SocketService>();
   Future<void> getChatList() async {
     if (isLoading_.value) return;
     isLoading_.value = true;
@@ -95,10 +96,26 @@ class ChatController extends GetxController {
       // TODO: replace with real API call
       // final data = await ChatService().fetchChatList();
       // if (data != null) { ... }
+
+      var messages = [].obs;
+
+      @override
+      void onInit() {
+        super.onInit();
+
+        socket.on("receive_message", (data) {
+          print("📩 New Message: $data");
+          messages.add(data);
+        });
+      }
     } finally {
       isLoading_.value = false;
       unFocusAll();
     }
+  }
+
+  void sendMessage(String message, String receiverId) {
+    socket.emit("send_message", {"message": message, "receiverId": receiverId});
   }
 
   void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);

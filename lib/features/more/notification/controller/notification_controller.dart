@@ -43,4 +43,24 @@ class NotificationController extends GetxController {
 
     isupdateIsSeenLoading_.value = false;
   }
+
+  //////////
+  // final socket = Get.find<SocketService>();
+
+  // var notifications_ = [].obs;
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+
+  //   socket.on("notification", (data) {
+  //     notifications_.add(data);
+
+  //     Get.snackbar("Notification", data['title']);
+  //   });
+  // }
+
+  ///
+  ///
+  ///
 }

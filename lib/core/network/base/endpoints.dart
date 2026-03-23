@@ -29,10 +29,8 @@ class Endpoints {
 
   static const addLocation = "profile/add-location";
 
-  static const getInventoryDetail = "inventory/get-inventory-detail";
-
-  static String getFilteredInventoryDetail({required String fuelType, required String time}) {
-    return "inventory/filter-inventory?fuelType=$fuelType&time=$time";
+  static String getMatch({required String lat, required String long}) {
+    return "profile/match-user?latitude=$lat&longitude=$long";
   }
 
   static const addInventoryRate = "supplier/add-fuel-rate";

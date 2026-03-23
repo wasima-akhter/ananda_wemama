@@ -38,7 +38,7 @@ class CommunitySpotlight extends StatelessWidget {
                   contClr: c.inputBackground,
 
                   rad: 18,
-                  vp: 8,
+                  vp: 6,
                   hp: 18,
 
                   child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),

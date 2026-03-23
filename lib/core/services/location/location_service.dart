@@ -13,10 +13,9 @@ class LocationService extends GetxService {
     String? city,
   }) async {
     final data = {
-      'location': address,
+      'address': address,
       'latitude': latitude.toString(),
       'longitude': longitude.toString(),
-      // if (city != null && city.isNotEmpty) 'city': city,
     };
 
     apiCall() {

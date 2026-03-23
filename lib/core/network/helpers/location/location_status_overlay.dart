@@ -14,7 +14,7 @@ class LocationStatusOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: S.w * 0.07, vertical: 24),
+      insetPadding: EdgeInsets.symmetric(horizontal: S.w * 0.07, vertical: 24.h),
       child: _OverlayCard(isActive: isActive),
     );
   }
@@ -51,7 +51,7 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
   @override
   Widget build(BuildContext context) {
     final isActive = widget.isActive;
-    final accent = isActive ? Colors.green : Colors.orange;
+    final accent = isActive ? Colors.green : c.secondary;
 
     return FadeTransition(
       opacity: _fade,
@@ -75,14 +75,14 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                     children: [
                       CircleAvatar(
                         backgroundColor: accent.withOpacity(0.12),
-                        radius: 20,
+                        radius: 20.r,
                         child: Icon(
                           isActive ? Icons.location_on_rounded : Icons.location_off_rounded,
                           color: accent,
-                          size: 20,
+                          size: 20.h,
                         ),
                       ),
-                      SizedBox(width: 10),
+                      Gap(10.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                                   : Strings.youAreInactiveNow,
                               style: TxtStyle.interSemiB(fs: 14, w: 700, color: c.textPrimary),
                             ),
-                            SizedBox(height: 3),
+                            Gap(3.w),
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [ActiveTag(isActive: isActive)],
@@ -108,9 +108,9 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                     ],
                   ),
 
-                  SizedBox(height: 14),
+                  Gap(14.w),
                   Divider(color: c.secondary.withOpacity(0.15), height: 1),
-                  SizedBox(height: 14),
+                  Gap(14.w),
 
                   // ── Body ──────────────────────────────────────────────────
                   Row(
@@ -125,7 +125,7 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                           height: 11,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      Gap(8.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,10 +135,10 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                               style: TxtStyle.interSemiB(
                                 fs: 12,
                                 w: 400,
-                                color: c.primary.withOpacity(0.5),
+                                color: c.primary.withOpacity(0.7),
                               ),
                             ),
-                            SizedBox(height: 6),
+                            Gap(6.w),
                             Text(
                               isActive
                                   ? Strings.youCanNowFindMatches
@@ -155,7 +155,7 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                     ],
                   ),
 
-                  SizedBox(height: 16),
+                  Gap(14.w),
 
                   // ── CTA ───────────────────────────────────────────────────
                   SizedBox(
@@ -164,10 +164,8 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                         ? OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(color: c.secondary),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: 12.brdrRad),
+                              padding: 12.pv,
                             ),
                             onPressed: () => Get.back(),
                             child: Text(
@@ -178,12 +176,10 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                         : ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: c.secondary,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: 12.brdrRad),
+                              padding: 12.pv,
                             ),
-                            icon: Icon(Icons.location_on_rounded, color: Colors.white, size: 16),
+                            icon: Icon(Icons.location_on_rounded, color: Colors.white, size: 16.w),
                             label: Text(
                               Strings.enableLocation.capEachWord(),
                               style: TextStyle(color: Colors.white),

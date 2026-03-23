@@ -7,3 +7,5 @@ enum MoodType { calm, tired, anxious, stressed }
 enum BrdrCorner { topLeft, topRight, bottomLeft, bottomRight }
 
 enum MyCommunityBtnState { manage, visit, join }
+
+enum ChildGender { male, female }
