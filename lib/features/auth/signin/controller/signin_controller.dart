@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
 import '../../../../core/services/auth/signin_service.dart';
@@ -80,8 +82,10 @@ class SigninController extends GetxController {
   void onInit() {
     debugPrint('Base URL: $baseUrl');
 
-    emailCtrler.text = "ananda@yopmail.com";
-    passwordCtrler.text = "123456";
+    if (kDebugMode) {
+      emailCtrler.text = "ananda@yopmail.com";
+      passwordCtrler.text = "123456";
+    }
     super.onInit();
   }
 

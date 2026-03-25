@@ -195,6 +195,11 @@ class AppStorage extends GetxService {
     return UserRoleExt.fromString(roleStr);
   }
 
+  static const _userIdKey = 'userId';
+
+  void setUserId(String id) => _storage.write(_userIdKey, id);
+  String get getUserId => _storage.read(_userIdKey) ?? '';
+
   // ---------------------------  USER TYPE  ---------------------------
   void saveUserType(int type) => _storage.write(_userTypeKey, type);
   int? get getUserType => _storage.read(_userTypeKey);

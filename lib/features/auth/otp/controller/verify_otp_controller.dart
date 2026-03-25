@@ -56,14 +56,14 @@ class VerifyOtpController extends GetxController {
 
     isResendLoading_.value = true;
 
-    // final success = await VerifyOtpService().resendOtp(email: email);
+    final success = await VerifyOtpService().resendOtp(email: email);
 
-    // isResendLoading_.value = false;
+    isResendLoading_.value = false;
 
-    // if (success) {
-    //   isOtpResent_.value = true;
-    //   showTimer_.value = true;
-    // }
+    if (success) {
+      isOtpResent_.value = true;
+      showTimer_.value = true;
+    }
   }
 
   @override

@@ -567,7 +567,7 @@ class BoxDeco {
       BoxDecoration(
         color: clr ?? bgClr,
         borderRadius: rad.brdrRad,
-        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+        border: Border.all(color: brdrClr ?? c.inputBorder, width: 0.6.w),
       );
 
   static BoxDecoration decBrdrBottom({Color? brdrClr, double? w}) => BoxDecoration(

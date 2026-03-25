@@ -71,7 +71,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.w),
-      decoration: BoxDeco.decRadiusAll(20, clr: c.textOnPrimary),
+      decoration: BoxDeco.decRadAllBorderedAll(20, clr: c.textOnPrimary, brdrClr: c.secondary),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,13 +83,13 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 UserAvatar(imageUrl: user.profileImage ?? ''),
-                SizedBox(height: itemGap),
+                Gap(itemGap),
                 _getUserName(user),
               ],
             ),
           ),
 
-          SizedBox(height: itemGap),
+          Gap(itemGap),
 
           // ── Info rows ──────────────────────────────────────────────────
           _getUserInfo([
@@ -105,17 +105,17 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
             ),
           ]),
 
-          SizedBox(height: itemGap),
+          Gap(itemGap),
           _getRowOfImages(user),
 
-          SizedBox(height: itemGap),
+          Gap(itemGap),
 
           // ── Children ───────────────────────────────────────────────────
           if ((user.children ?? []).isNotEmpty) ...[
             Text(Strings.children.cap, style: TxtStyle.outfitSemiB(fs: 15, w: 500)),
-            SizedBox(height: itemGap),
+            Gap(itemGap),
             _getChildrenRow(user),
-            SizedBox(height: 4),
+            Gap(itemGap),
           ],
 
           // ── About me ───────────────────────────────────────────────────
@@ -124,7 +124,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
             isExpanded: isExpanded,
             onToggle: widget.onTapSeeMore,
           ),
-          SizedBox(height: 4),
+          Gap(itemGap),
 
           // ── Pass / Wave ────────────────────────────────────────────────
           _getDeclineAcceptBtnRow(),
@@ -136,7 +136,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
   Widget _getUserName(MatchResponseModel user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Flexible(
           child: Text(

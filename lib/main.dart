@@ -5,7 +5,6 @@ import 'app/app.dart';
 import 'core/local/app_storage.dart';
 import 'core/network/network_manager.dart';
 import 'core/services/location/location_service.dart';
-import 'core/services/socket/socket_service.dart';
 import 'core/themes/theme_service.dart';
 
 void main() async {
@@ -24,7 +23,7 @@ void main() async {
   // Initialize LocalStorageService singleton
   await Get.putAsync<AppStorage>(() async => await AppStorage.init());
 
-  await Get.putAsync(() async => await SocketService().init());
+  // await Get.putAsync(() async => await SocketService().init());
 
   // ✅ Initialize services AFTER AppStorage
   // await initServices();

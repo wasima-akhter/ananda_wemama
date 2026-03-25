@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:mama_app/core/common_widgets/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
 import 'package:mama_app/features/main_tabs/match/services/match_service.dart';
@@ -20,22 +18,27 @@ class MatchController extends GetxController {
   RxBool isSeeMore = false.obs;
   RxBool subUpgradeNeeded = false.obs;
 
-  /// ---------------- MOCK DATA ----------------
-
-  /// change this to simulate subscription
   bool isPaidUser = false;
-
-  /// free user limit
   int freeDailyLimit = 10;
-
-  /// how many searches done today
   int searchesToday = 0;
   int _searchId = 0;
 
-  @override
-  void onInit() {
-    super.onInit();
+  // ── Local match queue ──────────────────────────────────────────────────────
+  // fetchedMatches holds ALL results from the last API call.
+  // _currentMatchIndex tracks which one is currently displayed.
+  // Pass advances the index locally — no new API call until the list is exhausted.
+  final fetchedMatches = <MatchResponseModel>[].obs;
+  int _currentMatchIndex = 0;
+
+  MatchResponseModel? get currentMatch {
+    if (fetchedMatches.isEmpty) return null;
+    if (_currentMatchIndex >= fetchedMatches.length) return null;
+    return fetchedMatches[_currentMatchIndex];
   }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  @override
+  void onInit() => super.onInit();
 
   @override
   void onClose() {
@@ -46,80 +49,68 @@ class MatchController extends GetxController {
 
   @override
   void dispose() {
-    cancelSearch(); // cancel when leaving page
+    cancelSearch();
     super.dispose();
   }
 
-  /// ------- Load address ---------///
-  /// Cache: matchId → resolved one-line address string
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ADDRESS RESOLUTION
+  // ═══════════════════════════════════════════════════════════════════════════
+
   final _addressCache = <String, String>{};
 
-  /// Returns the resolved address for a given match.
-  /// Priority: address field → reverse geocode from coordinates → placeholder
   Future<String> resolveAddress(MatchResponseModel user) async {
     final id = user.id ?? '';
-
-    // Return cached value immediately if already resolved
     if (_addressCache.containsKey(id)) return _addressCache[id]!;
 
-    // ── 1. Use address field if non-empty ────────────────────────────────────
     final rawAddress = user.address?.trim() ?? '';
     if (rawAddress.isNotEmpty) {
       _addressCache[id] = rawAddress.capEachWord();
       return _addressCache[id]!;
     }
 
-    // ── 2. Fall back to reverse geocoding from coordinates ───────────────────
     final coords = user.location?.coordinates;
-    // GeoJSON order is [longitude, latitude]
     if (coords != null && coords.length >= 2) {
-      final lng = coords[0];
-      final lat = coords[1];
-
-      final resolved = await getOneLineAddress(latitude: lat.toString(), longitude: lng.toString());
-
+      final resolved = await getOneLineAddress(
+        latitude: coords[1].toString(), // GeoJSON: [lng, lat]
+        longitude: coords[0].toString(),
+      );
       _addressCache[id] = resolved;
       return resolved;
     }
 
-    // ── 3. Nothing available ─────────────────────────────────────────────────
     _addressCache[id] = 'N/A';
     return 'N/A';
   }
-  ////////
 
-  /// ---------------- SEARCH ----------------
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SEARCH
+  // ═══════════════════════════════════════════════════════════════════════════
+
   RxBool isSearchLoading = false.obs;
-  final fetchedMatches = <MatchResponseModel>[].obs;
 
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
 
-    // ── 1. FREE USER DAILY LIMIT HIT ─────────────────────────────────────────
-    // Show dialog + fetch matches in background so we can pass them to the
-    // upgrade screen. The user sees the limit dialog while we load.
+    // ── 1. FREE USER DAILY LIMIT HIT ──────────────────────────────────────────
     if (!isPaidUser && searchesToday >= freeDailyLimit) {
       subUpgradeNeeded.value = true;
-      showDailyLimitDialog(); // non-blocking — dialog shows, flow continues
-
-      _fetchMatchesAndUpgrade(); // fire-and-forget background fetch
+      showDailyLimitDialog();
+      _fetchMatchesAndUpgrade();
       return;
     }
 
     // ── 2. FREE USER WITHIN LIMIT ─────────────────────────────────────────────
-    if (!isPaidUser) {
-      searchesToday++;
-    }
+    if (!isPaidUser) searchesToday++;
 
-    // ── 3. SEARCHING STATE + SIMULATED DELAY ─────────────────────────────────
+    // ── 3. SEARCHING STATE + SIMULATED DELAY ──────────────────────────────────
     matchState.value = MatchState.searching;
     await Future.delayed(const Duration(seconds: 5));
 
-    // Cancelled or superseded by a newer search — bail out silently
     if (currentSearchId != _searchId) return;
 
     // ── 4. FETCH REAL MATCHES FROM BACKEND ────────────────────────────────────
-    if (isSearchLoading.value) return; // prevent duplicate concurrent calls
+    if (isSearchLoading.value) return;
     isSearchLoading.value = true;
 
     try {
@@ -129,7 +120,6 @@ class MatchController extends GetxController {
         longitude: slc.longitude.toString(),
       );
 
-      // Cancelled while awaiting network — discard result
       if (currentSearchId != _searchId) return;
 
       if (data.isEmpty) {
@@ -137,21 +127,18 @@ class MatchController extends GetxController {
         return;
       }
 
+      // Fresh results — reset queue to start
       fetchedMatches.value = data;
+      _currentMatchIndex = 0;
       matchState.value = MatchState.found;
     } catch (e) {
       debugPrint('startSearching fetch error: $e');
-      // Don't leave the user on MatchState.searching on error
-      if (currentSearchId == _searchId) {
-        matchState.value = MatchState.noMatch;
-      }
+      if (currentSearchId == _searchId) matchState.value = MatchState.noMatch;
     } finally {
       isSearchLoading.value = false;
     }
   }
 
-  /// Fetches matches in the background while the daily-limit dialog is visible,
-  /// then navigates to the upgrade screen with the results pre-loaded.
   Future<void> _fetchMatchesAndUpgrade() async {
     if (isSearchLoading.value) return;
     isSearchLoading.value = true;
@@ -167,14 +154,13 @@ class MatchController extends GetxController {
         matchState.value = MatchState.noMatch;
       } else {
         fetchedMatches.value = data;
+        _currentMatchIndex = 0;
       }
 
-      // Small pause so the dialog has time to render before navigating away
       await Future.delayed(const Duration(milliseconds: 600));
       navToSubUpgrade();
     } catch (e) {
       debugPrint('_fetchMatchesAndUpgrade error: $e');
-      // Still navigate — upgrade screen can handle empty state
       navToSubUpgrade();
     } finally {
       isSearchLoading.value = false;
@@ -182,59 +168,83 @@ class MatchController extends GetxController {
   }
 
   void navToSubUpgrade() {
-    if (Get.isDialogOpen ?? false) Get.back(); // close daily-limit dialog first
+    if (Get.isDialogOpen ?? false) Get.back();
     Get.toNamed(RoutePaths.subscriptionUpgrade);
   }
 
-  /// simulate backend matching
-  bool _mockMatchResult() {
-    /// 60% chance to find match
-    return Random().nextInt(100) < 60;
-  }
-
-  /// ---------------- CANCEL SEARCH ----------------
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CANCEL / RESET
+  // ═══════════════════════════════════════════════════════════════════════════
 
   void cancelSearch() {
-    _searchId++; // invalidate previous search
+    _searchId++;
     matchState.value = MatchState.idle;
   }
 
-  /// ---------------- SEE MORE ----------------
-
-  void toggleSeeMore() {
-    isSeeMore.toggle();
-  }
+  void toggleSeeMore() => isSeeMore.toggle();
 
   void resetState() {
     matchState.value = MatchState.idle;
+    _currentMatchIndex = 0;
   }
 
-  /// ---------------- ACTION (WAVE / PASS) ----------------
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ACTION — WAVE / PASS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   final socket = Get.find<SocketService>();
+  final stopSearching = false.obs;
+
   Future<void> onAction(bool hasWaved, {required String receiverId}) async {
     isLoading.value = true;
-
     await Future.delayed(const Duration(seconds: 1));
-
     isLoading.value = false;
 
     if (hasWaved) {
-      // send socket request to the userid first, then show the popup.
-
       sendConversationRequest(receiverId);
-
-      /// show wave sent popup
-      showWaveSentDialog();
-
-      /// search again after delay
-      Future.delayed(const Duration(seconds: 1), () async {
-        Get.back(); // close popup
-
-        await startSearching();
-      });
+      await showWaveSentDialog(stopSearching: stopSearching); // waits until she taps close
+      if (stopSearching.value) {
+        matchState.value = MatchState.idle;
+      } else {
+        await _showNextMatch();
+      } // then advances
+      // Future.delayed(const Duration(seconds: 3), () async {
+      //   Get.back(); // close wave sent dialog
+      //   await _showNextMatch();
+      // });
     } else {
-      /// pass → find next match
-      startSearching();
+      // Pass — show next user from existing list, no API call
+      // Brief visual pause so the pass feels intentional, not instant
+      matchState.value = MatchState.idle;
+      await Future.delayed(const Duration(milliseconds: 600));
+      await _showNextMatch();
+    }
+  }
+
+  /// Advances to the next match in the cached list.
+  /// Only hits the API again when the list is fully exhausted.
+  Future<void> _showNextMatch() async {
+    _currentMatchIndex++;
+
+    if (_currentMatchIndex < fetchedMatches.length) {
+      // Still have local matches — just update the displayed index
+      // fetchedMatches is already observed; rebuild is triggered by
+      // matchState staying as MatchState.found while currentMatch getter
+      // returns the new index. Force a notify by toggling state briefly.
+      matchState.value = MatchState.searching;
+      await Future.delayed(const Duration(milliseconds: 400)); // brief transition
+      matchState.value = MatchState.found;
+
+      debugPrint(
+        "➡️ Next local match: $_currentMatchIndex / ${fetchedMatches.length - 1} "
+        "(${fetchedMatches[_currentMatchIndex].name})",
+      );
+    } else {
+      // List exhausted — fetch fresh batch from API
+      debugPrint("🔄 Match list exhausted — fetching new batch from API");
+      _currentMatchIndex = 0;
+      fetchedMatches.clear();
+      await startSearching();
     }
   }
 
@@ -243,16 +253,11 @@ class MatchController extends GetxController {
   }
 
   Future<void> onTapUpgradeNow() async {
-    if (Get.isDialogOpen ?? false) {
-      Get.back(); // close popup
-    }
-
+    if (Get.isDialogOpen ?? false) Get.back();
     final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
-
     print("result: $result");
   }
 }
-
 /* socket 
 
 
@@ -293,4 +298,16 @@ startSearching()
 
 
 
+      */
+
+
+      /*
+
+user 1" ananda:
+I/flutter (10351):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI1Mjg0ZTJhNjg1YjQwOGQ4ZmY4MDciLCJlbWFpbCI6ImFuYW5kYUB5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjUyODRlMmE2ODViNDA4ZDhmZjgwOSIsImlhdCI6MTc3NDM0ODQ3OCwiZXhwIjoxODA1ODg0NDc4fQ.jtVoZZOpuniKm4gbc7FCO746cffDZP7esa9Zp_SbchY 
+     
+     
+     user 2 : abc
+     
+I/flutter (18447):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI2NjFkNmFiYzExMDM3MDVhYTc3MDIiLCJlbWFpbCI6ImFiY0B5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjY2MWQ2YWJjMTEwMzcwNWFhNzcwNCIsImlhdCI6MTc3NDM0ODQ5NCwiZXhwIjoxODA1ODg0NDk0fQ.yX446f1F8PQGLIYxpB_bpWmtBHUg64qZow_XeQzf7H0 
       */

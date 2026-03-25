@@ -81,29 +81,27 @@ class UserDetailComponent extends StatelessWidget {
 
   Widget _getUserName({required String userName, required String userAge}) {
     return Align(
-      alignment: Alignment.center,
+      // alignment: Alignment.center,
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ContainerBordered(
-            contClr: ctransp,
-            vp: 0,
-            child: Row(
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(text: userName.capEachWord()),
-                      if (userAge != '0') TextSpan(text: ', $userAge'),
-                    ],
-                  ),
-                  style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary),
-                ),
-                Gap(3),
-                SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
-              ],
+          Flexible(
+            child: Text.rich(
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              TextSpan(
+                children: [
+                  TextSpan(text: userName.capEachWord()),
+                  if (userAge != '0') TextSpan(text: ', $userAge'),
+                ],
+              ),
+              style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary),
             ),
           ),
+          Gap(3),
+          SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
         ],
       ),
     );

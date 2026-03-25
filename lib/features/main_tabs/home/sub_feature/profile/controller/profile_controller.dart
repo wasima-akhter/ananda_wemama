@@ -46,6 +46,8 @@ class ProfileController extends GetxController {
           imageUrl: data.profileImage,
         );
 
+        storage.setUserId(data.id ?? '');
+
         // also save the lat long
         if (data.location != null) {
           storage.setUserLongitude(data.location?.coordinates?.first ?? 0.0);

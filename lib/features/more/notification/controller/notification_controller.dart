@@ -16,6 +16,10 @@ class NotificationController extends GetxController {
     // loadNotifications();
   }
 
+  void addNotification(dynamic data) {
+    notifications.insert(0, NotificationsDataModel.fromJson(data));
+  }
+
   Future<void> loadNotifications() async {
     isLoading_.value = true;
 

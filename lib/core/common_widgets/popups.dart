@@ -72,8 +72,11 @@ Future<T?> showAnimatedDialog<T>({
 }
 
 //
-Future<void> showWaveSentDialog() {
-  return showAnimatedDialog(context: Get.context!, child: WaveSentPopup());
+Future<void> showWaveSentDialog({required RxBool stopSearching}) {
+  return showAnimatedDialog(
+    context: Get.context!,
+    child: WaveSentPopup(stopSearching: stopSearching),
+  );
 }
 
 Future<void> showDailyLimitDialog() {

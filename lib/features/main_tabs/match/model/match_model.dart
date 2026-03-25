@@ -55,7 +55,7 @@ class MatchResponseModel {
           ? []
           : List<String>.from(json["interesteds"]!.map((x) => x)),
       mumStage: json["mumStage"],
-      distanceKm: json["distanceKm"],
+      distanceKm: (json["distanceKm"] as num).toDouble(),
     );
   }
 }

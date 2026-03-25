@@ -30,6 +30,7 @@ class ProfileSection extends StatelessWidget {
           children: [
             Gap(4.h),
             _buildInactiveInfo(),
+            Text(pc.userProfileData.value?.email ?? ''),
             UserDetailComponent(
               isLoading: udc.isLoading_,
               onTapSeeMore: udc.toggleSeeMore,

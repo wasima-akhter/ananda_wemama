@@ -93,34 +93,37 @@ class VerifyOtpScreen extends StatelessWidget {
                         ),
                       ),
                       otpc.showTimer
-                          ? Transform.scale(
-                              scale: 0.5,
-                              child: EasyCountdownTimerWidget(
-                                key: ValueKey(DateTime.now()),
-                                duration: Duration(seconds: 5),
-                                digitTextStyle: TxtStyle.outfit(fs: 14, w: 600, color: c.primary),
-                                separatorTextStyle: TxtStyle.outfit(fs: 14, color: Colors.grey),
-                                onFinished: () {
-                                  print('Countdown Complete!');
-                                  otpc.showTimer_.value = false; // hide timer
-                                  otpc.isOtpResent_.value =
-                                      false; // switch text back to "youHaventGotOTP"
-                                },
+                          ? DefaultTextStyle(
+                              style: TxtStyle.outfit(fs: 14, w: 600, color: c.primary),
+                              child: Transform.scale(
+                                scale: 0.4,
+                                child: EasyCountdownTimerWidget(
+                                  key: ValueKey(DateTime.now()),
+                                  duration: Duration(seconds: 5),
+                                  digitTextStyle: TxtStyle.outfit(fs: 14, w: 600, color: c.primary),
+                                  separatorTextStyle: TxtStyle.outfit(fs: 14, color: c.primary),
+                                  onFinished: () {
+                                    print('Countdown Complete!');
+                                    otpc.showTimer_.value = false; // hide timer
+                                    otpc.isOtpResent_.value =
+                                        false; // switch text back to "youHaventGotOTP"
+                                  },
 
-                                showDays: false,
-                                showHours: false,
-                                showMinutes: true,
-                                showSeconds: true,
-                                separatedWidget: Text(
-                                  " : ",
-                                  style: TxtStyle.outfit(fs: 14, color: Colors.blue),
+                                  showDays: false,
+                                  showHours: false,
+                                  showMinutes: true,
+                                  showSeconds: true,
+                                  separatedWidget: Text(
+                                    " : ",
+                                    style: TxtStyle.outfit(fs: 14, color: c.primary),
+                                  ),
                                 ),
                               ),
                             )
                           : CusGestureDetector(
                               onTap: otpc.onTapResendOtp,
                               child: otpc.isResendLoading
-                                  ? LoadingWhite()
+                                  ? LoadingPrimary()
                                   : Text(
                                       Strings.resendOTP,
                                       style: TxtStyle.outfit(w: 600, color: c.primary),

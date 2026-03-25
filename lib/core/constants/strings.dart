@@ -717,6 +717,9 @@ class Strings {
   //
   static const String setChildren = "Set Children";
   static const String noChildrenAddedYet = "No children added yet";
+  //
+  static const String continueSearching = "Continue Searching";
+  static const String stop = "Stop";
 }
 
 //

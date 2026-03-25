@@ -10,13 +10,16 @@ class MatchFoundState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // currentMatch uses _currentMatchIndex — advances locally on pass
+    final user = mc.currentMatch;
+    if (user == null) return const SizedBox.shrink();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         MatchUserDetails(
           resolveAddress: (user) =>
               mc.resolveAddress(user), // ← passed so MatchUserDetails can call mc.resolveAddress()
-          user: mc.fetchedMatches.first,
+          user: user,
           isLoading: mc.isLoading,
           isSeeMore: mc.isSeeMore,
           onTapSeeMore: mc.toggleSeeMore,

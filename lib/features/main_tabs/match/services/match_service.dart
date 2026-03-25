@@ -13,7 +13,8 @@ class MatchService extends GetxService {
   }) async {
     apiCall() {
       return ApiClient().get(
-        Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
+        // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
+        Endpoints.getMatch(long: "90.4075757", lat: "23.7808752").getUrl,
         reqName: Strings.match,
         headers: HeaderHelpers.getAuthHeader(),
       );

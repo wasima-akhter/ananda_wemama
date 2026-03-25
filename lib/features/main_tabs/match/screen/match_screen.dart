@@ -14,6 +14,7 @@ class MatchScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       onRefresh: () async {},
+
       appBar: CommonAppBarContent(title: Strings.match, hasBackNavArrow: false),
       child: Obx(() {
         return switch (mc.matchState.value) {
