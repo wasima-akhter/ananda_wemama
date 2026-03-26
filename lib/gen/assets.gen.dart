@@ -497,6 +497,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/no_net_2.png
   AssetGenImage get noNet2 => const AssetGenImage('assets/images/no_net_2.png');
 
+  /// File path: assets/images/no_search_img.png
+  AssetGenImage get noSearchImg =>
+      const AssetGenImage('assets/images/no_search_img.png');
+
   /// File path: assets/images/nothing-yet.json
   String get nothingYet => 'assets/images/nothing-yet.json';
 
@@ -607,6 +611,7 @@ class $AssetsImagesGen {
     momsGroupPhoto,
     noNet,
     noNet2,
+    noSearchImg,
     nothingYet,
     onboarding1,
     onboarding2,

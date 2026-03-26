@@ -1,7 +1,11 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../core/services/socket/socket_events.dart';
+import '../../../../core/services/socket/socket_service.dart';
+import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
+import '../model/new_wave_req_list_item_model.dart';
+import '../service/wave_user_profile_info_service.dart';
 
 class WaveRequestController extends GetxController {
   var fakeNewWavesList = [
@@ -12,17 +16,13 @@ class WaveRequestController extends GetxController {
     FakeNewWavesModel(id: "5", name: "Eve", time: "1 Jan 2026", imageUrl: Strings.fakeImageUrl),
   ];
 
-  final listOfInfo = [
-    UiInfoItem(iconPath: IconsPath.locationBold, text: 'Ikeja, Lagos'),
-    UiInfoItem(iconPath: IconsPath.chartFilled, text: 'TTC:  Trying to conceive'),
-    UiInfoItem(
-      iconPath: IconsPath.heartHalfFilled,
-      text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
-    ),
-  ];
-
   @override
   void onInit() {
+    getNewWavesList();
+
+    ever(newWaveList, (callback) {
+      // show the list anew after it changed.
+    });
     super.onInit();
   }
 
@@ -41,13 +41,22 @@ class WaveRequestController extends GetxController {
     Get.back();
 
     if (isAccepted) {
-      // show popup
-      showReqAcceptedDialog();
-      Future.delayed(Duration(seconds: 3), () {
-        Get.back();
+      // first trigger the emit of acceptation
+      //
+      acceptUserWave("jhcvdsj");
 
-        showBothConnectedDialog();
-      });
+      // listen method is success,
+      // then show:
+      final successAccept = true;
+      if (successAccept) {
+        // show popup
+        showReqAcceptedDialog();
+        Future.delayed(Duration(seconds: 3), () {
+          Get.back();
+
+          showBothConnectedDialog();
+        });
+      }
     }
   }
 
@@ -55,12 +64,18 @@ class WaveRequestController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
+  final newWaveList = <NewWaveListItemModel>[].obs;
+
   /// Fetch the latest  data from API
   Future<void> getNewWavesList() async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 
+    debugPrint(' getNewWavesList.. ');
+
     try {
+      final currentUserId = currentProfileId;
+      getConversationRequestList(currentUserId);
       // final data = await ChatService().fetchChatList(
 
       // );
@@ -76,6 +91,47 @@ class WaveRequestController extends GetxController {
       unFocusAll();
     }
   }
+
+  void updateWaveList(List<NewWaveListItemModel> list) {
+    newWaveList.assignAll(list);
+  }
+
+  final socket = Get.find<SocketService>();
+  void getConversationRequestList(String receiverId) {
+    socket.emit(SocketEvents.getConversationRequests, {"receiverId": receiverId});
+  }
+
+  void acceptUserWave(String conversationId) {
+    socket.emit(SocketEvents.acceptConversationRequest, {"conversationId": conversationId});
+  }
+
+  // API loading state
+  var isgetUserProfileLoading_ = false.obs;
+  bool get isgetUserProfileLoading => isgetUserProfileLoading_.value;
+
+  final waveUserProfileData = Rxn<ProfileDataModel>();
+  //// get wave user details
+  ///
+  /// Fetch the latest profile from API
+  Future<void> getUserProfile({required String userId}) async {
+    if (isgetUserProfileLoading_.value) return; // Prevent duplicate calls
+    isgetUserProfileLoading_.value = true;
+
+    try {
+      final data = await WaveUserProfileInfoService().fetchUserProfile(userId: userId);
+
+      if (data != null) {
+        waveUserProfileData.value = data;
+        print("data fetching profile: ${(data)}");
+      }
+    } catch (e) {
+      print("Error fetching profile: $e");
+    } finally {
+      isgetUserProfileLoading_.value = false;
+    }
+  }
+
+  ///
 }
 
 class FakeNewWavesModel {

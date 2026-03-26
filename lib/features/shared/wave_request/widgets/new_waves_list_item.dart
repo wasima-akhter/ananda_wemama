@@ -1,63 +1,79 @@
 import 'package:mama_app/core/common_widgets/popups.dart';
+import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../../../main_tabs/chat/widgets/chat_user_image.dart';
 import '../controller/wave_request_controller.dart';
+import '../model/new_wave_req_list_item_model.dart';
 
 class NewWavesListItem extends StatelessWidget {
   final WaveRequestController wrc;
-  final FakeNewWavesModel chatModel;
+  final NewWaveListItemModel model;
 
-  const NewWavesListItem({super.key, required this.chatModel, required this.wrc});
+  const NewWavesListItem({super.key, required this.model, required this.wrc});
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = chatModel.imageUrl;
-    final name = chatModel.name;
-    final time = chatModel.time;
+    final myId = currentProfileId;
+
+    // 🔥 IMPORTANT: get OTHER user (not me)
+    final otherUser = model.participants?.firstWhere(
+      (p) => p.id != myId,
+      orElse: () => model.participants!.first,
+    );
+
+    final name = otherUser?.name ?? "Unknown";
+    final imageUrl = otherUser?.profileImage ?? "";
+
+    final time =
+        (model.createdAt != null
+                ? DateHelper()
+                      .formatTimeAgo(model.createdAt!.toString())
+                      .date // optional helper
+                : "")
+            .toString();
 
     final udc = Get.find<UserDetailController>();
 
     return CusGestureDetector(
-      onTap: () {
-        // show a pop up with wave details
+      onTap: () async {
+        final otherUserId = otherUser?.id;
+
+        if (otherUserId == null) return;
+
+        // 🔥 open popup FIRST
         newWavesUserDetailsDialog(
-          isLoading: udc.isLoading_,
+          isLoading: wrc.isgetUserProfileLoading_,
           onTapAction: wrc.onTapAction,
           isSeeMore: udc.isSeeMore,
           onTapSeeMoreTxt: udc.toggleSeeMore,
-          user: udc.fakeUserDetails,
+          user: wrc.waveUserProfileData, // ✅ Rxn
         );
+
+        // 🔥 THEN fetch
+        await wrc.getUserProfile(userId: otherUserId);
       },
       child: ContainerBordered(
-        mv: 10,
-
-        vp: 0,
-        hp: 0,
+        mv: 2,
+        // contClr: c.bottomSheetBackground,
         child: Row(
           children: [
             ChatUserImage(imageUrl: imageUrl, name: name),
             Gap(itemGap),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    name.cap,
-                    style: TxtStyle.outfitSemiB(fs: 16, w: 500, color: c.primary),
-                  ),
-                ],
+              child: Text(
+                name.capEachWord(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TxtStyle.outfitSemiB(fs: 16, w: 500, color: c.primary),
               ),
             ),
-
             Gap(itemGap),
-            Text(time.cap, style: TxtStyle.outfitSmSecNor500),
+            Text(time, style: TxtStyle.outfitSmSecNor500),
           ],
         ),
-      ).get10cm.mR(10),
+      ).get10cm.mR(0),
     );
   }
 }

@@ -33,11 +33,9 @@ class Endpoints {
     return "profile/match-user?latitude=$lat&longitude=$long";
   }
 
-  static const addInventoryRate = "supplier/add-fuel-rate";
-  static const inventoryFuelDieselLoading = "inventory/today-fuel-loading";
-  static const getFuelRate = "supplier/get-fuel-rate";
-
-  static const createNewOrder = "order/create-new-order";
+  static String getUserProfile({required String userId}) {
+    return "profile/get-friend-profile?profileId=$userId";
+  }
 
   /// Dynamic endpoint for nearest suppliers and price stats
   static String findNearestSuppliersAndPriceStats({

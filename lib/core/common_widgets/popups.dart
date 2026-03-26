@@ -4,9 +4,9 @@ import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_acce
 
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_tabs/community/widgets/community_guildline.dart';
+import '../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
-import 'common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import 'popup_widgets/awaiting_verification_popup.dart';
 import 'popup_widgets/cancel_order_dialog.dart';
 import 'popup_widgets/daily_limit_popup.dart';
@@ -120,7 +120,7 @@ Future<void> newWavesUserDetailsDialog({
   required Future<void> Function(bool isAccepted) onTapAction,
   required RxBool isSeeMore,
   required void Function() onTapSeeMoreTxt,
-  required FakeUserDetailsModel? user,
+  required Rxn<ProfileDataModel> user,
 }) async {
   await Popups().baseAlert(
     context: Get.context!,

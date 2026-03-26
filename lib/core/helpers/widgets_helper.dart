@@ -2,9 +2,11 @@ import 'package:pinput/pinput.dart';
 
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_tabs/community/model/comments_bottom_sheet.dart';
+import '../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
 import '../../features/video_meeting/modules/meeting_comments_bottom_sheet.dart';
 import '../common_widgets/common_components/set_children_bottom_sheet.dart';
+import '../common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 
 PinTheme? defaultPinTheme = PinTheme(
   width: 56.w,
@@ -245,6 +247,52 @@ String getChildAge(
   } catch (e) {
     return placeholder;
   }
+}
+
+//
+/// --------------   profile data helpers ----------- ///
+
+FakeUserDetailsModel? mapToUserModel(ProfileDataModel? data) {
+  if (data == null) return null;
+
+  return FakeUserDetailsModel(
+    imageUrl: data.profileImage ?? '',
+    name: data.name ?? '',
+    age: calculateAge(data.dob),
+    aboutMe: data.bio ?? '',
+    galleryImages: data.images,
+    children: data.children.map((e) => getChildAge(e.dob.toString())).toList(),
+    infoList: buildInfoList(data),
+  );
+}
+
+List<UiInfoItem> buildInfoList(ProfileDataModel data) {
+  final List<UiInfoItem> list = [];
+  final coords = data.location?.coordinates;
+
+  if (coords != null && coords.length >= 2) {
+    list.add(
+      UiInfoItem(iconPath: IconsPath.locationBold, text: "${data.city ?? ''}, ${data.state ?? ''}"),
+    );
+  }
+
+  if (data.mumStage != null) {
+    list.add(UiInfoItem(iconPath: IconsPath.chartFilled, text: data.mumStage!));
+  }
+
+  if (data.interesteds.isNotEmpty) {
+    list.add(UiInfoItem(iconPath: IconsPath.heartHalfFilled, text: data.interesteds.join(', ')));
+  }
+
+  return list;
+}
+
+int calculateAge(DateTime? dob) {
+  if (dob == null) return 0;
+  final now = DateTime.now();
+  int age = now.year - dob.year;
+  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
+  return age;
 }
 
 //

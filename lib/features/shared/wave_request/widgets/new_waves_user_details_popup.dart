@@ -1,11 +1,13 @@
 import 'package:mama_app/core/common_widgets/common_components/user_detaIl_component/ui/user_detail_component.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../../../../core/common_widgets/small_popup_dialog.dart';
+import '../../../../core/helpers/widgets_helper.dart';
+import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
+import '../../../main_tabs/home/sub_feature/profile/widgets/profile_shimmer.dart';
 
 class NewWavesUserDetailsPopup extends StatelessWidget {
-  final FakeUserDetailsModel? user;
+  final Rxn<ProfileDataModel> user;
   final RxBool isLoading;
   final VoidCallback onTapSeeMore;
   final Future<void> Function(bool isAccepted) onTapAction;
@@ -22,30 +24,44 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (user == null) {
-      return SizedBox.shrink();
-    }
+    return Obx(() {
+      final userValue = user.value;
 
-    return LargePopupDialog(
-      child: BounceSingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: itemGap,
-          children: [
-            UserDetailComponent(
-              user: user,
-              isLoading: isLoading,
-              onTapSeeMore: onTapSeeMore,
-              onTapAction: onTapAction,
-              isSeeMore: isSeeMore,
-            ),
-            // decline and accept buttons
-            _getDeclineAcceptBtnRow(),
-          ],
+      if (isLoading.value) {
+        return LargePopupDialog(
+          child: Column(mainAxisSize: MainAxisSize.min, children: [const ProfileShimmer()]),
+        );
+      }
+
+      if (userValue == null) {
+        return LargePopupDialog(
+          child: SizedBox(
+            height: 200,
+            child: Center(child: Text("Failed to load user", style: TxtStyle.outfitSmNor)),
+          ),
+        );
+      }
+
+      final userData = mapToUserModel(userValue);
+
+      return LargePopupDialog(
+        child: BounceSingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              UserDetailComponent(
+                user: userData,
+                isLoading: isLoading,
+                onTapSeeMore: onTapSeeMore,
+                onTapAction: onTapAction,
+                isSeeMore: isSeeMore,
+              ),
+              _getDeclineAcceptBtnRow(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _getDeclineAcceptBtnRow() {

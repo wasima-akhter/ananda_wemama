@@ -6,6 +6,9 @@ import 'package:mama_app/routes/route_paths.dart';
 
 import '../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../core/config/app_info.dart';
+import '../core/network/helpers/network_helpers.dart';
+import '../core/services/socket/socket_service.dart';
+import '../core/utils/extension/binding_extensions.dart';
 
 class App extends StatelessWidget {
   final bool hasInternet;
@@ -45,6 +48,16 @@ class App extends StatelessWidget {
           initialBinding: BindingsBuilder(() {
             Get.put(UserDetailController(), permanent: true);
             Get.put(ReportController(), permanent: true);
+
+            // ── Register SocketService first (MatchController depends on it) ──────────
+            Get.putPermanent(SocketService());
+            final socketService = Get.find<SocketService>();
+
+            // ── Connect immediately if user is already logged in (token exists) ───────
+            // On fresh login this is skipped — SigninService.connectSocket() handles it.
+            if ((getToken ?? '').isNotEmpty) {
+              socketService.connectSocket();
+            }
           }),
         );
       },

@@ -9,11 +9,11 @@ class ChatUserImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final letter = name.isNotEmpty ? name.substring(0, 1).toUpperCase() : "?";
     return imageUrl.isNotEmpty
-        ? NetworkImageWidget(imageUrl: imageUrl, radius: 20, isCircle: true)
+        ? NetworkImageWidget(imageUrl: imageUrl, radius: 16, isCircle: true)
         : Container(
             decoration: 0.circleBrdr(),
             child: CircleAvatar(
-              radius: 22.r,
+              radius: 16.r,
               backgroundColor: c.inputBackground,
               child: Text(letter, style: TxtStyle.outfitSmTitle),
             ),

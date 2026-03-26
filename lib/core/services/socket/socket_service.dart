@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:mama_app/core/config/app_info.dart';
+import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
+import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
@@ -142,6 +144,28 @@ class SocketService extends GetxService {
         notificationData?["description"] ?? "",
       );
     });
+
+    _on(SocketEvents.conversationRequests, (data) {
+      print("📥 conversation_requests: $data");
+
+      // parse the data
+
+      final parsedData = (data["data"] as List? ?? [])
+          .map((e) => NewWaveListItemModel.fromJson(e))
+          .toList();
+
+      if (Get.isRegistered<WaveRequestController>()) {
+        Get.find<WaveRequestController>().updateWaveList(parsedData);
+      }
+
+      // Get.snackbar("New Wave List Retrived", data["message"] ?? "you got the list!");
+    });
+
+    _on(SocketEvents.conversationAccepted, (data) {
+      print("📥 conversation_accepted: $data");
+
+      Get.snackbar("conversation Accepted ", data["message"] ?? "conversationAccepted");
+    });
   }
 
   void _handleResponseSnackbar(Map<String, dynamic> data) {
@@ -221,3 +245,11 @@ class SocketService extends GetxService {
     return Map<String, dynamic>.from(data as Map);
   }
 }
+
+
+
+/*
+
+
+{"statusCode":200,"success":true,"message":"You have retrieved all conversation requests.","data":[{"_id":"69c3b1238adbc682371dbea3","participants":[{"_id":"69ae9cb708dc2ab1a71ac76e","name":"soubir","profileImage":"uploads/profile-image/profile-avatar-1773811023684.jpeg"},{"_id":"69b661d6abc1103705aa7704","name":"abc","profileImage":"uploads/profile-image/screenshot-2026-03-17-094619-1773741134511.png"}],"status":"Pending","createdAt":"2026-03-25T09:55:47.826Z","updatedAt":"2026-03-25T09:55:47.826Z","__v":0}]}
+*/

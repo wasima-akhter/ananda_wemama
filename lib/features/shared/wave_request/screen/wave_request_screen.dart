@@ -1,3 +1,5 @@
+import 'package:mama_app/core/common_widgets/empty_widget.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/wave_request_controller.dart';
 import '../widgets/new_waves_list_item.dart';
@@ -17,9 +19,21 @@ class WaveRequestScreen extends StatelessWidget {
       },
       appBar: CommonAppBarContent(title: Strings.newWaves),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          ...wrc.fakeNewWavesList.map((e) {
-            return NewWavesListItem(chatModel: e, wrc: wrc);
+          Obx(() {
+            final list_ = wrc.newWaveList;
+            final list = [...list_, ...list_, ...list_];
+
+            if (list.isEmpty) {
+              return const EmptyWidget(title: "No waves yet..!");
+            }
+
+            return Column(
+              children: list.map((e) {
+                return NewWavesListItem(model: e, wrc: wrc);
+              }).toList(),
+            );
           }),
         ],
       ).getcm,

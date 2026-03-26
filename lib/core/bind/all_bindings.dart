@@ -55,6 +55,21 @@ import '../services/socket/socket_service.dart';
 import '../state_screens/success/controller/success_controller.dart';
 import '../utils/extension/binding_extensions.dart';
 
+class InitialBinding extends Bindings {
+  @override
+  void dependencies() {
+    // ── Register SocketService first (MatchController depends on it) ──────────
+    Get.putPermanent(SocketService());
+    final socketService = Get.find<SocketService>();
+
+    // ── Connect immediately if user is already logged in (token exists) ───────
+    // On fresh login this is skipped — SigninService.connectSocket() handles it.
+    if ((getToken ?? '').isNotEmpty) {
+      socketService.connectSocket();
+    }
+  }
+}
+
 // ─────────────────────────────
 // 🔹 Splash & Onboarding Flow
 // ─────────────────────────────
@@ -125,16 +140,6 @@ class PostSignupScreensBinding extends Bindings {
 class MainNavBinding extends Bindings {
   @override
   void dependencies() {
-    // ── Register SocketService first (MatchController depends on it) ──────────
-    Get.putPermanent(SocketService());
-    final socketService = Get.find<SocketService>();
-
-    // ── Connect immediately if user is already logged in (token exists) ───────
-    // On fresh login this is skipped — SigninService.connectSocket() handles it.
-    if ((getToken ?? '').isNotEmpty) {
-      socketService.connectSocket();
-    }
-
     // Permanent
 
     Get.putPermanent(StationLocationController());

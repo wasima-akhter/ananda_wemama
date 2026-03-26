@@ -6,7 +6,6 @@ import '../../../../../../core/common_widgets/common_components/user_detaIl_comp
 import '../../../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_detail_component.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
 import '../controller/profile_controller.dart';
-import '../model/profile_model.dart';
 import 'profile_shimmer.dart';
 
 class ProfileSection extends StatelessWidget {
@@ -20,7 +19,7 @@ class ProfileSection extends StatelessWidget {
     return Obx(() {
       if (pc.isLoading_.value) return const ProfileShimmer();
 
-      final userData = _mapToUserModel(pc.userProfileData.value);
+      final userData = mapToUserModel(pc.userProfileData.value);
 
       return ContainerBordered(
         hasBrdr: true,
@@ -67,52 +66,6 @@ class ProfileSection extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  FakeUserDetailsModel? _mapToUserModel(ProfileDataModel? data) {
-    if (data == null) return null;
-
-    return FakeUserDetailsModel(
-      imageUrl: data.profileImage ?? '',
-      name: data.name ?? '',
-      age: _calculateAge(data.dob),
-      aboutMe: data.bio ?? '',
-      galleryImages: data.images,
-      children: data.children.map((e) => getChildAge(e.dob.toString())).toList(),
-      infoList: _buildInfoList(data),
-    );
-  }
-
-  List<UiInfoItem> _buildInfoList(ProfileDataModel data) {
-    final List<UiInfoItem> list = [];
-    final coords = data.location?.coordinates;
-
-    if (coords != null && coords.length >= 2) {
-      list.add(
-        UiInfoItem(
-          iconPath: IconsPath.locationBold,
-          text: "${data.city ?? ''}, ${data.state ?? ''}",
-        ),
-      );
-    }
-
-    if (data.mumStage != null) {
-      list.add(UiInfoItem(iconPath: IconsPath.chartFilled, text: data.mumStage!));
-    }
-
-    if (data.interesteds.isNotEmpty) {
-      list.add(UiInfoItem(iconPath: IconsPath.heartHalfFilled, text: data.interesteds.join(', ')));
-    }
-
-    return list;
-  }
-
-  int _calculateAge(DateTime? dob) {
-    if (dob == null) return 0;
-    final now = DateTime.now();
-    int age = now.year - dob.year;
-    if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
-    return age;
   }
 
   Widget _buildInactiveInfo() {
