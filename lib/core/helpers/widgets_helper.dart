@@ -136,51 +136,45 @@ Future<dynamic> showChildrenBottomSheet({double? heightFactor, bool isScrollCont
 }
 
 //
-// String getChildAge(String? dobString, {String placeholder = "N/A"}) {
-//   if (dobString == null || dobString.isEmpty) return placeholder;
 
-//   try {
-//     final dob = DateTime.parse(dobString).toLocal();
-//     final now = DateTime.now();
+///////////////////////////////////////////////////////////////
+///
+///       socket helper
+///
+///////////////////////////////////////////////////////////////
 
-//     int years = now.year - dob.year;
-//     int months = now.month - dob.month;
-//     int days = now.day - dob.day;
+Widget buildTitle(String? title) {
+  if (title == null || title.trim().isEmpty) {
+    return const SizedBox.shrink(); // 👈 don't show
+  }
 
-//     /// adjust days
-//     if (days < 0) {
-//       final prevMonth = DateTime(now.year, now.month, 0);
-//       days += prevMonth.day;
-//       months--;
-//     }
+  return Text(
+    title,
+    style: TxtStyle.outfit(
+      fs: 16,
+      w: 600,
+      color: c.primary, // 🎨 custom color
+    ),
+  );
+}
 
-//     /// adjust months
-//     if (months < 0) {
-//       years--;
-//       months += 12;
-//     }
+Widget buildMessage(String? message) {
+  if (message == null || message.trim().isEmpty) {
+    return const SizedBox.shrink(); // 👈 don't show
+  }
 
-//     /// 🔹 أقل من شهر → show days
-//     if (years == 0 && months == 0) {
-//       return "$days day${days == 1 ? '' : 's'}";
-//     }
-
-//     /// 🔹 أقل من سنة → show months
-//     if (years == 0) {
-//       return "$months month${months == 1 ? '' : 's'}";
-//     }
-
-//     /// 🔹 سنة بدون شهور
-//     if (months == 0) {
-//       return "$years year${years == 1 ? '' : 's'}";
-//     }
-
-//     /// 🔹 سنة + شهور
-//     return "$years year${years == 1 ? '' : 's'} $months month${months == 1 ? '' : 's'}";
-//   } catch (e) {
-//     return placeholder;
-//   }
-// }
+  return Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Text(
+      message,
+      style: TxtStyle.outfit(
+        fs: 14,
+        w: 400,
+        color: c.textSecondary, // 🎨 custom color
+      ),
+    ),
+  );
+}
 
 String getChildAge(
   String? dobString, {

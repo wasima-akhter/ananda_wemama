@@ -219,6 +219,7 @@ class EditProfileController extends GetxController {
     unfocusAll();
 
     final data = await _service.updateProfileWithChildren(
+      name: nameCtrl.text.trim(),
       descriptionImages: desImageFiles.value ?? [],
       dob: convertDobToTimestamp(selectedDob.value),
       state: selectedState.value,

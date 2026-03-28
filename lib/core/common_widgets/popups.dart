@@ -142,6 +142,7 @@ Future<void> showBothConnectedDialog({
   required String myImageUrl,
   required String peerImageUrl,
   required String peerName,
+  required String conversationId,
 }) async {
   await Popups().baseAlert(
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
@@ -150,6 +151,7 @@ Future<void> showBothConnectedDialog({
       myImageUrl: myImageUrl,
       peerImageUrl: peerImageUrl,
       peerName: peerName,
+      conversationId: conversationId,
     ),
   );
 }

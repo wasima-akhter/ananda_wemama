@@ -25,7 +25,8 @@ class WaveRequestScreen extends StatelessWidget {
         children: [
           Obx(() {
             final list_ = wrc.newWaveList;
-            final list = [...list_, ...list_, ...list_];
+            // final list = [...list_, ...list_, ...list_];
+            final list = [...list_];
 
             if (list.isEmpty) {
               return const EmptyWidget(title: "No waves yet..!");

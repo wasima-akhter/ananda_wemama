@@ -7,22 +7,171 @@ import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../model/new_wave_req_list_item_model.dart';
 import '../service/wave_user_profile_info_service.dart';
 
-class WaveRequestController extends GetxController {
-  var fakeNewWavesList = [
-    FakeNewWavesModel(id: "1", name: "Alice", time: "2h ago", imageUrl: Strings.fakeImageUrl),
-    FakeNewWavesModel(id: "2", name: "Bob", time: "4min ago", imageUrl: Strings.fakeImageUrl),
-    FakeNewWavesModel(id: "3", name: "Charlie", time: "yesterday", imageUrl: Strings.fakeImageUrl),
-    FakeNewWavesModel(id: "4", name: "Diana", time: "22 Jan 2026", imageUrl: Strings.fakeImageUrl),
-    FakeNewWavesModel(id: "5", name: "Eve", time: "1 Jan 2026", imageUrl: Strings.fakeImageUrl),
-  ];
+//
+// class WaveRequestController extends GetxController {
+//   var fakeNewWavesList = [
+//     FakeNewWavesModel(id: "1", name: "Alice", time: "2h ago", imageUrl: Strings.fakeImageUrl),
+//     FakeNewWavesModel(id: "2", name: "Bob", time: "4min ago", imageUrl: Strings.fakeImageUrl),
+//     FakeNewWavesModel(id: "3", name: "Charlie", time: "yesterday", imageUrl: Strings.fakeImageUrl),
+//     FakeNewWavesModel(id: "4", name: "Diana", time: "22 Jan 2026", imageUrl: Strings.fakeImageUrl),
+//     FakeNewWavesModel(id: "5", name: "Eve", time: "1 Jan 2026", imageUrl: Strings.fakeImageUrl),
+//   ];
 
+//   @override
+//   void onInit() {
+//     getNewWavesList();
+
+//     ever(newWaveList, (callback) {
+//       // show the list anew after it changed.
+//     });
+//     super.onInit();
+//   }
+
+//   @override
+//   void onClose() {
+//     super.onClose();
+//   }
+
+//   void clearAll() {}
+
+//   void unFocusAll() {
+//     FocusManager.instance.primaryFocus?.unfocus();
+//   }
+
+//   final isSuccessAccept = false.obs;
+
+//   final peerImageUrl = ''.obs;
+//   final peerName = ''.obs;
+
+//   Future<void> onTapAction(bool isAccepted, {required String conversationId}) async {
+//     Get.back();
+
+//     if (isAccepted) {
+//       // first trigger the emit of acceptation
+//       //
+//       acceptUserWave(conversationId);
+
+//       // listen method is success,
+//       // then show:
+
+//       if (isSuccessAccept.value) {
+//         // show popup
+//         showReqAcceptedDialog();
+//         Future.delayed(Duration(seconds: 3), () {
+//           Get.back();
+
+//           final myImageUrl = currentUserImage();
+
+//           showBothConnectedDialog(
+//             myImageUrl: myImageUrl,
+//             peerImageUrl: peerImageUrl.value,
+//             peerName: peerName.value,
+//             conversationId: conversationId,
+//           );
+//         });
+//       }
+//     } else {
+//       // if rejected
+//       rejectUserWave(conversationId);
+//     }
+//   }
+
+//   // API loading state
+//   var isLoading_ = false.obs;
+//   bool get isLoading => isLoading_.value;
+
+//   final newWaveList = <NewWaveListItemModel>[].obs;
+
+//   /// Fetch the latest  data from API
+//   Future<void> getNewWavesList() async {
+//     if (isLoading_.value) return; // Prevent duplicate calls
+//     isLoading_.value = true;
+
+//     debugPrint(' getNewWavesList.. ');
+
+//     try {
+//       final currentUserId = currentProfileId();
+//       getConversationRequestList(currentUserId);
+//       // final data = await ChatService().fetchChatList(
+
+//       // );
+
+//       // if (data != null) {
+
+//       // }
+//     } catch (e) {
+//       print("Error fetching profile: $e");
+//     } finally {
+//       isLoading_.value = false;
+
+//       unFocusAll();
+//     }
+//   }
+
+//   void updateWaveList(List<NewWaveListItemModel> list) {
+//     newWaveList.assignAll(list);
+//   }
+
+//   final socket = Get.find<SocketService>();
+//   void getConversationRequestList(String receiverId) {
+//     socket.emit(SocketEvents.getConversationRequests, {"receiverId": receiverId});
+//   }
+
+//   void acceptUserWave(String conversationId) {
+//     socket.emit(SocketEvents.acceptConversationRequest, {"conversationId": conversationId});
+//   }
+
+//   void rejectUserWave(String conversationId) {
+//     socket.emit(SocketEvents.rejectConversationRequest, {"conversationId": conversationId});
+//   }
+
+//   // API loading state
+//   var isgetUserProfileLoading_ = false.obs;
+//   bool get isgetUserProfileLoading => isgetUserProfileLoading_.value;
+
+//   final waveUserProfileData = Rxn<ProfileDataModel>();
+//   //// get wave user details
+//   ///
+//   /// Fetch the latest profile from API
+//   Future<void> getUserProfile({required String userId}) async {
+//     if (isgetUserProfileLoading_.value) return; // Prevent duplicate calls
+//     isgetUserProfileLoading_.value = true;
+
+//     try {
+//       final data = await WaveUserProfileInfoService().fetchUserProfile(userId: userId);
+
+//       if (data != null) {
+//         waveUserProfileData.value = data;
+//         print("data fetching profile: ${(data)}");
+//       }
+//     } catch (e) {
+//       print("Error fetching profile: $e");
+//     } finally {
+//       isgetUserProfileLoading_.value = false;
+//     }
+//   }
+
+//   ///
+// }
+//
+class WaveRequestController extends GetxController {
   @override
   void onInit() {
     getNewWavesList();
 
-    ever(newWaveList, (callback) {
-      // show the list anew after it changed.
+    // ── React to socket success flags ─────────────────────────────────────────
+    ever(isSuccessAccept, (bool success) {
+      if (!success) return;
+      _onAcceptSuccess();
+      isSuccessAccept.value = false; // reset
     });
+
+    ever(isSuccessReject, (bool success) {
+      if (!success) return;
+      _onRejectSuccess();
+      isSuccessReject.value = false; // reset
+    });
+
     super.onInit();
   }
 
@@ -31,81 +180,75 @@ class WaveRequestController extends GetxController {
     super.onClose();
   }
 
-  void clearAll() {}
-
-  void unFocusAll() {
-    FocusManager.instance.primaryFocus?.unfocus();
-  }
+  // ── State ─────────────────────────────────────────────────────────────────
+  final isLoading_ = false.obs;
+  bool get isLoading => isLoading_.value;
 
   final isSuccessAccept = false.obs;
-  Future<void> onTapAction(bool isAccepted, {required String conversationId}) async {
-    Get.back();
+  final isSuccessReject = false.obs;
 
-    if (isAccepted) {
-      // first trigger the emit of acceptation
-      //
-      acceptUserWave(conversationId);
-
-      // listen method is success,
-      // then show:
-
-      if (isSuccessAccept.value) {
-        // show popup
-        showReqAcceptedDialog();
-        Future.delayed(Duration(seconds: 3), () {
-          Get.back();
-
-          final myImageUrl = currentUserImage();
-          final peerImageUrl = '';
-          final peerName = '';
-
-          showBothConnectedDialog(
-            myImageUrl: myImageUrl,
-            peerImageUrl: peerImageUrl,
-            peerName: peerName,
-          );
-        });
-      }
-    }
-  }
-
-  // API loading state
-  var isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
+  final peerImageUrl = ''.obs;
+  final peerName = ''.obs;
 
   final newWaveList = <NewWaveListItemModel>[].obs;
 
-  /// Fetch the latest  data from API
-  Future<void> getNewWavesList() async {
-    if (isLoading_.value) return; // Prevent duplicate calls
-    isLoading_.value = true;
+  // Tracks which conversationId is currently being acted on
+  String _pendingConversationId = '';
 
-    debugPrint(' getNewWavesList.. ');
+  // ── onTapAction ───────────────────────────────────────────────────────────
+  Future<void> onTapAction(bool isAccepted, {required String conversationId}) async {
+    Get.back(); // close bottom sheet
 
-    try {
-      final currentUserId = currentProfileId();
-      getConversationRequestList(currentUserId);
-      // final data = await ChatService().fetchChatList(
+    _pendingConversationId = conversationId;
 
-      // );
-
-      // if (data != null) {
-
-      // }
-    } catch (e) {
-      print("Error fetching profile: $e");
-    } finally {
-      isLoading_.value = false;
-
-      unFocusAll();
+    if (isAccepted) {
+      acceptUserWave(conversationId);
+      // ✅ Result handled reactively in ever(isSuccessAccept)
+    } else {
+      rejectUserWave(conversationId);
+      // ✅ Result handled reactively in ever(isSuccessReject)
     }
   }
 
+  // ── Accept success handler ────────────────────────────────────────────────
+  void _onAcceptSuccess() {
+    // 1. Remove from local list
+    _removeFromList(_pendingConversationId);
+
+    // 2. Show accepted dialog
+    showReqAcceptedDialog();
+
+    // 3. After delay → show both connected dialog
+    Future.delayed(const Duration(seconds: 3), () {
+      Get.back(); // close accepted dialog
+
+      showBothConnectedDialog(
+        myImageUrl: currentUserImage(),
+        peerImageUrl: peerImageUrl.value,
+        peerName: peerName.value,
+        conversationId: _pendingConversationId,
+      );
+    });
+  }
+
+  // ── Reject success handler ────────────────────────────────────────────────
+  void _onRejectSuccess() {
+    // Remove from local list silently
+    _removeFromList(_pendingConversationId);
+  }
+
+  // ── List management ───────────────────────────────────────────────────────
   void updateWaveList(List<NewWaveListItemModel> list) {
     newWaveList.assignAll(list);
   }
 
+  void _removeFromList(String conversationId) {
+    newWaveList.removeWhere((item) => item.id == conversationId);
+  }
+
+  // ── Emits ─────────────────────────────────────────────────────────────────
   final socket = Get.find<SocketService>();
+
   void getConversationRequestList(String receiverId) {
     socket.emit(SocketEvents.getConversationRequests, {"receiverId": receiverId});
   }
@@ -114,14 +257,35 @@ class WaveRequestController extends GetxController {
     socket.emit(SocketEvents.acceptConversationRequest, {"conversationId": conversationId});
   }
 
-  // API loading state
+  void rejectUserWave(String conversationId) {
+    socket.emit(SocketEvents.rejectConversationRequest, {"conversationId": conversationId});
+  }
+
+  // ── Fetch list ────────────────────────────────────────────────────────────
+  Future<void> getNewWavesList() async {
+    if (isLoading_.value) return;
+    isLoading_.value = true;
+    try {
+      getConversationRequestList(currentProfileId());
+    } catch (e) {
+      print("Error fetching wave list: $e");
+    } finally {
+      isLoading_.value = false;
+    }
+  }
+
+  void unFocusAll() => FocusManager.instance.primaryFocus?.unfocus();
+
+  //   // API loading state
   var isgetUserProfileLoading_ = false.obs;
   bool get isgetUserProfileLoading => isgetUserProfileLoading_.value;
-
-  final waveUserProfileData = Rxn<ProfileDataModel>();
   //// get wave user details
   ///
   /// Fetch the latest profile from API
+  ///
+  final waveUserProfileData = Rxn<ProfileDataModel>();
+
+  ///
   Future<void> getUserProfile({required String userId}) async {
     if (isgetUserProfileLoading_.value) return; // Prevent duplicate calls
     isgetUserProfileLoading_.value = true;

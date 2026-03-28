@@ -11,7 +11,9 @@ class SocketEvents {
   static const getConversationRequests = "get_conversation_requests"; // receiver listens
   static const conversationRequests = "conversation_requests"; // receiver listens
   static const acceptConversationRequest = "accept_conversation_request"; // receiver listens
+  static const rejectConversationRequest = "reject_conversation_request"; // receiver listens
   static const conversationAccepted = "conversation_accepted"; // receiver listens
+  static const conversationRejected = "conversation_rejected"; // receiver listens
 
   // 🔔 Notifications
   static const newNotification = "new_notification"; // receiver listens

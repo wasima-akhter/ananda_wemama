@@ -7,9 +7,11 @@ import 'package:mama_app/features/shared/wave_request/controller/wave_request_co
 import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../../features/more/notification/controller/notification_controller.dart';
+import '../../helpers/methods_helper.dart';
+import '../../helpers/widgets_helper.dart';
 import '../../network/helpers/network_helpers.dart';
+import '../../utils/extension/context_extension.dart';
 import 'socket_events.dart';
 import 'socket_response_handler .dart';
 
@@ -84,104 +86,6 @@ class SocketService extends GetxService {
   // LISTENERS — registered once per connectSocket() call
   // ═══════════════════════════════════════════════════════════════════════════
 
-  /*
-  void _registerListeners() {
-    // ── send_conversation_request (response back to USER 1 who emitted) ───────
-    // User 1 gets this as confirmation. We do NOT show a snackbar here because
-    // MatchController already shows a custom "Wave Sent" dialog on success.
-    _on(SocketEvents.sendConversationRequest, (data) {
-      print("📥 [send_conversation_request] response: $data");
-      // Intentionally no snackbar — MatchController.showWaveSentDialog() handles UI
-    });
-
-    // ── new_conversation_request (incoming request to USER 2) ────────────────
-    // Only show snackbar if this user is the RECEIVER.
-    // We detect this by checking the message — the sender gets
-    // "You have requested..." and the receiver gets "You have received..."
-    _on(SocketEvents.newConversationRequest, (data) {
-      print("📥 New Conversation Request: $data");
-
-      final participants =
-          (data["data"]?["participants"] as List?)?.map((e) => e.toString()).toList() ?? [];
-
-      final currentProfileId = Get.find<ProfileController>().userProfileData.value?.id ?? '';
-
-      // 🧠 Receiver is ALWAYS index 1 (based on your backend)
-      final isReceiver = participants.length >= 2 && participants[1] == currentProfileId;
-
-      ///
-      if (data["success"] == true) {
-        Get.find<MatchController>().isSuccessSentReq.value = true;
-      }
-
-      final message = (data["message"] ?? '').toString();
-
-      if (message.contains('received')) {
-        // receiver
-        Get.snackbar(
-          "New Request 💬",
-          data["message"] ?? "Someone sent you a conversation request",
-        );
-      } else {
-        print("👤 Sender detected → snackbar skipped");
-      }
-    });
-
-    // ── new_notification (USER 2 only) ────────────────────────────────────────
-    _on(SocketEvents.newNotification, (data) {
-      print("🔔 New Notification: $data");
-      final notificationData = data["data"];
-
-      // Add to notification list regardless
-      if (notificationData != null && Get.isRegistered<NotificationController>()) {
-        Get.find<NotificationController>().addNotification(notificationData);
-      }
-
-      // Suppress snackbar for SENT_WAVE type — the new_conversation_request
-      // listener above already showed a snackbar for this exact event.
-      final type = notificationData?["type"] as String? ?? '';
-      if (type == 'SENT_WAVE') {
-        print(
-          "🔕 Suppressing SENT_WAVE notification snackbar (already shown via conversation request)",
-        );
-        return;
-      }
-
-      // Show snackbar for all other notification types
-
-      Get.snackbar(
-        notificationData?["title"] ?? "Notification",
-        notificationData?["description"] ?? "",
-      );
-    });
-
-    _on(SocketEvents.conversationRequests, (data) {
-      print("📥 conversation_requests: $data");
-
-      // parse the data
-
-      final parsedData = (data["data"] as List? ?? [])
-          .map((e) => NewWaveListItemModel.fromJson(e))
-          .toList();
-
-      if (Get.isRegistered<WaveRequestController>()) {
-        Get.find<WaveRequestController>().updateWaveList(parsedData);
-      }
-
-      // Get.snackbar("New Wave List Retrived", data["message"] ?? "you got the list!");
-    });
-
-    _on(SocketEvents.conversationAccepted, (data) {
-      print("📥 conversation_accepted: $data");
-      print("data[ success ]: ${data["success"]}");
-      if (data["success"] == true) {
-        Get.find<WaveRequestController>().isSuccessAccept.value = true;
-      }
-      Get.snackbar("conversation Accepted ", data["message"] ?? "conversationAccepted");
-    });
-  }
-*/
-
   void _registerListeners() {
     // ── send_conversation_request ─────────────────────────────────────────────
     _on(SocketEvents.sendConversationRequest, (data) {
@@ -200,7 +104,7 @@ class SocketService extends GetxService {
       );
       if (!res.isSuccess) return;
 
-      final currentProfileId = Get.find<ProfileController>().userProfileData.value?.id ?? '';
+      // final currentProfileId = Get.find<ProfileController>().userProfileData.value?.id ?? '';
 
       // ── Determine role via message (reliable, backend-controlled) ────────────
       // Sender  → "You have requested..."
@@ -209,7 +113,7 @@ class SocketService extends GetxService {
       final isReceiver = res.message.toLowerCase().contains('received');
 
       print(
-        '🧪 newConversationRequest | currentId: $currentProfileId '
+        '🧪 newConversationRequest | currentId: ${currentProfileId()} '
         '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
       );
 
@@ -232,7 +136,7 @@ class SocketService extends GetxService {
 
       print('🧪 fallback participants: $participants');
 
-      if (participants.length >= 2 && participants[1] == currentProfileId) {
+      if (participants.length >= 2 && participants[1] == currentProfileId()) {
         Get.snackbar('New Request 💬', res.message, snackPosition: SnackPosition.TOP);
       }
     });
@@ -256,6 +160,11 @@ class SocketService extends GetxService {
       Get.snackbar(
         notificationData['title'] ?? 'Notification',
         notificationData['description'] ?? '',
+        // 🎨 background (optional)
+        backgroundColor: c.primary.withOpacity(0.1),
+        // ❌ default texts disabled
+        titleText: buildTitle(notificationData['title']),
+        messageText: buildMessage(notificationData['description']),
         snackPosition: SnackPosition.TOP,
       );
     });
@@ -277,13 +186,91 @@ class SocketService extends GetxService {
       final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationAccepted);
       if (!res.isSuccess) return;
 
-      // ✅ Guard — controller may not be mounted on receiver's end
+      final conversationId = res.dataAsMap?['_id'] as String? ?? '';
+
+      // ── Parse populated participants ──────────────────────────────────────────
+      final participantsList = res.dataAsMap?['participants'] as List? ?? [];
+      final participants = participantsList
+          .map((e) => Map<String, dynamic>.from(e as Map))
+          .toList();
+
+      final myId = currentProfileId();
+
+      // ── Role detection via message ────────────────────────────────────────────
+      // Acceptor  → "Your new conversation request accepted."  (YOU accepted)
+      // Requester → backend sends different message to the wave sender
+      final msg = res.message.toLowerCase();
+      final isAcceptor =
+          msg.contains('you have accepted') ||
+          msg.contains('your new conversation request accepted');
+
+      // ── Peer = the one who is NOT me ─────────────────────────────────────────
+      final peer = participants.firstWhereOrNull((p) => p['_id'] != myId);
+      final peerName = peer?['name'] as String? ?? '';
+      final peerImageUrl = peer?['profileImage'] as String? ?? '';
+
+      print(
+        '🧪 conversationAccepted | myId: $myId | isAcceptor: $isAcceptor'
+        ' | peer: $peerName | msg: ${res.message}',
+      );
+
       if (Get.isRegistered<WaveRequestController>()) {
-        Get.find<WaveRequestController>().isSuccessAccept.value = true;
+        final wrc = Get.find<WaveRequestController>();
+
+        // Always hydrate peer info — both sides may need it
+        wrc.peerName.value = peerName;
+        wrc.peerImageUrl.value = peerImageUrl;
+
+        if (isAcceptor) {
+          // Triggers ever(isSuccessAccept) → _onAcceptSuccess()
+          wrc.isSuccessAccept.value = true;
+        }
       }
 
-      Get.snackbar('Request Accepted ✅', res.message, snackPosition: SnackPosition.TOP);
+      // 🔔 Notify the wave SENDER that their request was accepted
+      // if (!isAcceptor) {
+      //   Get.snackbar('Wave Accepted! 🎉', res.message, snackPosition: SnackPosition.TOP);
+      // }
     });
+
+    // ── conversation_rejected ─────────────────────────────────────────────────
+    _on(SocketEvents.conversationRejected, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationRejected);
+      if (!res.isSuccess) return;
+
+      final msg = res.message.toLowerCase();
+      final isRejector = msg.contains('you have rejected') || msg.contains('declined');
+
+      print('🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}');
+
+      if (isRejector && Get.isRegistered<WaveRequestController>()) {
+        // Triggers ever(isSuccessReject) → _onRejectSuccess()
+        Get.find<WaveRequestController>().isSuccessReject.value = true;
+        Get.snackbar('Wave Rejected! ', res.message, snackPosition: SnackPosition.TOP);
+      }
+
+      // 🔕 No snackbar to wave sender — bad UX to explicitly notify rejection
+    });
+    // ```
+
+    // ---
+
+    // **The flow now:**
+    // ```
+    // User taps Accept
+    //   → onTapAction() stores _pendingConversationId, emits socket
+    //     → Socket fires conversation_accepted
+    //       → SocketService sets wrc.isSuccessAccept = true
+    //         → ever() triggers _onAcceptSuccess()
+    //           → removes from list + shows dialogs ✅
+
+    // User taps Reject
+    //   → onTapAction() stores _pendingConversationId, emits socket
+    //     → Socket fires conversation_rejected
+    //       → SocketService sets wrc.isSuccessReject = true
+    //         → ever() triggers _onRejectSuccess()
+    //           → removes from list silently ✅
+    //   //
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

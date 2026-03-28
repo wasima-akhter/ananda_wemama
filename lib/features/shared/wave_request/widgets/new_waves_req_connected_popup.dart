@@ -4,11 +4,13 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
   final String myImageUrl;
   final String peerImageUrl;
   final String peerName;
+  final String conversationId;
   const NewWavesReqConnectedPopup({
     super.key,
     required this.myImageUrl,
     required this.peerImageUrl,
     required this.peerName,
+    required this.conversationId,
   });
 
   @override
@@ -41,7 +43,7 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                   style: TxtStyle.outfitSemiB(fs: 12, color: c.textOnPrimary, w: 500),
                   onTap: () {
                     Get.back();
-                    Get.offAndToNamed(RoutePaths.chatInbox, arguments: "chatId");
+                    Get.offAndToNamed(RoutePaths.chatInbox, arguments: conversationId);
                   },
                   btnTxt: Strings.sayHello,
                   isLoading: false,
