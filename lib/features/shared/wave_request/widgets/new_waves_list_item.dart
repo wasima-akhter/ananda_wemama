@@ -45,7 +45,7 @@ class NewWavesListItem extends StatelessWidget {
         // 🔥 open popup FIRST
         newWavesUserDetailsDialog(
           isLoading: wrc.isgetUserProfileLoading_,
-          onTapAction: wrc.onTapAction,
+          onTapAction: (isAccepted) => wrc.onTapAction(isAccepted, conversationId: model.id ?? ''),
           isSeeMore: udc.isSeeMore,
           onTapSeeMoreTxt: udc.toggleSeeMore,
           user: wrc.waveUserProfileData, // ✅ Rxn

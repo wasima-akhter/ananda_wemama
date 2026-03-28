@@ -10,7 +10,21 @@ T findCont<T extends GetxController>() {
   return Get.find<T>();
 }
 
-String get currentProfileId => Get.find<ProfileController>().userProfileData.value?.id ?? '';
+String currentProfileId() {
+  if (Get.isRegistered<ProfileController>()) {
+    return Get.find<ProfileController>().userProfileData.value?.id ?? '';
+  } else {
+    return '';
+  }
+}
+
+String currentUserImage() {
+  if (Get.isRegistered<ProfileController>()) {
+    return Get.find<ProfileController>().userProfileData.value?.profileImage ?? '';
+  } else {
+    return '';
+  }
+}
 
 TextStyle get componentTxtStyle => TxtStyle.inter(fs: 12, w: 600);
 TextStyle amountTxtStyle({Color? clr}) =>

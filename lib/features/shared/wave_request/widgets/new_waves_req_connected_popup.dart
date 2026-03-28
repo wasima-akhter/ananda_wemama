@@ -1,7 +1,15 @@
 import '../../../../app/helper_widgets_export.dart';
 
 class NewWavesReqConnectedPopup extends StatelessWidget {
-  const NewWavesReqConnectedPopup({super.key});
+  final String myImageUrl;
+  final String peerImageUrl;
+  final String peerName;
+  const NewWavesReqConnectedPopup({
+    super.key,
+    required this.myImageUrl,
+    required this.peerImageUrl,
+    required this.peerName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +25,12 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
           child: BounceSingleChildScrollView(
             child: Column(
               children: [
-                _TopImageRow(),
+                _TopImageRow(myImageUrl: myImageUrl, peerImageUrl: peerImageUrl),
 
                 Gap(itemGap * 2),
 
                 Text(
-                  "${Strings.youAnd} Sarah \n${Strings.connected}",
+                  "${Strings.youAnd} $peerName \n${Strings.connected}",
                   textAlign: TextAlign.center,
                   style: TxtStyle.outfitSemiB(fs: 25, w: 500, color: c.primary),
                 ),
@@ -123,6 +131,10 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
 }
 
 class _TopImageRow extends StatelessWidget {
+  final String myImageUrl;
+  final String peerImageUrl;
+
+  const _TopImageRow({required this.myImageUrl, required this.peerImageUrl});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -134,11 +146,11 @@ class _TopImageRow extends StatelessWidget {
           children: [
             Transform.translate(
               offset: Offset(-25, 0), // half overlap
-              child: _makeImage(),
+              child: _makeImage(imageUrl: myImageUrl),
             ),
             Transform.translate(
               offset: Offset(25, 0), // half overlap
-              child: _makeImage(),
+              child: _makeImage(imageUrl: peerImageUrl),
             ),
           ],
         ),
@@ -146,10 +158,10 @@ class _TopImageRow extends StatelessWidget {
     );
   }
 
-  Widget _makeImage() {
+  Widget _makeImage({required String imageUrl}) {
     return Container(
       decoration: 0.circleBrdr(brdrW: 1, brdrClr: c.primary),
-      child: NetworkImageWidget(imageUrl: Strings.fakeImageUrl, isCircle: true, radius: 40),
+      child: NetworkImageWidget(imageUrl: imageUrl, isCircle: true, radius: 40),
     );
   }
 }

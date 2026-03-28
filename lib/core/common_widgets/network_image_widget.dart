@@ -6,6 +6,7 @@ class NetworkImageWidget extends StatelessWidget {
   final double? width;
   final double? height;
   final bool isCircle;
+  final bool? isSmall;
   final double? radius;
   final Animation<double>? opacity;
   final bool? hasBrdr;
@@ -19,6 +20,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.radius,
     this.opacity,
     this.hasBrdr,
+    this.isSmall,
   });
 
   bool isImageUrl(String url) {
@@ -57,7 +59,11 @@ class NetworkImageWidget extends StatelessWidget {
   Widget _buildImageContent({required bool isCircle, required double radius}) {
     if (imageUrl == null || imageUrl!.isEmpty || !isImageUrl(imageUrl!)) {
       return Center(
-        child: Assets.images.imagePlaceholder.image(width: 22.w, height: 22.w, color: c.primary),
+        child: Assets.images.imagePlaceholder.image(
+          width: isSmall == true ? 12.w : 22.w,
+          height: isSmall == true ? 12.w : 22.w,
+          color: c.primary,
+        ),
       );
     }
 
@@ -77,7 +83,11 @@ class NetworkImageWidget extends StatelessWidget {
       },
       errorBuilder: (context, error, stackTrace) {
         return Center(
-          child: Assets.images.imagePlaceholder.image(width: 22.w, height: 22.w, color: c.primary),
+          child: Assets.images.imagePlaceholder.image(
+            width: isSmall == true ? 12.w : 22.w,
+            height: isSmall == true ? 12.w : 22.w,
+            color: c.primary,
+          ),
         );
       },
     );

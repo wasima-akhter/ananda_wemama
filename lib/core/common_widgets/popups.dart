@@ -138,11 +138,19 @@ Future<void> showReqAcceptedDialog() async {
   await Popups().baseAlert(context: Get.context!, content: NewWavesReqAcceptPopup());
 }
 
-Future<void> showBothConnectedDialog() async {
+Future<void> showBothConnectedDialog({
+  required String myImageUrl,
+  required String peerImageUrl,
+  required String peerName,
+}) async {
   await Popups().baseAlert(
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     context: Get.context!,
-    content: NewWavesReqConnectedPopup(),
+    content: NewWavesReqConnectedPopup(
+      myImageUrl: myImageUrl,
+      peerImageUrl: peerImageUrl,
+      peerName: peerName,
+    ),
   );
 }
 

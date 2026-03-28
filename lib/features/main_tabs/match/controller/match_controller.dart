@@ -195,6 +195,8 @@ class MatchController extends GetxController {
   final socket = Get.find<SocketService>();
   final stopSearching = false.obs;
 
+  final isSuccessSentReq = false.obs;
+
   Future<void> onAction(bool hasWaved, {required String receiverId}) async {
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
@@ -202,16 +204,19 @@ class MatchController extends GetxController {
 
     if (hasWaved) {
       sendConversationRequest(receiverId);
-      await showWaveSentDialog(stopSearching: stopSearching); // waits until she taps close
-      if (stopSearching.value) {
-        matchState.value = MatchState.idle;
-      } else {
-        await _showNextMatch();
-      } // then advances
-      // Future.delayed(const Duration(seconds: 3), () async {
-      //   Get.back(); // close wave sent dialog
-      //   await _showNextMatch();
-      // });
+
+      if (isSuccessSentReq.value) {
+        await showWaveSentDialog(stopSearching: stopSearching); // waits until she taps close
+        if (stopSearching.value) {
+          matchState.value = MatchState.idle;
+        } else {
+          await _showNextMatch();
+        } // then advances
+        // Future.delayed(const Duration(seconds: 3), () async {
+        //   Get.back(); // close wave sent dialog
+        //   await _showNextMatch();
+        // });
+      }
     } else {
       // Pass — show next user from existing list, no API call
       // Brief visual pause so the pass feels intentional, not instant

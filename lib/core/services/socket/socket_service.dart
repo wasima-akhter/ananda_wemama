@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:mama_app/core/config/app_info.dart';
+import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -10,6 +11,7 @@ import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_
 import '../../../features/more/notification/controller/notification_controller.dart';
 import '../../network/helpers/network_helpers.dart';
 import 'socket_events.dart';
+import 'socket_response_handler .dart';
 
 class SocketService extends GetxService {
   IO.Socket? _socket;
@@ -82,6 +84,7 @@ class SocketService extends GetxService {
   // LISTENERS — registered once per connectSocket() call
   // ═══════════════════════════════════════════════════════════════════════════
 
+  /*
   void _registerListeners() {
     // ── send_conversation_request (response back to USER 1 who emitted) ───────
     // User 1 gets this as confirmation. We do NOT show a snackbar here because
@@ -105,7 +108,14 @@ class SocketService extends GetxService {
 
       // 🧠 Receiver is ALWAYS index 1 (based on your backend)
       final isReceiver = participants.length >= 2 && participants[1] == currentProfileId;
+
+      ///
+      if (data["success"] == true) {
+        Get.find<MatchController>().isSuccessSentReq.value = true;
+      }
+
       final message = (data["message"] ?? '').toString();
+
       if (message.contains('received')) {
         // receiver
         Get.snackbar(
@@ -163,20 +173,117 @@ class SocketService extends GetxService {
 
     _on(SocketEvents.conversationAccepted, (data) {
       print("📥 conversation_accepted: $data");
-
+      print("data[ success ]: ${data["success"]}");
+      if (data["success"] == true) {
+        Get.find<WaveRequestController>().isSuccessAccept.value = true;
+      }
       Get.snackbar("conversation Accepted ", data["message"] ?? "conversationAccepted");
     });
   }
+*/
 
-  void _handleResponseSnackbar(Map<String, dynamic> data) {
-    final success = data["success"] ?? false;
-    final message = data["message"] ?? "Something happened";
-    Get.snackbar(
-      success ? "Success ✅" : "Error ❌",
-      message,
-      snackPosition: SnackPosition.TOP,
-      duration: const Duration(seconds: 3),
-    );
+  void _registerListeners() {
+    // ── send_conversation_request ─────────────────────────────────────────────
+    _on(SocketEvents.sendConversationRequest, (data) {
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.sendConversationRequest,
+      );
+      // No snackbar — MatchController.showWaveSentDialog() handles UI
+    });
+
+    // ── new_conversation_request ──────────────────────────────────────────────
+    _on(SocketEvents.newConversationRequest, (data) {
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.newConversationRequest,
+      );
+      if (!res.isSuccess) return;
+
+      final currentProfileId = Get.find<ProfileController>().userProfileData.value?.id ?? '';
+
+      // ── Determine role via message (reliable, backend-controlled) ────────────
+      // Sender  → "You have requested..."
+      // Receiver → "You have received..."
+      final isSender = res.message.toLowerCase().contains('requested');
+      final isReceiver = res.message.toLowerCase().contains('received');
+
+      print(
+        '🧪 newConversationRequest | currentId: $currentProfileId '
+        '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
+      );
+
+      if (isSender) {
+        // ✅ Flag for MatchController (sender only)
+        if (Get.isRegistered<MatchController>()) {
+          Get.find<MatchController>().isSuccessSentReq.value = true;
+        }
+        return; // sender gets no snackbar — MatchController shows Wave Sent dialog
+      }
+
+      if (isReceiver) {
+        Get.snackbar('New Request 💬', res.message, snackPosition: SnackPosition.TOP);
+        return;
+      }
+
+      // ── Fallback: message was neither, use participant index as last resort ───
+      final participants =
+          (res.dataAsMap?['participants'] as List?)?.map((e) => e.toString()).toList() ?? [];
+
+      print('🧪 fallback participants: $participants');
+
+      if (participants.length >= 2 && participants[1] == currentProfileId) {
+        Get.snackbar('New Request 💬', res.message, snackPosition: SnackPosition.TOP);
+      }
+    });
+    // ── new_notification ──────────────────────────────────────────────────────
+    _on(SocketEvents.newNotification, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newNotification);
+      if (!res.isSuccess) return;
+
+      final notificationData = res.dataAsMap;
+      if (notificationData == null) return;
+
+      // Always push to notification list
+      if (Get.isRegistered<NotificationController>()) {
+        Get.find<NotificationController>().addNotification(notificationData);
+      }
+
+      // Suppress snackbar for SENT_WAVE — already shown via conversation_request
+      final type = notificationData['type'] as String? ?? '';
+      if (type == 'SENT_WAVE') return;
+
+      Get.snackbar(
+        notificationData['title'] ?? 'Notification',
+        notificationData['description'] ?? '',
+        snackPosition: SnackPosition.TOP,
+      );
+    });
+
+    // ── conversation_requests (list) ──────────────────────────────────────────
+    _on(SocketEvents.conversationRequests, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationRequests);
+      if (!res.isSuccess) return;
+
+      final list = (res.dataAsList ?? []).map((e) => NewWaveListItemModel.fromJson(e)).toList();
+
+      if (Get.isRegistered<WaveRequestController>()) {
+        Get.find<WaveRequestController>().updateWaveList(list);
+      }
+    });
+
+    // ── conversation_accepted ─────────────────────────────────────────────────
+    _on(SocketEvents.conversationAccepted, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationAccepted);
+      if (!res.isSuccess) return;
+
+      // ✅ Guard — controller may not be mounted on receiver's end
+      if (Get.isRegistered<WaveRequestController>()) {
+        Get.find<WaveRequestController>().isSuccessAccept.value = true;
+      }
+
+      Get.snackbar('Request Accepted ✅', res.message, snackPosition: SnackPosition.TOP);
+    });
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

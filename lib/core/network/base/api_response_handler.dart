@@ -39,6 +39,7 @@ class ApiResponseHandler {
     }
 
     /// 🔔 Show toast with request name (optional)
+    ///
     if (reqName != null && reqName.isNotEmpty) {
       "$reqName : $message".showToast();
     } else {

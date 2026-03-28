@@ -37,24 +37,33 @@ class WaveRequestController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  Future<void> onTapAction(bool isAccepted) async {
+  final isSuccessAccept = false.obs;
+  Future<void> onTapAction(bool isAccepted, {required String conversationId}) async {
     Get.back();
 
     if (isAccepted) {
       // first trigger the emit of acceptation
       //
-      acceptUserWave("jhcvdsj");
+      acceptUserWave(conversationId);
 
       // listen method is success,
       // then show:
-      final successAccept = true;
-      if (successAccept) {
+
+      if (isSuccessAccept.value) {
         // show popup
         showReqAcceptedDialog();
         Future.delayed(Duration(seconds: 3), () {
           Get.back();
 
-          showBothConnectedDialog();
+          final myImageUrl = currentUserImage();
+          final peerImageUrl = '';
+          final peerName = '';
+
+          showBothConnectedDialog(
+            myImageUrl: myImageUrl,
+            peerImageUrl: peerImageUrl,
+            peerName: peerName,
+          );
         });
       }
     }
@@ -74,7 +83,7 @@ class WaveRequestController extends GetxController {
     debugPrint(' getNewWavesList.. ');
 
     try {
-      final currentUserId = currentProfileId;
+      final currentUserId = currentProfileId();
       getConversationRequestList(currentUserId);
       // final data = await ChatService().fetchChatList(
 
