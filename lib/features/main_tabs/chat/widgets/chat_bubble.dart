@@ -11,7 +11,7 @@ class ChatBubbleCont extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: 4.pv,
       child: Row(
         mainAxisAlignment: _isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -28,12 +28,12 @@ class ChatBubbleCont extends StatelessWidget {
     return UnconstrainedBox(
       alignment: _isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: _isMe ? S.w * 0.7 : double.infinity),
+        constraints: BoxConstraints(maxWidth: S.w * 0.7),
         child: ContainerBordered(
           rad: 12,
           vp: 10,
           hp: 12,
-          contClr: _isMe ? c.secondary : ctransp,
+          contClr: _isMe ? c.secondary : c.bottomSheetBackground,
           alignment: _isMe ? null : Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min, // 👈
@@ -43,10 +43,12 @@ class ChatBubbleCont extends StatelessWidget {
                 // 👈 not Expanded
                 child: Text(
                   message.msg,
-                  textAlign: TextAlign.left,
+
+                  textAlign: TextAlign.start,
                   style: TxtStyle.outfit(w: _isMe ? 500 : 400, color: _isMe ? white : c.secondary),
                 ),
               ),
+              Gap(itemGap),
               if (!_isMe) _timeWidget(),
             ],
           ),
@@ -57,8 +59,15 @@ class ChatBubbleCont extends StatelessWidget {
 
   Widget _timeWidget() {
     return Container(
-      padding: 8.ph,
-      child: Text(message.time, style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.secondary)),
+      // color: Colors.amber,
+      padding: 2.ph,
+      child: Text(
+        maxLines: 2,
+        softWrap: true,
+        overflow: TextOverflow.visible,
+        message.time,
+        style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.secondary),
+      ),
     );
   }
 }

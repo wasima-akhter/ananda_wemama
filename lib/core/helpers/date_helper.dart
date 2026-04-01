@@ -62,6 +62,35 @@ class DateHelper {
     }
   }
 
+  String formatDateLabel(String dateStr) {
+    final date = DateTime.parse(dateStr).toLocal();
+    final now = DateTime.now();
+
+    final difference = now.difference(date).inDays;
+
+    if (difference == 0) return "Today";
+    if (difference == 1) return "Yesterday";
+
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+
+    final monthName = months[date.month - 1];
+
+    return "${date.day} $monthName ${date.year}";
+  }
+
   String formatTime12HourSafe(String? dateTimeStr) {
     if (dateTimeStr == null || dateTimeStr.trim().isEmpty) return '--:--';
 
@@ -131,24 +160,24 @@ class DateHelper {
         result = "just now";
       } else if (difference.inMinutes < 60) {
         final minutes = difference.inMinutes;
-        result = minutes == 1 ? "1 minute ago" : "$minutes minutes ago";
+        result = minutes == 1 ? "1 min ago" : "$minutes min ago";
       } else if (difference.inHours < 24) {
         final hours = difference.inHours;
-        result = hours == 1 ? "1 hour ago" : "$hours hours ago";
+        result = hours == 1 ? "1 hr ago" : "$hours hrs ago";
       } else if (difference.inDays == 1) {
         result = "yesterday";
       } else if (difference.inDays < 7) {
         final days = difference.inDays;
-        result = "$days days ago";
+        result = "$days d ago";
       } else if (difference.inDays < 30) {
         final weeks = (difference.inDays / 7).floor();
-        result = weeks == 1 ? "1 week ago" : "$weeks weeks ago";
+        result = weeks == 1 ? "1 w ago" : "$weeks w ago";
       } else if (difference.inDays < 365) {
         final months = (difference.inDays / 30).floor();
-        result = months == 1 ? "1 month ago" : "$months months ago";
+        result = months == 1 ? "1 mon ago" : "$months mon ago";
       } else {
         final years = (difference.inDays / 365).floor();
-        result = years == 1 ? "1 year ago" : "$years years ago";
+        result = years == 1 ? "1 yr ago" : "$years yrs ago";
       }
 
       return DateAndTimeMap(date: result, time: '', dateYear: result);
@@ -385,7 +414,7 @@ String convertDobToTimestamp(String dob) {
       int.parse(parts[0]), // day
     );
 
-    return date.toUtc().toString();
+    return DateTime.utc(date.year, date.month, date.day).toIso8601String();
   } catch (e) {
     return '';
   }
@@ -402,7 +431,7 @@ String convertChildDobToTimestamp(String dob) {
       int.parse(parts[0]), // day
     );
 
-    return date.toUtc().toString();
+    return DateTime.utc(date.year, date.month, date.day).toIso8601String();
   } catch (e) {
     return '';
   }

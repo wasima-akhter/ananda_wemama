@@ -20,7 +20,8 @@ class MatchFoundState extends StatelessWidget {
           resolveAddress: (user) =>
               mc.resolveAddress(user), // ← passed so MatchUserDetails can call mc.resolveAddress()
           user: user,
-          isLoading: mc.isLoading,
+          isPassLoading: mc.isPassLoading,
+          isWaveLoading: mc.isWaveLoading,
           isSeeMore: mc.isSeeMore,
           onTapSeeMore: mc.toggleSeeMore,
           onTapAction: (hasWaved) async =>

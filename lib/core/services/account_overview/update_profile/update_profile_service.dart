@@ -84,38 +84,38 @@ class UpdateProfileService extends GetxService {
     final data = dio.FormData();
 
     // ── All files go under 'files' key — matches Postman ─────────────────────
-    if (profileImage != null) {
-      data.files.add(
-        MapEntry(
-          'profile-image',
-          await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name),
-        ),
-      );
-    }
+    // if (profileImage != null) {
+    //   data.files.add(
+    //     MapEntry(
+    //       'profile-image',
+    //       await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name),
+    //     ),
+    //   );
+    // }
 
-    for (final image in descriptionImages) {
-      data.files.add(
-        MapEntry(
-          'description-image',
-          await dio.MultipartFile.fromFile(image.path, filename: image.name),
-        ),
-      );
-    }
+    // for (final image in descriptionImages) {
+    //   data.files.add(
+    //     MapEntry(
+    //       'description-image',
+    //       await dio.MultipartFile.fromFile(image.path, filename: image.name),
+    //     ),
+    //   );
+    // }
 
     // ── Text fields ───────────────────────────────────────────────────────────
     data.fields
-      ..add(MapEntry('DOB', dob))
+      // ..add(MapEntry('DOB', dob))
       ..add(MapEntry('state', state))
       ..add(MapEntry('city', city))
       ..add(MapEntry('bio', bio))
       ..add(MapEntry('name', name)); // ✅ add name
 
-    if (children != null) {
-      for (int i = 0; i < children.length; i++) {
-        data.fields.add(MapEntry('children[$i][gender]', children[i]['gender']!));
-        data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
-      }
-    }
+    // if (children != null) {
+    //   for (int i = 0; i < children.length; i++) {
+    //     data.fields.add(MapEntry('children[$i][gender]', children[i]['gender']!));
+    //     data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
+    //   }
+    // }
 
     print(data.fields);
     print(data.files.map((e) => e.key).toList());

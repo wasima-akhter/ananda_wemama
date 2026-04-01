@@ -15,6 +15,13 @@ class SocketEvents {
   static const conversationAccepted = "conversation_accepted"; // receiver listens
   static const conversationRejected = "conversation_rejected"; // receiver listens
 
+  static const chatList = "chat_list"; // receiver listens
+  static const getChatList = "get_chat_list"; // receiver emits
+
+  static const getMessages = "get_messages"; // receiver emits
+  static const messages = "messages"; // receiver listens
+  static const newMessage = "new_message"; // receiver listens
+
   // 🔔 Notifications
   static const newNotification = "new_notification"; // receiver listens
 

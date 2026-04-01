@@ -78,7 +78,11 @@ class NetworkImageWidget extends StatelessWidget {
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         return Center(
-          child: SizedBox(width: 24.r, height: 24.r, child: LoadingPrimary()),
+          child: SizedBox(
+            width: radius < 20 ? 20.r : 24.r,
+            height: radius < 20 ? 20.r : 24.r,
+            child: LoadingPrimary(size: radius < 20 ? 30 : null),
+          ),
         );
       },
       errorBuilder: (context, error, stackTrace) {

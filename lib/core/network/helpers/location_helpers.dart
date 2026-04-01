@@ -47,6 +47,8 @@ class LocationHelper {
                     // retry takking the current location
                     // 🔁 Retry getting current location after returning from settings
                     await Future.delayed(const Duration(seconds: 1));
+                    final accuracyStatus = await Geolocator.getLocationAccuracy();
+                    debugPrint("Accuracy status: $accuracyStatus");
                     await getCurrentLocation(showSnackbar: showSnackbar);
                   },
                   rad: 8,
@@ -104,12 +106,53 @@ class LocationHelper {
       }
 
       // 3️⃣ Get current position
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.bestForNavigation,
-          distanceFilter: 10,
-        ),
-      );
+      // Position position = await Geolocator.getCurrentPosition(
+      //   locationSettings: const LocationSettings(
+      //     accuracy: LocationAccuracy.bestForNavigation,
+      //     distanceFilter: 10,
+      //   ),
+      // );
+      // to avoid the device not getting loc error
+      ////////////////-------------- Handled the position location
+
+      Position? position;
+
+      try {
+        // 🥇 First attempt (balanced)
+        position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 10,
+          ),
+          timeLimit: const Duration(seconds: 8),
+        );
+      } catch (e) {
+        debugPrint("⚠️ First attempt failed: $e");
+
+        // ⏳ Give device time to stabilize GPS
+        await Future.delayed(const Duration(seconds: 2));
+
+        try {
+          // 🥈 Second attempt (less strict)
+          position = await Geolocator.getCurrentPosition(
+            locationSettings: const LocationSettings(
+              accuracy: LocationAccuracy.medium,
+              distanceFilter: 20,
+            ),
+            timeLimit: const Duration(seconds: 10),
+          );
+        } catch (e) {
+          debugPrint("❌ Retry failed: $e");
+
+          // 🥉 Final fallback
+          position = await Geolocator.getLastKnownPosition();
+        }
+      }
+
+      if (position == null) {
+        throw Exception("Location unavailable after retries");
+      }
+      ////////////////-------------- Handled the position location
 
       debugPrint('✅ Got position: ${position.latitude}, ${position.longitude}');
 

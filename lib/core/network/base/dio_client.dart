@@ -16,8 +16,8 @@ class DioClient {
       BaseOptions(
         baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
-        sendTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 120), // ✅ was 30s, now 2 min
+        sendTimeout: const Duration(seconds: 60),
         headers: {"Accept": "application/json"},
       ),
     );

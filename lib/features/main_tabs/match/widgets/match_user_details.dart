@@ -8,7 +8,8 @@ import '../model/match_model.dart';
 
 class MatchUserDetails extends StatefulWidget {
   final MatchResponseModel? user;
-  final RxBool isLoading;
+  final RxBool isWaveLoading;
+  final RxBool isPassLoading;
   final VoidCallback onTapSeeMore;
   final Future<void> Function(bool hasWaved) onTapAction;
   final RxBool isSeeMore;
@@ -17,11 +18,12 @@ class MatchUserDetails extends StatefulWidget {
   const MatchUserDetails({
     super.key,
     required this.user,
-    required this.isLoading,
+    required this.isPassLoading,
     required this.isSeeMore,
     required this.onTapSeeMore,
     required this.onTapAction,
     required this.resolveAddress,
+    required this.isWaveLoading,
   });
 
   @override
@@ -233,7 +235,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
               txtClr: c.textSecondary,
               rad: 12,
               btnTxt: Strings.pass,
-              isLoading: widget.isLoading.value,
+              isLoading: widget.isPassLoading.value,
               onTap: () => widget.onTapAction(false),
             ),
           ),
@@ -246,7 +248,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
               txtClr: white,
               btnTxt: Strings.wave,
               rad: 12,
-              isLoading: widget.isLoading.value,
+              isLoading: widget.isWaveLoading.value,
               onTap: () => widget.onTapAction(true),
             ),
           ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:mama_app/app/controller_export.dart';
 
@@ -82,6 +84,8 @@ class ApiClient {
       print("DATA TYPE: ${data.runtimeType}");
 
       final response = await _dio.request(url, data: data, options: options);
+
+      log('response in patch  : $response ');
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
       print("PATCH request error: $e");

@@ -13,8 +13,8 @@ class MatchController extends GetxController {
   Rx<MatchState> matchState = MatchState.idle.obs;
 
   static MatchController get to => Get.find<MatchController>();
-
-  RxBool isLoading = false.obs;
+  RxBool isWaveLoading = false.obs;
+  RxBool isPassLoading = false.obs;
   RxBool isSeeMore = false.obs;
   RxBool subUpgradeNeeded = false.obs;
 
@@ -198,28 +198,31 @@ class MatchController extends GetxController {
   final isSuccessSentReq = false.obs;
 
   Future<void> onAction(bool hasWaved, {required String receiverId}) async {
-    isLoading.value = true;
+    if (hasWaved) {
+      isWaveLoading.value = true;
+    } else {
+      isPassLoading.value = true;
+    }
+
     await Future.delayed(const Duration(seconds: 1));
-    isLoading.value = false;
 
     if (hasWaved) {
+      isWaveLoading.value = false;
+
       sendConversationRequest(receiverId);
 
       if (isSuccessSentReq.value) {
-        await showWaveSentDialog(stopSearching: stopSearching); // waits until she taps close
+        await showWaveSentDialog(stopSearching: stopSearching);
+
         if (stopSearching.value) {
           matchState.value = MatchState.idle;
         } else {
           await _showNextMatch();
-        } // then advances
-        // Future.delayed(const Duration(seconds: 3), () async {
-        //   Get.back(); // close wave sent dialog
-        //   await _showNextMatch();
-        // });
+        }
       }
     } else {
-      // Pass — show next user from existing list, no API call
-      // Brief visual pause so the pass feels intentional, not instant
+      isPassLoading.value = false;
+
       matchState.value = MatchState.idle;
       await Future.delayed(const Duration(milliseconds: 600));
       await _showNextMatch();

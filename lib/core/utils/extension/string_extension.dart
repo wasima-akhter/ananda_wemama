@@ -15,7 +15,7 @@ extension ShowToastExtension on String {
       backgroundColor: bgColor ?? c.cardPrimary,
       fontSize: 16,
       gravity: ToastGravity.BOTTOM,
-      textColor: txtColor ?? Colors.black54,
+      textColor: txtColor ?? c.primary,
       toastLength: Toast.LENGTH_LONG,
       timeInSecForIosWeb: 1,
     );

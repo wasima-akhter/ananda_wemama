@@ -2,11 +2,15 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:mama_app/core/config/app_info.dart';
+import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
+import '../../../features/main_tabs/chat/model/chat_inbox_msg_item_model.dart';
+import '../../../features/main_tabs/chat/model/chat_list_item_model.dart';
 import '../../../features/more/notification/controller/notification_controller.dart';
 import '../../helpers/methods_helper.dart';
 import '../../helpers/widgets_helper.dart';
@@ -14,6 +18,7 @@ import '../../network/helpers/network_helpers.dart';
 import '../../utils/extension/context_extension.dart';
 import 'socket_events.dart';
 import 'socket_response_handler .dart';
+import 'socket_status_controller.dart';
 
 class SocketService extends GetxService {
   IO.Socket? _socket;
@@ -87,6 +92,10 @@ class SocketService extends GetxService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void _registerListeners() {
+    //
+    //
+    _registerRetryListeners(); //
+
     // ── send_conversation_request ─────────────────────────────────────────────
     _on(SocketEvents.sendConversationRequest, (data) {
       final res = SocketResponseHandler.handle(
@@ -251,6 +260,45 @@ class SocketService extends GetxService {
 
       // 🔕 No snackbar to wave sender — bad UX to explicitly notify rejection
     });
+
+    // ── chat_list (list) ──────────────────────────────────────────
+    _on(SocketEvents.chatList, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.chatList);
+      if (!res.isSuccess) return;
+
+      final list = (res.dataAsList ?? []).map((e) => ChatListItemModel.fromJson(e)).toList();
+
+      if (Get.isRegistered<ChatController>()) {
+        Get.find<ChatController>().updateChatList(list);
+      }
+    });
+
+    // ── chat_inbox_msg_list (list) ──────────────────────────────────────────
+    _on(SocketEvents.messages, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.messages);
+      if (!res.isSuccess) return;
+
+      final itemData = ChatInboxMessageItemModel.fromJson(res.dataAsMap ?? {});
+
+      if (Get.isRegistered<ChatInboxController>()) {
+        Get.find<ChatInboxController>().updateChatInboxMsgItem(itemData);
+      }
+    });
+
+    //
+    // ── chat_new_message listen ──────────────────────────────────────────
+    _on(SocketEvents.newMessage, (data) {
+      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newMessage);
+      if (!res.isSuccess) return;
+
+      final msgData = Message.fromJson(res.dataAsMap ?? {});
+
+      if (Get.isRegistered<ChatInboxController>()) {
+        Get.find<ChatInboxController>().addMessage(msgData); // ✅ correct
+      }
+    });
+    //
+    //
     // ```
 
     // ---
@@ -323,6 +371,7 @@ class SocketService extends GetxService {
 
   @override
   void onClose() {
+    _retryTimer?.cancel();
     _socket?.clearListeners();
     _socket?.disconnect();
     _socket?.destroy();
@@ -337,6 +386,78 @@ class SocketService extends GetxService {
   Map<String, dynamic> _parse(dynamic data) {
     if (data is Map<String, dynamic>) return data;
     return Map<String, dynamic>.from(data as Map);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // AUTO-RETRY — added without touching any existing logic
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  static const int _maxRetries = 8;
+  static const Duration _baseDelay = Duration(seconds: 2);
+
+  int _retryCount = 0;
+  Timer? _retryTimer;
+
+  /// Called once inside _registerListeners() — hooks into socket lifecycle.
+  // At the top of _registerRetryListeners()
+  void _registerRetryListeners() {
+    _socket!.onConnect((_) {
+      _retryCount = 0;
+      _retryTimer?.cancel();
+      _retryTimer = null;
+      print("🔁 Retry state reset — socket healthy");
+
+      // ✅ NEW
+      if (Get.isRegistered<SocketStatusController>()) {
+        SocketStatusController.to.setConnected();
+      }
+    });
+
+    _socket!.onDisconnect((_) {
+      print("🔌 Socket disconnected — scheduling retry...");
+      _scheduleRetry();
+    });
+
+    _socket!.onConnectError((_) {
+      print("❌ Connect error — scheduling retry...");
+      _scheduleRetry();
+    });
+  }
+
+  void _scheduleRetry() {
+    _retryTimer?.cancel();
+
+    if (_retryCount >= _maxRetries) {
+      print("🚫 Max retries ($_maxRetries) reached. Giving up.");
+
+      // ✅ NEW
+      if (Get.isRegistered<SocketStatusController>()) {
+        SocketStatusController.to.setFailed();
+      }
+      return;
+    }
+
+    final delay = Duration(seconds: (_baseDelay.inSeconds * (1 << _retryCount)).clamp(2, 60));
+
+    _retryCount++;
+
+    // ✅ NEW
+    if (Get.isRegistered<SocketStatusController>()) {
+      SocketStatusController.to.setReconnecting(_retryCount);
+    }
+
+    print("⏳ Retry #$_retryCount in ${delay.inSeconds}s...");
+
+    _retryTimer = Timer(delay, () async {
+      if (!isConnected) {
+        print("🔄 Attempting reconnect #$_retryCount...");
+        try {
+          await connectSocket();
+        } catch (e) {
+          print("❌ Reconnect #$_retryCount failed: $e");
+        }
+      }
+    });
   }
 }
 
