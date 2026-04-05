@@ -1,8 +1,8 @@
-import 'package:mama_app/core/common_widgets/custom_divider.dart';
+import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
-import '../../../../core/common_widgets/items/comment_item_w_reply.dart';
+import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
+import '../../../shared/comments/widget/comment_item_w_reply.dart';
 import '../controller/community_detail_controller.dart';
 import '../controller/post_details_controller.dart';
 import '../widgets/post_item_widget.dart';

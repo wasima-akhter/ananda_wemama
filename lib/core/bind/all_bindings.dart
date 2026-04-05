@@ -40,6 +40,7 @@ import '../../features/post_auth_setup/setup_profile/controller/setup_profile_co
 import '../../features/post_auth_setup/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
 import '../../features/shared/bookmark/controller/bookmark_controller.dart';
+import '../../features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
 import '../../features/shared/mood/mood_library/controller/mood_library_controller.dart';
 import '../../features/shared/report_sheet/controller/report_controller.dart';
@@ -47,7 +48,6 @@ import '../../features/shared/subscription_info/controller/subscription_info_con
 import '../../features/station_location/controller/station_location_controller.dart';
 import '../../features/video_meeting/controller/meeting_comment_controller.dart';
 import '../../features/video_meeting/controller/meeting_controller.dart';
-import '../components/mood_check_in/mood_check_in_controller.dart';
 import '../enums/app_enums.dart';
 import '../enums/ui_enums.dart';
 import '../network/helpers/network_helpers.dart';

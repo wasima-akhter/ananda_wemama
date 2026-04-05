@@ -1,4 +1,4 @@
-import 'package:mama_app/core/common_widgets/common_components/bg_image_container.dart';
+import 'package:mama_app/core/components/ui/layout/bg_image_container.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/mums_stage_controller.dart';

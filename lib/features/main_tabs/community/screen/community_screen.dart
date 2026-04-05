@@ -1,9 +1,9 @@
-import 'package:mama_app/core/common_widgets/custom_divider.dart';
-import 'package:mama_app/core/common_widgets/popups.dart';
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
+import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_scrollbar_widget.dart';
-import '../../../../core/common_widgets/cus_search_bar.dart';
+import '../../../../core/components/ui/inputs/cus_search_bar.dart';
+import '../../../../core/components/ui/scroll/cus_scrollbar_widget.dart';
 import '../controller/community_controller.dart';
 import '../widgets/community_item.dart';
 

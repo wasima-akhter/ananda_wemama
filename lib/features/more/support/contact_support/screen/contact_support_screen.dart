@@ -1,5 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/common_widgets/cus_des_type_text_form_field.dart';
+import '../../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import '../../../../../core/utils/validator/validators.dart';
 import '../controller/contact_support_controller.dart';
 

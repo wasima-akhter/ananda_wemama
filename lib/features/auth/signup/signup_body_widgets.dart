@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../core/common_widgets/cus_pass_type_text_form_field.dart';
-import '../../../core/common_widgets/visibility_suffix.dart';
+import '../../../core/components/ui/helpers/visibility_suffix.dart';
+import '../../../core/components/ui/inputs/cus_pass_type_text_form_field.dart';
 import '../../../core/utils/validator/validators.dart';
 import 'controller/signup_controller.dart';
 

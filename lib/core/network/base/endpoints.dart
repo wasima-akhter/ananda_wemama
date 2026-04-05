@@ -25,8 +25,13 @@ class Endpoints {
     return "notification/make-notification-seen/$notificationId";
   }
 
-  static const supplierDetails = "supplier/supplier-details";
+  // mood library
+  static const getAllMood = "mood/get-all-mood";
+  static String getAllMoodContents({required String moodId}) {
+    return "mood/get-all-mood-content?moodId=$moodId";
+  }
 
+  // add location
   static const addLocation = "profile/add-location";
 
   static String getMatch({required String lat, required String long}) {

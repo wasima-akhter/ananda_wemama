@@ -1,8 +1,8 @@
 // lib/features/main_tabs/community/modules/post_item_widget.dart
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_flexible_dropdown.dart';
-import '../../../../core/common_widgets/popups.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import '../../../../core/helpers/widgets_helper.dart';
 import '../controller/community_detail_controller.dart';
 import '../modules/user_short_detail_widget.dart';

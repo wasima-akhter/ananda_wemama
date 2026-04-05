@@ -1,4 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/components/ui/buttons/small_nav_btn.dart';
 
 class MoodIllustrationCard extends StatelessWidget {
   final String imageUrl;

@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/core/common_widgets/common_components/add_photo_widget.dart';
+import 'package:mama_app/core/components/app_ui/cards/add_photo_widget.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';

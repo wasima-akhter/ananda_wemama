@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/common_components/add_photos_card.dart';
+import '../../../../../../core/components/app_ui/cards/add_photos_card.dart';
 
 class DescriptionImagesGrid extends StatelessWidget {
   const DescriptionImagesGrid({

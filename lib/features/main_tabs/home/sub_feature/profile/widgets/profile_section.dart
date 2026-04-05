@@ -1,9 +1,9 @@
-import 'package:mama_app/core/common_widgets/common_components/tag_type_widgets.dart';
-import 'package:mama_app/core/common_widgets/cus_flexible_dropdown.dart';
+import 'package:mama_app/core/components/app_ui/tags/tag_type_widgets.dart';
+import 'package:mama_app/core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
-import '../../../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_detail_component.dart';
+import '../../../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../../../core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
 import '../controller/profile_controller.dart';
 import 'profile_shimmer.dart';
@@ -28,7 +28,7 @@ class ProfileSection extends StatelessWidget {
         child: Column(
           children: [
             Gap(4.h),
-            _buildInactiveInfo(),
+            // _buildInactiveInfo(),
             Text(pc.userProfileData.value?.email ?? ''),
             UserDetailComponent(
               isLoading: udc.isLoading_,

@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/empty_widget.dart';
-import '../../../../core/common_widgets/popups.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../controller/notification_controller.dart';
 import '../model/notifications_model.dart';
 

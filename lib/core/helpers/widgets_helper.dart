@@ -1,12 +1,12 @@
 import 'package:pinput/pinput.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../../features/main_tabs/community/model/comments_bottom_sheet.dart';
+import '../../features/main_tabs/community/modules/comments_bottom_sheet.dart';
 import '../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
 import '../../features/video_meeting/modules/meeting_comments_bottom_sheet.dart';
-import '../common_widgets/common_components/set_children_bottom_sheet.dart';
-import '../common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../components/app_ui/sheets/set_children_bottom_sheet.dart';
 
 PinTheme? defaultPinTheme = PinTheme(
   width: 56.w,
@@ -248,6 +248,8 @@ String getChildAge(
 
 FakeUserDetailsModel? mapToUserModel(ProfileDataModel? data) {
   if (data == null) return null;
+
+  debugPrint("Mapping data.profileImage: ${data.profileImage} ");
 
   return FakeUserDetailsModel(
     imageUrl: data.profileImage ?? '',

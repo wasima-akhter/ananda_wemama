@@ -1,7 +1,7 @@
 // lib/features/main_tabs/home/modules/location_status_overlay.dart
 
 import 'package:geolocator/geolocator.dart';
-import 'package:mama_app/core/common_widgets/common_components/tag_type_widgets.dart';
+import 'package:mama_app/core/components/app_ui/tags/tag_type_widgets.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 

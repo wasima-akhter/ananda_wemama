@@ -1,7 +1,7 @@
-import 'package:mama_app/core/enums/app_enums.dart';
-
 import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/enums/app_enums.dart';
 import '../controller/mood_library_controller.dart';
+import '../model/get_all_mood_model.dart';
 import '../widgets/mood_library_comp.dart';
 
 class MoodLibraryScreen extends StatelessWidget {
@@ -37,7 +37,16 @@ class MoodLibraryScreen extends StatelessWidget {
           }),
 
           /// ✅ Reactive Mood Illustration
-          MoodIllustrationCard(imageUrl: Strings.fakeImageUrl),
+          Obx(() {
+            if (mlc.isMoodsImagesloading) {
+              return LoadingPrimary();
+            }
+            final fetchedMood = mlc.allMoodImageData.value.firstWhere(
+              (m) => (m.title ?? '').toLowerCase() == mlc.selectedMood.value.name.toLowerCase(),
+              orElse: () => GetAllMoodItemModel(id: 'default'),
+            );
+            return MoodIllustrationCard(imageUrl: fetchedMood.image ?? '');
+          }),
 
           /// ✅ Reactive Reading Items
           Obx(() {

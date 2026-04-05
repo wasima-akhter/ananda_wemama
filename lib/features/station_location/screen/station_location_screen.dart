@@ -1,5 +1,5 @@
 import '../../../app/helper_widgets_export.dart';
-import '../../../core/common_widgets/current_location_showbar.dart';
+import '../../../core/components/app_ui/location/current_location_showbar.dart';
 import '../controller/station_location_controller.dart';
 
 class StationLocationScreen extends StatelessWidget {

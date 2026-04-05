@@ -1,4 +1,4 @@
-import 'package:mama_app/core/common_widgets/popup_input_tile.dart';
+import 'package:mama_app/core/components/ui/dialogs/popup_input_tile.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';

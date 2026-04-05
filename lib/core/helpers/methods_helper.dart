@@ -4,7 +4,7 @@ import 'package:mama_app/core/config/app_info.dart';
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../common_widgets/custom_divider.dart';
+import '../components/ui/helpers/shapes/custom_divider.dart';
 
 T findCont<T extends GetxController>() {
   return Get.find<T>();

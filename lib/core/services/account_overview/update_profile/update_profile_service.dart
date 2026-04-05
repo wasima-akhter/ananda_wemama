@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../app/service_export.dart';
@@ -56,8 +57,8 @@ class UpdateProfileService extends GetxService {
   //     );
   //   }
 
-  //   print(data.fields);
-  //   print(data.files.map((e) => e.key).toList());
+  //  debugPrint(data.fields);
+  //  debugPrint(data.files.map((e) => e.key).toList());
 
   //   debugPrint("UpdateProfileService - Storage.token: ${storage.getAccessToken}");
 
@@ -84,23 +85,23 @@ class UpdateProfileService extends GetxService {
     final data = dio.FormData();
 
     // ── All files go under 'files' key — matches Postman ─────────────────────
-    // if (profileImage != null) {
-    //   data.files.add(
-    //     MapEntry(
-    //       'profile-image',
-    //       await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name),
-    //     ),
-    //   );
-    // }
+    if (profileImage != null) {
+      data.files.add(
+        MapEntry(
+          'profile-image',
+          await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name),
+        ),
+      );
+    }
 
-    // for (final image in descriptionImages) {
-    //   data.files.add(
-    //     MapEntry(
-    //       'description-image',
-    //       await dio.MultipartFile.fromFile(image.path, filename: image.name),
-    //     ),
-    //   );
-    // }
+    for (final image in descriptionImages) {
+      data.files.add(
+        MapEntry(
+          'description-image',
+          await dio.MultipartFile.fromFile(image.path, filename: image.name),
+        ),
+      );
+    }
 
     // ── Text fields ───────────────────────────────────────────────────────────
     data.fields
@@ -110,19 +111,28 @@ class UpdateProfileService extends GetxService {
       ..add(MapEntry('bio', bio))
       ..add(MapEntry('name', name)); // ✅ add name
 
-    // if (children != null) {
-    //   for (int i = 0; i < children.length; i++) {
-    //     data.fields.add(MapEntry('children[$i][gender]', children[i]['gender']!));
-    //     data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
-    //   }
-    // }
+    if (children != null) {
+      for (int i = 0; i < children.length; i++) {
+        data.fields.add(MapEntry('children[$i][gender]', children[i]['gender']!));
+        data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
+      }
+    }
 
-    print(data.fields);
-    print(data.files.map((e) => e.key).toList());
+    debugPrint('fields: ${data.fields}');
+    debugPrint('files count: ${data.files.length}');
+    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    debugPrint('FIELDS:');
+    for (var f in data.fields) {
+      debugPrint('${f.key}: ${f.value}');
+    }
+
+    debugPrint('FILES:');
+    for (var f in data.files) {
+      debugPrint('${f.key}: ${f.value.filename}');
+    }
+
+    debugPrint("Token: ${storage.getAccessToken}");
 
     final response = await _apiHelper.request<ProfileDataModel>(
       apiCall: () => ApiClient().patchWithFile(

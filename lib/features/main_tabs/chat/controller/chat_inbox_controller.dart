@@ -231,6 +231,7 @@ class ChatInboxController extends GetxController {
     messages.add(newMsg); // ✅ add to RxList, NOT realChatInboxMsgItem
     scrollToBottom();
     sendMessageEmit(msg, receiverId);
+    getChatInboxMsgList();
     clearAll();
   }
 

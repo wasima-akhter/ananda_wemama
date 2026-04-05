@@ -1,5 +1,5 @@
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../controller/profile_controller.dart';
 import '../widgets/profile_section.dart';
 import '../widgets/profile_settings_tiles.dart';

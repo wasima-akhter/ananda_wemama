@@ -1,7 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
+import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import '../controller/chat_inbox_controller.dart';
 
 class ChatInputRow extends StatelessWidget {

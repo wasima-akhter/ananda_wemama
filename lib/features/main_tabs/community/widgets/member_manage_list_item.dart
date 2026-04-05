@@ -1,5 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_flexible_dropdown.dart';
+import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import '../../../main_tabs/chat/widgets/chat_user_image.dart';
 import '../controller/member_management_controller.dart';
 

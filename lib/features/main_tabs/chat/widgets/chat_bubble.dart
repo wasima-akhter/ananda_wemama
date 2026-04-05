@@ -33,7 +33,7 @@ class ChatBubbleCont extends StatelessWidget {
           rad: 12,
           vp: 10,
           hp: 12,
-          contClr: _isMe ? c.secondary : c.bottomSheetBackground,
+          contClr: _isMe ? c.secondary : ctransp,
           alignment: _isMe ? null : Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min, // 👈

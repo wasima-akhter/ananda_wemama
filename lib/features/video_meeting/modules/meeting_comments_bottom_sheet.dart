@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
-import '../../../core/common_widgets/items/comment_item_w_reply.dart';
+import '../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
+import '../../shared/comments/widget/comment_item_w_reply.dart';
 import '../controller/meeting_comment_controller.dart';
 
 class MeetingCommentsBottomSheet extends StatelessWidget {

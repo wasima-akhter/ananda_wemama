@@ -2,7 +2,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../app/helper_widgets_export.dart';
-import '../../common_widgets/models/my_location_result_model.dart';
+import '../../models/ui/my_location_result_model.dart';
 
 class LocationHelper {
   /// Get current location with permission handling and user feedback

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/common_widgets/popups.dart';
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
 import 'package:mama_app/features/main_tabs/match/services/match_service.dart';
 

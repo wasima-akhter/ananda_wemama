@@ -720,6 +720,9 @@ class Strings {
   //
   static const String continueSearching = "Continue Searching";
   static const String stop = "Stop";
+
+  static const String getAllMood = "Get All Mood";
+  static const String getAllMoodContents = "Get All Mood CContents";
 }
 
 //

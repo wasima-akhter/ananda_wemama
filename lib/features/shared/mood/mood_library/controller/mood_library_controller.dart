@@ -1,7 +1,9 @@
 import '../../../../../../app/controller_export.dart';
 import '../../../../../../core/local/app_storage.dart';
-import '../../../../../core/components/mood_check_in/mood_check_in_controller.dart';
 import '../../../../../core/enums/ui_enums.dart';
+import '../../mood_check_in/mood_check_in_controller.dart';
+import '../model/get_all_mood_model.dart';
+import '../service/mood_library_service.dart';
 
 class MoodReadingItem {
   final String id; // ← add
@@ -21,7 +23,7 @@ class MoodLibraryController extends GetxController {
   late final Rx<MoodType> selectedMood;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     selectedMood = (moodCheckInC.selectedMood.value ?? MoodType.calm).obs;
@@ -30,6 +32,10 @@ class MoodLibraryController extends GetxController {
     ever(moodCheckInC.selectedMood, (MoodType? mood) {
       selectedMood.value = mood ?? MoodType.calm;
     });
+
+    await getAllMoodsImages();
+
+    await getAllMoodContent();
   }
 
   final Map<MoodType, List<MoodReadingItem>> moodReadingItems = {
@@ -93,6 +99,8 @@ class MoodLibraryController extends GetxController {
     ],
   };
 
+  final service = MoodLibraryService();
+
   ///
   ///
   var isLoading = false.obs;
@@ -102,21 +110,61 @@ class MoodLibraryController extends GetxController {
     selectedMood.value = mood;
   }
 
+  String getSelMoodId() {
+    final selMoodId = allMoodImageData
+        .firstWhere(
+          (m) => (m.title ?? '').toLowerCase() == selectedMood.value.name.toLowerCase(),
+          orElse: () => GetAllMoodItemModel(id: 'default'),
+        )
+        .id;
+
+    return selMoodId ?? '';
+  }
+
   UserInfoModel get userInfo => storage.getUserInfo;
 
+  final realMoodReadingItems = null;
+
   /// Fetch mood library data safely
-  Future<void> fetchMoodLibraries({double? latitude, double? longitude}) async {
+  Future<void> getAllMoodContent() async {
     if (isLoading.value) return;
     isLoading.value = true;
 
     try {
       // TODO: API Call
-      // final data = await MoodLibraryService().fetchMoodLibraries(lat: latitude, long: longitude);
+      final data = await MoodLibraryService().fetchAllMoodContents(moodId: getSelMoodId());
       // parse and update moodImages & moodReadingItems here
     } catch (e) {
       print("Error fetching mood library: $e");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  var isMoodsImagesLoading_ = false.obs;
+  bool get isMoodsImagesloading => isMoodsImagesLoading_.value;
+
+  final allMoodImageData = <GetAllMoodItemModel>[].obs;
+
+  /// Fetch mood library data safely
+  Future<void> getAllMoodsImages({double? latitude, double? longitude}) async {
+    if (isMoodsImagesLoading_.value) return;
+    isMoodsImagesLoading_.value = true;
+
+    try {
+      // TODO: API Call
+      final data = await MoodLibraryService().fetchMoodImageData();
+
+      if (data.isNotEmpty) {
+        allMoodImageData.value = data;
+
+        debugPrint(' allMoodImageData : ${allMoodImageData.value.length}');
+      } else {}
+      // parse and update moodImages & moodReadingItems here
+    } catch (e) {
+      print("Error fetching mood library: $e");
+    } finally {
+      isMoodsImagesLoading_.value = false;
     }
   }
 }

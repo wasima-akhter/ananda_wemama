@@ -1,8 +1,8 @@
-import 'package:mama_app/core/common_widgets/cus_search_bar.dart';
+import 'package:mama_app/core/components/ui/inputs/cus_search_bar.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/empty_widget.dart';
+import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
 import '../controller/chat_controller.dart';
 import '../widgets/chat_list_item.dart';

@@ -1,6 +1,5 @@
 import '../../../app/helper_widgets_export.dart';
-import '../../../core/common_widgets/cus_pass_type_text_form_field.dart';
-import '../../../core/common_widgets/gesture_detector_cus.dart';
+import '../../../core/components/ui/inputs/cus_pass_type_text_form_field.dart';
 import '../../../core/state_screens/success/screen/success_screen.dart';
 import '../controller/payment_controller.dart';
 
@@ -57,10 +56,7 @@ class PaymentScreen extends StatelessWidget {
                             Text(Strings.paymentViaCard, style: TxtStyle.inter(w: 600)),
                             Gap(itemGap * 2),
 
-                            Text(
-                              Strings.yourDetailsAreSafe,
-                              style: TxtStyle.inter(fs: 11, w: 600),
-                            ),
+                            Text(Strings.yourDetailsAreSafe, style: TxtStyle.inter(fs: 11, w: 600)),
 
                             Gap(itemGap * 4),
 

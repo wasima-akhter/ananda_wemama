@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/service_export.dart';
@@ -51,13 +52,32 @@ class PostSignupSetProfileService extends GetxService {
       }
     }
 
-    /// profile image
-    ///     // Add file if exists
+    // / profile image
+    // /     // Add file if exists
     if (profileImage != null) {
       final file = await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name);
 
       data.files.add(MapEntry('profile-image', file));
     }
+
+    //
+    debugPrint('fields: ${data.fields}');
+    debugPrint('files count: ${data.files.length}');
+    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+
+    debugPrint('FIELDS:');
+    for (var f in data.fields) {
+      debugPrint('${f.key}: ${f.value}');
+    }
+
+    debugPrint('FILES:');
+    for (var f in data.files) {
+      debugPrint('${f.key}: ${f.value.filename}');
+    }
+
+    debugPrint("Token: ${storage.getAccessToken}");
+
+    //
 
     apiCall() {
       return ApiClient().postWithFile(

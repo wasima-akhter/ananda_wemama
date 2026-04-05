@@ -1,6 +1,6 @@
 import '../../../../app/controller_export.dart';
-import '../../../../core/components/mood_check_in/mood_row_model.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../../../shared/mood/mood_check_in/mood_row_model.dart';
 
 class OnboardController extends GetxController {
   var moodDataList = [

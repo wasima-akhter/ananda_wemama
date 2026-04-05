@@ -1,5 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/custom_toggle_btn.dart';
+import '../../../../core/components/ui/inputs/custom_toggle_btn.dart';
 
 class PreferenceTile extends StatelessWidget {
   final String title;

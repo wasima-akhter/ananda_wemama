@@ -1,8 +1,8 @@
-import 'package:mama_app/core/common_widgets/popups.dart';
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../../../main_tabs/chat/widgets/chat_user_image.dart';
 import '../controller/wave_request_controller.dart';
 import '../model/new_wave_req_list_item_model.dart';

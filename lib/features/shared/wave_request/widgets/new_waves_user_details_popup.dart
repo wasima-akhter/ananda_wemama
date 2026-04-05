@@ -1,7 +1,7 @@
-import 'package:mama_app/core/common_widgets/common_components/user_detaIl_component/ui/user_detail_component.dart';
+import 'package:mama_app/core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/small_popup_dialog.dart';
+import '../../../../core/components/ui/dialogs/small_popup_dialog.dart';
 import '../../../../core/helpers/widgets_helper.dart';
 import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../main_tabs/home/sub_feature/profile/widgets/profile_shimmer.dart';

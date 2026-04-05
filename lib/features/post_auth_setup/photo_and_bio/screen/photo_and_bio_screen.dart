@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/core/common_widgets/cus_des_type_text_form_field.dart';
+import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/network/helpers/network_helpers.dart';

@@ -1,5 +1,5 @@
 import '../../../app/helper_widgets_export.dart';
-import '../../../core/common_widgets/cus_flexible_dropdown.dart';
+import '../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import 'meet_bottom_action.dart';
 
 class ReactButton extends StatelessWidget {

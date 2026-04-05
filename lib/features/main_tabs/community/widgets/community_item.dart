@@ -1,5 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/small_outlined_btn.dart';
+import '../../../../core/components/ui/buttons/small_outlined_btn.dart';
 
 class CommunityItem extends StatelessWidget {
   final void Function()? onTapItemBtn;

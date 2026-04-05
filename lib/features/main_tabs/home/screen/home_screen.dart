@@ -1,11 +1,11 @@
-import 'package:mama_app/core/common_widgets/common_components/community_spotlight.dart';
-import 'package:mama_app/core/common_widgets/home_app_bar_content.dart';
+import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
+import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/components/mood_check_in/mood_chip_card.dart';
-import '../../../../core/components/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../../../core/network/helpers/location/location_status_overlay.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
+import '../../../shared/mood/mood_check_in/mood_chip_card.dart';
+import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../controller/home_controller.dart';
 import '../modules/gentle_reminder_card.dart';
 

@@ -1,6 +1,6 @@
 import 'package:mama_app/app/helper_widgets_export.dart';
 
-import '../../../../core/common_widgets/models/common_data_models.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 
 class WelcomeFundingMumController extends GetxController {
   // ─────────────────────────────

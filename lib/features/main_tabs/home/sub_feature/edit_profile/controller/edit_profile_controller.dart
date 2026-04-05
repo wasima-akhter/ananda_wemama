@@ -244,7 +244,7 @@ class EditProfileController extends GetxController {
       storage.setUserPhone(data.phone ?? '');
 
       updatedProfileData.value = data;
-      clearForm();
+      // clearForm();
       nameCtrl.text = data.name ?? '';
       fileImage.value = null;
 

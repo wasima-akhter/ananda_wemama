@@ -1,5 +1,5 @@
 import '../../../app/helper_widgets_export.dart';
-import '../../../core/common_widgets/common_components/community_spotlight.dart';
+import '../../shared/community_spotlight/community_spotlight.dart';
 
 class TopContent extends StatelessWidget {
   const TopContent({super.key});

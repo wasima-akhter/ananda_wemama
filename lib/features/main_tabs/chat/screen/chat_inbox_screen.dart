@@ -1,4 +1,4 @@
-import 'package:mama_app/core/common_widgets/empty_widget.dart';
+import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -26,10 +26,20 @@ class ChatInboxScreen extends StatelessWidget {
           final user = cic.realChatInboxMsgItem.value.receiver;
 
           return Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               NetworkImageWidget(imageUrl: user?.profileImage ?? '', isCircle: true, radius: 16),
               Gap(itemGap),
-              Text(user?.name ?? 'Chat', style: 18.titleMclrCusFSOutfit),
+              SizedBox(
+                width: S.w * 0.5,
+                child: Text(
+                  user?.name ?? 'Chat',
+                  maxLines: 1,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style: 18.titleMclrCusFSOutfit,
+                ),
+              ),
             ],
           );
         }),

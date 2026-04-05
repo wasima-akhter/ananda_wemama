@@ -1,4 +1,4 @@
-import 'package:mama_app/core/common_widgets/popups.dart';
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
 import 'package:mama_app/features/main_tabs/community/modules/join_btn.dart';
 import 'package:mama_app/features/main_tabs/community/widgets/post_item_widget.dart';

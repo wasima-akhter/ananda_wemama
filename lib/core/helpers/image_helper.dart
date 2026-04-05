@@ -1,9 +1,9 @@
 import 'package:flutter/services.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../common_widgets/file_picker_bottom_sheet.dart';
-import '../common_widgets/image_error_builder.dart';
-import '../common_widgets/image_picker_bottom_sheet.dart';
+import '../components/ui/media/image_error_builder.dart';
+import '../components/ui/sheets/file_picker_bottom_sheet.dart';
+import '../components/ui/sheets/image_picker_bottom_sheet.dart';
 
 Image get mamaLogoWithoutTxtImage =>
     Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.2);

@@ -1,8 +1,8 @@
-import 'package:mama_app/core/common_widgets/cus_des_type_text_form_field.dart';
+import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_in_community_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/custom_toggle_btn.dart';
+import '../../../../core/components/ui/inputs/custom_toggle_btn.dart';
 import '../modules/user_short_detail_widget.dart';
 
 class PostInCommunityScreen extends StatelessWidget {

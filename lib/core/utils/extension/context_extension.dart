@@ -1,6 +1,6 @@
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
-import 'package:mama_app/core/common_widgets/common_components/founding_mum_badge_snack.dart';
+import 'package:mama_app/core/components/app_ui/snacks/founding_mum_badge_snack.dart';
 import 'package:mama_app/core/enums/app_enums.dart';
 
 import '../../themes/color/color_model.dart';

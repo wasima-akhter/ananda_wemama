@@ -1,9 +1,9 @@
 import 'package:mama_app/core/helpers/widgets_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/controller/user_detail_controller.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_about_section.dart';
-import '../../../../core/common_widgets/common_components/user_detaIl_component/ui/user_avatar.dart';
+import '../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
+import '../../../../core/components/app_ui/components/user_detaIl_component/ui/user_about_section.dart';
+import '../../../../core/components/app_ui/components/user_detaIl_component/ui/user_avatar.dart';
 import '../model/match_model.dart';
 
 class MatchUserDetails extends StatefulWidget {

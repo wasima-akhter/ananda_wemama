@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/add_photos_card.dart';
-import '../../../../core/common_widgets/cus_des_type_text_form_field.dart';
+import '../../../../core/components/app_ui/cards/add_photos_card.dart';
+import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import '../controller/report_controller.dart';
 import '../modules/report_reason_tile.dart';
 

@@ -1,9 +1,9 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/cus_search_bar.dart';
-import '../../../../core/components/ongoing_sessions/live_ongoing_expert_session_card.dart';
-import '../../../../core/components/ongoing_sessions/past_sessions_library_card.dart';
-import '../../../../core/components/ongoing_sessions/upcoming_expert_session_card.dart';
+import '../../../../core/components/ui/inputs/cus_search_bar.dart';
 import '../../../shared/mood/mood_library/widgets/mood_library_chip_card.dart';
+import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
+import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
+import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
 import '../controller/experts_controller.dart';
 import '../widgets/paid_past_sessions_component.dart';
 

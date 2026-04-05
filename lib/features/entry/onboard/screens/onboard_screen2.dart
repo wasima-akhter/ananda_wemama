@@ -1,7 +1,7 @@
-import 'package:mama_app/core/common_widgets/back_arrow_in_circle.dart';
+import 'package:mama_app/core/components/ui/buttons/back_arrow_in_circle.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/community_spotlight.dart';
+import '../../../shared/community_spotlight/community_spotlight.dart';
 import '../controller/onboard_controller.dart';
 
 class OnboardScreen2 extends StatelessWidget {

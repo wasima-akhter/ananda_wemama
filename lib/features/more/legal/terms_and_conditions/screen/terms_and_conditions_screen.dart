@@ -1,7 +1,7 @@
 import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/common_widgets/html_viewer_auto_height.dart';
+import '../../../../../core/components/ui/media/html_viewer_auto_height.dart';
 import '../../../../../core/helpers/string_helper.dart';
 import '../controller/terms_and_conditions_controller.dart';
 

@@ -1,8 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../app/controller_export.dart';
-import '../../../../core/common_widgets/popups.dart';
-import '../../../../core/components/mood_check_in/mood_check_in_controller.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../../station_location/controller/station_location_controller.dart';
 import '../dialogs/permanent_denied_dialog.dart';
 import '../dialogs/rationale_dialog.dart';

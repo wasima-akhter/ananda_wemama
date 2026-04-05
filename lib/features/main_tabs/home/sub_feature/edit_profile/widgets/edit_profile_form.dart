@@ -1,6 +1,6 @@
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/cus_des_type_text_form_field.dart';
-import '../../../../../../core/common_widgets/popup_input_tile.dart';
+import '../../../../../../core/components/ui/dialogs/popup_input_tile.dart';
+import '../../../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import '../../../../../../core/helpers/date_helper.dart';
 import '../../../../../../core/utils/validator/validators.dart';
 import '../controller/edit_profile_controller.dart';

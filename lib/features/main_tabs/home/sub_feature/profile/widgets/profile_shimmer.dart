@@ -1,5 +1,5 @@
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/shimmer_widget.dart';
+import '../../../../../../core/components/ui/loaders/shimmer_widget.dart';
 
 class ProfileShimmer extends StatelessWidget {
   const ProfileShimmer({super.key});

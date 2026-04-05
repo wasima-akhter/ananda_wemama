@@ -1,5 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/common_widgets/common_components/bg_image_container.dart';
+import '../../../../core/components/ui/layout/bg_image_container.dart';
 import '../controller/onboard_controller.dart';
 import '../widgets/onboard_layout_config.dart';
 import '../widgets/security_text.dart';

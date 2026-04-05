@@ -1,5 +1,5 @@
 import '../../../../../../app/helper_widgets_export.dart';
-import '../../../../../../core/common_widgets/popups.dart';
+import '../../../../../../core/components/ui/dialogs/popups.dart';
 import '../../../modules/profile_tile.dart';
 import '../controller/profile_controller.dart';
 
