@@ -6,12 +6,14 @@ class CommunityItem extends StatelessWidget {
   final void Function()? onTapItem;
   final bool isLoading;
   final String btnTxt;
+  final Color? bgClr;
   const CommunityItem({
     super.key,
     this.onTapItemBtn,
     required this.isLoading,
     required this.btnTxt,
     this.onTapItem,
+    this.bgClr,
   });
 
   @override
@@ -21,8 +23,9 @@ class CommunityItem extends StatelessWidget {
     return CusGestureDetector(
       onTap: onTapItem,
       child: ContainerBordered(
-        vp: 12,
+        vp: 10,
         hp: 12,
+        contClr: bgClr,
         hasBrdr: true,
         brdrClr: c.inputBorder.withOpacity(0.3),
         child: Row(
@@ -38,7 +41,7 @@ class CommunityItem extends StatelessWidget {
                     style: TxtStyle.outfitSmTitle,
                   ),
 
-                  Gap(6),
+                  Gap(2.h),
 
                   Row(
                     children: List.generate(stats.length, (index) {
@@ -59,9 +62,15 @@ class CommunityItem extends StatelessWidget {
               ),
             ),
 
-            Gap(12),
+            Gap(12.w),
 
-            SmallOutlinedBtn(isLoading: isLoading, btnTxt: btnTxt, onTap: onTapItemBtn),
+            SmallOutlinedBtn(
+              isLoading: isLoading,
+              btnClr: bgClr != null ? c.secondary : null,
+              txtClr: bgClr != null ? white : null,
+              btnTxt: btnTxt,
+              onTap: onTapItemBtn,
+            ),
           ],
         ),
       ),

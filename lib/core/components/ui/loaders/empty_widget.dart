@@ -14,12 +14,37 @@ class EmptyWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Gap(itemGap * 2),
-          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.navItemUnselected)),
+          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
 
           Gap(itemGap * 2),
 
           Image.asset(ImagesPath.noSearchImg, fit: BoxFit.contain, height: S.w * 0.36),
           Gap(itemGap * 7),
+        ],
+      ),
+    ).mT(12);
+  }
+}
+
+class EmptySessionWidget extends StatelessWidget {
+  final String title;
+  const EmptySessionWidget({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      contClr: c.bottomSheetBackground.withOpacity(0.2),
+      vp: 20.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Gap(itemGap),
+          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+
+          Gap(itemGap),
+
+          Image.asset(ImagesPath.noSearchImg, fit: BoxFit.contain, height: S.w * 0.3),
+          Gap(itemGap * 2),
         ],
       ),
     ).mT(12);

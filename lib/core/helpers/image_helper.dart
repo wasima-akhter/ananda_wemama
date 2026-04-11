@@ -33,17 +33,27 @@ Column get weMamaLogoWithTxt => Column(
   ],
 );
 
-CircleAvatar circledImageBgComponent({String? imagePath, double? radius}) {
+CircleAvatar circledImageBgComponent({String? imagePath, Color? brdrClr, double? radius}) {
   return CircleAvatar(
     radius: (radius ?? 20).r,
     backgroundColor: c.inputBackground,
     child: Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: c.secondary),
+        border: Border.all(color: brdrClr ?? c.secondary),
         image: DecorationImage(image: AssetImage(imagePath ?? ImagesPath.userDemoL)),
       ),
     ),
+  );
+}
+
+Widget circledNetworkImageBgComponent({String? imagePath, Color? brdrClr, double? radius}) {
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: brdrClr ?? c.secondary),
+    ),
+    child: NetworkImageWidget(imageUrl: imagePath, radius: radius ?? 20),
   );
 }
 

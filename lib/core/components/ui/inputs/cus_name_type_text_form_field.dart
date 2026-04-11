@@ -20,6 +20,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
   final TextStyle? style;
   final VoidCallback? onTap;
   final Function(String)? onChanged;
+  final void Function()? onEditingComplete;
   final EdgeInsetsGeometry? contentPadding;
   final FocusNode? focusNode;
   final InputBorder? errorBorder;
@@ -71,6 +72,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
     this.rad,
     this.brdrW,
     this.fillColor,
+    this.onEditingComplete,
   });
 
   @override
@@ -164,9 +166,12 @@ class CusNameTypeTextFormField extends StatelessWidget {
         validator: validator,
         onTap: onTap,
         // ✅ ADD THIS: Prevents text from being submitted/cleared when keyboard closes
-        onEditingComplete: () {
-          // Do nothing - just prevent default behavior
-        },
+        onEditingComplete:
+            onEditingComplete ??
+            () {
+              // Do nothing - just prevent default behavior
+              debugPrint('controller.text: ${controller.text}');
+            },
       ),
     );
   }

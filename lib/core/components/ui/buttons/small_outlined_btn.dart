@@ -5,12 +5,14 @@ class SmallOutlinedBtn extends StatelessWidget {
   final bool isLoading;
   final String btnTxt;
   final Color? btnClr;
+  final Color? txtClr;
   const SmallOutlinedBtn({
     super.key,
     this.onTap,
     required this.isLoading,
     required this.btnTxt,
     this.btnClr,
+    this.txtClr,
   });
 
   @override
@@ -19,8 +21,7 @@ class SmallOutlinedBtn extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         CustomBtnWTxt(
-          txtClr: c.primary,
-          style: TxtStyle.interSemiB(fs: 12, w: 500),
+          style: TxtStyle.interSemiB(fs: 12, w: 500, color: txtClr),
           rad: 30,
           borderClr: c.inputBorder.withOpacity(0.3),
           padding: EdgeInsets.symmetric(vertical: 5.w, horizontal: 12.w),

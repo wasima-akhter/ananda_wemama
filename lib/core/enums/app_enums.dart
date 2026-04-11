@@ -22,3 +22,5 @@ enum CustomerOrderCategory {
 }
 
 enum SupplierOrderAction { accept, onTheWay, complete, delete, confirm, reject, cancel }
+
+enum SessionStatus { upcoming, ongoing }

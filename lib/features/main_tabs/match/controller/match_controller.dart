@@ -1,11 +1,11 @@
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
-import 'package:mama_app/features/main_tabs/match/services/match_service.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../station_location/controller/station_location_controller.dart';
 import '../model/match_model.dart';
+import '../services/match_service.dart';
 
 enum MatchState { idle, searching, found, noMatch }
 

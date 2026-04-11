@@ -57,6 +57,9 @@ class RoutePaths {
   static const postDetails = '/postDetails';
   static const pastSessions = '/pastSessions';
 
+  static const ongoingSessions = '/ongoingSessions';
+  static const upcomingSessions = '/upcomingSessions';
+
   // ─────────────────────────────
   // 🔹 Experts >
   // ─────────────────────────────

@@ -5,7 +5,6 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/network/helpers/location/location_status_overlay.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../../../shared/mood/mood_check_in/mood_chip_card.dart';
-import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../controller/home_controller.dart';
 import '../modules/gentle_reminder_card.dart';
 
@@ -59,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),
-          LiveOngoingSessionCard(),
+          // LiveOngoingSessionCard(),
         ],
       ).getcm,
     );

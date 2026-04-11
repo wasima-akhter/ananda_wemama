@@ -3,13 +3,31 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
 
-class CommunityController extends GetxController {
-  final searchController = TextEditingController();
-  final searchFocus = FocusNode();
+class CommunityController extends GetxController with WidgetsBindingObserver {
+  final isKeyboardOpen = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    isKeyboardOpen.value = bottomInset > 0;
+  }
+
+  final searchController = TextEditingController();
+  final searchFocus = FocusNode();
+
+  final showSearchedTag = false.obs; // ← to control showing searched tag
+  final searchedTxt = ''.obs; //
+
+  final selTab = CommunityTab.myCommunities.obs;
+
+  void changeTab(CommunityTab tab) {
+    selTab.value = tab;
   }
 
   @override
@@ -18,6 +36,11 @@ class CommunityController extends GetxController {
     searchFocus.dispose();
     myCommunityScrlCtrl.dispose(); // ← add
     suggCommunityScrlCtrl.dispose(); // ← add
+    manageCommunityScrlCtrl.dispose(); // ← add
+    communityScrlCtrl.dispose(); // ← add
+
+    WidgetsBinding.instance.removeObserver(this);
+    unFocusAll();
     super.onClose();
   }
 
@@ -35,7 +58,9 @@ class CommunityController extends GetxController {
   bool get isLoading => isLoading_.value;
 
   final ScrollController myCommunityScrlCtrl = ScrollController();
+  final ScrollController manageCommunityScrlCtrl = ScrollController();
   final ScrollController suggCommunityScrlCtrl = ScrollController();
+  final ScrollController communityScrlCtrl = ScrollController();
 
   /// Fetch the latest  data from API
   Future<void> getChatList() async {

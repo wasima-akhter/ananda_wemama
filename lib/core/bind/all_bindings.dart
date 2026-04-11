@@ -436,7 +436,19 @@ class GoogleMapBinding extends Bindings {
 class MeetingBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MeetingController>(() => MeetingController(), fenix: true);
+    ///////////
+    final args = Get.arguments;
+    print("--> args: $args");
+
+    if (args == null || args is! String) {
+      throw Exception("MeetingController requires a String argument!");
+    }
+
+    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
+    // while arguments are still available in binding context
+
+    Get.lazyPutFenix(() => MeetingController(args));
+
     Get.lazyPut<MeetingCommentController>(() => MeetingCommentController(), fenix: true);
   }
 }

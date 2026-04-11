@@ -293,8 +293,8 @@ class Strings {
   // Notification
   // ===========================
   static const String noNotificationFound = "No notification found";
-  static const String noSupplierFound = "No Supplier found";
   static const String noItemFound = "No Item Found";
+  static const String noSessionsFound = "No Session Found";
 
   // ===========================
   // Location
@@ -546,10 +546,13 @@ class Strings {
   static const String liveChat = "Live Chat";
   static const String ongoingExpertSession = "Ongoing expert session";
   static const String upcomingExpertSession = "Upcoming expert session";
+  static const String ongoingSession = "Ongoing Session";
+  static const String upcomingSession = "Upcoming Session";
   static const String babySleepSession = "Baby Sleep Session";
   static const String gentleRoutines =
       "Gentle routines for restful night to keep your baby peaceful";
   static const String joinLive = "Join Live";
+  static const String viewAll = "View All";
 
   // mood library
   static const String openMoodLibrary = "Open Mood Library";
@@ -669,8 +672,8 @@ class Strings {
   static const String members = "Members";
   static const String writeSomething = "Write Something";
   static const String writeQuestion = "Write Question";
-  static const String myCommunity = "My Community";
-  static const String suggestedCommunity = "Suggested Community";
+  static const String myCommunity = "My Communities";
+  static const String suggestions = "Suggestions";
 
   // Comments
 

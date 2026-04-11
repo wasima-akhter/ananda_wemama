@@ -6,19 +6,28 @@ class ShimmerWidget extends StatelessWidget {
   final double width;
   final double height;
   final ShapeBorder shapeBorder;
+  final Color? shimmerClr;
 
-  const ShimmerWidget.rectangular({super.key, required this.width, required this.height})
-    : shapeBorder = const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      );
+  const ShimmerWidget.rectangular({
+    super.key,
+    required this.width,
+    required this.height,
+    this.shimmerClr,
+  }) : shapeBorder = const RoundedRectangleBorder(
+         borderRadius: BorderRadius.all(Radius.circular(8)),
+       );
 
-  const ShimmerWidget.circular({super.key, required this.width, required this.height})
-    : shapeBorder = const CircleBorder();
+  const ShimmerWidget.circular({
+    super.key,
+    required this.width,
+    required this.height,
+    this.shimmerClr,
+  }) : shapeBorder = const CircleBorder();
 
   @override
   Widget build(BuildContext context) {
     return Shimmer(
-      color: c.inputBorder,
+      color: shimmerClr ?? c.inputBorder,
 
       // highlightColor: c.cardPrimary,
       child: Container(

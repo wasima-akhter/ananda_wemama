@@ -2,26 +2,41 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/helpers/date_helper.dart';
+import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
   final void Function()? onTapQues;
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
+  final Session data;
+  final bool? isFromUpcomgScreen;
   const UpcomingExpertSessionCard({
     super.key,
     this.onTapQues,
     required this.writeQuesCtrl,
     required this.writeQuesFocusNode,
+    required this.data,
+    this.isFromUpcomgScreen,
   });
 
   @override
   Widget build(BuildContext context) {
+    final doctorName = (data.expert?.name ?? "Unknown").capEachWord();
+    final specialty = (data.expert?.profession?.title ?? "Specialist").capEachWord();
+    final sessionTitle = (data.title ?? "Session").capEachWord();
+    final description = (data.description ?? "").cap;
+    final time = data.time ?? "--:--";
+    final date = DateHelper().formatUTCtimestamp(data.date.toString()).date;
+
+    final imgUrl = data.expert?.image ?? '';
+    final channelName = data.channelName ?? '';
+
     return ContainerBordered(
       contClr: c.cardOngoing,
       rad: 20,
-
       hp: 16,
-      vp: 12,
+      vp: 16,
       boxShadow: boxShadowBottom(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,15 +51,15 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              circledImageBgComponent(),
+              circledNetworkImageBgComponent(imagePath: imgUrl, radius: 22),
               Gap(itemGap),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    Text(Strings.fakeDrName, style: TxtStyle.urbanistSmTitle),
-                    Text(Strings.fakeDrSpecialty, style: TxtStyle.urbanistSmTitleSec),
+                    Text(doctorName, style: TxtStyle.urbanistSmTitle),
+                    Text(specialty, style: TxtStyle.urbanistSmTitleSec),
                   ],
                 ),
               ),
@@ -52,11 +67,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    Strings.fakeTime,
-                    style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: c.primary),
-                  ),
-                  Text(Strings.fakeDate, style: TxtStyle.outfit(fs: 12)),
+                  Text(time, style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary)),
+                  Text(date, style: TxtStyle.outfit(fs: 11)),
                 ],
               ),
             ],
@@ -64,14 +76,12 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
           Gap(itemGap),
 
-          Text(Strings.babySleepSession.capEachWord(), style: TxtStyle.urbanistSmTitle600),
+          Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle600),
 
-          Text(Strings.gentleRoutines.cap, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
-
-          Gap(itemGap),
+          Text(description, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
+          isFromUpcomgScreen == true ? Gap(itemGap) : Spacer(),
 
           Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               ContainerBordered(
                 hasBrdr: true,
@@ -95,7 +105,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               ),
               Gap(itemGap),
               CusGestureDetector(
-                onTap: () => Get.toNamed(RoutePaths.meetingScreen),
+                onTap: () => Get.toNamed(RoutePaths.meetingScreen, arguments: channelName),
                 child: ContainerBordered(
                   contClr: c.buttonPrimary,
                   rad: 30,
@@ -115,18 +125,20 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                 ),
               ),
               Gap(itemGap),
-              CusGestureDetector(
-                onTap: () => showAskYourQuesDialog(
-                  onTap: onTapQues,
-                  writeQuesCtrl: writeQuesCtrl,
-                  writeQuesFocusNode: writeQuesFocusNode,
-                ),
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  vp: 8,
-                  hp: 12,
-                  child: SvgIcon(iconPath: IconsPath.chatDotSquare, height: 21),
+              Expanded(
+                child: CusGestureDetector(
+                  onTap: () => showAskYourQuesDialog(
+                    onTap: onTapQues,
+                    writeQuesCtrl: writeQuesCtrl,
+                    writeQuesFocusNode: writeQuesFocusNode,
+                  ),
+                  child: ContainerBordered(
+                    contClr: c.buttonPrimary,
+                    rad: 30,
+                    vp: 8,
+                    // hp: 4,
+                    child: SvgIcon(iconPath: IconsPath.chatDotSquare, height: 21),
+                  ),
                 ),
               ),
             ],

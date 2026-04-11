@@ -4,7 +4,9 @@ import 'package:mama_app/features/main_tabs/community/screen/manage_community_sc
 import 'package:mama_app/features/main_tabs/community/screen/member_management_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/post_details_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/post_in_community_screen.dart';
+import 'package:mama_app/features/main_tabs/experts/screen/ongoing/ongoing_sessions_screen.dart';
 import 'package:mama_app/features/main_tabs/experts/screen/past_sessions_screen%20.dart';
+import 'package:mama_app/features/main_tabs/experts/screen/upcoming/upcoming_sessions_screen.dart';
 import 'package:mama_app/features/more/about/screen/about_screen.dart';
 import 'package:mama_app/features/more/blocked_user/screen/blocked_user_screen.dart';
 import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_and_conditions_screen.dart';
@@ -156,6 +158,20 @@ class RoutePageList {
       binding: CommunityDetailBinding(),
       // transition RouteTransitions.byName(RoutePaths.communityDetail),
     ),
+
+    GetPage(
+      name: RoutePaths.ongoingSessions,
+      page: () => const OngoingSessionsScreen(),
+      binding: MainNavBinding(),
+      // transition RouteTransitions.byName(RoutePaths.experts),
+    ),
+    GetPage(
+      name: RoutePaths.upcomingSessions,
+      page: () => const UpcomingSessionsScreen(),
+      binding: MainNavBinding(),
+      // transition RouteTransitions.byName(RoutePaths.experts),
+    ),
+
     // ─────────────────────────────
     // 🔹 Auth Flow
     // ─────────────────────────────

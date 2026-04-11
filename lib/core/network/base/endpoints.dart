@@ -38,17 +38,17 @@ class Endpoints {
     return "profile/match-user?latitude=$lat&longitude=$long";
   }
 
+  static String getExpertSessionList({required String sessionStatus, required String page}) {
+    return "expert/get-all-session-app?sessionStatus=$sessionStatus&page=$page";
+  }
+
   static String getUserProfile({required String userId}) {
     return "profile/get-friend-profile?profileId=$userId";
   }
 
   /// Dynamic endpoint for nearest suppliers and price stats
-  static String findNearestSuppliersAndPriceStats({
-    required double latitude,
-    required double longitude,
-    int radiusKm = 30, // optional default radius
-  }) {
-    return "supplier/find-nearest-supplier?latitude=$latitude&longitude=$longitude&radiusKm=$radiusKm";
+  static String joinLiveSessionInfo({required String channelName}) {
+    return "agora/join-live?channelName=$channelName";
   }
 
   /// specific status based customer orderlist

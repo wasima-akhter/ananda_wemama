@@ -207,7 +207,7 @@ class MeetingScreen extends StatelessWidget {
     return MeetingScreenTemplate(
       backgroundColor: c.cardPrimary,
       inputFocus: mc.inputMsgFocus,
-      topContent: TopContent(),
+      topContent: TopContent(mc: mc),
 
       commentList: ListView.separated(
         padding: EdgeInsets.only(top: itemGap * 1.5),

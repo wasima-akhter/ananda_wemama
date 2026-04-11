@@ -96,6 +96,7 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
   void didChangeMetrics() {
     // 👈 fires reliably whenever keyboard opens or closes
     final keyboardOpen = WidgetsBinding.instance.window.viewInsets.bottom > 0;
+    // final keyboardOpen = WidgetsBinding.instance. > 0;
     if (_keyboardOpen != keyboardOpen) {
       setState(() => _keyboardOpen = keyboardOpen);
     }

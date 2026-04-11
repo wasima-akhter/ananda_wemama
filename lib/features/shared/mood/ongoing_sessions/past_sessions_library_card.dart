@@ -1,5 +1,4 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/components/ui/buttons/small_nav_btn.dart';
 
 class PastSessionsLibraryCard extends StatelessWidget {
   final VoidCallback? onTapSubscribe;

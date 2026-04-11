@@ -1,8 +1,12 @@
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+
 import '../../../app/helper_widgets_export.dart';
 import '../../shared/community_spotlight/community_spotlight.dart';
+import '../controller/meeting_controller.dart';
 
 class TopContent extends StatelessWidget {
-  const TopContent({super.key});
+  final MeetingController mc;
+  const TopContent({super.key, required this.mc});
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +46,42 @@ class TopContent extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: [
-              NetworkImageWidget(
-                imageUrl: Strings.fakeImageUrl,
-                width: double.infinity,
-                height: S.h * 0.26,
-              ),
+              // In TopContent — replace NetworkImageWidget with the Agora view
+
+              // Where you have NetworkImageWidget, replace it with:
+              Obx(() {
+                if (!mc.isEngineReady.value || mc.agoraEngine == null) {
+                  return Container(
+                    width: double.infinity,
+                    height: S.h * 0.26,
+                    color: Colors.black,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (mc.remoteUids.isEmpty) {
+                  return Container(
+                    width: double.infinity,
+                    height: S.h * 0.26,
+                    color: Colors.black,
+                    child: Center(
+                      child: Text(
+                        "Live starting soon...",
+                        style: TxtStyle.inter(fs: 14, color: Colors.white70),
+                      ),
+                    ),
+                  );
+                }
+
+                // ✅ Show the host's video (first remote uid = the host/doctor)
+                return AgoraVideoView(
+                  controller: VideoViewController.remote(
+                    rtcEngine: mc.agoraEngine!,
+                    canvas: VideoCanvas(uid: mc.remoteUids.first),
+                    connection: RtcConnection(channelId: mc.channelName.value),
+                  ),
+                );
+              }),
               Positioned(
                 right: 12,
                 top: 12,

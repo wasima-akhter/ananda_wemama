@@ -26,6 +26,12 @@ String currentUserImage() {
   }
 }
 
+UIState getSessionState({required bool isLoading, required List list}) {
+  if (isLoading) return UIState.loading;
+  if (list.isEmpty) return UIState.empty;
+  return UIState.data;
+}
+
 TextStyle get componentTxtStyle => TxtStyle.inter(fs: 12, w: 600);
 TextStyle amountTxtStyle({Color? clr}) =>
     TxtStyle.interSemiB(fs: 14, w: 600, color: clr ?? c.textSecondary);
