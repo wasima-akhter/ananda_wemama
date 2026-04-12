@@ -1,5 +1,6 @@
 import 'package:mama_app/app/service_export.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/ask_ques_popup.dart';
+import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -163,6 +164,16 @@ Future<void> deletePostConfirmDialog({
   await Popups().baseAlert(
     context: Get.context!,
     content: DeleteConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
+  );
+}
+
+Future<void> showLiveEndMsg() {
+  return showDialog(
+    context: Get.context!,
+    barrierDismissible: true,
+    builder: (_) {
+      return LiveEndMsgPopup();
+    },
   );
 }
 

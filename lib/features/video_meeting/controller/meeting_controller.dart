@@ -1,4 +1,6 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
+import 'package:mama_app/core/utils/extension/string_extension.dart';
 import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
 
 import '../../../app/controller_export.dart';
@@ -281,12 +283,23 @@ class MeetingController extends GetxController {
   var isLocalAudioMuted = false.obs;
   var isLocalVideoMuted = false.obs;
 
+  RxBool isHostVideoOn = true.obs;
+  RxBool isHostAudioOn = true.obs;
+
+  RxBool isJoined = false.obs;
+
   @override
   void onInit() {
     /// Initial channel from navigation
     debugPrint('channelname arg: $channelname');
 
     channelName.value = channelname;
+
+    ever(isJoined, (callback) {
+      if (!isJoined.value) {
+        "You have left the live".showToast();
+      }
+    });
 
     super.onInit();
   }
@@ -405,65 +418,150 @@ class MeetingController extends GetxController {
     }
 
     /// Enable video stream
-    await engine.enableVideo();
+    try {
+      await engine.enableVideo();
+      debugPrint('✅ enableVideo done');
+    } catch (e) {
+      debugPrint('❌ enableVideo FAILED: $e');
+      return;
+    }
 
     /// Set as LIVE STREAM (not call)
-    await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
+    try {
+      await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
+      debugPrint('✅ setChannelProfile → LiveBroadcasting done');
+      debugPrint('🔵 [7] Role = BRODCASTER');
+    } catch (e) {
+      debugPrint('❌ setChannelProfile FAILED: $e');
+      return;
+    }
 
     /// 👤 USER ROLE = AUDIENCE (viewer-only app)
-    await engine.setClientRole(role: ClientRoleType.clientRoleAudience);
+    try {
+      await engine.setClientRole(role: ClientRoleType.clientRoleAudience);
+      debugPrint('🔵 [7] Role = AUDIENCE ✅');
+    } catch (e) {
+      debugPrint('❌ setClientRole FAILED: $e');
+      return;
+    }
 
     debugPrint('🔵 [7] Role = AUDIENCE');
 
     /// -------------------- Event Handlers -------------------- ///
-    engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onError: (err, msg) {
-          debugPrint('❌ Agora Error: $err - $msg');
-        },
+    ///
 
-        /// Joined successfully
-        onJoinChannelSuccess: (connection, elapsed) {
-          debugPrint('✅ Joined channel: ${connection.channelId}, uid: ${connection.localUid}');
-        },
+    try {
+      engine.registerEventHandler(
+        RtcEngineEventHandler(
+          onError: (err, msg) {
+            debugPrint('❌ Agora Error: $err - $msg');
+          },
 
-        /// Host joined → show video
-        onUserJoined: (connection, uid, elapsed) {
-          debugPrint('🎥 Host joined: uid=$uid');
+          onJoinChannelSuccess: (connection, elapsed) {
+            try {
+              debugPrint('✅ Joined channel: ${connection.channelId}, uid: ${connection.localUid}');
 
-          remoteUids.add(uid);
+              isJoined.value = true;
+            } catch (e) {
+              debugPrint('❌ onJoinChannelSuccess handler error: $e');
+            }
+          },
 
-          hasLiveStarted.value = true;
-          hasLiveEnded.value = false;
-        },
+          onUserJoined: (connection, uid, elapsed) {
+            try {
+              debugPrint('🎥 Host joined: uid=$uid');
+              remoteUids.add(uid);
+              hasLiveStarted.value = true;
+              hasLiveEnded.value = false;
+            } catch (e) {
+              debugPrint('❌ onUserJoined handler error: $e');
+            }
+          },
 
-        /// Host left
-        onUserOffline: (connection, uid, reason) {
-          debugPrint('⚠️ Host left: uid=$uid');
+          onUserOffline: (connection, uid, reason) async {
+            try {
+              debugPrint('⚠️ Host left: uid=$uid');
+              remoteUids.remove(uid);
+              if (hasLiveStarted.value && remoteUids.isEmpty) {
+                hasLiveEnded.value = true;
 
-          remoteUids.remove(uid);
+                // show a popup saying: the live has ended.
 
-          if (hasLiveStarted.value && remoteUids.isEmpty) {
-            hasLiveEnded.value = true;
-          }
-        },
+                await Future.delayed(Duration(milliseconds: 300));
 
-        /// Token expiry
-        onTokenPrivilegeWillExpire: (connection, token) {
-          debugPrint('⚠️ Token expiring soon');
-        },
+                showLiveEndMsg();
+              }
+            } catch (e) {
+              debugPrint('❌ onUserOffline handler error: $e');
+            }
+          },
 
-        /// Connection state
-        onConnectionStateChanged: (connection, state, reason) {
-          debugPrint('🔵 Connection: $state, reason: $reason');
-        },
+          onTokenPrivilegeWillExpire: (connection, token) {
+            try {
+              debugPrint('⚠️ Token expiring soon');
+              // TODO: refresh token from backend here
+            } catch (e) {
+              debugPrint('❌ onTokenPrivilegeWillExpire handler error: $e');
+            }
+          },
 
-        /// Video state debug
-        onRemoteVideoStateChanged: (connection, remoteUid, state, reason, elapsed) {
-          debugPrint('🎥 Video state: uid=$remoteUid, state=$state');
-        },
-      ),
-    );
+          onConnectionStateChanged: (connection, state, reason) {
+            try {
+              debugPrint('🔵 Connection: $state, reason: $reason');
+            } catch (e) {
+              debugPrint('❌ onConnectionStateChanged handler error: $e');
+            }
+          },
+
+          onRemoteVideoStateChanged: (connection, remoteUid, state, reason, elapsed) {
+            try {
+              debugPrint('🎥 Video state: uid=$remoteUid, state=$state');
+
+              if (state == RemoteVideoState.remoteVideoStateStopped) {
+                isHostVideoOn.value = false;
+              } else if (state == RemoteVideoState.remoteVideoStateDecoding) {
+                isHostVideoOn.value = true;
+              }
+            } catch (e) {
+              debugPrint('❌ onRemoteVideoStateChanged handler error: $e');
+            }
+          },
+
+          onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {
+            try {
+              debugPrint('🔄 [ROLE CHANGE] $oldRole → $newRole');
+              debugPrint('   channel: ${connection.channelId}');
+              debugPrint('   localUid: ${connection.localUid}');
+              if (newRole == ClientRoleType.clientRoleBroadcaster) {
+                debugPrint('   ✅ Now BROADCASTER — web CAN hear this user');
+              } else {
+                debugPrint('   ✅ Now AUDIENCE — web can NO LONGER hear this user');
+              }
+            } catch (e) {
+              debugPrint('❌ onClientRoleChanged handler error: $e');
+            }
+          },
+
+          onRemoteAudioStateChanged: (connection, remoteUid, state, reason, elapsed) {
+            try {
+              debugPrint('🔊 Audio state: uid=$remoteUid, state=$state');
+
+              if (state == RemoteAudioState.remoteAudioStateStopped) {
+                isHostAudioOn.value = false;
+              } else if (state == RemoteAudioState.remoteAudioStateDecoding) {
+                isHostAudioOn.value = true;
+              }
+            } catch (e) {
+              debugPrint('❌ onRemoteAudioStateChanged handler error: $e');
+            }
+          },
+        ),
+      );
+      debugPrint('✅ Event handlers registered');
+    } catch (e) {
+      debugPrint('❌ registerEventHandler FAILED: $e');
+      return;
+    }
 
     /// -------------------- Join Channel -------------------- ///
     debugPrint('🔵 Joining channel...');
@@ -557,6 +655,8 @@ class MeetingController extends GetxController {
       await agoraEngine!.release();
       agoraEngine = null;
     }
+
+    isJoined.value = false;
 
     inputMsgCtrl.dispose();
     inputMsgFocus.dispose();

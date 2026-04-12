@@ -51,6 +51,8 @@ class RoutePaths {
   static const chatInbox = '/chatInbox';
   static const createCommunity = '/createCommunity';
   static const communityDetail = '/communityDetail';
+  static const communitySearch = '/communitySearch';
+
   static const manageCommunity = '/manageCommunity';
   static const memberManagement = '/memberManagement';
   static const postInCommunity = '/postInCommunity';

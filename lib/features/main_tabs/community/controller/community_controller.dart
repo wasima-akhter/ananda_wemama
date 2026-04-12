@@ -37,7 +37,7 @@ class CommunityController extends GetxController with WidgetsBindingObserver {
     myCommunityScrlCtrl.dispose(); // ← add
     suggCommunityScrlCtrl.dispose(); // ← add
     manageCommunityScrlCtrl.dispose(); // ← add
-    communityScrlCtrl.dispose(); // ← add
+    searchedCommCtrl.dispose(); // ← add
 
     WidgetsBinding.instance.removeObserver(this);
     unFocusAll();
@@ -60,7 +60,7 @@ class CommunityController extends GetxController with WidgetsBindingObserver {
   final ScrollController myCommunityScrlCtrl = ScrollController();
   final ScrollController manageCommunityScrlCtrl = ScrollController();
   final ScrollController suggCommunityScrlCtrl = ScrollController();
-  final ScrollController communityScrlCtrl = ScrollController();
+  final ScrollController searchedCommCtrl = ScrollController();
 
   /// Fetch the latest  data from API
   Future<void> getChatList() async {

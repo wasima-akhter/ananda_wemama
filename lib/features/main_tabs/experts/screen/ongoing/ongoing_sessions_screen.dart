@@ -15,7 +15,13 @@ class OngoingSessionsScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       isScrollable: false,
-      appBar: CommonAppBarContent(title: Strings.ongoingSession),
+      appBar: CommonAppBarContent(
+        title: Strings.ongoingSession,
+
+        onTapBack: () {
+          goToMainNavWithTab(4);
+        },
+      ),
       onRefresh: () async {
         await exc.getOngoingSessions();
       },

@@ -63,7 +63,7 @@ class TopContent extends StatelessWidget {
                         const Icon(Icons.live_tv_outlined, color: Colors.white54, size: 36),
                         const Gap(10),
                         Text(
-                          "The live has ended",
+                          "The live has ended \nThanks for joining!",
                           style: TxtStyle.inter(fs: 15, color: Colors.white70),
                         ),
                       ],
@@ -79,6 +79,15 @@ class TopContent extends StatelessWidget {
                       style: TxtStyle.inter(fs: 14, color: Colors.white70),
                     ),
                   );
+                }
+
+                if (!mc.isHostVideoOn.value) {
+                  return _buildPlaceholder(child: Text("camera off"));
+                  // HostAvatarWidget(); // 👈 your custom UI
+                }
+                if (!mc.isHostAudioOn.value) {
+                  return _buildPlaceholder(child: Text("mic off"));
+                  // HostAvatarWidget(); // 👈 your custom UI
                 }
 
                 // ✅ Live is active
@@ -97,19 +106,18 @@ class TopContent extends StatelessWidget {
               Positioned(
                 right: 12,
                 top: 12,
-                child: ContainerBordered(
-                  rad: 30,
-                  hp: 10,
-                  vp: 6,
-                  contClr: white.withOpacity(.9),
-                  child: Row(
-                    children: [
-                      Icon(Icons.visibility, size: 16, color: c.secondary),
-                      Gap(6),
-                      Text("520", style: TxtStyle.inter(fs: 13, w: 600)),
-                    ],
-                  ),
+                child: Row(
+                  children: [
+                    _buildFloatingIcon(text: "235", icon: Icons.thumb_up_sharp),
+                    Gap(itemGap),
+                    _buildFloatingIcon(text: "520", icon: Icons.visibility),
+                  ],
                 ),
+              ),
+              Positioned(
+                left: 12,
+                top: 12,
+                child: _buildFloatingIcon(text: "02:10:13", icon: Icons.circle),
               ),
             ],
           ),
@@ -127,6 +135,26 @@ class TopContent extends StatelessWidget {
       height: S.h * 0.26,
       color: Colors.black,
       child: Center(child: child),
+    );
+  }
+
+  Widget _buildFloatingIcon({required String text, required IconData icon}) {
+    return ContainerBordered(
+      rad: 30,
+      hp: 10,
+      vp: 4,
+      contClr: Colors.grey.shade600,
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 9.r,
+            backgroundColor: white,
+            child: Icon(icon, size: 12.h, color: c.secondary),
+          ),
+          Gap(6),
+          Text(text, style: TxtStyle.inter(fs: 12, w: 600, color: white)),
+        ],
+      ),
     );
   }
 }

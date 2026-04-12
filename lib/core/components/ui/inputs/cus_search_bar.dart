@@ -28,14 +28,14 @@ class CusSearchBar extends StatelessWidget {
       fillColor: fillColor ?? c.inputBackground,
       focusNode: focusNode,
       contentPadding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 8.w),
-      prefix: SvgIcon(iconPath: IconsPath.search, height: 20).mL(15),
+      prefix: SvgIcon(iconPath: IconsPath.search, height: 20).mL(12),
       prefixSize: 22.h,
       controller: controller,
       onTap: onTap,
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
       hintText: Strings.search.cap,
-      hintStyle: TxtStyle.outfitSmTitle,
+      hintStyle: TxtStyle.outfitSmSecNor,
     );
   }
 }

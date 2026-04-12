@@ -1,6 +1,7 @@
 import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
 import '../../../app/helper_widgets_export.dart';
+import '../../../core/components/ui/dialogs/popups.dart';
 import '../modules/meet_bottom_action.dart';
 import '../modules/meet_comment_item.dart';
 import '../modules/meet_msg_input_row.dart';
@@ -39,7 +40,12 @@ class MeetingScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: CusGestureDetector(
-                  onTap: () => Get.back(),
+                  onTap: () async {
+                    // Get.back();
+                    await Future.delayed(Duration(milliseconds: 300));
+
+                    showLiveEndMsg();
+                  },
                   child: BottomAction(
                     iconPath: IconsPath.closeWhite,
                     backgroundColor: Colors.red,

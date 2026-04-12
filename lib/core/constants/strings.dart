@@ -725,7 +725,16 @@ class Strings {
   static const String stop = "Stop";
 
   static const String getAllMood = "Get All Mood";
-  static const String getAllMoodContents = "Get All Mood CContents";
+  static const String getAllMoodContents = "Get All Mood Contents";
+
+  // meeting live
+  static const String liveEndPopupMsg1 = "This live session has ended.";
+  static const String liveEndPopupMsg2 =
+      "Hope you enjoyed it! Feel free to check out other ongoing sessions.";
+
+  static const String back = "Back";
+  static const String browseMore = "Browse More";
+  //
 }
 
 //

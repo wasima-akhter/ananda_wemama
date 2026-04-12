@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mama_app/features/main_tabs/community/screen/community_details_screen.dart';
+import 'package:mama_app/features/main_tabs/community/screen/community_search_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/manage_community_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/member_management_screen.dart';
 import 'package:mama_app/features/main_tabs/community/screen/post_details_screen.dart';
@@ -156,6 +157,12 @@ class RoutePageList {
       name: RoutePaths.communityDetail,
       page: () => const CommunityDetailsScreen(),
       binding: CommunityDetailBinding(),
+      // transition RouteTransitions.byName(RoutePaths.communityDetail),
+    ),
+    GetPage(
+      name: RoutePaths.communitySearch,
+      page: () => const CommunitySearchScreen(),
+      binding: MainNavBinding(),
       // transition RouteTransitions.byName(RoutePaths.communityDetail),
     ),
 

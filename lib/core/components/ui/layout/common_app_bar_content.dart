@@ -9,6 +9,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
   final bool? isBgTransp;
   final bool? titleInLeft;
   final Widget? titleLeftWidget;
+  final Widget? titleWidget;
 
   const CommonAppBarContent({
     super.key,
@@ -19,6 +20,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
     this.isBgTransp,
     this.titleInLeft,
     this.titleLeftWidget,
+    this.titleWidget,
   });
 
   @override
@@ -43,35 +45,45 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
               if (hasBackNavArrow == null)
                 BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop())
               else if (hasBackNavArrow == false)
-                const SizedBox(width: 40),
+                SizedBox(width: 40.w),
 
               titleInLeft == true ? Gap(itemGap * 2) : const SizedBox.shrink(),
 
               Expanded(
-                child: titleInLeft == true
-                    ? Row(
-                        children: [
-                          titleLeftWidget ?? const SizedBox.shrink(),
-                          titleLeftWidget != null ? Gap(itemGap) : const SizedBox.shrink(),
-                          Text(
-                            title.capEachWord(),
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: true,
-                            textAlign: TextAlign.left,
-                            style: 18.titleMclrCusFSOutfit,
-                          ),
-                        ],
-                      )
-                    : Text(
-                        title.capEachWord(),
-                        overflow: TextOverflow.ellipsis,
-                        softWrap: true,
-                        textAlign: TextAlign.center,
-                        style: 18.titleMclrCusFSOutfit,
-                      ),
-              ),
+                child:
+                    titleWidget ??
+                    Row(
+                      children: [
+                        Expanded(
+                          child: titleInLeft == true
+                              ? Row(
+                                  children: [
+                                    titleLeftWidget ?? const SizedBox.shrink(),
+                                    titleLeftWidget != null
+                                        ? Gap(itemGap)
+                                        : const SizedBox.shrink(),
+                                    Text(
+                                      title.capEachWord(),
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      textAlign: TextAlign.left,
+                                      style: 18.titleMclrCusFSOutfit,
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  title.capEachWord(),
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  textAlign: TextAlign.center,
+                                  style: 18.titleMclrCusFSOutfit,
+                                ),
+                        ),
 
-              suffix ?? const SizedBox(width: 40),
+                        suffix ?? Container(width: 40.w),
+                      ],
+                    ),
+              ),
             ],
           ),
         ),
