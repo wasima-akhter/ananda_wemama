@@ -34,7 +34,7 @@ class BottomAction extends StatelessWidget {
           ),
         ),
         Gap(6),
-        Text(text, style: TxtStyle.inter(fs: 11)),
+        FittedBox(child: Text(text, style: TxtStyle.inter(fs: 11))),
       ],
     );
   }

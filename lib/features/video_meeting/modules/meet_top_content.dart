@@ -51,34 +51,46 @@ class TopContent extends StatelessWidget {
               // Where you have NetworkImageWidget, replace it with:
               Obx(() {
                 if (!mc.isEngineReady.value || mc.agoraEngine == null) {
-                  return Container(
-                    width: double.infinity,
-                    height: S.h * 0.26,
-                    color: Colors.black,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
+                  return _buildPlaceholder(child: const CircularProgressIndicator());
                 }
 
-                if (mc.remoteUids.isEmpty) {
-                  return Container(
-                    width: double.infinity,
-                    height: S.h * 0.26,
-                    color: Colors.black,
-                    child: Center(
-                      child: Text(
-                        "Live starting soon...",
-                        style: TxtStyle.inter(fs: 14, color: Colors.white70),
-                      ),
+                // ✅ Live has ended
+                if (mc.hasLiveEnded.value) {
+                  return _buildPlaceholder(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.live_tv_outlined, color: Colors.white54, size: 36),
+                        const Gap(10),
+                        Text(
+                          "The live has ended",
+                          style: TxtStyle.inter(fs: 15, color: Colors.white70),
+                        ),
+                      ],
                     ),
                   );
                 }
 
-                // ✅ Show the host's video (first remote uid = the host/doctor)
-                return AgoraVideoView(
-                  controller: VideoViewController.remote(
-                    rtcEngine: mc.agoraEngine!,
-                    canvas: VideoCanvas(uid: mc.remoteUids.first),
-                    connection: RtcConnection(channelId: mc.channelName.value),
+                // ✅ Live not started yet
+                if (mc.remoteUids.isEmpty) {
+                  return _buildPlaceholder(
+                    child: Text(
+                      "Live starting soon...",
+                      style: TxtStyle.inter(fs: 14, color: Colors.white70),
+                    ),
+                  );
+                }
+
+                // ✅ Live is active
+                return SizedBox(
+                  height: S.h * 0.26,
+                  width: S.w - 40.w,
+                  child: AgoraVideoView(
+                    controller: VideoViewController.remote(
+                      rtcEngine: mc.agoraEngine!,
+                      canvas: VideoCanvas(uid: mc.remoteUids.first),
+                      connection: RtcConnection(channelId: mc.channelName.value),
+                    ),
                   ),
                 );
               }),
@@ -107,5 +119,14 @@ class TopContent extends StatelessWidget {
         Gap(itemGap * 1.5),
       ],
     ).get10cm;
+  }
+
+  Widget _buildPlaceholder({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      height: S.h * 0.26,
+      color: Colors.black,
+      child: Center(child: child),
+    );
   }
 }

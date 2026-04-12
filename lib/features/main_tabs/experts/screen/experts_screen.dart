@@ -65,7 +65,7 @@ class ExpertsScreen extends StatelessWidget {
               data: () => CardHorizontalList(
                 title: Strings.ongoingExpertSession,
                 exc: exc,
-                onViewAll: () => exc.onTapViewAll(false),
+                onViewAll: () => exc.onTapViewAll(true),
                 itemCount: displayList.length,
                 itemBuilder: (index) {
                   final item = displayList[index];

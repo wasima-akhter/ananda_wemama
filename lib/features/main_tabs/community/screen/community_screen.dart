@@ -426,7 +426,7 @@ Widget _buildDefaultContentSliver(CommunityController cc) {
             ? Column(
                 children: [
                   SizedBox(
-                    height: S.h * 0.4,
+                    height: S.h * 0.5,
                     child: buildCommunityList(
                       scrollController: cc.myCommunityScrlCtrl,
                       itemCount: 14,

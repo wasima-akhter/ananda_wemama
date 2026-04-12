@@ -17,3 +17,18 @@ samples, guidance on mobile development, and a full API reference.
 
 <!--  dart run build_runner watch --delete-conflicting-outputs
  -->
+
+ # 📡 Live Session (Viewer) Module – Flutter + GetX + Agora
+
+## 🎯 Overview
+
+This module implements a **live streaming viewer experience** using Agora SDK.
+
+- Users **join live sessions**
+- Users are **audience by default**
+- Optional: users can **become speakers (raise hand flow)**
+
+---
+
+## 🧭 Flow Overview
+

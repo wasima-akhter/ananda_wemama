@@ -116,7 +116,13 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
                 children: [
                   // comment list takes full space
                   Positioned.fill(
-                    child: Container(color: bgClr, child: widget.commentList),
+                    child: Container(
+                      padding: _keyboardOpen
+                          ? EdgeInsets.only(bottom: S.h * 0.08)
+                          : EdgeInsets.only(bottom: S.h * 0.18),
+                      color: bgClr,
+                      child: widget.commentList,
+                    ),
                   ),
 
                   // input + bottom actions float at bottom
@@ -124,13 +130,16 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        widget.inputRow,
-                        if (!_keyboardOpen && widget.bottomActions != null)
-                          widget.bottomActions!.mT(5.h),
-                      ],
+                    child: Container(
+                      color: bgClr,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          widget.inputRow,
+                          if (!_keyboardOpen && widget.bottomActions != null)
+                            widget.bottomActions!.mT(5.h),
+                        ],
+                      ),
                     ),
                   ),
                 ],

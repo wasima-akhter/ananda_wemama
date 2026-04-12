@@ -284,6 +284,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/two_leaf.svg
   String get twoLeaf => 'assets/icons/two_leaf.svg';
 
+  /// File path: assets/icons/unmuted_audio.svg
+  String get unmutedAudio => 'assets/icons/unmuted_audio.svg';
+
   /// File path: assets/icons/user_icon_outlined.svg
   String get userIconOutlined => 'assets/icons/user_icon_outlined.svg';
 
@@ -409,6 +412,7 @@ class $AssetsIconsGen {
     tickSm,
     ttcMagnet,
     twoLeaf,
+    unmutedAudio,
     userIconOutlined,
     userStack1,
     userStack2,

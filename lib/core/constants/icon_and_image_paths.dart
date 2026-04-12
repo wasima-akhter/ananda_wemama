@@ -91,6 +91,7 @@ class IconsPath {
   // Live / Status
   static String get liveDot => Assets.icons.liveDot;
   static String get mutedAudio => Assets.icons.mutedAudio;
+  static String get unmutedAudio => Assets.icons.unmutedAudio;
   static String get handRaise => Assets.icons.handRaise;
   static String get leave => Assets.icons.leave;
 

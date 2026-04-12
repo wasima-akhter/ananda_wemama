@@ -447,7 +447,8 @@ class MeetingBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    Get.lazyPutFenix(() => MeetingController(args));
+    // ✅ fenix:false ensures a fresh controller every time
+    Get.put(MeetingController(Get.arguments as String), permanent: false);
 
     Get.lazyPut<MeetingCommentController>(() => MeetingCommentController(), fenix: true);
   }
