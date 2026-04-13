@@ -51,51 +51,23 @@ class Endpoints {
     return "agora/join-live?channelName=$channelName";
   }
 
-  /// specific status based customer orderlist
-  static String customerAllOrders({required String orderStatus}) {
-    final status = orderStatus;
-    return "order/customer-all-order?orderStatus=$status";
-  }
+  static String uploadSessionQuesUrl = "expert/add-new-question";
 
-  static String supplierAllOrders({required String orderStatus}) {
-    final status = orderStatus;
-    return "order/supplier-all-order?orderStatus=$status";
-  }
+  // Community
+  static String createCommunity = "community/create-community";
+  static String getMyCommunity = "community/get-my-community";
+  static String getJoinedCommunity = "community/get-joined-community?searchText=";
+  static String getSuggestedCommunity = "community/get-community-suggestion";
+  static String getSearchedCommunity({required String searchTxt}) =>
+      "community/search-community?searchText=$searchTxt";
+  static String getCommunityDetail({required String id}) => "community/get-community-detail/$id";
+  static String postToggleLike = "post/toggle-like";
+  static String pinPost({required String id}) => "post/pin-post/$id";
+  static String lockCommentOfPost({required String id}) => "post/lock-comment/$id";
+  static String createNewPost = "post/create-new-post";
+  // delet post url : baki
 
-  static String customerOrderDetails({required String customerOrderId}) {
-    return "order/customer-single-order/$customerOrderId";
-  }
-
-  static String supplierOrderDetails({required String supplierOrderId}) {
-    return "order/supplier-single-order/$supplierOrderId";
-  }
-
-  static String cancelOrderDetails({required String customerOrderId}) {
-    return "order/cancel-order/$customerOrderId";
-  }
-
-  static String supplierOrderAction({
-    required String actionEndpoint,
-    required String supplierOrderId,
-  }) {
-    return "order/$actionEndpoint/$supplierOrderId";
-  }
-
-  static String customerOrderAction({
-    required String actionEndpoint,
-    required String customerOrderId,
-  }) {
-    return "order/$actionEndpoint/$customerOrderId";
-  }
-
-  static String customerSpentReport({required String time}) {
-    return "inventory/customer-spent-stat?time=$time";
-    // inventory/customer-spent-stat?time=this-year
-  }
-
-  static String getRevenueHistory({required String time}) {
-    return "supplier/get-supplier-revenue?time=$time";
-  }
+  //
 
   static String getAllReviews({required String supplierId}) {
     return "review/get-all-review/$supplierId";

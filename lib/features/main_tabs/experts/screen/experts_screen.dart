@@ -37,7 +37,7 @@ class ExpertsScreen extends StatelessWidget {
 
             final displayList = list.length > 5 ? list.sublist(0, 5) : list;
 
-            final state = getSessionState(isLoading: isLoading, list: displayList);
+            final state = getUIStateList(isLoading: isLoading, list: displayList);
 
             return UIStateHandler(
               state: state,
@@ -85,7 +85,7 @@ class ExpertsScreen extends StatelessWidget {
 
             final displayList = list.length > 5 ? list.sublist(0, 5) : list;
 
-            final uiState = getSessionState(isLoading: isLoading, list: displayList);
+            final uiState = getUIStateList(isLoading: isLoading, list: displayList);
 
             return UIStateHandler(
               state: uiState,
@@ -119,8 +119,10 @@ class ExpertsScreen extends StatelessWidget {
                   return UpcomingExpertSessionCard(
                     data: item,
                     writeQuesCtrl: exc.writeQuesCtrl,
+                    isSendQuesLoading: exc.isuploadQuesLoading,
                     writeQuesFocusNode: exc.writeQuesFocusNode,
-                    onTapQues: exc.onTapQues,
+                    onTapQues: ({required expertId, required sessionId}) =>
+                        exc.onTapQues(expertId: expertId, sessionId: sessionId),
                   );
                 },
               ),

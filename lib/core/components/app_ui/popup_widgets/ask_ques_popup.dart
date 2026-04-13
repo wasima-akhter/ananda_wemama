@@ -6,11 +6,13 @@ class AskQuesPopup extends StatelessWidget {
   final void Function()? onTap;
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
+  final RxBool isSendQuesLoading;
   const AskQuesPopup({
     super.key,
     this.onTap,
     required this.writeQuesCtrl,
     required this.writeQuesFocusNode,
+    required this.isSendQuesLoading,
   });
 
   @override
@@ -44,13 +46,17 @@ class AskQuesPopup extends StatelessWidget {
               ),
 
               Gap(4),
-              CusGestureDetector(
-                onTap: onTap,
-                child: CircleAvatar(
-                  radius: 20.r,
-                  backgroundColor: c.primary,
-                  child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 22),
-                ),
+              Obx(
+                () => isSendQuesLoading.value
+                    ? LoadingPrimary()
+                    : CusGestureDetector(
+                        onTap: onTap,
+                        child: CircleAvatar(
+                          radius: 20.r,
+                          backgroundColor: c.primary,
+                          child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 22),
+                        ),
+                      ),
               ),
             ],
           ),

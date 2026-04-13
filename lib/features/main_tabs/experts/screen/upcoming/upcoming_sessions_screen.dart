@@ -42,7 +42,7 @@ class UpcomingSessionsScreen extends StatelessWidget {
 
               // final validFetchNext =
 
-              final state = getSessionState(isLoading: isLoading, list: list);
+              final state = getUIStateList(isLoading: isLoading, list: list);
 
               return UIStateHandler(
                 state: state,
@@ -68,6 +68,7 @@ class UpcomingSessionsScreen extends StatelessWidget {
                         padding: EdgeInsets.only(bottom: itemGap),
                         child: UpcomingExpertSessionCard(
                           isFromUpcomgScreen: true,
+                          isSendQuesLoading: exc.isuploadQuesLoading,
                           data: item,
                           writeQuesCtrl: exc.writeQuesCtrl,
                           writeQuesFocusNode: exc.writeQuesFocusNode,

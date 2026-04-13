@@ -24,6 +24,9 @@ class WaveRequestScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Obx(() {
+            if (wrc.isLoading_.value) {
+              return LoadingPrimary();
+            }
             final list_ = wrc.newWaveList;
             // final list = [...list_, ...list_, ...list_];
             final list = [...list_];

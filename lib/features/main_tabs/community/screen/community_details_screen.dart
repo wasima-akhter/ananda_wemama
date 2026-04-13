@@ -1,9 +1,12 @@
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
+import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
-import 'package:mama_app/features/main_tabs/community/modules/join_btn.dart';
+import 'package:mama_app/features/main_tabs/community/model/community_item_detail_model.dart';
 import 'package:mama_app/features/main_tabs/community/widgets/post_item_widget.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 
 class CommunityDetailsScreen extends StatelessWidget {
   const CommunityDetailsScreen({super.key});
@@ -17,6 +20,7 @@ class CommunityDetailsScreen extends StatelessWidget {
       refreshKey: refreshKey,
       onRefresh: () async {
         print("communities refreshed");
+        cc.getCommunityDetail();
       },
 
       child: Column(
@@ -26,101 +30,45 @@ class CommunityDetailsScreen extends StatelessWidget {
           Stack(
             children: [
               // ── Base content ──
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  NetworkImageWidget(
-                    imageUrl: Strings.fakeImageUrl,
-                    width: double.infinity,
-                    height: S.h * 0.25,
-                    radius: 0,
-                  ),
-                  ContainerBordered(
-                    rad: 0,
-                    vp: 12,
-                    hp: 0,
-                    contClr: c.secondary,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Obx(() {
+                final isLoading = cc.isLoading_.value;
+                final itemDetail = cc.communityItemDetail.value;
+
+                final state = getUIStateDetail(isLoading: isLoading);
+
+                debugPrint('itemDetail  : ${itemDetail.community?.name} ');
+
+                return UIStateHandler(
+                  onRefresh: () async {
+                    cc.getCommunityDetail();
+                  },
+                  state: state,
+                  loading: () => Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerWidget.rectangular(height: S.h * 0.25, width: double.infinity),
+                      ContainerBordered(
+                        rad: 0,
+                        vp: 12,
+                        hp: 0,
+                        contClr: c.secondary,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFit(
-                                  "lagos Mom's Community".capEachWord(),
-                                  style: TxtStyle.outfitSemiB(fs: 18, w: 500, color: white),
-                                ),
-                                Row(
-                                  children: [
-                                    SvgIcon(iconPath: IconsPath.userGroup, height: 22),
-                                    Gap(4),
-                                    TextFit(
-                                      "${Strings.members.capEachWord()} 2.5K",
-                                      style: TxtStyle.outfit(fs: 12, w: 400, color: white),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            // wrap JoinBtn with Obx
-                            Obx(
-                              () => JoinBtn(
-                                isLoading: false,
-
-                                onTap: () {
-                                  if (cc.args.value == MyCommunityBtnState.manage) {
-                                    Get.toNamed(RoutePaths.manageCommunity);
-                                  }
-                                  if (cc.args.value == MyCommunityBtnState.join) {
-                                    communityGuidlineDialog(
-                                      isLoading: false,
-                                      onTapAction: () async {
-                                        Get.back();
-                                        Get.toNamed(
-                                          RoutePaths.communityDetail,
-                                          arguments: MyCommunityBtnState.join,
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                btnTxt: cc.getBtnTxt(),
-                              ),
-                            ),
+                            ShimmerWidget.rectangular(height: 16, width: 150),
+                            const Gap(8),
+                            ShimmerWidget.rectangular(height: 12, width: 100),
                           ],
-                        ),
-                        Gap(itemGap * 3),
-
-                        CusGestureDetector(
-                          onTap: () {
-                            Get.toNamed(RoutePaths.postInCommunity);
-                          },
-                          child: ContainerBordered(
-                            rad: 30,
-                            contClr: bgClr,
-                            vp: 10,
-                            hp: 14,
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              Strings.writeSomething.capEachWord(),
-                              style: TxtStyle.outfit(color: c.secondary, fs: 12),
-                            ),
-                          ),
-                        ),
-
-                        //   CusNameTypeTextFormField(
-                        //   controller: cc.postCtrl,
-                        //   hintText: Strings.writeSomething,
-                        // ),
-                      ],
-                    ).get10cm,
+                        ).get10cm,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+
+                  data: () => CommunityDetailTopContent(itemDetail: itemDetail),
+                );
+
+                // your real header
+              }),
 
               // ── Topbar overlaid on top of image ──
               Positioned(
@@ -144,17 +92,40 @@ class CommunityDetailsScreen extends StatelessWidget {
           Gap(itemGap * 2),
 
           // ── Posts ──
-          Obx(
-            () => Column(
-              children: List.generate(
-                cc.posts.length,
-                (index) => PostItemWidget(
-                  btnState: cc.args.value,
-                  postId: cc.posts[index].id, // ← pass postId
-                ).mB(itemGap),
-              ),
-            ).getcm,
-          ),
+          Obx(() {
+            final isLoading = cc.isLoading_.value;
+            final itemDetail = cc.communityItemDetail.value;
+            final itemPosts = itemDetail.allPost ?? [];
+
+            final state = getUIStateList(isLoading: isLoading, list: itemPosts);
+
+            debugPrint('itemDetail  : ${itemDetail.community?.name} ');
+
+            return UIStateHandler(
+              onRefresh: () async {
+                cc.getCommunityDetail();
+              },
+              state: state,
+              loading: () => Column(
+                children: List.generate(5, (index) => const PostItemShimmer().mB(itemGap)),
+              ).getcm,
+              empty: () => const EmptyWidget(title: "No Posts yet"),
+
+              data: () => Column(
+                children: List.generate(
+                  itemPosts.length,
+                  (index) =>
+                      // Text("data")
+                      PostItemWidget(
+                        postItem: itemPosts[index],
+                        cc: cc,
+                        btnState: cc.args.value,
+                        postId: itemPosts[index].id.toString(),
+                      ).mB(itemGap),
+                ),
+              ).getcm,
+            );
+          }),
 
           Gap(itemGap * 2),
         ],
@@ -163,138 +134,116 @@ class CommunityDetailsScreen extends StatelessWidget {
   }
 }
 
-// class _PostItem extends StatelessWidget {
-//   final MyCommunityBtnState btnState;
-//   final int postId; // ← add
-//   const _PostItem({super.key, required this.btnState, required this.postId});
+class CommunityDetailTopContent extends StatelessWidget {
+  final CommunityItemDetailModel itemDetail;
+  const CommunityDetailTopContent({super.key, required this.itemDetail});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final cc = Get.find<CommunityDetailController>(); // ← find here
+  @override
+  Widget build(BuildContext context) {
+    final community = itemDetail.community;
+    final communityName = community?.name ?? '';
+    final membersNum = (community?.totalMember ?? 0).toString();
+    final communityImg = community?.image ?? '';
 
-//     return ContainerBordered(
-//       vp: 12,
-//       hp: 12,
-//       hasBrdr: true,
-//       brdrClr: c.inputBorder.withOpacity(0.3),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               UserShortDetailWidget(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        NetworkImageWidget(
+          imageUrl: communityImg,
+          width: double.infinity,
+          height: S.h * 0.25,
+          radius: 0,
+        ),
+        ContainerBordered(
+          rad: 0,
+          vp: 12,
+          hp: 0,
+          contClr: c.secondary,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextFit(
+                        communityName.capEachWord(),
+                        style: TxtStyle.outfitSemiB(fs: 18, w: 500, color: white),
+                      ),
+                      Row(
+                        children: [
+                          SvgIcon(iconPath: IconsPath.userGroup, height: 22),
+                          Gap(4),
+                          TextFit(
+                            "${Strings.members.capEachWord()} $membersNum",
+                            style: TxtStyle.outfit(fs: 12, w: 400, color: white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
 
-//               Row(
-//                 children: [
-//                   // at top of post content, after the user row
-//                   Obx(() {
-//                     final isPinned = cc.posts.firstWhere((p) => p.id == postId).isPinned.value;
-//                     if (!isPinned) return const SizedBox.shrink();
-//                     return SvgIcon(iconPath: IconsPath.pin, height: 22);
-//                   }),
+                  // wrap JoinBtn with Obx
+                  // Obx(
+                  //   () => JoinBtn(
+                  //     isLoading: false,
 
-//                   ///
-//                   if (btnState == MyCommunityBtnState.visit)
-//                     CusFlexibleDropdown(
-//                       items: [
-//                         CusDropdownItem(
-//                           title: Strings.reportContent,
-//                           onTap: () async => await showReportBottomSheet(),
-//                         ),
-//                       ],
-//                       child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-//                     ),
+                  //     onTap: () {
+                  //       if (cc.args.value == MyCommunityBtnState.manage) {
+                  //         Get.toNamed(RoutePaths.manageCommunity);
+                  //       }
+                  //       if (cc.args.value == MyCommunityBtnState.join) {
+                  //         communityGuidlineDialog(
+                  //           isLoading: false,
+                  //           onTapAction: () async {
+                  //             Get.back();
+                  //             // Get.toNamed(
+                  //             //   RoutePaths.communityDetail,
+                  //             //   arguments: {
+                  //             //     'btnState': MyCommunityBtnState.join,
+                  //             //     "communityItemId": "123",
+                  //             //   },
+                  //             // );
+                  //           },
+                  //         );
+                  //       }
+                  //     },
+                  //     btnTxt: cc.getBtnTxt(),
+                  //   ),
+                  // ),
+                ],
+              ),
+              Gap(itemGap * 3),
 
-//                   if (btnState == MyCommunityBtnState.manage)
-//                     Obx(
-//                       () => CusFlexibleDropdown(
-//                         items: [
-//                           CusDropdownItem(
-//                             title: cc.getPinBtnTxt(postId), // ← reactive pin text
-//                             onTap: () async {
-//                               cc.togglePin(postId); // ← toggle pin
-//                             },
-//                           ),
-//                           CusDropdownItem(
-//                             title: cc.getLockBtnTxt(postId),
-//                             onTap: () async {
-//                               showLockCommentialog();
-//                               Future.delayed(Duration(seconds: 1));
-//                               Get.back();
-//                               cc.toggleCommentLock(postId);
-//                             },
-//                           ),
-//                           CusDropdownItem(
-//                             title: Strings.deletePost.capEachWord(),
-//                             onTap: () async {
-//                               deletePostConfirmDialog(
-//                                 onConfirm: () async => Get.back(),
-//                                 isLoading: RxBool(false),
-//                               );
-//                             },
-//                           ),
-//                         ],
-//                         child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-//                       ),
-//                     ),
-//                 ],
-//               ),
-//             ],
-//           ),
+              CusGestureDetector(
+                onTap: () {
+                  Get.toNamed(RoutePaths.postInCommunity, arguments: community?.id ?? '');
+                },
+                child: ContainerBordered(
+                  rad: 30,
+                  contClr: bgClr,
+                  vp: 10,
+                  hp: 14,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    Strings.writeSomething.capEachWord(),
+                    style: TxtStyle.outfit(color: c.secondary, fs: 12),
+                  ),
+                ),
+              ),
 
-//           Gap(itemGap * 2),
-
-//           Text(
-//             "Is it normal for my 2-month-old to want to feed every hour at night? I feel exhausted and keep wondering if I'm doing something wrong 😔",
-//             style: TxtStyle.outfit(fs: 13, w: 400),
-//           ),
-
-//           Gap(itemGap * 2.5),
-
-//           // ── Like & Comment row ──
-//           Obx(() {
-//             final post = cc.posts.firstWhere((p) => p.id == postId);
-//             return Row(
-//               children: [
-//                 CusGestureDetector(
-//                   onTap: () => cc.toggleLike(postId),
-//                   child: Row(
-//                     children: [
-//                       // ← swap icon based on isLiked
-//                       SvgIcon(
-//                         iconPath: post.isLiked.value
-//                             ? IconsPath
-//                                   .likeHeartFilled // ← filled
-//                             : IconsPath.like, // ← outlined
-//                         height: 22,
-//                       ),
-//                       Gap(4),
-//                       TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
-//                     ],
-//                   ),
-//                 ),
-//                 Gap(itemGap * 2),
-//                 Row(
-//                   children: [
-//                     SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
-//                     Gap(4),
-//                     CusGestureDetector(
-//                       onTap: () => Get.toNamed(
-//                         RoutePaths.postDetails,
-//                         arguments: {'postId': postId, 'btnState': btnState},
-//                       ),
-//                       child: TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             );
-//           }),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-//
+              //   CusNameTypeTextFormField(
+              //   controller: cc.postCtrl,
+              //   hintText: Strings.writeSomething,
+              // ),
+            ],
+          ).get10cm,
+        ),
+      ],
+    );
+  }
+}
+ 
+ //

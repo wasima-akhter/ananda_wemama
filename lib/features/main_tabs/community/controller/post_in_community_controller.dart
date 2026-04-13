@@ -1,10 +1,11 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/main_tabs/community/services/community_detail_service.dart';
 
 import '../../../../app/controller_export.dart';
 
 class PostInCommunityController extends GetxController {
-  final nameCtrl = TextEditingController();
-  final nameFocus = FocusNode();
+  final contentCtrl = TextEditingController();
+  final contentFocus = FocusNode();
 
   var postAnonymously = false.obs; // 👈 toggle state
 
@@ -15,8 +16,8 @@ class PostInCommunityController extends GetxController {
 
   @override
   void onClose() {
-    nameCtrl.dispose();
-    nameFocus.dispose();
+    contentCtrl.dispose();
+    contentFocus.dispose();
     super.onClose();
   }
 
@@ -25,12 +26,12 @@ class PostInCommunityController extends GetxController {
   }
 
   void clearAll() {
-    nameCtrl.clear();
+    contentCtrl.clear();
     fileImage.value = null;
   }
 
   void unFocusAll() {
-    nameFocus.unfocus();
+    contentFocus.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
@@ -64,6 +65,33 @@ class PostInCommunityController extends GetxController {
       print("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
+      unFocusAll();
+    }
+  }
+
+  RxBool isCreatePostLoading = false.obs;
+  Future<void> uploadSessionQues({required String communityItemId}) async {
+    if (isCreatePostLoading.value) return;
+
+    isCreatePostLoading.value = true;
+
+    try {
+      final response = await CommunityDetailService().createNewPost(
+        communityItemId: communityItemId,
+        content: contentCtrl.text.trim(),
+        isAnonymous: postAnonymously.value,
+      );
+      if (response == true) {
+        debugPrint('quest sent successfully!');
+        Get.back();
+      } else {
+        debugPrint('quest sent failed!');
+      }
+    } catch (e) {
+      debugPrint('upload ques of Session error: $e');
+    } finally {
+      isCreatePostLoading.value = false;
+      clearAll();
       unFocusAll();
     }
   }

@@ -32,4 +32,31 @@ class ExpertsService extends GetxService {
     print("response data: ${response?.data}");
     return response?.data;
   }
+
+  //----------------------------
+
+  Future<bool> uploadUpcomingSessionQues({
+    required String expertId,
+    required String sessionId,
+    required String question,
+  }) async {
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.uploadSessionQuesUrl.getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
+        data: {"expert": expertId, "session": sessionId, "question": question},
+      );
+    }
+
+    final response = await _apiHelper.request<void>(apiCall: () => apiCall());
+
+    if (response == null) return false;
+
+    // You can access user like:
+    if (response.success) {
+      print("Send question is success!");
+    }
+
+    return true;
+  }
 }

@@ -67,10 +67,7 @@ class CommentsBottomSheet extends StatelessWidget {
 
             // ── Hide input if this post's comments are locked ──
             Obx(() {
-              final isLocked = cc.posts
-                  .firstWhere((p) => p.id == postId)
-                  .isCommentLocked
-                  .value; // ← per post check
+              final isLocked = false; // ← per post check
 
               if (isLocked) return const SizedBox.shrink();
 

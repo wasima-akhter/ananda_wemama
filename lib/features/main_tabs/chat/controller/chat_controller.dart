@@ -57,51 +57,16 @@ class ChatController extends GetxController {
 
   final realChatList = <ChatListItemModel>[].obs;
 
-  // final fakeChatList = <FakeChatModel>[
-  //   FakeChatModel(
-  //     id: "1",
-  //     name: "Alice",
-  //     lastMessage: "Hey, how are you?",
-  //     time: "2h ago",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   ),
-  //   FakeChatModel(
-  //     id: "2",
-  //     name: "Bob",
-  //     lastMessage: "See you later!",
-  //     time: "4min ago",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   ),
-  //   FakeChatModel(
-  //     id: "3",
-  //     name: "Charlie",
-  //     lastMessage: "Thanks for your help!",
-  //     time: "yesterday",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   ),
-  //   FakeChatModel(
-  //     id: "4",
-  //     name: "Diana",
-  //     lastMessage: "Let's meet tomorrow.",
-  //     time: "22 Jan 2026",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   ),
-  //   FakeChatModel(
-  //     id: "5",
-  //     name: "Eve",
-  //     lastMessage: "Happy birthday!",
-  //     time: "1 Jan 2026",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   ),
-  // ];
-
   // ─────────────────────────────────────────────
   // Actions
   // ─────────────────────────────────────────────
 
   // ── List management ───────────────────────────────────────────────────────
   void updateChatList(List<ChatListItemModel> list) {
+    if (isLoading_.value) return;
+    isLoading_.value = true;
     realChatList.assignAll(list);
+    isLoading_.value = false;
   }
 
   final socket = Get.find<SocketService>();

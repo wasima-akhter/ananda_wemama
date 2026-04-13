@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/main_tabs/community/services/community_service.dart';
 
 import '../../../../app/controller_export.dart';
 
@@ -49,25 +50,28 @@ class CreateCommunityController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
-  /// Fetch the latest  data from API
-  Future<void> getChatList() async {
+  Future<void> onTapCreate() async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 
     try {
-      // final data = await ChatService().fetchChatList(
+      final response = await CommunityService().createCommunity(
+        communityImg: fileImage.value,
+        communityName: nameCtrl.text,
+      );
 
-      // );
-
-      // if (data != null) {
-
-      // }
+      if (response == true) {
+        debugPrint('onTapCreate success : $response');
+      } else {
+        debugPrint('onTapCreate failed : $response');
+      }
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error onTapCreate community: $e");
     } finally {
       isLoading_.value = false;
 
       unFocusAll();
+      clearAll();
     }
   }
 }

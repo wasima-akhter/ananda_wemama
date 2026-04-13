@@ -8,7 +8,16 @@ class UIStateHandler extends StatelessWidget {
   final Widget Function()? empty;
   final Widget Function()? data;
 
-  const UIStateHandler({super.key, required this.state, this.loading, this.empty, this.data});
+  final Future<void> Function()? onRefresh;
+
+  const UIStateHandler({
+    super.key,
+    required this.state,
+    this.loading,
+    this.empty,
+    this.data,
+    this.onRefresh,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +26,16 @@ class UIStateHandler extends StatelessWidget {
         return loading?.call() ?? const SizedBox.shrink();
 
       case UIState.empty:
-        return empty?.call() ?? const SizedBox.shrink();
+        return CusRefreshIndicator(
+          onRefresh: onRefresh ?? () async {},
+          child: empty?.call() ?? const SizedBox.shrink(),
+        );
 
       case UIState.data:
-        return data?.call() ?? const SizedBox.shrink();
+        return CusRefreshIndicator(
+          onRefresh: onRefresh ?? () async {},
+          child: data?.call() ?? const SizedBox.shrink(),
+        );
     }
   }
 }

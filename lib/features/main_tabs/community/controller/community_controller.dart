@@ -2,24 +2,17 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../model/community_item_model.dart';
+import '../services/community_service.dart';
 
-class CommunityController extends GetxController with WidgetsBindingObserver {
-  final isKeyboardOpen = false.obs;
-
+class CommunityController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addObserver(this);
-  }
 
-  @override
-  void didChangeMetrics() {
-    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
-    isKeyboardOpen.value = bottomInset > 0;
+    getMyCommunityList();
+    getManagedCommunityList();
   }
-
-  final searchController = TextEditingController();
-  final searchFocus = FocusNode();
 
   final showSearchedTag = false.obs; // ← to control showing searched tag
   final searchedTxt = ''.obs; //
@@ -32,97 +25,105 @@ class CommunityController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onClose() {
-    searchController.dispose();
-    searchFocus.dispose();
-    myCommunityScrlCtrl.dispose(); // ← add
-    suggCommunityScrlCtrl.dispose(); // ← add
-    manageCommunityScrlCtrl.dispose(); // ← add
-    searchedCommCtrl.dispose(); // ← add
+    myCommunityScrlCtrl.dispose();
+    manageCommunityScrlCtrl.dispose();
 
-    WidgetsBinding.instance.removeObserver(this);
     unFocusAll();
     super.onClose();
   }
 
-  void clearAll() {
-    searchController.clear();
-  }
+  void clearAll() {}
 
   void unFocusAll() {
-    searchFocus.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  // API loading state
-  var isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-
   final ScrollController myCommunityScrlCtrl = ScrollController();
   final ScrollController manageCommunityScrlCtrl = ScrollController();
-  final ScrollController suggCommunityScrlCtrl = ScrollController();
-  final ScrollController searchedCommCtrl = ScrollController();
+
+  //
+  final service = CommunityService();
+
+  // API loading state
+  var isManagedCommunityLoading_ = false.obs;
+  bool get isMyCommunityLoading => isManagedCommunityLoading_.value;
+
+  final managedCommunityList = <CommunityItemModel>[].obs;
 
   /// Fetch the latest  data from API
-  Future<void> getChatList() async {
-    if (isLoading_.value) return; // Prevent duplicate calls
-    isLoading_.value = true;
+  Future<void> getManagedCommunityList() async {
+    if (isManagedCommunityLoading_.value) return; // Prevent duplicate calls
+    isManagedCommunityLoading_.value = true;
 
     try {
-      // final data = await ChatService().fetchChatList(
+      final data = await service.fetchManagedCommunityList();
 
-      // );
-
-      // if (data != null) {
-
-      // }
+      debugPrint('getMyCommunityList   : $data');
+      managedCommunityList.value = data;
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error my community: $e");
     } finally {
-      isLoading_.value = false;
+      isManagedCommunityLoading_.value = false;
 
       unFocusAll();
     }
   }
 
-  void onTapItemBtn(MyCommunityBtnState btnState) {
+  // API loading state
+  var isJoinedCommunityLoading_ = false.obs;
+  bool get isJoinedCommunityLoading => isJoinedCommunityLoading_.value;
+
+  final joinedCommunityList = <CommunityItemModel>[].obs;
+
+  /// Fetch the latest  data from API
+  Future<void> getMyCommunityList() async {
+    if (isJoinedCommunityLoading_.value) return; // Prevent duplicate calls
+    isJoinedCommunityLoading_.value = true;
+
+    try {
+      final data = await service.fetchJoinedCommunityList();
+
+      debugPrint('get Joined CommunityList   : $data');
+      joinedCommunityList.value = data;
+    } catch (e) {
+      print("Error Joined community: $e");
+    } finally {
+      isJoinedCommunityLoading_.value = false;
+
+      unFocusAll();
+    }
+  }
+
+  void onTapItemBtn({required MyCommunityBtnState btnState, required String communityItemId}) {
     if (btnState == MyCommunityBtnState.join) {
       communityGuidlineDialog(
-        isLoading: isLoading,
+        isLoading: false,
         onTapAction: () async {
           Get.back();
           Get.toNamed(
             RoutePaths.communityDetail,
-            arguments: {
-              'btnState': MyCommunityBtnState.join,
-              'isAlreadyMember': true, // ← came via join button = now member
-            },
+            arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": communityItemId},
           );
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.manage, 'isAlreadyMember': true},
+        arguments: {'btnState': MyCommunityBtnState.manage, "communityItemId": communityItemId},
       );
     } else if (btnState == MyCommunityBtnState.visit) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {
-          'btnState': MyCommunityBtnState.visit,
-          'isAlreadyMember': false, // ← just visiting, not member
-        },
+        arguments: {'btnState': MyCommunityBtnState.visit, "communityItemId": communityItemId},
       );
     }
   }
 
   // ← tapping the item row (not the button) = just viewing
-  void onTapItem(MyCommunityBtnState btnState) {
+  void onTapItem({required MyCommunityBtnState btnState, required String communityItemId}) {
     Get.toNamed(
       RoutePaths.communityDetail,
-      arguments: {
-        'btnState': btnState,
-        'isAlreadyMember': false, // ← came via item tap = not joined yet
-      },
+      arguments: {'btnState': btnState, "communityItemId": communityItemId},
     );
   }
 }

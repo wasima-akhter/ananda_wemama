@@ -3,26 +3,29 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
-import '../../../../core/helpers/widgets_helper.dart';
+import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../controller/community_detail_controller.dart';
+import '../model/community_item_detail_model.dart';
 import '../modules/user_short_detail_widget.dart';
 
 class PostItemWidget extends StatelessWidget {
   final MyCommunityBtnState btnState;
-  final int postId;
-  final bool showActions; // ← add
+  final String postId;
+  final bool showActions;
+  final CommunityDetailController cc;
+  final AllPost postItem;
 
   const PostItemWidget({
     super.key,
     required this.btnState,
     required this.postId,
-    this.showActions = true, // ← default true (community detail shows it)
+    this.showActions = true,
+    required this.cc,
+    required this.postItem,
   });
 
   @override
   Widget build(BuildContext context) {
-    final cc = Get.find<CommunityDetailController>();
-
     return ContainerBordered(
       vp: 12,
       hp: 12,
@@ -31,15 +34,11 @@ class PostItemWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Section 1: Header (user + pin + dropdown) ──
-          _PostHeader(cc: cc, postId: postId, btnState: btnState),
-
+          _PostHeader(cc: cc, postId: postId, btnState: btnState, postItem: postItem),
           Gap(itemGap * 2),
 
-          // ── Section 2: Post Content ──
-          _PostContent(),
+          _PostContent(postItem: postItem),
 
-          // ── Section 3: Like/Comment Row (optional) ──
           if (showActions) ...[
             Gap(itemGap * 2.5),
             _PostActions(cc: cc, postId: postId, btnState: btnState),
@@ -53,46 +52,66 @@ class PostItemWidget extends StatelessWidget {
 // ─────────────────────────────
 class _PostHeader extends StatelessWidget {
   final CommunityDetailController cc;
-  final int postId;
+  final String postId;
   final MyCommunityBtnState btnState;
+  final AllPost postItem;
 
-  const _PostHeader({required this.cc, required this.postId, required this.btnState});
+  const _PostHeader({
+    required this.cc,
+    required this.postId,
+    required this.btnState,
+    required this.postItem,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        UserShortDetailWidget(),
-        Row(
-          children: [
-            Obx(() {
-              final isPinned = cc.posts.firstWhere((p) => p.id == postId).isPinned.value;
-              if (!isPinned) return const SizedBox.shrink();
-              return SvgIcon(iconPath: IconsPath.pin, height: 22);
-            }),
+        Expanded(child: UserShortDetailWidget(postItem: postItem)),
 
-            if (btnState == MyCommunityBtnState.visit)
-              CusFlexibleDropdown(
-                items: [
-                  CusDropdownItem(
-                    title: Strings.reportContent,
-                    onTap: () async => await showReportBottomSheet(),
-                  ),
-                ],
-                child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-              ),
+        // ✅ Obx wraps only the reactive trailing section
+        Obx(() {
+          final isPinned = cc.pinFlag(postId).value;
+          final isLocked = cc.commentLockFlag(postId).value;
 
-            if (btnState == MyCommunityBtnState.manage)
-              Obx(
-                () => CusFlexibleDropdown(
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Pin indicator
+              if (isPinned)
+                SvgIcon(iconPath: IconsPath.pin, height: 22)
+              else
+                const SizedBox.shrink(),
+
+              // Visitor dropdown
+              if (btnState == MyCommunityBtnState.visit)
+                CusFlexibleDropdown(
                   items: [
                     CusDropdownItem(
-                      title: cc.getPinBtnTxt(postId),
-                      onTap: () async => cc.togglePin(postId),
+                      title: isPinned
+                          ? Strings.unpinPost.capEachWord()
+                          : Strings.pinPost.capEachWord(),
+                      onTap: () => cc.togglePin(postId),
+                    ),
+                  ],
+                  child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+                ),
+
+              // Manager dropdown
+              if (btnState == MyCommunityBtnState.manage)
+                CusFlexibleDropdown(
+                  items: [
+                    CusDropdownItem(
+                      title: isPinned
+                          ? Strings.unpinPost.capEachWord()
+                          : Strings.pinPost.capEachWord(),
+                      onTap: () => cc.togglePin(postId),
                     ),
                     CusDropdownItem(
-                      title: cc.getLockBtnTxt(postId),
+                      title: isLocked
+                          ? Strings.unlockComment.capEachWord()
+                          : Strings.lockComment.capEachWord(),
                       onTap: () async {
                         showLockCommentialog();
                         await Future.delayed(const Duration(seconds: 1));
@@ -110,9 +129,9 @@ class _PostHeader extends StatelessWidget {
                   ],
                   child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
                 ),
-              ),
-          ],
-        ),
+            ],
+          );
+        }),
       ],
     );
   }
@@ -120,21 +139,19 @@ class _PostHeader extends StatelessWidget {
 
 // ─────────────────────────────
 class _PostContent extends StatelessWidget {
-  const _PostContent();
+  final AllPost postItem;
+  const _PostContent({required this.postItem});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      "Is it normal for my 2-month-old to want to feed every hour at night? I feel exhausted and keep wondering if I'm doing something wrong 😔",
-      style: TxtStyle.outfit(fs: 13, w: 400),
-    );
+    return Text(postItem.content ?? '', style: TxtStyle.outfit(fs: 13, w: 400));
   }
 }
 
 // ─────────────────────────────
 class _PostActions extends StatelessWidget {
   final CommunityDetailController cc;
-  final int postId;
+  final String postId;
   final MyCommunityBtnState btnState;
 
   const _PostActions({required this.cc, required this.postId, required this.btnState});
@@ -142,38 +159,101 @@ class _PostActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final post = cc.posts.firstWhere((p) => p.id == postId);
+      // ✅ _ensureFlags guarantees a valid RxBool — Obx always has a subscription
+      final isLiked = cc.likeFlag(postId).value;
+
       return Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           CusGestureDetector(
             onTap: () => cc.toggleLike(postId),
             child: Row(
               children: [
-                SvgIcon(
-                  iconPath: post.isLiked.value ? IconsPath.likeHeartFilled : IconsPath.like,
-                  height: 22,
-                ),
+                SvgIcon(iconPath: isLiked ? IconsPath.likeHeartFilled : IconsPath.like, height: 22),
                 Gap(4),
                 TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
               ],
             ),
           ),
-          Gap(itemGap * 2),
-          Row(
-            children: [
-              SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
-              Gap(4),
-              CusGestureDetector(
-                onTap: () => Get.toNamed(
-                  RoutePaths.postDetails,
-                  arguments: {'postId': postId, 'btnState': btnState},
-                ),
-                child: TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
-              ),
-            ],
+          Gap(itemGap),
+          CusGestureDetector(
+            onTap: () => Get.toNamed(
+              RoutePaths.postDetails,
+              arguments: {'postId': postId, 'btnState': btnState},
+            ),
+            child: Row(
+              children: [
+                SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
+                Gap(4),
+                TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
+              ],
+            ),
           ),
         ],
       );
     });
+  }
+}
+
+// ─────────────────────────────
+class PostItemShimmer extends StatelessWidget {
+  const PostItemShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      vp: 12,
+      hp: 12,
+      hasBrdr: true,
+      brdrClr: c.inputBorder.withOpacity(0.2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  ShimmerWidget.circular(width: 40, height: 40),
+                  const Gap(8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerWidget.rectangular(height: 10, width: 100),
+                      const Gap(6),
+                      ShimmerWidget.rectangular(height: 8, width: 60),
+                    ],
+                  ),
+                ],
+              ),
+              ShimmerWidget.circular(width: 20, height: 20),
+            ],
+          ),
+
+          const Gap(16),
+
+          ShimmerWidget.rectangular(height: 10, width: double.infinity),
+          const Gap(6),
+          ShimmerWidget.rectangular(height: 10, width: double.infinity),
+          const Gap(6),
+          ShimmerWidget.rectangular(height: 10, width: 200),
+
+          const Gap(20),
+
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ShimmerWidget.circular(width: 20, height: 20),
+              const Gap(6),
+              ShimmerWidget.rectangular(height: 10, width: 40),
+              const Gap(20),
+              ShimmerWidget.circular(width: 20, height: 20),
+              const Gap(6),
+              ShimmerWidget.rectangular(height: 10, width: 60),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

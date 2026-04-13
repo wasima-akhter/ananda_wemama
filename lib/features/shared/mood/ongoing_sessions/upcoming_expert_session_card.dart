@@ -6,18 +6,20 @@ import '../../../../core/helpers/date_helper.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
-  final void Function()? onTapQues;
+  final void Function({required String expertId, required String sessionId}) onTapQues;
+  final RxBool isSendQuesLoading;
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
   final Session data;
   final bool? isFromUpcomgScreen;
   const UpcomingExpertSessionCard({
     super.key,
-    this.onTapQues,
+    required this.onTapQues,
     required this.writeQuesCtrl,
     required this.writeQuesFocusNode,
     required this.data,
     this.isFromUpcomgScreen,
+    required this.isSendQuesLoading,
   });
 
   @override
@@ -31,6 +33,9 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
     final imgUrl = data.expert?.image ?? '';
     final channelName = data.channelName ?? '';
+
+    final expertId_ = data.expert?.id ?? '';
+    final sessionId_ = data.id ?? '';
 
     return ContainerBordered(
       contClr: c.cardOngoing,
@@ -128,7 +133,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               Expanded(
                 child: CusGestureDetector(
                   onTap: () => showAskYourQuesDialog(
-                    onTap: onTapQues,
+                    onTap: () => onTapQues(expertId: expertId_, sessionId: sessionId_),
+                    isSendQuesLoading: isSendQuesLoading,
                     writeQuesCtrl: writeQuesCtrl,
                     writeQuesFocusNode: writeQuesFocusNode,
                   ),

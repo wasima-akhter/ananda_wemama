@@ -3,7 +3,6 @@ import 'package:mama_app/features/main_tabs/community/controller/post_in_communi
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/inputs/custom_toggle_btn.dart';
-import '../modules/user_short_detail_widget.dart';
 
 class PostInCommunityScreen extends StatelessWidget {
   const PostInCommunityScreen({super.key});
@@ -66,7 +65,7 @@ class PostInCommunityScreen extends StatelessWidget {
           ),
 
           Gap(itemGap * 2),
-          UserShortDetailWidget(),
+          // UserShortDetailWidget(),
 
           // Obx(() {
           //   return AddPhotoWidget(
@@ -78,8 +77,8 @@ class PostInCommunityScreen extends StatelessWidget {
           Gap(itemGap * 3),
 
           CusDesTypeTextFormField(
-            controller: pcc.nameCtrl,
-            focusNode: pcc.nameFocus,
+            controller: pcc.contentCtrl,
+            focusNode: pcc.contentFocus,
 
             rad: 8,
             brdrClr: c.inputBorder.withOpacity(0.6),

@@ -37,6 +37,9 @@ class ChatScreen extends StatelessWidget {
           Gap(itemGap * 1.5),
 
           Obx(() {
+            if (cc.isLoading_.value) {
+              return LoadingPrimary();
+            }
             final list_ = cc.realChatList;
             // final list = [...list_, ...list_, ...list_];
             final list = [...list_];

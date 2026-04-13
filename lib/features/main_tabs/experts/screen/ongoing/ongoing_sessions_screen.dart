@@ -46,7 +46,7 @@ class OngoingSessionsScreen extends StatelessWidget {
               final list = exc.ongoingList;
               final isLoading = exc.isOngoingLoading.value;
 
-              final state = getSessionState(isLoading: isLoading, list: list);
+              final state = getUIStateList(isLoading: isLoading, list: list);
 
               return UIStateHandler(
                 state: state,

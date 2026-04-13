@@ -68,9 +68,16 @@ class ExpertsController extends GetxController {
     super.onClose();
   }
 
-  void onTapQues() {
-    Get.back();
+  Future<void> onTapQues({required String expertId, required String sessionId}) async {
+    debugPrint('expertId: $expertId ');
+    debugPrint('sessionId: $sessionId ');
+
+    // upload to the backend
+
+    await uploadSessionQues(expertId: expertId, sessionId: sessionId);
   }
+
+  /////////
 
   void unfocusAll() {
     writeQuesFocusNode.unfocus();
@@ -152,6 +159,36 @@ class ExpertsController extends GetxController {
       fetchNext: fetchNext,
     );
   }
+
+  //////////////////////
+
+  RxBool isuploadQuesLoading = false.obs;
+  Future<void> uploadSessionQues({required String expertId, required String sessionId}) async {
+    if (isuploadQuesLoading.value) return;
+
+    isuploadQuesLoading.value = true;
+
+    try {
+      final response = await ExpertsService().uploadUpcomingSessionQues(
+        expertId: expertId,
+        question: writeQuesCtrl.text,
+        sessionId: sessionId,
+      );
+      if (response == true) {
+        debugPrint('quest sent successfully!');
+        Get.back();
+      } else {
+        debugPrint('quest sent failed!');
+      }
+    } catch (e) {
+      debugPrint('upload ques of Session error: $e');
+    } finally {
+      isuploadQuesLoading.value = false;
+      writeQuesCtrl.text = '';
+    }
+  }
+
+  ////////////---------------------------->
 
   List<Session> limitList(List<Session> list) {
     return list.length > 5 ? list.sublist(0, 5) : list;

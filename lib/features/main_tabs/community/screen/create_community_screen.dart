@@ -22,12 +22,8 @@ class CreateCommunityScreen extends StatelessWidget {
       bottomWidget: Obx(
         () => filledBtnWTxt(
           btnTxt: Strings.create,
-          isLoading: ccc.isLoading,
-          onTap: () async {
-            // Get.toNamed(RoutePaths.photoAndBio);
-          },
-
-          //  await epc.onTapSignup(setupProfileFormKey),
+          isLoading: ccc.isLoading_.value,
+          onTap: () async => await ccc.onTapCreate(),
         ),
       ),
       child: Column(

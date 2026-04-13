@@ -1,6 +1,8 @@
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
+import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../core/components/ui/scroll/cus_scrollbar_widget.dart';
 import '../controller/community_controller.dart';
 import '../widgets/community_item.dart';
@@ -40,38 +42,123 @@ class CommunityScreen extends StatelessWidget {
           Gap(itemGap * 0.5),
 
           // ── Scrollable content per tab ──────────────────────────────
-          Expanded(
-            // height: S.h * 0.6,
-            child: Obx(() {
-              final selTab = cc.selTab.value;
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: selTab == CommunityTab.myCommunities
-                    ? _CommunityListView(
-                        key: const ValueKey(CommunityTab.myCommunities),
-                        scrollController: cc.myCommunityScrlCtrl,
-                        itemCount: 12,
-                        itemBuilder: (index) => CommunityItem(
-                          btnTxt: Strings.visit,
-                          isLoading: false,
-                          onTapItem: () => cc.onTapItem(MyCommunityBtnState.visit),
-                          onTapItemBtn: () => cc.onTapItemBtn(MyCommunityBtnState.visit),
-                        ),
-                      )
-                    : _CommunityListView(
-                        key: const ValueKey(CommunityTab.manage),
-                        scrollController: cc.manageCommunityScrlCtrl,
-                        itemCount: 12,
-                        itemBuilder: (index) => CommunityItem(
-                          btnTxt: Strings.manage,
-                          isLoading: false,
-                          onTapItem: () => cc.onTapItem(MyCommunityBtnState.manage),
-                          onTapItemBtn: () => cc.onTapItemBtn(MyCommunityBtnState.manage),
+          Obx(() {
+            final isJoinedLoading = cc.isJoinedCommunityLoading_.value;
+            final displayListJoined = cc.joinedCommunityList;
+
+            final uiStateMyCommunities = getUIStateList(
+              isLoading: isJoinedLoading,
+              list: displayListJoined,
+            );
+
+            final isManagedLoading = cc.isManagedCommunityLoading_.value;
+            final displayListManaged = cc.managedCommunityList;
+
+            final uiStateManaged = getUIStateList(
+              isLoading: isManagedLoading,
+              list: displayListManaged,
+            );
+
+            final selTab = cc.selTab.value;
+
+            return selTab == CommunityTab.myCommunities
+                ? Expanded(
+                    child: UIStateHandler(
+                      onRefresh: () async {
+                        await cc.getMyCommunityList();
+                      },
+                      state: uiStateMyCommunities,
+
+                      loading: () => CusScrollbarWidget(
+                        controller: cc.myCommunityScrlCtrl,
+                        child:
+                            //  ListView.builder(itemCount: 10, itemBuilder: (context, index) => Text("data")),
+                            ListView.separated(
+                              controller: cc.myCommunityScrlCtrl,
+                              physics: const BouncingScrollPhysics(
+                                parent: AlwaysScrollableScrollPhysics(),
+                              ),
+                              padding: EdgeInsets.only(bottom: itemGap * 2),
+                              itemCount: 10,
+                              separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                              itemBuilder: (_, index) => CommunityItemShimmer(),
+                            ).getcm,
+                      ),
+
+                      empty: () => const EmptyWidgetScrollable(title: "No Communities yet").getcm,
+
+                      data: () => AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: _CommunityListView(
+                          key: const ValueKey(CommunityTab.myCommunities),
+                          scrollController: cc.myCommunityScrlCtrl,
+                          itemCount: displayListJoined.length,
+                          itemBuilder: (index) => CommunityItem(
+                            item: displayListJoined[index],
+                            btnTxt: Strings.visit,
+                            isLoading: false,
+                            onTapItem: () => cc.onTapItem(
+                              btnState: MyCommunityBtnState.visit,
+                              communityItemId: displayListJoined[index].id ?? '',
+                            ),
+                            onTapItemBtn: () => cc.onTapItemBtn(
+                              btnState: MyCommunityBtnState.visit,
+                              communityItemId: displayListJoined[index].id ?? '',
+                            ),
+                          ),
                         ),
                       ),
-              );
-            }),
-          ),
+                    ),
+                  )
+                : Expanded(
+                    child: UIStateHandler(
+                      onRefresh: () async {
+                        await cc.getManagedCommunityList();
+                      },
+                      state: uiStateManaged,
+
+                      loading: () => CusScrollbarWidget(
+                        controller: cc.manageCommunityScrlCtrl,
+                        child:
+                            //  ListView.builder(itemCount: 10, itemBuilder: (context, index) => Text("data")),
+                            ListView.separated(
+                              controller: cc.manageCommunityScrlCtrl,
+                              physics: const BouncingScrollPhysics(
+                                parent: AlwaysScrollableScrollPhysics(),
+                              ),
+                              padding: EdgeInsets.only(bottom: itemGap * 2),
+                              itemCount: 10,
+                              separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                              itemBuilder: (_, index) => CommunityItemShimmer(),
+                            ).getcm,
+                      ),
+
+                      empty: () => const EmptyWidgetScrollable(title: "No Communities yet").getcm,
+
+                      data: () => AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: _CommunityListView(
+                          key: const ValueKey(CommunityTab.manage),
+                          scrollController: cc.manageCommunityScrlCtrl,
+                          itemCount: displayListManaged.length,
+                          itemBuilder: (index) => CommunityItem(
+                            item: displayListManaged[index],
+                            btnTxt: Strings.manage,
+                            isLoading: false,
+                            onTapItem: () => cc.onTapItem(
+                              btnState: MyCommunityBtnState.manage,
+                              communityItemId: displayListJoined[index].id ?? '',
+                            ),
+                            onTapItemBtn: () => cc.onTapItemBtn(
+                              btnState: MyCommunityBtnState.manage,
+                              communityItemId: displayListJoined[index].id ?? '',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+          }),
         ],
       ),
     );

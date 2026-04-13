@@ -106,9 +106,10 @@ class ApiClient {
       print("DATA TYPE: ${data.runtimeType}");
 
       final response = await _dio.request(url, data: data, options: options);
+      log('response in post  : $response ');
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
-      print("PATCH request error: $e");
+      print("POST request error: $e");
       return null;
     }
   }

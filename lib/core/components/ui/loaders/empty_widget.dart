@@ -1,4 +1,3 @@
-import 'package:lottie/lottie.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
 
 class EmptyWidget extends StatelessWidget {
@@ -59,23 +58,25 @@ class EmptyWidgetScrollable extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      child: SizedBox(
-        height: S.h * 0.3, // ensure enough scrollable area
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(title, style: TxtStyle.inter(w: 600)),
+      child:
+          // ensure enough scrollable area
+          ContainerBordered(
+            h: S.h * 0.3,
+            contClr: c.bottomSheetBackground.withOpacity(0.2),
+            vp: 20.h,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Gap(itemGap),
+                Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
 
-            Lottie.asset(
-              ImagesPath.nothingYetJson,
+                Gap(itemGap),
 
-              fit: BoxFit.contain,
-              repeat: true,
-              animate: true,
+                Image.asset(ImagesPath.noSearchImg, fit: BoxFit.contain, height: S.w * 0.3),
+                Gap(itemGap * 2),
+              ],
             ),
-          ],
-        ).mT(30.h),
-      ),
+          ),
     );
   }
 }

@@ -24,15 +24,12 @@ class CommunitySpotlight extends StatelessWidget {
               Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
 
               CusGestureDetector(
-                onTap: () => isFromOnboardScreen == true
-                    ? {}
-                    : Get.toNamed(
-                        RoutePaths.communityDetail,
-                        arguments: {
-                          'btnState': MyCommunityBtnState.join,
-                          'isAlreadyMember': false, // ← came via join button = now member
-                        },
-                      ),
+                onTap: () => isFromOnboardScreen == true ? {} : {},
+
+                //  Get.toNamed(
+                //     RoutePaths.communityDetail,
+                //     arguments: {'btnState': MyCommunityBtnState.join, "communityItemId": "123"},
+                //   ),
                 child: ContainerBordered(
                   hasBrdr: true,
                   contClr: c.inputBackground,

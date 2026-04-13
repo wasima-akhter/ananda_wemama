@@ -62,11 +62,22 @@ Future<T?> showAnimatedDialog<T>({
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 280),
     pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-    transitionBuilder: (_, animation, __, ___) {
+
+    transitionBuilder: (context, animation, __, ___) {
       final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
-      return ScaleTransition(
-        scale: Tween<double>(begin: 0.85, end: 1.0).animate(curved),
-        child: FadeTransition(opacity: animation, child: child),
+
+      return AnimatedPadding(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        child: SafeArea(
+          child: Center(
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.85, end: 1.0).animate(curved),
+              child: FadeTransition(opacity: animation, child: child),
+            ),
+          ),
+        ),
       );
     },
   );
@@ -92,12 +103,15 @@ Future<void> showAskYourQuesDialog({
   required void Function()? onTap,
   required TextEditingController writeQuesCtrl,
   required FocusNode writeQuesFocusNode,
+  required RxBool isSendQuesLoading,
 }) {
   return showAnimatedDialog(
     context: Get.context!,
     barrierDismissible: true,
     child: AskQuesPopup(
       onTap: onTap,
+      isSendQuesLoading: isSendQuesLoading,
+
       writeQuesCtrl: writeQuesCtrl,
       writeQuesFocusNode: writeQuesFocusNode,
     ),

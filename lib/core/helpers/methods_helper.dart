@@ -26,9 +26,14 @@ String currentUserImage() {
   }
 }
 
-UIState getSessionState({required bool isLoading, required List list}) {
+UIState getUIStateList({required bool isLoading, required List list}) {
   if (isLoading) return UIState.loading;
   if (list.isEmpty) return UIState.empty;
+  return UIState.data;
+}
+
+UIState getUIStateDetail({required bool isLoading}) {
+  if (isLoading) return UIState.loading;
   return UIState.data;
 }
 

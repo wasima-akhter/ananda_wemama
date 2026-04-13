@@ -1,5 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/buttons/small_outlined_btn.dart';
+import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../model/community_item_model.dart';
 
 class CommunityItem extends StatelessWidget {
   final void Function()? onTapItemBtn;
@@ -7,6 +9,7 @@ class CommunityItem extends StatelessWidget {
   final bool isLoading;
   final String btnTxt;
   final Color? bgClr;
+  final CommunityItemModel item;
   const CommunityItem({
     super.key,
     this.onTapItemBtn,
@@ -14,12 +17,15 @@ class CommunityItem extends StatelessWidget {
     required this.btnTxt,
     this.onTapItem,
     this.bgClr,
+    required this.item,
   });
 
   @override
   Widget build(BuildContext context) {
-    final stats = ["32", "656"];
-
+    final communityName = item.name ?? '';
+    final postNum = (item.totalPost ?? 0).toString();
+    final membersNum = (item.totalMember ?? 0).toString();
+    final stats = [postNum, membersNum];
     return CusGestureDetector(
       onTap: onTapItem,
       child: ContainerBordered(
@@ -36,10 +42,7 @@ class CommunityItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFit(
-                    "Lagos Single Mom's Community dfgv dydfvb uhdfbvu dfgvy df",
-                    style: TxtStyle.outfitSmTitle,
-                  ),
+                  TextFit(communityName, style: TxtStyle.outfitSmTitle),
 
                   Gap(2.h),
 
@@ -73,6 +76,66 @@ class CommunityItem extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CommunityItemShimmer extends StatelessWidget {
+  const CommunityItemShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      vp: 10,
+      hp: 12,
+      hasBrdr: true,
+      brdrClr: c.inputBorder.withOpacity(0.3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// LEFT CONTENT
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Title (2 lines effect)
+                ShimmerWidget.rectangular(width: double.infinity, height: 12),
+                Gap(6),
+                ShimmerWidget.rectangular(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 12,
+                ),
+
+                Gap(10),
+
+                /// Stats row
+                Row(
+                  children: List.generate(2, (index) {
+                    return Padding(
+                      padding: EdgeInsets.only(right: 12.w),
+                      child: Row(
+                        children: [
+                          /// Dot
+                          ShimmerWidget.circular(width: 8, height: 8),
+                          Gap(6),
+
+                          /// Text
+                          ShimmerWidget.rectangular(width: 60, height: 10),
+                        ],
+                      ),
+                    );
+                  }),
+                ),
+              ],
+            ),
+          ),
+
+          Gap(12.w),
+
+          /// BUTTON SHIMMER
+          ShimmerWidget.rectangular(width: 80, height: 32),
+        ],
       ),
     );
   }

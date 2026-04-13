@@ -5,7 +5,6 @@ import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart'
 import '../../../shared/comments/widget/comment_item_w_reply.dart';
 import '../controller/community_detail_controller.dart';
 import '../controller/post_details_controller.dart';
-import '../widgets/post_item_widget.dart';
 
 class PostDetailsScreen extends StatelessWidget {
   const PostDetailsScreen({super.key});
@@ -17,7 +16,7 @@ class PostDetailsScreen extends StatelessWidget {
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     final args = Get.arguments as Map<String, dynamic>;
-    final postId = args['postId'] as int;
+    final postId = args['postId'] as String;
     final btnState = args['btnState'] as MyCommunityBtnState;
 
     // ← scroll to bottom + open keyboard after first frame
@@ -45,7 +44,7 @@ class PostDetailsScreen extends StatelessWidget {
 
       // ── Pinned input at bottom ──
       floatingActionButton: Obx(() {
-        final isLocked = cc.posts.firstWhere((p) => p.id == postId).isCommentLocked.value;
+        final isLocked = false.obs.value;
 
         if (isLocked) return const SizedBox.shrink();
 
@@ -81,8 +80,9 @@ class PostDetailsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // ── Post at top ──
-          PostItemWidget(postId: postId, btnState: btnState, showActions: false),
-
+          // PostItemWidget(cc: cc,
+          // postItem: ,
+          //  postId: postId, btnState: btnState, showActions: false),
           Gap(itemGap * 3),
           CustomDivider(isFullWidth: true, clr: c.secondary),
           Gap(itemGap),

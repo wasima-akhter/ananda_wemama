@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mama_app/features/main_tabs/community/controller/community_search_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_details_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_in_community_controller.dart';
@@ -232,16 +233,23 @@ class ReportControllerBinding extends Bindings {
 class CommunityDetailBinding extends Bindings {
   @override
   void dependencies() {
-    final args = Get.arguments as Map<String, dynamic>;
-    final btnState = args['btnState'] as MyCommunityBtnState;
-    final isAlreadyMember = args['isAlreadyMember'] as bool;
+    final args = Get.arguments as Map<String, dynamic>?;
 
-    // ← delete old instance first, then create fresh
+    final btnState = args?['btnState'] as MyCommunityBtnState;
+    final communityItemId = args?['communityItemId'] as String;
+
     if (Get.isRegistered<CommunityDetailController>()) {
       Get.delete<CommunityDetailController>(force: true);
     }
 
-    Get.put(CommunityDetailController(btnState, isAlreadyMember)); // ← put, not lazyPut
+    Get.put(CommunityDetailController(btnState, communityItemId));
+  }
+}
+
+class CommunitySearchBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPutFenix(() => CommunitySearchController());
   }
 }
 
