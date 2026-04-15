@@ -22,12 +22,17 @@ class PostInCommunityScreen extends StatelessWidget {
         suffix: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CustomBtnWTxt(
-              rad: 30,
-              padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
-              isSmall: true,
-              btnTxt: Strings.post.cap,
-              isLoading: false,
+            Obx(
+              () => CustomBtnWTxt(
+                rad: 30,
+                onTap: () async {
+                  await pcc.createNewPost();
+                },
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+                isSmall: true,
+                btnTxt: Strings.post.cap,
+                isLoading: pcc.isCreatePostLoading.value,
+              ),
             ),
           ],
         ),

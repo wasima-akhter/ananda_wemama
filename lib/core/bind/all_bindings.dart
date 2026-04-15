@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_search_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_details_controller.dart';
@@ -195,7 +196,13 @@ class CreateCommunityBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    Get.lazyPutFenix(() => CreateCommunityController());
+    final args = Get.arguments as CreateCommunityArgModel?;
+
+    if (Get.isRegistered<CreateCommunityController>()) {
+      Get.delete<CreateCommunityController>(force: true);
+    }
+
+    Get.put(CreateCommunityController());
   }
 }
 
@@ -258,8 +265,15 @@ class PostInCommunityBinding extends Bindings {
   void dependencies() {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
+    final args = Get.arguments as String;
 
-    Get.lazyPutFenix(() => PostInCommunityController());
+    final communityItemId = args;
+
+    if (Get.isRegistered<PostInCommunityController>()) {
+      Get.delete<PostInCommunityController>(force: true);
+    }
+
+    Get.put(PostInCommunityController(communityItemId));
   }
 }
 
@@ -269,7 +283,13 @@ class PostDetailsBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    Get.lazyPutFenix(() => PostDetailsController());
+    final args = Get.arguments;
+
+    if (Get.isRegistered<PostDetailsController>()) {
+      Get.delete<PostDetailsController>(force: true);
+    }
+
+    Get.put(PostDetailsController());
   }
 }
 

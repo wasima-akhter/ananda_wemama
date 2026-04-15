@@ -105,8 +105,14 @@ class CommunitySearchScreen extends StatelessWidget {
                       item: displayListSearched[index],
                       btnTxt: Strings.join,
                       isLoading: false,
-                      onTapItem: () => csc.onTapItem(MyCommunityBtnState.join),
-                      onTapItemBtn: () => csc.onTapItemBtn(MyCommunityBtnState.join),
+                      onTapItem: () => csc.onTapItem(
+                        btnState: MyCommunityBtnState.join,
+                        communityItemId: displayListSearched[index].id ?? '',
+                      ),
+                      onTapItemBtn: () => csc.onTapItemBtn(
+                        btnState: MyCommunityBtnState.join,
+                        communityItemId: displayListSearched[index].id ?? '',
+                      ),
                     ),
                   ),
                 ),
@@ -223,8 +229,14 @@ class SuggestedCommunitySection extends StatelessWidget {
                   bgClr: c.inputBackground,
                   btnTxt: Strings.join,
                   isLoading: false,
-                  onTapItem: () => csc.onTapItem(MyCommunityBtnState.join),
-                  onTapItemBtn: () => csc.onTapItemBtn(MyCommunityBtnState.join),
+                  onTapItem: () => csc.onTapItem(
+                    btnState: MyCommunityBtnState.join,
+                    communityItemId: displayListSuggested[index].id ?? '',
+                  ),
+                  onTapItemBtn: () => csc.onTapItemBtn(
+                    btnState: MyCommunityBtnState.join,
+                    communityItemId: displayListSuggested[index].id ?? '',
+                  ),
                 ),
               ),
             ),

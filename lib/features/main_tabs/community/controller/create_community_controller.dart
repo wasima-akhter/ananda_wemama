@@ -2,13 +2,18 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/features/main_tabs/community/services/community_service.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 
 class CreateCommunityController extends GetxController {
+  late CreateCommunityArgModel? args;
+
   final nameCtrl = TextEditingController();
   final nameFocus = FocusNode();
 
   @override
   void onInit() {
+    args = Get.arguments as CreateCommunityArgModel?;
+    debugPrint('create community arg model : ${args?.communityImg}');
     super.onInit();
   }
 

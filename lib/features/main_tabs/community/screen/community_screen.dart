@@ -147,11 +147,11 @@ class CommunityScreen extends StatelessWidget {
                             isLoading: false,
                             onTapItem: () => cc.onTapItem(
                               btnState: MyCommunityBtnState.manage,
-                              communityItemId: displayListJoined[index].id ?? '',
+                              communityItemId: displayListManaged[index].id ?? '',
                             ),
                             onTapItemBtn: () => cc.onTapItemBtn(
                               btnState: MyCommunityBtnState.manage,
-                              communityItemId: displayListJoined[index].id ?? '',
+                              communityItemId: displayListManaged[index].id ?? '',
                             ),
                           ),
                         ),

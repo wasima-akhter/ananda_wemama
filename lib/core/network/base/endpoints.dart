@@ -65,6 +65,9 @@ class Endpoints {
   static String pinPost({required String id}) => "post/pin-post/$id";
   static String lockCommentOfPost({required String id}) => "post/lock-comment/$id";
   static String createNewPost = "post/create-new-post";
+  static String joinCommunity({required String communityId}) =>
+      "community/join-community?communityId=$communityId";
+  static String getAllCommentsOfAPost({required String postId}) => "post/get-all-comment/$postId";
   // delet post url : baki
 
   //

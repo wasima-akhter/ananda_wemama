@@ -1,9 +1,10 @@
 import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
+import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../shared/comments/widget/comment_item_w_reply.dart';
-import '../controller/community_detail_controller.dart';
 import '../controller/post_details_controller.dart';
 
 class PostDetailsScreen extends StatelessWidget {
@@ -12,12 +13,7 @@ class PostDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pcc = Get.find<PostDetailsController>();
-    final cc = Get.find<CommunityDetailController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
-
-    final args = Get.arguments as Map<String, dynamic>;
-    final postId = args['postId'] as String;
-    final btnState = args['btnState'] as MyCommunityBtnState;
 
     // ← scroll to bottom + open keyboard after first frame
     // Replace current addPostFrameCallback with:
@@ -63,7 +59,7 @@ class PostDetailsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CusGestureDetector(
-                onTap: () {},
+                onTap: () => pcc.onTapAddComment(),
                 child: CircleAvatar(
                   backgroundColor: c.primary,
                   child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
@@ -89,41 +85,64 @@ class PostDetailsScreen extends StatelessWidget {
 
           // ── Comments list (not independently scrollable) ──
           Flexible(
-            child: Column(
-              children: [
-                ...List.generate(pcc.comments.length, (index) {
-                  final item = pcc.comments[index];
+            child: Obx(() {
+              final state = pcc.commentState;
 
-                  return ContainerBordered(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        NetworkImageWidget(imageUrl: Strings.fakeImageUrl, radius: 20),
-                        Gap(itemGap),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.userName,
-                                style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
-                              ),
-                              Text(item.comment, style: TxtStyle.outfit(fs: 13, w: 400)),
-                              CusGestureDetector(
-                                onTap: () => pcc.showChildren.value = true,
-                                child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
-                              ),
-                              CommentItem(item: item),
-                            ],
+              return UIStateHandler(
+                state: state,
+
+                onRefresh: () async {
+                  await pcc.getCommentsList();
+                },
+
+                loading: () => ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(bottom: itemGap),
+                  itemCount: 6,
+                  separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                  itemBuilder: (_, index) => const CommentItemShimmer(),
+                ),
+
+                empty: () => const EmptyWidget(title: "No comments yet"),
+
+                data: () => ListView.separated(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(bottom: itemGap * 2),
+                  itemCount: pcc.comments.length,
+                  separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                  itemBuilder: (_, index) {
+                    final item = pcc.comments[index];
+
+                    return ContainerBordered(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          NetworkImageWidget(imageUrl: Strings.fakeImageUrl, radius: 20),
+                          Gap(itemGap),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.creator?.name ?? '',
+                                  style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+                                ),
+                                Text(item.content ?? '', style: TxtStyle.outfit(fs: 13)),
+                                CusGestureDetector(
+                                  onTap: () => pcc.showChildren.value = true,
+                                  child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                  ;
-                }),
-              ],
-            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            }),
           ),
         ],
       ).getcm,

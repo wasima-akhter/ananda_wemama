@@ -1,6 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
-import '../../shared/comments/widget/comment_item_w_reply.dart';
 import '../controller/meeting_comment_controller.dart';
 
 class MeetingCommentsBottomSheet extends StatelessWidget {
@@ -31,7 +30,8 @@ class MeetingCommentsBottomSheet extends StatelessWidget {
                 separatorBuilder: (_, __) => Gap(itemGap * 0.9),
                 itemBuilder: (context, index) {
                   final item = controller.comments[index];
-                  return CommentItem(item: item);
+                  // return CommentItem(item: item);
+                  return Text("comment");
                 },
               ),
             ),

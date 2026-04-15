@@ -1,9 +1,14 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
 import 'package:mama_app/features/main_tabs/community/services/community_detail_service.dart';
 
 import '../../../../app/controller_export.dart';
 
 class PostInCommunityController extends GetxController {
+  final String communityItemId;
+
+  PostInCommunityController(this.communityItemId);
+
   final contentCtrl = TextEditingController();
   final contentFocus = FocusNode();
 
@@ -11,6 +16,7 @@ class PostInCommunityController extends GetxController {
 
   @override
   void onInit() {
+    debugPrint(' communityItemId :$communityItemId ');
     super.onInit();
   }
 
@@ -70,7 +76,7 @@ class PostInCommunityController extends GetxController {
   }
 
   RxBool isCreatePostLoading = false.obs;
-  Future<void> uploadSessionQues({required String communityItemId}) async {
+  Future<void> createNewPost() async {
     if (isCreatePostLoading.value) return;
 
     isCreatePostLoading.value = true;
@@ -82,13 +88,14 @@ class PostInCommunityController extends GetxController {
         isAnonymous: postAnonymously.value,
       );
       if (response == true) {
-        debugPrint('quest sent successfully!');
+        debugPrint('Post created successfully!');
+        Get.find<CommunityDetailController>().onRefresh();
         Get.back();
       } else {
-        debugPrint('quest sent failed!');
+        debugPrint('Post created failed!');
       }
     } catch (e) {
-      debugPrint('upload ques of Session error: $e');
+      debugPrint('Post created  error: $e');
     } finally {
       isCreatePostLoading.value = false;
       clearAll();

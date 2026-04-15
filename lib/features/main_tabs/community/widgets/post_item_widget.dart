@@ -11,6 +11,8 @@ import '../modules/user_short_detail_widget.dart';
 class PostItemWidget extends StatelessWidget {
   final MyCommunityBtnState btnState;
   final String postId;
+  final String postCreatorId;
+  final String userName;
   final bool showActions;
   final CommunityDetailController cc;
   final AllPost postItem;
@@ -22,6 +24,8 @@ class PostItemWidget extends StatelessWidget {
     this.showActions = true,
     required this.cc,
     required this.postItem,
+    required this.userName,
+    required this.postCreatorId,
   });
 
   @override
@@ -34,14 +38,20 @@ class PostItemWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _PostHeader(cc: cc, postId: postId, btnState: btnState, postItem: postItem),
+          _PostHeader(
+            cc: cc,
+            postId: postId,
+            btnState: btnState,
+            postCreatorId: postCreatorId,
+            postItem: postItem,
+          ),
           Gap(itemGap * 2),
 
           _PostContent(postItem: postItem),
 
           if (showActions) ...[
             Gap(itemGap * 2.5),
-            _PostActions(cc: cc, postId: postId, btnState: btnState),
+            _PostActions(cc: cc, postId: postId, userName: userName, btnState: btnState),
           ],
         ],
       ),
@@ -53,6 +63,7 @@ class PostItemWidget extends StatelessWidget {
 class _PostHeader extends StatelessWidget {
   final CommunityDetailController cc;
   final String postId;
+  final String postCreatorId;
   final MyCommunityBtnState btnState;
   final AllPost postItem;
 
@@ -61,6 +72,7 @@ class _PostHeader extends StatelessWidget {
     required this.postId,
     required this.btnState,
     required this.postItem,
+    required this.postCreatorId,
   });
 
   @override
@@ -85,14 +97,15 @@ class _PostHeader extends StatelessWidget {
                 const SizedBox.shrink(),
 
               // Visitor dropdown
-              if (btnState == MyCommunityBtnState.visit)
+              if (btnState == MyCommunityBtnState.visit && currentProfileId() == postCreatorId)
                 CusFlexibleDropdown(
                   items: [
                     CusDropdownItem(
                       title: isPinned
                           ? Strings.unpinPost.capEachWord()
                           : Strings.pinPost.capEachWord(),
-                      onTap: () => cc.togglePin(postId),
+                      // onTap: () => cc.togglePin(postId),
+                      onTap: () => cc.togglePinApi(postId),
                     ),
                   ],
                   child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
@@ -106,7 +119,8 @@ class _PostHeader extends StatelessWidget {
                       title: isPinned
                           ? Strings.unpinPost.capEachWord()
                           : Strings.pinPost.capEachWord(),
-                      onTap: () => cc.togglePin(postId),
+                      // onTap: () => cc.togglePin(postId),
+                      onTap: () => cc.togglePinApi(postId),
                     ),
                     CusDropdownItem(
                       title: isLocked
@@ -116,13 +130,16 @@ class _PostHeader extends StatelessWidget {
                         showLockCommentialog();
                         await Future.delayed(const Duration(seconds: 1));
                         Get.back();
-                        cc.toggleCommentLock(postId);
+                        // cc.toggleCommentLock(postId);
+                        await cc.toggleLockApi(postId);
                       },
                     ),
                     CusDropdownItem(
                       title: Strings.deletePost.capEachWord(),
                       onTap: () async => deletePostConfirmDialog(
-                        onConfirm: () async => Get.back(),
+                        onConfirm: () async {
+                          Get.back();
+                        },
                         isLoading: RxBool(false),
                       ),
                     ),
@@ -152,9 +169,15 @@ class _PostContent extends StatelessWidget {
 class _PostActions extends StatelessWidget {
   final CommunityDetailController cc;
   final String postId;
+  final String userName;
   final MyCommunityBtnState btnState;
 
-  const _PostActions({required this.cc, required this.postId, required this.btnState});
+  const _PostActions({
+    required this.cc,
+    required this.postId,
+    required this.btnState,
+    required this.userName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +189,8 @@ class _PostActions extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CusGestureDetector(
-            onTap: () => cc.toggleLike(postId),
+            // onTap: () => cc.toggleLike(postId),
+            onTap: () => cc.toggleLikeApi(postId, userName), // pass real username
             child: Row(
               children: [
                 SvgIcon(iconPath: isLiked ? IconsPath.likeHeartFilled : IconsPath.like, height: 22),
@@ -177,10 +201,7 @@ class _PostActions extends StatelessWidget {
           ),
           Gap(itemGap),
           CusGestureDetector(
-            onTap: () => Get.toNamed(
-              RoutePaths.postDetails,
-              arguments: {'postId': postId, 'btnState': btnState},
-            ),
+            onTap: () => Get.toNamed(RoutePaths.postDetails, arguments: postId),
             child: Row(
               children: [
                 SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),

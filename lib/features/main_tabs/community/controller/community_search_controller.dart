@@ -115,7 +115,9 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
     }
   }
 
-  void onTapItemBtn(MyCommunityBtnState btnState) {
+  //--------------------->
+
+  void onTapItemBtn({required MyCommunityBtnState btnState, required String communityItemId}) {
     if (btnState == MyCommunityBtnState.join) {
       communityGuidlineDialog(
         isLoading: false,
@@ -123,28 +125,28 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
           Get.back();
           Get.toNamed(
             RoutePaths.communityDetail,
-            arguments: {'btnState': MyCommunityBtnState.join, "communityItemId": "123"},
+            arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": communityItemId},
           );
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.manage, "communityItemId": "123"},
+        arguments: {'btnState': MyCommunityBtnState.manage, "communityItemId": communityItemId},
       );
     } else if (btnState == MyCommunityBtnState.visit) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.visit, "communityItemId": "123"},
+        arguments: {'btnState': MyCommunityBtnState.visit, "communityItemId": communityItemId},
       );
     }
   }
 
   // ← tapping the item row (not the button) = just viewing
-  void onTapItem(MyCommunityBtnState btnState) {
+  void onTapItem({required MyCommunityBtnState btnState, required String communityItemId}) {
     Get.toNamed(
       RoutePaths.communityDetail,
-      arguments: {'btnState': btnState, "communityItemId": "123"},
+      arguments: {'btnState': btnState, "communityItemId": communityItemId},
     );
   }
 }

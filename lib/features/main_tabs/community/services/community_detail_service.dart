@@ -1,4 +1,5 @@
 import '../../../../app/service_export.dart';
+import '../model/all_comments_of_post_model.dart';
 import '../model/community_item_detail_model.dart';
 
 class CommunityDetailService extends GetxService {
@@ -18,6 +19,29 @@ class CommunityDetailService extends GetxService {
       parser: (data) {
         print("parserdata: ${data}");
         final parsedData = CommunityItemDetailModel.fromJson(data);
+
+        return parsedData;
+      },
+    );
+
+    print("response data: ${response?.data}");
+    return response?.data;
+  }
+
+  Future<CommentOfPostResponseModel?> fetchCommentsOfAPost({required String postId}) async {
+    apiCall() {
+      return ApiClient().get(
+        Endpoints.getAllCommentsOfAPost(postId: postId).getUrl,
+        reqName: "${Strings.comment} of a post",
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
+
+    final response = await _apiHelper.request<CommentOfPostResponseModel?>(
+      apiCall: apiCall,
+      parser: (data) {
+        print("parserdata: ${data}");
+        final parsedData = CommentOfPostResponseModel.fromJson(data);
 
         return parsedData;
       },
@@ -79,6 +103,22 @@ class CommunityDetailService extends GetxService {
     return response.success;
   }
 
+  // Future<bool> deletePost({required String postItemId}) async {
+  //   apiCall() {
+  //     return ApiClient().post(
+  //       Endpoints.lockCommentOfPost(id: postItemId).getUrl,
+  //       reqName: Strings.comment,
+
+  //       headers: HeaderHelpers.getAuthHeader(),
+  //     );
+  //   }
+
+  //   final response = await _apiHelper.request(apiCall: apiCall);
+  //   if (response == null) return false;
+  //   print("response success: ${response.success}");
+  //   return response.success;
+  // }
+
   Future<bool> createNewPost({
     required String communityItemId,
     required String content,
@@ -87,9 +127,24 @@ class CommunityDetailService extends GetxService {
     apiCall() {
       return ApiClient().post(
         Endpoints.createNewPost.getUrl,
-        reqName: Strings.comment,
+        reqName: Strings.post,
         data: {"community": communityItemId, "content": content, "isAnonymous": isAnonymous},
 
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
+
+    final response = await _apiHelper.request(apiCall: apiCall);
+    if (response == null) return false;
+    print("response success: ${response.success}");
+    return response.success;
+  }
+
+  Future<bool> joinCommunity({required String communityItemId}) async {
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.joinCommunity(communityId: communityItemId).getUrl,
+        reqName: "${Strings.join} Community",
         headers: HeaderHelpers.getAuthHeader(),
       );
     }

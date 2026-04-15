@@ -1,12 +1,14 @@
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
 import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
+import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
 import 'package:mama_app/features/main_tabs/community/model/community_item_detail_model.dart';
 import 'package:mama_app/features/main_tabs/community/widgets/post_item_widget.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../modules/join_btn.dart';
 
 class CommunityDetailsScreen extends StatelessWidget {
   const CommunityDetailsScreen({super.key});
@@ -27,18 +29,17 @@ class CommunityDetailsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // ── Header with overlaid topbar ──
-          Stack(
-            children: [
-              // ── Base content ──
-              Obx(() {
-                final isLoading = cc.isLoading_.value;
-                final itemDetail = cc.communityItemDetail.value;
+          Obx(() {
+            final isLoading = cc.isLoading_.value;
+            final itemDetail = cc.communityItemDetail.value;
 
-                final state = getUIStateDetail(isLoading: isLoading);
+            final state = getUIStateDetail(isLoading: isLoading);
 
-                debugPrint('itemDetail  : ${itemDetail.community?.name} ');
-
-                return UIStateHandler(
+            debugPrint('itemDetail  : ${itemDetail.community?.name} ');
+            return Stack(
+              children: [
+                // ── Base content ──
+                UIStateHandler(
                   onRefresh: () async {
                     cc.getCommunityDetail();
                   },
@@ -64,30 +65,45 @@ class CommunityDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  data: () => CommunityDetailTopContent(itemDetail: itemDetail),
-                );
+                  data: () => CommunityDetailTopContent(itemDetail: itemDetail, cc: cc),
+                ),
 
                 // your real header
-              }),
 
-              // ── Topbar overlaid on top of image ──
-              Positioned(
-                top: itemGap,
-                right: 0,
-                left: 0,
-                child: CommunityTopbarContent(
-                  suffix: CusGestureDetector(
-                    onTap: () =>
-                        communityGuidlineDialog(isLoading: false, onTapAction: () async {}),
-                    child: CusCircleIconButton(
-                      radius: 15.r,
-                      child: SvgIcon(iconPath: IconsPath.info, height: 30),
+                // ── Topbar overlaid on top of image ──
+                Positioned(
+                  top: itemGap,
+                  right: 0,
+                  left: 0,
+                  child: CommunityTopbarContent(
+                    suffix: CusGestureDetector(
+                      onTap: () {
+                        if (cc.btnState.value == MyCommunityBtnState.manage) {
+                          // edit the community
+                          Get.toNamed(
+                            RoutePaths.createCommunity,
+                            arguments: CreateCommunityArgModel(
+                              communityImg: itemDetail.community?.image ?? '',
+                              communityName: itemDetail.community?.name ?? '',
+                              isEdit: true,
+                            ),
+                          );
+                        }
+                        if (cc.btnState.value == MyCommunityBtnState.visit) {}
+                        if (cc.btnState.value == MyCommunityBtnState.join) {
+                          communityGuidlineDialog(isLoading: false, onTapAction: () async {});
+                        }
+                      },
+                      child: CusCircleIconButton(
+                        radius: 15.r,
+                        child: SvgIcon(iconPath: IconsPath.info, height: 30),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
 
           Gap(itemGap * 2),
 
@@ -119,8 +135,10 @@ class CommunityDetailsScreen extends StatelessWidget {
                       PostItemWidget(
                         postItem: itemPosts[index],
                         cc: cc,
-                        btnState: cc.args.value,
+                        btnState: cc.btnState.value,
                         postId: itemPosts[index].id.toString(),
+                        userName: itemPosts[index].creator?.name ?? '',
+                        postCreatorId: itemDetail.community?.id ?? '',
                       ).mB(itemGap),
                 ),
               ).getcm,
@@ -136,7 +154,10 @@ class CommunityDetailsScreen extends StatelessWidget {
 
 class CommunityDetailTopContent extends StatelessWidget {
   final CommunityItemDetailModel itemDetail;
-  const CommunityDetailTopContent({super.key, required this.itemDetail});
+
+  final CommunityDetailController cc;
+
+  const CommunityDetailTopContent({super.key, required this.itemDetail, required this.cc});
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +165,9 @@ class CommunityDetailTopContent extends StatelessWidget {
     final communityName = community?.name ?? '';
     final membersNum = (community?.totalMember ?? 0).toString();
     final communityImg = community?.image ?? '';
+
+    debugPrint('membersNum  : $membersNum');
+    debugPrint('community?.totalMember  : ${community?.totalMember}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -165,54 +189,57 @@ class CommunityDetailTopContent extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextFit(
-                        communityName.capEachWord(),
-                        style: TxtStyle.outfitSemiB(fs: 18, w: 500, color: white),
-                      ),
-                      Row(
-                        children: [
-                          SvgIcon(iconPath: IconsPath.userGroup, height: 22),
-                          Gap(4),
-                          TextFit(
-                            "${Strings.members.capEachWord()} $membersNum",
-                            style: TxtStyle.outfit(fs: 12, w: 400, color: white),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          // width: S.w * 0.75,
+                          child: TextFit(
+                            communityName.capEachWord(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 7,
+                            style: TxtStyle.outfitSemiB(fs: 18, w: 500, color: white),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        Row(
+                          children: [
+                            SvgIcon(iconPath: IconsPath.userGroup, height: 22),
+                            Gap(4),
+                            TextFit(
+                              "${Strings.members.capEachWord()} $membersNum",
+                              style: TxtStyle.outfit(fs: 12, w: 400, color: white),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
 
-                  // wrap JoinBtn with Obx
-                  // Obx(
-                  //   () => JoinBtn(
-                  //     isLoading: false,
+                  Gap(itemGap),
 
-                  //     onTap: () {
-                  //       if (cc.args.value == MyCommunityBtnState.manage) {
-                  //         Get.toNamed(RoutePaths.manageCommunity);
-                  //       }
-                  //       if (cc.args.value == MyCommunityBtnState.join) {
-                  //         communityGuidlineDialog(
-                  //           isLoading: false,
-                  //           onTapAction: () async {
-                  //             Get.back();
-                  //             // Get.toNamed(
-                  //             //   RoutePaths.communityDetail,
-                  //             //   arguments: {
-                  //             //     'btnState': MyCommunityBtnState.join,
-                  //             //     "communityItemId": "123",
-                  //             //   },
-                  //             // );
-                  //           },
-                  //         );
-                  //       }
-                  //     },
-                  //     btnTxt: cc.getBtnTxt(),
-                  //   ),
-                  // ),
+                  // wrap JoinBtn with Obx
+                  Obx(() {
+                    return JoinBtn(
+                      isLoading: cc.isJoinLoading.value,
+                      btnTxt: cc.getBtnTxt(), // now reactive
+                      onTap: () {
+                        if (cc.btnState.value == MyCommunityBtnState.manage) {
+                          Get.toNamed(RoutePaths.manageCommunity);
+                        }
+
+                        if (cc.btnState.value == MyCommunityBtnState.join) {
+                          communityGuidlineDialog(
+                            isLoading: false,
+                            onTapAction: () async {
+                              Get.back();
+                              cc.joinCommunity(communityItemId: itemDetail.community?.id ?? '');
+                            },
+                          );
+                        }
+                      },
+                    );
+                  }),
                 ],
               ),
               Gap(itemGap * 3),
