@@ -19,8 +19,10 @@ class MsgInputRow extends StatelessWidget {
       focusNode: inputMsgFocus,
       hintText: Strings.typeSomething,
       minLines: 1,
-      minHeight: 40,
+      minHeight: 20,
+      maxHeight: 60,
       bgClr: c.textOnPrimary,
+      isPaddingLess: true,
       suffix: CusCircleIconButton(
         radius: 15,
         backgroundColor: c.primary,

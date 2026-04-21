@@ -1,166 +1,9 @@
 import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
-/*
-class LiveOngoingSessionCard extends StatelessWidget {
-  const LiveOngoingSessionCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: S.w - 40.w,
-      child: ContainerBordered(
-        contClr: c.cardOngoing,
-        rad: 20,
-
-        hp: 16,
-        vp: 16,
-        boxShadow: boxShadowBottom(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Row(
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: [
-            //     ContainerBordered(
-            //       contClr: c.error,
-            //       rad: 6,
-            //       hp: 10,
-            //       vp: 4,
-            //       hasBrdr: true,
-            //       brdrClr: c.primary,
-            //       child: Text(
-            //         Strings.live.toUpperCase(),
-            //         style: TxtStyle.inter(fs: 10, w: 600, color: c.textOnPrimary),
-            //       ),
-            //     ),
-            //     Gap(itemGap),
-            //     Text(Strings.ongoingExpertSession.capEachWord(), style: TxtStyle.outfitSmTitle),
-            //   ],
-            // ),
-
-            // Gap(itemGap),
-
-            // CustomDivider(isFullWidth: true, h: 0.6),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    circledImageBgComponent(brdrClr: c.error),
-
-                    Positioned(
-                      bottom: -8,
-                      left: 4,
-
-                      child: ContainerBordered(
-                        contClr: c.error,
-                        rad: 6,
-                        hp: 6,
-                        vp: 2,
-                        // hasBrdr: true,
-                        // brdrClr: c.primary,
-                        child: Text(
-                          Strings.live.toUpperCase(),
-                          style: TxtStyle.interSemiB(fs: 8, w: 600, color: white),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Gap(itemGap),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-                      Text(Strings.fakeDrName, style: TxtStyle.urbanistSmTitle),
-                      Text(Strings.fakeDrSpecialty, style: TxtStyle.urbanistSmTitleSec),
-                    ],
-                  ),
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      Strings.fakeTime,
-                      style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary),
-                    ),
-                    Text(Strings.fakeDate, style: TxtStyle.outfit(fs: 11)),
-                  ],
-                ),
-              ],
-            ),
-
-            Gap(itemGap * 1.5),
-
-            Text(Strings.babySleepSession.capEachWord(), style: TxtStyle.urbanistSmTitle600),
-
-            Text(
-              Strings.gentleRoutines.cap +
-                  "hdfg duvodf vodhfvhfv dyifv du hv dfvhdfovoidfhod vh dfv",
-
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TxtStyle.outfit(fs: 13, color: c.secondary),
-            ),
-
-            Gap(itemGap * 1.5),
-
-            Row(
-              children: [
-                Expanded(
-                  child: ContainerBordered(
-                    hasBrdr: true,
-                    brdrClr: c.primary,
-                    rad: 30,
-                    contClr: ctransp,
-                    vp: 8,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgIcon(iconPath: IconsPath.share),
-                        Gap(itemGap),
-                        Text(
-                          Strings.share.cap,
-                          textAlign: TextAlign.center,
-                          style: TxtStyle.outfitSmTitle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Gap(itemGap),
-                Expanded(
-                  child: CusGestureDetector(
-                    onTap: () => Get.toNamed(RoutePaths.meetingScreen),
-                    child: ContainerBordered(
-                      contClr: c.buttonPrimary,
-                      rad: 30,
-                      vp: 8,
-                      child: Text(
-                        Strings.joinLive.capEachWord(),
-                        textAlign: TextAlign.center,
-                        style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.textOnPrimary),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
 
 class LiveOngoingSessionCard extends StatelessWidget {
   const LiveOngoingSessionCard({super.key, required this.data, this.isFromOngoingScreen});
@@ -286,7 +129,14 @@ class LiveOngoingSessionCard extends StatelessWidget {
                   child: CusGestureDetector(
                     onTap: () {
                       if (channelName.isNotEmpty) {
-                        Get.toNamed(RoutePaths.meetingScreen, arguments: channelName);
+                        Get.toNamed(
+                          RoutePaths.meetingScreen,
+                          arguments: MeetingCtrlAgModel(
+                            channelname: channelName,
+                            sessionTitle: sessionTitle,
+                            hostName: doctorName,
+                          ),
+                        );
                       }
                     },
                     child: ContainerBordered(

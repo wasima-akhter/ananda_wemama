@@ -1,3 +1,5 @@
+import '../../../core/constants/icon_and_image_paths.dart';
+
 class ChatMessageLiveModel {
   final String text;
   final String senderId;
@@ -47,3 +49,13 @@ class JoinerModel {
   final String? avatar;
   JoinerModel({this.uid, this.name, this.avatar});
 }
+
+final reactionList = [
+  (ImagesPath.likeEmoji, 'LIKE'),
+  (ImagesPath.heartEmoji, 'HEART'),
+  (ImagesPath.careEmoji, 'CARE'),
+  (ImagesPath.hahaEmoji, 'HAHA'),
+  (ImagesPath.wowEmoji, 'WOW'),
+  (ImagesPath.sadEmoji, 'SAD'),
+  (ImagesPath.angryEmoji, 'ANGRY'),
+];

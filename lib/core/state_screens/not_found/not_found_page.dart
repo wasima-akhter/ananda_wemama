@@ -20,7 +20,7 @@ class RouteNotFoundPage extends StatelessWidget {
               const Text('Page not found'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => Get.offAllNamed(RoutePaths.meetingScreen),
+                onPressed: () => Get.offAllNamed(RoutePaths.splashScreen),
                 child: const Text("Go to Splash"),
               ),
             ],

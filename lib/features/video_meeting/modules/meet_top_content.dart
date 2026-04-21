@@ -24,8 +24,8 @@ class TopContent extends StatelessWidget {
             Gap(50.w),
             Column(
               children: [
-                Text("Breastfeeding Basic", style: TxtStyle.outfit(fs: 16, w: 600)),
-                Text("With Dr. Adebayo", style: TxtStyle.outfit(fs: 13, color: c.secondary)),
+                Text(mc.agrModel.sessionTitle, style: TxtStyle.outfit(fs: 16, w: 600)),
+                Text(mc.agrModel.hostName, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
               ],
             ),
             ContainerBordered(
@@ -41,6 +41,97 @@ class TopContent extends StatelessWidget {
           ],
         ).get10cm,
         Gap(itemGap * 1.5),
+
+        AspectRatio(
+          aspectRatio: 16 / 9, // ← single source of truth for size
+          child: ContainerBordered(
+            rad: 20,
+            hp: 0,
+            vp: 0,
+            clipBehavior: Clip.antiAlias,
+            child: Stack(
+              fit: StackFit.expand, // ← children fill the stack automatically
+              children: [
+                Obx(() {
+                  if (!mc.isEngineReady.value || mc.agoraEngine == null) {
+                    return _buildPlaceholder(child: const CircularProgressIndicator());
+                  }
+                  if (mc.hasLiveEnded.value) {
+                    return _buildPlaceholder(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.live_tv_outlined, color: Colors.white54, size: 36),
+                          const Gap(10),
+                          Text(
+                            "The live has ended\nThanks for joining!",
+                            style: TxtStyle.inter(fs: 15, color: Colors.white70),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  if (mc.remoteUids.isEmpty) {
+                    return _buildPlaceholder(
+                      child: Text(
+                        "Live starting soon...",
+                        style: TxtStyle.inter(fs: 14, color: Colors.white70),
+                      ),
+                    );
+                  }
+                  if (!mc.isHostVideoOn.value) {
+                    return _buildPlaceholder(child: Text("camera off"));
+                  }
+                  if (!mc.isHostAudioOn.value) {
+                    return _buildPlaceholder(child: Text("mic off"));
+                  }
+
+                  // ✅ No SizedBox wrapper — StackFit.expand handles sizing
+                  return AgoraVideoView(
+                    controller: VideoViewController.remote(
+                      rtcEngine: mc.agoraEngine!,
+                      canvas: VideoCanvas(uid: mc.remoteUids.first),
+                      connection: RtcConnection(channelId: mc.channelName.value),
+                    ),
+                  );
+                }),
+
+                // Overlays stay exactly the same
+                Positioned(
+                  right: 12,
+                  top: 12,
+                  child: Row(
+                    children: [
+                      Obx(
+                        () => _buildFloatingIcon(
+                          text: "${cc.reactionCount.value}",
+                          icon: Icons.thumb_up_sharp,
+                        ),
+                      ),
+                      Gap(itemGap),
+                      Obx(
+                        () => _buildFloatingIcon(
+                          text: "${cc.viewCount.value}",
+                          icon: Icons.visibility,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  left: 12,
+                  top: 12,
+                  child: Obx(
+                    () => _buildFloatingIcon(text: mc.formattedDuration, icon: Icons.circle),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        /*
         ContainerBordered(
           rad: 20,
           hp: 0,
@@ -97,6 +188,9 @@ class TopContent extends StatelessWidget {
                   height: S.h * 0.26,
                   width: S.w - 40.w,
                   child: AgoraVideoView(
+                    onAgoraVideoViewCreated: (viewId) {
+                      debugPrint("Video view created: $viewId");
+                    },
                     controller: VideoViewController.remote(
                       rtcEngine: mc.agoraEngine!,
                       canvas: VideoCanvas(uid: mc.remoteUids.first),
@@ -110,7 +204,12 @@ class TopContent extends StatelessWidget {
                 top: 12,
                 child: Row(
                   children: [
-                    _buildFloatingIcon(text: "235", icon: Icons.thumb_up_sharp),
+                    Obx(
+                      () => _buildFloatingIcon(
+                        text: "${cc.reactionCount.value}",
+                        icon: Icons.thumb_up_sharp,
+                      ),
+                    ),
 
                     Gap(itemGap),
 
@@ -132,10 +231,13 @@ class TopContent extends StatelessWidget {
             ],
           ),
         ),
+
+        */
         Gap(itemGap * 1.5),
 
         // Joiners list (short, max 5 avatars)
-        Obx(() => LiveStackOfImages(participants: cc.participants)),
+        LiveStackOfImages(participants: cc.participants),
+
         Gap(itemGap * 1.5),
       ],
     ).get10cm;

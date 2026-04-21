@@ -469,8 +469,8 @@ class MeetingBinding extends Bindings {
     final args = Get.arguments;
     print("--> args: $args");
 
-    if (args == null || args is! String) {
-      throw Exception("MeetingController requires a String argument!");
+    if (args == null || args is! MeetingCtrlAgModel) {
+      throw Exception("MeetingController requires a MeetingCtrlAgModel argument!");
     }
 
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
@@ -478,7 +478,7 @@ class MeetingBinding extends Bindings {
 
     // ✅ fenix:false ensures a fresh controller every time
     // ✅ 1. MeetingController FIRST — LiveChatController depends on it
-    Get.put(MeetingController(Get.arguments as String), permanent: false);
+    Get.put(MeetingController(Get.arguments as MeetingCtrlAgModel), permanent: false);
 
     // ✅ 2. LiveChatController SECOND — so Get.find<MeetingController>() succeeds
     Get.put(LiveChatController(), permanent: false);

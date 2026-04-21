@@ -54,6 +54,8 @@ class LiveChatController extends GetxController {
           final decoded = utf8.decode(bytes);
           final Map<String, dynamic> payload = jsonDecode(decoded);
 
+          debugPrint('payload: ${payload.toString()} ');
+
           // ✅ Same type routing as plain string path
           final type = payload['type'];
           switch (type) {
@@ -154,7 +156,7 @@ class LiveChatController extends GetxController {
           }),
         );
 
-        viewCount.value = participants.length;
+        viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         return;
 
       case RtmPresenceEventType.remoteJoinChannel:
@@ -174,7 +176,7 @@ class LiveChatController extends GetxController {
           );
         }
 
-        viewCount.value = participants.length;
+        viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         debugPrint('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
         return;
 
@@ -182,7 +184,7 @@ class LiveChatController extends GetxController {
       case RtmPresenceEventType.remoteTimeout:
         // Someone left
         participants.removeWhere((j) => j.uid == event.publisher);
-        viewCount.value = participants.length;
+        viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         debugPrint('✅ [RTM] Joiner removed: ${event.publisher}');
         return;
 
@@ -353,6 +355,7 @@ class LiveChatController extends GetxController {
         mc.channelName.value,
         payload, // ← send JSON string, not raw text
         channelType: RtmChannelType.message,
+        // storeInHistory: true,
       );
 
       if (status.error) {
@@ -376,6 +379,7 @@ class LiveChatController extends GetxController {
       );
 
       mc.inputMsgCtrl.clear();
+      FocusManager.instance.primaryFocus?.unfocus(); // ← dismiss keyboard
       _scrollToBottom();
     } catch (e) {
       debugPrint('❌ [RTM] sendMessage error: $e');
@@ -384,7 +388,13 @@ class LiveChatController extends GetxController {
   }
 
   //////
+
+  RxInt reactionCount = 0.obs;
+  final hearts = <({int id, String emoji})>[].obs; // each int is a unique animation id
+
   Future<void> sendReaction(String emoji) async {
+    Get.back();
+    debugPrint('sent emoji : $emoji');
     // ← takes emoji
     if (!isRtmReady.value || rtmClient == null) return;
 
@@ -399,6 +409,7 @@ class LiveChatController extends GetxController {
       mc.channelName.value,
       payload,
       channelType: RtmChannelType.message,
+      // storeInHistory: true,
     );
 
     if (status.error) {
@@ -412,12 +423,11 @@ class LiveChatController extends GetxController {
 
   void _triggerHeartAnimation(String emoji) {
     final id = DateTime.now().millisecondsSinceEpoch;
-    hearts.add(id);
-    Future.delayed(const Duration(seconds: 2), () => hearts.remove(id));
+    hearts.add((id: id, emoji: emoji));
+    Future.delayed(const Duration(seconds: 2), () {
+      hearts.removeWhere((h) => h.id == id);
+    });
   }
-
-  RxInt reactionCount = 0.obs;
-  final hearts = <int>[].obs; // each int is a unique animation id
 
   ///-----------------------
   RxList<RaiseHandModel> raisedHands = <RaiseHandModel>[].obs;
@@ -434,7 +444,12 @@ class LiveChatController extends GetxController {
       "senderAvatar": mc.sessionInfo.value.userAvatar ?? '', // ← add
     });
 
-    await rtmClient!.publish(mc.channelName.value, payload, channelType: RtmChannelType.message);
+    await rtmClient!.publish(
+      mc.channelName.value,
+      payload,
+      channelType: RtmChannelType.message,
+      // storeInHistory: true,
+    );
 
     if (isRaised) {
       raisedHands.removeWhere((h) => h.uid == mc.uid.value.toString());

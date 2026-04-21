@@ -8,6 +8,7 @@ import '../modules/meet_comment_item.dart';
 import '../modules/meet_msg_input_row.dart';
 import '../modules/meet_react_button.dart';
 import '../modules/meet_top_content.dart';
+import '../widgets/heart_animation_widget.dart';
 import '../widgets/meeting_screen_template.dart';
 
 class MeetingScreen extends StatelessWidget {
@@ -18,104 +19,124 @@ class MeetingScreen extends StatelessWidget {
     final mc = Get.find<MeetingController>();
     final cc = Get.find<LiveChatController>();
 
-    return MeetingScreenTemplate(
-      backgroundColor: c.cardPrimary,
-      inputFocus: mc.inputMsgFocus,
-      topContent: TopContent(mc: mc, cc: cc),
+    return Stack(
+      children: [
+        MeetingScreenTemplate(
+          backgroundColor: c.cardPrimary,
+          inputFocus: mc.inputMsgFocus,
+          topContent: TopContent(mc: mc, cc: cc),
 
-      // ✅ Reactive comment list
-      commentList: Obx(() {
-        if (cc.messages.isEmpty) {
-          return const SizedBox.shrink();
-        }
+          // ✅ Reactive comment list
+          commentList: Obx(() {
+            if (cc.messages.isEmpty) {
+              return const SizedBox.shrink();
+            }
 
-        return ListView.separated(
-          controller: cc.chatScrollCtrl,
-          padding: EdgeInsets.only(top: itemGap * 1.5),
-          itemCount: cc.messages.length,
-          separatorBuilder: (_, __) => Gap(14),
-          itemBuilder: (_, index) {
-            final msg = cc.messages[index];
-            return MeetCommentItem(message: msg);
-          },
-        ).get10cm;
-      }),
+            return ListView.separated(
+              controller: cc.chatScrollCtrl,
+              padding: EdgeInsets.only(top: itemGap * 1.5),
+              itemCount: cc.messages.length,
+              separatorBuilder: (_, __) => Gap(14),
+              itemBuilder: (_, index) {
+                final msg = cc.messages[index];
+                return MeetCommentItem(message: msg);
+              },
+            ).get10cm;
+          }),
 
-      inputRow: MsgInputRow(
-        inputMsgCtrl: mc.inputMsgCtrl,
-        inputMsgFocus: mc.inputMsgFocus,
-        onSend: () => cc.sendMessage(mc.inputMsgCtrl.text), // ✅ wire send
-      ),
+          inputRow: MsgInputRow(
+            inputMsgCtrl: mc.inputMsgCtrl,
+            inputMsgFocus: mc.inputMsgFocus,
+            onSend: () => cc.sendMessage(mc.inputMsgCtrl.text), // ✅ wire send
+          ),
 
-      bottomActions: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-          color: c.cardPrimary,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: CusGestureDetector(
-                  onTap: () async {
-                    // Get.back();
-                    await Future.delayed(Duration(milliseconds: 300));
+          bottomActions: ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+              color: c.cardPrimary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: CusGestureDetector(
+                      onTap: () async {
+                        // Get.back();
+                        await Future.delayed(Duration(milliseconds: 300));
 
-                    showLiveEndMsg();
-                  },
-                  child: BottomAction(
-                    iconPath: IconsPath.closeWhite,
-                    backgroundColor: Colors.red,
-                    size: 13,
-                    text: "Leave",
-                    color: white,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Obx(
-                  () => CusGestureDetector(
-                    onTap: () => mc.toggleSpeak(),
-                    child: BottomAction(
-                      color: mc.isSpeaking.value ? white : c.primary,
-                      iconPath: mc.isSpeaking.value
-                          ? IconsPath
-                                .unmutedAudio // show "stop speaking" icon
-                          : IconsPath.mutedAudio, // show "speak" icon
-                      text: mc.isSpeaking.value ? "Speaking" : "Muted",
-                      backgroundColor: mc.isSpeaking.value ? c.primary : null,
+                        showLiveEndMsg();
+                      },
+                      child: BottomAction(
+                        iconPath: IconsPath.closeWhite,
+                        backgroundColor: Colors.red,
+                        size: 13,
+                        text: "Leave",
+                        color: white,
+                      ),
                     ),
                   ),
-                ),
-              ),
-
-              // Reaction button
-              Obx(
-                () => Expanded(
-                  child: ReactButton(count: cc.reactionCount.value, sendReaction: cc.sendReaction),
-                ),
-              ),
-
-              // Raise hand button
-              Obx(
-                () => Expanded(
-                  child: CusGestureDetector(
-                    onTap: () => cc.toggleRaiseHand(),
-                    child: BottomAction(
-                      iconPath: cc.isHandRaised
-                          ? IconsPath
-                                .handRaise // put filled icon
-                          : IconsPath.handRaise,
-                      text: "Raise Hand",
-                      backgroundColor: cc.isHandRaised ? c.primary : null,
+                  Expanded(
+                    child: Obx(
+                      () => CusGestureDetector(
+                        onTap: () => mc.toggleSpeak(),
+                        child: BottomAction(
+                          color: mc.isSpeaking.value ? white : c.primary,
+                          iconPath: mc.isSpeaking.value
+                              ? IconsPath
+                                    .unmutedAudio // show "stop speaking" icon
+                              : IconsPath.mutedAudio, // show "speak" icon
+                          text: mc.isSpeaking.value ? "Speaking" : "Muted",
+                          backgroundColor: mc.isSpeaking.value ? c.primary : null,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ).getcm,
+
+                  // Reaction button
+                  Expanded(
+                    child: ReactButton(
+                      count: cc.reactionCount.value,
+                      sendReaction: (emoji) => cc.sendReaction(emoji),
+                    ),
+                  ),
+                  // Raise hand button
+                  Expanded(
+                    child: Obx(
+                      () => CusGestureDetector(
+                        onTap: () => cc.toggleRaiseHand(),
+                        child: BottomAction(
+                          color: cc.isHandRaised ? white : c.primary,
+                          iconPath: cc.isHandRaised
+                              ? IconsPath
+                                    .handRaise // put filled icon
+                              : IconsPath.handRaise,
+                          text: cc.isHandRaised ? "Raised Hand" : "Raise Hand",
+
+                          backgroundColor: cc.isHandRaised ? c.primary : null,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ).getcm,
+            ),
+          ),
         ),
-      ),
+
+        // ── Floating emoji overlay (above everything, near react button) ──
+        Positioned(
+          bottom: 100.h, // sits just above the bottom action bar
+          right: 80.w, // aligns roughly over the react button
+          child: Obx(() {
+            return Stack(
+              clipBehavior: Clip.none,
+              children: cc.hearts.map((heart) {
+                return HeartAnimationWidget(key: ValueKey(heart.id), emoji: heart.emoji);
+              }).toList(),
+            );
+          }),
+        ),
+      ],
     );
   }
 }

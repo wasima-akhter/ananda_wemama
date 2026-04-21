@@ -10,10 +10,22 @@ import '../../../core/config/agora_config.dart';
 import '../../../core/helpers/permission_helper.dart';
 import '../model/live_session_info_model.dart';
 
+class MeetingCtrlAgModel {
+  final String channelname;
+  final String sessionTitle;
+  final String hostName;
+
+  MeetingCtrlAgModel({
+    required this.channelname,
+    required this.sessionTitle,
+    required this.hostName,
+  });
+}
+
 class MeetingController extends GetxController {
   /// 🔹 Channel passed from previous screen
-  final String channelname;
-  MeetingController(this.channelname);
+  final MeetingCtrlAgModel agrModel;
+  MeetingController(this.agrModel);
 
   /// 🔹 Chat input
   final inputMsgCtrl = TextEditingController();
@@ -48,9 +60,9 @@ class MeetingController extends GetxController {
   @override
   void onInit() {
     /// Initial channel from navigation
-    debugPrint('channelname arg: $channelname');
+    debugPrint('channelname arg: ${agrModel.channelname}');
 
-    channelName.value = channelname;
+    channelName.value = agrModel.channelname;
 
     ever(isJoined, (callback) {
       if (!isJoined.value) {
@@ -75,7 +87,7 @@ class MeetingController extends GetxController {
     isSessionInfoLoading.value = true;
 
     try {
-      final data = await MeetingService().fetchSessionsInfo(channelName: channelname);
+      final data = await MeetingService().fetchSessionsInfo(channelName: agrModel.channelname);
 
       if (data != null) {
         sessionInfo.value = data;
@@ -405,17 +417,46 @@ class MeetingController extends GetxController {
   }
 
   /// --------------- Live Duration ---------------///
+
+  /// -----------------
+
   // Add these
   final sessionStartTime = Rxn<DateTime>();
   final elapsedSeconds = 0.obs;
   Timer? _sessionTimer;
 
+  // In MeetingController — replace startSessionTimer() call
   void startSessionTimer() {
-    sessionStartTime.value = DateTime.now();
-    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (_) {
-      elapsedSeconds.value++;
-    });
-    debugPrint('⏱️ Session timer started');
+    try {
+      final startedAtRaw = sessionInfo.value.startedAt;
+
+      /// ✅ Parse ISO string → DateTime (UTC)
+      final startTime = startedAtRaw != null
+          ? DateTime.parse(startedAtRaw).toLocal()
+          : DateTime.now();
+
+      sessionStartTime.value = startTime;
+
+      /// ✅ Calculate elapsed time
+      elapsedSeconds.value = DateTime.now().difference(startTime).inSeconds;
+
+      /// ✅ Prevent negative (device time mismatch)
+      if (elapsedSeconds.value < 0) {
+        elapsedSeconds.value = 0;
+      }
+
+      /// ✅ Avoid multiple timers
+      _sessionTimer?.cancel();
+
+      /// ✅ Accurate ticking (no drift)
+      _sessionTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+        elapsedSeconds.value = DateTime.now().difference(sessionStartTime.value!).inSeconds;
+      });
+
+      debugPrint('⏱️ Timer started — start: $startTime, elapsed: ${elapsedSeconds.value}s');
+    } catch (e) {
+      debugPrint('❌ Timer error: $e');
+    }
   }
 
   void stopSessionTimer() {

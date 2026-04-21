@@ -6,6 +6,7 @@ class LiveSessionInfoModel {
     this.rtmToken,
     this.userName,
     this.userAvatar,
+    this.startedAt,
   });
 
   final String? channelName;
@@ -14,6 +15,7 @@ class LiveSessionInfoModel {
 
   final String? userName;
   final String? userAvatar;
+  final String? startedAt;
   final int? uid;
 
   factory LiveSessionInfoModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class LiveSessionInfoModel {
       rtcToken: json["rtcToken"],
       userName: json["userName"],
       userAvatar: json["userAvatar"],
+      startedAt: json["startedAt"],
       uid: json["uid"],
     );
   }

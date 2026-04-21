@@ -35,7 +35,7 @@ class LiveEndMsgPopup extends StatelessWidget {
                     Get.back();
                     // how to remove all previous page routes and then redirecto this page
                     Get.offAllNamed(RoutePaths.mainNav);
-                    MainNavController.to.goToTab(0);
+                    MainNavController.to.goToTab(4);
                   },
                   child: ContainerBordered(
                     hasBrdr: true,

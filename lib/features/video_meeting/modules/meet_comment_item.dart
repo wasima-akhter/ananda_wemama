@@ -120,8 +120,6 @@ class MeetCommentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final time = TimeOfDay.fromDateTime(message.timestamp).format(context);
 
-    final otherUserImgUrl = '';
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -194,6 +192,6 @@ class MeetCommentItem extends StatelessWidget {
   /// Avatar widget
   Widget _avatar(String avatarUrl) {
     /// fallback avatar
-    return NetworkImageWidget(imageUrl: avatarUrl);
+    return NetworkImageWidget(imageUrl: avatarUrl, isCircle: true);
   }
 }

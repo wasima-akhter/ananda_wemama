@@ -4,6 +4,7 @@ import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/date_helper.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
+import '../../../video_meeting/controller/meeting_controller.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
   final void Function({required String expertId, required String sessionId}) onTapQues;
@@ -110,7 +111,14 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               ),
               Gap(itemGap),
               CusGestureDetector(
-                onTap: () => Get.toNamed(RoutePaths.meetingScreen, arguments: channelName),
+                onTap: () => Get.toNamed(
+                  RoutePaths.meetingScreen,
+                  arguments: MeetingCtrlAgModel(
+                    channelname: channelName,
+                    sessionTitle: sessionTitle,
+                    hostName: doctorName,
+                  ),
+                ),
                 child: ContainerBordered(
                   contClr: c.buttonPrimary,
                   rad: 30,
