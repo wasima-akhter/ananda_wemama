@@ -8,6 +8,7 @@ import 'package:mama_app/features/more/about/controller/about_controller.dart';
 import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/controller/subscription_upgrade_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
+import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../features/account_overview/change_password/controller/change_password_controller.dart';
@@ -476,7 +477,11 @@ class MeetingBinding extends Bindings {
     // while arguments are still available in binding context
 
     // ✅ fenix:false ensures a fresh controller every time
+    // ✅ 1. MeetingController FIRST — LiveChatController depends on it
     Get.put(MeetingController(Get.arguments as String), permanent: false);
+
+    // ✅ 2. LiveChatController SECOND — so Get.find<MeetingController>() succeeds
+    Get.put(LiveChatController(), permanent: false);
 
     Get.lazyPut<MeetingCommentController>(() => MeetingCommentController(), fenix: true);
   }

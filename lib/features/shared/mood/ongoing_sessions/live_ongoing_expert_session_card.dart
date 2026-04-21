@@ -174,7 +174,8 @@ class LiveOngoingSessionCard extends StatelessWidget {
     final specialty = (data.expert?.profession?.title ?? "Specialist").capEachWord();
     final sessionTitle = (data.title ?? "Session").capEachWord();
     final description = (data.description ?? "").cap;
-    final time = data.time ?? "--:--";
+    final time = DateHelper().formatUTCtimestamp(data.time.toString()).time;
+
     final date = DateHelper().formatUTCtimestamp(data.date.toString()).date;
 
     final imgUrl = data.expert?.image ?? '';

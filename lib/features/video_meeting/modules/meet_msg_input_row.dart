@@ -4,7 +4,13 @@ import '../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
 class MsgInputRow extends StatelessWidget {
   final TextEditingController inputMsgCtrl;
   final FocusNode inputMsgFocus;
-  const MsgInputRow({super.key, required this.inputMsgCtrl, required this.inputMsgFocus});
+  final void Function()? onSend;
+  const MsgInputRow({
+    super.key,
+    required this.inputMsgCtrl,
+    required this.inputMsgFocus,
+    this.onSend,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +24,7 @@ class MsgInputRow extends StatelessWidget {
       suffix: CusCircleIconButton(
         radius: 15,
         backgroundColor: c.primary,
-        onTap: () async {
-          // open picker for image or file
-        },
+        onTap: onSend,
         child: SvgIcon(iconPath: IconsPath.sendLargeWhite, height: 20),
       ).mAll(4),
     ).mHV(10, 0);

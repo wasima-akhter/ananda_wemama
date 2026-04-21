@@ -1,3 +1,4 @@
+import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
 import '../../../app/helper_widgets_export.dart';
@@ -15,20 +16,36 @@ class MeetingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mc = Get.find<MeetingController>();
+    final cc = Get.find<LiveChatController>();
 
     return MeetingScreenTemplate(
       backgroundColor: c.cardPrimary,
       inputFocus: mc.inputMsgFocus,
-      topContent: TopContent(mc: mc),
+      topContent: TopContent(mc: mc, cc: cc),
 
-      commentList: ListView.separated(
-        padding: EdgeInsets.only(top: itemGap * 1.5),
-        itemCount: 10,
-        separatorBuilder: (_, __) => Gap(14),
-        itemBuilder: (_, index) => CommentItem(),
-      ).get10cm,
+      // ✅ Reactive comment list
+      commentList: Obx(() {
+        if (cc.messages.isEmpty) {
+          return const SizedBox.shrink();
+        }
 
-      inputRow: MsgInputRow(inputMsgCtrl: mc.inputMsgCtrl, inputMsgFocus: mc.inputMsgFocus),
+        return ListView.separated(
+          controller: cc.chatScrollCtrl,
+          padding: EdgeInsets.only(top: itemGap * 1.5),
+          itemCount: cc.messages.length,
+          separatorBuilder: (_, __) => Gap(14),
+          itemBuilder: (_, index) {
+            final msg = cc.messages[index];
+            return MeetCommentItem(message: msg);
+          },
+        ).get10cm;
+      }),
+
+      inputRow: MsgInputRow(
+        inputMsgCtrl: mc.inputMsgCtrl,
+        inputMsgFocus: mc.inputMsgFocus,
+        onSend: () => cc.sendMessage(mc.inputMsgCtrl.text), // ✅ wire send
+      ),
 
       bottomActions: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
@@ -71,9 +88,29 @@ class MeetingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(child: ReactButton()),
-              Expanded(
-                child: BottomAction(iconPath: IconsPath.handRaise, text: "Raise Hand"),
+
+              // Reaction button
+              Obx(
+                () => Expanded(
+                  child: ReactButton(count: cc.reactionCount.value, sendReaction: cc.sendReaction),
+                ),
+              ),
+
+              // Raise hand button
+              Obx(
+                () => Expanded(
+                  child: CusGestureDetector(
+                    onTap: () => cc.toggleRaiseHand(),
+                    child: BottomAction(
+                      iconPath: cc.isHandRaised
+                          ? IconsPath
+                                .handRaise // put filled icon
+                          : IconsPath.handRaise,
+                      text: "Raise Hand",
+                      backgroundColor: cc.isHandRaised ? c.primary : null,
+                    ),
+                  ),
+                ),
               ),
             ],
           ).getcm,

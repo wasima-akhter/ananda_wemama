@@ -1,12 +1,14 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 
 import '../../../app/helper_widgets_export.dart';
-import '../../shared/community_spotlight/community_spotlight.dart';
+import '../controller/live_chat_controller.dart';
 import '../controller/meeting_controller.dart';
+import '../model/chat_message_live_model.dart';
 
 class TopContent extends StatelessWidget {
   final MeetingController mc;
-  const TopContent({super.key, required this.mc});
+  final LiveChatController cc;
+  const TopContent({super.key, required this.mc, required this.cc});
 
   @override
   Widget build(BuildContext context) {
@@ -109,21 +111,31 @@ class TopContent extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildFloatingIcon(text: "235", icon: Icons.thumb_up_sharp),
+
                     Gap(itemGap),
-                    _buildFloatingIcon(text: "520", icon: Icons.visibility),
+
+                    // View count
+                    Obx(
+                      () =>
+                          _buildFloatingIcon(text: "${cc.viewCount.value}", icon: Icons.visibility),
+                    ),
                   ],
                 ),
               ),
               Positioned(
                 left: 12,
                 top: 12,
-                child: _buildFloatingIcon(text: "02:10:13", icon: Icons.circle),
+                child: Obx(
+                  () => _buildFloatingIcon(text: mc.formattedDuration, icon: Icons.circle),
+                ),
               ),
             ],
           ),
         ),
         Gap(itemGap * 1.5),
-        StackOfImages(numOfImage: 6),
+
+        // Joiners list (short, max 5 avatars)
+        Obx(() => LiveStackOfImages(participants: cc.participants)),
         Gap(itemGap * 1.5),
       ],
     ).get10cm;
@@ -152,9 +164,52 @@ class TopContent extends StatelessWidget {
             child: Icon(icon, size: 12.h, color: c.secondary),
           ),
           Gap(6),
-          Text(text, style: TxtStyle.inter(fs: 12, w: 600, color: white)),
+          Text(
+            text,
+            style: TxtStyle.inter(
+              fs: 12,
+              w: 600,
+              color: white,
+              fontFeatures: [FontFeature.tabularFigures()],
+            ),
+          ),
         ],
       ),
     );
+  }
+}
+
+class LiveStackOfImages extends StatelessWidget {
+  final RxList<ParticipantModel> participants;
+  const LiveStackOfImages({super.key, required this.participants});
+
+  @override
+  Widget build(BuildContext context) {
+    const double radius = 15;
+    const double overlap = 25;
+
+    final listLength = participants.length < 10
+        ? participants.length
+        : participants.take(10).length;
+
+    return SizedBox(
+      width: (radius * 2) + (overlap * 2), // total visual width
+      height: radius * 2,
+      child: Stack(
+        clipBehavior: Clip.none,
+        alignment: Alignment.centerLeft,
+        children: List.generate(listLength, (index) {
+          String? path = participants[index].avatar ?? '';
+          return Positioned(
+            left: index * overlap,
+            child: _buildImage(radius: radius, path: path),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildImage({String? path, double? radius}) {
+    return circledNetworkImageBgComponent(radius: radius, imagePath: path);
   }
 }

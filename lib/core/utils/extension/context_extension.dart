@@ -369,6 +369,7 @@ class TxtStyle {
     double? ls,
     double? h,
     TextDecoration? dec,
+    List<FontFeature>? fontFeatures,
   }) => textThemeInter.bodyMedium!.copyWith(
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
@@ -376,6 +377,7 @@ class TxtStyle {
     color: color ?? c.primary,
     height: h,
     decoration: dec,
+    fontFeatures: fontFeatures,
   );
 
   static TextStyle interSemiB({
