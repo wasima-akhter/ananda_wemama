@@ -145,7 +145,7 @@ class LiveChatController extends GetxController {
 
         participants.assignAll(
           members.map((m) {
-            final stateMap = {for (var s in (m.states ?? [])) s.key: s.value};
+            final stateMap = {for (StateItem s in (m.states ?? [])) s.key: s.value};
 
             return ParticipantModel(
               uid: m.userId,
@@ -155,6 +155,7 @@ class LiveChatController extends GetxController {
             );
           }),
         );
+        participants.removeWhere((element) => element.uid == mc.uid.value.toString());
 
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         return;
@@ -175,6 +176,7 @@ class LiveChatController extends GetxController {
             ),
           );
         }
+        participants.removeWhere((element) => element.uid == mc.uid.value.toString());
 
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         debugPrint('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
@@ -184,6 +186,7 @@ class LiveChatController extends GetxController {
       case RtmPresenceEventType.remoteTimeout:
         // Someone left
         participants.removeWhere((j) => j.uid == event.publisher);
+        participants.removeWhere((element) => element.uid == mc.uid.value.toString());
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
         debugPrint('✅ [RTM] Joiner removed: ${event.publisher}');
         return;

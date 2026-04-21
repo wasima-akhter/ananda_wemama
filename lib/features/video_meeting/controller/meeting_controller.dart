@@ -4,6 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
 import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/controller_export.dart';
 import '../../../core/config/agora_config.dart';
@@ -167,6 +168,7 @@ class MeetingController extends GetxController {
   }
 
   /// -------------------- Agora Setup -------------------- ///
+  /*
   Future<void> initAgora() async {
     debugPrint('🔵 [4] initAgora() started');
 
@@ -174,19 +176,19 @@ class MeetingController extends GetxController {
     await requestPermissions();
     debugPrint('🔵 [5] Permissions granted');
 
-    /// Clean previous engine if exists (VERY important)
-    if (agoraEngine != null) {
-      debugPrint('⚠️ Releasing previous engine');
-      await agoraEngine!.leaveChannel();
-      await agoraEngine!.release();
-      agoraEngine = null;
-
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
-
+    // ✅ Always create + release first to reset native state
     final engine = createAgoraRtcEngine();
 
-    /// Initialize engine
+    try {
+      await engine.release(sync: true); // force-clean native engine
+      debugPrint('✅ Pre-release done (clears stale native state)');
+    } catch (e) {
+      debugPrint('⚠️ Pre-release skipped: $e'); // safe to ignore on first launch
+    }
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // Now initialize on a clean slate
     try {
       await engine.initialize(RtcEngineContext(appId: appId.value));
       debugPrint('🔵 [6] Engine initialized');
@@ -195,7 +197,77 @@ class MeetingController extends GetxController {
       return;
     }
 
-    /// Enable video stream
+    /// Clean previous engine if exists (VERY important)
+    // if (agoraEngine != null) {
+    //   debugPrint('⚠️ Releasing previous engine');
+    //   await agoraEngine!.leaveChannel();
+    //   await agoraEngine!.release();
+    //   agoraEngine = null;
+
+    //   await Future.delayed(const Duration(milliseconds: 500));
+    // }
+
+    // final engine = createAgoraRtcEngine();
+
+    // /// Initialize engine
+    // /// Initialize engine
+    // try {
+    //   await engine.initialize(RtcEngineContext(appId: appId.value));
+    //   debugPrint('🔵 [6] Engine initialized');
+    // } catch (e) {
+    //   debugPrint('❌ Engine init FAILED: $e');
+    //   return;
+    // }
+
+    // ✅ Step 1: Channel profile FIRST — before anything else
+    try {
+      await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
+      debugPrint('✅ setChannelProfile → LiveBroadcasting done');
+    } catch (e) {
+      debugPrint('❌ setChannelProfile FAILED: $e');
+      return;
+    }
+
+    // ✅ Step 2: Client role second
+    try {
+      await engine.setClientRole(
+        role: ClientRoleType.clientRoleAudience,
+        options: const ClientRoleOptions(
+          audienceLatencyLevel: AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
+        ),
+      );
+      debugPrint('✅ setClientRole → AUDIENCE with low latency done');
+    } catch (e) {
+      debugPrint('❌ setClientRole FAILED: $e');
+      return;
+    }
+
+    // ✅ Step 3: Audio/video after profile is set
+    try {
+      await engine.enableAudio();
+      debugPrint('✅ enableAudio done');
+    } catch (e) {
+      debugPrint('❌ enableAudio FAILED: $e');
+      return;
+    }
+
+    try {
+      await engine.setDefaultAudioRouteToSpeakerphone(true);
+      debugPrint('✅ setDefaultAudioRouteToSpeakerphone done');
+    } catch (e) {
+      debugPrint('❌ setDefaultAudioRouteToSpeakerphone FAILED: $e');
+    }
+
+    try {
+      await engine.setAudioProfile(
+        profile: AudioProfileType.audioProfileDefault,
+        scenario: AudioScenarioType.audioScenarioDefault,
+      );
+      debugPrint('✅ setAudioProfile done');
+    } catch (e) {
+      debugPrint('❌ setAudioProfile FAILED: $e');
+    }
+
     try {
       await engine.enableVideo();
       debugPrint('✅ enableVideo done');
@@ -204,24 +276,14 @@ class MeetingController extends GetxController {
       return;
     }
 
-    /// Set as LIVE STREAM (not call)
-    try {
-      await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
-      debugPrint('✅ setChannelProfile → LiveBroadcasting done');
-      debugPrint('🔵 [7] Role = BRODCASTER');
-    } catch (e) {
-      debugPrint('❌ setChannelProfile FAILED: $e');
-      return;
-    }
-
     /// 👤 USER ROLE = AUDIENCE (viewer-only app)
-    try {
-      await engine.setClientRole(role: ClientRoleType.clientRoleAudience);
-      debugPrint('🔵 [7] Role = AUDIENCE ✅');
-    } catch (e) {
-      debugPrint('❌ setClientRole FAILED: $e');
-      return;
-    }
+    // try {
+    //   await engine.setClientRole(role: ClientRoleType.clientRoleAudience);
+    //   debugPrint('🔵 [7] Role = AUDIENCE ✅');
+    // } catch (e) {
+    //   debugPrint('❌ setClientRole FAILED: $e');
+    //   return;
+    // }
 
     debugPrint('🔵 [7] Role = AUDIENCE');
 
@@ -245,13 +307,16 @@ class MeetingController extends GetxController {
             }
           },
 
-          onUserJoined: (connection, uid, elapsed) {
+          onUserJoined: (connection, uid, elapsed) async {
             try {
               debugPrint('🎥 Host joined: uid=$uid');
               remoteUids.add(uid);
               hasLiveStarted.value = true;
               hasLiveEnded.value = false;
 
+              /// 🔥 FORCE AUDIO SUBSCRIBE (THIS FIXES YOUR ISSUE)
+              await agoraEngine?.muteRemoteAudioStream(uid: uid, mute: false);
+              debugPrint('🔊 Forced audio subscribe for uid=$uid');
               // ✅ Start timer the moment host video appears
               startSessionTimer();
             } catch (e) {
@@ -336,6 +401,31 @@ class MeetingController extends GetxController {
               debugPrint('❌ onRemoteAudioStateChanged handler error: $e');
             }
           },
+
+          // ← ADD: fires every 2s with live audio stats per remote uid
+          onRemoteAudioStats: (connection, stats) {
+            debugPrint(
+              '📊 [AUDIO STATS] uid=${stats.uid} '
+              '| receivedBitrate=${stats.receivedBitrate} '
+              '| totalFrozenTime=${stats.totalFrozenTime} '
+              '| quality=${stats.quality}',
+            );
+            // If receivedBitrate is 0 every time → host is not publishing audio
+            // If quality is 0 → network issue
+          },
+
+          // ← ADD: fires when audio subscribing state changes
+          onAudioSubscribeStateChanged: (channel, uid, oldState, newState, elapseSinceLastState) {
+            debugPrint(
+              '🔊 [AUDIO SUBSCRIBE] uid=$uid '
+              '| $oldState → $newState '
+              '| elapsed=${elapseSinceLastState}ms',
+            );
+            // Should see: subscribing → subscribed
+            // If stuck at "idle" → autoSubscribeAudio not working
+          },
+
+          //
         ),
       );
       debugPrint('✅ Event handlers registered');
@@ -359,9 +449,19 @@ class MeetingController extends GetxController {
         publishCameraTrack: false,
         publishMicrophoneTrack: false,
 
+        audienceLatencyLevel: // ← ADD THIS
+            AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
+
         clientRoleType: ClientRoleType.clientRoleAudience,
       ),
     );
+
+    // ✅ ADD THESE — must be called AFTER joinChannel
+    await engine.setEnableSpeakerphone(true); // forces speaker output NOW
+    await engine.adjustPlaybackSignalVolume(200);
+    await engine.muteAllRemoteAudioStreams(false);
+
+    debugPrint('✅ Playback volume boosted to 400');
 
     agoraEngine = engine;
 
@@ -369,6 +469,248 @@ class MeetingController extends GetxController {
     isEngineReady.value = true;
 
     debugPrint('🔵 Engine ready');
+  }
+*/
+
+  final hostUid = RxnInt(); // ✅ nullable int
+  Future<void> initAgora() async {
+    debugPrint('🔵 [4] initAgora() started');
+
+    await requestPermissions();
+    debugPrint('🔵 [5] Permissions granted');
+
+    final engine = createAgoraRtcEngine();
+
+    // ✅ Release any stale native engine
+    try {
+      await engine.release(sync: true);
+      debugPrint('✅ Pre-release done');
+    } catch (e) {
+      debugPrint('⚠️ Pre-release skipped: $e');
+    }
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    try {
+      await engine.initialize(RtcEngineContext(appId: appId.value));
+      debugPrint('🔵 [6] Engine initialized');
+    } catch (e) {
+      debugPrint('❌ Engine init FAILED: $e');
+      return;
+    }
+
+    try {
+      await engine.setChannelProfile(ChannelProfileType.channelProfileLiveBroadcasting);
+      debugPrint('✅ setChannelProfile done');
+    } catch (e) {
+      debugPrint('❌ setChannelProfile FAILED: $e');
+      return;
+    }
+
+    try {
+      await engine.setClientRole(
+        role: ClientRoleType.clientRoleAudience,
+        options: const ClientRoleOptions(
+          audienceLatencyLevel: AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
+        ),
+      );
+      debugPrint('✅ setClientRole AUDIENCE done');
+    } catch (e) {
+      debugPrint('❌ setClientRole FAILED: $e');
+      return;
+    }
+
+    try {
+      await engine.enableAudio();
+      await engine.enableVideo();
+      await engine.setDefaultAudioRouteToSpeakerphone(true);
+      await engine.setAudioProfile(
+        profile: AudioProfileType.audioProfileDefault,
+        scenario: AudioScenarioType.audioScenarioGameStreaming,
+      );
+      debugPrint('✅ Audio/Video enabled');
+    } catch (e) {
+      debugPrint('❌ Audio/Video setup FAILED: $e');
+      return;
+    }
+
+    // ✅ CRITICAL: assign engine BEFORE registering handlers and joining
+    // so that onUserJoined, onJoinChannelSuccess etc. can use agoraEngine
+    agoraEngine = engine;
+
+    engine.registerEventHandler(
+      RtcEngineEventHandler(
+        onError: (err, msg) {
+          debugPrint('❌ Agora Error: $err - $msg');
+        },
+
+        onJoinChannelSuccess: (connection, elapsed) async {
+          try {
+            debugPrint('✅ Joined: ${connection.channelId}, uid: ${connection.localUid}');
+            isJoined.value = true;
+
+            // ✅ NOW safe to set speaker — channel is active
+            await agoraEngine?.setEnableSpeakerphone(true);
+            await agoraEngine?.adjustPlaybackSignalVolume(200);
+            await agoraEngine?.muteAllRemoteAudioStreams(false);
+
+            await WakelockPlus.enable(); // 🔥 keep screen ON
+            debugPrint('🌙 Wakelock enabled');
+            debugPrint('✅ Speaker on, volume boosted');
+          } catch (e) {
+            debugPrint('❌ onJoinChannelSuccess handler error: $e');
+          }
+        },
+
+        onUserJoined: (connection, uid, elapsed) async {
+          try {
+            debugPrint('🎥 Host joined: uid=$uid');
+
+            // ✅ If this is the host
+            if (hostUid.value == null) {
+              // fallback (if backend didn’t provide)
+              hostUid.value = uid;
+              debugPrint('🎯 Assigned HOST uid=$uid');
+            }
+
+            // ✅ Always keep list (optional)
+            if (!remoteUids.contains(uid)) {
+              remoteUids.add(uid);
+            }
+
+            hasLiveStarted.value = true;
+            hasLiveEnded.value = false;
+
+            await agoraEngine?.muteRemoteAudioStream(uid: uid, mute: false);
+
+            if (uid == hostUid.value) {
+              startSessionTimer(); // ✅ only for host
+            }
+          } catch (e) {
+            debugPrint('❌ onUserJoined handler error: $e');
+          }
+        },
+
+        onUserOffline: (connection, uid, reason) async {
+          try {
+            debugPrint('⚠️ Host left: uid=$uid, reason=$reason');
+            remoteUids.remove(uid);
+
+            if (uid == hostUid.value) {
+              debugPrint('❌ HOST LEFT');
+
+              hostUid.value = null;
+              isHostAudioOn.value = false;
+              isHostVideoOn.value = false;
+
+              hasLiveEnded.value = true;
+              stopSessionTimer();
+
+              showLiveEndMsg();
+            }
+          } catch (e) {
+            debugPrint('❌ onUserOffline handler error: $e');
+          }
+        },
+
+        onUserMuteAudio: (connection, remoteUid, muted) {
+          if (remoteUid == hostUid.value) {
+            isHostAudioOn.value = !muted;
+          }
+        },
+        onTokenPrivilegeWillExpire: (connection, token) {
+          debugPrint('⚠️ Token expiring soon — refresh needed');
+          // TODO: call backend to refresh token, then renewToken()
+        },
+
+        onConnectionStateChanged: (connection, state, reason) {
+          debugPrint('🔵 Connection: $state, reason: $reason');
+
+          // ✅ Handle unexpected disconnects
+          if (state == ConnectionStateType.connectionStateDisconnected ||
+              state == ConnectionStateType.connectionStateFailed) {
+            debugPrint('⚠️ Disconnected — cleaning up');
+            _handleUnexpectedDisconnect();
+          }
+        },
+
+        onRemoteVideoStateChanged: (connection, remoteUid, state, reason, elapsed) {
+          if (remoteUid != hostUid.value) return;
+          try {
+            debugPrint('🎥 Video state: uid=$remoteUid, state=$state');
+            if (state == RemoteVideoState.remoteVideoStateStopped) {
+              isHostVideoOn.value = false;
+            } else if (state == RemoteVideoState.remoteVideoStateDecoding) {
+              isHostVideoOn.value = true;
+            }
+          } catch (e) {
+            debugPrint('❌ onRemoteVideoStateChanged error: $e');
+          }
+        },
+
+        onRemoteAudioStateChanged: (connection, remoteUid, state, reason, elapsed) {
+          try {
+            debugPrint('🔊 Audio state: uid=$remoteUid, state=$state');
+
+            if (state == RemoteAudioState.remoteAudioStateStopped) {
+              isHostAudioOn.value = false;
+            } else if (state == RemoteAudioState.remoteAudioStateDecoding) {
+              isHostAudioOn.value = true;
+
+              // ✅ Re-apply speaker AFTER audio track is active
+              // This defeats Android's audio re-routing after track starts
+              agoraEngine?.setEnableSpeakerphone(true).then((_) {
+                debugPrint('🔊 Speaker re-applied after decode started');
+              });
+            }
+          } catch (e) {
+            debugPrint('❌ onRemoteAudioStateChanged error: $e');
+          }
+        },
+        onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {
+          debugPrint('🔄 Role: $oldRole → $newRole');
+        },
+
+        onRemoteAudioStats: (connection, stats) {
+          debugPrint(
+            '📊 [AUDIO STATS] uid=${stats.uid} | bitrate=${stats.receivedBitrate} | quality=${stats.quality}',
+          );
+        },
+
+        onAudioSubscribeStateChanged: (channel, uid, oldState, newState, elapsed) {
+          debugPrint('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
+        },
+      ),
+    );
+
+    debugPrint('🔵 Joining channel...');
+
+    await engine.joinChannel(
+      token: rtcToken.value,
+      channelId: channelName.value,
+      uid: uid.value,
+      options: const ChannelMediaOptions(
+        autoSubscribeAudio: true,
+        autoSubscribeVideo: true,
+        publishCameraTrack: false,
+        publishMicrophoneTrack: false,
+        audienceLatencyLevel: AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
+        clientRoleType: ClientRoleType.clientRoleAudience,
+      ),
+    );
+
+    // ✅ No audio calls here — moved to onJoinChannelSuccess
+    isEngineReady.value = true;
+    debugPrint('🔵 Engine ready');
+  }
+
+  // ✅ Handle unexpected disconnects (network loss etc.)
+  void _handleUnexpectedDisconnect() {
+    remoteUids.clear();
+    isHostAudioOn.value = false;
+    isHostVideoOn.value = false;
+    hasLiveStarted.value = false;
+    stopSessionTimer();
   }
 
   /// ---------------- Speaking (Audience → Broadcaster) ---------------- ///
@@ -480,29 +822,51 @@ class MeetingController extends GetxController {
   var hasLiveEnded = false.obs;
 
   /// Leave channel manually
-  void leaveMeeting() {
-    agoraEngine?.leaveChannel();
-    remoteUids.clear();
-    isEngineReady.value = false;
-    stopSessionTimer();
-  }
+  Future<void> leaveMeeting() async {
+    debugPrint('🔵 leaveMeeting() called');
 
-  @override
-  void onClose() async {
-    debugPrint('🔵 onClose → releasing engine');
+    stopSessionTimer();
+
+    // ✅ Reset all visual state immediately so UI doesn't show stale data
+    remoteUids.clear();
+    isHostAudioOn.value = false;
+    isHostVideoOn.value = false;
+    hasLiveStarted.value = false;
+    hasLiveEnded.value = false;
+    isSpeaking.value = false;
+    isEngineReady.value = false;
+
+    await WakelockPlus.disable(); // 🔥 allow sleep again
+    debugPrint('🌙 Wakelock disabled');
 
     if (agoraEngine != null) {
-      await agoraEngine!.leaveChannel();
-      await agoraEngine!.release();
+      try {
+        await agoraEngine!.leaveChannel();
+        debugPrint('✅ Left channel');
+      } catch (e) {
+        debugPrint('❌ leaveChannel error: $e');
+      }
+
+      try {
+        await agoraEngine!.release(sync: true);
+        debugPrint('✅ Engine released');
+      } catch (e) {
+        debugPrint('❌ release error: $e');
+      }
+
       agoraEngine = null;
     }
 
     isJoined.value = false;
+    debugPrint('✅ leaveMeeting complete');
+  }
 
+  @override
+  void onClose() async {
+    debugPrint('🔵 onClose called');
+    await leaveMeeting(); // reuse the same logic
     inputMsgCtrl.dispose();
     inputMsgFocus.dispose();
-    stopSessionTimer();
-
     super.onClose();
   }
 }
