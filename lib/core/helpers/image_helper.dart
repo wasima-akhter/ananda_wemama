@@ -47,13 +47,23 @@ CircleAvatar circledImageBgComponent({String? imagePath, Color? brdrClr, double?
   );
 }
 
-Widget circledNetworkImageBgComponent({String? imagePath, Color? brdrClr, double? radius}) {
+Widget circledNetworkImageBgComponent({
+  String? imagePath,
+  Color? brdrClr,
+  double? radius,
+  bool? isUser,
+}) {
   return Container(
     decoration: BoxDecoration(
       shape: BoxShape.circle,
       border: Border.all(color: brdrClr ?? c.secondary),
     ),
-    child: NetworkImageWidget(imageUrl: imagePath, radius: radius ?? 20),
+    child: NetworkImageWidget(
+      imageUrl: imagePath,
+      isCircle: true,
+      radius: radius ?? 20,
+      isUser: isUser,
+    ),
   );
 }
 

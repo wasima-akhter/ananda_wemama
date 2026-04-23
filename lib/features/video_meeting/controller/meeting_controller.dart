@@ -7,6 +7,7 @@ import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/controller_export.dart';
+import '../../../core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import '../../../core/config/agora_config.dart';
 import '../../../core/helpers/permission_helper.dart';
 import '../model/live_session_info_model.dart';
@@ -540,10 +541,15 @@ class MeetingController extends GetxController {
 
     engine.registerEventHandler(
       RtcEngineEventHandler(
+        // Agora engine error (add inside onError handler)
         onError: (err, msg) {
           debugPrint('❌ Agora Error: $err - $msg');
+          // Only show popup for fatal errors, not minor ones
+          final fatalCodes = [17, 110, 111, 112]; // token expired, not in channel, etc.
+          if (fatalCodes.contains(err.index)) {
+            showLiveExitPopup(LiveExitReason.connectionLost, onRejoin: () => hostMeeting());
+          }
         },
-
         onJoinChannelSuccess: (connection, elapsed) async {
           try {
             debugPrint('✅ Joined: ${connection.channelId}, uid: ${connection.localUid}');
@@ -590,23 +596,20 @@ class MeetingController extends GetxController {
             debugPrint('❌ onUserJoined handler error: $e');
           }
         },
-
+        // Host left → ended
         onUserOffline: (connection, uid, reason) async {
           try {
             debugPrint('⚠️ Host left: uid=$uid, reason=$reason');
             remoteUids.remove(uid);
 
             if (uid == hostUid.value) {
-              debugPrint('❌ HOST LEFT');
-
               hostUid.value = null;
               isHostAudioOn.value = false;
               isHostVideoOn.value = false;
-
               hasLiveEnded.value = true;
               stopSessionTimer();
-
-              showLiveEndMsg();
+              await Future.delayed(const Duration(milliseconds: 300));
+              showLiveExitPopup(LiveExitReason.ended); // ← was showLiveEndMsg()
             }
           } catch (e) {
             debugPrint('❌ onUserOffline handler error: $e');
@@ -704,6 +707,7 @@ class MeetingController extends GetxController {
     debugPrint('🔵 Engine ready');
   }
 
+  // Connection lost / unexpected disconnect
   // ✅ Handle unexpected disconnects (network loss etc.)
   void _handleUnexpectedDisconnect() {
     remoteUids.clear();
@@ -711,6 +715,10 @@ class MeetingController extends GetxController {
     isHostVideoOn.value = false;
     hasLiveStarted.value = false;
     stopSessionTimer();
+    showLiveExitPopup(
+      LiveExitReason.connectionLost,
+      onRejoin: () => hostMeeting(), // re-runs the full join flow
+    );
   }
 
   /// ---------------- Speaking (Audience → Broadcaster) ---------------- ///
@@ -815,6 +823,48 @@ class MeetingController extends GetxController {
     return '${h.toString().padLeft(2, '0')}:'
         '${m.toString().padLeft(2, '0')}:'
         '${sec.toString().padLeft(2, '0')}';
+  }
+
+  //
+  /// Called by LiveChatController when host sends REMOTE_MUTE targeting this user
+  Future<void> muteLocalAudio(bool mute) async {
+    if (agoraEngine == null) return;
+
+    isLocalAudioMuted.value = mute;
+
+    if (isSpeaking.value) {
+      // If currently speaking (broadcaster role), unpublish mic
+      await agoraEngine?.updateChannelMediaOptions(
+        ChannelMediaOptions(
+          publishMicrophoneTrack: !mute,
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        ),
+      );
+      if (mute) {
+        // Step back to audience so host definitely can't hear them
+        await agoraEngine?.setClientRole(role: ClientRoleType.clientRoleAudience);
+        await agoraEngine?.updateChannelMediaOptions(
+          const ChannelMediaOptions(
+            publishMicrophoneTrack: false,
+            clientRoleType: ClientRoleType.clientRoleAudience,
+          ),
+        );
+        isSpeaking.value = false;
+      }
+    }
+
+    debugPrint('🔇 muteLocalAudio($mute) applied');
+  }
+
+  /// Called by LiveChatController when host sends REMOTE_KICK targeting this user
+  Future<void> leaveSession() async {
+    debugPrint('🔴 leaveSession() — kicked by host');
+    await leaveMeeting();
+
+    // Navigate away after cleanup
+    // Small delay so leaveMeeting() finishes before navigation
+    await Future.delayed(const Duration(milliseconds: 300));
+    Get.offAllNamed('/home'); // ← replace with your actual home/dashboard route
   }
 
   /// ---------------- Live State ---------------- ///

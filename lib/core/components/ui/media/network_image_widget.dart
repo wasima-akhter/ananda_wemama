@@ -8,6 +8,7 @@ class NetworkImageWidget extends StatelessWidget {
   final bool isCircle;
   final bool? isSmall;
   final double? radius;
+  final bool? isUser;
   final Animation<double>? opacity;
   final bool? hasBrdr;
 
@@ -21,6 +22,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.opacity,
     this.hasBrdr,
     this.isSmall,
+    this.isUser,
   });
 
   bool isImageUrl(String url) {
@@ -57,13 +59,24 @@ class NetworkImageWidget extends StatelessWidget {
 
   /// Builds image content, circle or rect
   Widget _buildImageContent({required bool isCircle, required double radius}) {
+    // Scale placeholder icon relative to circle size when isCircle is true
+    final double placeholderSize = isCircle
+        ? (radius * 0.7).clamp(8.0, 22.0) // 70% of radius, clamped between 8–22
+        : (isSmall == true ? 12.w : 22.w);
+
     if (imageUrl == null || imageUrl!.isEmpty || !isImageUrl(imageUrl!)) {
       return Center(
-        child: Assets.images.imagePlaceholder.image(
-          width: isSmall == true ? 12.w : 22.w,
-          height: isSmall == true ? 12.w : 22.w,
-          color: c.primary,
-        ),
+        child: isUser == false
+            ? Assets.images.imagePlaceholder.image(
+                width: placeholderSize,
+                height: placeholderSize,
+                color: c.primary,
+              )
+            : Assets.images.userPlaceholder.image(
+                width: placeholderSize,
+                height: placeholderSize,
+                color: c.primary,
+              ),
       );
     }
 
@@ -87,11 +100,17 @@ class NetworkImageWidget extends StatelessWidget {
       },
       errorBuilder: (context, error, stackTrace) {
         return Center(
-          child: Assets.images.imagePlaceholder.image(
-            width: isSmall == true ? 12.w : 22.w,
-            height: isSmall == true ? 12.w : 22.w,
-            color: c.primary,
-          ),
+          child: isUser == false
+              ? Assets.images.imagePlaceholder.image(
+                  width: placeholderSize,
+                  height: placeholderSize,
+                  color: c.primary,
+                )
+              : Assets.images.userPlaceholder.image(
+                  width: placeholderSize,
+                  height: placeholderSize,
+                  color: c.primary,
+                ),
         );
       },
     );

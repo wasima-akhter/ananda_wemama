@@ -21,10 +21,6 @@ class FakeChatModel {
 }
 
 class ChatController extends GetxController {
-  // ─────────────────────────────────────────────
-  // Search
-  // ─────────────────────────────────────────────
-
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
 
@@ -42,49 +38,38 @@ class ChatController extends GetxController {
   }
 
   void clearAll() => searchController.clear();
-
   void unFocusAll() {
     searchFocus.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  // ─────────────────────────────────────────────
-  // State
-  // ─────────────────────────────────────────────
+  // ── State ────────────────────────────────────────────────────────────────
 
-  final isLoading_ = false.obs;
+  final isLoading_ = true.obs; // ← start true, data hasn't arrived yet
   bool get isLoading => isLoading_.value;
 
   final realChatList = <ChatListItemModel>[].obs;
 
-  // ─────────────────────────────────────────────
-  // Actions
-  // ─────────────────────────────────────────────
+  // ── Called by SocketService when data arrives ────────────────────────────
 
-  // ── List management ───────────────────────────────────────────────────────
   void updateChatList(List<ChatListItemModel> list) {
-    if (isLoading_.value) return;
-    isLoading_.value = true;
     realChatList.assignAll(list);
-    isLoading_.value = false;
+    isLoading_.value = false; // ← only stop loading when data actually arrives
   }
+
+  // ── Emit ─────────────────────────────────────────────────────────────────
 
   final socket = Get.find<SocketService>();
+
   Future<void> getChatList() async {
-    if (isLoading_.value) return;
+    if (isLoading_.value && realChatList.isNotEmpty) return; // don't re-fetch if already loading
     isLoading_.value = true;
     try {
-      getChatListEmit(currentProfileId());
+      socket.emit(SocketEvents.getChatList, {"receiverId": currentProfileId()});
     } catch (e) {
       print("Error fetching chat list: $e");
-    } finally {
-      isLoading_.value = false;
-      unFocusAll();
+      isLoading_.value = false; // ← only false on error, not after emit
     }
-  }
-
-  void getChatListEmit(String userOwnId) {
-    socket.emit(SocketEvents.getChatList, {"receiverId": userOwnId});
   }
 
   void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);

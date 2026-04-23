@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:agora_rtm/agora_rtm.dart';
 
 import '../../../app/controller_export.dart';
+import '../../../core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
+import '../../../core/components/ui/dialogs/popups.dart';
 import '../../../core/utils/extension/string_extension.dart';
 import '../model/chat_message_live_model.dart';
 import 'meeting_controller.dart';
@@ -33,39 +35,34 @@ class LiveChatController extends GetxController {
 
   // ---- Listeners (kept as named references so removeListener works) ---- //
 
-  void _onMessage(MessageEvent event) {
+  _onMessage(MessageEvent event) async {
     try {
       debugPrint('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
 
       String rawText = (event.message ?? '').toString();
-
-      // ✅ Web sends JSON bytes — decode it
       String displayText = rawText;
-
-      /// 🆕 extracted fields
       String senderName = '';
       String senderAvatar = '';
 
       try {
-        // Check if it looks like a byte array string "[123, 34, ...]"
         if (rawText.trimLeft().startsWith('[')) {
           final List<dynamic> byteList = jsonDecode(rawText);
           final bytes = byteList.cast<int>();
           final decoded = utf8.decode(bytes);
           final Map<String, dynamic> payload = jsonDecode(decoded);
 
-          debugPrint('payload: ${payload.toString()} ');
+          debugPrint('payload: ${payload.toString()}');
 
-          // ✅ Same type routing as plain string path
           final type = payload['type'];
           switch (type) {
             case 'LIKE':
               reactionCount.value++;
               _triggerHeartAnimation(payload["emoji"] ?? '');
               return;
+
             case 'RAISE_HAND':
-              final uid = payload['sender'];
-              if (!raisedHands.any((h) => h.uid == uid)) {
+              final uid = payload['sender']?.toString() ?? '';
+              if (uid.isNotEmpty && !raisedHands.any((h) => h.uid == uid)) {
                 raisedHands.add(
                   RaiseHandModel(
                     uid: uid,
@@ -75,13 +72,123 @@ class LiveChatController extends GetxController {
                 );
               }
               return;
+
             case 'HAND_LOWER':
-              raisedHands.removeWhere((h) => h.uid == payload['sender']);
+              final target = payload['target']?.toString() ?? '';
+              raisedHands.removeWhere((h) {
+                debugPrint('raisedHands target id: ${target} ');
+                debugPrint('raisedHands target id: ${h.uid} ');
+                return h.uid == target;
+              });
+
               return;
+
+            // ✅ NEW: Host remotely mutes this user
+
+            case 'REMOTE_MUTE':
+              final target = payload['target']?.toString() ?? '';
+              if (target == mc.uid.value.toString()) {
+                await mc.muteLocalAudio(true);
+                "You have been muted by the host".showToast();
+              }
+              return;
+
+            case 'REMOTE_KICK':
+              final target = payload['target']?.toString() ?? '';
+              if (target == mc.uid.value.toString()) {
+                // 1. Clean up engine immediately — user stops seeing/hearing live
+                await mc.leaveMeeting();
+
+                // 2. Navigate away from meeting screen entirely
+                Get.offAllNamed(RoutePaths.ongoingSessions);
+
+                // 3. Small delay to let the new screen settle before showing popup
+                await Future.delayed(const Duration(milliseconds: 400));
+
+                // 4. Show popup on top of the new screen
+                showLiveExitPopup(LiveExitReason.kicked);
+              }
+              return;
+
             default:
               displayText = payload['message'] ?? decoded;
               senderName = payload['senderName'] ?? '';
               senderAvatar = payload['senderAvatar'] ?? payload['avatar'] ?? '';
+          }
+        } else {
+          // Plain JSON string path (sent by Flutter clients)
+          try {
+            final Map<String, dynamic> payload = jsonDecode(rawText);
+            final type = payload['type'];
+
+            switch (type) {
+              case 'LIKE':
+                reactionCount.value++;
+                _triggerHeartAnimation(payload["emoji"] ?? '');
+                return;
+
+              case 'RAISE_HAND':
+                final uid = payload['sender']?.toString() ?? '';
+                if (uid.isNotEmpty && !raisedHands.any((h) => h.uid == uid)) {
+                  raisedHands.add(
+                    RaiseHandModel(
+                      uid: uid,
+                      name: payload['senderName'] ?? uid,
+                      avatar: payload['senderAvatar'] ?? '',
+                    ),
+                  );
+                }
+                return;
+
+              case 'HAND_LOWER':
+                final target = payload['target']?.toString() ?? '';
+                raisedHands.removeWhere((h) {
+                  debugPrint('raisedHands target id: $target');
+                  debugPrint('raisedHands uid: ${h.uid}');
+                  return h.uid == target;
+                });
+                // Only show toast if the host lowered THIS user's hand
+                if (target == mc.uid.value.toString()) {
+                  "The host has lowered your hand".showToast();
+                }
+                return;
+
+              case 'REMOTE_MUTE':
+                final target = payload['target']?.toString() ?? '';
+                if (target == mc.uid.value.toString()) {
+                  await mc.muteLocalAudio(true);
+                  "You have been muted by the host".showToast();
+                }
+                return;
+
+              case 'REMOTE_KICK':
+                final target = payload['target']?.toString() ?? '';
+                if (target == mc.uid.value.toString()) {
+                  // 1. Clean up engine immediately — user stops seeing/hearing live
+                  await mc.leaveMeeting();
+
+                  // 2. Navigate away from meeting screen entirely
+                  Get.offAllNamed(RoutePaths.ongoingSessions);
+
+                  // 3. Small delay to let the new screen settle before showing popup
+                  await Future.delayed(const Duration(milliseconds: 400));
+
+                  // 4. Show popup on top of the new screen
+                  showLiveExitPopup(LiveExitReason.kicked);
+                }
+                return;
+
+              case 'CHAT':
+                displayText = payload['message'] ?? rawText;
+                senderName = payload['senderName'] ?? '';
+                senderAvatar = payload['senderAvatar'] ?? payload['avatar'] ?? '';
+                break;
+
+              default:
+                displayText = rawText;
+            }
+          } catch (_) {
+            displayText = rawText;
           }
         }
       } catch (e) {
@@ -89,18 +196,16 @@ class LiveChatController extends GetxController {
         displayText = rawText;
       }
 
+      // Skip adding a chat bubble for non-CHAT types that already returned above
       final isMe = event.publisher == mc.uid.value.toString();
 
-      /// 🆕 fallback handling (VERY IMPORTANT)
       if (senderName.isEmpty) {
         senderName = isMe ? (mc.sessionInfo.value.userName ?? 'You') : 'User';
       }
-
       if (senderAvatar.isEmpty) {
         senderAvatar = isMe ? (mc.sessionInfo.value.userAvatar ?? '') : '';
       }
 
-      /// 🆕 final message push
       messages.add(
         ChatMessageLiveModel(
           text: displayText,
@@ -119,6 +224,95 @@ class LiveChatController extends GetxController {
     }
   }
 
+  //
+
+  /// Host mutes a remote participant
+  Future<void> muteParticipant(String targetUid) async {
+    if (!isRtmReady.value || rtmClient == null) return;
+
+    final payload = jsonEncode({
+      "type": "REMOTE_MUTE",
+      "sender": mc.uid.value.toString(),
+      "target": targetUid,
+    });
+
+    final (status, _) = await rtmClient!.publish(
+      mc.channelName.value,
+      payload,
+      channelType: RtmChannelType.message,
+    );
+
+    if (status.error) {
+      debugPrint('❌ [RTM] muteParticipant failed: ${status.errorCode}');
+      "Failed to mute participant".showToast();
+      return;
+    }
+
+    // Optimistically update local participant list
+    final index = participants.indexWhere((p) => p.uid == targetUid);
+    if (index != -1) {
+      participants[index] = participants[index].copyWith(isMuted: true);
+    }
+
+    debugPrint('✅ [RTM] Mute command sent to $targetUid');
+    "Mute command sent".showToast();
+  }
+
+  /// Host kicks a remote participant
+  Future<void> kickParticipant(String targetUid) async {
+    if (!isRtmReady.value || rtmClient == null) return;
+
+    final payload = jsonEncode({
+      "type": "REMOTE_KICK",
+      "sender": mc.uid.value.toString(),
+      "target": targetUid,
+    });
+
+    final (status, _) = await rtmClient!.publish(
+      mc.channelName.value,
+      payload,
+      channelType: RtmChannelType.message,
+    );
+
+    if (status.error) {
+      debugPrint('❌ [RTM] kickParticipant failed: ${status.errorCode}');
+      "Failed to remove participant".showToast();
+      return;
+    }
+
+    // Optimistically remove from local list
+    participants.removeWhere((p) => p.uid == targetUid);
+    raisedHands.removeWhere((h) => h.uid == targetUid);
+    viewCount.value = participants.length;
+
+    debugPrint('✅ [RTM] Kick command sent to $targetUid');
+    "Participant removed".showToast();
+  }
+
+  /// Host lowers a specific participant's hand
+  Future<void> lowerParticipantHand(String targetUid) async {
+    if (!isRtmReady.value || rtmClient == null) return;
+
+    final payload = jsonEncode({
+      "type": "HAND_LOWER",
+      "sender": mc.uid.value.toString(),
+      "target": targetUid,
+    });
+
+    final (status, _) = await rtmClient!.publish(
+      mc.channelName.value,
+      payload,
+      channelType: RtmChannelType.message,
+    );
+
+    if (status.error) {
+      debugPrint('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
+      return;
+    }
+
+    raisedHands.removeWhere((h) => h.uid == targetUid);
+    debugPrint('✅ [RTM] Hand lowered for $targetUid');
+  }
   //
 
   void _onLinkState(LinkStateEvent event) {

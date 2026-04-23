@@ -181,13 +181,20 @@ Future<void> deletePostConfirmDialog({
   );
 }
 
-Future<void> showLiveEndMsg() {
+// lib/core/components/ui/dialogs/popups.dart
+// Replace your showLiveEndMsg with these:
+
+Future<void> showLiveExitPopup(
+  LiveExitReason reason, {
+  VoidCallback? onRejoin,
+  Function(bool)? onTapCancel,
+}) {
+  final isBlocking = reason == LiveExitReason.kicked || reason == LiveExitReason.connectionLost;
   return showDialog(
     context: Get.context!,
-    barrierDismissible: true,
-    builder: (_) {
-      return LiveEndMsgPopup();
-    },
+    barrierDismissible: !isBlocking,
+    builder: (_) =>
+        LiveSessionExitPopup(reason: reason, onRejoin: onRejoin, onTapCancel: onTapCancel),
   );
 }
 

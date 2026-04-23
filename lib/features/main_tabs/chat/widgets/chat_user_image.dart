@@ -9,7 +9,13 @@ class ChatUserImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final letter = name.isNotEmpty ? name.substring(0, 1).toUpperCase() : "?";
     return imageUrl.isNotEmpty
-        ? NetworkImageWidget(imageUrl: imageUrl, radius: 16, isCircle: true, isSmall: true)
+        ? NetworkImageWidget(
+            imageUrl: imageUrl,
+            radius: 16,
+            isCircle: true,
+            isUser: true,
+            isSmall: true,
+          )
         : Container(
             decoration: 0.circleBrdr(),
             child: CircleAvatar(

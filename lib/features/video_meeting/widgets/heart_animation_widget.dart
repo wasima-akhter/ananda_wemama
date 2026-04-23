@@ -14,46 +14,65 @@ class HeartAnimationWidget extends StatefulWidget {
 class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
-  late final Animation<double> _y; // rise
-  late final Animation<double> _opacity; // fade out near top
-  late final Animation<double> _wave; // side waver
-  late final Animation<double> _scale; // pop-in at start
+  late final Animation<double> _y;
+  late final Animation<double> _opacity;
+  late final Animation<double> _wave;
+  late final Animation<double> _scale;
+  late final Animation<double> _rotation;
 
   final _random = Random();
-  late final double _startX; // random horizontal start near react button
-  late final double _waveAmp; // how wide it sways
+
+  late final double _startX;
+  late final double _waveAmp;
+  late final double _endY;
+  late final int _durationMs;
+  late final double _waveCycles;
+  late final Curve _curve;
 
   @override
   void initState() {
     super.initState();
 
-    _startX = _random.nextDouble() * 40 - 20; // -20..+20 px from center
-    _waveAmp = 18 + _random.nextDouble() * 14; // 18..32 px sway width
+    /// 🎯 RANDOMIZE EVERYTHING IMPORTANT
+    _startX = _random.nextDouble() * 60 - 30; // wider spread
+    _waveAmp = 12 + _random.nextDouble() * 28; // 12–40
+    _endY = -220 - _random.nextDouble() * 120; // different heights
+    _durationMs = 1800 + _random.nextInt(1200); // 1.8s – 3s
+    _waveCycles = 1.5 + _random.nextDouble() * 2.5; // wave variation
 
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 2200))
-      ..forward();
+    _curve = [
+      Curves.easeOut,
+      Curves.easeOutQuad,
+      Curves.easeOutCubic,
+      Curves.easeOutQuart,
+    ][_random.nextInt(4)];
 
-    _y = Tween<double>(
-      begin: 0,
-      end: -280,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: _durationMs),
+    )..forward();
+
+    _y = Tween<double>(begin: 0, end: _endY).animate(CurvedAnimation(parent: _ctrl, curve: _curve));
 
     _opacity = TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 10), // fade in
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 60), // hold
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 30), // fade out
+      TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 60),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 0.0), weight: 30),
     ]).animate(_ctrl);
 
-    _wave = Tween<double>(
-      begin: 0,
-      end: 2 * pi * 2.5,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.linear));
+    _wave = Tween<double>(begin: 0, end: 2 * pi * _waveCycles).animate(_ctrl);
 
     _scale = TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 0.4, end: 1.3), weight: 15), // pop
-      TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 10), // settle
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 75), // hold
+      TweenSequenceItem(tween: Tween(begin: 0.4, end: 1.3), weight: 15),
+      TweenSequenceItem(tween: Tween(begin: 1.3, end: 1.0), weight: 10),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.0), weight: 75),
     ]).animate(_ctrl);
+
+    /// 🔥 subtle rotation (makes it feel alive)
+    _rotation = Tween<double>(
+      begin: -0.2,
+      end: 0.2,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -68,18 +87,21 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
       animation: _ctrl,
       builder: (_, __) {
         final dx = _startX + sin(_wave.value) * _waveAmp;
+
         return Transform.translate(
           offset: Offset(dx, _y.value),
           child: Opacity(
             opacity: _opacity.value.clamp(0.0, 1.0),
-            child: Transform.scale(
-              scale: _scale.value,
-              child: Image.asset(
-                reactionList
-                    .firstWhere((element) => element.$2.toLowerCase() == widget.emoji.toLowerCase())
-                    .$1,
-                fit: BoxFit.cover,
-                height: 22.h,
+            child: Transform.rotate(
+              angle: _rotation.value,
+              child: Transform.scale(
+                scale: _scale.value,
+                child: Image.asset(
+                  reactionList
+                      .firstWhere((e) => e.$2.toLowerCase() == widget.emoji.toLowerCase())
+                      .$1,
+                  height: 22.h,
+                ),
               ),
             ),
           ),

@@ -450,6 +450,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/done_animation.json
   String get doneAnimation => 'assets/images/done_animation.json';
 
+  /// File path: assets/images/empty_list.png
+  AssetGenImage get emptyList =>
+      const AssetGenImage('assets/images/empty_list.png');
+
   /// File path: assets/images/folder_attach.png
   AssetGenImage get folderAttach =>
       const AssetGenImage('assets/images/folder_attach.png');
@@ -601,6 +605,7 @@ class $AssetsImagesGen {
     camera,
     careEmoji,
     doneAnimation,
+    emptyList,
     folderAttach,
     foundingMum,
     gallery,

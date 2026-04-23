@@ -57,7 +57,7 @@ class ExpertsScreen extends StatelessWidget {
                 children: [
                   makeCardHeader(Strings.ongoingExpertSession, onTap: () {}),
                   Gap(itemGap),
-                  const EmptySessionWidget(title: Strings.noSessionsFound),
+                  const EmptyNoSearchWidget(title: Strings.noSessionsFound),
                 ],
               ),
 
@@ -103,7 +103,7 @@ class ExpertsScreen extends StatelessWidget {
                 children: [
                   makeCardHeader(Strings.upcomingExpertSession, onTap: () {}),
                   Gap(itemGap),
-                  const EmptySessionWidget(title: "No upcoming sessions"),
+                  const EmptyNoSearchWidget(title: "No upcoming sessions"),
                 ],
               ),
 

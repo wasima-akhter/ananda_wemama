@@ -153,29 +153,34 @@ class TopContent extends StatelessWidget {
   }
 
   Widget _buildFloatingIcon({required String text, required IconData icon}) {
-    return ContainerBordered(
-      rad: 30,
-      hp: 10,
-      vp: 4,
-      contClr: Colors.grey.shade600,
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 9.r,
-            backgroundColor: white,
-            child: Icon(icon, size: 12.h, color: c.secondary),
-          ),
-          Gap(6),
-          Text(
-            text,
-            style: TxtStyle.inter(
-              fs: 12,
-              w: 600,
-              color: white,
-              fontFeatures: [FontFeature.tabularFigures()],
+    return FittedBox(
+      child: ContainerBordered(
+        rad: 30,
+        hp: 6,
+        vp: 3,
+        contClr: greyLoc.withOpacity(0.5),
+        child: Row(
+          children: [
+            // CircleAvatar(
+            //   radius: 7.r,
+            //   backgroundColor: ctransp,
+            //   child: Icon(icon, size: 12.h, color: icon == Icons.circle ? c.secondary : white),
+            // ),
+            Icon(icon, size: 12.h, color: icon == Icons.circle ? c.secondary : white),
+            Gap(6.w),
+            FittedBox(
+              child: Text(
+                text,
+                style: TxtStyle.inter(
+                  fs: 12,
+                  w: 600,
+                  color: white,
+                  fontFeatures: [FontFeature.tabularFigures()],
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -187,21 +192,54 @@ class LiveStackOfImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double radius = 15;
-    const double overlap = 25;
+    const double radius = 12;
+    const double overlap = 17;
+    const int maxVisible = 5; // show 3 avatars + 1 count bubble
 
     return Obx(() {
-      final list = participants;
-      final listLength = list.length < 10 ? list.length : 10;
+      final list = [
+        ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+        // ...participants,
+      ];
+      final total = list.length;
+
+      if (total == 0) return const SizedBox.shrink();
+
+      final visibleCount = total <= maxVisible ? total : maxVisible;
+      final remainder = total - visibleCount;
+      final itemCount = remainder > 0 ? visibleCount + 1 : visibleCount;
 
       return SizedBox(
-        width: (radius * 2) + (overlap * 2),
+        width: (radius * 2) + (overlap * (itemCount - 1)),
         height: radius * 2,
         child: Stack(
           clipBehavior: Clip.none,
           alignment: Alignment.centerLeft,
-          children: List.generate(listLength, (index) {
-            String? path = list[index].avatar ?? '';
+          children: List.generate(itemCount, (index) {
+            // Last slot → show +N bubble
+            if (remainder > 0 && index == itemCount - 1) {
+              return Positioned(left: index * overlap, child: _buildCountBubble(remainder, radius));
+            }
+
+            final path = list[index].avatar ?? '';
             return Positioned(
               left: index * overlap,
               child: _buildImage(radius: radius, path: path),
@@ -212,7 +250,31 @@ class LiveStackOfImages extends StatelessWidget {
     });
   }
 
+  Widget _buildCountBubble(int count, double radius) {
+    final size = (radius + 1) * 2;
+
+    return CircleAvatar(
+      radius: radius + 1,
+      backgroundColor: c.primary,
+      child: Center(
+        child: SizedBox(
+          width: size * 0.8, // keep padding inside circle
+          height: size * 0.8,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '+${count.formatToK()}',
+              maxLines: 1,
+              softWrap: false,
+              style: TxtStyle.interSemiB(fs: 10, w: 600, color: white),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildImage({String? path, double? radius}) {
-    return circledNetworkImageBgComponent(radius: radius, imagePath: path);
+    return circledNetworkImageBgComponent(radius: radius, imagePath: path, isUser: true);
   }
 }

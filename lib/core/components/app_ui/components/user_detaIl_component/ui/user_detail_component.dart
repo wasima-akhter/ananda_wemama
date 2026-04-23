@@ -144,7 +144,11 @@ class UserDetailComponent extends StatelessWidget {
             child: Padding(
               padding: 4.pa,
               child: hasImage
-                  ? NetworkImageWidget(radius: 8, imageUrl: user!.galleryImages[index].trim())
+                  ? NetworkImageWidget(
+                      radius: 8,
+                      imageUrl: user!.galleryImages[index].trim(),
+                      isUser: false,
+                    )
                   : const SizedBox(), // empty slot
             ),
           ),

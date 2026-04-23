@@ -123,6 +123,7 @@ class CommunityController extends GetxController {
   void onTapItem({required MyCommunityBtnState btnState, required String communityItemId}) {
     Get.toNamed(
       RoutePaths.communityDetail,
+      
       arguments: {'btnState': btnState, "communityItemId": communityItemId},
     );
   }

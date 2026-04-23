@@ -189,6 +189,7 @@ class ImagesPath {
   static String get folderAttach => Assets.images.folderAttach.path;
 
   static String get noSearchImg => Assets.images.noSearchImg.path;
+  static String get emptyList => Assets.images.emptyList.path;
   static String get likeEmoji => Assets.images.likeEmoji.path;
   static String get heartEmoji => Assets.images.heartEmoji.path;
   static String get careEmoji => Assets.images.careEmoji.path;

@@ -30,37 +30,120 @@ class ChatInboxController extends GetxController {
   final String chatId;
   ChatInboxController(this.chatId);
 
-  // var fakeMsgList = [
-  //   FakeMsgItemData(msg: "Hey, how are you?", time: "2h ago", isSentByMe: false),
-  //   FakeMsgItemData(msg: "I'm good, thanks! How about you?", time: "1h ago", isSentByMe: true),
-  //   FakeMsgItemData(msg: "Doing well, just busy with work.", time: "45min ago", isSentByMe: false),
-  //   FakeMsgItemData(
-  //     msg: "I understand. Let me know if you want to catch up later.",
-  //     time: "02:45 pm",
-  //     isSentByMe: true,
-  //   ),
-  //   FakeMsgItemData(msg: "Sure, sounds good!", time: "02:45 pm", isSentByMe: false),
-  // ];
-
-  // FakeChatInboxModel? fakeChatInbox;
-
-  // void initFakeData(String chatId) {
-  //   final senderData = FakeChatModel(
-  //     id: chatId,
-  //     name: "Alice",
-  //     lastMessage: "Hey, how are you?",
-  //     time: "2h ago",
-  //     imageUrl: Strings.fakeImageUrl,
-  //   );
-
-  //   fakeChatInbox = FakeChatInboxModel(senderData: senderData, msgList: fakeMsgList);
-  // }
-
   final msgInputController = TextEditingController();
-
   final msgInputFocus = FocusNode();
-
   final scrollController = ScrollController();
+
+  // ── State ────────────────────────────────────────────────────────────────
+
+  final isLoading_ = true.obs; // ← start true
+  bool get isLoading => isLoading_.value;
+
+  final isSending_ = false.obs; // ← separate sending state
+  bool get isSending => isSending_.value;
+
+  final messages = <Message>[].obs;
+  final realChatInboxMsgItem = ChatInboxMessageItemModel().obs;
+
+  // ── Init / Close ─────────────────────────────────────────────────────────
+
+  @override
+  void onInit() async {
+    super.onInit();
+    print("chatId: $chatId");
+    emitGetMessages(); // ← just emit, don't clear or set loading again
+  }
+
+  @override
+  void onClose() {
+    msgInputController.dispose();
+    msgInputFocus.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  // ── Socket callbacks ─────────────────────────────────────────────────────
+
+  // Called by SocketService when full message list arrives
+  void updateChatInboxMsgItem(ChatInboxMessageItemModel item) {
+    realChatInboxMsgItem.value = item;
+    messages.assignAll(item.messages ?? []);
+    isLoading_.value = false; // ← data arrived, stop loading
+    scrollToBottom();
+  }
+
+  // Called by SocketService on each new incoming message
+  void addMessage(Message msg) {
+    // Avoid duplicate if we just sent it optimistically
+    final alreadyExists = messages.any(
+      (m) =>
+          m.sender == msg.sender &&
+          m.text == msg.text &&
+          m.createdAt != null &&
+          msg.createdAt != null &&
+          msg.createdAt!.difference(m.createdAt!).inSeconds.abs() < 3,
+    );
+    if (!alreadyExists) {
+      messages.add(msg);
+      scrollToBottom();
+    }
+  }
+
+  // ── Send message ─────────────────────────────────────────────────────────
+
+  void onTapSendMsg() {
+    final text = msgInputController.text.trim();
+    if (text.isEmpty) {
+      "Type something...".showToast();
+      return;
+    }
+
+    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
+
+    // Optimistic add — user sees message instantly
+    final newMsg = Message(
+      conversationId: chatId,
+      createdAt: DateTime.now(),
+      receiver: receiverId,
+      seen: false,
+      sender: currentProfileId(),
+      text: text,
+    );
+
+    messages.add(newMsg);
+    scrollToBottom();
+
+    // Emit to socket
+    _emitSendMessage(text, receiverId);
+
+    // ← NO getChatInboxMsgList() here — that caused the empty flicker
+    clearAll();
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  void emitGetMessages() {
+    Get.find<SocketService>().emit(SocketEvents.getMessages, {"conversationId": chatId});
+  }
+
+  void _emitSendMessage(String message, String receiverId) {
+    Get.find<SocketService>().emit(SocketEvents.sendMessage, {
+      "senderId": currentProfileId(),
+      "receiverId": receiverId,
+      "text": message,
+    });
+  }
+
+  void clearAll() {
+    msgInputController.clear();
+    msgInputFocus.unfocus();
+    pickedImageOrFile.value = null;
+  }
+
+  void unFocusAll() {
+    msgInputFocus.unfocus();
+    FocusManager.instance.primaryFocus?.unfocus();
+  }
 
   void scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -71,7 +154,6 @@ class ChatInboxController extends GetxController {
   }
 
   List<dynamic> groupMessagesByDate() {
-    // ✅ Read from reactive list, not a passed-in model
     final sorted = [...messages]
       ..sort((a, b) => (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
 
@@ -90,160 +172,33 @@ class ChatInboxController extends GetxController {
     return result;
   }
 
-  @override
-  void onInit() async {
-    print("chatId: $chatId");
-    // initFakeData(chatId);
+  // ── File picking (unchanged) ──────────────────────────────────────────────
 
-    await getChatInboxMsgList();
+  var pickedImageOrFile = Rxn<XFile>();
+  var filePicked = Rx<File?>(null);
 
-    //
-    scrollToBottom();
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    msgInputController.dispose();
-    msgInputFocus.dispose();
-    super.onClose();
-  }
-
-  void unFocusAll() {
-    msgInputFocus.unfocus();
-    FocusManager.instance.primaryFocus?.unfocus();
-  }
-
-  /// pick image -----------------------//
-
-  var pickedImageOrFile = Rxn<XFile>(); // for image
-  var filePicked = Rx<File?>(null); // for other files
-
-  /// Pick single image (camera/gallery) or any type of file
   Future<void> pickSingleImageOrFile({ImageSource? source}) async {
-    // Pick image from camera/gallery
     if (source != null) {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(
         source: source,
         preferredCameraDevice: CameraDevice.front,
       );
-
-      if (image != null) {
-        pickedImageOrFile.value = image;
-        print("Picked image: ${image.path}");
-      }
+      if (image != null) pickedImageOrFile.value = image;
       return;
     }
 
-    // Pick any file
     try {
       final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
       if (result != null && result.files.isNotEmpty) {
         final path = result.files.single.path;
         if (path != null) {
           filePicked.value = File(path);
           pickedImageOrFile.value = result.files.single.xFile;
-          print("Picked file: $path");
         }
       }
     } catch (e) {
       print("FilePicker error: $e");
     }
-  }
-
-  /////////////////////---------------------------
-  void clearAll() {
-    msgInputController.clear();
-    msgInputFocus.unfocus();
-    pickedImageOrFile.value = null;
-  }
-
-  // API loading state
-  var isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-
-  final realChatInboxMsgItem = ChatInboxMessageItemModel().obs;
-
-  // updateChatInboxMsgItem
-
-  // ─────────────────────────────────────────────
-  // Actions
-  // ─────────────────────────────────────────────
-
-  // ── List management ───────────────────────────────────────────────────────
-
-  final socket = Get.find<SocketService>();
-  // Remove loadInbox() — not needed separately
-  // Keep messages as the single source of truth
-
-  final messages = <Message>[].obs;
-
-  Future<void> getChatInboxMsgList() async {
-    if (isLoading_.value) return;
-    isLoading_.value = true;
-    try {
-      messages.clear(); // ✅ clear reactive list
-      realChatInboxMsgItem.value = ChatInboxMessageItemModel();
-      getChatInboxMSgListEmit(currentProfileId());
-    } catch (e) {
-      print("Error fetching chat list: $e");
-    } finally {
-      isLoading_.value = false;
-      unFocusAll();
-    }
-  }
-
-  // Called when socket returns the full message list
-  void updateChatInboxMsgItem(ChatInboxMessageItemModel chatInboxMsgItem) {
-    realChatInboxMsgItem.value = chatInboxMsgItem;
-    messages.assignAll(chatInboxMsgItem.messages ?? []); // ✅ sync RxList
-    isLoading_.value = false;
-    scrollToBottom(); // ✅ scroll after data loads
-  }
-
-  // Called by socket on new incoming message
-  void addMessage(Message msg) {
-    messages.add(msg); // ✅ reactive, triggers UI rebuild
-    scrollToBottom();
-  }
-
-  void onTapSendMsg() {
-    final msg = msgInputController.text.trim();
-    if (msg.isEmpty) {
-      "Type Something...".showToast();
-      return;
-    }
-
-    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
-    final sentTime = DateTime.now();
-
-    final newMsg = Message(
-      conversationId: chatId,
-      createdAt: sentTime,
-      receiver: receiverId,
-      seen: true,
-      sender: currentProfileId(),
-      text: msg,
-    );
-
-    messages.add(newMsg); // ✅ add to RxList, NOT realChatInboxMsgItem
-    scrollToBottom();
-    sendMessageEmit(msg, receiverId);
-    getChatInboxMsgList();
-    clearAll();
-  }
-
-  void getChatInboxMSgListEmit(String userOwnId) {
-    socket.emit(SocketEvents.getMessages, {"conversationId": chatId});
-  }
-
-  void sendMessageEmit(String message, String receiverId) {
-    socket.emit(SocketEvents.sendMessage, {
-      "senderId": currentProfileId(),
-      "receiverId": receiverId,
-      "text": message,
-    });
   }
 }

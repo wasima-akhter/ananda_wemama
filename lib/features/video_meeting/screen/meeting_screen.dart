@@ -1,3 +1,6 @@
+import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
+import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
@@ -29,7 +32,17 @@ class MeetingScreen extends StatelessWidget {
           // ✅ Reactive comment list
           commentList: Obx(() {
             if (cc.messages.isEmpty) {
-              return const SizedBox.shrink();
+              return SingleChildScrollView(
+                // ← wraps fixed content so it scrolls if needed
+                physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    CustomDivider(isFullWidth: true),
+                    Gap(itemGap),
+                    EmptyNoSearchWidget(title: Strings.noCommentsYet, isSmaller: true),
+                  ],
+                ),
+              );
             }
 
             return ListView.separated(
@@ -60,11 +73,22 @@ class MeetingScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CusGestureDetector(
-                      onTap: () async {
-                        // Get.back();
-                        await Future.delayed(Duration(milliseconds: 300));
-
-                        showLiveEndMsg();
+                      onTap: () {
+                        // ← NO leaveMeeting() here
+                        showLiveExitPopup(
+                          LiveExitReason.voluntary,
+                          onTapCancel: (cancelLeave) async {
+                            if (cancelLeave) {
+                              // User hit "Cancel" → just close popup, stay in session
+                              Get.back();
+                            } else {
+                              // User hit "Leave" → now actually leave
+                              Get.back();
+                              await mc.leaveMeeting();
+                              // No reconnect popup needed — they chose to leave
+                            }
+                          },
+                        );
                       },
                       child: BottomAction(
                         iconPath: IconsPath.closeWhite,

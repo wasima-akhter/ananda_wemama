@@ -53,7 +53,11 @@ class IdentityDetailComponent extends StatelessWidget {
             flex: 2,
             child: CircleAvatar(
               radius: 30.r,
-              child: NetworkImageWidget(imageUrl: imageUrl, isCircle: isCircle ?? false),
+              child: NetworkImageWidget(
+                imageUrl: imageUrl,
+                isCircle: isCircle ?? false,
+                isUser: true,
+              ),
             ),
           ),
           Gap(12),

@@ -140,7 +140,7 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
 
   @override
   void didChangeMetrics() {
-    final keyboardOpen = WidgetsBinding.instance.window.viewInsets.bottom > 0;
+    final keyboardOpen = View.of(context).viewInsets.bottom > 0;
     if (_keyboardOpen != keyboardOpen) {
       setState(() => _keyboardOpen = keyboardOpen);
     }
@@ -162,7 +162,7 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
               child: Container(color: bgClr, child: widget.commentList),
             ),
 
-            // ── Input + bottom actions (natural height, never hidden) ─
+            // ── Input + bottom actions (natural height, never hidden) ─skjddsf
             Container(
               color: widget.backgroundColor ?? c.cardPrimary,
               child: Column(

@@ -45,7 +45,8 @@ class ContainerBordered extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       clipBehavior: clipBehavior ?? Clip.none,
-      alignment: alignment ?? Alignment.center,
+      alignment: alignment,
+      //  ?? Alignment.center,
       duration: Duration(milliseconds: duration ?? 0),
       margin: EdgeInsets.symmetric(horizontal: (mh ?? 0.0).w, vertical: (mv ?? 0).h),
       curve: Curves.easeInOut,

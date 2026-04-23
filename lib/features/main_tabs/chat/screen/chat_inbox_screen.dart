@@ -24,7 +24,6 @@ class ChatInboxScreen extends StatelessWidget {
         title: '',
         titleLeftWidget: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
-
           return Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -35,7 +34,6 @@ class ChatInboxScreen extends StatelessWidget {
                 child: Text(
                   user?.name ?? 'Chat',
                   maxLines: 1,
-                  softWrap: true,
                   overflow: TextOverflow.ellipsis,
                   style: 18.titleMclrCusFSOutfit,
                 ),
@@ -47,12 +45,10 @@ class ChatInboxScreen extends StatelessWidget {
       inputRow: ChatInputRow(cic: cic).get10cm,
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
-        onRefresh: () async {
-          cic.getChatInboxMsgList();
-        },
+        onRefresh: () async => cic.emitGetMessages(),
         child: SingleChildScrollView(
           controller: cic.scrollController,
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -60,67 +56,38 @@ class ChatInboxScreen extends StatelessWidget {
               Gap(itemGap * 2),
 
               Obx(() {
+                // 1. Loading state — data hasn't arrived from socket yet
                 if (cic.isLoading_.value) {
-                  return Text("Loading...");
-                }
-                final chatInboxMsgItem = cic.realChatInboxMsgItem;
-                final itemMsgList = cic.realChatInboxMsgItem.value.messages ?? [];
-                // final list = [...list_, ...list_, ...list_];
-                final list = [...itemMsgList];
-                if (list.isEmpty) {
-                  return const EmptyWidget(title: "No Messages yet..!");
+                  return SizedBox(
+                    height: S.h * 0.5,
+                    child: const Center(child: LoadingPrimary()),
+                  );
                 }
 
-                // final groupedList = cic.groupMessagesByDate(chatInboxMsgItem.value);
+                // 2. Empty state — data arrived but no messages
+                if (cic.messages.isEmpty) {
+                  return SizedBox(
+                    height: S.h * 0.4,
+                    child: const EmptyWidget(title: "No messages yet!"),
+                  );
+                }
 
-                // return Column(
-                //   children: groupedList.map((item) {
-                //     // 🟡 DATE HEADER
-                //     if (item is String) {
-                //       return Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           _dateVerLine(),
-                //           Padding(
-                //             padding: 10.ph,
-                //             child: Text(
-                //               item,
-                //               style: TxtStyle.outfitSemiB(fs: 12, color: c.textSecondary),
-                //             ),
-                //           ),
-                //           _dateVerLine(),
-                //         ],
-                //       ).mOnly(bottom: 12, top: 12);
-                //     }
-
-                //     // 💬 MESSAGE
-                //     final e = item as Message;
-
-                //     return
-                //     //  Text("data");
-                //     ChatBubbleCont(
-                //       message: FakeMsgItemData(
-                //         isSentByMe: (e.sender ?? '') == currentProfileId(),
-                //         msg: e.text ?? '',
-                //         time: DateHelper().formatUTCtimestamp(e.createdAt.toString()).time,
-                //       ),
-                //     );
-                //   }).toList(),
-                // );
-
-                final grouped = cic.groupMessagesByDate(); // ✅ reactive call inside Obx
+                // 3. Message list — use cic.messages (RxList), not realChatInboxMsgItem
+                final grouped = cic.groupMessagesByDate();
                 return Column(
                   children: [
                     const SocketStatusBanner(),
                     ...grouped.map((item) {
                       if (item is String) {
-                        return DateDivider(item: item); // your date label widget
+                        return DateDivider(item: item);
                       }
                       final msg = item as Message;
                       return ChatBubbleCont(
                         message: FakeMsgItemData(
                           msg: msg.text ?? '',
-                          time: DateHelper().formatTimeAgo(msg.createdAt?.toString() ?? '').date,
+                          time: DateHelper()
+                              .formatUTCtimestamp(msg.createdAt?.toString() ?? '')
+                              .time,
                           isSentByMe: msg.sender == currentProfileId(),
                         ),
                       );
@@ -129,7 +96,6 @@ class ChatInboxScreen extends StatelessWidget {
                 );
               }),
 
-              // ...msgList.map((e) => ChatBubbleCont(message: e)),
               Gap(itemGap * 2),
             ],
           ).getcm,

@@ -1,8 +1,4 @@
 import '../../../app/helper_widgets_export.dart';
-// import '../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
-// import '../../../core/helpers/widgets_helper.dart';
-import '../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
-import '../../../core/helpers/widgets_helper.dart';
 import '../model/chat_message_live_model.dart';
 
 // class MeetCommentItem extends StatelessWidget {
@@ -173,18 +169,18 @@ class MeetCommentItem extends StatelessWidget {
         ),
 
         /// ⋮ Menu (only for others OR optional for all)
-        CusFlexibleDropdown(
-          items: [
-            CusDropdownItem(
-              title: Strings.reportContent,
-              onTap: () async => await showReportBottomSheet(),
-            ),
-          ],
-          child: Padding(
-            padding: EdgeInsets.only(left: 6.w),
-            child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
-          ),
-        ),
+        // CusFlexibleDropdown(
+        //   items: [
+        //     CusDropdownItem(
+        //       title: Strings.reportContent,
+        //       onTap: () async => await showReportBottomSheet(),
+        //     ),
+        //   ],
+        //   child: Padding(
+        //     padding: EdgeInsets.only(left: 6.w),
+        //     child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+        //   ),
+        // ),
       ],
     );
   }

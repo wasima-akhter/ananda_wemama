@@ -292,9 +292,10 @@ class Strings {
   // ===========================
   // Notification
   // ===========================
-  static const String noNotificationFound = "No notification found";
-  static const String noItemFound = "No Item Found";
-  static const String noSessionsFound = "No Session Found";
+  static const String noNotificationFound = "No notification yet";
+  static const String noItemFound = "No Item yet";
+  static const String noSessionsFound = "No Session yet";
+  static const String noCommentsYet = "No Comments yet";
 
   // ===========================
   // Location
