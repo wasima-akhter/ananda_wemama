@@ -60,6 +60,62 @@ class CommunityService extends GetxService {
     return true;
   }
 
+  Future<bool> updateCommunity({
+    required XFile? communityImg,
+    required String? communityName,
+    required String communityId,
+  }) async {
+    final data = dio.FormData();
+
+    // ── All files go under 'files' key — matches Postman ─────────────────────
+    if (communityImg != null) {
+      data.files.add(
+        MapEntry(
+          'community-image',
+          await dio.MultipartFile.fromFile(communityImg.path, filename: communityImg.name),
+        ),
+      );
+    }
+
+    // ── Text fields ───────────────────────────────────────────────────────────
+
+    if (communityName != null) {
+      data.fields.add(MapEntry('name', communityName)); // ✅ add name
+    }
+
+    data.fields.add(MapEntry('communityId', communityId)); // ✅ add name
+
+    debugPrint('fields: ${data.fields}');
+    debugPrint('files count: ${data.files.length}');
+    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+
+    debugPrint('FIELDS:');
+    for (var f in data.fields) {
+      debugPrint('${f.key}: ${f.value}');
+    }
+
+    debugPrint('FILES:');
+    for (var f in data.files) {
+      debugPrint('${f.key}: ${f.value.filename}');
+    }
+
+    debugPrint("Token: ${storage.getAccessToken}");
+
+    final response = await _apiHelper.request(
+      apiCall: () => ApiClient().patchWithFile(
+        Endpoints.updateCommunity.getUrl,
+        reqName: Strings.updateCommunity,
+        data: data,
+      ),
+    );
+
+    if (response == null || !response.success) return false;
+
+    debugPrint('response.success: ${response.success}');
+    debugPrint('community id while update : ${response.data}');
+    return true;
+  }
+
   Future<List<CommunityItemModel>> fetchManagedCommunityList() async {
     apiCall() {
       return ApiClient().get(

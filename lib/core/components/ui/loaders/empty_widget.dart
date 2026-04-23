@@ -68,6 +68,8 @@ class EmptySessionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerBordered(
       contClr: c.bottomSheetBackground.withOpacity(0.2),
+      alignment: Alignment.center,
+
       vp: 20.h,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

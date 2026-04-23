@@ -83,7 +83,11 @@ class NetworkImageWidget extends StatelessWidget {
     print("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
     return Image.network(
-      makeImageUrl(imageUrl: imageUrl ?? ''),
+      makeImageUrl(
+        imageUrl: (imageUrl ?? '').startsWith('/')
+            ? (imageUrl ?? '').substring(1)
+            : (imageUrl ?? ''),
+      ),
       opacity: opacity,
       fit: BoxFit.cover,
       width: double.infinity,

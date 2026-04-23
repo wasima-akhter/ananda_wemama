@@ -55,7 +55,7 @@ class UpcomingSessionsScreen extends StatelessWidget {
                 ),
 
                 /// 🟡 EMPTY
-                empty: () => const Center(child: EmptySessionWidget(title: "No Upcoming sessions")),
+                empty: () => Center(child: EmptySessionWidget(title: "No Upcoming sessions")),
 
                 /// 🟢 DATA
                 data: () => SingleChildScrollView(

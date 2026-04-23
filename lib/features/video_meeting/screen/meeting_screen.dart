@@ -102,7 +102,7 @@ class MeetingScreen extends StatelessWidget {
                   Expanded(
                     child: Obx(
                       () => CusGestureDetector(
-                        onTap: () => mc.toggleSpeak(),
+                        onTap: () => mc.toggleSpeak(cc),
                         child: BottomAction(
                           color: mc.isSpeaking.value ? white : c.primary,
                           iconPath: mc.isSpeaking.value

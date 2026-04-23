@@ -15,6 +15,7 @@ class ContainerBordered extends StatelessWidget {
   final double? w;
   final int? duration;
   final AlignmentGeometry? alignment;
+  final bool? hideAlignment;
   final BoxDecoration? cusDec;
   final List<BoxShadow>? boxShadow;
   final Clip? clipBehavior;
@@ -39,31 +40,52 @@ class ContainerBordered extends StatelessWidget {
     this.mv,
     this.mh,
     this.clipBehavior,
+    this.hideAlignment,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      clipBehavior: clipBehavior ?? Clip.none,
-      alignment: alignment,
-      //  ?? Alignment.center,
-      duration: Duration(milliseconds: duration ?? 0),
-      margin: EdgeInsets.symmetric(horizontal: (mh ?? 0.0).w, vertical: (mv ?? 0).h),
-      curve: Curves.easeInOut,
-      height: h,
-      width: w,
-      decoration:
-          cusDec ??
-          BoxDecoration(
-            borderRadius: (rad ?? 12).brdrRad,
-            border: hasBrdr == null
-                ? Border()
-                : Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 0.6),
-            color: contClr ?? bgClr,
-            boxShadow: boxShadow,
-          ),
+    return hideAlignment == true
+        ? AnimatedContainer(
+            clipBehavior: clipBehavior ?? Clip.none,
+            duration: Duration(milliseconds: duration ?? 0),
+            margin: EdgeInsets.symmetric(horizontal: (mh ?? 0.0).w, vertical: (mv ?? 0).h),
+            curve: Curves.easeInOut,
+            height: h,
+            width: w,
+            decoration:
+                cusDec ??
+                BoxDecoration(
+                  borderRadius: (rad ?? 12).brdrRad,
+                  border: hasBrdr == null
+                      ? Border()
+                      : Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 0.6),
+                  color: contClr ?? bgClr,
+                  boxShadow: boxShadow,
+                ),
 
-      child: child.pHV((hp ?? 5).w, (vp ?? 5).h),
-    );
+            child: child.pHV((hp ?? 5).w, (vp ?? 5).h),
+          )
+        : AnimatedContainer(
+            clipBehavior: clipBehavior ?? Clip.none,
+            alignment: alignment ?? Alignment.center,
+            duration: Duration(milliseconds: duration ?? 0),
+            margin: EdgeInsets.symmetric(horizontal: (mh ?? 0.0).w, vertical: (mv ?? 0).h),
+            curve: Curves.easeInOut,
+            height: h,
+            width: w,
+            decoration:
+                cusDec ??
+                BoxDecoration(
+                  borderRadius: (rad ?? 12).brdrRad,
+                  border: hasBrdr == null
+                      ? Border()
+                      : Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 0.6),
+                  color: contClr ?? bgClr,
+                  boxShadow: boxShadow,
+                ),
+
+            child: child.pHV((hp ?? 5).w, (vp ?? 5).h),
+          );
   }
 }

@@ -10,7 +10,7 @@ class ManageCommunityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ccc = Get.find<ManageCommunityController>();
+    final mcc = Get.find<ManageCommunityController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
@@ -23,9 +23,9 @@ class ManageCommunityScreen extends StatelessWidget {
       bottomWidget: Obx(
         () => filledBtnWTxt(
           btnTxt: Strings.update,
-          isLoading: ccc.isLoading,
+          isLoading: mcc.isLoading,
           onTap: () async {
-            // Get.toNamed(RoutePaths.photoAndBio);
+            mcc.onTapEdit();
           },
 
           //  await epc.onTapSignup(setupProfileFormKey),
@@ -35,17 +35,17 @@ class ManageCommunityScreen extends StatelessWidget {
         children: [
           Obx(() {
             return AddPhotoWidget(
-              onTapAddPhoto: () async => await ccc.pickSingleImage(ImageSource.gallery),
-
-              selImage: ccc.fileImage.value,
+              onTapAddPhoto: () async => await mcc.pickSingleImage(ImageSource.gallery),
+              selImage: mcc.fileImage.value,
+              imageUrl: mcc.existingImageUrl.value, // ← pass URL as fallback
             );
           }),
 
           Gap(itemGap * 3),
 
           CusNameTypeTextFormField(
-            controller: ccc.nameCtrl,
-            focusNode: ccc.nameFocus,
+            controller: mcc.nameCtrl,
+            focusNode: mcc.nameFocus,
 
             rad: 8,
             brdrW: 0.6,

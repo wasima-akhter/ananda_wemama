@@ -62,6 +62,7 @@ class ChatBubbleCont extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: Get.width * 0.7),
         child: ContainerBordered(
+          hideAlignment: true,
           rad: 12,
           vp: 10,
           hp: 12,

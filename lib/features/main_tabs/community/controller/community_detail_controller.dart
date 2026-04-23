@@ -140,7 +140,7 @@ class CommunityDetailController extends GetxController {
 
   final communityItemDetail = CommunityItemDetailModel().obs;
 
-  Future<void> getCommunityDetail() async {
+  Future<void> getCommunityDetail({String? communityIdForRefresh}) async {
     if (isLoading_.value) return;
     isLoading_.value = true;
 
@@ -148,7 +148,7 @@ class CommunityDetailController extends GetxController {
 
     try {
       final data = await CommunityDetailService().fetchCommunityDetail(
-        communityItemId: communityItemId,
+        communityItemId: communityIdForRefresh ?? communityItemId,
       );
 
       if (data != null) {

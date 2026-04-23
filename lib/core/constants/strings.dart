@@ -626,6 +626,7 @@ class Strings {
 
   // Create Community
   static const String createCommunity = "Create Community";
+  static const String updateCommunity = "Update Community";
 
   static const String reqAccepted = "Request Accepted";
   static const String youCanStartChatting = "You Can Start Chatting";

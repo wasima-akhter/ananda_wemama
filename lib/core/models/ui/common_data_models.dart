@@ -21,12 +21,14 @@ class IdentityCardDataModel {
 class CreateCommunityArgModel {
   final String communityImg;
   final String communityName;
+  final String? communityId;
   final bool isEdit;
 
   CreateCommunityArgModel({
     required this.communityImg,
     required this.communityName,
     required this.isEdit,
+    this.communityId,
   });
 }
 

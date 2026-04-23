@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
+import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
@@ -724,7 +727,7 @@ class MeetingController extends GetxController {
   /// ---------------- Speaking (Audience → Broadcaster) ---------------- ///
   var isSpeaking = false.obs;
 
-  Future<void> toggleSpeak() async {
+  Future<void> toggleSpeak(LiveChatController cc) async {
     if (isSpeaking.value) {
       debugPrint('🔇 [SPEAK] Stepping down from broadcaster → audience');
 
@@ -737,9 +740,14 @@ class MeetingController extends GetxController {
           clientRoleType: ClientRoleType.clientRoleAudience,
         ),
       );
+
       debugPrint('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
 
       isSpeaking.value = false;
+
+      // ← notify web: mic is now OFF
+      await _publishMuteState(isMuted: true, cc: cc);
+
       debugPrint('🔇 [SPEAK] isSpeaking = false ✅');
     } else {
       debugPrint('🎙️ [SPEAK] Promoting to broadcaster → host');
@@ -762,7 +770,36 @@ class MeetingController extends GetxController {
       debugPrint('🎙️ [SPEAK] token: ${rtcToken.value.substring(0, 10)}...'); // partial for safety
 
       isSpeaking.value = true;
+
+      // ← notify web: mic is now ON
+      await _publishMuteState(isMuted: false, cc: cc);
+
       debugPrint('🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user');
+    }
+  }
+
+  Future<void> _publishMuteState({required bool isMuted, required LiveChatController cc}) async {
+    try {
+      if (!cc.isRtmReady.value || cc.rtmClient == null) return;
+
+      // 1. Publish a channel message — web receives this via onMessage
+      //    and updates the participant's isMuted state in its list
+      final payload = jsonEncode({
+        "type": "MUTE_STATE_CHANGE",
+        "sender": uid.value.toString(),
+        "isMuted": isMuted,
+      });
+
+      await cc.rtmClient!.publish(channelName.value, payload, channelType: RtmChannelType.message);
+
+      // 2. Also update own presence state — for late joiners who get snapshot
+      await cc.rtmClient!.getPresence().setState(channelName.value, RtmChannelType.message, {
+        'isMuted': isMuted ? 'true' : 'false',
+      });
+
+      debugPrint('📡 [RTM] Mute state broadcast → uid=${uid.value}, isMuted=$isMuted');
+    } catch (e) {
+      debugPrint('❌ [RTM] _publishMuteState error: $e');
     }
   }
 
@@ -827,13 +864,12 @@ class MeetingController extends GetxController {
 
   //
   /// Called by LiveChatController when host sends REMOTE_MUTE targeting this user
-  Future<void> muteLocalAudio(bool mute) async {
+  Future<void> muteLocalAudio(bool mute, {required LiveChatController cc}) async {
     if (agoraEngine == null) return;
 
     isLocalAudioMuted.value = mute;
 
     if (isSpeaking.value) {
-      // If currently speaking (broadcaster role), unpublish mic
       await agoraEngine?.updateChannelMediaOptions(
         ChannelMediaOptions(
           publishMicrophoneTrack: !mute,
@@ -841,7 +877,6 @@ class MeetingController extends GetxController {
         ),
       );
       if (mute) {
-        // Step back to audience so host definitely can't hear them
         await agoraEngine?.setClientRole(role: ClientRoleType.clientRoleAudience);
         await agoraEngine?.updateChannelMediaOptions(
           const ChannelMediaOptions(
@@ -852,6 +887,9 @@ class MeetingController extends GetxController {
         isSpeaking.value = false;
       }
     }
+
+    // ← sync mute state to web via RTM presence
+    await _publishMuteState(isMuted: mute, cc: cc);
 
     debugPrint('🔇 muteLocalAudio($mute) applied');
   }

@@ -5,7 +5,9 @@ import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/core/utils/extension/context_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../enums/app_enums.dart';
+import '../../../features/main_tabs/community/model/community_item_model.dart';
+import '../../constants/strings.dart';
+import '../../enums/ui_enums.dart';
 
 extension ShowToastExtension on String {
   showToast({bgColor, txtColor}) {
@@ -206,76 +208,21 @@ extension GetUrlExt on String {
   String get getUrl => baseUrl + routeInitial + this;
 }
 
-extension UserRoleExt on UserRole {
-  String get value {
-    switch (this) {
-      case UserRole.customer:
-        return "Customer";
-      case UserRole.supplier:
-        return "Supplier";
-      case UserRole.admin:
-        return "Admin";
-    }
+extension CommunityItemX on CommunityItemModel {
+  MyCommunityBtnState get btnState {
+    if (isCreator == true) return MyCommunityBtnState.manage;
+    if (isMember == true) return MyCommunityBtnState.visit;
+    return MyCommunityBtnState.join;
   }
 
-  static UserRole? fromString(String? roleStr) {
-    switch (roleStr?.toLowerCase()) {
-      case "customer":
-        return UserRole.customer;
-      case "supplier":
-        return UserRole.supplier;
-      case "admin":
-        return UserRole.admin;
-      default:
-        return null; // unknown role
-    }
-  }
-}
-
-// New extension for conversion
-extension UserRoleFromString on String {
-  UserRole? toUserRole() {
-    switch (toLowerCase()) {
-      case "customer":
-        return UserRole.customer;
-      case "supplier":
-        return UserRole.supplier;
-      case "admin":
-        return UserRole.admin;
-      default:
-        return UserRole.customer; // fallback if backend sends unexpected value
-    }
-  }
-}
-
-extension CustomerOrderCategoryX on CustomerOrderCategory {
-  /// Map a string to enum safely
-  static CustomerOrderCategory orderStatusToEnum(String? status) {
-    if (status == null) return CustomerOrderCategory.pending;
-    return CustomerOrderCategory.values.firstWhere(
-      (e) => e.name.toLowerCase() == status.toLowerCase(),
-      orElse: () => CustomerOrderCategory.canceled,
-    );
-  }
-}
-
-extension SupplierOrderActionExt on SupplierOrderAction {
-  String get endpoint {
-    switch (this) {
-      case SupplierOrderAction.accept:
-        return "accept-order";
-      case SupplierOrderAction.onTheWay:
-        return "order-on-the-way";
-      case SupplierOrderAction.complete:
-        return "complete-order";
-      case SupplierOrderAction.delete:
-        return "delete-order";
-      case SupplierOrderAction.confirm:
-        return "confirm-order";
-      case SupplierOrderAction.reject:
-        return "reject-order";
-      case SupplierOrderAction.cancel:
-        return "cancel-order";
+  String get btnText {
+    switch (btnState) {
+      case MyCommunityBtnState.manage:
+        return Strings.manage;
+      case MyCommunityBtnState.visit:
+        return Strings.visit;
+      case MyCommunityBtnState.join:
+        return Strings.join;
     }
   }
 }

@@ -55,6 +55,7 @@ class Endpoints {
 
   // Community
   static String createCommunity = "community/create-community";
+  static String updateCommunity = "community/edit-community";
   static String getMyCommunity = "community/get-my-community";
   static String getJoinedCommunity = "community/get-joined-community?searchText=";
   static String getSuggestedCommunity = "community/get-community-suggestion";

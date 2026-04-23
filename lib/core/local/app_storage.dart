@@ -1,9 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import '../enums/app_enums.dart';
-import '../utils/extension/string_extension.dart';
-
 class AppStorage extends GetxService {
   // ---------------------------  Keys  ---------------------------
   static const _isLoggedInKey = 'isLoggedIn';
@@ -185,15 +182,6 @@ class AppStorage extends GetxService {
 
   void setUserImageUrl(String userImageUrl) => _storage.write(_imageUrlKey, userImageUrl);
   String get getUserImageUrl => _storage.read(_imageUrlKey) ?? '';
-
-  void setUserRole(UserRole role) {
-    _storage.write(_userRoleKey, role.value);
-  }
-
-  UserRole? get getUserRole {
-    final roleStr = _storage.read(_userRoleKey);
-    return UserRoleExt.fromString(roleStr);
-  }
 
   static const _userIdKey = 'userId';
 

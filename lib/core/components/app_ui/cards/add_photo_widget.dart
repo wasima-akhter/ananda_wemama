@@ -71,7 +71,13 @@ class AddPhotoWidget extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius.r),
       child: Stack(
         children: [
-          NetworkImageWidget(imageUrl: imageUrl, radius: radius, width: w, height: h, isUser: true),
+          NetworkImageWidget(
+            imageUrl: imageUrl,
+            radius: radius,
+            width: w,
+            height: h,
+            isUser: false,
+          ),
 
           Container(width: w, height: h, color: black.withOpacity(0.15)),
 

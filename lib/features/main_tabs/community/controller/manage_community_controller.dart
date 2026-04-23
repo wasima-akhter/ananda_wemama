@@ -1,13 +1,26 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
+import 'package:mama_app/features/main_tabs/community/services/community_service.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 
 class ManageCommunityController extends GetxController {
+  late CreateCommunityArgModel? args;
+
   final nameCtrl = TextEditingController();
   final nameFocus = FocusNode();
 
+  // Add this observable
+  var existingImageUrl = ''.obs;
+  var communityId = ''.obs;
+
   @override
   void onInit() {
+    args = Get.arguments as CreateCommunityArgModel?;
+    nameCtrl.text = args?.communityName ?? '';
+    communityId.value = args?.communityId ?? '';
+    existingImageUrl.value = args?.communityImg ?? ''; // ← was the broken line
     super.onInit();
   }
 
@@ -49,21 +62,28 @@ class ManageCommunityController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
-  /// Fetch the latest  data from API
-  Future<void> getChatList() async {
+  Future<void> onTapEdit() async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 
     try {
-      // final data = await ChatService().fetchChatList(
+      final response = await CommunityService().updateCommunity(
+        communityId: communityId.value,
+        communityImg: fileImage.value,
+        communityName: nameCtrl.text,
+      );
 
-      // );
+      if (response == true) {
+        debugPrint('onTapEdit success : $response');
 
-      // if (data != null) {
-
-      // }
+        await Get.find<CommunityDetailController>().getCommunityDetail(
+          communityIdForRefresh: communityId.value,
+        );
+      } else {
+        debugPrint('onTapEdit failed : $response');
+      }
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error onTapEdit community: $e");
     } finally {
       isLoading_.value = false;
 

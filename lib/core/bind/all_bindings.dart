@@ -213,7 +213,13 @@ class ManageCommunityBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    Get.lazyPutFenix(() => ManageCommunityController());
+    final args = Get.arguments as CreateCommunityArgModel?;
+
+    if (Get.isRegistered<ManageCommunityController>()) {
+      Get.delete<ManageCommunityController>(force: true);
+    }
+
+    Get.put(ManageCommunityController());
   }
 }
 

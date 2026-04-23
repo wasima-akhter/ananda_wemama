@@ -303,6 +303,7 @@ class RoutePageList {
       page: () => const CreateCommunityScreen(),
       binding: CreateCommunityBinding(),
     ),
+
     GetPage(
       name: RoutePaths.postInCommunity,
       page: () => const PostInCommunityScreen(),

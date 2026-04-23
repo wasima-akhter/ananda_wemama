@@ -11,6 +11,8 @@ class CommunityItemModel {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.isCreator,
+    this.isMember,
   });
 
   final String? id;
@@ -23,6 +25,8 @@ class CommunityItemModel {
   final bool? isApproved;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final bool? isCreator;
+  final bool? isMember;
   final int? v;
 
   factory CommunityItemModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,9 @@ class CommunityItemModel {
       isApproved: json["isApproved"] ?? false,
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
+
+      isCreator: json["isCreator"] ?? false,
+      isMember: json["isMember"] ?? false,
       v: json["__v"],
     );
   }

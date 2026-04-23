@@ -155,7 +155,7 @@ class LiveSessionExitPopup extends StatelessWidget {
             Get.back();
             onRejoin?.call();
           },
-          rightLabel: 'Back home',
+          rightLabel: 'Back',
           rightAction: () {
             Get.back();
             Get.offAllNamed(RoutePaths.mainNav);

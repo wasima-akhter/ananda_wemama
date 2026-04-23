@@ -1,13 +1,13 @@
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
 import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
-import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
 import 'package:mama_app/features/main_tabs/community/model/community_item_detail_model.dart';
 import 'package:mama_app/features/main_tabs/community/widgets/post_item_widget.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 import '../modules/join_btn.dart';
 
 class CommunityDetailsScreen extends StatelessWidget {
@@ -80,14 +80,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                       onTap: () {
                         if (cc.btnState.value == MyCommunityBtnState.manage) {
                           // edit the community
-                          Get.toNamed(
-                            RoutePaths.createCommunity,
-                            arguments: CreateCommunityArgModel(
-                              communityImg: itemDetail.community?.image ?? '',
-                              communityName: itemDetail.community?.name ?? '',
-                              isEdit: true,
-                            ),
-                          );
+                          communityGuidlineDialog(isLoading: false, onTapAction: () async {});
                         }
                         if (cc.btnState.value == MyCommunityBtnState.visit) {}
                         if (cc.btnState.value == MyCommunityBtnState.join) {
@@ -177,6 +170,7 @@ class CommunityDetailTopContent extends StatelessWidget {
           width: double.infinity,
           height: S.h * 0.25,
           radius: 0,
+          isUser: false,
         ),
         ContainerBordered(
           rad: 0,
@@ -225,7 +219,15 @@ class CommunityDetailTopContent extends StatelessWidget {
                       btnTxt: cc.getBtnTxt(), // now reactive
                       onTap: () {
                         if (cc.btnState.value == MyCommunityBtnState.manage) {
-                          Get.toNamed(RoutePaths.manageCommunity);
+                          Get.toNamed(
+                            RoutePaths.manageCommunity,
+                            arguments: CreateCommunityArgModel(
+                              communityImg: itemDetail.community?.image ?? '',
+                              communityName: itemDetail.community?.name ?? '',
+                              communityId: itemDetail.community?.id ?? '',
+                              isEdit: true,
+                            ),
+                          );
                         }
 
                         if (cc.btnState.value == MyCommunityBtnState.join) {

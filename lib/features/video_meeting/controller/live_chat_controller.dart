@@ -88,7 +88,7 @@ class LiveChatController extends GetxController {
             case 'REMOTE_MUTE':
               final target = payload['target']?.toString() ?? '';
               if (target == mc.uid.value.toString()) {
-                await mc.muteLocalAudio(true);
+                await mc.muteLocalAudio(true, cc: this);
                 "You have been muted by the host".showToast();
               }
               return;
@@ -156,7 +156,7 @@ class LiveChatController extends GetxController {
               case 'REMOTE_MUTE':
                 final target = payload['target']?.toString() ?? '';
                 if (target == mc.uid.value.toString()) {
-                  await mc.muteLocalAudio(true);
+                  await mc.muteLocalAudio(true, cc: this);
                   "You have been muted by the host".showToast();
                 }
                 return;

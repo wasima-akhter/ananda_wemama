@@ -46,6 +46,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     Positioned(
                       bottom: -(10.h),
                       child: ContainerBordered(
+                        alignment: Alignment.center,
                         contClr: c.error,
                         rad: 6,
                         hp: 6,

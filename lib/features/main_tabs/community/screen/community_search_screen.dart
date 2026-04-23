@@ -98,22 +98,23 @@ class CommunitySearchScreen extends StatelessWidget {
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   child: buildCommunityList(
-                    // shrinkWrap: true,
                     scrollController: csc.searchedCommCtrl,
                     itemCount: displayListSearched.length,
-                    itemBuilder: (index) => CommunityItem(
-                      item: displayListSearched[index],
-                      btnTxt: Strings.join,
-                      isLoading: false,
-                      onTapItem: () => csc.onTapItem(
-                        btnState: MyCommunityBtnState.join,
-                        communityItemId: displayListSearched[index].id ?? '',
-                      ),
-                      onTapItemBtn: () => csc.onTapItemBtn(
-                        btnState: MyCommunityBtnState.join,
-                        communityItemId: displayListSearched[index].id ?? '',
-                      ),
-                    ),
+                    itemBuilder: (index) {
+                      final item = displayListSearched[index];
+
+                      return CommunityItem(
+                        item: item,
+                        btnTxt: item.btnText,
+                        isLoading: false,
+                        onTapItem: () =>
+                            csc.onTapItem(btnState: item.btnState, communityItemId: item.id ?? ''),
+                        onTapItemBtn: () => csc.onTapItemBtn(
+                          btnState: item.btnState,
+                          communityItemId: item.id ?? '',
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
