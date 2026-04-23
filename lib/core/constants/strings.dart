@@ -283,6 +283,7 @@ class Strings {
 
   static const String on = "On";
   static const String off = "Off";
+  static const String anonymous = "Anonymous";
 
   static const String deleted = "Deleted";
   static const String completeDelivery = "Complete delivery";
@@ -699,10 +700,12 @@ class Strings {
   static const String lockComment = "Lock Comment";
   static const String unlockComment = "Unock Comment";
   static const String lock = "Lock";
+  static const String unlock = "Unlock";
 
   static const String memberManagement = "Member Management";
 
   static const String commentLocked = "Comment has been locked. No one can comment now.";
+  static const String commentUnlocked = "Comment has been unlocked. You can comment now.";
 
   static const String confirmDeletePost = "Do you want to delete this post?";
   static const String noBookmarks = "noBookmarks";

@@ -85,7 +85,8 @@ class CommunityScreen extends StatelessWidget {
                             ).getcm,
                       ),
 
-                      empty: () => const EmptyWidgetScrollable(title: "No Communities yet").getcm,
+                      empty: () =>
+                          const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
 
                       data: () => AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
@@ -133,7 +134,8 @@ class CommunityScreen extends StatelessWidget {
                             ).getcm,
                       ),
 
-                      empty: () => const EmptyWidgetScrollable(title: "No Communities yet").getcm,
+                      empty: () =>
+                          const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
 
                       data: () => AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),

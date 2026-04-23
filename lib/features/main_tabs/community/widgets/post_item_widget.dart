@@ -1,5 +1,7 @@
 // lib/features/main_tabs/community/modules/post_item_widget.dart
 
+import 'package:mama_app/core/models/ui/common_data_models.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
@@ -9,6 +11,7 @@ import '../model/community_item_detail_model.dart';
 import '../modules/user_short_detail_widget.dart';
 
 class PostItemWidget extends StatelessWidget {
+  final Community communityData;
   final MyCommunityBtnState btnState;
   final String postId;
   final String postCreatorId;
@@ -26,36 +29,60 @@ class PostItemWidget extends StatelessWidget {
     required this.postItem,
     required this.userName,
     required this.postCreatorId,
+    required this.communityData,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ContainerBordered(
-      vp: 12,
-      hp: 12,
-      hasBrdr: true,
-      brdrClr: c.inputBorder.withOpacity(0.3),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _PostHeader(
-            cc: cc,
-            postId: postId,
-            btnState: btnState,
-            postCreatorId: postCreatorId,
-            postItem: postItem,
-          ),
-          Gap(itemGap * 2),
+    return Obx(() {
+      final isDeleted = cc.deleteLockFlag(postId).value;
+      final isDeleting = cc.flagsOf(postId)?.isdeleteLoading.value ?? false;
 
-          _PostContent(postItem: postItem),
+      // 🔥 CASE 1: deleting → show shimmer
+      if (isDeleting) {
+        return const PostItemShimmer();
+      }
 
-          if (showActions) ...[
-            Gap(itemGap * 2.5),
-            _PostActions(cc: cc, postId: postId, userName: userName, btnState: btnState),
+      // 🔥 CASE 2: deleted → remove from UI
+      if (isDeleted) {
+        return const SizedBox.shrink();
+      }
+
+      // ✅ NORMAL UI
+      return ContainerBordered(
+        vp: 12,
+        hp: 12,
+        hasBrdr: true,
+        brdrClr: c.inputBorder.withOpacity(0.3),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _PostHeader(
+              cc: cc,
+              postId: postId,
+              btnState: btnState,
+              postCreatorId: postCreatorId,
+              postItem: postItem,
+            ),
+            Gap(itemGap * 1.5),
+
+            _PostContent(postItem: postItem),
+
+            if (showActions) ...[
+              Gap(itemGap * 2),
+              _PostActions(
+                cc: cc,
+                communityData: communityData,
+                postItem: postItem,
+                postId: postId,
+                userName: userName,
+                btnState: btnState,
+              ),
+            ],
           ],
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }
 
@@ -85,7 +112,7 @@ class _PostHeader extends StatelessWidget {
         // ✅ Obx wraps only the reactive trailing section
         Obx(() {
           final isPinned = cc.pinFlag(postId).value;
-          final isLocked = cc.commentLockFlag(postId).value;
+          final isLocked = (postItem.isCommentLocked ?? false) || cc.commentLockFlag(postId).value;
 
           return Row(
             mainAxisSize: MainAxisSize.min,
@@ -127,8 +154,9 @@ class _PostHeader extends StatelessWidget {
                           ? Strings.unlockComment.capEachWord()
                           : Strings.lockComment.capEachWord(),
                       onTap: () async {
-                        showLockCommentialog();
+                        showLockCommentialog(isLocked: isLocked);
                         await Future.delayed(const Duration(seconds: 1));
+                        Get.back();
                         Get.back();
                         // cc.toggleCommentLock(postId);
                         await cc.toggleLockApi(postId);
@@ -139,8 +167,10 @@ class _PostHeader extends StatelessWidget {
                       onTap: () async => deletePostConfirmDialog(
                         onConfirm: () async {
                           Get.back();
+                          Get.back();
+                          cc.deletePostApi(postId);
                         },
-                        isLoading: RxBool(false),
+                        isLoading: cc.deleteLoadingFlag(postId),
                       ),
                     ),
                   ],
@@ -161,13 +191,15 @@ class _PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(postItem.content ?? '', style: TxtStyle.outfit(fs: 13, w: 400));
+    return Text(postItem.content ?? '', style: TxtStyle.outfit(fs: 14, w: 400));
   }
 }
 
 // ─────────────────────────────
 class _PostActions extends StatelessWidget {
   final CommunityDetailController cc;
+  final Community communityData;
+  final AllPost postItem;
   final String postId;
   final String userName;
   final MyCommunityBtnState btnState;
@@ -177,6 +209,8 @@ class _PostActions extends StatelessWidget {
     required this.postId,
     required this.btnState,
     required this.userName,
+    required this.communityData,
+    required this.postItem,
   });
 
   @override
@@ -184,6 +218,8 @@ class _PostActions extends StatelessWidget {
     return Obx(() {
       // ✅ _ensureFlags guarantees a valid RxBool — Obx always has a subscription
       final isLiked = cc.likeFlag(postId).value;
+
+      final isLocked = (postItem.isCommentLocked ?? false) || cc.commentLockFlag(postId).value;
 
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -201,12 +237,19 @@ class _PostActions extends StatelessWidget {
           ),
           Gap(itemGap),
           CusGestureDetector(
-            onTap: () => Get.toNamed(RoutePaths.postDetails, arguments: postId),
+            onTap: () => isLocked
+                ? null
+                : Get.toNamed(
+                    RoutePaths.postDetails,
+                    arguments: PostDetailArgModel(communityData: communityData, postItem: postItem),
+                  ),
             child: Row(
               children: [
                 SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
                 Gap(4),
                 TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
+                Gap(4),
+                isLocked ? SvgIcon(iconPath: IconsPath.lock, height: 12) : const SizedBox.shrink(),
               ],
             ),
           ),

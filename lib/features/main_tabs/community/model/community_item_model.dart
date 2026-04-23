@@ -27,6 +27,7 @@ class CommunityItemModel {
   final DateTime? updatedAt;
   final bool? isCreator;
   final bool? isMember;
+
   final int? v;
 
   factory CommunityItemModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +45,7 @@ class CommunityItemModel {
 
       isCreator: json["isCreator"] ?? false,
       isMember: json["isMember"] ?? false,
+
       v: json["__v"],
     );
   }

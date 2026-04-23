@@ -21,19 +21,26 @@ class _PostFlags {
   final RxBool isLiked;
   final RxBool isPinned;
   final RxBool isCommentLocked;
+  final RxBool isCommentDeleted;
 
-  // ✅ NEW
   final RxBool isLikeLoading;
   final RxBool isPinLoading;
   final RxBool isLockLoading;
+  final RxBool isdeleteLoading;
 
-  _PostFlags({required bool isLiked, required bool isPinned, required bool isCommentLocked})
-    : isLiked = isLiked.obs,
-      isPinned = isPinned.obs,
-      isCommentLocked = isCommentLocked.obs,
-      isLikeLoading = false.obs,
-      isPinLoading = false.obs,
-      isLockLoading = false.obs;
+  _PostFlags({
+    required bool isLiked,
+    required bool isPinned,
+    required bool isCommentLocked,
+    required bool isCommentDeleted,
+  }) : isLiked = isLiked.obs,
+       isPinned = isPinned.obs,
+       isCommentLocked = isCommentLocked.obs,
+       isCommentDeleted = isCommentDeleted.obs,
+       isLikeLoading = false.obs,
+       isPinLoading = false.obs,
+       isLockLoading = false.obs,
+       isdeleteLoading = false.obs; // ✅ FIXED
 }
 
 class CommunityDetailController extends GetxController {
@@ -57,6 +64,9 @@ class CommunityDetailController extends GetxController {
   RxBool likeFlag(String postId) => _ensureFlags(postId).isLiked;
   RxBool pinFlag(String postId) => _ensureFlags(postId).isPinned;
   RxBool commentLockFlag(String postId) => _ensureFlags(postId).isCommentLocked;
+  RxBool deleteLockFlag(String postId) => _ensureFlags(postId).isCommentDeleted;
+
+  RxBool deleteLoadingFlag(String postId) => _ensureFlags(postId).isdeleteLoading;
 
   /// Always returns a _PostFlags — creates a default one if missing.
   /// This prevents Obx from tracking zero observables on first build.
@@ -75,7 +85,12 @@ class CommunityDetailController extends GetxController {
 
     return _postFlags.putIfAbsent(
       postId,
-      () => _PostFlags(isLiked: false, isPinned: false, isCommentLocked: false),
+      () => _PostFlags(
+        isLiked: false,
+        isPinned: false,
+        isCommentLocked: false,
+        isCommentDeleted: false,
+      ),
     );
   }
 
@@ -174,7 +189,7 @@ class CommunityDetailController extends GetxController {
         //   }
         // }
 
-        for (final post in data.allPost ?? []) {
+        for (AllPost post in data.allPost ?? []) {
           final id = post.id;
 
           debugPrint('post id: $id');
@@ -183,7 +198,8 @@ class CommunityDetailController extends GetxController {
           _postFlags[id] = _PostFlags(
             isLiked: post.isLiked ?? false,
             isPinned: post.isPinned ?? false,
-            isCommentLocked: false,
+            isCommentLocked: post.isCommentLocked ?? false,
+            isCommentDeleted: false,
           );
         }
         // 2. THEN update observable
@@ -268,30 +284,40 @@ class CommunityDetailController extends GetxController {
   }
 
   // delete from backend and remove post from UI
+  Future<void> deletePostApi(String postId) async {
+    final flags = _ensureFlags(postId);
 
-  // Future<void> deletePostApi(String postId) async {
-  //   final flags = _ensureFlags(postId);
+    if (flags.isdeleteLoading.value) return;
 
-  //   if (flags.isLockLoading.value) return;
+    flags.isdeleteLoading.value = true;
 
-  //   final oldValue = flags.isCommentLocked.value;
+    try {
+      final success = await CommunityDetailService().deletePost(postItemId: postId);
 
-  //   flags.isLockLoading.value = true;
+      if (success) {
+        // ✅ mark as deleted → UI will react
+        flags.isCommentDeleted.value = true;
 
-  //   final success = await CommunityDetailService().lockCommentOfPost(postItemId: postId);
+        // optional cleanup later (not immediate)
+        Future.delayed(const Duration(seconds: 1), () {
+          _postFlags.remove(postId);
+        });
+      } else {
+        debugPrint("Delete failed");
+      }
+    } catch (e) {
+      debugPrint("Delete error: $e");
+    } finally {
+      flags.isdeleteLoading.value = false;
+    }
+  }
 
-  //   if (!success) {
-  //     flags.isCommentLocked.value = oldValue;
-  //   }
-
-  //   flags.isLockLoading.value = false;
-  // }
   // ------------------> JOIN the group
 
   // ── API state ──
   var isJoinLoading = false.obs;
-  Future<void> joinCommunity({required String communityItemId}) async {
-    if (isJoinLoading.value) return;
+  Future<bool> joinCommunity({required String communityItemId}) async {
+    if (isJoinLoading.value) return false;
 
     isJoinLoading.value = true;
 
@@ -301,23 +327,20 @@ class CommunityDetailController extends GetxController {
       );
 
       if (success) {
-        debugPrint('Joined community successfully!');
-
-        // ✅ IMPORTANT: update UI state globally
         btnState.value = MyCommunityBtnState.visit;
 
-        // optional: refresh other screens if needed
         await Get.find<CommunitySearchController>().getSuggestedCommunityList();
         await Get.find<CommunityController>().getMyCommunityList();
-      } else {
-        debugPrint('Community Join failed!');
+
+        return true;
       }
+
+      return false;
     } catch (e) {
       debugPrint('Community Join error: $e');
+      return false;
     } finally {
       isJoinLoading.value = false;
-      clearAll();
-      unFocusAll();
     }
   }
 

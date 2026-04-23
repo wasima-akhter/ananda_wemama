@@ -1,6 +1,8 @@
 import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:mama_app/gen/assets.gen.dart';
 
+import '../loaders/shimmer_widget.dart';
+
 class NetworkImageWidget extends StatelessWidget {
   final String? imageUrl;
   final double? width;
@@ -88,19 +90,24 @@ class NetworkImageWidget extends StatelessWidget {
             ? (imageUrl ?? '').substring(1)
             : (imageUrl ?? ''),
       ),
-      opacity: opacity,
+      opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
       fit: BoxFit.cover,
       width: double.infinity,
       height: double.infinity,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
-        return Center(
-          child: SizedBox(
-            width: radius < 20 ? 20.r : 24.r,
-            height: radius < 20 ? 20.r : 24.r,
-            child: LoadingPrimary(size: radius < 20 ? 30 : null),
-          ),
-        );
+
+        return isCircle
+            ? ShimmerWidget.circular(
+                width: double.infinity,
+                height: double.infinity,
+                shimmerClr: c.inputBorder.withOpacity(0.4),
+              )
+            : ShimmerWidget.rectangular(
+                width: double.infinity,
+                height: double.infinity,
+                shimmerClr: c.inputBorder.withOpacity(0.4),
+              );
       },
       errorBuilder: (context, error, stackTrace) {
         return Center(

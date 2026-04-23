@@ -9,6 +9,7 @@ import '../core/config/app_info.dart';
 import '../core/network/helpers/network_helpers.dart';
 import '../core/services/socket/socket_service.dart';
 import '../core/utils/extension/binding_extensions.dart';
+import '../features/main_tabs/community/controller/community_action_controller.dart';
 
 class App extends StatelessWidget {
   final bool hasInternet;
@@ -48,6 +49,7 @@ class App extends StatelessWidget {
           initialBinding: BindingsBuilder(() {
             Get.put(UserDetailController(), permanent: true);
             Get.put(ReportController(), permanent: true);
+            Get.put(CommunityActionController(), permanent: true);
 
             // ── Register SocketService first (MatchController depends on it) ──────────
             Get.putPermanent(SocketService());

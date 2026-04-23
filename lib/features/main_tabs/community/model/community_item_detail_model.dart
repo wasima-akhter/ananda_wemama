@@ -23,6 +23,8 @@ class AllPost {
     this.isPinned,
     this.createdAt,
     this.isLiked,
+    this.isAnonymous,
+    this.isCommentLocked,
   });
 
   final String? id;
@@ -32,6 +34,8 @@ class AllPost {
   final bool? isPinned;
   final DateTime? createdAt;
   final bool? isLiked;
+  final bool? isAnonymous;
+  final bool? isCommentLocked;
 
   factory AllPost.fromJson(Map<String, dynamic> json) {
     return AllPost(
@@ -42,6 +46,8 @@ class AllPost {
       isPinned: json["isPinned"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       isLiked: json["isLiked"],
+      isAnonymous: json["isAnonymous"],
+      isCommentLocked: json["isCommentLocked"],
     );
   }
 }

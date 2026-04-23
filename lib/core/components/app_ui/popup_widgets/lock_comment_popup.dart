@@ -3,7 +3,8 @@ import 'package:mama_app/core/components/ui/dialogs/small_popup_dialog.dart';
 import '../../../../app/helper_widgets_export.dart';
 
 class LockCommentPopup extends StatelessWidget {
-  const LockCommentPopup({super.key});
+  final bool isLocked;
+  const LockCommentPopup({super.key, required this.isLocked});
 
   @override
   Widget build(BuildContext context) {
@@ -12,11 +13,14 @@ class LockCommentPopup extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            Strings.lock.capEachWord(),
+            (isLocked ? Strings.unlock : Strings.lock).capEachWord(),
             style: TxtStyle.interSemiB(fs: 18, w: 700, color: c.primary),
           ),
           Gap(4),
-          Text(Strings.commentLocked, style: TxtStyle.inter(fs: 12, color: c.primary)),
+          Text(
+            isLocked ? Strings.commentUnlocked : Strings.commentLocked,
+            style: TxtStyle.inter(fs: 12, color: c.primary),
+          ),
         ],
       ),
     );

@@ -103,21 +103,20 @@ class CommunityDetailService extends GetxService {
     return response.success;
   }
 
-  // Future<bool> deletePost({required String postItemId}) async {
-  //   apiCall() {
-  //     return ApiClient().post(
-  //       Endpoints.lockCommentOfPost(id: postItemId).getUrl,
-  //       reqName: Strings.comment,
+  Future<bool> deletePost({required String postItemId}) async {
+    apiCall() {
+      return ApiClient().delete(
+        Endpoints.deletePost(postId: postItemId).getUrl,
+        reqName: Strings.post,
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
 
-  //       headers: HeaderHelpers.getAuthHeader(),
-  //     );
-  //   }
-
-  //   final response = await _apiHelper.request(apiCall: apiCall);
-  //   if (response == null) return false;
-  //   print("response success: ${response.success}");
-  //   return response.success;
-  // }
+    final response = await _apiHelper.request(apiCall: apiCall);
+    if (response == null) return false;
+    print("response success: ${response.success}");
+    return response.success;
+  }
 
   Future<bool> createNewPost({
     required String communityItemId,
@@ -129,6 +128,42 @@ class CommunityDetailService extends GetxService {
         Endpoints.createNewPost.getUrl,
         reqName: Strings.post,
         data: {"community": communityItemId, "content": content, "isAnonymous": isAnonymous},
+
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
+
+    final response = await _apiHelper.request(apiCall: apiCall);
+    if (response == null) return false;
+    print("response success: ${response.success}");
+    return response.success;
+  }
+
+  Future<bool> addComment({
+    required String communityItemId,
+    required String postItemId,
+    String? parentCommentId,
+    required String content,
+    required String commentorName,
+  }) async {
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.postAddComment.getUrl,
+        reqName: Strings.comment,
+        data: parentCommentId == null
+            ? {
+                "community": communityItemId,
+                "post": postItemId,
+                "content": content,
+                "name": commentorName,
+              }
+            : {
+                "community": communityItemId,
+                "post": postItemId,
+                "parentComment": parentCommentId,
+                "content": content,
+                "name": commentorName,
+              },
 
         headers: HeaderHelpers.getAuthHeader(),
       );

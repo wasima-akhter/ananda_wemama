@@ -18,6 +18,14 @@ String currentProfileId() {
   }
 }
 
+String currentProfileName() {
+  if (Get.isRegistered<ProfileController>()) {
+    return Get.find<ProfileController>().userProfileData.value?.name ?? '';
+  } else {
+    return '';
+  }
+}
+
 String currentUserImage() {
   if (Get.isRegistered<ProfileController>()) {
     return Get.find<ProfileController>().userProfileData.value?.profileImage ?? '';

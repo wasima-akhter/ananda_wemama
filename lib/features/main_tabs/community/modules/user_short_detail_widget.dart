@@ -7,23 +7,32 @@ class UserShortDetailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAnonymous = postItem.isAnonymous ?? false;
+
     final creator = postItem.creator;
     final creatorName = creator?.name ?? '';
+    final creatorImg = creator?.profileImage ?? '';
     final creatorAddress = creator?.city ?? '';
     return Row(
       children: [
-        NetworkImageWidget(imageUrl: Strings.fakeImageUrl, isCircle: true, radius: 25),
+        NetworkImageWidget(imageUrl: creatorImg, isCircle: true, radius: 18),
         Gap(itemGap * 1.5),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TextFit(creatorName, style: TxtStyle.outfitSmNor500),
-            Row(
-              children: [
-                SvgIcon(iconPath: IconsPath.locationBold, height: 16),
-                TextFit(creatorAddress, style: TxtStyle.outfitxSmNor500),
-              ],
+            TextFit(
+              isAnonymous ? Strings.anonymous : creatorName.capEachWord(),
+              style: TxtStyle.outfitSemiB(fs: 15, w: 500, color: c.primary),
             ),
+            isAnonymous
+                ? const SizedBox.shrink()
+                : Row(
+                    children: [
+                      SvgIcon(iconPath: IconsPath.locationBold, height: 16),
+                      TextFit(creatorAddress, style: TxtStyle.outfitxSmNor500),
+                    ],
+                  ),
           ],
         ),
       ],

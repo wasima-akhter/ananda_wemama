@@ -23,7 +23,7 @@ class CommentModelOfPost {
   final Creator? creator;
   final String? content;
   final DateTime? createdAt;
-  final List<dynamic>? replies;
+  final List<ReplyModelOfPost>? replies;
 
   factory CommentModelOfPost.fromJson(Map<String, dynamic> json) {
     return CommentModelOfPost(
@@ -31,7 +31,27 @@ class CommentModelOfPost {
       creator: json["creator"] == null ? null : Creator.fromJson(json["creator"]),
       content: json["content"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      replies: json["replies"] == null ? [] : List<dynamic>.from(json["replies"]!.map((x) => x)),
+      replies: json["replies"] == null
+          ? []
+          : List<ReplyModelOfPost>.from(json["replies"]!.map((x) => ReplyModelOfPost.fromJson(x))),
+    );
+  }
+}
+
+class ReplyModelOfPost {
+  ReplyModelOfPost({this.id, this.creator, this.content, this.createdAt});
+
+  final String? id;
+  final Creator? creator;
+  final String? content;
+  final DateTime? createdAt;
+
+  factory ReplyModelOfPost.fromJson(Map<String, dynamic> json) {
+    return ReplyModelOfPost(
+      id: json["_id"],
+      creator: json["creator"] == null ? null : Creator.fromJson(json["creator"]),
+      content: json["content"],
+      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
     );
   }
 }

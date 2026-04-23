@@ -1,8 +1,10 @@
 import 'package:mama_app/core/services/socket/socket_events.dart';
+import 'package:mama_app/core/utils/extension/string_extension.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../model/chat_list_item_model.dart';
+import '../service/chat_service.dart';
 
 class FakeChatModel {
   final String id;
@@ -23,6 +25,8 @@ class FakeChatModel {
 class ChatController extends GetxController {
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
+
+  final chatScrollCtrl = ScrollController();
 
   @override
   void onClose() {
@@ -69,6 +73,44 @@ class ChatController extends GetxController {
     } catch (e) {
       print("Error fetching chat list: $e");
       isLoading_.value = false; // ← only false on error, not after emit
+    }
+  }
+
+  /// --------------  Search Chat List -----//
+  final showSearchedTag = false.obs;
+  final searchedTxt = ''.obs;
+
+  final isSearchLoading_ = false.obs; // ← start true, data hasn't arrived yet
+
+  final service = ChatService();
+  final searchedChatList = <ChatListItemModel>[].obs;
+
+  /// Fetch the latest  data from API
+  Future<void> getSearchedChatList() async {
+    debugPrint('hit search');
+    if (isSearchLoading_.value) return; // Prevent duplicate calls
+
+    if (searchController.text.trim().isEmpty) {
+      Strings.writeSomething.showToast();
+      return;
+    }
+
+    isSearchLoading_.value = true;
+    searchedChatList.value = [];
+
+    try {
+      final data = await service.fetchSearchedChatList(searchTxt: searchController.text.trim());
+
+      if (data.isNotEmpty) {
+        debugPrint('get Searched ChatList : $data');
+        searchedChatList.value = data;
+      }
+    } catch (e) {
+      print("Error fetching Searched ChatList : $e");
+    } finally {
+      isSearchLoading_.value = false;
+      unFocusAll();
+      clearAll();
     }
   }
 

@@ -52,7 +52,7 @@ class CommunitySearchScreen extends StatelessWidget {
 
                       csc.clearAll();
                     },
-                    child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: white),
+                    child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: c.primary),
 
                     // Icon(Icons.close, size: 16, color: white),
                   ),
@@ -92,30 +92,26 @@ class CommunitySearchScreen extends StatelessWidget {
                     ).getcm,
               ),
 
-              empty: () => const EmptyWidgetScrollable(title: "No Community found").getcm,
+              empty: () => const EmptyNoSearchWidgetScrollable(title: "No Community found").getcm,
 
-              data: () => Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300),
-                  child: buildCommunityList(
-                    scrollController: csc.searchedCommCtrl,
-                    itemCount: displayListSearched.length,
-                    itemBuilder: (index) {
-                      final item = displayListSearched[index];
+              data: () => AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: buildCommunityList(
+                  scrollController: csc.searchedCommCtrl,
+                  itemCount: displayListSearched.length,
+                  itemBuilder: (index) {
+                    final item = displayListSearched[index];
 
-                      return CommunityItem(
-                        item: item,
-                        btnTxt: item.btnText,
-                        isLoading: false,
-                        onTapItem: () =>
-                            csc.onTapItem(btnState: item.btnState, communityItemId: item.id ?? ''),
-                        onTapItemBtn: () => csc.onTapItemBtn(
-                          btnState: item.btnState,
-                          communityItemId: item.id ?? '',
-                        ),
-                      );
-                    },
-                  ),
+                    return CommunityItem(
+                      item: item,
+                      btnTxt: item.btnText,
+                      isLoading: false,
+                      onTapItem: () =>
+                          csc.onTapItem(btnState: item.btnState, communityItemId: item.id ?? ''),
+                      onTapItemBtn: () =>
+                          csc.onTapItemBtn(btnState: item.btnState, communityItemId: item.id ?? ''),
+                    );
+                  },
                 ),
               ),
             ),
@@ -128,7 +124,8 @@ class CommunitySearchScreen extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(CommunitySearchController csc) {
     return CommonAppBarContent(
       title: '',
-      titleWidget: Expanded(
+      titleWidget: SizedBox(
+        // width: S.w * 0.7,
         child: CusSearchBar(
           fillColor: ctransp,
           controller: csc.searchController,
@@ -220,7 +217,7 @@ class SuggestedCommunitySection extends StatelessWidget {
                 itemBuilder: (_, index) => CommunityItemShimmer(),
               ).getcm,
 
-              empty: () => const EmptyWidgetScrollable(title: "No Communities yet").getcm,
+              empty: () => const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
 
               data: () => buildCommunityList(
                 scrollController: csc.suggCommunityScrlCtrl,

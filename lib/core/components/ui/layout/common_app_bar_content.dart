@@ -36,7 +36,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
             // color: Colors.amber,
             color: finalBg,
           ),
-          padding: EdgeInsets.only(top: 25.h, left: 20.w, right: 20.w, bottom: 10.h),
+          padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w, bottom: 10.h),
 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,12 +88,12 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
           ),
         ),
       ),
-      toolbarHeight: 50.h,
+      toolbarHeight: 60.h,
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(50.h);
+  Size get preferredSize => Size.fromHeight(60.h);
 }
 
 class AppBarLikeTitle extends StatelessWidget {

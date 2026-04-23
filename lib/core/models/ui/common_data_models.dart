@@ -1,3 +1,5 @@
+import '../../../features/main_tabs/community/model/community_item_detail_model.dart';
+
 class IdentityCardDataModel {
   final String title;
   final String phone;
@@ -30,6 +32,13 @@ class CreateCommunityArgModel {
     required this.isEdit,
     this.communityId,
   });
+}
+
+class PostDetailArgModel {
+  final Community communityData;
+  final AllPost postItem;
+
+  PostDetailArgModel({required this.communityData, required this.postItem});
 }
 
 class CommonTitleIconpathModel {

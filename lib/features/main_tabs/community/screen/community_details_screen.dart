@@ -15,14 +15,14 @@ class CommunityDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cc = Get.find<CommunityDetailController>();
+    final cdc = Get.find<CommunityDetailController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async {
         print("communities refreshed");
-        cc.getCommunityDetail();
+        cdc.getCommunityDetail();
       },
 
       child: Column(
@@ -30,8 +30,8 @@ class CommunityDetailsScreen extends StatelessWidget {
         children: [
           // ── Header with overlaid topbar ──
           Obx(() {
-            final isLoading = cc.isLoading_.value;
-            final itemDetail = cc.communityItemDetail.value;
+            final isLoading = cdc.isLoading_.value;
+            final itemDetail = cdc.communityItemDetail.value;
 
             final state = getUIStateDetail(isLoading: isLoading);
 
@@ -41,7 +41,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                 // ── Base content ──
                 UIStateHandler(
                   onRefresh: () async {
-                    cc.getCommunityDetail();
+                    cdc.getCommunityDetail();
                   },
                   state: state,
                   loading: () => Column(
@@ -65,7 +65,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  data: () => CommunityDetailTopContent(itemDetail: itemDetail, cc: cc),
+                  data: () => CommunityDetailTopContent(itemDetail: itemDetail, cdc: cdc),
                 ),
 
                 // your real header
@@ -78,14 +78,20 @@ class CommunityDetailsScreen extends StatelessWidget {
                   child: CommunityTopbarContent(
                     suffix: CusGestureDetector(
                       onTap: () {
-                        if (cc.btnState.value == MyCommunityBtnState.manage) {
-                          // edit the community
-                          communityGuidlineDialog(isLoading: false, onTapAction: () async {});
-                        }
-                        if (cc.btnState.value == MyCommunityBtnState.visit) {}
-                        if (cc.btnState.value == MyCommunityBtnState.join) {
-                          communityGuidlineDialog(isLoading: false, onTapAction: () async {});
-                        }
+                        communityGuidlineDialog(
+                          isLoading: false,
+                          onTapAction: () async {
+                            Get.back();
+                          },
+                        );
+                        // if (cdc.btnState.value == MyCommunityBtnState.manage) {
+                        //   // edit the community
+                        //   communityGuidlineDialog(isLoading: false, onTapAction: () async {});
+                        // }
+                        // if (cdc.btnState.value == MyCommunityBtnState.visit) {}
+                        // if (cdc.btnState.value == MyCommunityBtnState.join) {
+                        //   communityGuidlineDialog(isLoading: false, onTapAction: () async {});
+                        // }
                       },
                       child: CusCircleIconButton(
                         radius: 15.r,
@@ -102,9 +108,10 @@ class CommunityDetailsScreen extends StatelessWidget {
 
           // ── Posts ──
           Obx(() {
-            final isLoading = cc.isLoading_.value;
-            final itemDetail = cc.communityItemDetail.value;
+            final isLoading = cdc.isLoading_.value;
+            final itemDetail = cdc.communityItemDetail.value;
             final itemPosts = itemDetail.allPost ?? [];
+            final communityData = itemDetail.community ?? Community();
 
             final state = getUIStateList(isLoading: isLoading, list: itemPosts);
 
@@ -112,13 +119,13 @@ class CommunityDetailsScreen extends StatelessWidget {
 
             return UIStateHandler(
               onRefresh: () async {
-                cc.getCommunityDetail();
+                cdc.getCommunityDetail();
               },
               state: state,
               loading: () => Column(
                 children: List.generate(5, (index) => const PostItemShimmer().mB(itemGap)),
               ).getcm,
-              empty: () => const EmptyWidget(title: "No Posts yet"),
+              empty: () => const EmptyNoSearchWidget(title: "No Posts yet"),
 
               data: () => Column(
                 children: List.generate(
@@ -126,9 +133,10 @@ class CommunityDetailsScreen extends StatelessWidget {
                   (index) =>
                       // Text("data")
                       PostItemWidget(
+                        communityData: communityData,
                         postItem: itemPosts[index],
-                        cc: cc,
-                        btnState: cc.btnState.value,
+                        cc: cdc,
+                        btnState: cdc.btnState.value,
                         postId: itemPosts[index].id.toString(),
                         userName: itemPosts[index].creator?.name ?? '',
                         postCreatorId: itemDetail.community?.id ?? '',
@@ -148,9 +156,9 @@ class CommunityDetailsScreen extends StatelessWidget {
 class CommunityDetailTopContent extends StatelessWidget {
   final CommunityItemDetailModel itemDetail;
 
-  final CommunityDetailController cc;
+  final CommunityDetailController cdc;
 
-  const CommunityDetailTopContent({super.key, required this.itemDetail, required this.cc});
+  const CommunityDetailTopContent({super.key, required this.itemDetail, required this.cdc});
 
   @override
   Widget build(BuildContext context) {
@@ -215,10 +223,10 @@ class CommunityDetailTopContent extends StatelessWidget {
                   // wrap JoinBtn with Obx
                   Obx(() {
                     return JoinBtn(
-                      isLoading: cc.isJoinLoading.value,
-                      btnTxt: cc.getBtnTxt(), // now reactive
+                      isLoading: cdc.isJoinLoading.value,
+                      btnTxt: cdc.getBtnTxt(), // now reactive
                       onTap: () {
-                        if (cc.btnState.value == MyCommunityBtnState.manage) {
+                        if (cdc.btnState.value == MyCommunityBtnState.manage) {
                           Get.toNamed(
                             RoutePaths.manageCommunity,
                             arguments: CreateCommunityArgModel(
@@ -230,12 +238,25 @@ class CommunityDetailTopContent extends StatelessWidget {
                           );
                         }
 
-                        if (cc.btnState.value == MyCommunityBtnState.join) {
+                        if (cdc.btnState.value == MyCommunityBtnState.join) {
                           communityGuidlineDialog(
-                            isLoading: false,
+                            isLoading: cdc.isJoinLoading.value,
                             onTapAction: () async {
                               Get.back();
-                              cc.joinCommunity(communityItemId: itemDetail.community?.id ?? '');
+
+                              final success = await cdc.joinCommunity(
+                                communityItemId: itemDetail.community?.id ?? '',
+                              );
+
+                              if (success) {
+                                Get.toNamed(
+                                  RoutePaths.communityDetail,
+                                  arguments: {
+                                    "btnState": MyCommunityBtnState.visit,
+                                    "communityItemId": itemDetail.community?.id ?? '',
+                                  },
+                                );
+                              }
                             },
                           );
                         }
@@ -264,7 +285,7 @@ class CommunityDetailTopContent extends StatelessWidget {
               ),
 
               //   CusNameTypeTextFormField(
-              //   controller: cc.postCtrl,
+              //   controller: cdc.postCtrl,
               //   hintText: Strings.writeSomething,
               // ),
             ],

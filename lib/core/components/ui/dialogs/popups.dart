@@ -95,8 +95,11 @@ Future<void> showDailyLimitDialog() {
   return showAnimatedDialog(context: Get.context!, child: DailyLimitPopup());
 }
 
-Future<void> showLockCommentialog() {
-  return showAnimatedDialog(context: Get.context!, child: LockCommentPopup());
+Future<void> showLockCommentialog({required bool isLocked}) {
+  return showAnimatedDialog(
+    context: Get.context!,
+    child: LockCommentPopup(isLocked: isLocked),
+  );
 }
 
 Future<void> showAskYourQuesDialog({

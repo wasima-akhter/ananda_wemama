@@ -2,6 +2,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 import '../model/all_comments_of_post_model.dart';
 import '../services/community_detail_service.dart';
 
@@ -13,13 +14,14 @@ class PostDetailsController extends GetxController {
 
   final scrollController = ScrollController(); // ← add
 
-  var postId = ''.obs;
+  final postDetailArg = Rxn<PostDetailArgModel>();
 
   @override
   void onInit() async {
-    final postId_ = Get.arguments;
-    postId.value = (postId_ ?? '').toString();
-    debugPrint('postId_: $postId_');
+    final args = Get.arguments as PostDetailArgModel;
+    postDetailArg.value = args;
+
+    debugPrint('postId_: ${postDetailArg.value?.postItem.id}');
     await getCommentsList();
     super.onInit();
   }
@@ -44,8 +46,6 @@ class PostDetailsController extends GetxController {
   // API loading state
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
-
-  final showChildren = false.obs;
 
   void onTapReply() {}
 
@@ -81,7 +81,9 @@ class PostDetailsController extends GetxController {
     isGetCommentsLoading.value = true;
 
     try {
-      final data = await CommunityDetailService().fetchCommentsOfAPost(postId: postId.value);
+      final data = await CommunityDetailService().fetchCommentsOfAPost(
+        postId: postDetailArg.value?.postItem.id ?? '',
+      );
 
       if (data != null) {
         comments.value = data.comments ?? [];
@@ -90,12 +92,97 @@ class PostDetailsController extends GetxController {
       print("Error fetching comments: $e");
     } finally {
       isGetCommentsLoading.value = false;
-
-      unFocusAll();
     }
   }
 
   UIState get commentState => getUIStateList(isLoading: isGetCommentsLoading.value, list: comments);
 
-  void onTapAddComment() {}
+  final replyingToCommentId = RxnString();
+  final replyingToUserName = ''.obs;
+
+  //
+  final isAddCommentLoading = false.obs;
+
+  Future<void> onTapAddComment() async {
+    if (isAddCommentLoading.value) return;
+
+    final text = commentCtrl.text.trim();
+    if (text.isEmpty) return;
+
+    isAddCommentLoading.value = true;
+    unFocusAll();
+
+    try {
+      final isReply = replyingToCommentId.value != null;
+
+      final success = await CommunityDetailService().addComment(
+        communityItemId: postDetailArg.value?.communityData.id ?? '',
+        postItemId: postDetailArg.value?.postItem.id ?? '',
+        parentCommentId: (replyingToCommentId.value ?? '').isEmpty
+            ? null
+            : replyingToCommentId.value,
+        content: text,
+        commentorName: currentProfileName(),
+      );
+
+      if (success == true) {
+        final now = DateTime.now();
+
+        if (isReply) {
+          // ✅ ADD CHILD COMMENT
+          final parentIndex = comments.indexWhere((e) => e.id == replyingToCommentId.value);
+
+          if (parentIndex != -1) {
+            final parent = comments[parentIndex];
+
+            final updatedReplies = List<ReplyModelOfPost>.from(parent.replies ?? []);
+
+            updatedReplies.add(
+              ReplyModelOfPost(
+                id: now.millisecondsSinceEpoch.toString(), // temp id
+                content: text,
+                createdAt: now,
+                creator: Creator(
+                  name: currentProfileName(),
+                  profileImage: currentUserImage(), // if available
+                ),
+              ),
+            );
+
+            comments[parentIndex] = CommentModelOfPost(
+              id: parent.id,
+              creator: parent.creator,
+              content: parent.content,
+              createdAt: parent.createdAt,
+              replies: updatedReplies,
+            );
+          }
+        } else {
+          // ✅ ADD PARENT COMMENT
+          comments.insert(
+            0,
+            CommentModelOfPost(
+              id: now.millisecondsSinceEpoch.toString(),
+              content: text,
+              createdAt: now,
+              creator: Creator(name: currentProfileName(), profileImage: currentUserImage()),
+              replies: [],
+            ),
+          );
+        }
+
+        // 🔥 IMPORTANT: force UI update
+        comments.refresh();
+
+        // reset reply state
+        replyingToCommentId.value = null;
+        replyingToUserName.value = '';
+      }
+    } catch (e) {
+      print("Error adding comment: $e");
+    } finally {
+      isAddCommentLoading.value = false;
+      clearAll();
+    }
+  }
 }

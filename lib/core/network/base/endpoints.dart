@@ -61,17 +61,21 @@ class Endpoints {
   static String getSuggestedCommunity = "community/get-community-suggestion";
   static String getSearchedCommunity({required String searchTxt}) =>
       "community/search-community?searchText=$searchTxt";
+
   static String getCommunityDetail({required String id}) => "community/get-community-detail/$id";
   static String postToggleLike = "post/toggle-like";
   static String pinPost({required String id}) => "post/pin-post/$id";
   static String lockCommentOfPost({required String id}) => "post/lock-comment/$id";
   static String createNewPost = "post/create-new-post";
+  static String postAddComment = "post/add-comment";
   static String joinCommunity({required String communityId}) =>
       "community/join-community?communityId=$communityId";
   static String getAllCommentsOfAPost({required String postId}) => "post/get-all-comment/$postId";
-  // delet post url : baki
+  static String deletePost({required String postId}) => "post/delete-post/$postId";
 
-  //
+  // Chat
+  static String getSearchedChatList({required String searchTxt}) =>
+      "chat/search-chat?searchText=$searchTxt";
 
   static String getAllReviews({required String supplierId}) {
     return "review/get-all-review/$supplierId";

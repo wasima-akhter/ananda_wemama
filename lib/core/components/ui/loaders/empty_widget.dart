@@ -60,6 +60,39 @@ class EmptyNoSearchWidget extends StatelessWidget {
   }
 }
 
+class EmptyNoSearchWidgetScrollable extends StatelessWidget {
+  final String title;
+  final bool? isSmaller;
+  const EmptyNoSearchWidgetScrollable({super.key, required this.title, this.isSmaller});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: ContainerBordered(
+        contClr: c.bottomSheetBackground.withOpacity(0.2),
+        vp: 20.h,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Gap(itemGap * 2),
+            Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+
+            Gap(itemGap * 2),
+
+            Image.asset(
+              ImagesPath.emptyList,
+              fit: BoxFit.contain,
+              height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
+            ),
+            Gap(itemGap * 5),
+          ],
+        ),
+      ).mT(12),
+    );
+  }
+}
+
 class EmptySessionWidget extends StatelessWidget {
   final String title;
   const EmptySessionWidget({super.key, required this.title});

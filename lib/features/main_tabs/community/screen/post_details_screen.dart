@@ -1,4 +1,6 @@
 import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:mama_app/features/main_tabs/community/controller/community_detail_controller.dart';
+import 'package:mama_app/features/main_tabs/community/model/community_item_detail_model.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -6,6 +8,8 @@ import '../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart'
 import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../shared/comments/widget/comment_item_w_reply.dart';
 import '../controller/post_details_controller.dart';
+import '../model/all_comments_of_post_model.dart';
+import '../widgets/post_item_widget.dart';
 
 class PostDetailsScreen extends StatelessWidget {
   const PostDetailsScreen({super.key});
@@ -13,6 +17,7 @@ class PostDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pcc = Get.find<PostDetailsController>();
+    final cc = Get.find<CommunityDetailController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     // ← scroll to bottom + open keyboard after first frame
@@ -35,39 +40,62 @@ class PostDetailsScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async => print("refreshed"),
+      isScrollable: false,
       appBar: CommonAppBarContent(title: Strings.post),
-      scrollController: pcc.scrollController,
 
       // ── Pinned input at bottom ──
       floatingActionButton: Obx(() {
-        final isLocked = false.obs.value;
+        final replyingTo = pcc.replyingToUserName.value;
 
-        if (isLocked) return const SizedBox.shrink();
-
-        return CusDesTypeTextFormField(
-          minLines: 1,
-          minHeight: 40,
-          maxHeight: 65,
-          rad: 30,
-          style: TxtStyle.outfitSmNor,
-          bgClr: c.inputBackground,
-          isPaddingLess: true,
-          controller: pcc.commentCtrl,
-          focusNode: pcc.commentFocus,
-          hintText: Strings.writeSomething,
-          suffix: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CusGestureDetector(
-                onTap: () => pcc.onTapAddComment(),
-                child: CircleAvatar(
-                  backgroundColor: c.primary,
-                  child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (replyingTo.isNotEmpty)
+              ContainerBordered(
+                hp: 10,
+                vp: 6,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Replying to $replyingTo", style: TxtStyle.outfit(fs: 14)),
+                    Gap(6),
+                    CusGestureDetector(
+                      onTap: () {
+                        pcc.replyingToCommentId.value = null;
+                        pcc.replyingToUserName.value = '';
+                      },
+                      child: SvgIconColored(iconPath: IconsPath.closeCircle),
+                    ),
+                  ],
                 ),
-              ).mAll(5),
-            ],
-          ),
-        ).getcm;
+              ),
+
+            CusDesTypeTextFormField(
+              controller: pcc.commentCtrl,
+              focusNode: pcc.commentFocus,
+              hintText: replyingTo.isNotEmpty ? "Reply to $replyingTo" : Strings.writeSomething,
+              minLines: 1,
+              minHeight: 40,
+              maxHeight: 65,
+              suffix: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CusGestureDetector(
+                    onTap: () async => await pcc.onTapAddComment(),
+                    child: CircleAvatar(
+                      backgroundColor: c.primary,
+                      child: Obx(
+                        () => pcc.isAddCommentLoading.value
+                            ? LoadingWhite()
+                            : SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
+                      ),
+                    ),
+                  ).mAll(5),
+                ],
+              ),
+            ).getcm,
+          ],
+        );
       }),
 
       // ── Scrollable body ──
@@ -76,11 +104,26 @@ class PostDetailsScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // ── Post at top ──
-          // PostItemWidget(cc: cc,
-          // postItem: ,
-          //  postId: postId, btnState: btnState, showActions: false),
+          Builder(
+            builder: (context) {
+              final communityData = pcc.postDetailArg.value?.communityData ?? Community();
+
+              final postItem = pcc.postDetailArg.value?.postItem ?? AllPost();
+              return PostItemWidget(
+                communityData: communityData,
+                postItem: postItem,
+                cc: cc,
+                btnState: cc.btnState.value,
+                postId: postItem.id.toString(),
+                userName: postItem.creator?.name ?? '',
+                postCreatorId: communityData.id ?? '',
+                showActions: false,
+              ).mB(itemGap);
+            },
+          ),
+
           Gap(itemGap * 3),
-          CustomDivider(isFullWidth: true, clr: c.secondary),
+          CustomDivider(isFullWidth: true, clr: c.primary, h: 0.5),
           Gap(itemGap),
 
           // ── Comments list (not independently scrollable) ──
@@ -103,7 +146,7 @@ class PostDetailsScreen extends StatelessWidget {
                   itemBuilder: (_, index) => const CommentItemShimmer(),
                 ),
 
-                empty: () => const EmptyWidget(title: "No comments yet"),
+                empty: () => const EmptyNoSearchWidgetScrollable(title: "No comments yet"),
 
                 data: () => ListView.separated(
                   shrinkWrap: true,
@@ -117,24 +160,15 @@ class PostDetailsScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          NetworkImageWidget(imageUrl: Strings.fakeImageUrl, radius: 20),
+                          NetworkImageWidget(
+                            imageUrl: item.creator?.profileImage ?? '',
+                            isCircle: true,
+                            radius: 16,
+                          ),
                           Gap(itemGap),
 
                           Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.creator?.name ?? '',
-                                  style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
-                                ),
-                                Text(item.content ?? '', style: TxtStyle.outfit(fs: 13)),
-                                CusGestureDetector(
-                                  onTap: () => pcc.showChildren.value = true,
-                                  child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
-                                ),
-                              ],
-                            ),
+                            child: CommentItemInPostDetail(item: item, pcc: pcc),
                           ),
                         ],
                       ),
@@ -146,6 +180,71 @@ class PostDetailsScreen extends StatelessWidget {
           ),
         ],
       ).getcm,
+    );
+  }
+}
+
+class CommentItemInPostDetail extends StatelessWidget {
+  final CommentModelOfPost item;
+  final PostDetailsController pcc;
+  const CommentItemInPostDetail({super.key, required this.item, required this.pcc});
+
+  @override
+  Widget build(BuildContext context) {
+    final childCommentList = item.replies ?? [];
+    debugPrint('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          item.creator?.name ?? 'N/A',
+          style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+        ),
+        Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
+        CusGestureDetector(
+          onTap: () {
+            pcc.replyingToCommentId.value = item.id;
+            pcc.replyingToUserName.value = item.creator?.name ?? '';
+
+            pcc.commentFocus.requestFocus(); // open keyboard
+          },
+          child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+        ),
+
+        Column(
+          children: [
+            ...childCommentList.map((child) {
+              return Padding(
+                padding: EdgeInsets.only(left: 20), // 👈 indent
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    NetworkImageWidget(
+                      imageUrl: child.creator?.profileImage ?? '',
+                      isCircle: true,
+                      radius: 14, // 👈 smaller avatar
+                    ),
+                    Gap(itemGap * 0.6),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            child.creator?.name ?? 'N/A',
+                            style: TxtStyle.outfitSemiB(fs: 13, color: c.textPrimary),
+                          ),
+                          Text(child.content ?? '--', style: TxtStyle.outfit(fs: 12)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ).mT(6);
+            }),
+          ],
+        ),
+      ],
     );
   }
 }

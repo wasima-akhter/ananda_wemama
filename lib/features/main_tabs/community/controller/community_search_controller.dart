@@ -4,6 +4,7 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
 import '../model/community_item_model.dart';
 import '../services/community_service.dart';
+import 'community_action_controller.dart';
 
 class CommunitySearchController extends GetxController with WidgetsBindingObserver {
   final isKeyboardOpen = false.obs;
@@ -116,17 +117,28 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
   }
 
   //--------------------->
+  final actionCtrl = Get.find<CommunityActionController>();
 
   void onTapItemBtn({required MyCommunityBtnState btnState, required String communityItemId}) {
     if (btnState == MyCommunityBtnState.join) {
       communityGuidlineDialog(
-        isLoading: false,
+        isLoading: actionCtrl.isJoinLoading.value,
         onTapAction: () async {
           Get.back();
-          Get.toNamed(
-            RoutePaths.communityDetail,
-            arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": communityItemId},
-          );
+
+          final success = await actionCtrl.joinCommunity(communityItemId);
+
+          if (success) {
+            Get.toNamed(
+              RoutePaths.communityDetail,
+              arguments: {
+                "btnState": MyCommunityBtnState.visit,
+                "communityItemId": communityItemId,
+              },
+            );
+
+            searchedCommunityList.removeWhere((item) => item.id == communityItemId);
+          }
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {

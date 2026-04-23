@@ -17,12 +17,13 @@ class ChatListItemModel {
 }
 
 class OtherUser {
-  OtherUser({this.name, this.profileImage});
+  OtherUser({this.name, this.profileImage, this.id});
 
   final String? name;
+  final String? id;
   final String? profileImage;
 
   factory OtherUser.fromJson(Map<String, dynamic> json) {
-    return OtherUser(name: json["name"], profileImage: json["profileImage"]);
+    return OtherUser(id: json["_id"], name: json["name"], profileImage: json["profileImage"]);
   }
 }

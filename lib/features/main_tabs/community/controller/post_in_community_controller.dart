@@ -3,6 +3,7 @@ import 'package:mama_app/features/main_tabs/community/controller/community_detai
 import 'package:mama_app/features/main_tabs/community/services/community_detail_service.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/utils/extension/string_extension.dart';
 
 class PostInCommunityController extends GetxController {
   final String communityItemId;
@@ -78,6 +79,11 @@ class PostInCommunityController extends GetxController {
   RxBool isCreatePostLoading = false.obs;
   Future<void> createNewPost() async {
     if (isCreatePostLoading.value) return;
+
+    if (contentCtrl.text.isEmpty) {
+      Strings.writeSomething.showToast();
+      return;
+    }
 
     isCreatePostLoading.value = true;
 

@@ -290,7 +290,7 @@ class PostDetailsBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    final args = Get.arguments;
+    final args = Get.arguments as PostDetailArgModel;
 
     if (Get.isRegistered<PostDetailsController>()) {
       Get.delete<PostDetailsController>(force: true);
