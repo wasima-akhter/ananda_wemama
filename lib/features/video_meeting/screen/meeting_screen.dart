@@ -77,6 +77,7 @@ class MeetingScreen extends StatelessWidget {
                         // ← NO leaveMeeting() here
                         showLiveExitPopup(
                           LiveExitReason.voluntary,
+
                           onTapCancel: (cancelLeave) async {
                             if (cancelLeave) {
                               Get.back();
@@ -85,9 +86,7 @@ class MeetingScreen extends StatelessWidget {
                               mc.exitReason = LiveExitReason.voluntary;
 
                               Get.back();
-                              await mc.leaveMeeting();
-
-                              showLiveExitPopup(LiveExitReason.voluntary);
+                              await mc.leaveSession();
                             }
                           },
                         );

@@ -5,6 +5,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:agora_rtm/agora_rtm.dart';
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
+import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
 import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -609,7 +610,8 @@ class MeetingController extends GetxController {
     // Navigate away after cleanup
     // Small delay so leaveMeeting() finishes before navigation
     await Future.delayed(const Duration(milliseconds: 300));
-    Get.offAllNamed('/home'); // ← replace with your actual home/dashboard route
+    Get.offAllNamed(RoutePaths.mainNav);
+    MainNavController.to.goToTab(4); // ← replace with your actual home/dashboard route
   }
 
   /// ---------------- Live State ---------------- ///
