@@ -97,6 +97,9 @@ class LiveChatController extends GetxController {
               final target = payload['target']?.toString() ?? '';
               if (target == mc.uid.value.toString()) {
                 // 1. Clean up engine immediately — user stops seeing/hearing live
+                mc.isSessionExiting = true;
+                mc.exitReason = LiveExitReason.kicked;
+
                 await mc.leaveMeeting();
 
                 // 2. Navigate away from meeting screen entirely

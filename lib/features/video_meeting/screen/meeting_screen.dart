@@ -79,13 +79,15 @@ class MeetingScreen extends StatelessWidget {
                           LiveExitReason.voluntary,
                           onTapCancel: (cancelLeave) async {
                             if (cancelLeave) {
-                              // User hit "Cancel" → just close popup, stay in session
                               Get.back();
                             } else {
-                              // User hit "Leave" → now actually leave
+                              mc.isSessionExiting = true;
+                              mc.exitReason = LiveExitReason.voluntary;
+
                               Get.back();
                               await mc.leaveMeeting();
-                              // No reconnect popup needed — they chose to leave
+
+                              showLiveExitPopup(LiveExitReason.voluntary);
                             }
                           },
                         );

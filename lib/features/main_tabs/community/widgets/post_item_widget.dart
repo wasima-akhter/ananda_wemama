@@ -220,6 +220,11 @@ class _PostActions extends StatelessWidget {
       final isLiked = cc.likeFlag(postId).value;
 
       final isLocked = (postItem.isCommentLocked ?? false) || cc.commentLockFlag(postId).value;
+      final canSeeLockedComment =
+          ((btnState == MyCommunityBtnState.manage) &&
+              (communityData.creator ?? '') == currentProfileId())
+          ? true
+          : false;
 
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -237,7 +242,7 @@ class _PostActions extends StatelessWidget {
           ),
           Gap(itemGap),
           CusGestureDetector(
-            onTap: () => isLocked
+            onTap: () => isLocked && !canSeeLockedComment
                 ? null
                 : Get.toNamed(
                     RoutePaths.postDetails,
