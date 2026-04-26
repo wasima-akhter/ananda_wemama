@@ -146,6 +146,7 @@ class UserDetailComponent extends StatelessWidget {
               child: hasImage
                   ? NetworkImageWidget(
                       radius: 8,
+                      enablePreview: true,
                       imageUrl: user!.galleryImages[index].trim(),
                       isUser: false,
                     )

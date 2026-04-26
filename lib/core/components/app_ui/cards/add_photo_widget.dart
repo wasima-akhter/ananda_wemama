@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../ui/dialogs/popups.dart';
 
 class AddPhotoWidget extends StatelessWidget {
   final XFile? selImage;
@@ -38,30 +39,32 @@ class AddPhotoWidget extends StatelessWidget {
     if (selImage != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(radius.r),
-        child: Stack(
-          children: [
-            Container(
-              width: w,
-              height: h,
-              decoration: BoxDecoration(
-                image: DecorationImage(image: FileImage(File(selImage!.path)), fit: BoxFit.cover),
+        child: GestureDetector(
+          onTap: () => _openBothViewer(context),
+          child: Stack(
+            children: [
+              Container(
+                width: w,
+                height: h,
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: FileImage(File(selImage!.path)), fit: BoxFit.cover),
+                ),
               ),
-            ),
 
-            // ── dark overlay so edit btn is visible ──
-            Container(width: w, height: h, color: black.withOpacity(0.15)),
+              Container(width: w, height: h, color: black.withOpacity(0.15)),
 
-            Positioned(
-              top: 10,
-              right: 10,
-              child: CusCircleIconButton(
-                onTap: onTapAddPhoto,
-                backgroundColor: c.primary.withOpacity(0.3),
-                radius: 20,
-                child: Icon(Icons.edit, size: 22, color: c.primary),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: CusCircleIconButton(
+                  onTap: onTapAddPhoto, // ❗ still edit only
+                  backgroundColor: c.primary.withOpacity(0.3),
+                  radius: 20,
+                  child: Icon(Icons.edit, size: 22, color: c.primary),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -94,6 +97,17 @@ class AddPhotoWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _openBothViewer(BuildContext context) {
+    if (selImage != null) {
+      showImageViewer(context: context, imageSource: selImage);
+      return;
+    }
+
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      showImageViewer(context: context, imageSource: imageUrl);
+    }
   }
 }
 

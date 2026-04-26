@@ -28,27 +28,71 @@ class MoodLibraryController extends GetxController {
 
     selectedMood = (moodCheckInC.selectedMood.value ?? MoodType.calm).obs;
 
-    // keep listening if mood changes later
     ever(moodCheckInC.selectedMood, (MoodType? mood) {
       selectedMood.value = mood ?? MoodType.calm;
     });
 
     await getAllMoodsImages();
-
     await getAllMoodContent();
   }
 
-  final Map<MoodType, List<MoodReadingItem>> moodReadingItems = {
+  //────────────────────────────────────────────
+  // STATE
+  //────────────────────────────────────────────
+
+  final isMoodsImagesLoading_ = false.obs;
+  bool get isMoodsImagesloading => isMoodsImagesLoading_.value;
+
+  final isContentLoading_ = false.obs;
+  bool get isContentLoading => isContentLoading_.value;
+
+  final allMoodImageData = <GetAllMoodItemModel>[].obs;
+
+  /// API-driven mood reading items
+  final moodReadingItems = <MoodType, List<MoodReadingItem>>{}.obs;
+
+  final service = MoodLibraryService();
+
+  //────────────────────────────────────────────
+  // SET MOOD
+  //────────────────────────────────────────────
+
+  void setMood(MoodType mood) {
+    selectedMood.value = mood;
+  }
+
+  //────────────────────────────────────────────
+  // SAFE MOOD ID
+  //────────────────────────────────────────────
+
+  String getSelMoodId() {
+    return allMoodImageData
+            .firstWhere(
+              (m) => (m.title ?? '').toLowerCase() == selectedMood.value.name.toLowerCase(),
+              orElse: () => GetAllMoodItemModel(id: ''),
+            )
+            .id ??
+        '';
+  }
+
+  String getMoodImage(MoodType mood) {
+    final data = allMoodImageData.firstWhere(
+      (m) => (m.title ?? '').toLowerCase() == mood.name.toLowerCase(),
+      orElse: () => GetAllMoodItemModel(),
+    );
+
+    return data.image ?? '';
+  }
+  //────────────────────────────────────────────
+  // STATIC FALLBACK (optional backup)
+  //────────────────────────────────────────────
+
+  final Map<MoodType, List<MoodReadingItem>> fallbackMoodReadingItems = {
     MoodType.calm: [
       MoodReadingItem(
         id: "calm_0",
         title: "Deep Breathing",
         bullets: ["Take a few deep breaths and relax your shoulders."],
-      ),
-      MoodReadingItem(
-        id: "calm_1",
-        title: "Calm Visualization",
-        bullets: ["Focus on a calming visualization."],
       ),
     ],
     MoodType.tired: [
@@ -57,32 +101,12 @@ class MoodLibraryController extends GetxController {
         title: "Rest & Recovery",
         bullets: ["Pause and allow yourself to rest."],
       ),
-      MoodReadingItem(
-        id: "tired_1",
-        title: "Hydration Reset",
-        bullets: ["Hydrate and stretch lightly."],
-      ),
-      MoodReadingItem(
-        id: "tired_2",
-        title: "Body Restore",
-        bullets: ["Pause and allow yourself to rest."],
-      ),
-      MoodReadingItem(
-        id: "tired_3",
-        title: "Light Movement",
-        bullets: ["Hydrate and stretch lightly."],
-      ),
     ],
     MoodType.anxious: [
       MoodReadingItem(
         id: "anxious_0",
         title: "Mindful Awareness",
-        bullets: ["Pause and notice your thoughts without judgment."],
-      ),
-      MoodReadingItem(
-        id: "anxious_1",
-        title: "Grounding Exercise",
-        bullets: ["Take a brief walk or grounding exercise."],
+        bullets: ["Notice thoughts without judgment."],
       ),
     ],
     MoodType.stressed: [
@@ -91,80 +115,81 @@ class MoodLibraryController extends GetxController {
         title: "Take Control",
         bullets: ["Identify one thing you can control now."],
       ),
-      MoodReadingItem(
-        id: "stressed_1",
-        title: "Mindfulness Break",
-        bullets: ["Try a short mindfulness exercise."],
-      ),
     ],
   };
 
-  final service = MoodLibraryService();
+  //────────────────────────────────────────────
+  // API: MOOD IMAGES
+  //────────────────────────────────────────────
 
-  ///
-  ///
-  var isLoading = false.obs;
-  bool get loading => isLoading.value;
-
-  void setMood(MoodType mood) {
-    selectedMood.value = mood;
-  }
-
-  String getSelMoodId() {
-    final selMoodId = allMoodImageData
-        .firstWhere(
-          (m) => (m.title ?? '').toLowerCase() == selectedMood.value.name.toLowerCase(),
-          orElse: () => GetAllMoodItemModel(id: 'default'),
-        )
-        .id;
-
-    return selMoodId ?? '';
-  }
-
-  UserInfoModel get userInfo => storage.getUserInfo;
-
-  final realMoodReadingItems = null;
-
-  /// Fetch mood library data safely
-  Future<void> getAllMoodContent() async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-
-    try {
-      // TODO: API Call
-      final data = await MoodLibraryService().fetchAllMoodContents(moodId: getSelMoodId());
-      // parse and update moodImages & moodReadingItems here
-    } catch (e) {
-      print("Error fetching mood library: $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  var isMoodsImagesLoading_ = false.obs;
-  bool get isMoodsImagesloading => isMoodsImagesLoading_.value;
-
-  final allMoodImageData = <GetAllMoodItemModel>[].obs;
-
-  /// Fetch mood library data safely
-  Future<void> getAllMoodsImages({double? latitude, double? longitude}) async {
+  Future<void> getAllMoodsImages() async {
     if (isMoodsImagesLoading_.value) return;
+
     isMoodsImagesLoading_.value = true;
 
     try {
-      // TODO: API Call
-      final data = await MoodLibraryService().fetchMoodImageData();
+      final data = await service.fetchMoodImageData();
 
-      if (data.isNotEmpty) {
-        allMoodImageData.value = data;
-
-        debugPrint(' allMoodImageData : ${allMoodImageData.value.length}');
-      } else {}
-      // parse and update moodImages & moodReadingItems here
+      allMoodImageData.assignAll(data);
     } catch (e) {
-      print("Error fetching mood library: $e");
+      print("Error fetching mood images: $e");
     } finally {
       isMoodsImagesLoading_.value = false;
     }
   }
+
+  //────────────────────────────────────────────
+  // API: MOOD CONTENT
+  //────────────────────────────────────────────
+
+  Future<void> getAllMoodContent() async {
+    if (isContentLoading_.value) return;
+
+    isContentLoading_.value = true;
+
+    try {
+      final moodId = getSelMoodId();
+
+      final data = await service.fetchAllMoodContents(moodId: moodId);
+
+      final Map<MoodType, List<MoodReadingItem>> grouped = {};
+
+      for (final item in data) {
+        final mood = MoodType.values.firstWhere(
+          (e) => e.name.toLowerCase() == (item.title ?? '').toLowerCase(),
+          orElse: () => selectedMood.value,
+        );
+
+        grouped.putIfAbsent(mood, () => []);
+
+        grouped[mood]!.add(
+          MoodReadingItem(
+            id: item.id ?? '',
+            title: item.title ?? '',
+            bullets: _extractBullets(item),
+          ),
+        );
+      }
+
+      moodReadingItems.assignAll(grouped);
+    } catch (e) {
+      print("Error fetching mood content: $e");
+    } finally {
+      isContentLoading_.value = false;
+    }
+  }
+
+  //────────────────────────────────────────────
+  // BULLET PARSER
+  //────────────────────────────────────────────
+
+  List<String> _extractBullets(GetAllMoodItemModel item) {
+    return ["Explore ${item.title ?? ''}"];
+  }
+
+  //────────────────────────────────────────────
+  // USER
+  //────────────────────────────────────────────
+
+  UserInfoModel get userInfo => storage.getUserInfo;
 }

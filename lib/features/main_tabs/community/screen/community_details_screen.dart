@@ -179,6 +179,7 @@ class CommunityDetailTopContent extends StatelessWidget {
           height: S.h * 0.25,
           radius: 0,
           isUser: false,
+          enablePreview: true,
         ),
         ContainerBordered(
           rad: 0,

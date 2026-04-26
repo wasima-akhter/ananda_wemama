@@ -52,7 +52,11 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    circledNetworkImageBgComponent(radius: 20, imagePath: currentUserImage()),
+                    circledNetworkImageBgComponent(
+                      radius: 20,
+                      imagePath: currentUserImage(),
+                      enablePreview: false,
+                    ),
 
                     Positioned(
                       top: -20,

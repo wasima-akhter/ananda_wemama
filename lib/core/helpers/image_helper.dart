@@ -52,6 +52,7 @@ Widget circledNetworkImageBgComponent({
   Color? brdrClr,
   double? radius,
   bool? isUser,
+  bool? enablePreview,
 }) {
   return Container(
     decoration: BoxDecoration(
@@ -62,6 +63,7 @@ Widget circledNetworkImageBgComponent({
       imageUrl: imagePath,
       isCircle: true,
       radius: radius ?? 20,
+      enablePreview: enablePreview ?? true,
       isUser: isUser,
     ),
   );

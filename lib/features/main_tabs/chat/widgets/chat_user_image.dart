@@ -15,6 +15,7 @@ class ChatUserImage extends StatelessWidget {
             isCircle: true,
             isUser: true,
             isSmall: true,
+            enablePreview: true,
           )
         : Container(
             decoration: 0.circleBrdr(),

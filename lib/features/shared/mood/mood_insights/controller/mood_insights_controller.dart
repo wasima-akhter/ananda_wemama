@@ -1,55 +1,50 @@
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
-import '../../../../../core/services/more/notification/notification_service.dart';
 import '../../mood_library/controller/mood_library_controller.dart';
-import '../model/mood_insights_model.dart';
 
 class MoodInsightsController extends GetxController {
-  final MoodType? passedMoodType;
-  final MoodReadingItem? passedItem; // ← add
+  final MoodType passedMoodType;
+  final String itemId;
 
-  MoodInsightsController(this.passedMoodType, this.passedItem);
+  MoodInsightsController(this.passedMoodType, this.itemId);
+
+  /// ── STATE ─────────────────────────────────────
+  final Rxn<MoodReadingItem> item = Rxn<MoodReadingItem>();
+  final RxBool isLoading = false.obs;
+
+  /// ── LIFECYCLE ─────────────────────────────────
   @override
   void onInit() {
     super.onInit();
-
-    print("passedMoodType in MoodInsight: $passedMoodType");
-
-    //
-    loadNotifications();
+    loadItemDetails();
   }
 
-  final NotificationService _service = NotificationService();
+  /// ── LOAD DATA ─────────────────────────────────
+  Future<void> loadItemDetails() async {
+    if (isLoading.value) return; // prevent duplicate calls
 
-  final notifications = <NotificationsDataModel>[].obs;
-  final isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
+    isLoading.value = true;
 
-  Future<void> loadNotifications() async {
-    isLoading_.value = true;
-
-    // final data = await _service.fetchNotifications();
-    // notifications.assignAll(data);
-
-    isLoading_.value = false;
-  }
-
-  final isupdateIsSeenLoading_ = false.obs;
-  bool get isupdateIsSeenLoading => isupdateIsSeenLoading_.value;
-  Future<void> updateIsSeen({required String notificationId}) async {
-    isupdateIsSeenLoading_.value = true;
-
-    final isSuccess = await _service.updateIsSeen(notificationId: notificationId);
-
-    if (isSuccess) {
-      // 🔥 Update local list
-      final index = notifications.indexWhere((e) => e.id == notificationId);
-
-      if (index != -1) {
-        notifications[index] = notifications[index].copyWith(isSeen: true);
-      }
+    try {
+      final result = await _fetchItem(itemId);
+      item.value = result;
+    } catch (e) {
+      debugPrint("Error loading mood insight: $e");
+      item.value = null; // safe fallback
+    } finally {
+      isLoading.value = false;
     }
+  }
 
-    isupdateIsSeenLoading_.value = false;
+  /// ── MOCK / API LAYER ──────────────────────────
+  Future<MoodReadingItem?> _fetchItem(String id) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    // Replace with API later
+    return MoodReadingItem(
+      id: id,
+      title: "Mood Insight Title",
+      bullets: const ["First insight detail", "Second insight detail", "Third insight detail"],
+    );
   }
 }

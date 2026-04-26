@@ -1,5 +1,7 @@
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../bookmark/controller/bookmark_controller.dart';
+import '../../mood_library/controller/mood_library_controller.dart';
 import '../../mood_library/widgets/mood_library_comp.dart';
 import '../controller/mood_insights_controller.dart';
 
@@ -10,34 +12,50 @@ class MoodInsightsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mic = Get.find<MoodInsightsController>();
     final bc = Get.find<BookmarkController>();
-    final refreshKey = GlobalKey<RefreshIndicatorState>();
-
-    final item = mic.passedItem; // ← single item
-    final currentMood = mic.passedMoodType;
-    final itemId = "${currentMood?.name}_${item?.title}";
+    final mlc = Get.find<MoodLibraryController>(); // 👈 ADD THIS
 
     return AppScreenTemplate(
-      refreshKey: refreshKey,
-      onRefresh: () async => print("refreshed"),
       appBar: CommonAppBarContent(title: Strings.moodInsights),
-      child: Column(
-        children: [
-          MoodIllustrationCard(imageUrl: Strings.fakeImageUrl),
-          Gap(itemGap),
+      child: Obx(() {
+        if (mic.isLoading.value) {
+          return const Center(child: LoadingPrimary());
+        }
 
-          if (item != null)
-            Obx(
-              () => MoodTypeInsightDesItem(
-                id: item.id, // ← use item.id
-                title: item.title,
-                bullets: item.bullets,
-                isBookmarked: bc.isBookmarked(item.id),
-                onTapBookmark: () => bc.addBookmark(item), // ← pass item directly
-                onTapExpertBtn: () => goToMainNavWithTab(4),
-              ),
+        final item = mic.item.value;
+
+        if (item == null) {
+          return const EmptyWidgetScrollable(title: "No Data Found");
+        }
+
+        final imageUrl = mlc.getMoodImage(mic.passedMoodType); // 👈 HERE
+
+        return Column(
+          children: [
+            MoodIllustrationCard(imageUrl: imageUrl),
+
+            Gap(itemGap),
+
+            MoodTypeInsightDesItem(
+              id: item.id,
+              title: item.title,
+              bullets: item.bullets,
+              isBookmarked: bc.isBookmarked(item.id),
+              onTapBookmark: () {
+                final bookmarkItem = BookmarkItem(
+                  id: item.id,
+                  title: item.title,
+                  bullets: item.bullets,
+                  moodType: mic.passedMoodType,
+                  imageUrl: mlc.getMoodImage(mic.passedMoodType),
+                );
+
+                bc.toggleBookmark(bookmarkItem);
+              },
+              onTapExpertBtn: () => goToMainNavWithTab(4),
             ),
-        ],
-      ).get10cm,
+          ],
+        ).get10cm;
+      }),
     );
   }
 }

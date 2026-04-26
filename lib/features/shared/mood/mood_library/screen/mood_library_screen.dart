@@ -50,7 +50,10 @@ class MoodLibraryScreen extends StatelessWidget {
 
           /// ✅ Reactive Reading Items
           Obx(() {
-            final items = mlc.moodReadingItems[mlc.selectedMood.value]!;
+            final items =
+                mlc.moodReadingItems[mlc.selectedMood.value] ??
+                mlc.fallbackMoodReadingItems[mlc.selectedMood.value] ??
+                [];
             final currentMood = mlc.selectedMood.value;
 
             return Column(
@@ -62,10 +65,7 @@ class MoodLibraryScreen extends StatelessWidget {
                   onTapRead: () {
                     Get.toNamed(
                       RoutePaths.moodInsight,
-                      arguments: {
-                        'item': item, // ← pass the specific item
-                        'mood': currentMood,
-                      },
+                      arguments: {'itemId': item.id, 'mood': currentMood},
                     );
                   },
                 );

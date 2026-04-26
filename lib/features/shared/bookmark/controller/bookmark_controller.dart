@@ -1,58 +1,36 @@
 import 'package:get/get.dart';
 
-import '../../../../core/services/more/notification/notification_service.dart';
+import '../../../../core/enums/ui_enums.dart';
 import '../../../../core/utils/extension/string_extension.dart';
-import '../../mood/mood_library/controller/mood_library_controller.dart';
+
+class BookmarkItem {
+  final String id;
+  final String title;
+  final List<String> bullets;
+  final MoodType moodType;
+  final String imageUrl;
+
+  BookmarkItem({
+    required this.id,
+    required this.title,
+    required this.bullets,
+    required this.moodType,
+    required this.imageUrl,
+  });
+}
 
 class BookmarkController extends GetxController {
-  final bookmarks = <MoodReadingItem>[].obs;
+  final bookmarks = <BookmarkItem>[].obs;
 
   bool isBookmarked(String id) => bookmarks.any((b) => b.id == id);
 
-  void addBookmark(MoodReadingItem item) {
-    if (!isBookmarked(item.id)) {
-      bookmarks.add(item);
-      "Bookmarked!".showToast();
-    } else {
+  void toggleBookmark(BookmarkItem item) {
+    if (isBookmarked(item.id)) {
       bookmarks.removeWhere((b) => b.id == item.id);
       "Removed from bookmarks".showToast();
+    } else {
+      bookmarks.add(item);
+      "Bookmarked!".showToast();
     }
-  }
-
-  final NotificationService _service = NotificationService();
-
-  // final notifications = <NotificationsDataModel>[].obs;
-
-  final isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-
-  @override
-  void onInit() {
-    super.onInit();
-    loadNotifications();
-  }
-
-  Future<void> loadNotifications() async {
-    isLoading_.value = true;
-
-    // final data = await _service.fetchNotifications();
-    // notifications.assignAll(data);
-
-    isLoading_.value = false;
-  }
-
-  final isupdateIsSeenLoading_ = false.obs;
-  bool get isupdateIsSeenLoading => isupdateIsSeenLoading_.value;
-
-  Future<void> updateIsSeen({required String notificationId}) async {
-    isupdateIsSeenLoading_.value = true;
-
-    final isSuccess = await _service.updateIsSeen(notificationId: notificationId);
-
-    if (isSuccess) {
-      // 🔥 Update local list
-    }
-
-    isupdateIsSeenLoading_.value = false;
   }
 }

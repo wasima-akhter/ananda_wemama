@@ -1,6 +1,7 @@
 import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:mama_app/gen/assets.gen.dart';
 
+import '../dialogs/popups.dart';
 import '../loaders/shimmer_widget.dart';
 
 class NetworkImageWidget extends StatelessWidget {
@@ -13,6 +14,7 @@ class NetworkImageWidget extends StatelessWidget {
   final bool? isUser;
   final Animation<double>? opacity;
   final bool? hasBrdr;
+  final bool? enablePreview;
 
   const NetworkImageWidget({
     super.key,
@@ -25,6 +27,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.hasBrdr,
     this.isSmall,
     this.isUser,
+    this.enablePreview,
   });
 
   bool isImageUrl(String url) {
@@ -84,46 +87,60 @@ class NetworkImageWidget extends StatelessWidget {
 
     print("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
-    return Image.network(
-      makeImageUrl(
-        imageUrl: (imageUrl ?? '').startsWith('/')
-            ? (imageUrl ?? '').substring(1)
-            : (imageUrl ?? ''),
-      ),
-      opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
-      fit: BoxFit.cover,
-      width: double.infinity,
-      height: double.infinity,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-
-        return isCircle
-            ? ShimmerWidget.circular(
-                width: double.infinity,
-                height: double.infinity,
-                shimmerClr: c.inputBorder.withOpacity(0.4),
-              )
-            : ShimmerWidget.rectangular(
-                width: double.infinity,
-                height: double.infinity,
-                shimmerClr: c.inputBorder.withOpacity(0.4),
-              );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Center(
-          child: isUser == false
-              ? Assets.images.imagePlaceholder.image(
-                  width: placeholderSize,
-                  height: placeholderSize,
-                  color: c.primary,
-                )
-              : Assets.images.userPlaceholder.image(
-                  width: placeholderSize,
-                  height: placeholderSize,
-                  color: c.primary,
+    return CusGestureDetector(
+      onTap: (!(enablePreview == true) || imageUrl == null || imageUrl!.isEmpty)
+          ? null
+          : () {
+              showImageViewer(
+                context: Get.context!,
+                imageSource: makeImageUrl(
+                  imageUrl: (imageUrl ?? '').startsWith('/')
+                      ? (imageUrl ?? '').substring(1)
+                      : (imageUrl ?? ''),
                 ),
-        );
-      },
+              );
+            },
+      child: Image.network(
+        makeImageUrl(
+          imageUrl: (imageUrl ?? '').startsWith('/')
+              ? (imageUrl ?? '').substring(1)
+              : (imageUrl ?? ''),
+        ),
+        opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+
+          return isCircle
+              ? ShimmerWidget.circular(
+                  width: double.infinity,
+                  height: double.infinity,
+                  shimmerClr: c.inputBorder.withOpacity(0.4),
+                )
+              : ShimmerWidget.rectangular(
+                  width: double.infinity,
+                  height: double.infinity,
+                  shimmerClr: c.inputBorder.withOpacity(0.4),
+                );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Center(
+            child: isUser == false
+                ? Assets.images.imagePlaceholder.image(
+                    width: placeholderSize,
+                    height: placeholderSize,
+                    color: c.primary,
+                  )
+                : Assets.images.userPlaceholder.image(
+                    width: placeholderSize,
+                    height: placeholderSize,
+                    color: c.primary,
+                  ),
+          );
+        },
+      ),
     );
   }
 }

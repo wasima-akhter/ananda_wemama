@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../../core/components/app_ui/cards/add_photos_card.dart';
+import '../../../../../../core/components/ui/dialogs/popups.dart';
 
 class DescriptionImagesGrid extends StatelessWidget {
   const DescriptionImagesGrid({
@@ -33,8 +34,14 @@ class DescriptionImagesGrid extends StatelessWidget {
             children: [
               ...List.generate(
                 images.length,
-                (i) =>
-                    _ImageTile(path: images[i].path, size: imageSize, onRemove: () => onRemove(i)),
+                (i) => CusGestureDetector(
+                  onTap: () => showImageViewer(context: context, imageSource: images[i]),
+                  child: _ImageTile(
+                    path: images[i].path,
+                    size: imageSize,
+                    onRemove: () => onRemove(i),
+                  ),
+                ),
               ),
               if (showAddBtn)
                 SizedBox(

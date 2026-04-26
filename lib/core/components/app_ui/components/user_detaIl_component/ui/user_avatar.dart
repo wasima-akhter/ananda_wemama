@@ -16,6 +16,7 @@ class UserAvatar extends StatelessWidget {
         isCircle: true,
         hasBrdr: false,
         radius: isFromProfile == true ? 35 : S.w * 0.12,
+        enablePreview: true,
       ),
     );
   }

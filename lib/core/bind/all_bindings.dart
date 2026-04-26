@@ -424,11 +424,13 @@ class MoodInsightBinding extends Bindings {
   @override
   void dependencies() {
     final args = Get.arguments as Map<String, dynamic>;
-    final mood = args['mood'] as MoodType;
-    final item = args['item'] as MoodReadingItem;
 
-    Get.put<MoodInsightsController>(MoodInsightsController(mood, item));
-    Get.lazyPutFenix(() => BookmarkController());
+    final mood = args['mood'] as MoodType;
+    final itemId = args['itemId'] as String;
+
+    Get.put<MoodInsightsController>(MoodInsightsController(mood, itemId));
+
+    Get.lazyPut(() => BookmarkController());
   }
 }
 

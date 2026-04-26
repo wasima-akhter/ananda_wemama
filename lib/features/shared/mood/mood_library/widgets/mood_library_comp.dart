@@ -1,5 +1,4 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/buttons/small_nav_btn.dart';
 
 class MoodIllustrationCard extends StatelessWidget {
   final String imageUrl;
@@ -39,10 +38,7 @@ class MoodTypeReadingItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title + "  siudcn sdiocsdi ciosd cosdnc oisdjcisdji sdcisd cisjd isdj",
-            style: TxtStyle.outfitLarTitle,
-          ),
+          Text(title, style: TxtStyle.outfitLarTitle),
 
           Gap(itemGap),
 

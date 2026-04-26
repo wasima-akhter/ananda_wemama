@@ -708,7 +708,7 @@ class Strings {
   static const String commentUnlocked = "Comment has been unlocked. You can comment now.";
 
   static const String confirmDeletePost = "Do you want to delete this post?";
-  static const String noBookmarks = "noBookmarks";
+  static const String noBookmarks = "No Bookmarks";
 
   //
   static const String moodChipLibrary = "Mood Chip Library";

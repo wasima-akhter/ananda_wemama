@@ -1,3 +1,5 @@
+import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../../mood/mood_library/widgets/mood_library_comp.dart';
 import '../controller/bookmark_controller.dart';
@@ -11,26 +13,36 @@ class BookmarkScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: Strings.bookmark),
+
+      onRefresh: () async {},
       child: Obx(() {
         if (bc.bookmarks.isEmpty) {
-          return Center(
-            child: Text(Strings.noBookmarks, style: TxtStyle.outfit(fs: 14, color: c.secondary)),
-          );
+          return Center(child: EmptyWidgetScrollable(title: Strings.noBookmarks));
         }
 
         return Column(
-          children: bc.bookmarks
-              .map(
-                (item) => MoodTypeInsightDesItem(
-                  id: item.id,
-                  title: item.title,
-                  bullets: item.bullets,
-                  isBookmarked: true, // ← always true on bookmark page
-                  onTapBookmark: () => bc.addBookmark(item), // ← tap removes it
-                  onTapExpertBtn: () => goToMainNavWithTab(4),
-                ).mB(itemGap),
-              )
-              .toList(),
+          children: [
+            ...List.generate(bc.bookmarks.length, (index) {
+              final item = bc.bookmarks.value[index];
+
+              return Column(
+                children: [
+                  MoodIllustrationCard(imageUrl: item.imageUrl),
+
+                  Gap(itemGap),
+
+                  MoodTypeInsightDesItem(
+                    id: item.id,
+                    title: item.title,
+                    bullets: item.bullets,
+                    isBookmarked: true,
+                    onTapBookmark: () => bc.toggleBookmark(item),
+                    onTapExpertBtn: () => goToMainNavWithTab(4),
+                  ),
+                ],
+              ).mB(itemGap);
+            }),
+          ],
         );
       }).getcm,
     );

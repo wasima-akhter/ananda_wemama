@@ -17,22 +17,15 @@ class ChatScreen extends StatelessWidget {
     final chatRefreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
-      refreshKey: chatRefreshKey,
       isScrollable: false,
-      onRefresh: () async {
-        print("chat refreshed");
-        cc.getChatList();
-      },
       appBar: CommonAppBarContent(
         title: Strings.chat,
         hasBackNavArrow: false,
-
         suffix: CusCircleIconButton(
           onTap: cc.onTapHandWave,
           child: SvgIcon(iconPath: IconsPath.handWave, height: 22),
         ),
       ),
-
       child: Obx(() {
         final showSearch = cc.showSearchedTag.value;
 
@@ -44,7 +37,6 @@ class ChatScreen extends StatelessWidget {
               onEditingComplete: () async {
                 cc.showSearchedTag.value = true;
                 cc.searchedTxt.value = cc.searchController.text;
-
                 await cc.getSearchedChatList();
               },
             ).get10cm,
@@ -52,9 +44,7 @@ class ChatScreen extends StatelessWidget {
             Gap(itemGap * 1.5),
 
             Expanded(
-              // color: Colors.amber,
-              // height: S.h * 0.8,
-              child: showSearch ? _buildSearchResult(cc) : _buildChatList(cc),
+              child: showSearch ? _buildSearchResult(cc) : _buildChatList(cc, chatRefreshKey),
             ),
           ],
         ).mR(10);
@@ -158,56 +148,45 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChatList(ChatController cc) {
-    final list = [
-      ...cc.realChatList,
-      // ...cc.realChatList,
-      // ...cc.realChatList,
-      // ...cc.realChatList,
-      // ...cc.realChatList,
-    ];
-
+  Widget _buildChatList(ChatController cc, GlobalKey<RefreshIndicatorState> refreshKey) {
     return Obx(() {
-      if (cc.isLoading_.value) {
-        return LoadingPrimary();
+      final list = cc.realChatList;
+
+      if (cc.isLoading_.value && list.isEmpty) {
+        return Column(children: [LoadingPrimary()]);
       }
 
       if (list.isEmpty) {
-        return const EmptyWidget(title: "No Conversations yet..!");
+        return RefreshIndicator(
+          key: refreshKey,
+          onRefresh: cc.getChatList,
+          child: const EmptyWidgetScrollable(title: "No Conversations yet..!"),
+        );
       }
 
-      return Column(
-        children: [
-          const SocketStatusBanner(),
+      // ✅ RefreshIndicator lives here — direct parent of ListView, no Column in between
+      return CusRefreshIndicator(
+        key: refreshKey,
+        onRefresh: cc.getChatList,
+        child: ListView.builder(
+          controller: cc.chatScrollCtrl,
+          physics: const AlwaysScrollableScrollPhysics(), // ✅ must have
+          itemCount: list.length + 1,
+          itemBuilder: (_, index) {
+            if (index == 0) return const SocketStatusBanner();
 
-          Expanded(
-            child: CusRefreshIndicator(
-              onRefresh: () async {
-                await cc.getChatList();
-              },
-              child: CusScrollbarWidget(
-                controller: cc.chatScrollCtrl,
-                child: ListView.builder(
-                  controller: cc.chatScrollCtrl,
-                  itemCount: list.length,
-                  itemBuilder: (_, index) {
-                    final e = list[index];
-
-                    return ChatListItem(
-                      chatModel: FakeChatModel(
-                        name: e.otherUser?.name ?? '',
-                        lastMessage: e.lastMessage ?? '',
-                        time: DateHelper().formatTimeAgo(e.time.toString()).date,
-                        imageUrl: e.otherUser?.profileImage ?? '',
-                        id: e.id ?? '',
-                      ),
-                    ).get10cm.mR(10);
-                  },
-                ),
+            final e = list[index - 1];
+            return ChatListItem(
+              chatModel: FakeChatModel(
+                name: e.otherUser?.name ?? '',
+                lastMessage: e.lastMessage ?? '',
+                time: DateHelper().formatTimeAgo(e.time.toString()).date,
+                imageUrl: e.otherUser?.profileImage ?? '',
+                id: e.id ?? '',
               ),
-            ),
-          ),
-        ],
+            ).get10cm.mR(10);
+          },
+        ),
       );
     });
   }

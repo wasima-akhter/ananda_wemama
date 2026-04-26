@@ -13,6 +13,7 @@ import '../../app_ui/popup_widgets/cancel_order_dialog.dart';
 import '../../app_ui/popup_widgets/daily_limit_popup.dart';
 import '../../app_ui/popup_widgets/delete_confirm_dialog.dart';
 import '../../app_ui/popup_widgets/edit_fuel_diesel_rate_popup.dart';
+import '../../app_ui/popup_widgets/image_viewer.dart';
 import '../../app_ui/popup_widgets/loading_popup.dart';
 import '../../app_ui/popup_widgets/lock_comment_popup.dart';
 import '../../app_ui/popup_widgets/logout_confirm_dialog.dart';
@@ -80,6 +81,17 @@ Future<T?> showAnimatedDialog<T>({
         ),
       );
     },
+  );
+}
+
+Future<void> showImageViewer({
+  required BuildContext context,
+  required dynamic imageSource, // String (url/path), File, XFile
+}) async {
+  await showAnimatedDialog(
+    context: context,
+    barrierDismissible: true,
+    child: ImageViewerPopup(imageSource: imageSource),
   );
 }
 

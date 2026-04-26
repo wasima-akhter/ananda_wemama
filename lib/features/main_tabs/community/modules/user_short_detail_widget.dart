@@ -15,7 +15,7 @@ class UserShortDetailWidget extends StatelessWidget {
     final creatorAddress = creator?.city ?? '';
     return Row(
       children: [
-        NetworkImageWidget(imageUrl: creatorImg, isCircle: true, radius: 18),
+        NetworkImageWidget(imageUrl: creatorImg, isCircle: true, radius: 18, enablePreview: true),
         Gap(itemGap * 1.5),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

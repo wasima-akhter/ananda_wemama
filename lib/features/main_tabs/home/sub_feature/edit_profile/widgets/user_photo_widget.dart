@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../../../gen/assets.gen.dart';
 
 class UserPhotoWidget extends StatelessWidget {
@@ -11,11 +12,38 @@ class UserPhotoWidget extends StatelessWidget {
 
   const UserPhotoWidget({super.key, this.selImage, this.imageUrl});
 
+  void _openViewer(BuildContext context) {
+    if (selImage != null) {
+      showImageViewer(context: context, imageSource: selImage);
+      return;
+    }
+
+    if (imageUrl != null && imageUrl!.isNotEmpty) {
+      showImageViewer(
+        context: context,
+        imageSource: makeImageUrl(
+          imageUrl: (imageUrl ?? '').startsWith('/')
+              ? (imageUrl ?? '').substring(1)
+              : (imageUrl ?? ''),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = (S.w * 0.2).w;
 
-    /// 1️⃣ Selected image (preview before upload)
+    final hasImage = selImage != null || (imageUrl != null && imageUrl!.isNotEmpty);
+
+    return GestureDetector(
+      onTap: hasImage ? () => _openViewer(context) : null,
+      child: _buildContent(size),
+    );
+  }
+
+  Widget _buildContent(double size) {
+    /// 1️⃣ Selected image
     if (selImage != null) {
       return Container(
         width: size,
@@ -28,13 +56,15 @@ class UserPhotoWidget extends StatelessWidget {
       );
     }
 
-    /// 2️⃣ Network image (from storage / updated profile)
+    /// 2️⃣ Network image
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return NetworkImageWidget(imageUrl: imageUrl, radius: size / 2, isCircle: true);
     }
 
-    /// 3️⃣ Placeholder
+    /// 3️⃣ Placeholder (no tap)
     return Container(
+      width: size,
+      height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: c.inputBorder),

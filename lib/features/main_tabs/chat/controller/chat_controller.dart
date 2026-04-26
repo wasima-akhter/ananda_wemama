@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mama_app/core/services/socket/socket_events.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
 
@@ -55,26 +57,51 @@ class ChatController extends GetxController {
   final realChatList = <ChatListItemModel>[].obs;
 
   // ── Called by SocketService when data arrives ────────────────────────────
+  Completer<void>? _chatListCompleter;
+
+  // ── Called by SocketService when data arrives ────────────────────────────
 
   void updateChatList(List<ChatListItemModel> list) {
     realChatList.assignAll(list);
-    isLoading_.value = false; // ← only stop loading when data actually arrives
+    isLoading_.value = false;
+
+    // ✅ Complete the pending refresh/load completer
+    if (!(_chatListCompleter?.isCompleted ?? true)) {
+      _chatListCompleter?.complete();
+    }
+  }
+
+  // ── Emit ─────────────────────────────────────────────────────────────────
+
+  Future<void> getChatList() async {
+    // Only show full loading spinner when list is empty
+    if (realChatList.isEmpty) {
+      isLoading_.value = true;
+    }
+
+    // ✅ Create a new completer so callers can await the socket response
+    _chatListCompleter = Completer<void>();
+
+    try {
+      socket.emit(SocketEvents.getChatList, {"receiverId": currentProfileId()});
+
+      // Wait for updateChatList() to complete the completer (with timeout)
+      await _chatListCompleter!.future.timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          print("⚠️ getChatList timeout — no socket response");
+        },
+      );
+    } catch (e) {
+      print("Error fetching chat list: $e");
+    } finally {
+      isLoading_.value = false;
+    }
   }
 
   // ── Emit ─────────────────────────────────────────────────────────────────
 
   final socket = Get.find<SocketService>();
-
-  Future<void> getChatList() async {
-    if (isLoading_.value && realChatList.isNotEmpty) return; // don't re-fetch if already loading
-    isLoading_.value = true;
-    try {
-      socket.emit(SocketEvents.getChatList, {"receiverId": currentProfileId()});
-    } catch (e) {
-      print("Error fetching chat list: $e");
-      isLoading_.value = false; // ← only false on error, not after emit
-    }
-  }
 
   /// --------------  Search Chat List -----//
   final showSearchedTag = false.obs;
