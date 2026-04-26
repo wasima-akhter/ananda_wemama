@@ -6,14 +6,14 @@ import '../../../../core/utils/extension/string_extension.dart';
 class BookmarkItem {
   final String id;
   final String title;
-  final List<String> bullets;
+  final String description; // ✅ was bullets
   final MoodType moodType;
   final String imageUrl;
 
   BookmarkItem({
     required this.id,
     required this.title,
-    required this.bullets,
+    required this.description,
     required this.moodType,
     required this.imageUrl,
   });

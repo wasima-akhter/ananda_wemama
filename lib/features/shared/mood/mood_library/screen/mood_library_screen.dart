@@ -1,7 +1,7 @@
 import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../../core/enums/app_enums.dart';
 import '../controller/mood_library_controller.dart';
-import '../model/get_all_mood_model.dart';
 import '../widgets/mood_library_comp.dart';
 
 class MoodLibraryScreen extends StatelessWidget {
@@ -19,55 +19,44 @@ class MoodLibraryScreen extends StatelessWidget {
           goToPath: RoutePaths.bookmark,
         ),
       ),
+      onRefresh: mlc.refresh, // ✅ refresh images + content together
       child: Column(
         spacing: itemGap * 2,
         children: [
-          /// ✅ Reactive Tabs
-          Obx(() {
-            return MoodTabSelector(
+          /// Mood Tabs
+          Obx(
+            () => MoodTabSelector(
               selected: mlc.selectedMood.value,
-              onTap: (moodName) {
-                final mood = MoodType.values.firstWhere(
-                  (e) => e == moodName,
-                  orElse: () => MoodType.calm,
-                );
-                mlc.setMood(mood);
-              },
-            );
+              onTap: (mood) => mlc.setMood(mood),
+            ),
+          ),
+
+          /// Mood Image
+          Obx(() {
+            if (mlc.isMoodsImagesloading) return LoadingPrimary();
+            return MoodIllustrationCard(imageUrl: mlc.getMoodImage(mlc.selectedMood.value));
           }),
 
-          /// ✅ Reactive Mood Illustration
+          /// Mood Content
           Obx(() {
-            if (mlc.isMoodsImagesloading) {
-              return LoadingPrimary();
-            }
-            final fetchedMood = mlc.allMoodImageData.value.firstWhere(
-              (m) => (m.title ?? '').toLowerCase() == mlc.selectedMood.value.name.toLowerCase(),
-              orElse: () => GetAllMoodItemModel(id: 'default'),
-            );
-            return MoodIllustrationCard(imageUrl: fetchedMood.image ?? '');
-          }),
+            if (mlc.isContentLoading) return LoadingPrimary();
 
-          /// ✅ Reactive Reading Items
-          Obx(() {
-            final items =
-                mlc.moodReadingItems[mlc.selectedMood.value] ??
-                mlc.fallbackMoodReadingItems[mlc.selectedMood.value] ??
-                [];
+            final items = mlc.moodReadingItems[mlc.selectedMood.value] ?? [];
             final currentMood = mlc.selectedMood.value;
+
+            if (items.isEmpty) {
+              return const EmptyNoSearchWidgetScrollable(title: "No content available");
+            }
 
             return Column(
               children: items.map((item) {
-                // ← item is MoodReadingItem
                 return MoodTypeReadingItem(
                   title: item.title,
-                  bullets: item.bullets,
-                  onTapRead: () {
-                    Get.toNamed(
-                      RoutePaths.moodInsight,
-                      arguments: {'itemId': item.id, 'mood': currentMood},
-                    );
-                  },
+                  description: item.description,
+                  onTapRead: () => Get.toNamed(
+                    RoutePaths.moodInsight,
+                    arguments: {'itemId': item.id, 'mood': currentMood},
+                  ),
                 );
               }).toList(),
             );

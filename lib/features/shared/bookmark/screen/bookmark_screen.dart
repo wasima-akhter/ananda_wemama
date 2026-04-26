@@ -13,7 +13,6 @@ class BookmarkScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: Strings.bookmark),
-
       onRefresh: () async {},
       child: Obx(() {
         if (bc.bookmarks.isEmpty) {
@@ -21,28 +20,22 @@ class BookmarkScreen extends StatelessWidget {
         }
 
         return Column(
-          children: [
-            ...List.generate(bc.bookmarks.length, (index) {
-              final item = bc.bookmarks.value[index];
-
-              return Column(
-                children: [
-                  MoodIllustrationCard(imageUrl: item.imageUrl),
-
-                  Gap(itemGap),
-
-                  MoodTypeInsightDesItem(
-                    id: item.id,
-                    title: item.title,
-                    bullets: item.bullets,
-                    isBookmarked: true,
-                    onTapBookmark: () => bc.toggleBookmark(item),
-                    onTapExpertBtn: () => goToMainNavWithTab(4),
-                  ),
-                ],
-              ).mB(itemGap);
-            }),
-          ],
+          children: bc.bookmarks.map((item) {
+            return Column(
+              children: [
+                MoodIllustrationCard(imageUrl: item.imageUrl),
+                Gap(itemGap),
+                MoodTypeInsightDesItem(
+                  id: item.id,
+                  title: item.title,
+                  description: item.description, // ✅ was bullets
+                  isBookmarked: true,
+                  onTapBookmark: () => bc.toggleBookmark(item),
+                  onTapExpertBtn: () => goToMainNavWithTab(4),
+                ),
+              ],
+            ).mB(itemGap);
+          }).toList(),
         );
       }).getcm,
     );

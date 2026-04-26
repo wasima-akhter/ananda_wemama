@@ -1,4 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
 
 class MoodIllustrationCard extends StatelessWidget {
   final String imageUrl;
@@ -18,13 +19,13 @@ class MoodIllustrationCard extends StatelessWidget {
 
 class MoodTypeReadingItem extends StatelessWidget {
   final String title;
-  final List<String> bullets;
+  final String description;
   final VoidCallback? onTapRead;
 
   const MoodTypeReadingItem({
     super.key,
     required this.title,
-    required this.bullets,
+    required this.description,
     this.onTapRead,
   });
 
@@ -39,18 +40,16 @@ class MoodTypeReadingItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: TxtStyle.outfitLarTitle),
-
           Gap(itemGap),
-
-          ...bullets.map(
-            (text) => Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: BulletPoint(text: text.capEachWord()),
-            ),
+          // ✅ Preview only — 2 lines of plain text
+          // Preview card (no WebView spun up at all)
+          AllAutoheightWebview(
+            htmlContent: description,
+            previewOnly: true,
+            previewMaxLines: 2,
+            padding: EdgeInsets.symmetric(horizontal: 4),
           ),
-
           16.verticalSpace,
-
           Center(
             child: SmallNavBtn(text: Strings.read.cap, onTap: onTapRead),
           ),
@@ -60,42 +59,22 @@ class MoodTypeReadingItem extends StatelessWidget {
   }
 }
 
-class BulletPoint extends StatelessWidget {
-  final String text;
-  const BulletPoint({super.key, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(top: 6.h),
-          child: Icon(Icons.circle, size: 6.sp, color: c.primary),
-        ),
-        10.horizontalSpace,
-        Expanded(child: Text(text, style: TxtStyle.outfitSmNor)),
-      ],
-    );
-  }
-}
-
 class MoodTypeInsightDesItem extends StatelessWidget {
-  final String id; // ← add
+  final String id;
   final String title;
-  final List<String> bullets;
+  final String description;
   final VoidCallback? onTapExpertBtn;
   final VoidCallback? onTapBookmark;
-  final bool isBookmarked; // ← add
+  final bool isBookmarked;
 
   const MoodTypeInsightDesItem({
     super.key,
     required this.id,
     required this.title,
-    required this.bullets,
+    required this.description,
     this.onTapExpertBtn,
     this.onTapBookmark,
-    this.isBookmarked = false, // ← default false
+    this.isBookmarked = false,
   });
 
   @override
@@ -110,11 +89,11 @@ class MoodTypeInsightDesItem extends StatelessWidget {
         children: [
           Text(title, style: TxtStyle.outfitLarTitle),
           Gap(itemGap),
-          ...bullets.map(
-            (text) => Padding(
-              padding: EdgeInsets.only(bottom: 10.h),
-              child: BulletPoint(text: text.capEachWord()),
-            ),
+          // Full view with custom background + padding
+          AllAutoheightWebview(
+            htmlContent: description,
+            backgroundColor: c.cardOngoing,
+            padding: EdgeInsets.symmetric(horizontal: 4),
           ),
           16.verticalSpace,
           Row(
@@ -134,10 +113,7 @@ class MoodTypeInsightDesItem extends StatelessWidget {
                   vp: 8,
                   hp: 12,
                   child: SvgIconColored(
-                    iconPath:
-                        isBookmarked // ← swap icon
-                        ? IconsPath.bookmarkFilled
-                        : IconsPath.bookmarkOutlined,
+                    iconPath: isBookmarked ? IconsPath.bookmarkFilled : IconsPath.bookmarkOutlined,
                     iconColor: white,
                   ),
                 ),

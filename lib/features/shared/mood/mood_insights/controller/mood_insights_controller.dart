@@ -8,43 +8,39 @@ class MoodInsightsController extends GetxController {
 
   MoodInsightsController(this.passedMoodType, this.itemId);
 
-  /// ── STATE ─────────────────────────────────────
   final Rxn<MoodReadingItem> item = Rxn<MoodReadingItem>();
   final RxBool isLoading = false.obs;
 
-  /// ── LIFECYCLE ─────────────────────────────────
   @override
   void onInit() {
     super.onInit();
     loadItemDetails();
   }
 
-  /// ── LOAD DATA ─────────────────────────────────
   Future<void> loadItemDetails() async {
-    if (isLoading.value) return; // prevent duplicate calls
-
+    if (isLoading.value) return;
     isLoading.value = true;
 
     try {
-      final result = await _fetchItem(itemId);
-      item.value = result;
+      // ✅ Read from already-loaded MoodLibraryController — no extra API call
+      final mlc = Get.find<MoodLibraryController>();
+      final items = mlc.moodReadingItems[passedMoodType] ?? [];
+
+      item.value = items.firstWhereOrNull((e) => e.id == itemId);
+      // ✅ null → EmptyWidget shown in screen, no fallback
     } catch (e) {
       debugPrint("Error loading mood insight: $e");
-      item.value = null; // safe fallback
+      item.value = null;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// ── MOCK / API LAYER ──────────────────────────
-  Future<MoodReadingItem?> _fetchItem(String id) async {
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    // Replace with API later
-    return MoodReadingItem(
-      id: id,
-      title: "Mood Insight Title",
-      bullets: const ["First insight detail", "Second insight detail", "Third insight detail"],
-    );
+  // ✅ Refresh: reload library content then re-resolve item
+  Future<void> refresh() async {
+    final mlc = Get.find<MoodLibraryController>();
+    mlc.selectedMood.value = passedMoodType; // ensure correct mood is active
+    await mlc.refresh();
+    await loadItemDetails();
   }
 }

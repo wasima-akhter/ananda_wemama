@@ -38,18 +38,18 @@ class MoodInsightsScreen extends StatelessWidget {
             MoodTypeInsightDesItem(
               id: item.id,
               title: item.title,
-              bullets: item.bullets,
+              description: item.description, // ✅ was bullets
               isBookmarked: bc.isBookmarked(item.id),
               onTapBookmark: () {
-                final bookmarkItem = BookmarkItem(
-                  id: item.id,
-                  title: item.title,
-                  bullets: item.bullets,
-                  moodType: mic.passedMoodType,
-                  imageUrl: mlc.getMoodImage(mic.passedMoodType),
+                bc.toggleBookmark(
+                  BookmarkItem(
+                    id: item.id,
+                    title: item.title,
+                    description: item.description, // ✅ update BookmarkItem too if needed
+                    moodType: mic.passedMoodType,
+                    imageUrl: mlc.getMoodImage(mic.passedMoodType),
+                  ),
                 );
-
-                bc.toggleBookmark(bookmarkItem);
               },
               onTapExpertBtn: () => goToMainNavWithTab(4),
             ),

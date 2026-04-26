@@ -429,8 +429,6 @@ class MoodInsightBinding extends Bindings {
     final itemId = args['itemId'] as String;
 
     Get.put<MoodInsightsController>(MoodInsightsController(mood, itemId));
-
-    Get.lazyPut(() => BookmarkController());
   }
 }
 
