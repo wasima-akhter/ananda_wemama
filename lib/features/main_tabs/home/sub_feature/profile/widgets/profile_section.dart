@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/components/app_ui/tags/tag_type_widgets.dart';
 import 'package:mama_app/core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 
@@ -29,7 +30,8 @@ class ProfileSection extends StatelessWidget {
           children: [
             Gap(4.h),
             // _buildInactiveInfo(),
-            Text(pc.userProfileData.value?.email ?? ''),
+            if (kDebugMode) Text(pc.userProfileData.value?.email ?? ''),
+
             UserDetailComponent(
               isLoading: udc.isLoading_,
               onTapSeeMore: udc.toggleSeeMore,

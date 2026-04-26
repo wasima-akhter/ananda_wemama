@@ -84,7 +84,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle600),
 
           Text(description, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
-          isFromUpcomgScreen == true ? Gap(itemGap) : Spacer(),
+          isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
 
           Row(
             children: [

@@ -63,6 +63,7 @@ class ExpertsScreen extends StatelessWidget {
 
               /// 🟢 DATA
               data: () => CardHorizontalList(
+                aspectRatio: 1.6,
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () => exc.onTapViewAll(true),
@@ -108,7 +109,7 @@ class ExpertsScreen extends StatelessWidget {
               ),
 
               data: () => CardHorizontalList(
-                aspectRatio: 1.5,
+                aspectRatio: 1.45,
                 onViewAll: () => exc.onTapViewAll(false),
                 title: Strings.upcomingExpertSession,
                 exc: exc,

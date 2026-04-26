@@ -45,11 +45,13 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     circledNetworkImageBgComponent(imagePath: imgUrl, brdrClr: c.error),
                     Positioned(
                       bottom: -(10.h),
+                      left: 2,
+                      right: 2,
                       child: ContainerBordered(
                         alignment: Alignment.center,
                         contClr: c.error,
                         rad: 6,
-                        hp: 6,
+                        hp: 4,
                         vp: 2,
                         child: Text(
                           Strings.live.toUpperCase(),
@@ -112,7 +114,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     brdrClr: c.primary,
                     rad: 30,
                     contClr: ctransp,
-                    vp: 8,
+                    vp: 7,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

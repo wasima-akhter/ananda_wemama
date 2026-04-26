@@ -27,17 +27,17 @@ class SplashController extends GetxController {
     print("token: ${AppStorage.to.getToken}");
 
     // Check if user has seen onboarding
-    if (AppStorage.to.getSeenOnboarding) {
-      // Already seen + signed in → go to Sign In
-      if (AppStorage.to.getLoggedIn) {
-        Get.offNamed(RoutePaths.mainNav);
-      } else {
-        // Already seen + not signed in → go to Sign In
-        Get.offNamed(RoutePaths.signin);
-      }
+    // if (AppStorage.to.getSeenOnboarding) {
+    // Already seen + signed in → go to Sign In
+    if (AppStorage.to.getLoggedIn) {
+      Get.offNamed(RoutePaths.mainNav);
     } else {
-      // Not seen → go to Onboarding
-      Get.offNamed(RoutePaths.onboardScreen);
+      // Already seen + not signed in → go to Sign In
+      Get.offNamed(RoutePaths.signin);
     }
+    // } else {
+    //   // Not seen → go to Onboarding
+    //   Get.offNamed(RoutePaths.onboardScreen);
+    // }
   }
 }
