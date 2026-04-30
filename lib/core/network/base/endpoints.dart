@@ -73,6 +73,9 @@ class Endpoints {
   static String getAllCommentsOfAPost({required String postId}) => "post/get-all-comment/$postId";
   static String deletePost({required String postId}) => "post/delete-post/$postId";
 
+  //
+  static String get communitySpotlight => "community/get-community-spotlight";
+
   // Chat
   static String getSearchedChatList({required String searchTxt}) =>
       "chat/search-chat?searchText=$searchTxt";

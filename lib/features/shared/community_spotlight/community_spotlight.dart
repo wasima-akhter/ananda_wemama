@@ -1,6 +1,11 @@
+import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:mama_app/core/helpers/date_helper.dart';
 import 'package:mama_app/core/helpers/string_helper.dart';
+import 'package:mama_app/features/main_tabs/home/controller/home_controller.dart';
 
 import '../../../app/helper_widgets_export.dart';
+import '../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../main_tabs/home/model/community_spotlight_model.dart';
 
 class CommunitySpotlight extends StatelessWidget {
   final bool? isFromOnboardScreen;
@@ -8,59 +13,150 @@ class CommunitySpotlight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (isFromOnboardScreen == true) return const _CommunitySpotlightDummy();
+    return const _CommunitySpotlightLive();
+  }
+}
+
+// ─────────────────────────────
+// 🔹 Dummy (Onboard Preview)
+// ─────────────────────────────
+class _CommunitySpotlightDummy extends StatelessWidget {
+  const _CommunitySpotlightDummy();
+
+  @override
+  Widget build(BuildContext context) {
     return ContainerBordered(
       vp: 10,
       hp: 10,
       boxShadow: boxShadowBottom(),
-
       contClr: c.cardOngoing,
       child: Column(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
-
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
-
-              CusGestureDetector(
-                onTap: () => isFromOnboardScreen == true ? {} : {},
-
-                //  Get.toNamed(
-                //     RoutePaths.communityDetail,
-                //     arguments: {'btnState': MyCommunityBtnState.join, "communityItemId": "123"},
-                //   ),
-                child: ContainerBordered(
-                  hasBrdr: true,
-                  contClr: c.inputBackground,
-
-                  rad: 18,
-                  vp: 6,
-                  hp: 18,
-
-                  child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),
-                ),
+              ContainerBordered(
+                hasBrdr: true,
+                contClr: c.inputBackground,
+                rad: 18,
+                vp: 6,
+                hp: 18,
+                child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),
               ),
             ],
           ),
-
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               StackOfImages(),
-
               Gap(itemGap),
-              Container(child: Text("42 " + Strings.mumsAreDiscussingThis, style: normRsmSecURB)),
+              Text("42 ${Strings.mumsAreDiscussingThis}", style: normRsmSecURB),
             ],
           ),
-
           Gap(itemGap),
-
-          CommunitySpotlightInsideCard(),
+          ContainerBordered(
+            hp: 10,
+            vp: 10,
+            contClr: c.cardMood,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(Strings.emotionalPostpartumQuestion.capEachWord(), style: normRsmPriURB),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(Strings.postpartumRecovery.capEachWord(), style: titleBPriURB),
+                    Text(Strings.comments, style: normRsmPriURB),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+}
+
+// ─────────────────────────────
+// 🔹 Live (Real Data)
+// ─────────────────────────────
+class _CommunitySpotlightLive extends StatelessWidget {
+  const _CommunitySpotlightLive();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final hc = Get.find<HomeController>();
+      final spotlightData = hc.spotLightData.value?.communitySpotlight;
+      final isLoading = hc.isSpotLightLoading_.value;
+      final state = getUIStateDetail(isLoading: isLoading);
+      final totalMembers = (spotlightData?.totalMember ?? 0).toString();
+      final lastPostData = spotlightData?.lastPost;
+      final commId = spotlightData?.id ?? '';
+      final communityname = spotlightData?.name ?? '';
+
+      return UIStateHandler(
+        loading: () => const CommunitySpotlightShimmer(),
+        state: state,
+        data: () => ContainerBordered(
+          vp: 10,
+          hp: 10,
+          boxShadow: boxShadowBottom(),
+          contClr: c.cardOngoing,
+          child: Column(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
+                  CusGestureDetector(
+                    onTap: () => Get.toNamed(
+                      RoutePaths.communityDetail,
+                      arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": commId},
+                    ),
+                    child: ContainerBordered(
+                      hasBrdr: true,
+                      contClr: c.inputBackground,
+                      rad: 18,
+                      vp: 6,
+                      hp: 18,
+                      child: Text(
+                        Strings.joinDiscussion.capEachWord(),
+                        style: 12.titleMclrCusFSURB,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  StackOfImages(),
+                  Gap(itemGap),
+                  Text(
+                    "$totalMembers ${(spotlightData?.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
+                    style: normRsmSecURB,
+                  ),
+                ],
+              ),
+              Gap(itemGap),
+              CommunitySpotlightInsideCard(
+                communityname: communityname,
+                key: ValueKey('${lastPostData?.id}_${lastPostData?.createdAt}'),
+                lastPostData: lastPostData,
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }
 
@@ -94,23 +190,107 @@ class StackOfImages extends StatelessWidget {
 }
 
 class CommunitySpotlightInsideCard extends StatelessWidget {
-  const CommunitySpotlightInsideCard({super.key});
+  final LastPost? lastPostData;
+  final String? communityname;
+  const CommunitySpotlightInsideCard({super.key, this.lastPostData, this.communityname});
 
   @override
   Widget build(BuildContext context) {
+    final content = lastPostData?.content ?? '';
+    final totalComment = (lastPostData?.totalComment ?? 0).toString();
+    final createdAt = DateHelper().formatTimeAgo((lastPostData?.createdAt ?? '').toString()).date;
     return ContainerBordered(
       hp: 10,
       vp: 10,
 
       contClr: c.cardMood,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.emotionalPostpartumQuestion.capEachWord(), style: normRsmPriURB),
+          Text(content.cap, maxLines: 3, overflow: TextOverflow.visible, style: normRsmPriURB),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Strings.postpartumRecovery.capEachWord(), style: titleBPriURB),
-              Text(Strings.repliesTimeAgo, style: normRsmPriURB),
+              Expanded(
+                child: Text(
+                  (communityname ?? '--').capEachWord(),
+                  maxLines: 2,
+                  overflow: TextOverflow.visible,
+                  style: titleBPriURB,
+                ),
+              ),
+              Text("$totalComment ${Strings.comments} | $createdAt", style: normRsmPriURB),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CommunitySpotlightShimmer extends StatelessWidget {
+  const CommunitySpotlightShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      vp: 10,
+      hp: 10,
+      boxShadow: boxShadowBottom(),
+      contClr: c.cardOngoing,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// Top Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const ShimmerWidget.rectangular(width: 140, height: 18),
+
+              ShimmerWidget.rectangular(width: 110, height: 34, shimmerClr: c.inputBorder),
+            ],
+          ),
+
+          const Gap(12),
+
+          /// Avatar Stack + Text
+          Row(
+            children: [
+              Row(
+                children: List.generate(
+                  3,
+                  (index) => Padding(
+                    padding: EdgeInsets.only(left: index == 0 ? 0 : 8),
+                    child: const ShimmerWidget.circular(width: 28, height: 28),
+                  ),
+                ),
+              ),
+
+              const Gap(10),
+
+              const ShimmerWidget.rectangular(width: 130, height: 14),
+            ],
+          ),
+
+          const Gap(12),
+
+          /// Inner Spotlight Card Placeholder
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ShimmerWidget.rectangular(width: double.infinity, height: 120),
+
+              const Gap(10),
+
+              const ShimmerWidget.rectangular(width: 180, height: 16),
+
+              const Gap(8),
+
+              const ShimmerWidget.rectangular(width: double.infinity, height: 14),
+
+              const Gap(6),
+
+              const ShimmerWidget.rectangular(width: 220, height: 14),
             ],
           ),
         ],

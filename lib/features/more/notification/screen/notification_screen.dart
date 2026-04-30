@@ -31,7 +31,9 @@ class NotificationScreen extends StatelessWidget {
               }
 
               if (nc.notifications.isEmpty) {
-                return EmptyWidgetScrollable(title: Strings.noNotificationFound);
+                return Column(
+                  children: [EmptyNoSearchWidgetScrollable(title: Strings.noNotificationFound)],
+                );
               }
 
               return SingleChildScrollView(

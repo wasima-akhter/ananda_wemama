@@ -51,6 +51,9 @@ class _HomeScreenState extends State<HomeScreen> {
     final hc = Get.find<HomeController>();
 
     return AppScreenTemplate(
+      onRefresh: () async {
+        await hc.getCommunitySpotLight();
+      },
       appBar: HomeAppBarContent(),
       child: Column(
         spacing: itemGap * 1.2,

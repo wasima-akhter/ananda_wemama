@@ -366,6 +366,7 @@ class Strings {
   static const String forgotAccount = "Forgot Account?";
 
   static const String mumsAreDiscussingThis = "mums are discussing this >";
+  static const String mumIsDiscussingThis = "mum is discussing this >";
   static const String communitySpotlight = "Community spotlight";
   static const String joinDiscussion = "Join discussion";
   static const String joinOurSafeCommunity = "Join our safe, Verified community for women";
@@ -374,7 +375,7 @@ class Strings {
   static const String emotionalPostpartumQuestion =
       "\"Is it normal to feel this emotional at 5 weeks postpartum?\"";
   static const String postpartumRecovery = "Postpartum Recovery";
-  static const String repliesTimeAgo = "25 replies | 2mins ago";
+  static const String comments = "comments";
   static const String signUpWith = "Sign up with";
   static const String getStarted = "Get Started";
   static const String alreadyHaveAccount = "Already have an account?";

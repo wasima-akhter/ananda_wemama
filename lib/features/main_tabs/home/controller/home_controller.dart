@@ -7,7 +7,9 @@ import '../../../station_location/controller/station_location_controller.dart';
 import '../dialogs/permanent_denied_dialog.dart';
 import '../dialogs/rationale_dialog.dart';
 import '../dialogs/turnon_service_dialog.dart';
+import '../model/community_spotlight_model.dart';
 import '../screen/home_screen.dart';
+import '../service/home_service.dart';
 
 class HomeController extends GetxController {
   final mcc = findCont<MoodCheckInController>();
@@ -15,6 +17,8 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     debugPrint(' token :$getToken ');
+
+    getCommunitySpotLight();
     super.onInit();
   }
 
@@ -23,8 +27,6 @@ class HomeController extends GetxController {
 
   void closeAllPopups() {}
 
-  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI1Mjg0ZTJhNjg1YjQwOGQ4ZmY4MDciLCJlbWFpbCI6ImFuYW5kYUB5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjUyODRlMmE2ODViNDA4ZDhmZjgwOSIsImlhdCI6MTc3NDM0ODQ3OCwiZXhwIjoxODA1ODg0NDc4fQ.jtVoZZOpuniKm4gbc7FCO746cffDZP7esa9Zp_SbchY
-  // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI1Mjg0ZTJhNjg1YjQwOGQ4ZmY4MDciLCJlbWFpbCI6ImFuYW5kYUB5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjUyODRlMmE2ODViNDA4ZDhmZjgwOSIsImlhdCI6MTc3NDM0ODQ3OCwiZXhwIjoxODA1ODg0NDc4fQ.jtVoZZOpuniKm4gbc7FCO746cffDZP7esa9Zp_SbchY
   // ─────────────────────────────────────────────────────────────────────────
   // 🔹 Location permission flow
   // ─────────────────────────────────────────────────────────────────────────
@@ -186,21 +188,26 @@ class HomeController extends GetxController {
   // 🔹 Nearby suppliers
   // ─────────────────────────────────────────────────────────────────────────
 
-  var isNearbySupplierLoading_ = false.obs;
-  bool get isNearbySupplierLoading => isNearbySupplierLoading_.value;
+  var isSpotLightLoading_ = false.obs;
+  bool get isSpotLightLoading => isSpotLightLoading_.value;
 
-  Future<void> getNearbySuppliersWithPriceStats({
-    required double latitude,
-    required double longitude,
-  }) async {
-    if (isNearbySupplierLoading_.value) return;
-    isNearbySupplierLoading_.value = true;
+  // ✅ Correct way to declare nullable Rx
+  final spotLightData = Rxn<CommunitySpotlightModel>();
+
+  Future<void> getCommunitySpotLight() async {
+    if (isSpotLightLoading_.value) return;
+    isSpotLightLoading_.value = true;
     try {
-      // await NearbySuppliersWPriceStatsService().fetchNearestSuppliersAndPriceStats(...)
+      final data = await HomeService().fetchCommunitySpotLight();
+
+      if (data != null) {
+        spotLightData.value = data;
+        debugPrint(' spotlightData : ${spotLightData?.value?.communitySpotlight?.name}');
+      }
     } catch (e) {
-      debugPrint("Error fetching nearby suppliers: $e");
+      debugPrint("Error fetch Community SpotLight : $e");
     } finally {
-      isNearbySupplierLoading_.value = false;
+      isSpotLightLoading_.value = false;
     }
   }
 }
