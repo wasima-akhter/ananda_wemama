@@ -53,19 +53,7 @@ class ChatScreen extends StatelessWidget {
   }
 
   Widget _buildSearchResult(ChatController cc) {
-    final list = [
-      ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-      // ...cc.searchedChatList,
-    ];
+    final list = [...cc.searchedChatList];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

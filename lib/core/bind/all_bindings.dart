@@ -157,7 +157,10 @@ class MainNavBinding extends Bindings {
     Get.putPermanent(BookmarkController());
 
     // Lazy (auto recreate if disposed)
-    Get.lazyPutFenix(() => ChatController());
+    if (Get.isRegistered<ChatController>()) {
+      Get.delete<ChatController>();
+    }
+    Get.putPermanent(ChatController());
     Get.lazyPutFenix(() => MatchController());
     Get.lazyPutFenix(() => CommunityController());
     Get.lazyPutFenix(() => ExpertsController());
@@ -182,9 +185,10 @@ class ChatInboxBinding extends Bindings {
       throw Exception("ChatInboxController requires ChatInboxArgPassModel!");
     }
 
-    Get.lazyPutFenix(() => ChatController());
-
-    Get.lazyPutFenix(() => ChatInboxController(args));
+    if (Get.isRegistered<ChatInboxController>()) {
+      Get.delete<ChatInboxController>();
+    }
+    Get.putPermanent(ChatInboxController(args));
   }
 }
 

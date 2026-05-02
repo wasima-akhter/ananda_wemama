@@ -76,7 +76,9 @@ class ChatInboxScreen extends StatelessWidget {
           );
         }),
       ),
-      inputRow: cic.isBlocked ? const SizedBox.shrink() : ChatInputRow(cic: cic).get10cm,
+      inputRow:
+          // cic.isBlocked ? const SizedBox.shrink() :
+          ChatInputRow(cic: cic).get10cm,
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
         onRefresh: () async => cic.emitGetMessages(),

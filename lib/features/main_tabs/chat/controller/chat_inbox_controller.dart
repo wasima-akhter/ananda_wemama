@@ -107,6 +107,10 @@ class ChatInboxController extends GetxController {
       return;
     }
 
+    if (isBlocked) {
+      "Can't send message right now. Unblock the user first.".showToast();
+    }
+
     final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
 
     // Optimistic add — user sees message instantly
@@ -246,7 +250,7 @@ class ChatInboxController extends GetxController {
 
     if (confirm != true) return;
 
-    Get.back();
+    // Get.back();
   }
 
   var isUnblockLoading = false.obs;
@@ -262,9 +266,9 @@ class ChatInboxController extends GetxController {
 
       if (success) {}
 
-      Get.back(result: true); // close dialog with success
+      // Get.back(result: true); // close dialog with success
 
-      Get.find<ChatController>().getChatList();
+      await Get.find<ChatController>().getChatList();
     } catch (e) {
       print("Error blocking user: $e");
     } finally {

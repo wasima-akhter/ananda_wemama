@@ -1,6 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../controller/chat_controller.dart';
+import '../controller/chat_inbox_controller.dart';
 import 'chat_user_image.dart';
 
 class ChatListItem extends StatelessWidget {
@@ -13,10 +14,13 @@ class ChatListItem extends StatelessWidget {
     debugPrint(' passed chat id: ${chatModel.id}');
     debugPrint(' passed chatModel.isblocked: ${chatModel.isblocked}');
     return CusGestureDetector(
-      onTap: () => Get.toNamed(
-        RoutePaths.chatInbox,
-        arguments: ChatInboxArgPassModel(chatId: chatModel.id, isBlocked: chatModel.isblocked),
-      ),
+      onTap: () {
+        Get.delete<ChatInboxController>(force: true);
+        Get.toNamed(
+          RoutePaths.chatInbox,
+          arguments: ChatInboxArgPassModel(chatId: chatModel.id, isBlocked: chatModel.isblocked),
+        );
+      },
       child: ContainerBordered(
         mv: 10,
         vp: 0,
@@ -45,7 +49,13 @@ class ChatListItem extends StatelessWidget {
               ),
             ),
             Gap(itemGap),
-            Text(chatModel.time.cap, style: TxtStyle.outfitSmSecNor500),
+            Column(
+              children: [
+                Text(chatModel.time.cap, style: TxtStyle.outfitSmSecNor500),
+                if (chatModel.isblocked)
+                  Text(Strings.blocked.cap, style: TxtStyle.outfitSmSecNor500),
+              ],
+            ),
           ],
         ),
       ).mL(8),
