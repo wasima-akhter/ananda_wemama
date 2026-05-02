@@ -1,4 +1,7 @@
+import 'package:mama_app/features/more/blocked_user/model/blocked_user_model.dart';
+
 import '../../../../app/helper_widgets_export.dart';
+import '../service/blocked_user_service.dart';
 
 class BlockedUserController extends GetxController {
   var fakeBlockedUser = [
@@ -11,6 +14,7 @@ class BlockedUserController extends GetxController {
 
   @override
   void onInit() {
+    getBlockedUserList();
     super.onInit();
   }
 
@@ -27,24 +31,16 @@ class BlockedUserController extends GetxController {
 
   // API loading state
   var isUnblockLoading = false.obs;
-  Future<void> onTapBlocked() async {
-    if (isUnblockLoading.value) return; // Prevent duplicate calls
+  Future<void> onTapBlocked({required String userId}) async {
+    if (isUnblockLoading.value) return;
     isUnblockLoading.value = true;
-
     try {
-      // final data = await ChatService().fetchChatList(
-
-      // );
-
-      // if (data != null) {
-
-      // }
+      await BlockedUserService().unblockUser(userId: userId);
+      blockedUserList.removeWhere((e) => e.id == userId); // ✅ remove from list on success
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error unblocking user: $e");
     } finally {
       isUnblockLoading.value = false;
-
-      unFocusAll();
     }
   }
 
@@ -52,21 +48,21 @@ class BlockedUserController extends GetxController {
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
+  final blockedUserList = <BlockedUserDataModel>[].obs;
+
   /// Fetch the latest  data from API
   Future<void> getBlockedUserList() async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 
     try {
-      // final data = await ChatService().fetchChatList(
+      final data = await BlockedUserService().fetchBlockedUsers();
 
-      // );
-
-      // if (data != null) {
-
-      // }
+      if (data.isNotEmpty) {
+        blockedUserList.value = data;
+      }
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error fetchBlockedUsers: $e");
     } finally {
       isLoading_.value = false;
 

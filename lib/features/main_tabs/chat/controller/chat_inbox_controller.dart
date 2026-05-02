@@ -7,8 +7,12 @@ import 'package:mama_app/core/utils/extension/string_extension.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/components/app_ui/popup_widgets/block_user_dialog.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../more/blocked_user/service/blocked_user_service.dart';
 import '../model/chat_inbox_msg_item_model.dart';
 
 class FakeChatInboxModel {
@@ -27,8 +31,12 @@ class FakeMsgItemData {
 }
 
 class ChatInboxController extends GetxController {
-  final String chatId;
-  ChatInboxController(this.chatId);
+  final ChatInboxArgPassModel args;
+
+  ChatInboxController(this.args);
+
+  String get chatId => args.chatId;
+  bool get isBlocked => args.isBlocked;
 
   final msgInputController = TextEditingController();
   final msgInputFocus = FocusNode();
@@ -51,6 +59,7 @@ class ChatInboxController extends GetxController {
   void onInit() async {
     super.onInit();
     print("chatId: $chatId");
+    print("isBlocked: $isBlocked");
     emitGetMessages(); // ← just emit, don't clear or set loading again
   }
 
@@ -113,7 +122,7 @@ class ChatInboxController extends GetxController {
     messages.add(newMsg);
     scrollToBottom();
 
-    // Emit to socket
+    // Emit to socketio
     _emitSendMessage(text, receiverId);
 
     // ← NO getChatInboxMsgList() here — that caused the empty flicker
@@ -200,5 +209,68 @@ class ChatInboxController extends GetxController {
     } catch (e) {
       print("FilePicker error: $e");
     }
+  }
+
+  // Blocked users part---------------->>>>>>>
+
+  var isBlockLoading = false.obs;
+  Future<void> onTapBlocked({required String userId}) async {
+    final isBlockLoading = false.obs;
+
+    if (isBlockLoading.value) return;
+
+    final confirm = await showAnimatedDialog<bool>(
+      context: Get.context!,
+      barrierDismissible: true,
+      child: BlockUserConfirmDialog(
+        isLoading: isBlockLoading,
+        onConfirm: () async {
+          isBlockLoading.value = true;
+
+          try {
+            final success = await BlockedUserService().blockUser(userId: userId);
+
+            if (success) {}
+
+            Get.back(result: true); // close dialog with success
+
+            Get.find<ChatController>().getChatList();
+          } catch (e) {
+            print("Error blocking user: $e");
+          } finally {
+            isBlockLoading.value = false;
+          }
+        },
+      ),
+    );
+
+    if (confirm != true) return;
+
+    Get.back();
+  }
+
+  var isUnblockLoading = false.obs;
+  Future<void> onTapUnBlock({required String userId}) async {
+    final isUnblockLoading = false.obs;
+
+    if (isUnblockLoading.value) return;
+
+    isUnblockLoading.value = true;
+
+    try {
+      final success = await BlockedUserService().unblockUser(userId: userId);
+
+      if (success) {}
+
+      Get.back(result: true); // close dialog with success
+
+      Get.find<ChatController>().getChatList();
+    } catch (e) {
+      print("Error blocking user: $e");
+    } finally {
+      isUnblockLoading.value = false;
+    }
+
+    Get.back();
   }
 }

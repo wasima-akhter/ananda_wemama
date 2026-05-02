@@ -12,6 +12,7 @@ import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
 import '../../../features/main_tabs/chat/model/chat_inbox_msg_item_model.dart';
 import '../../../features/main_tabs/chat/model/chat_list_item_model.dart';
 import '../../../features/more/notification/controller/notification_controller.dart';
+import '../../../features/more/notification/model/notifications_model.dart';
 import '../../helpers/methods_helper.dart';
 import '../../helpers/widgets_helper.dart';
 import '../../network/helpers/network_helpers.dart';
@@ -150,6 +151,34 @@ class SocketService extends GetxService {
       }
     });
     // ── new_notification ──────────────────────────────────────────────────────
+    // _on(SocketEvents.newNotification, (data) {
+    //   final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newNotification);
+    //   if (!res.isSuccess) return;
+
+    //   final notificationData = res.dataAsMap;
+    //   if (notificationData == null) return;
+
+    //   // Always push to notification list
+    //   if (Get.isRegistered<NotificationController>()) {
+    //     Get.find<NotificationController>().addNotification(notificationData);
+    //   }
+
+    //   // Suppress snackbar for SENT_WAVE — already shown via conversation_request
+    //   final type = notificationData['type'] as String? ?? '';
+    //   if (type == 'SENT_WAVE') return;
+
+    //   Get.snackbar(
+    //     notificationData['title'] ?? 'Notification',
+    //     notificationData['description'] ?? '',
+    //     // 🎨 background (optional)
+    //     backgroundColor: c.primary.withOpacity(0.1),
+    //     // ❌ default texts disabled
+    //     titleText: buildTitle(notificationData['title']),
+    //     messageText: buildMessage(notificationData['description']),
+    //     snackPosition: SnackPosition.TOP,
+    //   );
+    // });
+
     _on(SocketEvents.newNotification, (data) {
       final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newNotification);
       if (!res.isSuccess) return;
@@ -157,27 +186,32 @@ class SocketService extends GetxService {
       final notificationData = res.dataAsMap;
       if (notificationData == null) return;
 
-      // Always push to notification list
+      // ─────────────────────────────
+      // 🔹 Push to notification list
+      // ─────────────────────────────
       if (Get.isRegistered<NotificationController>()) {
-        Get.find<NotificationController>().addNotification(notificationData);
+        // ✅ NotificationItemModel.fromJson expects:
+        // _id, toId, toModel, title, description, type,
+        // referenceId, referenceModel, isSeen, createdAt, updatedAt, __v
+        final notification = NotificationItemModel.fromJson(notificationData);
+        Get.find<NotificationController>().addNotification(notification);
       }
 
-      // Suppress snackbar for SENT_WAVE — already shown via conversation_request
+      // ─────────────────────────────
+      // 🔹 Suppress snackbar for SENT_WAVE
+      // ─────────────────────────────
       final type = notificationData['type'] as String? ?? '';
       if (type == 'SENT_WAVE') return;
 
       Get.snackbar(
         notificationData['title'] ?? 'Notification',
         notificationData['description'] ?? '',
-        // 🎨 background (optional)
         backgroundColor: c.primary.withOpacity(0.1),
-        // ❌ default texts disabled
         titleText: buildTitle(notificationData['title']),
         messageText: buildMessage(notificationData['description']),
         snackPosition: SnackPosition.TOP,
       );
     });
-
     // ── conversation_requests (list) ──────────────────────────────────────────
     _on(SocketEvents.conversationRequests, (data) {
       final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationRequests);

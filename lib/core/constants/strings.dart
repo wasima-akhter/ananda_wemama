@@ -294,6 +294,7 @@ class Strings {
   // Notification
   // ===========================
   static const String noNotificationFound = "No notification yet";
+  static const String noBlockedUserFound = "No Blocked User yet";
   static const String noItemFound = "No Item yet";
   static const String noSessionsFound = "No Session yet";
   static const String noCommentsYet = "No Comments yet";
@@ -516,6 +517,7 @@ class Strings {
 
   static const String blockedUser = "Blocked User";
   static const String blocked = "Blocked";
+  static const String block = "Block";
   static const String security = "Security";
   static const String securityAlert = "Security Alert";
   static const String securityAlertMsg =

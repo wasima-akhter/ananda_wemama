@@ -1,24 +1,33 @@
-import '../../../../../app/service_export.dart';
-import '../../../../features/more/notification/model/notifications_model.dart';
+import '../../../../app/service_export.dart';
+import '../model/notifications_model.dart';
 
 class NotificationService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
-  Future<List<NotificationsDataModel>> fetchNotifications() async {
+  /// Fetch inventory details from API
+
+  Future<List<NotificationItemModel>> fetchNotifications() async {
     apiCall() {
       return ApiClient().get(
+        // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
         Endpoints.notifications.getUrl,
+        reqName: Strings.notification,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<NotificationsDataModel>>(
+    final response = await _apiHelper.request<List<NotificationItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        return (data as List).map((e) => NotificationsDataModel.fromJson(e)).toList();
+        print("parserdata: ${data}");
+
+        if (data == null) return [];
+
+        return (data is List) ? data.map((e) => NotificationItemModel.fromJson(e)).toList() : [];
       },
     );
 
+    print("response data: ${response?.data}");
     return response?.data ?? [];
   }
 

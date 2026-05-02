@@ -9,7 +9,6 @@ import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_mo
 import '../../../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
 import '../../app_ui/popup_widgets/awaiting_verification_popup.dart';
-import '../../app_ui/popup_widgets/cancel_order_dialog.dart';
 import '../../app_ui/popup_widgets/daily_limit_popup.dart';
 import '../../app_ui/popup_widgets/delete_confirm_dialog.dart';
 import '../../app_ui/popup_widgets/edit_fuel_diesel_rate_popup.dart';
@@ -265,17 +264,6 @@ Future<void> awaitingVerification({required VoidCallback onBackToLogin}) async {
   await Popups().baseAlert(
     context: Get.context!,
     content: AwaitingVerificationPopup(onBackToLogin: onBackToLogin),
-  );
-}
-
-/// 🔹 Awaiting Verification Popup
-Future<void> cancelOrderDialog({
-  required bool isLoading,
-  required Future<void> Function() onCancelOrder,
-}) async {
-  await Popups().baseAlert(
-    context: Get.context!,
-    content: CancelOrderDialog(isLoading: isLoading, onCancelOrder: onCancelOrder),
   );
 }
 

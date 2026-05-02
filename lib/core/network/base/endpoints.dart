@@ -19,10 +19,18 @@ class Endpoints {
 
   static const getBankCodes = "paystack/get-bank-list";
 
-  static const notifications = "notification/get-all-notification";
+  static String get notifications => "notification/get-all-notification";
+  static String get blockedUsers => "chat/get-blocked-user";
+  static String blockUser({required String userId}) {
+    return "chat/block-user-app?userId=$userId";
+  }
+
+  static String unblockUser({required String blockedUserId, required String blockeRUserId}) {
+    return "chat/unblock-user-app?blockerId=$blockeRUserId&blockedId=$blockedUserId";
+  }
 
   static String notificationIsSeenUpdate({required String notificationId}) {
-    return "notification/make-notification-seen/$notificationId";
+    return "notification/mark-notification-seen/$notificationId";
   }
 
   // mood library

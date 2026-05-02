@@ -11,6 +11,7 @@ import '../service/chat_service.dart';
 class FakeChatModel {
   final String id;
   final String name;
+  final bool isblocked;
   final String lastMessage;
   final String time;
   final String imageUrl;
@@ -21,6 +22,7 @@ class FakeChatModel {
     required this.time,
     required this.imageUrl,
     required this.id,
+    required this.isblocked,
   });
 }
 

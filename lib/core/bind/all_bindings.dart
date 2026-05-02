@@ -176,16 +176,13 @@ class MainNavBinding extends Bindings {
 class ChatInboxBinding extends Bindings {
   @override
   void dependencies() {
-    ///////////
     final args = Get.arguments;
-    print("--> args: $args");
 
-    if (args == null || args is! String) {
-      throw Exception("ChatInboxController requires a String argument!");
+    if (args == null || args is! ChatInboxArgPassModel) {
+      throw Exception("ChatInboxController requires ChatInboxArgPassModel!");
     }
 
-    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
-    // while arguments are still available in binding context
+    Get.lazyPutFenix(() => ChatController());
 
     Get.lazyPutFenix(() => ChatInboxController(args));
   }

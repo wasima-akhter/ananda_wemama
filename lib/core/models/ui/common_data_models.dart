@@ -48,3 +48,10 @@ class CommonTitleIconpathModel {
 
   CommonTitleIconpathModel({required this.title, required this.iconPath, this.subtitle});
 }
+
+class ChatInboxArgPassModel {
+  final String chatId;
+  final bool isBlocked;
+
+  ChatInboxArgPassModel({required this.chatId, required this.isBlocked});
+}

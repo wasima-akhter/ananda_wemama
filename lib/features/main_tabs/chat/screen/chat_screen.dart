@@ -131,6 +131,7 @@ class ChatScreen extends StatelessWidget {
 
                     return ChatListItem(
                       chatModel: FakeChatModel(
+                        isblocked: e.isBlocked ?? false,
                         name: e.otherUser?.name ?? '',
                         lastMessage: e.lastMessage ?? '',
                         time: DateHelper().formatTimeAgo(e.time.toString()).date,
@@ -176,9 +177,12 @@ class ChatScreen extends StatelessWidget {
             if (index == 0) return const SocketStatusBanner();
 
             final e = list[index - 1];
+
+            debugPrint(' is blocked in chatscreen: ${e.isBlocked}');
             return ChatListItem(
               chatModel: FakeChatModel(
                 name: e.otherUser?.name ?? '',
+                isblocked: e.isBlocked ?? false,
                 lastMessage: e.lastMessage ?? '',
                 time: DateHelper().formatTimeAgo(e.time.toString()).date,
                 imageUrl: e.otherUser?.profileImage ?? '',

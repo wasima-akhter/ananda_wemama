@@ -1,4 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/models/ui/common_data_models.dart';
 import '../controller/chat_controller.dart';
 import 'chat_user_image.dart';
 
@@ -9,8 +10,13 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(' passed chat id: ${chatModel.id}');
+    debugPrint(' passed chatModel.isblocked: ${chatModel.isblocked}');
     return CusGestureDetector(
-      onTap: () => Get.toNamed(RoutePaths.chatInbox, arguments: chatModel.id),
+      onTap: () => Get.toNamed(
+        RoutePaths.chatInbox,
+        arguments: ChatInboxArgPassModel(chatId: chatModel.id, isBlocked: chatModel.isblocked),
+      ),
       child: ContainerBordered(
         mv: 10,
         vp: 0,

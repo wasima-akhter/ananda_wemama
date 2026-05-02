@@ -10,17 +10,13 @@ enum FuelType { fuel, diesel }
 
 enum CreateOrderState { loading, success, failure }
 
-enum CustomerOrderCategory {
-  pending,
-  canceled,
-  rejected,
-  accepted,
-  onTheWay,
-  completed,
-  confirmed,
-  none,
-}
+enum NotificationType { sentMessage, sentwave, acceptWave, approveCommunity, none }
 
+// SENT_MESSAGE
+// SENT_WAVE
+// ACCEPT_WAVE
+// APPROVE_COMMUNITY
+// SENT_MESSAGE
 enum SupplierOrderAction { accept, onTheWay, complete, delete, confirm, reject, cancel }
 
 enum SessionStatus { upcoming, ongoing }

@@ -1,8 +1,9 @@
 class ChatListItemModel {
-  ChatListItemModel({this.id, this.otherUser, this.lastMessage, this.time});
+  ChatListItemModel({this.id, this.otherUser, this.lastMessage, this.time, this.isBlocked});
 
   final String? id;
   final OtherUser? otherUser;
+  final bool? isBlocked;
   final String? lastMessage;
   final DateTime? time;
 
@@ -10,6 +11,7 @@ class ChatListItemModel {
     return ChatListItemModel(
       id: json["_id"],
       otherUser: json["otherUser"] == null ? null : OtherUser.fromJson(json["otherUser"]),
+      isBlocked: json["isBlocked"],
       lastMessage: json["lastMessage"],
       time: DateTime.tryParse(json["time"] ?? ""),
     );

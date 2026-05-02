@@ -1,70 +1,66 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../core/services/more/notification/notification_service.dart';
 import '../model/notifications_model.dart';
+import '../service/notification_service.dart';
 
 class NotificationController extends GetxController {
   final NotificationService _service = NotificationService();
 
-  final notifications = <NotificationsDataModel>[].obs;
+  final notifications = <NotificationItemModel>[].obs;
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
+
+  final isupdateIsSeenLoading_ = false.obs;
+  bool get isupdateIsSeenLoading => isupdateIsSeenLoading_.value;
 
   @override
   void onInit() {
     super.onInit();
-    // loadNotifications();
+    getNotifications();
   }
 
+  // ─────────────────────────────
+  // 🔹 Socket — add incoming notification at top
+  // ─────────────────────────────
   void addNotification(dynamic data) {
-    notifications.insert(0, NotificationsDataModel.fromJson(data));
+    notifications.insert(0, NotificationItemModel.fromJson(data));
   }
 
-  Future<void> loadNotifications() async {
+  // ─────────────────────────────
+  // 🔹 Fetch all notifications
+  // ─────────────────────────────
+  Future<void> getNotifications() async {
+    if (isLoading_.value) return;
     isLoading_.value = true;
-
-    final data = await _service.fetchNotifications();
-    notifications.assignAll(data);
-
-    isLoading_.value = false;
+    try {
+      final data = await _service.fetchNotifications();
+      notifications.assignAll(data);
+      debugPrint('notifications loaded: ${notifications.length}');
+    } catch (e) {
+      debugPrint("Error fetch notifications: $e");
+    } finally {
+      isLoading_.value = false;
+    }
   }
 
-  final isupdateIsSeenLoading_ = false.obs;
-  bool get isupdateIsSeenLoading => isupdateIsSeenLoading_.value;
+  // ─────────────────────────────
+  // 🔹 Mark single notification as seen
+  // ─────────────────────────────
   Future<void> updateIsSeen({required String notificationId}) async {
     isupdateIsSeenLoading_.value = true;
-
-    final isSuccess = await _service.updateIsSeen(notificationId: notificationId);
-
-    if (isSuccess) {
-      // 🔥 Update local list
-      final index = notifications.indexWhere((e) => e.id == notificationId);
-
-      if (index != -1) {
-        notifications[index] = notifications[index].copyWith(isSeen: true);
+    try {
+      final isSuccess = await _service.updateIsSeen(notificationId: notificationId);
+      if (isSuccess) {
+        final index = notifications.indexWhere((e) => e.id == notificationId);
+        if (index != -1) {
+          notifications[index] = notifications[index].copyWith(isSeen: true);
+        }
       }
+    } catch (e) {
+      debugPrint("Error updateIsSeen: $e");
+    } finally {
+      isupdateIsSeenLoading_.value = false;
     }
-
-    isupdateIsSeenLoading_.value = false;
   }
-
-  //////////
-  // final socket = Get.find<SocketService>();
-
-  // var notifications_ = [].obs;
-
-  // @override
-  // void onInit() {
-  //   super.onInit();
-
-  //   socket.on("notification", (data) {
-  //     notifications_.add(data);
-
-  //     Get.snackbar("Notification", data['title']);
-  //   });
-  // }
-
-  ///
-  ///
-  ///
 }

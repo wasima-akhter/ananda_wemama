@@ -2,6 +2,7 @@ import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import '../../../../core/helpers/date_helper.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
 import '../controller/chat_inbox_controller.dart';
@@ -25,24 +26,57 @@ class ChatInboxScreen extends StatelessWidget {
         titleLeftWidget: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
           return Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              NetworkImageWidget(imageUrl: user?.profileImage ?? '', isCircle: true, radius: 16),
-              Gap(itemGap),
-              SizedBox(
-                width: S.w * 0.5,
-                child: Text(
-                  user?.name ?? 'Chat',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: 18.titleMclrCusFSOutfit,
-                ),
+              Container(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    NetworkImageWidget(
+                      imageUrl: user?.profileImage ?? '',
+                      isCircle: true,
+                      radius: 16,
+                    ),
+                    Gap(itemGap),
+                    SizedBox(
+                      width: S.w * 0.5,
+                      child: Text(
+                        user?.name ?? 'Chat',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: 18.titleMclrCusFSOutfit,
+                      ),
+                    ),
+                  ],
+                ).mL(12),
               ),
             ],
           );
         }),
+
+        suffix: Obx(() {
+          final user = cic.realChatInboxMsgItem.value.receiver;
+
+          final isBlocked = cic.isBlocked;
+          return CusFlexibleDropdown(
+            items: [
+              CusDropdownItem(
+                title: isBlocked ? Strings.unblock : Strings.block,
+                onTap: () {
+                  debugPrint('--> tapped ');
+                  Get.back();
+                  isBlocked
+                      ? cic.onTapUnBlock(userId: user?.id ?? '')
+                      : cic.onTapBlocked(userId: user?.id ?? '');
+                },
+              ),
+            ],
+
+            child: SvgIconColored(iconPath: IconsPath.moreVertical),
+          );
+        }),
       ),
-      inputRow: ChatInputRow(cic: cic).get10cm,
+      inputRow: cic.isBlocked ? const SizedBox.shrink() : ChatInputRow(cic: cic).get10cm,
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
         onRefresh: () async => cic.emitGetMessages(),
