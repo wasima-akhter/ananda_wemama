@@ -45,7 +45,13 @@ PinTheme? followingPinTheme = defaultPinTheme?.copyWith(
 ///
 ///////////////////////////////////////////////////////////////
 
-Future<dynamic> showReportBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
+Future<dynamic> showReportBottomSheet({
+  double? heightFactor,
+  bool isScrollControlled = true,
+  required bool isUserReport,
+  String? userId,
+  String? postId,
+}) {
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
@@ -59,7 +65,7 @@ Future<dynamic> showReportBottomSheet({double? heightFactor, bool isScrollContro
         height: bSheetH * 1 * (heightFactor ?? 1),
 
         // width: 1.sw,
-        child: ReportBottomSheet(),
+        child: ReportBottomSheet(isUserReport: isUserReport, postId: postId, userId: userId),
       ).getBtmSheetM,
     ),
 

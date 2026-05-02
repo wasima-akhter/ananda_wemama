@@ -75,3 +75,25 @@ class NotificationItemModel {
     );
   }
 }
+
+// export const ENUM_NOTIFICATION_TYPE = {
+//     LIKE_POST : "LIKE_POST",
+//     COMMENT_POST : "COMMENT_POST",
+//     APPROVE_COMMUNITY : "APPROVE_COMMUNITY",
+//     SENT_MESSAGE : "SENT_MESSAGE",
+//     SENT_WAVE : "SENT_WAVE",
+//     ACCEPT_WAVE : "ACCEPT_WAVE",
+//     REJECT_WAVE : "REJECT_WAVE",
+//     OTHER : "OTHER"
+// }
+
+class NotificationTypes {
+  static const likePost = "LIKE_POST";
+  static const commentPost = "COMMENT_POST";
+  static const approveCommunity = "APPROVE_COMMUNITY";
+  static const sentMessage = "SENT_MESSAGE";
+  static const sentWave = "SENT_WAVE";
+  static const acceptWave = "ACCEPT_WAVE";
+  static const rejectWave = "REJECT_WAVE";
+  static const other = "OTHER";
+}

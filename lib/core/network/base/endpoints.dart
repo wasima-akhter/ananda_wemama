@@ -15,10 +15,6 @@ class Endpoints {
   static const changePassword = "profile/change-password";
   static const resetPassword = "auth/reset-password";
 
-  static const addBankDetails = "profile/add-bank-details";
-
-  static const getBankCodes = "paystack/get-bank-list";
-
   static String get notifications => "notification/get-all-notification";
   static String get blockedUsers => "chat/get-blocked-user";
   static String blockUser({required String userId}) {
@@ -28,6 +24,8 @@ class Endpoints {
   static String unblockUser({required String blockedUserId, required String blockeRUserId}) {
     return "chat/unblock-user-app?blockerId=$blockeRUserId&blockedId=$blockedUserId";
   }
+
+  static String get reportUser => "report/new-report";
 
   static String notificationIsSeenUpdate({required String notificationId}) {
     return "notification/mark-notification-seen/$notificationId";

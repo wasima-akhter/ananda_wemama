@@ -1,10 +1,13 @@
 import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
+import 'package:mama_app/features/main_tabs/experts/model/expert_session_list_model.dart';
 import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../core/network/helpers/location/location_status_overlay.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../../../shared/mood/mood_check_in/mood_chip_card.dart';
+import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../controller/home_controller.dart';
 import '../modules/gentle_reminder_card.dart';
 
@@ -56,12 +59,29 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       appBar: HomeAppBarContent(),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 1.2,
         children: [
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),
-          // LiveOngoingSessionCard(),
+          // if none, show: no live session available right now
+          Obx(() {
+            final liveSessionData = hc.spotLightData.value?.liveSession;
+
+            final isLoading = hc.isSpotLightLoading_.value;
+            final state = getUIStateDetail(isLoading: isLoading);
+
+            return Container(
+              height: S.h * 0.25,
+              child: UIStateHandler(
+                loading: () => const LiveOngoingSessionCardShimmer(), // change to li
+                state: state,
+                data: () =>
+                    Container(child: LiveOngoingSessionCard(data: liveSessionData ?? Session())),
+              ),
+            );
+          }),
         ],
       ).getcm,
     );

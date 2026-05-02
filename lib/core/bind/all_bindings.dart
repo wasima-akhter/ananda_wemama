@@ -46,7 +46,6 @@ import '../../features/shared/bookmark/controller/bookmark_controller.dart';
 import '../../features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
 import '../../features/shared/mood/mood_library/controller/mood_library_controller.dart';
-import '../../features/shared/report_sheet/controller/report_controller.dart';
 import '../../features/shared/subscription_info/controller/subscription_info_controller.dart';
 import '../../features/station_location/controller/station_location_controller.dart';
 import '../../features/video_meeting/controller/meeting_comment_controller.dart';
@@ -231,16 +230,6 @@ class MemberManagementBinding extends Bindings {
     // while arguments are still available in binding context
 
     Get.lazyPutFenix(() => MemberManagementController());
-  }
-}
-
-class ReportControllerBinding extends Bindings {
-  @override
-  void dependencies() {
-    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
-    // while arguments are still available in binding context
-    // Use Get.put for global, immediate instantiation
-    Get.put(ReportController(), permanent: true);
   }
 }
 

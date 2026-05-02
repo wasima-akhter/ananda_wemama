@@ -5,7 +5,10 @@ import '../controller/report_controller.dart';
 import '../modules/report_reason_tile.dart';
 
 class ReportBottomSheet extends GetView<ReportController> {
-  const ReportBottomSheet({super.key});
+  final bool isUserReport;
+  final String? userId;
+  final String? postId;
+  const ReportBottomSheet({super.key, required this.isUserReport, this.userId, this.postId});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,14 @@ class ReportBottomSheet extends GetView<ReportController> {
 
             Row(
               children: [
-                AddPhotosCard(onTap: controller.onTapAddPhotoCard),
+                Obx(
+                  () => AddPhotoCard(
+                    onTap: controller.onTapAddPhotoCard,
+                    imageFile: controller.pickedImageOrFile.value,
+
+                    onRemove: () => controller.pickedImageOrFile.value = null,
+                  ),
+                ),
                 Gap(itemGap * 1.2),
                 Expanded(
                   child: CusDesTypeTextFormField(
@@ -74,7 +84,15 @@ class ReportBottomSheet extends GetView<ReportController> {
 
             Gap(itemGap * 2.5),
 
-            CustomBtnWTxt(btnTxt: Strings.submit, isLoading: controller.isLoading, isSmall: true),
+            Obx(
+              () => CustomBtnWTxt(
+                btnTxt: Strings.submit,
+                onTap: () =>
+                    controller.report(isUserReport: isUserReport, postId: postId, userId: userId),
+                isLoading: controller.isLoading,
+                isSmall: true,
+              ),
+            ),
           ],
         ),
       ),

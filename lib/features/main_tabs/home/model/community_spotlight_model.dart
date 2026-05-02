@@ -1,15 +1,17 @@
+import '../../experts/model/expert_session_list_model.dart';
+
 class CommunitySpotlightModel {
   CommunitySpotlightModel({this.communitySpotlight, this.liveSession});
 
   final CommunitySpotlightData? communitySpotlight;
-  final LiveSession? liveSession;
+  final Session? liveSession;
 
   factory CommunitySpotlightModel.fromJson(Map<String, dynamic> json) {
     return CommunitySpotlightModel(
       communitySpotlight: json["communitySpotlight"] == null
           ? null
           : CommunitySpotlightData.fromJson(json["communitySpotlight"]),
-      liveSession: json["liveSession"] == null ? null : LiveSession.fromJson(json["liveSession"]),
+      liveSession: json["liveSession"] == null ? null : Session.fromJson(json["liveSession"]),
     );
   }
 }
@@ -50,28 +52,6 @@ class LastPost {
       totalLike: json["totalLike"],
       totalComment: json["totalComment"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-    );
-  }
-}
-
-class LiveSession {
-  LiveSession({this.id, this.expert, this.title, this.description, this.time, this.date});
-
-  final String? id;
-  final Expert? expert;
-  final String? title;
-  final String? description;
-  final DateTime? time;
-  final DateTime? date;
-
-  factory LiveSession.fromJson(Map<String, dynamic> json) {
-    return LiveSession(
-      id: json["_id"],
-      expert: json["expert"] == null ? null : Expert.fromJson(json["expert"]),
-      title: json["title"],
-      description: json["description"],
-      time: DateTime.tryParse(json["time"] ?? ""),
-      date: DateTime.tryParse(json["date"] ?? ""),
     );
   }
 }

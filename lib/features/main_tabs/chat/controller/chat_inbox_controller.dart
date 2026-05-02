@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:mama_app/core/helpers/widgets_helper.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 
@@ -36,7 +37,9 @@ class ChatInboxController extends GetxController {
   ChatInboxController(this.args);
 
   String get chatId => args.chatId;
-  bool get isBlocked => args.isBlocked;
+
+  final isBlockedRx = false.obs;
+  bool get isBlocked => isBlockedRx.value;
 
   final msgInputController = TextEditingController();
   final msgInputFocus = FocusNode();
@@ -60,6 +63,8 @@ class ChatInboxController extends GetxController {
     super.onInit();
     print("chatId: $chatId");
     print("isBlocked: $isBlocked");
+
+    isBlockedRx.value = args.isBlocked;
     emitGetMessages(); // ← just emit, don't clear or set loading again
   }
 
@@ -219,8 +224,6 @@ class ChatInboxController extends GetxController {
 
   var isBlockLoading = false.obs;
   Future<void> onTapBlocked({required String userId}) async {
-    final isBlockLoading = false.obs;
-
     if (isBlockLoading.value) return;
 
     final confirm = await showAnimatedDialog<bool>(
@@ -230,33 +233,28 @@ class ChatInboxController extends GetxController {
         isLoading: isBlockLoading,
         onConfirm: () async {
           isBlockLoading.value = true;
+          Get.back();
 
           try {
             final success = await BlockedUserService().blockUser(userId: userId);
 
-            if (success) {}
+            if (success) {
+              isBlockedRx.value = true;
 
-            Get.back(result: true); // close dialog with success
+              Get.find<ChatController>().updateChatBlockStatus(chatId: chatId, isBlocked: true);
+            }
 
-            Get.find<ChatController>().getChatList();
-          } catch (e) {
-            print("Error blocking user: $e");
+            Get.back(result: true);
           } finally {
             isBlockLoading.value = false;
           }
         },
       ),
     );
-
-    if (confirm != true) return;
-
-    // Get.back();
   }
 
   var isUnblockLoading = false.obs;
   Future<void> onTapUnBlock({required String userId}) async {
-    final isUnblockLoading = false.obs;
-
     if (isUnblockLoading.value) return;
 
     isUnblockLoading.value = true;
@@ -264,17 +262,18 @@ class ChatInboxController extends GetxController {
     try {
       final success = await BlockedUserService().unblockUser(userId: userId);
 
-      if (success) {}
+      if (success) {
+        isBlockedRx.value = false;
 
-      // Get.back(result: true); // close dialog with success
-
-      await Get.find<ChatController>().getChatList();
-    } catch (e) {
-      print("Error blocking user: $e");
+        Get.find<ChatController>().updateChatBlockStatus(chatId: chatId, isBlocked: false);
+      }
     } finally {
       isUnblockLoading.value = false;
     }
+  }
 
-    Get.back();
+  Future<void> onTapReportUser({required String userId}) async {
+    await showReportBottomSheet(isUserReport: true, userId: userId);
+    Get.back(); // report user dropdown collapse
   }
 }

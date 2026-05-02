@@ -47,21 +47,18 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
               else if (hasBackNavArrow == false)
                 SizedBox(width: 40.w),
 
-              titleInLeft == true ? Gap(itemGap * 2) : const SizedBox.shrink(),
-
               Expanded(
                 child:
                     titleWidget ??
                     Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Expanded(
                           child: titleInLeft == true
                               ? Row(
                                   children: [
                                     titleLeftWidget ?? const SizedBox.shrink(),
-                                    titleLeftWidget != null
-                                        ? Gap(itemGap)
-                                        : const SizedBox.shrink(),
+
                                     Text(
                                       title.capEachWord(),
                                       overflow: TextOverflow.ellipsis,
@@ -79,11 +76,10 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
                                   style: 18.titleMclrCusFSOutfit,
                                 ),
                         ),
-
-                        suffix ?? Container(width: 40.w),
                       ],
                     ),
               ),
+              suffix ?? Container(width: 40.w),
             ],
           ),
         ),

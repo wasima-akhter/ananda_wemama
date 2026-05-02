@@ -144,4 +144,21 @@ class ChatController extends GetxController {
   }
 
   void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);
+
+  // -------------update
+  void updateChatBlockStatus({required String chatId, required bool isBlocked}) {
+    final index = realChatList.indexWhere((e) => e.id == chatId);
+
+    if (index == -1) return;
+
+    realChatList[index] = realChatList[index].copyWith(isBlocked: isBlocked);
+    realChatList.refresh();
+
+    final searchIndex = searchedChatList.indexWhere((e) => e.id == chatId);
+    if (searchIndex != -1) {
+      searchedChatList[searchIndex] = searchedChatList[searchIndex].copyWith(isBlocked: isBlocked);
+
+      searchedChatList.refresh();
+    }
+  }
 }

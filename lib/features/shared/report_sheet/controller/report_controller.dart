@@ -1,4 +1,5 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/shared/report_sheet/service/report_service.dart';
 
 import '../../../../app/controller_export.dart';
 
@@ -68,6 +69,7 @@ class ReportController extends GetxController {
     noteCtrl.clear();
     noteFocus.unfocus();
     pickedImageOrFile.value = null;
+    selectedReason.value = '';
   }
 
   // API loading state
@@ -75,24 +77,32 @@ class ReportController extends GetxController {
   bool get isLoading => isLoading_.value;
 
   /// Fetch the latest  data from API
-  Future<void> getChatList() async {
+  Future<void> report({required bool isUserReport, String? userId, String? postId}) async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 
+    final id_ = isUserReport ? userId : postId;
+
     try {
-      // final data = await ChatService().fetchChatList(
+      final data = await ReportService().reportUserOrContent(
+        id_: id_ ?? '',
+        isUserReport: isUserReport,
+        name: selectedReason.value,
+        note: noteCtrl.text.trim(),
+        reportImage: pickedImageOrFile.value,
+      );
 
-      // );
-
-      // if (data != null) {
-
-      // }
+      if (data != null) {
+        debugPrint('report success: ${data.report}');
+      }
     } catch (e) {
-      print("Error fetching profile: $e");
+      print("Error reportUserOrContent: $e");
     } finally {
       isLoading_.value = false;
 
       unFocusAll();
+      clearAll();
+      Get.back(); // report sheet collapse
     }
   }
 

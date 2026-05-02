@@ -124,15 +124,14 @@ class _PostHeader extends StatelessWidget {
                 const SizedBox.shrink(),
 
               // Visitor dropdown
-              if (btnState == MyCommunityBtnState.visit && currentProfileId() == postCreatorId)
+              if (btnState == MyCommunityBtnState.visit
+              // & currentProfileId() == postCreatorId
+              )
                 CusFlexibleDropdown(
                   items: [
                     CusDropdownItem(
-                      title: isPinned
-                          ? Strings.unpinPost.capEachWord()
-                          : Strings.pinPost.capEachWord(),
-                      // onTap: () => cc.togglePin(postId),
-                      onTap: () => cc.togglePinApi(postId),
+                      title: Strings.reportContent.capEachWord(),
+                      onTap: () => cc.onTapReportContent(postId: postId),
                     ),
                   ],
                   child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),

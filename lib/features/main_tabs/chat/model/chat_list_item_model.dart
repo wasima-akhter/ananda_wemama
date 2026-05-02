@@ -16,6 +16,22 @@ class ChatListItemModel {
       time: DateTime.tryParse(json["time"] ?? ""),
     );
   }
+
+  ChatListItemModel copyWith({
+    String? id,
+    OtherUser? otherUser,
+    bool? isBlocked,
+    String? lastMessage,
+    DateTime? time,
+  }) {
+    return ChatListItemModel(
+      id: id ?? this.id,
+      otherUser: otherUser ?? this.otherUser,
+      isBlocked: isBlocked ?? this.isBlocked,
+      lastMessage: lastMessage ?? this.lastMessage,
+      time: time ?? this.time,
+    );
+  }
 }
 
 class OtherUser {
@@ -27,5 +43,13 @@ class OtherUser {
 
   factory OtherUser.fromJson(Map<String, dynamic> json) {
     return OtherUser(id: json["_id"], name: json["name"], profileImage: json["profileImage"]);
+  }
+
+  OtherUser copyWith({String? name, String? id, String? profileImage}) {
+    return OtherUser(
+      name: name ?? this.name,
+      id: id ?? this.id,
+      profileImage: profileImage ?? this.profileImage,
+    );
   }
 }

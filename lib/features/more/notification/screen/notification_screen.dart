@@ -6,6 +6,7 @@ import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../controller/notification_controller.dart';
 import '../model/notifications_model.dart';
+import '../router/notification_router.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -33,7 +34,7 @@ class NotificationScreen extends StatelessWidget {
             // ─────────────────────────────
             // 🔹 Loading
             // ─────────────────────────────
-            loading: () => const Center(child: LoadingWhite()),
+            loading: () => const Center(child: LoadingPrimary()),
 
             // ─────────────────────────────
             // 🔹 Empty
@@ -52,11 +53,20 @@ class NotificationScreen extends StatelessWidget {
                     return NotificationItemCard(
                       n: n,
                       onTapNItem: (notificationId) async {
-                        if (n.isSeen == true) return;
+                        if (n.isSeen == true) {
+                          await NotificationRouter.route(n);
+                          return;
+                        }
 
                         showLoading(isupdateIsSeenLoading: nc.isupdateIsSeenLoading_);
+
                         await nc.updateIsSeen(notificationId: notificationId);
+
                         Get.back();
+
+                        await Future.delayed(const Duration(milliseconds: 300));
+
+                        await NotificationRouter.route(n);
                       },
                     );
                   }),

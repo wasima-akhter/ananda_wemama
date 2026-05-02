@@ -25,53 +25,46 @@ class ChatInboxScreen extends StatelessWidget {
         title: '',
         titleLeftWidget: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    NetworkImageWidget(
-                      imageUrl: user?.profileImage ?? '',
-                      isCircle: true,
-                      radius: 16,
-                    ),
-                    Gap(itemGap),
-                    SizedBox(
-                      width: S.w * 0.5,
-                      child: Text(
-                        user?.name ?? 'Chat',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: 18.titleMclrCusFSOutfit,
-                      ),
-                    ),
-                  ],
-                ).mL(12),
-              ),
-            ],
+          return Expanded(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NetworkImageWidget(imageUrl: user?.profileImage ?? '', isCircle: true, radius: 16),
+                Gap(itemGap),
+                Flexible(
+                  // width: S.w * 0.5,
+                  child: Text(
+                    user?.name ?? Strings.chat,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: 18.titleMclrCusFSOutfit,
+                  ),
+                ),
+              ],
+            ).mL(12),
           );
         }),
 
         suffix: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
 
-          final isBlocked = cic.isBlocked;
           return CusFlexibleDropdown(
             items: [
               CusDropdownItem(
-                title: isBlocked ? Strings.unblock : Strings.block,
+                title: cic.isBlockedRx.value ? Strings.unblock : Strings.block,
                 onTap: () {
-                  debugPrint('--> tapped ');
-                  Get.back();
-                  isBlocked
+                  cic.isBlockedRx.value
                       ? cic.onTapUnBlock(userId: user?.id ?? '')
                       : cic.onTapBlocked(userId: user?.id ?? '');
                 },
               ),
+              CusDropdownItem(
+                title: Strings.reportUser,
+                onTap: () {
+                  cic.onTapReportUser(userId: user?.id ?? '');
+                },
+              ),
             ],
-
             child: SvgIconColored(iconPath: IconsPath.moreVertical),
           );
         }),

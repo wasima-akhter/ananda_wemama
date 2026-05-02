@@ -4,6 +4,7 @@ import 'package:mama_app/features/main_tabs/community/services/community_detail_
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../../../../core/helpers/widgets_helper.dart';
 import '../model/community_item_detail_model.dart';
 
 // class _PostFlags {
@@ -346,5 +347,12 @@ class CommunityDetailController extends GetxController {
 
   void onRefresh() {
     getCommunityDetail();
+  }
+
+  //----------------------------------
+
+  Future<void> onTapReportContent({required String postId}) async {
+    await showReportBottomSheet(isUserReport: false, postId: postId);
+    Get.back(); // report user dropdown collapse
   }
 }
