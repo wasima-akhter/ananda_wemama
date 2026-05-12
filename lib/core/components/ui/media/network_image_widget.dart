@@ -31,7 +31,10 @@ class NetworkImageWidget extends StatelessWidget {
   });
 
   bool isImageUrl(String url) {
-    return RegExp(r'\.(jpg|jpeg|png|webp)$', caseSensitive: false).hasMatch(url);
+    return RegExp(
+      r'\.(jpg|jpeg|png|webp)$',
+      caseSensitive: false,
+    ).hasMatch(url);
   }
 
   @override
@@ -56,7 +59,10 @@ class NetworkImageWidget extends StatelessWidget {
     return Container(
       width: width ?? 30.w,
       height: height ?? 30.w,
-      decoration: BoxDecoration(color: c.inputBackground, borderRadius: fallbackRadius.brdrRad),
+      decoration: BoxDecoration(
+        color: c.inputBackground,
+        borderRadius: fallbackRadius.brdrRad,
+      ),
       clipBehavior: Clip.antiAlias,
       child: _buildImageContent(isCircle: false, radius: fallbackRadius),
     );
@@ -126,21 +132,52 @@ class NetworkImageWidget extends StatelessWidget {
                 );
         },
         errorBuilder: (context, error, stackTrace) {
-          return Center(
-            child: isUser == false
-                ? Assets.images.imagePlaceholder.image(
-                    width: placeholderSize,
-                    height: placeholderSize,
-                    color: c.primary,
-                  )
-                : Assets.images.userPlaceholder.image(
-                    width: placeholderSize,
-                    height: placeholderSize,
-                    color: c.primary,
-                  ),
+          return _FallbackWidget(
+            isCircle: isCircle,
+            isUser: isUser,
+            radius: radius ?? 12,
+            isSmall: isSmall ?? false,
           );
         },
       ),
     );
   }
 }
+
+///────────────────────────────────────────
+class _FallbackWidget extends StatelessWidget {
+  final bool isCircle;
+  final bool? isUser;
+  final double radius;
+  final bool isSmall;
+
+  const _FallbackWidget({
+    required this.isCircle,
+    required this.radius,
+    this.isUser,
+    required this.isSmall,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholderSize = isCircle
+        ? (radius * 0.7).clamp(8.0, 22.0)
+        : (isSmall ? 12.w : 22.w);
+
+    return Center(
+      child: (isUser == false)
+          ? Assets.images.imagePlaceholder.image(
+              width: placeholderSize,
+              height: placeholderSize,
+              color: c.primary,
+            )
+          : Assets.images.userPlaceholder.image(
+              width: placeholderSize,
+              height: placeholderSize,
+              color: c.primary,
+            ),
+    );
+  }
+}
+
+///
