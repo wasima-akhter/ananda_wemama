@@ -28,7 +28,11 @@ class FakeMsgItemData {
   final String time;
   final bool isSentByMe;
 
-  FakeMsgItemData({required this.msg, required this.time, required this.isSentByMe});
+  FakeMsgItemData({
+    required this.msg,
+    required this.time,
+    required this.isSentByMe,
+  });
 }
 
 class ChatInboxController extends GetxController {
@@ -141,7 +145,9 @@ class ChatInboxController extends GetxController {
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   void emitGetMessages() {
-    Get.find<SocketService>().emit(SocketEvents.getMessages, {"conversationId": chatId});
+    Get.find<SocketService>().emit(SocketEvents.getMessages, {
+      "conversationId": chatId,
+    });
   }
 
   void _emitSendMessage(String message, String receiverId) {
@@ -173,13 +179,18 @@ class ChatInboxController extends GetxController {
 
   List<dynamic> groupMessagesByDate() {
     final sorted = [...messages]
-      ..sort((a, b) => (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)));
+      ..sort(
+        (a, b) =>
+            (a.createdAt ?? DateTime(0)).compareTo(b.createdAt ?? DateTime(0)),
+      );
 
     final List<dynamic> result = [];
     String? lastDate;
 
     for (var msg in sorted) {
-      final dateLabel = DateHelper().formatDateLabel(msg.createdAt?.toString() ?? "");
+      final dateLabel = DateHelper().formatDateLabel(
+        msg.createdAt?.toString() ?? "",
+      );
       if (lastDate != dateLabel) {
         result.add(dateLabel);
         lastDate = dateLabel;
@@ -199,6 +210,7 @@ class ChatInboxController extends GetxController {
     if (source != null) {
       final picker = ImagePicker();
       final XFile? image = await picker.pickImage(
+        imageQuality: 60,
         source: source,
         preferredCameraDevice: CameraDevice.front,
       );
@@ -236,12 +248,17 @@ class ChatInboxController extends GetxController {
           Get.back();
 
           try {
-            final success = await BlockedUserService().blockUser(userId: userId);
+            final success = await BlockedUserService().blockUser(
+              userId: userId,
+            );
 
             if (success) {
               isBlockedRx.value = true;
 
-              Get.find<ChatController>().updateChatBlockStatus(chatId: chatId, isBlocked: true);
+              Get.find<ChatController>().updateChatBlockStatus(
+                chatId: chatId,
+                isBlocked: true,
+              );
             }
 
             Get.back(result: true);
@@ -265,7 +282,10 @@ class ChatInboxController extends GetxController {
       if (success) {
         isBlockedRx.value = false;
 
-        Get.find<ChatController>().updateChatBlockStatus(chatId: chatId, isBlocked: false);
+        Get.find<ChatController>().updateChatBlockStatus(
+          chatId: chatId,
+          isBlocked: false,
+        );
       }
     } finally {
       isUnblockLoading.value = false;

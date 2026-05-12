@@ -13,7 +13,8 @@ class SocketStatusBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        if (!Get.isRegistered<SocketStatusController>()) return const SizedBox.shrink();
+        if (!Get.isRegistered<SocketStatusController>())
+          return const SizedBox.shrink();
 
         final sc = SocketStatusController.to;
 
@@ -56,11 +57,14 @@ class SocketStatusBanner extends StatelessWidget {
                   onTap: () async {
                     SocketStatusController.to.setReconnecting(1);
                     try {
-                      await Get.find<SocketService>().connectSocket();
+                      Get.find<SocketService>().connectSocket();
                     } catch (_) {}
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
@@ -93,15 +97,18 @@ class _PulseDot extends StatefulWidget {
   State<_PulseDot> createState() => _PulseDotState();
 }
 
-class _PulseDotState extends State<_PulseDot> with SingleTickerProviderStateMixin {
+class _PulseDotState extends State<_PulseDot>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _anim;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-      ..repeat(reverse: true);
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat(reverse: true);
     _anim = Tween(
       begin: 0.4,
       end: 1.0,

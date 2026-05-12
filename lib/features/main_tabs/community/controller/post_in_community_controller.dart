@@ -48,6 +48,7 @@ class PostInCommunityController extends GetxController {
     final picker = ImagePicker();
 
     final XFile? selectedImage = await picker.pickImage(
+      imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );

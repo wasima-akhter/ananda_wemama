@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:mama_app/app/controller_export.dart';
+import 'package:mama_app/app/controller_export.dart' hide Response;
 
+import '../../helpers/image_helper.dart';
 import '../helpers/header_helpers.dart';
 import 'api_response_handler.dart';
 import 'dio_client.dart';
@@ -55,7 +56,7 @@ class ApiClient {
       method: 'PATCH',
       headers:
           //  {"Authorization": "Bearer ${getToken}"},
-          {"Authorization": "Bearer ${getToken}", ...?headers},
+          {"Authorization": "Bearer $getToken", ...?headers},
       // ❌ Don't set contentType for FormData - Dio handles it
       contentType: 'application/json',
       // contentType: "multipart/form-data; boundary=<calculated when request is sent>",
@@ -71,14 +72,51 @@ class ApiClient {
     }
   }
 
+  // Future<dynamic> patchWithFile(
+  //   String url, {
+  //   String? reqName,
+  //   dynamic data,
+  //   Map<String, dynamic>? headers,
+  // }) async {
+  //   // For FormData, don't set Content-Type - let Dio handle it automatically
+  //   final options = Options(method: 'PATCH', headers: {"Authorization": "Bearer $getToken"});
+
+  //   try {
+  //     print("DATA TYPE: ${data.runtimeType}");
+
+  //     final response = await _dio.request(url, data: data, options: options);
+
+  //     log('response in patch  : $response ');
+  //     return ApiResponseHandler.handle(response, reqName);
+  //   } catch (e) {
+  //     print("PATCH request error: $e");
+  //     return null;
+  //   }
+  // }
   Future<dynamic> patchWithFile(
     String url, {
     String? reqName,
     dynamic data,
     Map<String, dynamic>? headers,
   }) async {
-    // For FormData, don't set Content-Type - let Dio handle it automatically
-    final options = Options(method: 'PATCH', headers: {"Authorization": "Bearer $getToken"});
+    /// ✅ FILE SIZE VALIDATION
+    final isValid = await validateFileSize(data);
+
+    if (!isValid) {
+      return ApiResponseHandler.handle(
+        Response(
+          requestOptions: RequestOptions(path: url),
+          statusCode: 400,
+          data: {"message": "File size must be less than 3 MB"},
+        ),
+        reqName,
+      );
+    }
+
+    final options = Options(
+      method: 'PATCH',
+      headers: {"Authorization": "Bearer $getToken"},
+    );
 
     try {
       print("DATA TYPE: ${data.runtimeType}");
@@ -86,12 +124,36 @@ class ApiClient {
       final response = await _dio.request(url, data: data, options: options);
 
       log('response in patch  : $response ');
+
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
       print("PATCH request error: $e");
       return null;
     }
   }
+  // Future<dynamic> postWithFile(
+  //   String url, {
+  //   String? reqName,
+  //   dynamic data,
+  //   Map<String, dynamic>? headers,
+  // }) async {
+  //   // For FormData, don't set Content-Type - let Dio handle it automatically
+  //   final options = Options(
+  //     method: 'POST',
+  //     headers: {"Authorization": "Bearer $getToken"},
+  //   );
+
+  //   try {
+  //     print("DATA TYPE: ${data.runtimeType}");
+
+  //     final response = await _dio.request(url, data: data, options: options);
+  //     log('response in post  : $response ');
+  //     return ApiResponseHandler.handle(response, reqName);
+  //   } catch (e) {
+  //     print("POST request error: $e");
+  //     return null;
+  //   }
+  // }
 
   Future<dynamic> postWithFile(
     String url, {
@@ -99,14 +161,32 @@ class ApiClient {
     dynamic data,
     Map<String, dynamic>? headers,
   }) async {
-    // For FormData, don't set Content-Type - let Dio handle it automatically
-    final options = Options(method: 'POST', headers: {"Authorization": "Bearer $getToken"});
+    /// ✅ FILE SIZE VALIDATION
+    final isValid = await validateFileSize(data);
+
+    if (!isValid) {
+      return ApiResponseHandler.handle(
+        Response(
+          requestOptions: RequestOptions(path: url),
+          statusCode: 400,
+          data: {"message": "File size must be less than 3 MB"},
+        ),
+        reqName,
+      );
+    }
+
+    final options = Options(
+      method: 'POST',
+      headers: {"Authorization": "Bearer $getToken"},
+    );
 
     try {
       print("DATA TYPE: ${data.runtimeType}");
 
       final response = await _dio.request(url, data: data, options: options);
+
       log('response in post  : $response ');
+
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
       print("POST request error: $e");

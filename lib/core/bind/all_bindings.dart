@@ -132,10 +132,16 @@ class PostSignupScreensBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<SetupProfileController>(() => SetupProfileController());
     Get.lazyPut<PhotoAndBioController>(() => PhotoAndBioController());
-    Get.lazyPut<LifestyleAndInterestsController>(() => LifestyleAndInterestsController());
+    Get.lazyPut<LifestyleAndInterestsController>(
+      () => LifestyleAndInterestsController(),
+    );
     Get.lazyPut<MumsStageController>(() => MumsStageController());
-    Get.lazyPut<SubscriptionChoosePlanController>(() => SubscriptionChoosePlanController());
-    Get.lazyPut<WelcomeFundingMumController>(() => WelcomeFundingMumController());
+    Get.lazyPut<SubscriptionChoosePlanController>(
+      () => SubscriptionChoosePlanController(),
+    );
+    Get.lazyPut<WelcomeFundingMumController>(
+      () => WelcomeFundingMumController(),
+    );
   }
 }
 
@@ -378,7 +384,9 @@ class ContactSupportBinding extends Bindings {
 class TermsAndConditionsBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<TermsAndConditionsController>(() => TermsAndConditionsController());
+    Get.lazyPut<TermsAndConditionsController>(
+      () => TermsAndConditionsController(),
+    );
   }
 }
 
@@ -395,7 +403,6 @@ class NotificationBinding extends Bindings {
 class ProfileBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ProfileController>(() => ProfileController());
     Get.lazyPut<EditProfileController>(() => EditProfileController());
   }
 }
@@ -466,7 +473,9 @@ class MeetingBinding extends Bindings {
     print("--> args: $args");
 
     if (args == null || args is! MeetingCtrlAgModel) {
-      throw Exception("MeetingController requires a MeetingCtrlAgModel argument!");
+      throw Exception(
+        "MeetingController requires a MeetingCtrlAgModel argument!",
+      );
     }
 
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
@@ -474,11 +483,17 @@ class MeetingBinding extends Bindings {
 
     // ✅ fenix:false ensures a fresh controller every time
     // ✅ 1. MeetingController FIRST — LiveChatController depends on it
-    Get.put(MeetingController(Get.arguments as MeetingCtrlAgModel), permanent: false);
+    Get.put(
+      MeetingController(Get.arguments as MeetingCtrlAgModel),
+      permanent: false,
+    );
 
     // ✅ 2. LiveChatController SECOND — so Get.find<MeetingController>() succeeds
     Get.put(LiveChatController(), permanent: false);
 
-    Get.lazyPut<MeetingCommentController>(() => MeetingCommentController(), fenix: true);
+    Get.lazyPut<MeetingCommentController>(
+      () => MeetingCommentController(),
+      fenix: true,
+    );
   }
 }

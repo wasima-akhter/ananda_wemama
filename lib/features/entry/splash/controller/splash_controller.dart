@@ -3,11 +3,25 @@ import 'package:get/get.dart';
 
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
+import '../../../../core/services/socket/socket_service.dart';
 import '../../../../routes/route_paths.dart';
 
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
-
+  final socketService = Get.find<SocketService>();
+  @override
+  // void onInit() {
+  //   ever(socketService.status, (status) {
+  //     if (status == SocketStatus.failed) {
+  //       Get.snackbar(
+  //         "Connection issue",
+  //         "Live updates are currently unavailable. Trying again in background.",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     }
+  //   });
+  //   super.onInit();
+  // }
   Future<void> splashScreenFunctions(BuildContext context) async {
     print("splash controller function called");
 

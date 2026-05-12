@@ -29,64 +29,114 @@ class SocketService extends GetxService {
   bool get isConnected => _socket?.connected ?? false;
 
   // ── onInit: nothing socket-related here — socket doesn't exist yet ─────────
-  @override
-  void onInit() {
-    super.onInit();
-    // connectSocket() is called explicitly:
-    //   • At app start via MainNavBinding (already-logged-in users)
-    //   • After login via SigninService._connectSocketAfterLogin()
-    // Do NOT connect here — token may not be saved yet on first launch.
-  }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // CONNECT
   // ═══════════════════════════════════════════════════════════════════════════
-
   Future<void> connectSocket() async {
     // Reset completer
     _connectCompleter = Completer<void>();
 
-    // cleanup old socket
-    if (_socket != null) {
-      _socket!.clearListeners();
-      _socket!.disconnect();
-      _socket!.destroy();
-      _socket = null;
-    }
+    try {
+      // cleanup old socket
+      if (_socket != null) {
+        _socket!.clearListeners();
+        _socket!.disconnect();
+        _socket!.destroy();
+        _socket = null;
+      }
 
-    _socket = IO.io(
-      baseUrl,
-      IO.OptionBuilder()
-          .setTransports(['websocket'])
-          .setAuth({'token': getToken})
-          .disableAutoConnect() // 👈 important
-          .build(),
-    );
+      _socket = IO.io(
+        baseUrl,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .setAuth({'token': getToken})
+            .disableAutoConnect()
+            .build(),
+      );
 
-    _socket!.onConnect((_) {
-      print("✅ Socket Connected: ${_socket!.id}");
+      try {
+        _socket!.onConnect((_) {
+          print("✅ Socket Connected: ${_socket!.id}");
 
-      // complete future
+          if (!(_connectCompleter?.isCompleted ?? true)) {
+            _connectCompleter?.complete();
+          }
+        });
+      } catch (e) {
+        print("onConnect error ignored: $e");
+      }
+
+      _socket!.onConnectError((err) {
+        print("❌ Socket error: $err");
+
+        if (!(_connectCompleter?.isCompleted ?? true)) {
+          _connectCompleter?.completeError(err);
+        }
+      });
+
+      _registerListeners();
+
+      _socket!.connect();
+
+      // 👇 WAIT here until connected
+      return _connectCompleter!.future;
+    } catch (e) {
+      print("Socket connect crashed (ignored): $e");
+
+      // 👉 prevent app crash / interruption
       if (!(_connectCompleter?.isCompleted ?? true)) {
         _connectCompleter?.complete();
       }
-    });
-
-    _socket!.onConnectError((err) {
-      print("❌ Socket error: $err");
-
-      if (!(_connectCompleter?.isCompleted ?? true)) {
-        _connectCompleter?.completeError(err);
-      }
-    });
-
-    _registerListeners();
-
-    _socket!.connect();
-
-    // 👇 WAIT here until connected
-    return _connectCompleter!.future;
+    }
   }
+  // Future<void> connectSocket() async {
+  //   // Reset completer
+  //   _connectCompleter = Completer<void>();
+
+  //   // cleanup old socket
+  //   if (_socket != null) {
+  //     _socket!.clearListeners();
+  //     _socket!.disconnect();
+  //     _socket!.destroy();
+  //     _socket = null;
+  //   }
+
+  //   _socket = IO.io(
+  //     baseUrl,
+  //     IO.OptionBuilder()
+  //         .setTransports(['websocket'])
+  //         .setAuth({'token': getToken})
+  //         .disableAutoConnect() // 👈 important
+  //         .build(),
+  //   );
+
+  //   try {
+  //     _socket!.onConnect((_) {
+  //       print("✅ Socket Connected: ${_socket!.id}");
+
+  //       // complete future
+  //       if (!(_connectCompleter?.isCompleted ?? true)) {
+  //         _connectCompleter?.complete();
+  //       }
+  //     });
+  //   } catch (e) {}
+
+  //   _socket!.onConnectError((err) {
+  //     print("❌ Socket error: $err");
+
+  //     if (!(_connectCompleter?.isCompleted ?? true)) {
+  //       _connectCompleter?.completeError(err);
+  //     }
+  //   });
+
+  //   _registerListeners();
+
+  //   _socket!.connect();
+
+  //   // 👇 WAIT here until connected
+  //   return _connectCompleter!.future;
+  // }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // LISTENERS — registered once per connectSocket() call
@@ -136,18 +186,29 @@ class SocketService extends GetxService {
       }
 
       if (isReceiver) {
-        Get.snackbar('New Request 💬', res.message, snackPosition: SnackPosition.TOP);
+        Get.snackbar(
+          'New Request 💬',
+          res.message,
+          snackPosition: SnackPosition.TOP,
+        );
         return;
       }
 
       // ── Fallback: message was neither, use participant index as last resort ───
       final participants =
-          (res.dataAsMap?['participants'] as List?)?.map((e) => e.toString()).toList() ?? [];
+          (res.dataAsMap?['participants'] as List?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          [];
 
       print('🧪 fallback participants: $participants');
 
       if (participants.length >= 2 && participants[1] == currentProfileId()) {
-        Get.snackbar('New Request 💬', res.message, snackPosition: SnackPosition.TOP);
+        Get.snackbar(
+          'New Request 💬',
+          res.message,
+          snackPosition: SnackPosition.TOP,
+        );
       }
     });
     // ── new_notification ──────────────────────────────────────────────────────
@@ -180,7 +241,10 @@ class SocketService extends GetxService {
     // });
 
     _on(SocketEvents.newNotification, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newNotification);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.newNotification,
+      );
       if (!res.isSuccess) return;
 
       final notificationData = res.dataAsMap;
@@ -214,10 +278,15 @@ class SocketService extends GetxService {
     });
     // ── conversation_requests (list) ──────────────────────────────────────────
     _on(SocketEvents.conversationRequests, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationRequests);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.conversationRequests,
+      );
       if (!res.isSuccess) return;
 
-      final list = (res.dataAsList ?? []).map((e) => NewWaveListItemModel.fromJson(e)).toList();
+      final list = (res.dataAsList ?? [])
+          .map((e) => NewWaveListItemModel.fromJson(e))
+          .toList();
 
       if (Get.isRegistered<WaveRequestController>()) {
         Get.find<WaveRequestController>().updateWaveList(list);
@@ -226,7 +295,10 @@ class SocketService extends GetxService {
 
     // ── conversation_accepted ─────────────────────────────────────────────────
     _on(SocketEvents.conversationAccepted, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationAccepted);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.conversationAccepted,
+      );
       if (!res.isSuccess) return;
 
       final conversationId = res.dataAsMap?['_id'] as String? ?? '';
@@ -278,18 +350,28 @@ class SocketService extends GetxService {
 
     // ── conversation_rejected ─────────────────────────────────────────────────
     _on(SocketEvents.conversationRejected, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.conversationRejected);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.conversationRejected,
+      );
       if (!res.isSuccess) return;
 
       final msg = res.message.toLowerCase();
-      final isRejector = msg.contains('you have rejected') || msg.contains('declined');
+      final isRejector =
+          msg.contains('you have rejected') || msg.contains('declined');
 
-      print('🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}');
+      print(
+        '🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}',
+      );
 
       if (isRejector && Get.isRegistered<WaveRequestController>()) {
         // Triggers ever(isSuccessReject) → _onRejectSuccess()
         Get.find<WaveRequestController>().isSuccessReject.value = true;
-        Get.snackbar('Wave Rejected! ', res.message, snackPosition: SnackPosition.TOP);
+        Get.snackbar(
+          'Wave Rejected! ',
+          res.message,
+          snackPosition: SnackPosition.TOP,
+        );
       }
 
       // 🔕 No snackbar to wave sender — bad UX to explicitly notify rejection
@@ -297,10 +379,15 @@ class SocketService extends GetxService {
 
     // ── chat_list (list) ──────────────────────────────────────────
     _on(SocketEvents.chatList, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.chatList);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.chatList,
+      );
       if (!res.isSuccess) return;
 
-      final list = (res.dataAsList ?? []).map((e) => ChatListItemModel.fromJson(e)).toList();
+      final list = (res.dataAsList ?? [])
+          .map((e) => ChatListItemModel.fromJson(e))
+          .toList();
 
       if (Get.isRegistered<ChatController>()) {
         Get.find<ChatController>().updateChatList(list);
@@ -309,7 +396,10 @@ class SocketService extends GetxService {
 
     // ── chat_inbox_msg_list (list) ──────────────────────────────────────────
     _on(SocketEvents.messages, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.messages);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.messages,
+      );
       if (!res.isSuccess) return;
 
       final itemData = ChatInboxMessageItemModel.fromJson(res.dataAsMap ?? {});
@@ -322,7 +412,10 @@ class SocketService extends GetxService {
     //
     // ── chat_new_message listen ──────────────────────────────────────────
     _on(SocketEvents.newMessage, (data) {
-      final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newMessage);
+      final res = SocketResponseHandler.handle(
+        data,
+        eventName: SocketEvents.newMessage,
+      );
       if (!res.isSuccess) return;
 
       final msgData = Message.fromJson(res.dataAsMap ?? {});
@@ -471,7 +564,9 @@ class SocketService extends GetxService {
       return;
     }
 
-    final delay = Duration(seconds: (_baseDelay.inSeconds * (1 << _retryCount)).clamp(2, 60));
+    final delay = Duration(
+      seconds: (_baseDelay.inSeconds * (1 << _retryCount)).clamp(2, 60),
+    );
 
     _retryCount++;
 
@@ -494,8 +589,6 @@ class SocketService extends GetxService {
     });
   }
 }
-
-
 
 /*
 

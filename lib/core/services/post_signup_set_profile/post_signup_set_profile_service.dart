@@ -1,16 +1,18 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/service_export.dart';
 import '../../../features/post_auth_setup/mums_stage/model/complete_profile_model.dart';
+import '../../helpers/image_helper.dart';
 
 class PostSignupSetProfileService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
   Future<bool> uploadCompleteProfile({
     required String name,
-
     required String dob,
     required String state,
     required String city,
@@ -19,82 +21,69 @@ class PostSignupSetProfileService extends GetxService {
     required String mumStage,
     XFile? profileImage,
   }) async {
-    //
-    // 'name': 'soubir',
-    // 'DOB': '2020.12.16',
-    // 'state': 'Dhaka',
-    // 'city': 'Mohakhali',
-    // 'bio': 'Developer',
-    // 'mumStage': 'Pregnant',
-    // 'phone': '01641632319',
-    // 'interesteds': [world, sdsdc]
-    // 'profile-image': file
-
-    // Build form data conditionally
     final data = dio.FormData();
 
-    /// Text fields
-    data.fields.add(MapEntry('name', name));
-    data.fields.add(MapEntry('DOB', dob));
-    data.fields.add(MapEntry('state', state));
-    data.fields.add(MapEntry('city', city));
-    data.fields.add(MapEntry('mumStage', mumStage));
+    // ───────────────── TEXT FIELDS ─────────────────
 
-    /// bio (optional)
-    if (bioDes != null && bioDes.isNotEmpty) {
-      data.fields.add(MapEntry('bio', bioDes));
+    data.fields
+      ..add(MapEntry('name', name))
+      ..add(MapEntry('DOB', dob))
+      ..add(MapEntry('state', state))
+      ..add(MapEntry('city', city))
+      ..add(MapEntry('mumStage', mumStage));
+
+    if (bioDes != null && bioDes.trim().isNotEmpty) {
+      data.fields.add(MapEntry('bio', bioDes.trim()));
     }
 
-    /// interested fields → [ a, b, c ]
-    if (interestedFields.isNotEmpty) {
-      for (var field in interestedFields) {
-        data.fields.add(MapEntry('interesteds', field));
-      }
+    for (final field in interestedFields) {
+      data.fields.add(MapEntry('interesteds', field));
     }
 
-    // / profile image
-    // /     // Add file if exists
+    // ───────────────── PROFILE IMAGE (COMPRESSED) ─────────────────
+
     if (profileImage != null) {
-      final file = await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name);
+      final compressed = await MultipartHelper.compressedImage(
+        File(profileImage.path),
+      );
 
-      data.files.add(MapEntry('profile-image', file));
+      if (compressed == null) {
+        "Image compression failed".showToast();
+        return false;
+      }
+
+      data.files.add(MapEntry('profile-image', compressed));
     }
 
-    //
+    // ───────────────── DEBUG ─────────────────
+
     debugPrint('fields: ${data.fields}');
     debugPrint('files count: ${data.files.length}');
     debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    debugPrint('FIELDS:');
-    for (var f in data.fields) {
+    for (final f in data.fields) {
       debugPrint('${f.key}: ${f.value}');
     }
 
-    debugPrint('FILES:');
-    for (var f in data.files) {
+    for (final f in data.files) {
       debugPrint('${f.key}: ${f.value.filename}');
     }
 
     debugPrint("Token: ${storage.getAccessToken}");
 
-    //
+    // ───────────────── API CALL ─────────────────
 
-    apiCall() {
-      return ApiClient().postWithFile(
+    final response = await _apiHelper.request<CompleteProfileModel>(
+      apiCall: () => ApiClient().postWithFile(
         Endpoints.completeProfile.getUrl,
         reqName: Strings.setupProfile,
         data: data,
-      );
-    }
-
-    final response = await _apiHelper.request<CompleteProfileModel>(
-      apiCall: apiCall,
+      ),
       parser: (data) => CompleteProfileModel.fromJson(data),
     );
 
     if (response == null) return false;
 
-    // You can access user like:
     if (response.success) {
       print("response.data?.createdAt : ${response.data?.createdAt}");
     }

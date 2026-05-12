@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/features/main_tabs/community/model/community_item_model.dart';
 
 import '../../../../app/service_export.dart';
+import '../../../../core/helpers/image_helper.dart';
 
 class CommunityService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
@@ -16,34 +19,42 @@ class CommunityService extends GetxService {
   }) async {
     final data = dio.FormData();
 
-    // ── All files go under 'files' key — matches Postman ─────────────────────
+    // ───────────────── IMAGE (COMPRESS) ─────────────────
+
     if (communityImg != null) {
-      data.files.add(
-        MapEntry(
-          'community-image',
-          await dio.MultipartFile.fromFile(communityImg.path, filename: communityImg.name),
-        ),
+      final compressed = await MultipartHelper.compressedImage(
+        File(communityImg.path),
       );
+
+      if (compressed == null) {
+        "Image compression failed".showToast();
+        return false;
+      }
+
+      data.files.add(MapEntry('community-image', compressed));
     }
 
-    // ── Text fields ───────────────────────────────────────────────────────────
-    data.fields.add(MapEntry('name', communityName)); // ✅ add name
+    // ───────────────── TEXT FIELDS ─────────────────
+
+    data.fields.add(MapEntry('name', communityName));
+
+    // ───────────────── DEBUG ─────────────────
 
     debugPrint('fields: ${data.fields}');
     debugPrint('files count: ${data.files.length}');
     debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    debugPrint('FIELDS:');
-    for (var f in data.fields) {
+    for (final f in data.fields) {
       debugPrint('${f.key}: ${f.value}');
     }
 
-    debugPrint('FILES:');
-    for (var f in data.files) {
+    for (final f in data.files) {
       debugPrint('${f.key}: ${f.value.filename}');
     }
 
     debugPrint("Token: ${storage.getAccessToken}");
+
+    // ───────────────── API CALL ─────────────────
 
     final response = await _apiHelper.request(
       apiCall: () => ApiClient().postWithFile(
@@ -57,6 +68,7 @@ class CommunityService extends GetxService {
 
     debugPrint('response.success: ${response.success}');
     debugPrint('community id while create: ${response.data}');
+
     return true;
   }
 
@@ -67,23 +79,30 @@ class CommunityService extends GetxService {
   }) async {
     final data = dio.FormData();
 
-    // ── All files go under 'files' key — matches Postman ─────────────────────
+    // ───────────────── IMAGE (COMPRESS HERE) ─────────────────
+
     if (communityImg != null) {
-      data.files.add(
-        MapEntry(
-          'community-image',
-          await dio.MultipartFile.fromFile(communityImg.path, filename: communityImg.name),
-        ),
+      final compressed = await MultipartHelper.compressedImage(
+        File(communityImg.path),
       );
+
+      if (compressed != null) {
+        data.files.add(MapEntry('community-image', compressed));
+      } else {
+        "Image compression failed".showToast();
+        return false;
+      }
     }
 
-    // ── Text fields ───────────────────────────────────────────────────────────
+    // ───────────────── TEXT FIELDS ─────────────────
 
     if (communityName != null) {
-      data.fields.add(MapEntry('name', communityName)); // ✅ add name
+      data.fields.add(MapEntry('name', communityName));
     }
 
-    data.fields.add(MapEntry('communityId', communityId)); // ✅ add name
+    data.fields.add(MapEntry('communityId', communityId));
+
+    // ───────────────── DEBUG ─────────────────
 
     debugPrint('fields: ${data.fields}');
     debugPrint('files count: ${data.files.length}');
@@ -101,6 +120,8 @@ class CommunityService extends GetxService {
 
     debugPrint("Token: ${storage.getAccessToken}");
 
+    // ───────────────── API CALL ─────────────────
+
     final response = await _apiHelper.request(
       apiCall: () => ApiClient().patchWithFile(
         Endpoints.updateCommunity.getUrl,
@@ -113,6 +134,7 @@ class CommunityService extends GetxService {
 
     debugPrint('response.success: ${response.success}');
     debugPrint('community id while update : ${response.data}');
+
     return true;
   }
 
@@ -128,7 +150,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -153,7 +175,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -178,7 +200,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -191,7 +213,9 @@ class CommunityService extends GetxService {
     return response?.data ?? [];
   }
 
-  Future<List<CommunityItemModel>> fetchSearchedCommunityList({required String searchTxt}) async {
+  Future<List<CommunityItemModel>> fetchSearchedCommunityList({
+    required String searchTxt,
+  }) async {
     apiCall() {
       return ApiClient().get(
         Endpoints.getSearchedCommunity(searchTxt: searchTxt).getUrl,
@@ -203,7 +227,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }

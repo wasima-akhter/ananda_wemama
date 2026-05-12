@@ -3,6 +3,7 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../model/new_wave_req_list_item_model.dart';
 import '../service/wave_user_profile_info_service.dart';
@@ -175,11 +176,6 @@ class WaveRequestController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   // ── State ─────────────────────────────────────────────────────────────────
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
@@ -196,7 +192,10 @@ class WaveRequestController extends GetxController {
   String _pendingConversationId = '';
 
   // ── onTapAction ───────────────────────────────────────────────────────────
-  Future<void> onTapAction(bool isAccepted, {required String conversationId}) async {
+  Future<void> onTapAction(
+    bool isAccepted, {
+    required String conversationId,
+  }) async {
     Get.back(); // close bottom sheet
 
     _pendingConversationId = conversationId;
@@ -223,7 +222,7 @@ class WaveRequestController extends GetxController {
       Get.back(); // close accepted dialog
 
       showBothConnectedDialog(
-        myImageUrl: currentUserImage(),
+        myImageUrl: Get.find<ProfileController>().myImageUrl,
         peerImageUrl: peerImageUrl.value,
         peerName: peerName.value,
         conversationId: _pendingConversationId,
@@ -250,15 +249,21 @@ class WaveRequestController extends GetxController {
   final socket = Get.find<SocketService>();
 
   void getConversationRequestList(String receiverId) {
-    socket.emit(SocketEvents.getConversationRequests, {"receiverId": receiverId});
+    socket.emit(SocketEvents.getConversationRequests, {
+      "receiverId": receiverId,
+    });
   }
 
   void acceptUserWave(String conversationId) {
-    socket.emit(SocketEvents.acceptConversationRequest, {"conversationId": conversationId});
+    socket.emit(SocketEvents.acceptConversationRequest, {
+      "conversationId": conversationId,
+    });
   }
 
   void rejectUserWave(String conversationId) {
-    socket.emit(SocketEvents.rejectConversationRequest, {"conversationId": conversationId});
+    socket.emit(SocketEvents.rejectConversationRequest, {
+      "conversationId": conversationId,
+    });
   }
 
   // ── Fetch list ────────────────────────────────────────────────────────────
@@ -291,7 +296,9 @@ class WaveRequestController extends GetxController {
     isgetUserProfileLoading_.value = true;
 
     try {
-      final data = await WaveUserProfileInfoService().fetchUserProfile(userId: userId);
+      final data = await WaveUserProfileInfoService().fetchUserProfile(
+        userId: userId,
+      );
 
       if (data != null) {
         waveUserProfileData.value = data;

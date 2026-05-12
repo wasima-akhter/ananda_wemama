@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../app/service_export.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
+import '../../../helpers/image_helper.dart';
 
 class UpdateProfileService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
@@ -72,6 +75,7 @@ class UpdateProfileService extends GetxService {
   //   return response.data; // 👈 return actual data
   // }
 
+  /*
   Future<ProfileDataModel?> updateProfileWithChildren({
     required List<XFile> descriptionImages,
     XFile? profileImage,
@@ -89,7 +93,10 @@ class UpdateProfileService extends GetxService {
       data.files.add(
         MapEntry(
           'profile-image',
-          await dio.MultipartFile.fromFile(profileImage.path, filename: profileImage.name),
+          await dio.MultipartFile.fromFile(
+            profileImage.path,
+            filename: profileImage.name,
+          ),
         ),
       );
     }
@@ -105,7 +112,7 @@ class UpdateProfileService extends GetxService {
 
     // ── Text fields ───────────────────────────────────────────────────────────
     data.fields
-      // ..add(MapEntry('DOB', dob))
+      ..add(MapEntry('DOB', dob))
       ..add(MapEntry('state', state))
       ..add(MapEntry('city', city))
       ..add(MapEntry('bio', bio))
@@ -113,7 +120,9 @@ class UpdateProfileService extends GetxService {
 
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
-        data.fields.add(MapEntry('children[$i][gender]', children[i]['gender']!));
+        data.fields.add(
+          MapEntry('children[$i][gender]', children[i]['gender']!),
+        );
         data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
       }
     }
@@ -144,6 +153,96 @@ class UpdateProfileService extends GetxService {
     );
 
     if (response == null || !response.success) return null;
+    return response.data;
+  }
+
+  */
+  Future<ProfileDataModel?> updateProfileWithChildren({
+    required List<XFile> descriptionImages,
+    XFile? profileImage,
+    required String dob,
+    required String state,
+    required String city,
+    required String bio,
+    required String name,
+    List<Map<String, String>>? children,
+  }) async {
+    final data = dio.FormData();
+
+    // ───────────────── PROFILE IMAGE ─────────────────
+
+    if (profileImage != null) {
+      final compressedProfile = await MultipartHelper.compressedImage(
+        File(profileImage.path),
+      );
+
+      if (compressedProfile != null) {
+        data.files.add(MapEntry('profile-image', compressedProfile));
+      }
+    }
+
+    // ───────────────── DESCRIPTION IMAGES ─────────────────
+
+    for (final image in descriptionImages) {
+      final compressedImage = await MultipartHelper.compressedImage(
+        File(image.path),
+      );
+
+      if (compressedImage != null) {
+        data.files.add(MapEntry('description-image', compressedImage));
+      }
+    }
+
+    // ───────────────── TEXT FIELDS ─────────────────
+
+    data.fields
+      ..add(MapEntry('DOB', dob))
+      ..add(MapEntry('state', state))
+      ..add(MapEntry('city', city))
+      ..add(MapEntry('bio', bio))
+      ..add(MapEntry('name', name));
+
+    // ───────────────── CHILDREN ─────────────────
+
+    if (children != null) {
+      for (int i = 0; i < children.length; i++) {
+        data.fields.add(
+          MapEntry('children[$i][gender]', children[i]['gender']!),
+        );
+
+        data.fields.add(MapEntry('children[$i][dob]', children[i]['dob']!));
+      }
+    }
+
+    debugPrint('fields: ${data.fields}');
+    debugPrint('files count: ${data.files.length}');
+    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+
+    debugPrint('FIELDS:');
+    for (var f in data.fields) {
+      debugPrint('${f.key}: ${f.value}');
+    }
+
+    debugPrint('FILES:');
+    for (var f in data.files) {
+      debugPrint('${f.key}: ${f.value.filename}');
+    }
+
+    debugPrint("Token: ${storage.getAccessToken}");
+
+    final response = await _apiHelper.request<ProfileDataModel>(
+      apiCall: () => ApiClient().patchWithFile(
+        Endpoints.updateProfile.getUrl,
+        reqName: Strings.updateProfile,
+        data: data,
+      ),
+      parser: (data) => ProfileDataModel.fromJson(data),
+    );
+
+    if (response == null || !response.success) {
+      return null;
+    }
+
     return response.data;
   }
 }

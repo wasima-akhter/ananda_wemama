@@ -1,11 +1,17 @@
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
   final Widget? suffix;
   final VoidCallback? onTapBack;
   final bool? hasBackNavArrow;
 
-  const HomeAppBarContent({super.key, this.suffix, this.onTapBack, this.hasBackNavArrow});
+  const HomeAppBarContent({
+    super.key,
+    this.suffix,
+    this.onTapBack,
+    this.hasBackNavArrow,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,11 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                   child: CircleAvatar(
                     radius: 20.r,
                     backgroundColor: c.inputBackground,
-                    child: SvgIcon(iconPath: IconsPath.notification, height: 22.h, width: 25.w),
+                    child: SvgIcon(
+                      iconPath: IconsPath.notification,
+                      height: 22.h,
+                      width: 25.w,
+                    ),
                   ),
                 ),
               ),
@@ -52,11 +62,20 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    circledNetworkImageBgComponent(
-                      radius: 20,
-                      imagePath: currentUserImage(),
-                      enablePreview: false,
-                    ),
+                    Obx(() {
+                      final image =
+                          Get.find<ProfileController>()
+                              .userProfileData
+                              .value
+                              ?.profileImage ??
+                          '';
+
+                      return circledNetworkImageBgComponent(
+                        radius: 20,
+                        imagePath: image,
+                        enablePreview: false,
+                      );
+                    }),
 
                     Positioned(
                       top: -20,

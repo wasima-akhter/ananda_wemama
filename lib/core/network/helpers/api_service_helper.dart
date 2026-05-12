@@ -19,7 +19,7 @@ class ApiServiceHelper {
 
       //
       if (res == null) {
-        "No response from server".showToast();
+        "Something went wrong. Try again".showToast();
         return null;
       }
       // ✅ extract .data if it's a Dio Response
@@ -51,7 +51,8 @@ class ApiServiceHelper {
             errorMsg = "Request was canceled.";
             break;
           case DioExceptionType.badResponse:
-            if (e.response?.data is Map && e.response!.data["message"] != null) {
+            if (e.response?.data is Map &&
+                e.response!.data["message"] != null) {
               errorMsg = e.response!.data["message"].toString();
             } else {
               errorMsg = "Server error. Please try again later.";

@@ -12,8 +12,10 @@ class SigninService extends GetxService {
     print("Login started..");
 
     final response = await _apiHelper.request<SigninModelData>(
-      apiCall: () =>
-          ApiClient().post(Endpoints.login.getUrl, data: {"email": email, "password": password}),
+      apiCall: () => ApiClient().post(
+        Endpoints.login.getUrl,
+        data: {"email": email, "password": password},
+      ),
       parser: (data) => SigninModelData.fromJson(data),
     );
 
@@ -23,7 +25,11 @@ class SigninService extends GetxService {
     if (response.success) {
       _saveUserDataAfterLogin(response: response);
       // ✅ IMPORTANT: wait for socket connection
-      await Get.find<SocketService>().connectSocket();
+      try {
+        await Get.find<SocketService>().connectSocket();
+      } catch (e) {
+        debugPrint("not socket connect");
+      }
 
       // ✅ Now safe — user is in room
       if (Get.isRegistered<ProfileController>()) {
@@ -48,14 +54,16 @@ class SigninService extends GetxService {
     }
   }
 
-  void _saveUserDataAfterLogin({required BaseResponse<SigninModelData> response}) {
+  void _saveUserDataAfterLogin({
+    required BaseResponse<SigninModelData> response,
+  }) {
     if (response.data == null) return;
 
     final user = response.data!.user;
-    storage.setUserInfo(email: user?.email);
+    storage.setUserInfo(email: user.email);
     storage.setToken(response.data!.accessToken);
 
-    print("Logged in as: ${user?.email}");
+    print("Logged in as: ${user.email}");
     print("Access token: ${response.data!.accessToken}");
   }
 }

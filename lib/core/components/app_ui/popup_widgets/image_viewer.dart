@@ -9,36 +9,92 @@ class ImageViewerPopup extends StatelessWidget {
 
   const ImageViewerPopup({super.key, required this.imageSource});
 
-  ImageProvider _resolveImage() {
-    if (imageSource is File) {
-      return FileImage(imageSource);
+  bool get isNetwork =>
+      imageSource is String && imageSource.toString().startsWith('http');
+
+  bool get isFile => imageSource is File || imageSource is XFile;
+
+  String? get assetPath {
+    if (imageSource is String && !isNetwork) {
+      return imageSource;
+    }
+    return null;
+  }
+
+  File? get file {
+    if (imageSource is File) return imageSource;
+    if (imageSource is XFile) return File(imageSource.path);
+    return null;
+  }
+
+  Widget _buildImage() {
+    // NETWORK IMAGE
+    if (isNetwork) {
+      return Image.network(
+        imageSource,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return _placeholder();
+        },
+      );
     }
 
-    if (imageSource is XFile) {
-      return FileImage(File(imageSource.path));
+    // FILE IMAGE
+    if (file != null) {
+      return Image.file(
+        file!,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return _placeholder();
+        },
+      );
     }
 
-    // default: network or asset string
-    final path = imageSource.toString();
-
-    if (path.startsWith('http')) {
-      return NetworkImage(path);
+    // ASSET IMAGE
+    if (assetPath != null) {
+      return Image.asset(
+        assetPath!,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return _placeholder();
+        },
+      );
     }
 
-    return AssetImage(path);
+    return _placeholder();
+  }
+
+  Widget _placeholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: bgClr,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+          Icon(Icons.broken_image, size: 60, color: Colors.grey),
+          SizedBox(height: 10),
+          Text(
+            "Image not available",
+            style: TxtStyle.outfit(color: Colors.grey, fs: 16),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        /// BACKGROUND + ZOOMABLE IMAGE
+        /// IMAGE WITH ZOOM
         Center(
           child: InteractiveViewer(
             panEnabled: true,
             minScale: 1,
             maxScale: 4,
-            child: Image(image: _resolveImage(), fit: BoxFit.contain),
+            child: _buildImage(),
           ),
         ),
 

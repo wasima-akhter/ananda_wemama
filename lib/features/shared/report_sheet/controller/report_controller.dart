@@ -53,7 +53,7 @@ class ReportController extends GetxController {
     // Pick image from camera/gallery
 
     final picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
+    final XFile? image = await picker.pickImage( imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );

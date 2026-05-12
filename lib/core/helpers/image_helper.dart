@@ -1,9 +1,16 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
-import '../../app/helper_widgets_export.dart';
+import '../../app/helper_widgets_export.dart' hide MultipartFile;
+import '../components/app_ui/popup_widgets/file_size_excedeed_popup.dart';
+import '../components/ui/dialogs/popups.dart';
 import '../components/ui/media/image_error_builder.dart';
 import '../components/ui/sheets/file_picker_bottom_sheet.dart';
 import '../components/ui/sheets/image_picker_bottom_sheet.dart';
+import 'image/image_compressor.dart';
 
 Image get mamaLogoWithoutTxtImage =>
     Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.2);
@@ -13,7 +20,10 @@ Image get mamaLogoWithoutTxtImageSmall =>
 ImageErrorBuilder defaultErrorBuilder({double? height, double? width}) =>
     ImageErrorBuilder(height: height, width: width);
 
-Future<String> svgPathWNewWidth({required String iconPath, required double strokeWidth}) async {
+Future<String> svgPathWNewWidth({
+  required String iconPath,
+  required double strokeWidth,
+}) async {
   // 1️⃣ Load SVG as string
   String svgStr = await rootBundle.loadString(iconPath);
 
@@ -33,7 +43,11 @@ Column get weMamaLogoWithTxt => Column(
   ],
 );
 
-CircleAvatar circledImageBgComponent({String? imagePath, Color? brdrClr, double? radius}) {
+CircleAvatar circledImageBgComponent({
+  String? imagePath,
+  Color? brdrClr,
+  double? radius,
+}) {
   return CircleAvatar(
     radius: (radius ?? 20).r,
     backgroundColor: c.inputBackground,
@@ -41,7 +55,9 @@ CircleAvatar circledImageBgComponent({String? imagePath, Color? brdrClr, double?
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: brdrClr ?? c.secondary),
-        image: DecorationImage(image: AssetImage(imagePath ?? ImagesPath.userDemoL)),
+        image: DecorationImage(
+          image: AssetImage(imagePath ?? ImagesPath.userDemoL),
+        ),
       ),
     ),
   );
@@ -80,16 +96,22 @@ Future<dynamic> showPickImageBottomSheet({
     isDismissible: true,
     enableDrag: true,
 
-    AnimatedPadding(
-      duration: const Duration(milliseconds: 250),
-      padding: EdgeInsets.only(bottom: S.bottomInset),
+    SafeArea(
+      top: false,
+      child: AnimatedPadding(
+        duration: const Duration(milliseconds: 250),
+        padding: EdgeInsets.only(bottom: S.bottomInset),
 
-      child: Container(
-        height: bSheetH * 0.5 * (heightFactor ?? 1),
+        child: SizedBox(
+          height: bSheetH * 0.5 * (heightFactor ?? 1),
 
-        // width: 1.sw,
-        child: PickImageBottomSheet(onTapGallery: onTapGallery, onTapCamera: onTapCamera),
-      ).getBtmSheetM,
+          // width: 1.sw,
+          child: PickImageBottomSheet(
+            onTapGallery: onTapGallery,
+            onTapCamera: onTapCamera,
+          ),
+        ).getBtmSheetM,
+      ),
     ),
 
     isScrollControlled: isScrollControlled,
@@ -113,7 +135,7 @@ Future<dynamic> showPickAnyFileBottomSheet({
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
 
-      child: Container(
+      child: SizedBox(
         height: bSheetH * 0.45 * (heightFactor ?? 1),
 
         // width: 1.sw,
@@ -128,4 +150,48 @@ Future<dynamic> showPickAnyFileBottomSheet({
     isScrollControlled: isScrollControlled,
     backgroundColor: bgClr, // needed for rounded corners
   );
+}
+
+// ------------------------------------
+//
+// -------------------------------------------
+
+const int maxFileSizeInBytes = 3 * 1024 * 1024; // 3 MB
+
+Future<bool> validateFileSize(dynamic data) async {
+  if (data is! dio.FormData) return true;
+
+  for (final field in data.files) {
+    final multipartFile = field.value;
+
+    final length = multipartFile.length;
+
+    if (length > maxFileSizeInBytes) {
+      await showAnimatedDialog(
+        context: Get.context!,
+        barrierDismissible: true,
+        child: const FileSizeExceededPopup(),
+      );
+
+      return false;
+    }
+  }
+
+  return true;
+}
+
+class MultipartHelper {
+  static Future<MultipartFile?> compressedImage(File file) async {
+    final compressed = await ImageCompressor.compressUntilUnder3MB(file);
+
+    if (compressed == null) {
+      print("Image compression failed");
+      return null;
+    }
+
+    return await MultipartFile.fromFile(
+      compressed.path,
+      filename: compressed.path.split('/').last,
+    );
+  }
 }

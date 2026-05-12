@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart' as dio;
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
@@ -10,46 +12,54 @@ class ReportService extends GetxService {
   Future<ReportInfoModel?> reportUserOrContent({
     XFile? reportImage,
     required String id_,
-    required String name, //
-    required bool isUserReport, //
-    required String note, //
+    required String name,
+    required bool isUserReport,
+    required String note,
   }) async {
     final data = dio.FormData();
 
-    // ── All files go under 'files' key — matches Postman ─────────────────────
+    // ───────────────── IMAGE (COMPRESS) ─────────────────
+
     if (reportImage != null) {
-      data.files.add(
-        MapEntry(
-          'report-image',
-          await dio.MultipartFile.fromFile(reportImage.path, filename: reportImage.name),
-        ),
+      final compressed = await MultipartHelper.compressedImage(
+        File(reportImage.path),
       );
+
+      if (compressed == null) {
+        "Image compression failed".showToast();
+        return null;
+      }
+
+      data.files.add(MapEntry('report-image', compressed));
     }
 
-    // ── Text fields ───────────────────────────────────────────────────────────
+    // ───────────────── TEXT FIELDS ─────────────────
 
     final type = isUserReport ? "User".cap : "Content".cap;
+
     data.fields
       ..add(MapEntry('type', type))
       ..add(MapEntry('note', note))
       ..add(MapEntry('report', id_))
-      ..add(MapEntry('name', name)); // ✅ add name
+      ..add(MapEntry('name', name));
+
+    // ───────────────── DEBUG ─────────────────
 
     debugPrint('fields: ${data.fields}');
     debugPrint('files count: ${data.files.length}');
     debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    debugPrint('FIELDS:');
-    for (var f in data.fields) {
+    for (final f in data.fields) {
       debugPrint('${f.key}: ${f.value}');
     }
 
-    debugPrint('FILES:');
-    for (var f in data.files) {
+    for (final f in data.files) {
       debugPrint('${f.key}: ${f.value.filename}');
     }
 
     debugPrint("Token: ${storage.getAccessToken}");
+
+    // ───────────────── API CALL ─────────────────
 
     final response = await _apiHelper.request<ReportInfoModel>(
       apiCall: () => ApiClient().postWithFile(
@@ -61,6 +71,7 @@ class ReportService extends GetxService {
     );
 
     if (response == null || !response.success) return null;
+
     return response.data;
   }
 }

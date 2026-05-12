@@ -159,7 +159,7 @@ class EditProfileController extends GetxController {
 
   Future<void> pickSingleImage(ImageSource source) async {
     final picker = ImagePicker();
-    final selected = await picker.pickImage(
+    final selected = await picker.pickImage( imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
@@ -178,7 +178,7 @@ class EditProfileController extends GetxController {
     }
 
     final List<XFile> selected = remaining == 1
-        ? [if (await picker.pickImage(source: ImageSource.gallery) case final img?) img]
+        ? [if (await picker.pickImage( imageQuality: 60, source: ImageSource.gallery) case final img?) img]
         : await picker.pickMultiImage(limit: remaining);
 
     if (selected.isEmpty) return;

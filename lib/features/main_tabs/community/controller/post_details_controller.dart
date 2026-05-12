@@ -59,6 +59,7 @@ class PostDetailsController extends GetxController {
     final picker = ImagePicker();
 
     final XFile? selectedImage = await picker.pickImage(
+      imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
@@ -95,7 +96,8 @@ class PostDetailsController extends GetxController {
     }
   }
 
-  UIState get commentState => getUIStateList(isLoading: isGetCommentsLoading.value, list: comments);
+  UIState get commentState =>
+      getUIStateList(isLoading: isGetCommentsLoading.value, list: comments);
 
   final replyingToCommentId = RxnString();
   final replyingToUserName = ''.obs;
@@ -130,12 +132,16 @@ class PostDetailsController extends GetxController {
 
         if (isReply) {
           // ✅ ADD CHILD COMMENT
-          final parentIndex = comments.indexWhere((e) => e.id == replyingToCommentId.value);
+          final parentIndex = comments.indexWhere(
+            (e) => e.id == replyingToCommentId.value,
+          );
 
           if (parentIndex != -1) {
             final parent = comments[parentIndex];
 
-            final updatedReplies = List<ReplyModelOfPost>.from(parent.replies ?? []);
+            final updatedReplies = List<ReplyModelOfPost>.from(
+              parent.replies ?? [],
+            );
 
             updatedReplies.add(
               ReplyModelOfPost(
@@ -165,7 +171,10 @@ class PostDetailsController extends GetxController {
               id: now.millisecondsSinceEpoch.toString(),
               content: text,
               createdAt: now,
-              creator: Creator(name: currentProfileName(), profileImage: currentUserImage()),
+              creator: Creator(
+                name: currentProfileName(),
+                profileImage: currentUserImage(),
+              ),
               replies: [],
             ),
           );

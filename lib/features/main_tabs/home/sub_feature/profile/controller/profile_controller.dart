@@ -11,6 +11,8 @@ class ProfileController extends GetxController {
   // User model
   final userProfileData = Rxn<ProfileDataModel>();
 
+  String get myImageUrl => userProfileData.value?.profileImage ?? '';
+
   // Sign out loading state
   var isSignOutLoading_ = false.obs;
 
@@ -33,7 +35,8 @@ class ProfileController extends GetxController {
       final data = await ProfileInfoService().fetchProfile();
 
       if (data != null) {
-        userProfileData.value = data; // <-- triggers HomeSupplierController's ever()
+        userProfileData.value =
+            data; // <-- triggers HomeSupplierController's ever()
 
         print("data fetching profile: ${(data)}");
 
@@ -50,8 +53,8 @@ class ProfileController extends GetxController {
 
         // also save the lat long
         if (data.location != null) {
-          storage.setUserLongitude(data.location?.coordinates?.first ?? 0.0);
-          storage.setUserLatitude(data.location?.coordinates?.last ?? 0.0);
+          storage.setUserLongitude(data.location?.coordinates.first ?? 0.0);
+          storage.setUserLatitude(data.location?.coordinates.last ?? 0.0);
         }
       }
     } catch (e) {
