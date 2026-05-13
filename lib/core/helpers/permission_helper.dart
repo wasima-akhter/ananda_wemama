@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../app/helper_widgets_export.dart';
@@ -5,12 +8,28 @@ import '../components/ui/dialogs/popups.dart';
 import '../components/ui/dialogs/small_popup_dialog.dart';
 
 Future<bool> requestPermissions() async {
-  final result = await [
-    Permission.camera,
-    Permission.microphone,
-    Permission.storage,
-  ].request();
+  final permissions = <Permission>[Permission.camera, Permission.microphone];
 
+  if (Platform.isAndroid) {
+    final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+
+    if (sdk >= 33) {
+      // Android 13+ — granular media permissions
+      // Permission.photos   → READ_MEDIA_IMAGES
+      // Permission.videos   → READ_MEDIA_VIDEO
+      // Permission.audio    → READ_MEDIA_AUDIO  ← needed for recordings
+      permissions.addAll([
+        Permission.photos,
+        Permission.videos,
+        Permission.audio,
+      ]);
+    } else {
+      // Android 10–12 — legacy storage covers everything
+      permissions.add(Permission.storage);
+    }
+  }
+
+  final result = await permissions.request();
   final allGranted = result.values.every((status) => status.isGranted);
 
   if (!allGranted) {

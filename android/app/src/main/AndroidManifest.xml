@@ -1,20 +1,67 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-<uses-permission android:name="android.permission.INTERNET"/>
+<!-- <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.CAMERA"/>
-<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/> -->
 <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> -->
 <!-- android/app/src/main/AndroidManifest.xml -->
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
-<uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/> <!-- Android 13+ -->
-<uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>  <!-- Android 13+ -->
-<uses-permission android:name="android.permission.READ_MEDIA_FILES"/>  <!-- Android 13+ -->
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+<!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/> -->
+<!-- <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/> -->
+<!-- Android 13+ -->
+<!-- <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/> -->
+<!-- Android 13+ -->
+<!-- <uses-permission android:name="android.permission.READ_MEDIA_FILES"/> -->
+  <!-- Android 13+ -->
+<!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> -->
+
+<!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> -->
+
+<!--  -->
+
+ <!-- ✅ Core: always needed -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <!-- ✅ Needed for saving recordings to external storage on Android 10–12 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"/>
+    <!--
+        ⚠️  You removed this — put it back, but cap it at API 29.
+        On Android 10 (API 29), saving audio files outside app-private
+        directories (e.g. Downloads, Music) requires WRITE_EXTERNAL_STORAGE.
+        Android 11+ uses MediaStore API instead, no write permission needed.
+    -->
+
+    <!-- ✅ Read storage: Android 10–12 only -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+
+    <!-- ✅ Android 13+ granular media permissions -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!-- <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/> -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <!--
+        ❌ READ_MEDIA_FILES does not exist — already removed, good.
+        ✅ READ_MEDIA_AUDIO added — required for image picker audio & recordings.
+    -->
+
+    <!-- ✅ Location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <!-- ✅ Foreground service (needed for Agora, recording in background) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <!-- ✅ Add: keeps screen/audio alive during live session -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
 
 
-<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<!--  -->
 
     <application
         android:label="We Mama"

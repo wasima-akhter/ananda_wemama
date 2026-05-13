@@ -1,32 +1,15 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:agora_rtm/agora_rtm.dart';
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
-import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
-import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
-import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../app/controller_export.dart';
-import '../../../core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
-import '../../../core/config/agora_config.dart';
-import '../../../core/helpers/permission_helper.dart';
-import '../model/live_session_info_model.dart';
+import 'arg_model/meeting_ctrl_ag_model.dart';
+import 'mixins/agora_engine_mixin.dart';
+import 'mixins/leave_session_mixin.dart';
+import 'mixins/session_info_mixin.dart';
+import 'mixins/session_timer_mixin.dart';
+import 'mixins/speaking_mixin.dart';
 
-class MeetingCtrlAgModel {
-  final String channelname;
-  final String sessionTitle;
-  final String hostName;
-
-  MeetingCtrlAgModel({
-    required this.channelname,
-    required this.sessionTitle,
-    required this.hostName,
-  });
-}
+/*
 
 class MeetingController extends GetxController {
   /// 🔹 Channel passed from previous screen
@@ -181,6 +164,8 @@ class MeetingController extends GetxController {
     debugPrint('🔵 [4] initAgora() started');
 
     final granted = await requestPermissions();
+
+    debugPrint("granted : $granted");
 
     if (granted) {
       // your codes here
@@ -723,6 +708,97 @@ class MeetingController extends GetxController {
     super.onClose();
   }
 }
+*/
+
+class MeetingController extends GetxController
+    with
+        SessionInfoMixin,
+        AgoraEngineMixin,
+        SpeakingMixin,
+        SessionTimerMixin,
+        LeaveSessionMixin {
+  /// 🔹 Channel passed from previous screen
+  final MeetingCtrlAgModel agrModel;
+  MeetingController(this.agrModel);
+
+  /// 🔹 Chat input
+  final inputMsgCtrl = TextEditingController();
+  final inputMsgFocus = FocusNode();
+
+  /// -------------------- Agora Core Config -------------------- ///
+  /// These are populated AFTER backend response
+  final appId = ''.obs;
+  final rtmToken = ''.obs;
+  final rtcToken = ''.obs;
+  final channelName = ''.obs;
+  final uid = 0.obs;
+
+  /// Agora engine instance
+  RtcEngine? agoraEngine;
+
+  /// Engine ready → UI can render video
+  var isEngineReady = false.obs;
+
+  /// Remote users (host(s))
+  var remoteUids = <int>[].obs;
+
+  /// Local states (future use if needed)
+  var isLocalAudioMuted = false.obs;
+  var isLocalVideoMuted = false.obs;
+
+  RxBool isHostVideoOn = true.obs;
+  RxBool isHostAudioOn = true.obs;
+
+  RxBool isJoined = false.obs;
+
+  @override
+  void onInit() {
+    /// Initial channel from navigation
+    debugPrint('channelname arg: ${agrModel.channelname}');
+
+    channelName.value = agrModel.channelname;
+
+    ever(isJoined, (callback) {
+      if (!isJoined.value) {
+        "You have left the live".showToast();
+      }
+    });
+
+    super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+
+    /// -->  Entry point of live flow
+    hostMeeting();
+  }
+
+  @override
+  void onClose() async {
+    debugPrint('🔵 onClose called');
+    await leaveMeeting(); // reuse the same logic
+    inputMsgCtrl.dispose();
+    inputMsgFocus.dispose();
+    super.onClose();
+  }
+}
+
+/*
+
+App opens MeetingScreen with channelName
+    ↓
+MeetingController.getSessionsInfo(channelName)
+    ↓
+Your backend generates a token for that channel + uid
+    ↓
+Backend returns { token, uid, channelName }
+    ↓
+initAgora() uses that token to joinChannel()
+
+
+*/
 
 /*
 

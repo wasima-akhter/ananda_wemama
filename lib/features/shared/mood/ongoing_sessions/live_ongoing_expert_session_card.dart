@@ -1,12 +1,16 @@
 import 'package:mama_app/core/helpers/date_helper.dart';
-import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
+import '../../../video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 
 class LiveOngoingSessionCard extends StatelessWidget {
-  const LiveOngoingSessionCard({super.key, required this.data, this.isFromOngoingScreen});
+  const LiveOngoingSessionCard({
+    super.key,
+    required this.data,
+    this.isFromOngoingScreen,
+  });
 
   final Session data;
   final bool? isFromOngoingScreen;
@@ -14,7 +18,8 @@ class LiveOngoingSessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final doctorName = (data.expert?.name ?? "Unknown").capEachWord();
-    final specialty = (data.expert?.profession?.title ?? "Specialist").capEachWord();
+    final specialty = (data.expert?.profession?.title ?? "Specialist")
+        .capEachWord();
     final sessionTitle = (data.title ?? "Session").capEachWord();
     final description = (data.description ?? "").cap;
     final time = DateHelper().formatUTCtimestamp(data.time.toString()).time;
@@ -42,7 +47,10 @@ class LiveOngoingSessionCard extends StatelessWidget {
                 Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    circledNetworkImageBgComponent(imagePath: imgUrl, brdrClr: c.error),
+                    circledNetworkImageBgComponent(
+                      imagePath: imgUrl,
+                      brdrClr: c.error,
+                    ),
                     Positioned(
                       bottom: -(10.h),
                       left: 2,
@@ -55,7 +63,11 @@ class LiveOngoingSessionCard extends StatelessWidget {
                         vp: 2,
                         child: Text(
                           Strings.live.toUpperCase(),
-                          style: TxtStyle.interSemiB(fs: 8, w: 600, color: white),
+                          style: TxtStyle.interSemiB(
+                            fs: 8,
+                            w: 600,
+                            color: white,
+                          ),
                         ),
                       ),
                     ),
@@ -77,7 +89,14 @@ class LiveOngoingSessionCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(time, style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary)),
+                    Text(
+                      time,
+                      style: TxtStyle.outfitSemiB(
+                        fs: 11,
+                        w: 500,
+                        color: c.primary,
+                      ),
+                    ),
                     Text(date, style: TxtStyle.outfit(fs: 11)),
                   ],
                 ),
@@ -149,7 +168,11 @@ class LiveOngoingSessionCard extends StatelessWidget {
                       child: Text(
                         Strings.joinLive.capEachWord(),
                         textAlign: TextAlign.center,
-                        style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.textOnPrimary),
+                        style: TxtStyle.outfitSemiB(
+                          fs: 13,
+                          w: 600,
+                          color: c.textOnPrimary,
+                        ),
                       ),
                     ),
                   ),
@@ -181,7 +204,11 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
             /// Top Row
             Row(
               children: [
-                ShimmerWidget.circular(width: 40.w, height: 40.w, shimmerClr: c.cardReminder),
+                ShimmerWidget.circular(
+                  width: 40.w,
+                  height: 40.w,
+                  shimmerClr: c.cardReminder,
+                ),
 
                 Gap(itemGap),
 
@@ -212,7 +239,11 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
                       shimmerClr: c.cardReminder,
                     ),
                     6.verticalSpace,
-                    ShimmerWidget.rectangular(width: 30.w, height: 8.h, shimmerClr: c.cardReminder),
+                    ShimmerWidget.rectangular(
+                      width: 30.w,
+                      height: 8.h,
+                      shimmerClr: c.cardReminder,
+                    ),
                   ],
                 ),
               ],
@@ -220,7 +251,11 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
 
             Gap(itemGap * 1.5),
 
-            ShimmerWidget.rectangular(width: 140.w, height: 12.h, shimmerClr: c.cardReminder),
+            ShimmerWidget.rectangular(
+              width: 140.w,
+              height: 12.h,
+              shimmerClr: c.cardReminder,
+            ),
 
             6.verticalSpace,
 
@@ -230,7 +265,11 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
               shimmerClr: c.cardOngoing,
             ),
             6.verticalSpace,
-            ShimmerWidget.rectangular(width: 200.w, height: 10.h, shimmerClr: c.cardReminder),
+            ShimmerWidget.rectangular(
+              width: 200.w,
+              height: 10.h,
+              shimmerClr: c.cardReminder,
+            ),
 
             Spacer(),
 
