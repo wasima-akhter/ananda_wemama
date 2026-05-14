@@ -170,7 +170,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
             onEditingComplete ??
             () {
               // Do nothing - just prevent default behavior
-              debugPrint('controller.text: ${controller.text}');
+              print('controller.text: ${controller.text}');
             },
       ),
     );

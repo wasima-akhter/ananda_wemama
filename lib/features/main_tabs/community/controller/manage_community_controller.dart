@@ -75,13 +75,13 @@ class ManageCommunityController extends GetxController {
       );
 
       if (response == true) {
-        debugPrint('onTapEdit success : $response');
+        print('onTapEdit success : $response');
 
         await Get.find<CommunityDetailController>().getCommunityDetail(
           communityIdForRefresh: communityId.value,
         );
       } else {
-        debugPrint('onTapEdit failed : $response');
+        print('onTapEdit failed : $response');
       }
     } catch (e) {
       print("Error onTapEdit community: $e");

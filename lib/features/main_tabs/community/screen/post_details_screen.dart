@@ -192,7 +192,7 @@ class CommentItemInPostDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final childCommentList = item.replies ?? [];
-    debugPrint('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
+    print('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

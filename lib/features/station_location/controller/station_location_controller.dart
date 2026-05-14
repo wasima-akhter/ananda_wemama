@@ -97,7 +97,7 @@ class StationLocationController extends GetxController {
 
       await _saveLocationToBackend();
     } catch (e) {
-      debugPrint("❌ getAndSaveInBackendCurrLoc error: $e");
+      print("❌ getAndSaveInBackendCurrLoc error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
@@ -119,7 +119,7 @@ class StationLocationController extends GetxController {
 
       await _saveLocationToBackend();
     } catch (e) {
-      debugPrint("❌ selectCity error: $e");
+      print("❌ selectCity error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
@@ -143,9 +143,9 @@ class StationLocationController extends GetxController {
       storage.setUserAddress(selectedAddress.value);
       if (selectedCity.value.isNotEmpty) storage.setUserCity(selectedCity.value);
 
-      debugPrint("✅ Location saved to backend");
+      print("✅ Location saved to backend");
     } catch (e) {
-      debugPrint("❌ _saveLocationToBackend error: $e");
+      print("❌ _saveLocationToBackend error: $e");
       // Silent fail — overlay is the only user-facing feedback for location state
     }
   }

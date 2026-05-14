@@ -36,9 +36,9 @@ class NotificationController extends GetxController {
     try {
       final data = await _service.fetchNotifications();
       notifications.assignAll(data);
-      debugPrint('notifications loaded: ${notifications.length}');
+      print('notifications loaded: ${notifications.length}');
     } catch (e) {
-      debugPrint("Error fetch notifications: $e");
+      print("Error fetch notifications: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -58,7 +58,7 @@ class NotificationController extends GetxController {
         }
       }
     } catch (e) {
-      debugPrint("Error updateIsSeen: $e");
+      print("Error updateIsSeen: $e");
     } finally {
       isupdateIsSeenLoading_.value = false;
     }

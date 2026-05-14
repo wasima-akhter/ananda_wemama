@@ -79,7 +79,7 @@ class AllAutoheightWebview extends StatelessWidget {
               try {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               } catch (e) {
-                debugPrint("Could not launch URL: $uri, error: $e");
+                print("Could not launch URL: $uri, error: $e");
               }
             }
             return NavigationDecision.prevent;
@@ -305,7 +305,7 @@ $htmlContent
 //               try {
 //                 await launchUrl(uri, mode: LaunchMode.externalApplication);
 //               } catch (e) {
-//                 debugPrint('launch error: $e');
+//                 print('launch error: $e');
 //               }
 //             }
 //             return NavigationDecision.prevent;

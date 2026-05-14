@@ -93,7 +93,7 @@ class ReportController extends GetxController {
       );
 
       if (data != null) {
-        debugPrint('report success: ${data.report}');
+        print('report success: ${data.report}');
       }
     } catch (e) {
       print("Error reportUserOrContent: $e");

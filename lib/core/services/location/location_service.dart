@@ -33,14 +33,14 @@ class LocationService extends GetxService {
       if (response?.success == true) {
         //
 
-        debugPrint("✅ Location updated successfully in backend");
+        print("✅ Location updated successfully in backend");
       } else {
-        debugPrint("❌ Failed to update location: ${response?.message ?? 'Unknown error'}");
+        print("❌ Failed to update location: ${response?.message ?? 'Unknown error'}");
       }
 
       return response?.success ?? false;
     } catch (e) {
-      debugPrint("Error updating location: $e");
+      print("Error updating location: $e");
       return false;
     }
   }
@@ -56,7 +56,7 @@ class LocationService extends GetxService {
 
   //     return response?.data;
   //   } catch (e) {
-  //     debugPrint("Error getting location: $e");
+  //     print("Error getting location: $e");
   //     return null;
   //   }
   // }

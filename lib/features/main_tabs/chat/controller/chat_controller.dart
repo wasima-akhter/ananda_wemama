@@ -116,7 +116,7 @@ class ChatController extends GetxController {
 
   /// Fetch the latest  data from API
   Future<void> getSearchedChatList() async {
-    debugPrint('hit search');
+    print('hit search');
     if (isSearchLoading_.value) return; // Prevent duplicate calls
 
     if (searchController.text.trim().isEmpty) {
@@ -131,7 +131,7 @@ class ChatController extends GetxController {
       final data = await service.fetchSearchedChatList(searchTxt: searchController.text.trim());
 
       if (data.isNotEmpty) {
-        debugPrint('get Searched ChatList : $data');
+        print('get Searched ChatList : $data');
         searchedChatList.value = data;
       }
     } catch (e) {

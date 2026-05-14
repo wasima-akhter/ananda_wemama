@@ -8,11 +8,11 @@ class LocationHelper {
   /// Get current location with permission handling and user feedback
   static Future<LocationData?> getCurrentLocation({bool showSnackbar = true}) async {
     try {
-      debugPrint('📍 Starting location fetch...');
+      print('📍 Starting location fetch...');
 
       // 1️⃣ Check if GPS/location services are enabled
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      debugPrint('Service enabled: $serviceEnabled');
+      print('Service enabled: $serviceEnabled');
 
       if (!serviceEnabled) {
         if (showSnackbar) {
@@ -48,7 +48,7 @@ class LocationHelper {
                     // 🔁 Retry getting current location after returning from settings
                     await Future.delayed(const Duration(seconds: 1));
                     final accuracyStatus = await Geolocator.getLocationAccuracy();
-                    debugPrint("Accuracy status: $accuracyStatus");
+                    print("Accuracy status: $accuracyStatus");
                     await getCurrentLocation(showSnackbar: showSnackbar);
                   },
                   rad: 8,
@@ -64,12 +64,12 @@ class LocationHelper {
 
       // 2️⃣ Check and request permission
       LocationPermission permission = await Geolocator.checkPermission();
-      debugPrint('Current permission: $permission');
+      print('Current permission: $permission');
 
       if (permission == LocationPermission.denied) {
-        debugPrint('Requesting permission...');
+        print('Requesting permission...');
         permission = await Geolocator.requestPermission();
-        debugPrint('Permission after request: $permission');
+        print('Permission after request: $permission');
 
         if (permission == LocationPermission.denied) {
           if (showSnackbar) {
@@ -127,7 +127,7 @@ class LocationHelper {
           timeLimit: const Duration(seconds: 8),
         );
       } catch (e) {
-        debugPrint("⚠️ First attempt failed: $e");
+        print("⚠️ First attempt failed: $e");
 
         // ⏳ Give device time to stabilize GPS
         await Future.delayed(const Duration(seconds: 2));
@@ -142,7 +142,7 @@ class LocationHelper {
             timeLimit: const Duration(seconds: 10),
           );
         } catch (e) {
-          debugPrint("❌ Retry failed: $e");
+          print("❌ Retry failed: $e");
 
           // 🥉 Final fallback
           position = await Geolocator.getLastKnownPosition();
@@ -154,7 +154,7 @@ class LocationHelper {
       }
       ////////////////-------------- Handled the position location
 
-      debugPrint('✅ Got position: ${position.latitude}, ${position.longitude}');
+      print('✅ Got position: ${position.latitude}, ${position.longitude}');
 
       // 4️⃣ Reverse geocode to get human-readable address
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -178,8 +178,8 @@ class LocationHelper {
           place.country,
         ].where((e) => e != null && e!.isNotEmpty).join(', ');
 
-        debugPrint('📍 Address: $address');
-        if (city != null) debugPrint('📍 City: $city');
+        print('📍 Address: $address');
+        if (city != null) print('📍 City: $city');
       }
 
       // 5️⃣ Return clean result
@@ -192,7 +192,7 @@ class LocationHelper {
         city: city,
       );
     } catch (e) {
-      debugPrint("❌ Error getting location: $e");
+      print("❌ Error getting location: $e");
       if (showSnackbar) {
         // Failed to get location snackbar
         Snack.showError(

@@ -57,19 +57,19 @@ class PostSignupSetProfileService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    debugPrint('fields: ${data.fields}');
-    debugPrint('files count: ${data.files.length}');
-    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+    print('fields: ${data.fields}');
+    print('files count: ${data.files.length}');
+    print('file keys: ${data.files.map((e) => e.key).toList()}');
 
     for (final f in data.fields) {
-      debugPrint('${f.key}: ${f.value}');
+      print('${f.key}: ${f.value}');
     }
 
     for (final f in data.files) {
-      debugPrint('${f.key}: ${f.value.filename}');
+      print('${f.key}: ${f.value.filename}');
     }
 
-    debugPrint("Token: ${storage.getAccessToken}");
+    print("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 

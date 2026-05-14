@@ -19,8 +19,7 @@ Future<bool> requestPermissions() async {
       // Permission.videos   → READ_MEDIA_VIDEO
       // Permission.audio    → READ_MEDIA_AUDIO  ← needed for recordings
       permissions.addAll([
-        Permission.photos,
-        Permission.videos,
+        Permission.photos, 
         Permission.audio,
       ]);
     } else {

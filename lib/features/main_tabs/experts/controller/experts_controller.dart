@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mama_app/features/main_tabs/experts/services/experts_service.dart';
 
 import '../../../../app/controller_export.dart';
@@ -69,8 +71,8 @@ class ExpertsController extends GetxController {
   }
 
   Future<void> onTapQues({required String expertId, required String sessionId}) async {
-    debugPrint('expertId: $expertId ');
-    debugPrint('sessionId: $sessionId ');
+    log('expertId: $expertId ');
+    log('sessionId: $sessionId ');
 
     // upload to the backend
 
@@ -133,7 +135,7 @@ class ExpertsController extends GetxController {
         }
       }
     } catch (e) {
-      debugPrint('fetchSessions error: $e');
+      log('fetchSessions error: $e');
     } finally {
       loading.value = false;
     }
@@ -175,13 +177,13 @@ class ExpertsController extends GetxController {
         sessionId: sessionId,
       );
       if (response == true) {
-        debugPrint('quest sent successfully!');
+        log('quest sent successfully!');
         Get.back();
       } else {
-        debugPrint('quest sent failed!');
+        log('quest sent failed!');
       }
     } catch (e) {
-      debugPrint('upload ques of Session error: $e');
+      log('upload ques of Session error: $e');
     } finally {
       isuploadQuesLoading.value = false;
       writeQuesCtrl.text = '';

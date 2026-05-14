@@ -58,7 +58,7 @@ class CommunityController extends GetxController {
     try {
       final data = await service.fetchManagedCommunityList();
 
-      debugPrint('getMyCommunityList   : $data');
+      print('getMyCommunityList   : $data');
       managedCommunityList.value = data;
     } catch (e) {
       print("Error my community: $e");
@@ -83,7 +83,7 @@ class CommunityController extends GetxController {
     try {
       final data = await service.fetchJoinedCommunityList();
 
-      debugPrint('get Joined CommunityList   : $data');
+      print('get Joined CommunityList   : $data');
       joinedCommunityList.value = data;
     } catch (e) {
       print("Error Joined community: $e");

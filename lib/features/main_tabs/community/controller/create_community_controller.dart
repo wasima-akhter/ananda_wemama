@@ -13,7 +13,7 @@ class CreateCommunityController extends GetxController {
   @override
   void onInit() {
     args = Get.arguments as CreateCommunityArgModel?;
-    debugPrint('create community arg model : ${args?.communityImg}');
+    print('create community arg model : ${args?.communityImg}');
     super.onInit();
   }
 
@@ -67,9 +67,9 @@ class CreateCommunityController extends GetxController {
       );
 
       if (response == true) {
-        debugPrint('onTapCreate success : $response');
+        print('onTapCreate success : $response');
       } else {
-        debugPrint('onTapCreate failed : $response');
+        print('onTapCreate failed : $response');
       }
     } catch (e) {
       print("Error onTapCreate community: $e");

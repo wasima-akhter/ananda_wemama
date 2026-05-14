@@ -26,9 +26,9 @@ class DioClient {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           if (kDebugMode) {
-            debugPrint("➡️ REQUEST[${options.method}] => ${options.path}");
-            debugPrint("Headers: ${options.headers}");
-            debugPrint("Data: ${options.data}");
+            print("➡️ REQUEST[${options.method}] => ${options.path}");
+            print("Headers: ${options.headers}");
+            print("Data: ${options.data}");
 
             if (options.data != null && options.data is FormData) {
               final formData = options.data as FormData;
@@ -62,13 +62,13 @@ class DioClient {
         },
         onResponse: (response, handler) {
           if (kDebugMode) {
-            debugPrint("✅ RESPONSE[${response.statusCode}] => ${response.data}");
+            print("✅ RESPONSE[${response.statusCode}] => ${response.data}");
           }
           return handler.next(response);
         },
         onError: (DioException e, handler) {
           if (kDebugMode) {
-            debugPrint("❌ ERROR[${e.response?.statusCode}] => ${e.message}");
+            print("❌ ERROR[${e.response?.statusCode}] => ${e.message}");
           }
           return handler.next(e);
         },

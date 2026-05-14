@@ -21,7 +21,7 @@ class PostDetailsController extends GetxController {
     final args = Get.arguments as PostDetailArgModel;
     postDetailArg.value = args;
 
-    debugPrint('postId_: ${postDetailArg.value?.postItem.id}');
+    print('postId_: ${postDetailArg.value?.postItem.id}');
     await getCommentsList();
     super.onInit();
   }

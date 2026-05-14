@@ -132,7 +132,7 @@ class MatchController extends GetxController {
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
     } catch (e) {
-      debugPrint('startSearching fetch error: $e');
+      print('startSearching fetch error: $e');
       if (currentSearchId == _searchId) matchState.value = MatchState.noMatch;
     } finally {
       isSearchLoading.value = false;
@@ -160,7 +160,7 @@ class MatchController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 600));
       navToSubUpgrade();
     } catch (e) {
-      debugPrint('_fetchMatchesAndUpgrade error: $e');
+      print('_fetchMatchesAndUpgrade error: $e');
       navToSubUpgrade();
     } finally {
       isSearchLoading.value = false;
@@ -243,13 +243,13 @@ class MatchController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 400)); // brief transition
       matchState.value = MatchState.found;
 
-      debugPrint(
+      print(
         "➡️ Next local match: $_currentMatchIndex / ${fetchedMatches.length - 1} "
         "(${fetchedMatches[_currentMatchIndex].name})",
       );
     } else {
       // List exhausted — fetch fresh batch from API
-      debugPrint("🔄 Match list exhausted — fetching new batch from API");
+      print("🔄 Match list exhausted — fetching new batch from API");
       _currentMatchIndex = 0;
       fetchedMatches.clear();
       await startSearching();

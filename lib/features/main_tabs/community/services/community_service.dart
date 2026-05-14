@@ -40,19 +40,19 @@ class CommunityService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    debugPrint('fields: ${data.fields}');
-    debugPrint('files count: ${data.files.length}');
-    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+    print('fields: ${data.fields}');
+    print('files count: ${data.files.length}');
+    print('file keys: ${data.files.map((e) => e.key).toList()}');
 
     for (final f in data.fields) {
-      debugPrint('${f.key}: ${f.value}');
+      print('${f.key}: ${f.value}');
     }
 
     for (final f in data.files) {
-      debugPrint('${f.key}: ${f.value.filename}');
+      print('${f.key}: ${f.value.filename}');
     }
 
-    debugPrint("Token: ${storage.getAccessToken}");
+    print("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 
@@ -66,8 +66,8 @@ class CommunityService extends GetxService {
 
     if (response == null || !response.success) return false;
 
-    debugPrint('response.success: ${response.success}');
-    debugPrint('community id while create: ${response.data}');
+    print('response.success: ${response.success}');
+    print('community id while create: ${response.data}');
 
     return true;
   }
@@ -104,21 +104,21 @@ class CommunityService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    debugPrint('fields: ${data.fields}');
-    debugPrint('files count: ${data.files.length}');
-    debugPrint('file keys: ${data.files.map((e) => e.key).toList()}');
+    print('fields: ${data.fields}');
+    print('files count: ${data.files.length}');
+    print('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    debugPrint('FIELDS:');
+    print('FIELDS:');
     for (var f in data.fields) {
-      debugPrint('${f.key}: ${f.value}');
+      print('${f.key}: ${f.value}');
     }
 
-    debugPrint('FILES:');
+    print('FILES:');
     for (var f in data.files) {
-      debugPrint('${f.key}: ${f.value.filename}');
+      print('${f.key}: ${f.value.filename}');
     }
 
-    debugPrint("Token: ${storage.getAccessToken}");
+    print("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 
@@ -132,8 +132,8 @@ class CommunityService extends GetxService {
 
     if (response == null || !response.success) return false;
 
-    debugPrint('response.success: ${response.success}');
-    debugPrint('community id while update : ${response.data}');
+    print('response.success: ${response.success}');
+    print('community id while update : ${response.data}');
 
     return true;
   }

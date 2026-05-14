@@ -28,7 +28,7 @@ class SigninService extends GetxService {
       try {
         await Get.find<SocketService>().connectSocket();
       } catch (e) {
-        debugPrint("not socket connect");
+        print("not socket connect");
       }
 
       // ✅ Now safe — user is in room
@@ -50,7 +50,7 @@ class SigninService extends GetxService {
     } catch (e) {
       // SocketService not registered yet — should not happen if InitialBinding
       // is set up correctly, but log it rather than crashing.
-      debugPrint("⚠️ SocketService not found during login: $e");
+      print("⚠️ SocketService not found during login: $e");
     }
   }
 

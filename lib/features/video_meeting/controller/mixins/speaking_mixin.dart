@@ -15,12 +15,12 @@ mixin SpeakingMixin on GetxController {
 
   Future<void> toggleSpeak(LiveChatController cc) async {
     if (isSpeaking.value) {
-      debugPrint('🔇 [SPEAK] Stepping down from broadcaster → audience');
+      print('🔇 [SPEAK] Stepping down from broadcaster → audience');
 
       await _self.agoraEngine?.setClientRole(
         role: ClientRoleType.clientRoleAudience,
       );
-      debugPrint('🔇 [SPEAK] setClientRole → AUDIENCE done');
+      print('🔇 [SPEAK] setClientRole → AUDIENCE done');
 
       await _self.agoraEngine?.updateChannelMediaOptions(
         const ChannelMediaOptions(
@@ -29,21 +29,21 @@ mixin SpeakingMixin on GetxController {
         ),
       );
 
-      debugPrint('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
+      print('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
 
       isSpeaking.value = false;
 
       // ← notify web: mic is now OFF
       await _publishMuteState(isMuted: true, cc: cc);
 
-      debugPrint('🔇 [SPEAK] isSpeaking = false ✅');
+      print('🔇 [SPEAK] isSpeaking = false ✅');
     } else {
-      debugPrint('🎙️ [SPEAK] Promoting to broadcaster → host');
+      print('🎙️ [SPEAK] Promoting to broadcaster → host');
 
       await _self.agoraEngine?.setClientRole(
         role: ClientRoleType.clientRoleBroadcaster,
       );
-      debugPrint('🎙️ [SPEAK] setClientRole → BROADCASTER done');
+      print('🎙️ [SPEAK] setClientRole → BROADCASTER done');
 
       await _self.agoraEngine?.updateChannelMediaOptions(
         const ChannelMediaOptions(
@@ -51,15 +51,15 @@ mixin SpeakingMixin on GetxController {
           clientRoleType: ClientRoleType.clientRoleBroadcaster,
         ),
       );
-      debugPrint('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
+      print('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
 
       // ✅ Confirm engine state
-      debugPrint(
+      print(
         '🎙️ [SPEAK] agoraEngine is null: ${_self.agoraEngine == null}',
       );
-      debugPrint('🎙️ [SPEAK] channel: ${_self.channelName.value}');
-      debugPrint('🎙️ [SPEAK] uid: ${_self.uid.value}');
-      debugPrint(
+      print('🎙️ [SPEAK] channel: ${_self.channelName.value}');
+      print('🎙️ [SPEAK] uid: ${_self.uid.value}');
+      print(
         '🎙️ [SPEAK] token: ${_self.rtcToken.value.substring(0, 10)}...',
       ); // partial for safety
 
@@ -68,7 +68,7 @@ mixin SpeakingMixin on GetxController {
       // ← notify web: mic is now ON
       await _publishMuteState(isMuted: false, cc: cc);
 
-      debugPrint(
+      print(
         '🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user',
       );
     }
@@ -102,11 +102,11 @@ mixin SpeakingMixin on GetxController {
         {'isMuted': isMuted ? 'true' : 'false'},
       );
 
-      debugPrint(
+      print(
         '📡 [RTM] Mute state broadcast → uid=${_self.uid.value}, isMuted=$isMuted',
       );
     } catch (e) {
-      debugPrint('❌ [RTM] _publishMuteState error: $e');
+      print('❌ [RTM] _publishMuteState error: $e');
     }
   }
 
@@ -144,6 +144,6 @@ mixin SpeakingMixin on GetxController {
     // ← sync mute state to web via RTM presence
     await _publishMuteState(isMuted: mute, cc: cc);
 
-    debugPrint('🔇 muteLocalAudio($mute) applied');
+    print('🔇 muteLocalAudio($mute) applied');
   }
 }

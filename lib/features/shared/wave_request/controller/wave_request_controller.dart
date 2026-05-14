@@ -88,7 +88,7 @@ import '../service/wave_user_profile_info_service.dart';
 //     if (isLoading_.value) return; // Prevent duplicate calls
 //     isLoading_.value = true;
 
-//     debugPrint(' getNewWavesList.. ');
+//     print(' getNewWavesList.. ');
 
 //     try {
 //       final currentUserId = currentProfileId();

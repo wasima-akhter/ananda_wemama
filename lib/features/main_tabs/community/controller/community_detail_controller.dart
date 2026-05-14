@@ -81,7 +81,7 @@ class CommunityDetailController extends GetxController {
 
   _PostFlags _ensureFlags(String postId) {
     if (!_postFlags.containsKey(postId)) {
-      debugPrint("⚠️ Missing flags for postId: $postId");
+      print("⚠️ Missing flags for postId: $postId");
     }
 
     return _postFlags.putIfAbsent(
@@ -128,10 +128,10 @@ class CommunityDetailController extends GetxController {
   void onInit() {
     btnState = initialBtnState.obs;
 
-    debugPrint("initialBtnState: ${btnState.value.name}");
+    print("initialBtnState: ${btnState.value.name}");
     isAlreadyMember_ = (initialBtnState != MyCommunityBtnState.join).obs;
 
-    debugPrint('communityItemId: $communityItemId');
+    print('communityItemId: $communityItemId');
 
     getCommunityDetail();
     super.onInit();
@@ -193,7 +193,7 @@ class CommunityDetailController extends GetxController {
         for (AllPost post in data.allPost ?? []) {
           final id = post.id;
 
-          debugPrint('post id: $id');
+          print('post id: $id');
           if (id == null || id.isEmpty) continue;
 
           _postFlags[id] = _PostFlags(
@@ -209,11 +209,11 @@ class CommunityDetailController extends GetxController {
         // 👉 If you see true but UI not showing → UI issue
         // 👉 If you see false → API mapping issue
         for (final e in _postFlags.entries) {
-          debugPrint("POST ${e.key} -> pinned: ${e.value.isPinned.value}");
+          print("POST ${e.key} -> pinned: ${e.value.isPinned.value}");
         }
       }
     } catch (e) {
-      debugPrint("Error fetching Community Detail: $e");
+      print("Error fetching Community Detail: $e");
     } finally {
       isLoading_.value = false;
       unFocusAll();
@@ -304,10 +304,10 @@ class CommunityDetailController extends GetxController {
           _postFlags.remove(postId);
         });
       } else {
-        debugPrint("Delete failed");
+        print("Delete failed");
       }
     } catch (e) {
-      debugPrint("Delete error: $e");
+      print("Delete error: $e");
     } finally {
       flags.isdeleteLoading.value = false;
     }
@@ -338,7 +338,7 @@ class CommunityDetailController extends GetxController {
 
       return false;
     } catch (e) {
-      debugPrint('Community Join error: $e');
+      print('Community Join error: $e');
       return false;
     } finally {
       isJoinLoading.value = false;

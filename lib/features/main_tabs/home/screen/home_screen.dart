@@ -15,9 +15,9 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   static void showLocationStatusOverlay({required bool isActive}) {
-    debugPrint("🪟 showLocationStatusOverlay called — isActive: $isActive");
-    debugPrint("🪟 Get.context: ${Get.context}");
-    debugPrint("🪟 isDialogOpen: ${Get.isDialogOpen}");
+    print("🪟 showLocationStatusOverlay called — isActive: $isActive");
+    print("🪟 Get.context: ${Get.context}");
+    print("🪟 isDialogOpen: ${Get.isDialogOpen}");
 
     if (Get.isDialogOpen ?? false) Get.back();
 
@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
   }
 
   static void triggerPermissionFlow() {
-    debugPrint("🔑 triggerPermissionFlow called");
+    print("🔑 triggerPermissionFlow called");
     Get.find<HomeController>().runLocationPermissionFlow();
   }
 
@@ -41,10 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    debugPrint("🏠 HomeScreen initState");
+    print("🏠 HomeScreen initState");
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint("🏠 HomeScreen postFrameCallback — notifying MainNavController");
+      print("🏠 HomeScreen postFrameCallback — notifying MainNavController");
       MainNavController.to.notifyHomeFirstBuild();
     });
   }

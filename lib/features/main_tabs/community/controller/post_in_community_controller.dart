@@ -17,7 +17,7 @@ class PostInCommunityController extends GetxController {
 
   @override
   void onInit() {
-    debugPrint(' communityItemId :$communityItemId ');
+    print(' communityItemId :$communityItemId ');
     super.onInit();
   }
 
@@ -95,14 +95,14 @@ class PostInCommunityController extends GetxController {
         isAnonymous: postAnonymously.value,
       );
       if (response == true) {
-        debugPrint('Post created successfully!');
+        print('Post created successfully!');
         Get.find<CommunityDetailController>().onRefresh();
         Get.back();
       } else {
-        debugPrint('Post created failed!');
+        print('Post created failed!');
       }
     } catch (e) {
-      debugPrint('Post created  error: $e');
+      print('Post created  error: $e');
     } finally {
       isCreatePostLoading.value = false;
       clearAll();

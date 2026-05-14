@@ -23,7 +23,7 @@ class HomeService extends GetxService {
       parser: (data) {
         print("parserdata: ${data}");
 
-        debugPrint(
+        print(
           ' CommunitySpotlightData.fromJson(data) : ${CommunitySpotlightModel.fromJson(data).communitySpotlight?.createdAt}',
         );
 

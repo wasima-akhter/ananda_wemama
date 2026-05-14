@@ -16,7 +16,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    debugPrint(' token :$getToken ');
+    print(' token :$getToken ');
 
     getCommunitySpotLight();
     super.onInit();
@@ -32,7 +32,7 @@ class HomeController extends GetxController {
   // ─────────────────────────────────────────────────────────────────────────
 
   Future<void> runLocationPermissionFlow() async {
-    debugPrint("🔑 runLocationPermissionFlow START");
+    print("🔑 runLocationPermissionFlow START");
 
     // ── Geolocator.isLocationServiceEnabled() can hang on Android if the
     //    location subsystem isn't ready yet. Wrap with a timeout so we never
@@ -44,7 +44,7 @@ class HomeController extends GetxController {
       serviceOn = await Geolocator.isLocationServiceEnabled().timeout(
         const Duration(seconds: 5),
         onTimeout: () {
-          debugPrint("🔑 ⚠️ isLocationServiceEnabled timed out — assuming OFF");
+          print("🔑 ⚠️ isLocationServiceEnabled timed out — assuming OFF");
           return false;
         },
       );
@@ -52,24 +52,24 @@ class HomeController extends GetxController {
       permission = await Geolocator.checkPermission().timeout(
         const Duration(seconds: 5),
         onTimeout: () {
-          debugPrint("🔑 ⚠️ checkPermission timed out — assuming denied");
+          print("🔑 ⚠️ checkPermission timed out — assuming denied");
           return LocationPermission.denied;
         },
       );
     } catch (e) {
-      debugPrint("🔑 ❌ Geolocator check failed: $e — showing inactive overlay");
+      print("🔑 ❌ Geolocator check failed: $e — showing inactive overlay");
       HomeScreen.showLocationStatusOverlay(isActive: false);
       return;
     }
 
-    debugPrint("🔑 serviceOn: $serviceOn | permission: $permission");
+    print("🔑 serviceOn: $serviceOn | permission: $permission");
 
     final alreadyGranted =
         permission == LocationPermission.always || permission == LocationPermission.whileInUse;
 
     // ── Happy path ────────────────────────────────────────────────────────────
     if (serviceOn && alreadyGranted) {
-      debugPrint("🔑 Happy path — showing active overlay");
+      print("🔑 Happy path — showing active overlay");
       await _refreshLocationData();
       HomeScreen.showLocationStatusOverlay(isActive: true);
       return;
@@ -77,9 +77,9 @@ class HomeController extends GetxController {
 
     // ── Service OFF ───────────────────────────────────────────────────────────
     if (!serviceOn) {
-      debugPrint("🔑 Service OFF — showing turn-on dialog");
+      print("🔑 Service OFF — showing turn-on dialog");
       final userOpenedSettings = await _showTurnOnServiceDialog();
-      debugPrint("🔑 userOpenedSettings: $userOpenedSettings");
+      print("🔑 userOpenedSettings: $userOpenedSettings");
 
       if (!userOpenedSettings) {
         HomeScreen.showLocationStatusOverlay(isActive: false);
@@ -92,7 +92,7 @@ class HomeController extends GetxController {
         const Duration(seconds: 4),
         onTimeout: () => false,
       );
-      debugPrint("🔑 After settings — nowOn: $nowOn");
+      print("🔑 After settings — nowOn: $nowOn");
 
       if (!nowOn) {
         HomeScreen.showLocationStatusOverlay(isActive: false);
@@ -104,15 +104,15 @@ class HomeController extends GetxController {
     // ── Permission not granted ────────────────────────────────────────────────
     if (!alreadyGranted) {
       if (permission == LocationPermission.deniedForever) {
-        debugPrint("🔑 Permission permanently denied");
+        print("🔑 Permission permanently denied");
         await _showPermanentlyDeniedDialog();
         HomeScreen.showLocationStatusOverlay(isActive: false);
         return;
       }
 
-      debugPrint("🔑 Showing rationale dialog");
+      print("🔑 Showing rationale dialog");
       final userAgreed = await _showRationaleDialog();
-      debugPrint("🔑 userAgreed: $userAgreed");
+      print("🔑 userAgreed: $userAgreed");
 
       if (!userAgreed) {
         HomeScreen.showLocationStatusOverlay(isActive: false);
@@ -122,11 +122,11 @@ class HomeController extends GetxController {
       final result = await Geolocator.requestPermission().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
-          debugPrint("🔑 ⚠️ requestPermission timed out");
+          print("🔑 ⚠️ requestPermission timed out");
           return LocationPermission.denied;
         },
       );
-      debugPrint("🔑 requestPermission result: $result");
+      print("🔑 requestPermission result: $result");
 
       if (result == LocationPermission.denied || result == LocationPermission.deniedForever) {
         HomeScreen.showLocationStatusOverlay(isActive: false);
@@ -135,7 +135,7 @@ class HomeController extends GetxController {
     }
 
     // ── All checks passed ─────────────────────────────────────────────────────
-    debugPrint("🔑 All checks passed — showing active overlay");
+    print("🔑 All checks passed — showing active overlay");
     await _refreshLocationData();
     HomeScreen.showLocationStatusOverlay(isActive: true);
   }
@@ -144,7 +144,7 @@ class HomeController extends GetxController {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
     } catch (e) {
-      debugPrint("HomeController: error refreshing location — $e");
+      print("HomeController: error refreshing location — $e");
     }
   }
 
@@ -202,10 +202,10 @@ class HomeController extends GetxController {
 
       if (data != null) {
         spotLightData.value = data;
-        debugPrint(' spotlightData : ${spotLightData?.value?.communitySpotlight?.name}');
+        print(' spotlightData : ${spotLightData?.value?.communitySpotlight?.name}');
       }
     } catch (e) {
-      debugPrint("Error fetch Community SpotLight : $e");
+      print("Error fetch Community SpotLight : $e");
     } finally {
       isSpotLightLoading_.value = false;
     }

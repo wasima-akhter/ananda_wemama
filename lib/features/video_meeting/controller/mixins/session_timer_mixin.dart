@@ -42,18 +42,18 @@ mixin SessionTimerMixin on GetxController {
             .inSeconds;
       });
 
-      debugPrint(
+      print(
         '⏱️ Timer started — start: $startTime, elapsed: ${elapsedSeconds.value}s',
       );
     } catch (e) {
-      debugPrint('❌ Timer error: $e');
+      print('❌ Timer error: $e');
     }
   }
 
   void stopSessionTimer() {
     _sessionTimer?.cancel();
     _sessionTimer = null;
-    debugPrint('⏱️ Session timer stopped');
+    print('⏱️ Session timer stopped');
   }
 
   String get formattedDuration {

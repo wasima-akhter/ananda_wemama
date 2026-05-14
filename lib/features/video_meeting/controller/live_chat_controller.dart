@@ -9,6 +9,8 @@ import '../../../core/utils/extension/string_extension.dart';
 import '../model/chat_message_live_model.dart';
 import 'meeting_controller.dart';
 
+
+/*
 class LiveChatController extends GetxController {
   RtmClient? rtmClient;
   // ✅ No RtmChannel, no AgoraRtmClient — just RtmClient
@@ -26,7 +28,7 @@ class LiveChatController extends GetxController {
     // Wait until MeetingController finishes fetching tokens + joining RTC
     ever(mc.isEngineReady, (ready) {
       if (ready && !isRtmReady.value) {
-        debugPrint('🔵 [CHAT] Engine ready → starting RTM');
+        print('🔵 [CHAT] Engine ready → starting RTM');
         initRtm();
       }
     });
@@ -37,7 +39,7 @@ class LiveChatController extends GetxController {
 
   _onMessage(MessageEvent event) async {
     try {
-      debugPrint('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
+      print('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
 
       String rawText = (event.message ?? '').toString();
       String displayText = rawText;
@@ -51,7 +53,7 @@ class LiveChatController extends GetxController {
           final decoded = utf8.decode(bytes);
           final Map<String, dynamic> payload = jsonDecode(decoded);
 
-          debugPrint('payload: ${payload.toString()}');
+          print('payload: ${payload.toString()}');
 
           final type = payload['type'];
           switch (type) {
@@ -76,8 +78,8 @@ class LiveChatController extends GetxController {
             case 'HAND_LOWER':
               final target = payload['target']?.toString() ?? '';
               raisedHands.removeWhere((h) {
-                debugPrint('raisedHands target id: ${target} ');
-                debugPrint('raisedHands target id: ${h.uid} ');
+                print('raisedHands target id: ${target} ');
+                print('raisedHands target id: ${h.uid} ');
                 return h.uid == target;
               });
 
@@ -146,8 +148,8 @@ class LiveChatController extends GetxController {
               case 'HAND_LOWER':
                 final target = payload['target']?.toString() ?? '';
                 raisedHands.removeWhere((h) {
-                  debugPrint('raisedHands target id: $target');
-                  debugPrint('raisedHands uid: ${h.uid}');
+                  print('raisedHands target id: $target');
+                  print('raisedHands uid: ${h.uid}');
                   return h.uid == target;
                 });
                 // Only show toast if the host lowered THIS user's hand
@@ -195,7 +197,7 @@ class LiveChatController extends GetxController {
           }
         }
       } catch (e) {
-        debugPrint('⚠️ [RTM] Could not decode message — using raw: $e');
+        print('⚠️ [RTM] Could not decode message — using raw: $e');
         displayText = rawText;
       }
 
@@ -220,10 +222,10 @@ class LiveChatController extends GetxController {
         ),
       );
 
-      debugPrint('✅ [RTM] Total messages: ${messages.length}');
+      print('✅ [RTM] Total messages: ${messages.length}');
       _scrollToBottom();
     } catch (e) {
-      debugPrint('❌ [RTM] _onMessage error: $e');
+      print('❌ [RTM] _onMessage error: $e');
     }
   }
 
@@ -246,7 +248,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      debugPrint('❌ [RTM] muteParticipant failed: ${status.errorCode}');
+      print('❌ [RTM] muteParticipant failed: ${status.errorCode}');
       "Failed to mute participant".showToast();
       return;
     }
@@ -257,7 +259,7 @@ class LiveChatController extends GetxController {
       participants[index] = participants[index].copyWith(isMuted: true);
     }
 
-    debugPrint('✅ [RTM] Mute command sent to $targetUid');
+    print('✅ [RTM] Mute command sent to $targetUid');
     "Mute command sent".showToast();
   }
 
@@ -278,7 +280,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      debugPrint('❌ [RTM] kickParticipant failed: ${status.errorCode}');
+      print('❌ [RTM] kickParticipant failed: ${status.errorCode}');
       "Failed to remove participant".showToast();
       return;
     }
@@ -288,7 +290,7 @@ class LiveChatController extends GetxController {
     raisedHands.removeWhere((h) => h.uid == targetUid);
     viewCount.value = participants.length;
 
-    debugPrint('✅ [RTM] Kick command sent to $targetUid');
+    print('✅ [RTM] Kick command sent to $targetUid');
     "Participant removed".showToast();
   }
 
@@ -309,17 +311,17 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      debugPrint('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
+      print('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
       return;
     }
 
     raisedHands.removeWhere((h) => h.uid == targetUid);
-    debugPrint('✅ [RTM] Hand lowered for $targetUid');
+    print('✅ [RTM] Hand lowered for $targetUid');
   }
   //
 
   void _onLinkState(LinkStateEvent event) {
-    debugPrint('🔵 [RTM] LinkState: ${event.currentState}, reason: ${event.reason}');
+    print('🔵 [RTM] LinkState: ${event.currentState}, reason: ${event.reason}');
 
     if (event.currentState == RtmLinkState.connected) {
       isRtmReady.value = true;
@@ -333,7 +335,7 @@ class LiveChatController extends GetxController {
   RxList<ParticipantModel> participants = <ParticipantModel>[].obs;
 
   void _onPresence(PresenceEvent event) {
-    debugPrint('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
+    print('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
 
     switch (event.type) {
       case RtmPresenceEventType.snapshot:
@@ -376,7 +378,7 @@ class LiveChatController extends GetxController {
         participants.removeWhere((element) => element.uid == mc.uid.value.toString());
 
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
-        debugPrint('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
+        print('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
         return;
 
       case RtmPresenceEventType.remoteLeaveChannel:
@@ -385,7 +387,7 @@ class LiveChatController extends GetxController {
         participants.removeWhere((j) => j.uid == event.publisher);
         participants.removeWhere((element) => element.uid == mc.uid.value.toString());
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
-        debugPrint('✅ [RTM] Joiner removed: ${event.publisher}');
+        print('✅ [RTM] Joiner removed: ${event.publisher}');
         return;
 
       case RtmPresenceEventType.remoteStateChanged:
@@ -401,41 +403,41 @@ class LiveChatController extends GetxController {
             isMuted: stateMap['isMuted'] == 'true',
           );
 
-          debugPrint('✅ [RTM] State changed for $uid: $stateMap');
+          print('✅ [RTM] State changed for $uid: $stateMap');
         }
 
         return;
 
       default:
         // Optional: handle unknown events
-        debugPrint('⚠️ [RTM] Unhandled presence event: ${event.type}');
+        print('⚠️ [RTM] Unhandled presence event: ${event.type}');
         return;
     }
   }
 
   void _onToken(TokenEvent event) {
-    debugPrint('⚠️ [RTM] Token event: ${event.channelName}');
+    print('⚠️ [RTM] Token event: ${event.channelName}');
     // TODO: refresh rtmToken from backend here
   }
 
   Future<void> initRtm() async {
     if (isRtmLoading.value) {
-      debugPrint('⚠️ [RTM] Already loading — skipping');
+      print('⚠️ [RTM] Already loading — skipping');
       return;
     }
 
     if (mc.appId.value.isEmpty) {
-      debugPrint('❌ [RTM] appId is empty');
+      print('❌ [RTM] appId is empty');
       return;
     }
 
     if (mc.rtmToken.value.isEmpty) {
-      debugPrint('❌ [RTM] rtmToken is empty');
+      print('❌ [RTM] rtmToken is empty');
       return;
     }
 
     if (mc.channelName.value.isEmpty) {
-      debugPrint('❌ [RTM] channelName is empty');
+      print('❌ [RTM] channelName is empty');
       return;
     }
 
@@ -444,9 +446,9 @@ class LiveChatController extends GetxController {
     try {
       // Step 1: Create client — real factory is RTM()
       // uid must be a STRING, not int
-      debugPrint('🔵 [RTM-1] Calling RTM() factory...');
-      debugPrint('   appId: ${mc.appId.value}');
-      debugPrint('   userId: ${mc.uid.value.toString()}');
+      print('🔵 [RTM-1] Calling RTM() factory...');
+      print('   appId: ${mc.appId.value}');
+      print('   userId: ${mc.uid.value.toString()}');
 
       final (createStatus, client) = await RTM(
         mc.appId.value,
@@ -454,14 +456,14 @@ class LiveChatController extends GetxController {
       );
 
       if (createStatus.error) {
-        debugPrint(
+        print(
           '❌ [RTM-1] RTM() failed — code: ${createStatus.errorCode}, reason: ${createStatus.reason}',
         );
         return;
       }
 
       rtmClient = client;
-      debugPrint('✅ [RTM-1] RtmClient created');
+      print('✅ [RTM-1] RtmClient created');
 
       // Step 2: Attach listeners BEFORE login
       rtmClient!.addListener(
@@ -470,23 +472,23 @@ class LiveChatController extends GetxController {
         presence: _onPresence,
         token: _onToken,
       );
-      debugPrint('✅ [RTM-2] Listeners attached');
+      print('✅ [RTM-2] Listeners attached');
 
       // Step 3: Login with token
-      debugPrint('🔵 [RTM-3] Logging in...');
+      print('🔵 [RTM-3] Logging in...');
       final (loginStatus, loginResult) = await rtmClient!.login(mc.rtmToken.value);
 
       if (loginStatus.error) {
-        debugPrint(
+        print(
           '❌ [RTM-3] Login failed — code: ${loginStatus.errorCode}, reason: ${loginStatus.reason}',
         );
         return;
       }
 
-      debugPrint('✅ [RTM-3] Login success: $loginResult');
+      print('✅ [RTM-3] Login success: $loginResult');
 
       // Step 4: Subscribe
-      debugPrint('🔵 [RTM-4] Subscribing to: ${mc.channelName.value}');
+      print('🔵 [RTM-4] Subscribing to: ${mc.channelName.value}');
       final (subStatus, subResult) = await rtmClient!.subscribe(
         mc.channelName.value,
         withMessage: true,
@@ -494,7 +496,7 @@ class LiveChatController extends GetxController {
       );
 
       if (subStatus.error) {
-        debugPrint(
+        print(
           '❌ [RTM-4] Subscribe failed — code: ${subStatus.errorCode}, reason: ${subStatus.reason}',
         );
         return;
@@ -507,13 +509,13 @@ class LiveChatController extends GetxController {
         'isMuted': 'false',
       });
 
-      debugPrint('✅ [RTM] Presence state set');
-      debugPrint('✅ [RTM-4] Subscribed: $subResult');
+      print('✅ [RTM] Presence state set');
+      print('✅ [RTM-4] Subscribed: $subResult');
       isRtmReady.value = true;
-      debugPrint('✅ [RTM] FULLY READY');
+      print('✅ [RTM] FULLY READY');
     } catch (e, stack) {
-      debugPrint('❌ [RTM] initRtm FAILED: $e');
-      debugPrint('   $stack');
+      print('❌ [RTM] initRtm FAILED: $e');
+      print('   $stack');
       isRtmReady.value = false;
     } finally {
       isRtmLoading.value = false;
@@ -524,18 +526,18 @@ class LiveChatController extends GetxController {
     final trimmed = text.trim();
 
     if (trimmed.isEmpty) {
-      debugPrint('⚠️ [RTM] Empty message — skipping');
+      print('⚠️ [RTM] Empty message — skipping');
       return;
     }
 
     if (!isRtmReady.value || rtmClient == null) {
-      debugPrint('❌ [RTM] Not ready — cannot send');
+      print('❌ [RTM] Not ready — cannot send');
       "Chat not connected yet".showToast();
       return;
     }
 
     try {
-      debugPrint('📤 [RTM] Publishing: "$trimmed"');
+      print('📤 [RTM] Publishing: "$trimmed"');
 
       // final payload = jsonEncode({
       //   "type": "CHAT",
@@ -559,12 +561,12 @@ class LiveChatController extends GetxController {
       );
 
       if (status.error) {
-        debugPrint('❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}');
+        print('❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}');
         "Failed to send".showToast();
         return;
       }
 
-      debugPrint('✅ [RTM] Published: ${result.toString()}');
+      print('✅ [RTM] Published: ${result.toString()}');
 
       // v2 does NOT echo back to sender — add locally
       messages.add(
@@ -582,7 +584,7 @@ class LiveChatController extends GetxController {
       FocusManager.instance.primaryFocus?.unfocus(); // ← dismiss keyboard
       _scrollToBottom();
     } catch (e) {
-      debugPrint('❌ [RTM] sendMessage error: $e');
+      print('❌ [RTM] sendMessage error: $e');
       "Failed to send".showToast();
     }
   }
@@ -594,7 +596,7 @@ class LiveChatController extends GetxController {
 
   Future<void> sendReaction(String emoji) async {
     Get.back();
-    debugPrint('sent emoji : $emoji');
+    print('sent emoji : $emoji');
     // ← takes emoji
     if (!isRtmReady.value || rtmClient == null) return;
 
@@ -613,7 +615,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      debugPrint('❌ [RTM] Reaction failed: ${status.errorCode}');
+      print('❌ [RTM] Reaction failed: ${status.errorCode}');
       return;
     }
 
@@ -683,7 +685,7 @@ class LiveChatController extends GetxController {
   }
 
   Future<void> disposeRtm() async {
-    debugPrint('🔵 [RTM] Disposing...');
+    print('🔵 [RTM] Disposing...');
 
     // Remove named listeners cleanly
     try {
@@ -693,39 +695,39 @@ class LiveChatController extends GetxController {
         presence: _onPresence,
         token: _onToken,
       );
-      debugPrint('✅ [RTM] Listeners removed');
+      print('✅ [RTM] Listeners removed');
     } catch (e) {
-      debugPrint('⚠️ [RTM] removeListener error: $e');
+      print('⚠️ [RTM] removeListener error: $e');
     }
 
     try {
       await rtmClient?.unsubscribe(mc.channelName.value);
-      debugPrint('✅ [RTM] Unsubscribed');
+      print('✅ [RTM] Unsubscribed');
     } catch (e) {
-      debugPrint('⚠️ [RTM] unsubscribe error: $e');
+      print('⚠️ [RTM] unsubscribe error: $e');
     }
 
     try {
       if (rtmClient != null) {
         final (status, _) = await rtmClient!.logout();
-        debugPrint(
+        print(
           status.error ? '⚠️ [RTM] logout error: ${status.errorCode}' : '✅ [RTM] Logged out',
         );
       }
     } catch (e) {
-      debugPrint('⚠️ [RTM] logout error: $e');
+      print('⚠️ [RTM] logout error: $e');
     }
 
     try {
       await rtmClient?.release();
-      debugPrint('✅ [RTM] Released');
+      print('✅ [RTM] Released');
     } catch (e) {
-      debugPrint('⚠️ [RTM] release error: $e');
+      print('⚠️ [RTM] release error: $e');
     }
 
     rtmClient = null;
     isRtmReady.value = false;
-    debugPrint('✅ [RTM] Disposed cleanly');
+    print('✅ [RTM] Disposed cleanly');
   }
 
   @override
@@ -735,7 +737,69 @@ class LiveChatController extends GetxController {
     super.onClose();
   }
 }
+*/
 
+
+
+import 'package:agora_rtm/agora_rtm.dart';
+
+import '../../../../app/controller_export.dart';
+import 'meeting_controller.dart';
+import 'live_chat/mixins/rtm_connection_mixin.dart';
+import 'live_chat/mixins/rtm_host_controls_mixin.dart';
+import 'live_chat/mixins/rtm_message_mixin.dart';
+import 'live_chat/mixins/rtm_presence_mixin.dart';
+import 'live_chat/mixins/rtm_raise_hand_mixin.dart';
+import 'live_chat/mixins/rtm_reaction_mixin.dart';
+
+class LiveChatController extends GetxController
+    with
+        RtmConnectionMixin,
+        RtmMessageMixin,
+        RtmPresenceMixin,
+        RtmReactionMixin,
+        RtmRaiseHandMixin,
+        RtmHostControlsMixin {
+  RtmClient? rtmClient;
+
+  late MeetingController mc;
+
+  // ---- Scroll ---- //
+  final chatScrollCtrl = ScrollController();
+
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (chatScrollCtrl.hasClients) {
+        chatScrollCtrl.animateTo(
+          chatScrollCtrl.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void onInit() {
+    mc = Get.find<MeetingController>();
+
+    // Wait until MeetingController finishes fetching tokens + joining RTC
+    ever(mc.isEngineReady, (ready) {
+      if (ready && !isRtmReady.value) {
+        print('🔵 [CHAT] Engine ready → starting RTM');
+        initRtm();
+      }
+    });
+    super.onInit();
+  }
+
+  @override
+  void onClose() async {
+    await disposeRtm(); // unsubscribe + logout + release
+    chatScrollCtrl.dispose();
+    super.onClose();
+  }
+}
 /*
 
 hostMeeting()

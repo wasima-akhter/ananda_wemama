@@ -29,7 +29,7 @@ class MoodInsightsController extends GetxController {
       item.value = items.firstWhereOrNull((e) => e.id == itemId);
       // ✅ null → EmptyWidget shown in screen, no fallback
     } catch (e) {
-      debugPrint("Error loading mood insight: $e");
+      print("Error loading mood insight: $e");
       item.value = null;
     } finally {
       isLoading.value = false;
