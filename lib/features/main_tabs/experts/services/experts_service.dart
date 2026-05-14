@@ -21,7 +21,7 @@ class ExpertsService extends GetxService {
     final response = await _apiHelper.request<ExpertSessionsListModel?>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
 
         final responseData = ExpertSessionsListModel.fromJson(data);
 
@@ -29,7 +29,7 @@ class ExpertsService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data;
   }
 
@@ -54,7 +54,7 @@ class ExpertsService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("Send question is success!");
+      log("Send question is success!");
     }
 
     return true;

@@ -29,7 +29,7 @@ class ContactSupportService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("response.data?.createdAt : ${response.data?.createdAt}");
+      log("response.data?.createdAt : ${response.data?.createdAt}");
     }
 
     return response.success;

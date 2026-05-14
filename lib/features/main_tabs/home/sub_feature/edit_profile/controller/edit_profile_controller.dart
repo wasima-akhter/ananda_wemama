@@ -96,8 +96,8 @@ class EditProfileController extends GetxController {
         profileData.children.map((e) {
           final child = ChildModel();
 
-          print(' child.gender.value  : ${e.gender}');
-          print(' child.dob.value  : ${e.dob}');
+          log(' child.gender.value  : ${e.gender}');
+          log(' child.dob.value  : ${e.dob}');
           child.gender.value = (e.gender?.toString() ?? '').toLowerCase();
           // parse timestamp back to display format
           final dobRaw = e.dob?.toString() ?? '';

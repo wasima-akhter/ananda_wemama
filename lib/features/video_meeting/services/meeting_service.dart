@@ -18,12 +18,12 @@ class MeetingService extends GetxService {
     final response = await _apiHelper.request<LiveSessionInfoModel?>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
         return LiveSessionInfoModel.fromJson(data);
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data;
   }
 }

@@ -13,7 +13,7 @@ mixin RtmReactionMixin on GetxController {
 
   Future<void> sendReaction(String emoji) async {
     Get.back();
-    print('sent emoji : $emoji');
+    log('sent emoji : $emoji');
     if (!_self.isRtmReady.value || _self.rtmClient == null) return;
 
     final payload = jsonEncode({
@@ -30,7 +30,7 @@ mixin RtmReactionMixin on GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] Reaction failed: ${status.errorCode}');
+      log('❌ [RTM] Reaction failed: ${status.errorCode}');
       return;
     }
 

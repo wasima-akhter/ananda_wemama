@@ -13,7 +13,7 @@ class CreateCommunityController extends GetxController {
   @override
   void onInit() {
     args = Get.arguments as CreateCommunityArgModel?;
-    print('create community arg model : ${args?.communityImg}');
+    log('create community arg model : ${args?.communityImg}');
     super.onInit();
   }
 
@@ -47,8 +47,8 @@ class CreateCommunityController extends GetxController {
     if (selectedImage != null) {
       fileImage.value = selectedImage;
 
-      print("file.name: ${selectedImage.name}");
-      print("file.path: ${selectedImage.path}");
+      log("file.name: ${selectedImage.name}");
+      log("file.path: ${selectedImage.path}");
     }
   }
 
@@ -67,12 +67,12 @@ class CreateCommunityController extends GetxController {
       );
 
       if (response == true) {
-        print('onTapCreate success : $response');
+        log('onTapCreate success : $response');
       } else {
-        print('onTapCreate failed : $response');
+        log('onTapCreate failed : $response');
       }
     } catch (e) {
-      print("Error onTapCreate community: $e");
+      log("Error onTapCreate community: $e");
     } finally {
       isLoading_.value = false;
 

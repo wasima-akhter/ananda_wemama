@@ -1,5 +1,7 @@
 export 'dart:developer';
 
+export 'dart:developer' show log;
+
 export 'package:get/get.dart';
 export 'package:mama_app/core/constants/strings.dart';
 export 'package:mama_app/core/enums/app_enums.dart';

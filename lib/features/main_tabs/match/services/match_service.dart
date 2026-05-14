@@ -23,7 +23,7 @@ class MatchService extends GetxService {
     final response = await _apiHelper.request<List<MatchResponseModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
 
         if (data is List) {
           return data.map((e) => MatchResponseModel.fromJson(e)).toList();
@@ -32,7 +32,7 @@ class MatchService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 }

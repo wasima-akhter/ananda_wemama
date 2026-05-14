@@ -39,7 +39,7 @@ class PostDetailsScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       refreshKey: refreshKey,
-      onRefresh: () async => print("refreshed"),
+      onRefresh: () async => log("refreshed"),
       isScrollable: false,
       appBar: CommonAppBarContent(title: Strings.post),
 
@@ -192,7 +192,7 @@ class CommentItemInPostDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final childCommentList = item.replies ?? [];
-    print('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
+    log('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -17,7 +17,7 @@ class PostInCommunityController extends GetxController {
 
   @override
   void onInit() {
-    print(' communityItemId :$communityItemId ');
+    log(' communityItemId :$communityItemId ');
     super.onInit();
   }
 
@@ -56,8 +56,8 @@ class PostInCommunityController extends GetxController {
     if (selectedImage != null) {
       fileImage.value = selectedImage;
 
-      print("file.name: ${selectedImage.name}");
-      print("file.path: ${selectedImage.path}");
+      log("file.name: ${selectedImage.name}");
+      log("file.path: ${selectedImage.path}");
     }
   }
 
@@ -70,7 +70,7 @@ class PostInCommunityController extends GetxController {
     isLoading_.value = true;
 
     try {} catch (e) {
-      print("Error fetching profile: $e");
+      log("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
       unFocusAll();
@@ -95,14 +95,14 @@ class PostInCommunityController extends GetxController {
         isAnonymous: postAnonymously.value,
       );
       if (response == true) {
-        print('Post created successfully!');
+        log('Post created successfully!');
         Get.find<CommunityDetailController>().onRefresh();
         Get.back();
       } else {
-        print('Post created failed!');
+        log('Post created failed!');
       }
     } catch (e) {
-      print('Post created  error: $e');
+      log('Post created  error: $e');
     } finally {
       isCreatePostLoading.value = false;
       clearAll();

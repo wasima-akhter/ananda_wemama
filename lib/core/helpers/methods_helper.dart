@@ -189,7 +189,7 @@ Future<List<String>> getTwoLineAddress({
 
   String line2 = placeholder;
 
-  print("getTwoLineAddress called with lat=$latitude, lng=$longitude");
+  log("getTwoLineAddress called with lat=$latitude, lng=$longitude");
 
   // Only attempt reverse geocoding if lat/lng are valid numbers
   if (latitude != null && longitude != null && latitude.isNotEmpty && longitude.isNotEmpty) {
@@ -199,7 +199,7 @@ Future<List<String>> getTwoLineAddress({
 
       if (lat != null && lng != null) {
         final placemarks = await placemarkFromCoordinates(lat, lng);
-        print("placemarks with ${placemarks.toString()}");
+        log("placemarks with ${placemarks.toString()}");
 
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
@@ -222,7 +222,7 @@ Future<String> getOneLineAddress({
   required String longitude,
   String placeholder = "N/A",
 }) async {
-  print("getOneLineAddress called with lat=$latitude, lng=$longitude");
+  log("getOneLineAddress called with lat=$latitude, lng=$longitude");
 
   try {
     final lat = double.tryParse(latitude);
@@ -240,7 +240,7 @@ Future<String> getOneLineAddress({
       }
     }
   } catch (e) {
-    print("Reverse geocoding error: $e");
+    log("Reverse geocoding error: $e");
   }
 
   return placeholder;

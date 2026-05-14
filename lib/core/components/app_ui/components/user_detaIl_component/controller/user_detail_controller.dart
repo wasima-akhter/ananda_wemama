@@ -108,7 +108,7 @@ class UserDetailController extends GetxController {
 
       // }
     } catch (e) {
-      print("Error fetching profile: $e");
+      log("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
 

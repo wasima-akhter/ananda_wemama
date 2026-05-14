@@ -17,14 +17,14 @@ class CommunityDetailService extends GetxService {
     final response = await _apiHelper.request<CommunityItemDetailModel?>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
         final parsedData = CommunityItemDetailModel.fromJson(data);
 
         return parsedData;
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data;
   }
 
@@ -40,14 +40,14 @@ class CommunityDetailService extends GetxService {
     final response = await _apiHelper.request<CommentOfPostResponseModel?>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
         final parsedData = CommentOfPostResponseModel.fromJson(data);
 
         return parsedData;
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data;
   }
 
@@ -67,7 +67,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -83,7 +83,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -99,7 +99,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -114,7 +114,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -135,7 +135,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -171,7 +171,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 
@@ -186,7 +186,7 @@ class CommunityDetailService extends GetxService {
 
     final response = await _apiHelper.request(apiCall: apiCall);
     if (response == null) return false;
-    print("response success: ${response.success}");
+    log("response success: ${response.success}");
     return response.success;
   }
 }

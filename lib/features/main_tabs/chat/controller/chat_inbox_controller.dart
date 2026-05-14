@@ -65,8 +65,8 @@ class ChatInboxController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    print("chatId: $chatId");
-    print("isBlocked: $isBlocked");
+    log("chatId: $chatId");
+    log("isBlocked: $isBlocked");
 
     isBlockedRx.value = args.isBlocked;
     emitGetMessages(); // ← just emit, don't clear or set loading again
@@ -228,7 +228,7 @@ class ChatInboxController extends GetxController {
         }
       }
     } catch (e) {
-      print("FilePicker error: $e");
+      log("FilePicker error: $e");
     }
   }
 

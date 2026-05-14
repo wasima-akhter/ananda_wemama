@@ -24,7 +24,7 @@ class BaseResponse<T> {
       parsedData = fromJsonT(rawData);
     }
   } catch (e, st) {
-    print("❌ BaseResponse parsing error: $e\n$st");
+    log("❌ BaseResponse parsing error: $e\n$st");
     parsedData = null;
   }
 

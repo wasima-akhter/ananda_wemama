@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/controller_export.dart';
 import '../model/notifications_model.dart';
 import '../service/notification_service.dart';
 
@@ -36,9 +37,9 @@ class NotificationController extends GetxController {
     try {
       final data = await _service.fetchNotifications();
       notifications.assignAll(data);
-      print('notifications loaded: ${notifications.length}');
+      log('notifications loaded: ${notifications.length}');
     } catch (e) {
-      print("Error fetch notifications: $e");
+      log("Error fetch notifications: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -58,7 +59,7 @@ class NotificationController extends GetxController {
         }
       }
     } catch (e) {
-      print("Error updateIsSeen: $e");
+      log("Error updateIsSeen: $e");
     } finally {
       isupdateIsSeenLoading_.value = false;
     }

@@ -45,19 +45,19 @@ class ReportService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    log('fields: ${data.fields}');
+    log('files count: ${data.files.length}');
+    log('file keys: ${data.files.map((e) => e.key).toList()}');
 
     for (final f in data.fields) {
-      print('${f.key}: ${f.value}');
+      log('${f.key}: ${f.value}');
     }
 
     for (final f in data.files) {
-      print('${f.key}: ${f.value.filename}');
+      log('${f.key}: ${f.value.filename}');
     }
 
-    print("Token: ${storage.getAccessToken}");
+    log("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 

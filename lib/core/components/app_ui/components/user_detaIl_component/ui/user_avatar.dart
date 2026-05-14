@@ -8,7 +8,7 @@ class UserAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(' imageUrl : $imageUrl');
+    log(' imageUrl : $imageUrl');
     return Container(
       decoration: 0.circleBrdr(brdrW: 2.5, brdrClr: c.bottomSheetBackground),
       child: NetworkImageWidget(

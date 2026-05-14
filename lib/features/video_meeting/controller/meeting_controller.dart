@@ -1,6 +1,5 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:mama_app/app/service_export.dart';
-import 'package:mama_app/core/utils/extension/string_extension.dart';
 
 import '../../../app/controller_export.dart';
 import 'arg_model/meeting_ctrl_ag_model.dart';
@@ -50,7 +49,7 @@ class MeetingController extends GetxController {
   @override
   void onInit() {
     /// Initial channel from navigation
-    print('channelname arg: ${agrModel.channelname}');
+    log('channelname arg: ${agrModel.channelname}');
 
     channelName.value = agrModel.channelname;
 
@@ -85,16 +84,16 @@ class MeetingController extends GetxController {
         sessionInfo.value = data;
 
         /// Debug logs (VERY useful for Agora debugging)
-        print('📦 Parsed model rtmToken: ${data.rtmToken}');
-        print('📦 Parsed model rtcToken: ${data.rtcToken}');
-        print('📦 Parsed model channel: ${data.channelName}');
-        print('📦 Parsed model uid: ${data.uid}');
+        log('📦 Parsed model rtmToken: ${data.rtmToken}');
+        log('📦 Parsed model rtcToken: ${data.rtcToken}');
+        log('📦 Parsed model channel: ${data.channelName}');
+        log('📦 Parsed model uid: ${data.uid}');
       }
 
       /// Small delay for smoother UX
       await Future.delayed(const Duration(milliseconds: 600));
     } catch (e) {
-      print('getSessionsInfo error: $e');
+      log('getSessionsInfo error: $e');
     } finally {
       isSessionInfoLoading.value = false;
     }
@@ -110,16 +109,16 @@ class MeetingController extends GetxController {
 
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
-    print('🔵 [1] hostMeeting() started');
+    log('🔵 [1] hostMeeting() started');
 
     /// Step 1: Fetch token & session data
     await getSessionsInfo();
 
-    print('🔵 [2] sessionInfo after fetch:');
-    print('   channelName: ${sessionInfo.value.channelName}');
-    print('   rtmToken: ${sessionInfo.value.rtmToken}');
-    print('   rtc_Token: ${sessionInfo.value.rtcToken}');
-    print('   uid: ${sessionInfo.value.uid}');
+    log('🔵 [2] sessionInfo after fetch:');
+    log('   channelName: ${sessionInfo.value.channelName}');
+    log('   rtmToken: ${sessionInfo.value.rtmToken}');
+    log('   rtc_Token: ${sessionInfo.value.rtcToken}');
+    log('   uid: ${sessionInfo.value.uid}');
 
     final fetchedRtmToken = sessionInfo.value.rtmToken;
     final fetchedRtcToken = sessionInfo.value.rtcToken;
@@ -128,16 +127,16 @@ class MeetingController extends GetxController {
 
     /// 🔴 Safety checks (must have valid data)
     if (fetchedRtmToken == null || fetchedRtmToken.isEmpty) {
-      print('❌ Token is null or empty!');
+      log('❌ Token is null or empty!');
       return;
     }
 
     if (fetchedChannel == null || fetchedChannel.isEmpty) {
-      print('❌ ChannelName is null or empty!');
+      log('❌ ChannelName is null or empty!');
       return;
     }
     if (fetchedRtcToken == null || fetchedRtcToken.isEmpty) {
-      print('❌ fetchedRtcToken is null or empty!');
+      log('❌ fetchedRtcToken is null or empty!');
       return;
     }
 
@@ -148,11 +147,11 @@ class MeetingController extends GetxController {
     uid.value = fetchedUid ?? 0;
     appId.value = AgoraConfig.appId;
 
-    print('🔵 [3] appId: ${appId.value}');
-    print('🔵 [3] rtm token: ${rtmToken.value}');
-    print('🔵 [3] rtcToken: ${rtcToken.value}');
-    print('🔵 [3] channel: ${channelName.value}');
-    print('🔵 [3] uid: ${uid.value}');
+    log('🔵 [3] appId: ${appId.value}');
+    log('🔵 [3] rtm token: ${rtmToken.value}');
+    log('🔵 [3] rtcToken: ${rtcToken.value}');
+    log('🔵 [3] channel: ${channelName.value}');
+    log('🔵 [3] uid: ${uid.value}');
 
     /// Step 3: Initialize Agora
     await initAgora();
@@ -162,34 +161,34 @@ class MeetingController extends GetxController {
 
   final hostUid = RxnInt(); // ✅ nullable int
   Future<void> initAgora() async {
-    print('🔵 [4] initAgora() started');
+    log('🔵 [4] initAgora() started');
 
     final granted = await requestPermissions();
 
-    print("granted : $granted");
+    log("granted : $granted");
 
     if (granted) {
       // your codes here
 
-      print('🔵 [5] Permissions granted');
+      log('🔵 [5] Permissions granted');
 
       final engine = createAgoraRtcEngine();
 
       // ✅ Release any stale native engine
       try {
         await engine.release(sync: true);
-        print('✅ Pre-release done');
+        log('✅ Pre-release done');
       } catch (e) {
-        print('⚠️ Pre-release skipped: $e');
+        log('⚠️ Pre-release skipped: $e');
       }
 
       await Future.delayed(const Duration(milliseconds: 300));
 
       try {
         await engine.initialize(RtcEngineContext(appId: appId.value));
-        print('🔵 [6] Engine initialized');
+        log('🔵 [6] Engine initialized');
       } catch (e) {
-        print('❌ Engine init FAILED: $e');
+        log('❌ Engine init FAILED: $e');
         return;
       }
 
@@ -197,9 +196,9 @@ class MeetingController extends GetxController {
         await engine.setChannelProfile(
           ChannelProfileType.channelProfileLiveBroadcasting,
         );
-        print('✅ setChannelProfile done');
+        log('✅ setChannelProfile done');
       } catch (e) {
-        print('❌ setChannelProfile FAILED: $e');
+        log('❌ setChannelProfile FAILED: $e');
         return;
       }
 
@@ -211,9 +210,9 @@ class MeetingController extends GetxController {
                 AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
           ),
         );
-        print('✅ setClientRole AUDIENCE done');
+        log('✅ setClientRole AUDIENCE done');
       } catch (e) {
-        print('❌ setClientRole FAILED: $e');
+        log('❌ setClientRole FAILED: $e');
         return;
       }
 
@@ -225,9 +224,9 @@ class MeetingController extends GetxController {
           profile: AudioProfileType.audioProfileDefault,
           scenario: AudioScenarioType.audioScenarioGameStreaming,
         );
-        print('✅ Audio/Video enabled');
+        log('✅ Audio/Video enabled');
       } catch (e) {
-        print('❌ Audio/Video setup FAILED: $e');
+        log('❌ Audio/Video setup FAILED: $e');
         return;
       }
 
@@ -239,7 +238,7 @@ class MeetingController extends GetxController {
         RtcEngineEventHandler(
           // Agora engine error (add inside onError handler)
           onError: (err, msg) {
-            print('❌ Agora Error: $err - $msg');
+            log('❌ Agora Error: $err - $msg');
             // Only show popup for fatal errors, not minor ones
             final fatalCodes = [
               17,
@@ -256,7 +255,7 @@ class MeetingController extends GetxController {
           },
           onJoinChannelSuccess: (connection, elapsed) async {
             try {
-              print(
+              log(
                 '✅ Joined: ${connection.channelId}, uid: ${connection.localUid}',
               );
               isJoined.value = true;
@@ -267,22 +266,22 @@ class MeetingController extends GetxController {
               await agoraEngine?.muteAllRemoteAudioStreams(false);
 
               await WakelockPlus.enable(); // 🔥 keep screen ON
-              print('🌙 Wakelock enabled');
-              print('✅ Speaker on, volume boosted');
+              log('🌙 Wakelock enabled');
+              log('✅ Speaker on, volume boosted');
             } catch (e) {
-              print('❌ onJoinChannelSuccess handler error: $e');
+              log('❌ onJoinChannelSuccess handler error: $e');
             }
           },
 
           onUserJoined: (connection, uid, elapsed) async {
             try {
-              print('🎥 Host joined: uid=$uid');
+              log('🎥 Host joined: uid=$uid');
 
               // ✅ If this is the host
               if (hostUid.value == null) {
                 // fallback (if backend didn’t provide)
                 hostUid.value = uid;
-                print('🎯 Assigned HOST uid=$uid');
+                log('🎯 Assigned HOST uid=$uid');
               }
 
               // ✅ Always keep list (optional)
@@ -299,13 +298,13 @@ class MeetingController extends GetxController {
                 startSessionTimer(); // ✅ only for host
               }
             } catch (e) {
-              print('❌ onUserJoined handler error: $e');
+              log('❌ onUserJoined handler error: $e');
             }
           },
           // Host left → ended
           onUserOffline: (connection, uid, reason) async {
             try {
-              print('⚠️ Host left: uid=$uid, reason=$reason');
+              log('⚠️ Host left: uid=$uid, reason=$reason');
               remoteUids.remove(uid);
               if (uid == hostUid.value) {
                 isSessionExiting = true;
@@ -320,7 +319,7 @@ class MeetingController extends GetxController {
                 showLiveExitPopup(LiveExitReason.ended);
               }
             } catch (e) {
-              print('❌ onUserOffline handler error: $e');
+              log('❌ onUserOffline handler error: $e');
             }
           },
 
@@ -330,17 +329,17 @@ class MeetingController extends GetxController {
             }
           },
           onTokenPrivilegeWillExpire: (connection, token) {
-            print('⚠️ Token expiring soon — refresh needed');
+            log('⚠️ Token expiring soon — refresh needed');
             // TODO: call backend to refresh token, then renewToken()
           },
 
           onConnectionStateChanged: (connection, state, reason) {
-            print('🔵 Connection: $state, reason: $reason');
+            log('🔵 Connection: $state, reason: $reason');
 
             // ✅ Handle unexpected disconnects
             // 🚨 KEY FIX
             if (isSessionExiting) {
-              print('🟡 Ignoring connection change (intentional exit)');
+              log('🟡 Ignoring connection change (intentional exit)');
               return;
             }
 
@@ -354,7 +353,7 @@ class MeetingController extends GetxController {
               (connection, remoteUid, state, reason, elapsed) {
                 if (remoteUid != hostUid.value) return;
                 try {
-                  print('🎥 Video state: uid=$remoteUid, state=$state');
+                  log('🎥 Video state: uid=$remoteUid, state=$state');
                   if (state == RemoteVideoState.remoteVideoStateStopped) {
                     isHostVideoOn.value = false;
                   } else if (state ==
@@ -362,14 +361,14 @@ class MeetingController extends GetxController {
                     isHostVideoOn.value = true;
                   }
                 } catch (e) {
-                  print('❌ onRemoteVideoStateChanged error: $e');
+                  log('❌ onRemoteVideoStateChanged error: $e');
                 }
               },
 
           onRemoteAudioStateChanged:
               (connection, remoteUid, state, reason, elapsed) {
                 try {
-                  print('🔊 Audio state: uid=$remoteUid, state=$state');
+                  log('🔊 Audio state: uid=$remoteUid, state=$state');
 
                   if (state == RemoteAudioState.remoteAudioStateStopped) {
                     isHostAudioOn.value = false;
@@ -380,31 +379,31 @@ class MeetingController extends GetxController {
                     // ✅ Re-apply speaker AFTER audio track is active
                     // This defeats Android's audio re-routing after track starts
                     agoraEngine?.setEnableSpeakerphone(true).then((_) {
-                      print('🔊 Speaker re-applied after decode started');
+                      log('🔊 Speaker re-applied after decode started');
                     });
                   }
                 } catch (e) {
-                  print('❌ onRemoteAudioStateChanged error: $e');
+                  log('❌ onRemoteAudioStateChanged error: $e');
                 }
               },
           onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {
-            print('🔄 Role: $oldRole → $newRole');
+            log('🔄 Role: $oldRole → $newRole');
           },
 
           onRemoteAudioStats: (connection, stats) {
-            print(
+            log(
               '📊 [AUDIO STATS] uid=${stats.uid} | bitrate=${stats.receivedBitrate} | quality=${stats.quality}',
             );
           },
 
           onAudioSubscribeStateChanged:
               (channel, uid, oldState, newState, elapsed) {
-                print('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
+                log('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
               },
         ),
       );
 
-      print('🔵 Joining channel...');
+      log('🔵 Joining channel...');
 
       await engine.joinChannel(
         token: rtcToken.value,
@@ -423,7 +422,7 @@ class MeetingController extends GetxController {
 
       // ✅ No audio calls here — moved to onJoinChannelSuccess
       isEngineReady.value = true;
-      print('🔵 Engine ready');
+      log('🔵 Engine ready');
     } else {
       // optional extra handling
     }
@@ -448,10 +447,10 @@ class MeetingController extends GetxController {
 
   Future<void> toggleSpeak(LiveChatController cc) async {
     if (isSpeaking.value) {
-      print('🔇 [SPEAK] Stepping down from broadcaster → audience');
+      log('🔇 [SPEAK] Stepping down from broadcaster → audience');
 
       await agoraEngine?.setClientRole(role: ClientRoleType.clientRoleAudience);
-      print('🔇 [SPEAK] setClientRole → AUDIENCE done');
+      log('🔇 [SPEAK] setClientRole → AUDIENCE done');
 
       await agoraEngine?.updateChannelMediaOptions(
         const ChannelMediaOptions(
@@ -460,21 +459,21 @@ class MeetingController extends GetxController {
         ),
       );
 
-      print('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
+      log('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
 
       isSpeaking.value = false;
 
       // ← notify web: mic is now OFF
       await _publishMuteState(isMuted: true, cc: cc);
 
-      print('🔇 [SPEAK] isSpeaking = false ✅');
+      log('🔇 [SPEAK] isSpeaking = false ✅');
     } else {
-      print('🎙️ [SPEAK] Promoting to broadcaster → host');
+      log('🎙️ [SPEAK] Promoting to broadcaster → host');
 
       await agoraEngine?.setClientRole(
         role: ClientRoleType.clientRoleBroadcaster,
       );
-      print('🎙️ [SPEAK] setClientRole → BROADCASTER done');
+      log('🎙️ [SPEAK] setClientRole → BROADCASTER done');
 
       await agoraEngine?.updateChannelMediaOptions(
         const ChannelMediaOptions(
@@ -482,13 +481,13 @@ class MeetingController extends GetxController {
           clientRoleType: ClientRoleType.clientRoleBroadcaster,
         ),
       );
-      print('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
+      log('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
 
       // ✅ Confirm engine state
-      print('🎙️ [SPEAK] agoraEngine is null: ${agoraEngine == null}');
-      print('🎙️ [SPEAK] channel: ${channelName.value}');
-      print('🎙️ [SPEAK] uid: ${uid.value}');
-      print(
+      log('🎙️ [SPEAK] agoraEngine is null: ${agoraEngine == null}');
+      log('🎙️ [SPEAK] channel: ${channelName.value}');
+      log('🎙️ [SPEAK] uid: ${uid.value}');
+      log(
         '🎙️ [SPEAK] token: ${rtcToken.value.substring(0, 10)}...',
       ); // partial for safety
 
@@ -497,7 +496,7 @@ class MeetingController extends GetxController {
       // ← notify web: mic is now ON
       await _publishMuteState(isMuted: false, cc: cc);
 
-      print(
+      log(
         '🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user',
       );
     }
@@ -531,11 +530,11 @@ class MeetingController extends GetxController {
         {'isMuted': isMuted ? 'true' : 'false'},
       );
 
-      print(
+      log(
         '📡 [RTM] Mute state broadcast → uid=${uid.value}, isMuted=$isMuted',
       );
     } catch (e) {
-      print('❌ [RTM] _publishMuteState error: $e');
+      log('❌ [RTM] _publishMuteState error: $e');
     }
   }
 
@@ -578,18 +577,18 @@ class MeetingController extends GetxController {
             .inSeconds;
       });
 
-      print(
+      log(
         '⏱️ Timer started — start: $startTime, elapsed: ${elapsedSeconds.value}s',
       );
     } catch (e) {
-      print('❌ Timer error: $e');
+      log('❌ Timer error: $e');
     }
   }
 
   void stopSessionTimer() {
     _sessionTimer?.cancel();
     _sessionTimer = null;
-    print('⏱️ Session timer stopped');
+    log('⏱️ Session timer stopped');
   }
 
   String get formattedDuration {
@@ -636,7 +635,7 @@ class MeetingController extends GetxController {
     // ← sync mute state to web via RTM presence
     await _publishMuteState(isMuted: mute, cc: cc);
 
-    print('🔇 muteLocalAudio($mute) applied');
+    log('🔇 muteLocalAudio($mute) applied');
   }
 
   var isSessionExiting = false;
@@ -644,7 +643,7 @@ class MeetingController extends GetxController {
 
   /// Called by LiveChatController when host sends REMOTE_KICK targeting this user
   Future<void> leaveSession() async {
-    print('🔴 leaveSession() — kicked by host');
+    log('🔴 leaveSession() — kicked by host');
     await leaveMeeting();
 
     // Navigate away after cleanup
@@ -662,7 +661,7 @@ class MeetingController extends GetxController {
 
   /// Leave channel manually
   Future<void> leaveMeeting() async {
-    print('🔵 leaveMeeting() called');
+    log('🔵 leaveMeeting() called');
 
     stopSessionTimer();
 
@@ -676,33 +675,33 @@ class MeetingController extends GetxController {
     isEngineReady.value = false;
 
     await WakelockPlus.disable(); // 🔥 allow sleep again
-    print('🌙 Wakelock disabled');
+    log('🌙 Wakelock disabled');
 
     if (agoraEngine != null) {
       try {
         await agoraEngine!.leaveChannel();
-        print('✅ Left channel');
+        log('✅ Left channel');
       } catch (e) {
-        print('❌ leaveChannel error: $e');
+        log('❌ leaveChannel error: $e');
       }
 
       try {
         await agoraEngine!.release(sync: true);
-        print('✅ Engine released');
+        log('✅ Engine released');
       } catch (e) {
-        print('❌ release error: $e');
+        log('❌ release error: $e');
       }
 
       agoraEngine = null;
     }
 
     isJoined.value = false;
-    print('✅ leaveMeeting complete');
+    log('✅ leaveMeeting complete');
   }
 
   @override
   void onClose() async {
-    print('🔵 onClose called');
+    log('🔵 onClose called');
     await leaveMeeting(); // reuse the same logic
     inputMsgCtrl.dispose();
     inputMsgFocus.dispose();
@@ -778,7 +777,7 @@ class MeetingController extends GetxController
 
   @override
   void onClose() async {
-    print('🔵 onClose called');
+    log('🔵 onClose called');
     await leaveMeeting(); // reuse the same logic
     inputMsgCtrl.dispose();
     inputMsgFocus.dispose();

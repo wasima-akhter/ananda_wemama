@@ -26,7 +26,7 @@ mixin RtmHostControlsMixin on GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] muteParticipant failed: ${status.errorCode}');
+      log('❌ [RTM] muteParticipant failed: ${status.errorCode}');
       "Failed to mute participant".showToast();
       return;
     }
@@ -37,7 +37,7 @@ mixin RtmHostControlsMixin on GetxController {
       _self.participants[index] = _self.participants[index].copyWith(isMuted: true);
     }
 
-    print('✅ [RTM] Mute command sent to $targetUid');
+    log('✅ [RTM] Mute command sent to $targetUid');
     "Mute command sent".showToast();
   }
 
@@ -58,7 +58,7 @@ mixin RtmHostControlsMixin on GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] kickParticipant failed: ${status.errorCode}');
+      log('❌ [RTM] kickParticipant failed: ${status.errorCode}');
       "Failed to remove participant".showToast();
       return;
     }
@@ -68,7 +68,7 @@ mixin RtmHostControlsMixin on GetxController {
     _self.raisedHands.removeWhere((h) => h.uid == targetUid);
     _self.viewCount.value = _self.participants.length;
 
-    print('✅ [RTM] Kick command sent to $targetUid');
+    log('✅ [RTM] Kick command sent to $targetUid');
     "Participant removed".showToast();
   }
 
@@ -89,11 +89,11 @@ mixin RtmHostControlsMixin on GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
+      log('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
       return;
     }
 
     _self.raisedHands.removeWhere((h) => h.uid == targetUid);
-    print('✅ [RTM] Hand lowered for $targetUid');
+    log('✅ [RTM] Hand lowered for $targetUid');
   }
 }

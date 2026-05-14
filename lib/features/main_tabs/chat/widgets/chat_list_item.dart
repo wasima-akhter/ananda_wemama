@@ -11,8 +11,8 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(' passed chat id: ${chatModel.id}');
-    print(' passed chatModel.isblocked: ${chatModel.isblocked}');
+    log(' passed chat id: ${chatModel.id}');
+    log(' passed chatModel.isblocked: ${chatModel.isblocked}');
     return CusGestureDetector(
       onTap: () {
         Get.delete<ChatInboxController>(force: true);

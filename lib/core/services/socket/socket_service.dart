@@ -8,6 +8,7 @@ import 'package:mama_app/features/shared/wave_request/controller/wave_request_co
 import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
+import '../../../app/service_export.dart';
 import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
 import '../../../features/main_tabs/chat/model/chat_inbox_msg_item_model.dart';
 import '../../../features/main_tabs/chat/model/chat_list_item_model.dart';
@@ -57,18 +58,18 @@ class SocketService extends GetxService {
 
       try {
         _socket!.onConnect((_) {
-          print("✅ Socket Connected: ${_socket!.id}");
+          log("✅ Socket Connected: ${_socket!.id}");
 
           if (!(_connectCompleter?.isCompleted ?? true)) {
             _connectCompleter?.complete();
           }
         });
       } catch (e) {
-        print("onConnect error ignored: $e");
+        log("onConnect error ignored: $e");
       }
 
       _socket!.onConnectError((err) {
-        print("❌ Socket error: $err");
+        log("❌ Socket error: $err");
 
         if (!(_connectCompleter?.isCompleted ?? true)) {
           _connectCompleter?.completeError(err);
@@ -82,7 +83,7 @@ class SocketService extends GetxService {
       // 👇 WAIT here until connected
       return _connectCompleter!.future;
     } catch (e) {
-      print("Socket connect crashed (ignored): $e");
+      log("Socket connect crashed (ignored): $e");
 
       // 👉 prevent app crash / interruption
       if (!(_connectCompleter?.isCompleted ?? true)) {
@@ -113,7 +114,7 @@ class SocketService extends GetxService {
 
   //   try {
   //     _socket!.onConnect((_) {
-  //       print("✅ Socket Connected: ${_socket!.id}");
+  //       log("✅ Socket Connected: ${_socket!.id}");
 
   //       // complete future
   //       if (!(_connectCompleter?.isCompleted ?? true)) {
@@ -123,7 +124,7 @@ class SocketService extends GetxService {
   //   } catch (e) {}
 
   //   _socket!.onConnectError((err) {
-  //     print("❌ Socket error: $err");
+  //     log("❌ Socket error: $err");
 
   //     if (!(_connectCompleter?.isCompleted ?? true)) {
   //       _connectCompleter?.completeError(err);
@@ -172,7 +173,7 @@ class SocketService extends GetxService {
       final isSender = res.message.toLowerCase().contains('requested');
       final isReceiver = res.message.toLowerCase().contains('received');
 
-      print(
+      log(
         '🧪 newConversationRequest | currentId: ${currentProfileId()} '
         '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
       );
@@ -201,7 +202,7 @@ class SocketService extends GetxService {
               .toList() ??
           [];
 
-      print('🧪 fallback participants: $participants');
+      log('🧪 fallback participants: $participants');
 
       if (participants.length >= 2 && participants[1] == currentProfileId()) {
         Get.snackbar(
@@ -324,7 +325,7 @@ class SocketService extends GetxService {
       final peerName = peer?['name'] as String? ?? '';
       final peerImageUrl = peer?['profileImage'] as String? ?? '';
 
-      print(
+      log(
         '🧪 conversationAccepted | myId: $myId | isAcceptor: $isAcceptor'
         ' | peer: $peerName | msg: ${res.message}',
       );
@@ -360,7 +361,7 @@ class SocketService extends GetxService {
       final isRejector =
           msg.contains('you have rejected') || msg.contains('declined');
 
-      print(
+      log(
         '🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}',
       );
 
@@ -454,11 +455,11 @@ class SocketService extends GetxService {
 
   void emit(String event, dynamic data) {
     if (!isConnected) {
-      print("⚠️ Emit skipped — socket not connected → $event");
+      log("⚠️ Emit skipped — socket not connected → $event");
       return;
     }
     _socket!.emit(event, data);
-    print("📤 Emit: $event → $data");
+    log("📤 Emit: $event → $data");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -470,9 +471,9 @@ class SocketService extends GetxService {
     _socket!.on(event, (data) {
       try {
         callback(_parse(data));
-        print("📥 Listen: [$event] $data");
+        log("📥 Listen: [$event] $data");
       } catch (e, stack) {
-        print("❌ Callback error [$event]: $e\n$stack");
+        log("❌ Callback error [$event]: $e\n$stack");
       }
     });
   }
@@ -481,7 +482,7 @@ class SocketService extends GetxService {
   /// Only safe to call after connectSocket().
   void on(String event, Function(Map<String, dynamic>) callback) {
     if (_socket == null) {
-      print("⚠️ on('$event') — socket not ready, call connectSocket() first");
+      log("⚠️ on('$event') — socket not ready, call connectSocket() first");
       return;
     }
     _on(event, callback);
@@ -493,7 +494,7 @@ class SocketService extends GetxService {
 
   void off(String event) {
     _socket?.off(event);
-    print("🧹 Removed listener: $event");
+    log("🧹 Removed listener: $event");
   }
 
   @override
@@ -532,7 +533,7 @@ class SocketService extends GetxService {
       _retryCount = 0;
       _retryTimer?.cancel();
       _retryTimer = null;
-      print("🔁 Retry state reset — socket healthy");
+      log("🔁 Retry state reset — socket healthy");
 
       // ✅ NEW
       if (Get.isRegistered<SocketStatusController>()) {
@@ -541,12 +542,12 @@ class SocketService extends GetxService {
     });
 
     _socket!.onDisconnect((_) {
-      print("🔌 Socket disconnected — scheduling retry...");
+      log("🔌 Socket disconnected — scheduling retry...");
       _scheduleRetry();
     });
 
     _socket!.onConnectError((_) {
-      print("❌ Connect error — scheduling retry...");
+      log("❌ Connect error — scheduling retry...");
       _scheduleRetry();
     });
   }
@@ -555,7 +556,7 @@ class SocketService extends GetxService {
     _retryTimer?.cancel();
 
     if (_retryCount >= _maxRetries) {
-      print("🚫 Max retries ($_maxRetries) reached. Giving up.");
+      log("🚫 Max retries ($_maxRetries) reached. Giving up.");
 
       // ✅ NEW
       if (Get.isRegistered<SocketStatusController>()) {
@@ -575,15 +576,15 @@ class SocketService extends GetxService {
       SocketStatusController.to.setReconnecting(_retryCount);
     }
 
-    print("⏳ Retry #$_retryCount in ${delay.inSeconds}s...");
+    log("⏳ Retry #$_retryCount in ${delay.inSeconds}s...");
 
     _retryTimer = Timer(delay, () async {
       if (!isConnected) {
-        print("🔄 Attempting reconnect #$_retryCount...");
+        log("🔄 Attempting reconnect #$_retryCount...");
         try {
           await connectSocket();
         } catch (e) {
-          print("❌ Reconnect #$_retryCount failed: $e");
+          log("❌ Reconnect #$_retryCount failed: $e");
         }
       }
     });

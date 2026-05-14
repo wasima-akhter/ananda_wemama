@@ -15,7 +15,7 @@ class PostInCommunityScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async {
-        print("communities refreshed");
+        log("communities refreshed");
       },
       appBar: CommonAppBarContent(
         title: "",

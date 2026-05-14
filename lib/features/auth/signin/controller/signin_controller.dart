@@ -52,7 +52,7 @@ class SigninController extends GetxController {
 
       _handleLoginSuccess();
     } catch (e) {
-      print('Login Error: $e');
+      log('Login Error: $e');
     } finally {
       _isLoading.value = false;
     }
@@ -80,7 +80,7 @@ class SigninController extends GetxController {
   /// ================= LIFECYCLE =================
   @override
   void onInit() {
-    print('Base URL: $baseUrl');
+    log('Base URL: $baseUrl');
 
     if (kDebugMode) {
       emailCtrler.text = "ananda@yopmail.com";

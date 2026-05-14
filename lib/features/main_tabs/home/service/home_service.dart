@@ -21,9 +21,9 @@ class HomeService extends GetxService {
     final response = await _apiHelper.request<CommunitySpotlightModel?>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
 
-        print(
+        log(
           ' CommunitySpotlightData.fromJson(data) : ${CommunitySpotlightModel.fromJson(data).communitySpotlight?.createdAt}',
         );
 
@@ -31,7 +31,7 @@ class HomeService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data;
   }
 }

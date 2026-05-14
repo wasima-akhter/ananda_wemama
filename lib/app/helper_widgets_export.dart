@@ -30,3 +30,4 @@ export 'package:mama_app/core/utils/extension/context_extension.dart';
 export 'package:mama_app/core/utils/extension/int_extension.dart';
 export 'package:mama_app/core/utils/extension/string_extension.dart';
 export 'package:mama_app/routes/route_paths.dart';
+export 'dart:developer' show log;

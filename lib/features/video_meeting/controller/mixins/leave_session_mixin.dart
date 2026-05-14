@@ -17,7 +17,7 @@ mixin LeaveSessionMixin on GetxController {
 
   /// Called by LiveChatController when host sends REMOTE_KICK targeting this user
   Future<void> leaveSession() async {
-    print('🔴 leaveSession() — kicked by host');
+    log('🔴 leaveSession() — kicked by host');
     await leaveMeeting();
 
     // Navigate away after cleanup
@@ -31,7 +31,7 @@ mixin LeaveSessionMixin on GetxController {
 
   /// Leave channel manually
   Future<void> leaveMeeting() async {
-    print('🔵 leaveMeeting() called');
+    log('🔵 leaveMeeting() called');
 
     _self.stopSessionTimer();
 
@@ -45,27 +45,27 @@ mixin LeaveSessionMixin on GetxController {
     _self.isEngineReady.value = false;
 
     await WakelockPlus.disable(); // 🔥 allow sleep again
-    print('🌙 Wakelock disabled');
+    log('🌙 Wakelock disabled');
 
     if (_self.agoraEngine != null) {
       try {
         await _self.agoraEngine!.leaveChannel();
-        print('✅ Left channel');
+        log('✅ Left channel');
       } catch (e) {
-        print('❌ leaveChannel error: $e');
+        log('❌ leaveChannel error: $e');
       }
 
       try {
         await _self.agoraEngine!.release(sync: true);
-        print('✅ Engine released');
+        log('✅ Engine released');
       } catch (e) {
-        print('❌ release error: $e');
+        log('❌ release error: $e');
       }
 
       _self.agoraEngine = null;
     }
 
     _self.isJoined.value = false;
-    print('✅ leaveMeeting complete');
+    log('✅ leaveMeeting complete');
   }
 }

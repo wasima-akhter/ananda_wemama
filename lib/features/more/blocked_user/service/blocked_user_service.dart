@@ -20,7 +20,7 @@ class BlockedUserService extends GetxService {
     final response = await _apiHelper.request<List<BlockedUserDataModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
 
         if (data == null) return [];
 
@@ -28,7 +28,7 @@ class BlockedUserService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 
@@ -45,7 +45,7 @@ class BlockedUserService extends GetxService {
 
     if (response == null) return false;
 
-    print("response data: ${response?.success}");
+    log("response data: ${response?.success}");
     return response?.success ?? false;
   }
 
@@ -62,7 +62,7 @@ class BlockedUserService extends GetxService {
 
     if (response == null) return false;
 
-    print("response data: ${response?.success}");
+    log("response data: ${response?.success}");
     return response?.success ?? false;
   }
 }

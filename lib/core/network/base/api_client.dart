@@ -67,7 +67,7 @@ class ApiClient {
       final response = await _dio.request(url, data: data, options: options);
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
-      print("PATCH request error: $e");
+      log("PATCH request error: $e");
       return null;
     }
   }
@@ -82,14 +82,14 @@ class ApiClient {
   //   final options = Options(method: 'PATCH', headers: {"Authorization": "Bearer $getToken"});
 
   //   try {
-  //     print("DATA TYPE: ${data.runtimeType}");
+  //     log("DATA TYPE: ${data.runtimeType}");
 
   //     final response = await _dio.request(url, data: data, options: options);
 
   //     log('response in patch  : $response ');
   //     return ApiResponseHandler.handle(response, reqName);
   //   } catch (e) {
-  //     print("PATCH request error: $e");
+  //     log("PATCH request error: $e");
   //     return null;
   //   }
   // }
@@ -119,7 +119,7 @@ class ApiClient {
     );
 
     try {
-      print("DATA TYPE: ${data.runtimeType}");
+      log("DATA TYPE: ${data.runtimeType}");
 
       final response = await _dio.request(url, data: data, options: options);
 
@@ -127,7 +127,7 @@ class ApiClient {
 
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
-      print("PATCH request error: $e");
+      log("PATCH request error: $e");
       return null;
     }
   }
@@ -144,13 +144,13 @@ class ApiClient {
   //   );
 
   //   try {
-  //     print("DATA TYPE: ${data.runtimeType}");
+  //     log("DATA TYPE: ${data.runtimeType}");
 
   //     final response = await _dio.request(url, data: data, options: options);
   //     log('response in post  : $response ');
   //     return ApiResponseHandler.handle(response, reqName);
   //   } catch (e) {
-  //     print("POST request error: $e");
+  //     log("POST request error: $e");
   //     return null;
   //   }
   // }
@@ -181,7 +181,7 @@ class ApiClient {
     );
 
     try {
-      print("DATA TYPE: ${data.runtimeType}");
+      log("DATA TYPE: ${data.runtimeType}");
 
       final response = await _dio.request(url, data: data, options: options);
 
@@ -189,7 +189,7 @@ class ApiClient {
 
       return ApiResponseHandler.handle(response, reqName);
     } catch (e) {
-      print("POST request error: $e");
+      log("POST request error: $e");
       return null;
     }
   }

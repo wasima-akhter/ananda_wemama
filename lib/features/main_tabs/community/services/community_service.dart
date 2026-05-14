@@ -40,19 +40,19 @@ class CommunityService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    log('fields: ${data.fields}');
+    log('files count: ${data.files.length}');
+    log('file keys: ${data.files.map((e) => e.key).toList()}');
 
     for (final f in data.fields) {
-      print('${f.key}: ${f.value}');
+      log('${f.key}: ${f.value}');
     }
 
     for (final f in data.files) {
-      print('${f.key}: ${f.value.filename}');
+      log('${f.key}: ${f.value.filename}');
     }
 
-    print("Token: ${storage.getAccessToken}");
+    log("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 
@@ -66,8 +66,8 @@ class CommunityService extends GetxService {
 
     if (response == null || !response.success) return false;
 
-    print('response.success: ${response.success}');
-    print('community id while create: ${response.data}');
+    log('response.success: ${response.success}');
+    log('community id while create: ${response.data}');
 
     return true;
   }
@@ -104,21 +104,21 @@ class CommunityService extends GetxService {
 
     // ───────────────── DEBUG ─────────────────
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    log('fields: ${data.fields}');
+    log('files count: ${data.files.length}');
+    log('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    print('FIELDS:');
+    log('FIELDS:');
     for (var f in data.fields) {
-      print('${f.key}: ${f.value}');
+      log('${f.key}: ${f.value}');
     }
 
-    print('FILES:');
+    log('FILES:');
     for (var f in data.files) {
-      print('${f.key}: ${f.value.filename}');
+      log('${f.key}: ${f.value.filename}');
     }
 
-    print("Token: ${storage.getAccessToken}");
+    log("Token: ${storage.getAccessToken}");
 
     // ───────────────── API CALL ─────────────────
 
@@ -132,8 +132,8 @@ class CommunityService extends GetxService {
 
     if (response == null || !response.success) return false;
 
-    print('response.success: ${response.success}');
-    print('community id while update : ${response.data}');
+    log('response.success: ${response.success}');
+    log('community id while update : ${response.data}');
 
     return true;
   }
@@ -150,7 +150,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: $data");
+        log("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -159,7 +159,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 
@@ -175,7 +175,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: $data");
+        log("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -184,7 +184,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 
@@ -200,7 +200,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: $data");
+        log("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -209,7 +209,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 
@@ -227,7 +227,7 @@ class CommunityService extends GetxService {
     final response = await _apiHelper.request<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: $data");
+        log("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -236,7 +236,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 }

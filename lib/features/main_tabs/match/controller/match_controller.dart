@@ -132,7 +132,7 @@ class MatchController extends GetxController {
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
     } catch (e) {
-      print('startSearching fetch error: $e');
+      log('startSearching fetch error: $e');
       if (currentSearchId == _searchId) matchState.value = MatchState.noMatch;
     } finally {
       isSearchLoading.value = false;
@@ -160,7 +160,7 @@ class MatchController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 600));
       navToSubUpgrade();
     } catch (e) {
-      print('_fetchMatchesAndUpgrade error: $e');
+      log('_fetchMatchesAndUpgrade error: $e');
       navToSubUpgrade();
     } finally {
       isSearchLoading.value = false;
@@ -243,13 +243,13 @@ class MatchController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 400)); // brief transition
       matchState.value = MatchState.found;
 
-      print(
+      log(
         "➡️ Next local match: $_currentMatchIndex / ${fetchedMatches.length - 1} "
         "(${fetchedMatches[_currentMatchIndex].name})",
       );
     } else {
       // List exhausted — fetch fresh batch from API
-      print("🔄 Match list exhausted — fetching new batch from API");
+      log("🔄 Match list exhausted — fetching new batch from API");
       _currentMatchIndex = 0;
       fetchedMatches.clear();
       await startSearching();
@@ -263,7 +263,7 @@ class MatchController extends GetxController {
   Future<void> onTapUpgradeNow() async {
     if (Get.isDialogOpen ?? false) Get.back();
     final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
-    print("result: $result");
+    log("result: $result");
   }
 }
 /* socket 
@@ -276,7 +276,7 @@ class MatchController extends GetxController {
     super.onInit();
 
     socket.on("new_match", (data) {
-      print("🔥 New Match: $data");
+      log("🔥 New Match: $data");
 
       Get.snackbar("Match Found 🎉", "You got a new match!");
     });

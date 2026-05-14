@@ -91,7 +91,7 @@ class NetworkImageWidget extends StatelessWidget {
       );
     }
 
-    print("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
+    log("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
     return CusGestureDetector(
       onTap: (!(enablePreview == true) || imageUrl == null || imageUrl!.isEmpty)

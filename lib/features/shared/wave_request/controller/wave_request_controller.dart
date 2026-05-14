@@ -88,7 +88,7 @@ import '../service/wave_user_profile_info_service.dart';
 //     if (isLoading_.value) return; // Prevent duplicate calls
 //     isLoading_.value = true;
 
-//     print(' getNewWavesList.. ');
+//     log(' getNewWavesList.. ');
 
 //     try {
 //       final currentUserId = currentProfileId();
@@ -101,7 +101,7 @@ import '../service/wave_user_profile_info_service.dart';
 
 //       // }
 //     } catch (e) {
-//       print("Error fetching profile: $e");
+//       log("Error fetching profile: $e");
 //     } finally {
 //       isLoading_.value = false;
 
@@ -143,10 +143,10 @@ import '../service/wave_user_profile_info_service.dart';
 
 //       if (data != null) {
 //         waveUserProfileData.value = data;
-//         print("data fetching profile: ${(data)}");
+//         log("data fetching profile: ${(data)}");
 //       }
 //     } catch (e) {
-//       print("Error fetching profile: $e");
+//       log("Error fetching profile: $e");
 //     } finally {
 //       isgetUserProfileLoading_.value = false;
 //     }
@@ -273,7 +273,7 @@ class WaveRequestController extends GetxController {
     try {
       getConversationRequestList(currentProfileId());
     } catch (e) {
-      print("Error fetching wave list: $e");
+      log("Error fetching wave list: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -302,10 +302,10 @@ class WaveRequestController extends GetxController {
 
       if (data != null) {
         waveUserProfileData.value = data;
-        print("data fetching profile: ${(data)}");
+        log("data fetching profile: ${(data)}");
       }
     } catch (e) {
-      print("Error fetching profile: $e");
+      log("Error fetching profile: $e");
     } finally {
       isgetUserProfileLoading_.value = false;
     }

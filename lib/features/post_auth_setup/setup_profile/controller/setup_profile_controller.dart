@@ -53,9 +53,9 @@ class SetupProfileController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
-    print("DOB: ${selectedDob.value}");
-    print("State: ${selectedState.value}");
-    print("City: ${selectedCity.value}");
+    log("DOB: ${selectedDob.value}");
+    log("State: ${selectedState.value}");
+    log("City: ${selectedCity.value}");
 
     Get.toNamed(RoutePaths.photoAndBio);
 

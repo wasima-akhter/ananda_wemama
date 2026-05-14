@@ -1,3 +1,5 @@
+
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/core/helpers/permission_helper.dart';
@@ -13,16 +15,16 @@ mixin AgoraEngineMixin on GetxController {
 
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
-    print('🔵 [1] hostMeeting() started');
+    log('🔵 [1] hostMeeting() started');
 
     /// Step 1: Fetch token & session data
     await _self.getSessionsInfo();
 
-    print('🔵 [2] sessionInfo after fetch:');
-    print('   channelName: ${_self.sessionInfo.value.channelName}');
-    print('   rtmToken: ${_self.sessionInfo.value.rtmToken}');
-    print('   rtc_Token: ${_self.sessionInfo.value.rtcToken}');
-    print('   uid: ${_self.sessionInfo.value.uid}');
+    log('🔵 [2] sessionInfo after fetch:');
+    log('   channelName: ${_self.sessionInfo.value.channelName}');
+    log('   rtmToken: ${_self.sessionInfo.value.rtmToken}');
+    log('   rtc_Token: ${_self.sessionInfo.value.rtcToken}');
+    log('   uid: ${_self.sessionInfo.value.uid}');
 
     final fetchedRtmToken = _self.sessionInfo.value.rtmToken;
     final fetchedRtcToken = _self.sessionInfo.value.rtcToken;
@@ -31,16 +33,16 @@ mixin AgoraEngineMixin on GetxController {
 
     /// 🔴 Safety checks (must have valid data)
     if (fetchedRtmToken == null || fetchedRtmToken.isEmpty) {
-      print('❌ Token is null or empty!');
+      log('❌ Token is null or empty!');
       return;
     }
 
     if (fetchedChannel == null || fetchedChannel.isEmpty) {
-      print('❌ ChannelName is null or empty!');
+      log('❌ ChannelName is null or empty!');
       return;
     }
     if (fetchedRtcToken == null || fetchedRtcToken.isEmpty) {
-      print('❌ fetchedRtcToken is null or empty!');
+      log('❌ fetchedRtcToken is null or empty!');
       return;
     }
 
@@ -51,11 +53,11 @@ mixin AgoraEngineMixin on GetxController {
     _self.uid.value = fetchedUid ?? 0;
     _self.appId.value = AgoraConfig.appId;
 
-    print('🔵 [3] appId: ${_self.appId.value}');
-    print('🔵 [3] rtm token: ${_self.rtmToken.value}');
-    print('🔵 [3] rtcToken: ${_self.rtcToken.value}');
-    print('🔵 [3] channel: ${_self.channelName.value}');
-    print('🔵 [3] uid: ${_self.uid.value}');
+    log('🔵 [3] appId: ${_self.appId.value}');
+    log('🔵 [3] rtm token: ${_self.rtmToken.value}');
+    log('🔵 [3] rtcToken: ${_self.rtcToken.value}');
+    log('🔵 [3] channel: ${_self.channelName.value}');
+    log('🔵 [3] uid: ${_self.uid.value}');
 
     /// Step 3: Initialize Agora
     await initAgora();
@@ -65,32 +67,32 @@ mixin AgoraEngineMixin on GetxController {
 
   final hostUid = RxnInt(); // ✅ nullable int
   Future<void> initAgora() async {
-    print('🔵 [4] initAgora() started');
+    log('🔵 [4] initAgora() started');
 
     final granted = await requestPermissions();
 
     if (granted) {
       // your codes here
 
-      print('🔵 [5] Permissions granted');
+      log('🔵 [5] Permissions granted');
 
       final engine = createAgoraRtcEngine();
 
       // ✅ Release any stale native engine
       try {
         await engine.release(sync: true);
-        print('✅ Pre-release done');
+        log('✅ Pre-release done');
       } catch (e) {
-        print('⚠️ Pre-release skipped: $e');
+        log('⚠️ Pre-release skipped: $e');
       }
 
       await Future.delayed(const Duration(milliseconds: 300));
 
       try {
         await engine.initialize(RtcEngineContext(appId: _self.appId.value));
-        print('🔵 [6] Engine initialized');
+        log('🔵 [6] Engine initialized');
       } catch (e) {
-        print('❌ Engine init FAILED: $e');
+        log('❌ Engine init FAILED: $e');
         return;
       }
 
@@ -98,9 +100,9 @@ mixin AgoraEngineMixin on GetxController {
         await engine.setChannelProfile(
           ChannelProfileType.channelProfileLiveBroadcasting,
         );
-        print('✅ setChannelProfile done');
+        log('✅ setChannelProfile done');
       } catch (e) {
-        print('❌ setChannelProfile FAILED: $e');
+        log('❌ setChannelProfile FAILED: $e');
         return;
       }
 
@@ -112,9 +114,9 @@ mixin AgoraEngineMixin on GetxController {
                 AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
           ),
         );
-        print('✅ setClientRole AUDIENCE done');
+        log('✅ setClientRole AUDIENCE done');
       } catch (e) {
-        print('❌ setClientRole FAILED: $e');
+        log('❌ setClientRole FAILED: $e');
         return;
       }
 
@@ -126,9 +128,9 @@ mixin AgoraEngineMixin on GetxController {
           profile: AudioProfileType.audioProfileDefault,
           scenario: AudioScenarioType.audioScenarioGameStreaming,
         );
-        print('✅ Audio/Video enabled');
+        log('✅ Audio/Video enabled');
       } catch (e) {
-        print('❌ Audio/Video setup FAILED: $e');
+        log('❌ Audio/Video setup FAILED: $e');
         return;
       }
 
@@ -140,7 +142,7 @@ mixin AgoraEngineMixin on GetxController {
         RtcEngineEventHandler(
           // Agora engine error (add inside onError handler)
           onError: (err, msg) {
-            print('❌ Agora Error: $err - $msg');
+            log('❌ Agora Error: $err - $msg');
             // Only show popup for fatal errors, not minor ones
             final fatalCodes = [
               17,
@@ -157,7 +159,7 @@ mixin AgoraEngineMixin on GetxController {
           },
           onJoinChannelSuccess: (connection, elapsed) async {
             try {
-              print(
+              log(
                 '✅ Joined: ${connection.channelId}, uid: ${connection.localUid}',
               );
               _self.isJoined.value = true;
@@ -168,22 +170,22 @@ mixin AgoraEngineMixin on GetxController {
               await _self.agoraEngine?.muteAllRemoteAudioStreams(false);
 
               await WakelockPlus.enable(); // 🔥 keep screen ON
-              print('🌙 Wakelock enabled');
-              print('✅ Speaker on, volume boosted');
+              log('🌙 Wakelock enabled');
+              log('✅ Speaker on, volume boosted');
             } catch (e) {
-              print('❌ onJoinChannelSuccess handler error: $e');
+              log('❌ onJoinChannelSuccess handler error: $e');
             }
           },
 
           onUserJoined: (connection, uid, elapsed) async {
             try {
-              print('🎥 Host joined: uid=$uid');
+              log('🎥 Host joined: uid=$uid');
 
               // ✅ If this is the host
               if (hostUid.value == null) {
                 // fallback (if backend didn't provide)
                 hostUid.value = uid;
-                print('🎯 Assigned HOST uid=$uid');
+                log('🎯 Assigned HOST uid=$uid');
               }
 
               // ✅ Always keep list (optional)
@@ -203,13 +205,13 @@ mixin AgoraEngineMixin on GetxController {
                 _self.startSessionTimer(); // ✅ only for host
               }
             } catch (e) {
-              print('❌ onUserJoined handler error: $e');
+              log('❌ onUserJoined handler error: $e');
             }
           },
           // Host left → ended
           onUserOffline: (connection, uid, reason) async {
             try {
-              print('⚠️ Host left: uid=$uid, reason=$reason');
+              log('⚠️ Host left: uid=$uid, reason=$reason');
               _self.remoteUids.remove(uid);
               if (uid == hostUid.value) {
                 _self.isSessionExiting = true;
@@ -224,7 +226,7 @@ mixin AgoraEngineMixin on GetxController {
                 showLiveExitPopup(LiveExitReason.ended);
               }
             } catch (e) {
-              print('❌ onUserOffline handler error: $e');
+              log('❌ onUserOffline handler error: $e');
             }
           },
 
@@ -234,17 +236,17 @@ mixin AgoraEngineMixin on GetxController {
             }
           },
           onTokenPrivilegeWillExpire: (connection, token) {
-            print('⚠️ Token expiring soon — refresh needed');
+            log('⚠️ Token expiring soon — refresh needed');
             // TODO: call backend to refresh token, then renewToken()
           },
 
           onConnectionStateChanged: (connection, state, reason) {
-            print('🔵 Connection: $state, reason: $reason');
+            log('🔵 Connection: $state, reason: $reason');
 
             // ✅ Handle unexpected disconnects
             // 🚨 KEY FIX
             if (_self.isSessionExiting) {
-              print('🟡 Ignoring connection change (intentional exit)');
+              log('🟡 Ignoring connection change (intentional exit)');
               return;
             }
 
@@ -258,7 +260,7 @@ mixin AgoraEngineMixin on GetxController {
               (connection, remoteUid, state, reason, elapsed) {
                 if (remoteUid != hostUid.value) return;
                 try {
-                  print('🎥 Video state: uid=$remoteUid, state=$state');
+                  log('🎥 Video state: uid=$remoteUid, state=$state');
                   if (state == RemoteVideoState.remoteVideoStateStopped) {
                     _self.isHostVideoOn.value = false;
                   } else if (state ==
@@ -266,14 +268,14 @@ mixin AgoraEngineMixin on GetxController {
                     _self.isHostVideoOn.value = true;
                   }
                 } catch (e) {
-                  print('❌ onRemoteVideoStateChanged error: $e');
+                  log('❌ onRemoteVideoStateChanged error: $e');
                 }
               },
 
           onRemoteAudioStateChanged:
               (connection, remoteUid, state, reason, elapsed) {
                 try {
-                  print('🔊 Audio state: uid=$remoteUid, state=$state');
+                  log('🔊 Audio state: uid=$remoteUid, state=$state');
 
                   if (state == RemoteAudioState.remoteAudioStateStopped) {
                     _self.isHostAudioOn.value = false;
@@ -284,31 +286,31 @@ mixin AgoraEngineMixin on GetxController {
                     // ✅ Re-apply speaker AFTER audio track is active
                     // This defeats Android's audio re-routing after track starts
                     _self.agoraEngine?.setEnableSpeakerphone(true).then((_) {
-                      print('🔊 Speaker re-applied after decode started');
+                      log('🔊 Speaker re-applied after decode started');
                     });
                   }
                 } catch (e) {
-                  print('❌ onRemoteAudioStateChanged error: $e');
+                  log('❌ onRemoteAudioStateChanged error: $e');
                 }
               },
           onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {
-            print('🔄 Role: $oldRole → $newRole');
+            log('🔄 Role: $oldRole → $newRole');
           },
 
           onRemoteAudioStats: (connection, stats) {
-            print(
+            log(
               '📊 [AUDIO STATS] uid=${stats.uid} | bitrate=${stats.receivedBitrate} | quality=${stats.quality}',
             );
           },
 
           onAudioSubscribeStateChanged:
               (channel, uid, oldState, newState, elapsed) {
-                print('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
+                log('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
               },
         ),
       );
 
-      print('🔵 Joining channel...');
+      log('🔵 Joining channel...');
 
       await engine.joinChannel(
         token: _self.rtcToken.value,
@@ -327,7 +329,7 @@ mixin AgoraEngineMixin on GetxController {
 
       // ✅ No audio calls here — moved to onJoinChannelSuccess
       _self.isEngineReady.value = true;
-      print('🔵 Engine ready');
+      log('🔵 Engine ready');
     } else {
       // optional extra handling
     }

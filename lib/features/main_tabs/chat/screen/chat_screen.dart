@@ -166,7 +166,7 @@ class ChatScreen extends StatelessWidget {
 
             final e = list[index - 1];
 
-            print(' is blocked in chatscreen: ${e.isBlocked}');
+            log(' is blocked in chatscreen: ${e.isBlocked}');
             return ChatListItem(
               chatModel: FakeChatModel(
                 name: e.otherUser?.name ?? '',

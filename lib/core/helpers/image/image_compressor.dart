@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'dart:developer' show log;
+
 import '../../utils/extension/string_extension.dart';
 
 class ImageCompressor {
@@ -29,7 +31,7 @@ class ImageCompressor {
 
       return File(compressedFile.path);
     } catch (e) {
-      print("Compression Error: $e");
+      log("Compression Error: $e");
       return null;
     }
   }

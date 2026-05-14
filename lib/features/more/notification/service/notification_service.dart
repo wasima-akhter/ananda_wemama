@@ -19,7 +19,7 @@ class NotificationService extends GetxService {
     final response = await _apiHelper.request<List<NotificationItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
 
         if (data == null) return [];
 
@@ -27,7 +27,7 @@ class NotificationService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 

@@ -26,7 +26,7 @@ class VerifyOtpService extends GetxService {
     // You can access user like:
     if (response.success) {
       _saveUserDataAfterVerify(response: response);
-      print("response.data?.user.email : ${response.data?.user?.email}");
+      log("response.data?.user.email : ${response.data?.user?.email}");
     }
 
     return response.success;
@@ -40,7 +40,7 @@ class VerifyOtpService extends GetxService {
       // token
       storage.setToken(response.data?.accessToken ?? '');
 
-      print("after verify access token: ${response.data?.accessToken}");
+      log("after verify access token: ${response.data?.accessToken}");
 
       // ✅ Now call ProfileController to refresh the profile
       if (Get.isRegistered<ProfileController>()) {
@@ -70,7 +70,7 @@ class VerifyOtpService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("Resend otp is success!");
+      log("Resend otp is success!");
     }
 
     return response.success;

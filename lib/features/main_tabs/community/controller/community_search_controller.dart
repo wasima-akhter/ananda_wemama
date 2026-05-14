@@ -76,10 +76,10 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
     try {
       final data = await service.fetchSuggestedCommunityList();
 
-      print('get suggested CommunityList   : $data');
+      log('get suggested CommunityList   : $data');
       suggestedCommunityList.value = data;
     } catch (e) {
-      print("Error suggested community: $e");
+      log("Error suggested community: $e");
     } finally {
       isSuggestedCommunityLoading_.value = false;
 
@@ -105,10 +105,10 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
         searchTxt: searchController.text.trim(),
       );
 
-      print('get searched CommunityList   : $data');
+      log('get searched CommunityList   : $data');
       searchedCommunityList.value = data;
     } catch (e) {
-      print("Error searched community: $e");
+      log("Error searched community: $e");
     } finally {
       isSearchedCommunityLoading_.value = false;
 

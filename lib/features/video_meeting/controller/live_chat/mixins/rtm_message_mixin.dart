@@ -16,7 +16,7 @@ mixin RtmMessageMixin on GetxController {
 
   Future<void> onMessage(MessageEvent event) async {
     try {
-      print('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
+      log('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
 
       String rawText = (event.message ?? '').toString();
       String displayText = rawText;
@@ -30,7 +30,7 @@ mixin RtmMessageMixin on GetxController {
           final decoded = utf8.decode(bytes);
           final Map<String, dynamic> payload = jsonDecode(decoded);
 
-          print('payload: ${payload.toString()}');
+          log('payload: ${payload.toString()}');
 
           final type = payload['type'];
           switch (type) {
@@ -55,8 +55,8 @@ mixin RtmMessageMixin on GetxController {
             case 'HAND_LOWER':
               final target = payload['target']?.toString() ?? '';
               _self.raisedHands.removeWhere((h) {
-                print('raisedHands target id: ${target} ');
-                print('raisedHands target id: ${h.uid} ');
+                log('raisedHands target id: ${target} ');
+                log('raisedHands target id: ${h.uid} ');
                 return h.uid == target;
               });
               return;
@@ -122,8 +122,8 @@ mixin RtmMessageMixin on GetxController {
               case 'HAND_LOWER':
                 final target = payload['target']?.toString() ?? '';
                 _self.raisedHands.removeWhere((h) {
-                  print('raisedHands target id: $target');
-                  print('raisedHands uid: ${h.uid}');
+                  log('raisedHands target id: $target');
+                  log('raisedHands uid: ${h.uid}');
                   return h.uid == target;
                 });
                 // Only show toast if the host lowered THIS user's hand
@@ -171,7 +171,7 @@ mixin RtmMessageMixin on GetxController {
           }
         }
       } catch (e) {
-        print('⚠️ [RTM] Could not decode message — using raw: $e');
+        log('⚠️ [RTM] Could not decode message — using raw: $e');
         displayText = rawText;
       }
 
@@ -196,10 +196,10 @@ mixin RtmMessageMixin on GetxController {
         ),
       );
 
-      print('✅ [RTM] Total messages: ${messages.length}');
+      log('✅ [RTM] Total messages: ${messages.length}');
       _self.scrollToBottom();
     } catch (e) {
-      print('❌ [RTM] _onMessage error: $e');
+      log('❌ [RTM] _onMessage error: $e');
     }
   }
 
@@ -207,18 +207,18 @@ mixin RtmMessageMixin on GetxController {
     final trimmed = text.trim();
 
     if (trimmed.isEmpty) {
-      print('⚠️ [RTM] Empty message — skipping');
+      log('⚠️ [RTM] Empty message — skipping');
       return;
     }
 
     if (!_self.isRtmReady.value || _self.rtmClient == null) {
-      print('❌ [RTM] Not ready — cannot send');
+      log('❌ [RTM] Not ready — cannot send');
       "Chat not connected yet".showToast();
       return;
     }
 
     try {
-      print('📤 [RTM] Publishing: "$trimmed"');
+      log('📤 [RTM] Publishing: "$trimmed"');
 
       final payload = jsonEncode({
         "type": "CHAT",
@@ -235,14 +235,14 @@ mixin RtmMessageMixin on GetxController {
       );
 
       if (status.error) {
-        print(
+        log(
           '❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}',
         );
         "Failed to send".showToast();
         return;
       }
 
-      print('✅ [RTM] Published: ${result.toString()}');
+      log('✅ [RTM] Published: ${result.toString()}');
 
       // v2 does NOT echo back to sender — add locally
       messages.add(
@@ -260,7 +260,7 @@ mixin RtmMessageMixin on GetxController {
       FocusManager.instance.primaryFocus?.unfocus(); // ← dismiss keyboard
       _self.scrollToBottom();
     } catch (e) {
-      print('❌ [RTM] sendMessage error: $e');
+      log('❌ [RTM] sendMessage error: $e');
       "Failed to send".showToast();
     }
   }

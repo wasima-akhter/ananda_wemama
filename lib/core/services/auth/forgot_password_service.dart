@@ -24,7 +24,7 @@ class ForgotPasswordService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("Send otp is success!");
+      log("Send otp is success!");
     }
 
     return response.success;
@@ -58,7 +58,7 @@ class ForgotPasswordService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("response.data?.user?.role : ${response.data?.user?.role}");
+      log("response.data?.user?.role : ${response.data?.user?.role}");
     }
 
     return response.success;

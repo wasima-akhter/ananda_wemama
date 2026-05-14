@@ -29,16 +29,16 @@ mixin SessionInfoMixin on GetxController {
         sessionInfo.value = data;
 
         /// Debug logs (VERY useful for Agora debugging)
-        print('📦 Parsed model rtmToken: ${data.rtmToken}');
-        print('📦 Parsed model rtcToken: ${data.rtcToken}');
-        print('📦 Parsed model channel: ${data.channelName}');
-        print('📦 Parsed model uid: ${data.uid}');
+        log('📦 Parsed model rtmToken: ${data.rtmToken}');
+        log('📦 Parsed model rtcToken: ${data.rtcToken}');
+        log('📦 Parsed model channel: ${data.channelName}');
+        log('📦 Parsed model uid: ${data.uid}');
       }
 
       /// Small delay for smoother UX
       await Future.delayed(const Duration(milliseconds: 600));
     } catch (e) {
-      print('getSessionsInfo error: $e');
+      log('getSessionsInfo error: $e');
     } finally {
       isSessionInfoLoading.value = false;
     }

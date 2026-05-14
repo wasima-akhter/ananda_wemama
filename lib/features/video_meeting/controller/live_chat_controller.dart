@@ -1,3 +1,5 @@
+/*
+
 import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
@@ -8,9 +10,6 @@ import '../../../core/components/ui/dialogs/popups.dart';
 import '../../../core/utils/extension/string_extension.dart';
 import '../model/chat_message_live_model.dart';
 import 'meeting_controller.dart';
-
-
-/*
 class LiveChatController extends GetxController {
   RtmClient? rtmClient;
   // ✅ No RtmChannel, no AgoraRtmClient — just RtmClient
@@ -28,7 +27,7 @@ class LiveChatController extends GetxController {
     // Wait until MeetingController finishes fetching tokens + joining RTC
     ever(mc.isEngineReady, (ready) {
       if (ready && !isRtmReady.value) {
-        print('🔵 [CHAT] Engine ready → starting RTM');
+        log('🔵 [CHAT] Engine ready → starting RTM');
         initRtm();
       }
     });
@@ -39,7 +38,7 @@ class LiveChatController extends GetxController {
 
   _onMessage(MessageEvent event) async {
     try {
-      print('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
+      log('💬 [RTM] Raw message from ${event.publisher}: "${event.message}"');
 
       String rawText = (event.message ?? '').toString();
       String displayText = rawText;
@@ -53,7 +52,7 @@ class LiveChatController extends GetxController {
           final decoded = utf8.decode(bytes);
           final Map<String, dynamic> payload = jsonDecode(decoded);
 
-          print('payload: ${payload.toString()}');
+          log('payload: ${payload.toString()}');
 
           final type = payload['type'];
           switch (type) {
@@ -78,8 +77,8 @@ class LiveChatController extends GetxController {
             case 'HAND_LOWER':
               final target = payload['target']?.toString() ?? '';
               raisedHands.removeWhere((h) {
-                print('raisedHands target id: ${target} ');
-                print('raisedHands target id: ${h.uid} ');
+                log('raisedHands target id: ${target} ');
+                log('raisedHands target id: ${h.uid} ');
                 return h.uid == target;
               });
 
@@ -148,8 +147,8 @@ class LiveChatController extends GetxController {
               case 'HAND_LOWER':
                 final target = payload['target']?.toString() ?? '';
                 raisedHands.removeWhere((h) {
-                  print('raisedHands target id: $target');
-                  print('raisedHands uid: ${h.uid}');
+                  log('raisedHands target id: $target');
+                  log('raisedHands uid: ${h.uid}');
                   return h.uid == target;
                 });
                 // Only show toast if the host lowered THIS user's hand
@@ -197,7 +196,7 @@ class LiveChatController extends GetxController {
           }
         }
       } catch (e) {
-        print('⚠️ [RTM] Could not decode message — using raw: $e');
+        log('⚠️ [RTM] Could not decode message — using raw: $e');
         displayText = rawText;
       }
 
@@ -222,10 +221,10 @@ class LiveChatController extends GetxController {
         ),
       );
 
-      print('✅ [RTM] Total messages: ${messages.length}');
+      log('✅ [RTM] Total messages: ${messages.length}');
       _scrollToBottom();
     } catch (e) {
-      print('❌ [RTM] _onMessage error: $e');
+      log('❌ [RTM] _onMessage error: $e');
     }
   }
 
@@ -248,7 +247,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] muteParticipant failed: ${status.errorCode}');
+      log('❌ [RTM] muteParticipant failed: ${status.errorCode}');
       "Failed to mute participant".showToast();
       return;
     }
@@ -259,7 +258,7 @@ class LiveChatController extends GetxController {
       participants[index] = participants[index].copyWith(isMuted: true);
     }
 
-    print('✅ [RTM] Mute command sent to $targetUid');
+    log('✅ [RTM] Mute command sent to $targetUid');
     "Mute command sent".showToast();
   }
 
@@ -280,7 +279,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] kickParticipant failed: ${status.errorCode}');
+      log('❌ [RTM] kickParticipant failed: ${status.errorCode}');
       "Failed to remove participant".showToast();
       return;
     }
@@ -290,7 +289,7 @@ class LiveChatController extends GetxController {
     raisedHands.removeWhere((h) => h.uid == targetUid);
     viewCount.value = participants.length;
 
-    print('✅ [RTM] Kick command sent to $targetUid');
+    log('✅ [RTM] Kick command sent to $targetUid');
     "Participant removed".showToast();
   }
 
@@ -311,17 +310,17 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
+      log('❌ [RTM] lowerParticipantHand failed: ${status.errorCode}');
       return;
     }
 
     raisedHands.removeWhere((h) => h.uid == targetUid);
-    print('✅ [RTM] Hand lowered for $targetUid');
+    log('✅ [RTM] Hand lowered for $targetUid');
   }
   //
 
   void _onLinkState(LinkStateEvent event) {
-    print('🔵 [RTM] LinkState: ${event.currentState}, reason: ${event.reason}');
+    log('🔵 [RTM] LinkState: ${event.currentState}, reason: ${event.reason}');
 
     if (event.currentState == RtmLinkState.connected) {
       isRtmReady.value = true;
@@ -335,7 +334,7 @@ class LiveChatController extends GetxController {
   RxList<ParticipantModel> participants = <ParticipantModel>[].obs;
 
   void _onPresence(PresenceEvent event) {
-    print('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
+    log('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
 
     switch (event.type) {
       case RtmPresenceEventType.snapshot:
@@ -378,7 +377,7 @@ class LiveChatController extends GetxController {
         participants.removeWhere((element) => element.uid == mc.uid.value.toString());
 
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
-        print('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
+        log('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
         return;
 
       case RtmPresenceEventType.remoteLeaveChannel:
@@ -387,7 +386,7 @@ class LiveChatController extends GetxController {
         participants.removeWhere((j) => j.uid == event.publisher);
         participants.removeWhere((element) => element.uid == mc.uid.value.toString());
         viewCount.value = participants.where((p) => p.uid != mc.uid.value.toString()).length;
-        print('✅ [RTM] Joiner removed: ${event.publisher}');
+        log('✅ [RTM] Joiner removed: ${event.publisher}');
         return;
 
       case RtmPresenceEventType.remoteStateChanged:
@@ -403,41 +402,41 @@ class LiveChatController extends GetxController {
             isMuted: stateMap['isMuted'] == 'true',
           );
 
-          print('✅ [RTM] State changed for $uid: $stateMap');
+          log('✅ [RTM] State changed for $uid: $stateMap');
         }
 
         return;
 
       default:
         // Optional: handle unknown events
-        print('⚠️ [RTM] Unhandled presence event: ${event.type}');
+        log('⚠️ [RTM] Unhandled presence event: ${event.type}');
         return;
     }
   }
 
   void _onToken(TokenEvent event) {
-    print('⚠️ [RTM] Token event: ${event.channelName}');
+    log('⚠️ [RTM] Token event: ${event.channelName}');
     // TODO: refresh rtmToken from backend here
   }
 
   Future<void> initRtm() async {
     if (isRtmLoading.value) {
-      print('⚠️ [RTM] Already loading — skipping');
+      log('⚠️ [RTM] Already loading — skipping');
       return;
     }
 
     if (mc.appId.value.isEmpty) {
-      print('❌ [RTM] appId is empty');
+      log('❌ [RTM] appId is empty');
       return;
     }
 
     if (mc.rtmToken.value.isEmpty) {
-      print('❌ [RTM] rtmToken is empty');
+      log('❌ [RTM] rtmToken is empty');
       return;
     }
 
     if (mc.channelName.value.isEmpty) {
-      print('❌ [RTM] channelName is empty');
+      log('❌ [RTM] channelName is empty');
       return;
     }
 
@@ -446,9 +445,9 @@ class LiveChatController extends GetxController {
     try {
       // Step 1: Create client — real factory is RTM()
       // uid must be a STRING, not int
-      print('🔵 [RTM-1] Calling RTM() factory...');
-      print('   appId: ${mc.appId.value}');
-      print('   userId: ${mc.uid.value.toString()}');
+      log('🔵 [RTM-1] Calling RTM() factory...');
+      log('   appId: ${mc.appId.value}');
+      log('   userId: ${mc.uid.value.toString()}');
 
       final (createStatus, client) = await RTM(
         mc.appId.value,
@@ -456,14 +455,14 @@ class LiveChatController extends GetxController {
       );
 
       if (createStatus.error) {
-        print(
+        log(
           '❌ [RTM-1] RTM() failed — code: ${createStatus.errorCode}, reason: ${createStatus.reason}',
         );
         return;
       }
 
       rtmClient = client;
-      print('✅ [RTM-1] RtmClient created');
+      log('✅ [RTM-1] RtmClient created');
 
       // Step 2: Attach listeners BEFORE login
       rtmClient!.addListener(
@@ -472,23 +471,23 @@ class LiveChatController extends GetxController {
         presence: _onPresence,
         token: _onToken,
       );
-      print('✅ [RTM-2] Listeners attached');
+      log('✅ [RTM-2] Listeners attached');
 
       // Step 3: Login with token
-      print('🔵 [RTM-3] Logging in...');
+      log('🔵 [RTM-3] Logging in...');
       final (loginStatus, loginResult) = await rtmClient!.login(mc.rtmToken.value);
 
       if (loginStatus.error) {
-        print(
+        log(
           '❌ [RTM-3] Login failed — code: ${loginStatus.errorCode}, reason: ${loginStatus.reason}',
         );
         return;
       }
 
-      print('✅ [RTM-3] Login success: $loginResult');
+      log('✅ [RTM-3] Login success: $loginResult');
 
       // Step 4: Subscribe
-      print('🔵 [RTM-4] Subscribing to: ${mc.channelName.value}');
+      log('🔵 [RTM-4] Subscribing to: ${mc.channelName.value}');
       final (subStatus, subResult) = await rtmClient!.subscribe(
         mc.channelName.value,
         withMessage: true,
@@ -496,7 +495,7 @@ class LiveChatController extends GetxController {
       );
 
       if (subStatus.error) {
-        print(
+        log(
           '❌ [RTM-4] Subscribe failed — code: ${subStatus.errorCode}, reason: ${subStatus.reason}',
         );
         return;
@@ -509,13 +508,13 @@ class LiveChatController extends GetxController {
         'isMuted': 'false',
       });
 
-      print('✅ [RTM] Presence state set');
-      print('✅ [RTM-4] Subscribed: $subResult');
+      log('✅ [RTM] Presence state set');
+      log('✅ [RTM-4] Subscribed: $subResult');
       isRtmReady.value = true;
-      print('✅ [RTM] FULLY READY');
+      log('✅ [RTM] FULLY READY');
     } catch (e, stack) {
-      print('❌ [RTM] initRtm FAILED: $e');
-      print('   $stack');
+      log('❌ [RTM] initRtm FAILED: $e');
+      log('   $stack');
       isRtmReady.value = false;
     } finally {
       isRtmLoading.value = false;
@@ -526,18 +525,18 @@ class LiveChatController extends GetxController {
     final trimmed = text.trim();
 
     if (trimmed.isEmpty) {
-      print('⚠️ [RTM] Empty message — skipping');
+      log('⚠️ [RTM] Empty message — skipping');
       return;
     }
 
     if (!isRtmReady.value || rtmClient == null) {
-      print('❌ [RTM] Not ready — cannot send');
+      log('❌ [RTM] Not ready — cannot send');
       "Chat not connected yet".showToast();
       return;
     }
 
     try {
-      print('📤 [RTM] Publishing: "$trimmed"');
+      log('📤 [RTM] Publishing: "$trimmed"');
 
       // final payload = jsonEncode({
       //   "type": "CHAT",
@@ -561,12 +560,12 @@ class LiveChatController extends GetxController {
       );
 
       if (status.error) {
-        print('❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}');
+        log('❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}');
         "Failed to send".showToast();
         return;
       }
 
-      print('✅ [RTM] Published: ${result.toString()}');
+      log('✅ [RTM] Published: ${result.toString()}');
 
       // v2 does NOT echo back to sender — add locally
       messages.add(
@@ -584,7 +583,7 @@ class LiveChatController extends GetxController {
       FocusManager.instance.primaryFocus?.unfocus(); // ← dismiss keyboard
       _scrollToBottom();
     } catch (e) {
-      print('❌ [RTM] sendMessage error: $e');
+      log('❌ [RTM] sendMessage error: $e');
       "Failed to send".showToast();
     }
   }
@@ -596,7 +595,7 @@ class LiveChatController extends GetxController {
 
   Future<void> sendReaction(String emoji) async {
     Get.back();
-    print('sent emoji : $emoji');
+    log('sent emoji : $emoji');
     // ← takes emoji
     if (!isRtmReady.value || rtmClient == null) return;
 
@@ -615,7 +614,7 @@ class LiveChatController extends GetxController {
     );
 
     if (status.error) {
-      print('❌ [RTM] Reaction failed: ${status.errorCode}');
+      log('❌ [RTM] Reaction failed: ${status.errorCode}');
       return;
     }
 
@@ -685,7 +684,7 @@ class LiveChatController extends GetxController {
   }
 
   Future<void> disposeRtm() async {
-    print('🔵 [RTM] Disposing...');
+    log('🔵 [RTM] Disposing...');
 
     // Remove named listeners cleanly
     try {
@@ -695,39 +694,39 @@ class LiveChatController extends GetxController {
         presence: _onPresence,
         token: _onToken,
       );
-      print('✅ [RTM] Listeners removed');
+      log('✅ [RTM] Listeners removed');
     } catch (e) {
-      print('⚠️ [RTM] removeListener error: $e');
+      log('⚠️ [RTM] removeListener error: $e');
     }
 
     try {
       await rtmClient?.unsubscribe(mc.channelName.value);
-      print('✅ [RTM] Unsubscribed');
+      log('✅ [RTM] Unsubscribed');
     } catch (e) {
-      print('⚠️ [RTM] unsubscribe error: $e');
+      log('⚠️ [RTM] unsubscribe error: $e');
     }
 
     try {
       if (rtmClient != null) {
         final (status, _) = await rtmClient!.logout();
-        print(
+        log(
           status.error ? '⚠️ [RTM] logout error: ${status.errorCode}' : '✅ [RTM] Logged out',
         );
       }
     } catch (e) {
-      print('⚠️ [RTM] logout error: $e');
+      log('⚠️ [RTM] logout error: $e');
     }
 
     try {
       await rtmClient?.release();
-      print('✅ [RTM] Released');
+      log('✅ [RTM] Released');
     } catch (e) {
-      print('⚠️ [RTM] release error: $e');
+      log('⚠️ [RTM] release error: $e');
     }
 
     rtmClient = null;
     isRtmReady.value = false;
-    print('✅ [RTM] Disposed cleanly');
+    log('✅ [RTM] Disposed cleanly');
   }
 
   @override
@@ -739,18 +738,16 @@ class LiveChatController extends GetxController {
 }
 */
 
-
-
 import 'package:agora_rtm/agora_rtm.dart';
 
-import '../../../../app/controller_export.dart';
-import 'meeting_controller.dart';
+import '../../../app/controller_export.dart';
 import 'live_chat/mixins/rtm_connection_mixin.dart';
 import 'live_chat/mixins/rtm_host_controls_mixin.dart';
 import 'live_chat/mixins/rtm_message_mixin.dart';
 import 'live_chat/mixins/rtm_presence_mixin.dart';
 import 'live_chat/mixins/rtm_raise_hand_mixin.dart';
 import 'live_chat/mixins/rtm_reaction_mixin.dart';
+import 'meeting_controller.dart';
 
 class LiveChatController extends GetxController
     with
@@ -786,7 +783,7 @@ class LiveChatController extends GetxController
     // Wait until MeetingController finishes fetching tokens + joining RTC
     ever(mc.isEngineReady, (ready) {
       if (ready && !isRtmReady.value) {
-        print('🔵 [CHAT] Engine ready → starting RTM');
+        log('🔵 [CHAT] Engine ready → starting RTM');
         initRtm();
       }
     });
@@ -800,6 +797,115 @@ class LiveChatController extends GetxController
     super.onClose();
   }
 }
+
+// record history
+
+/*
+
+Now that RTM is working, to enable message history you need changes in both the Flutter code and Agora Console.
+
+---
+
+## 1. Agora Console — Enable Message History
+
+In the same Signaling settings where you enabled the data center:
+
+- Find **"Message History"** or **"Storage"** toggle → **Enable it**
+- Set retention period (e.g. 7 days or 30 days)
+
+---
+
+## 2. Flutter Code — Add `storeInHistory: true`
+
+You have it commented out in 3 places. Just uncomment them:
+
+### `rtm_message_mixin.dart` — `sendMessage()`
+```dart
+final (status, result) = await _self.rtmClient!.publish(
+  _self.mc.channelName.value,
+  payload,
+  channelType: RtmChannelType.message,
+  storeInHistory: true, // ← uncomment this
+);
+```
+
+### `rtm_reaction_mixin.dart` — `sendReaction()`
+```dart
+final (status, _) = await _self.rtmClient!.publish(
+  _self.mc.channelName.value,
+  payload,
+  channelType: RtmChannelType.message,
+  storeInHistory: true, // ← uncomment this
+);
+```
+
+### `rtm_raise_hand_mixin.dart` — `toggleRaiseHand()`
+```dart
+await _self.rtmClient!.publish(
+  _self.mc.channelName.value,
+  payload,
+  channelType: RtmChannelType.message,
+  storeInHistory: true, // ← uncomment this
+);
+```
+
+---
+
+## 3. Enable Storage + Presence History in `initRtm()`
+
+In `rtm_connection_mixin.dart`, update the `subscribe()` call to also enable presence and metadata storage:
+
+```dart
+final (subStatus, subResult) = await _self.rtmClient!.subscribe(
+  _self.mc.channelName.value,
+  withMessage: true,
+  withPresence: true,
+  withMetadata: true,   // ← add: stores channel/user metadata
+  withLock: false,      // ← add: not needed unless you use distributed locks
+);
+```
+
+---
+
+## 4. Load History on Join (optional but recommended)
+
+After subscribe succeeds in `rtm_connection_mixin.dart`, fetch previous messages so users joining mid-session see chat history:
+
+```dart
+// After subscribe succeeds — fetch message history
+try {
+  final (historyStatus, historyResult) = await _self.rtmClient!
+      .getStorage()
+      .getChannelMetadata(
+        channelName: _self.mc.channelName.value,
+        channelType: RtmChannelType.message,
+      );
+
+  // Or use history API if your Agora SDK version supports it:
+  // rtmClient!.getHistory(...)
+  debugPrint('✅ [RTM] History/metadata fetched');
+} catch (e) {
+  debugPrint('⚠️ [RTM] History fetch skipped: $e');
+}
+```
+
+> Note: The actual message history API (`getMessages`) is a REST API call on Agora's side — your **backend** can expose an endpoint that calls `https://api.agora.io/dev/v2/project/{appid}/rtm/channel/{channel}/message/history` and returns it to Flutter on join. That's the cleanest way to load chat history for late joiners.
+
+---
+
+## Summary of what enables what
+
+| Feature | Where to fix |
+|---|---|
+| Chat messages saved | `storeInHistory: true` in `sendMessage()` |
+| Reactions saved | `storeInHistory: true` in `sendReaction()` |
+| Raise hand saved | `storeInHistory: true` in `toggleRaiseHand()` |
+| Participant state persisted | `withMetadata: true` in `subscribe()` |
+| History visible to late joiners | Backend REST call to Agora history API |
+| Retention period | Agora Console → Signaling → Storage settings |
+
+*/
+
 /*
 
 hostMeeting()

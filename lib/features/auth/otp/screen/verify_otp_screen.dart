@@ -103,7 +103,7 @@ class VerifyOtpScreen extends StatelessWidget {
                                   digitTextStyle: TxtStyle.outfit(fs: 14, w: 600, color: c.primary),
                                   separatorTextStyle: TxtStyle.outfit(fs: 14, color: c.primary),
                                   onFinished: () {
-                                    print('Countdown Complete!');
+                                    log('Countdown Complete!');
                                     otpc.showTimer_.value = false; // hide timer
                                     otpc.isOtpResent_.value =
                                         false; // switch text back to "youHaventGotOTP"

@@ -21,7 +21,7 @@ class CommunityDetailsScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async {
-        print("communities refreshed");
+        log("communities refreshed");
         cdc.getCommunityDetail();
       },
 
@@ -35,7 +35,7 @@ class CommunityDetailsScreen extends StatelessWidget {
 
             final state = getUIStateDetail(isLoading: isLoading);
 
-            print('itemDetail  : ${itemDetail.community?.name} ');
+            log('itemDetail  : ${itemDetail.community?.name} ');
             return Stack(
               children: [
                 // ── Base content ──
@@ -115,7 +115,7 @@ class CommunityDetailsScreen extends StatelessWidget {
 
             final state = getUIStateList(isLoading: isLoading, list: itemPosts);
 
-            print('itemDetail  : ${itemDetail.community?.name} ');
+            log('itemDetail  : ${itemDetail.community?.name} ');
 
             return UIStateHandler(
               onRefresh: () async {
@@ -167,8 +167,8 @@ class CommunityDetailTopContent extends StatelessWidget {
     final membersNum = (community?.totalMember ?? 0).toString();
     final communityImg = community?.image ?? '';
 
-    print('membersNum  : $membersNum');
-    print('community?.totalMember  : ${community?.totalMember}');
+    log('membersNum  : $membersNum');
+    log('community?.totalMember  : ${community?.totalMember}');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

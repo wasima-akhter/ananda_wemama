@@ -91,11 +91,11 @@ class ChatController extends GetxController {
       await _chatListCompleter!.future.timeout(
         const Duration(seconds: 10),
         onTimeout: () {
-          print("⚠️ getChatList timeout — no socket response");
+          log("⚠️ getChatList timeout — no socket response");
         },
       );
     } catch (e) {
-      print("Error fetching chat list: $e");
+      log("Error fetching chat list: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -116,7 +116,7 @@ class ChatController extends GetxController {
 
   /// Fetch the latest  data from API
   Future<void> getSearchedChatList() async {
-    print('hit search');
+    log('hit search');
     if (isSearchLoading_.value) return; // Prevent duplicate calls
 
     if (searchController.text.trim().isEmpty) {
@@ -131,11 +131,11 @@ class ChatController extends GetxController {
       final data = await service.fetchSearchedChatList(searchTxt: searchController.text.trim());
 
       if (data.isNotEmpty) {
-        print('get Searched ChatList : $data');
+        log('get Searched ChatList : $data');
         searchedChatList.value = data;
       }
     } catch (e) {
-      print("Error fetching Searched ChatList : $e");
+      log("Error fetching Searched ChatList : $e");
     } finally {
       isSearchLoading_.value = false;
       unFocusAll();

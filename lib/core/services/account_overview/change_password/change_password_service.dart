@@ -32,7 +32,7 @@ class ChangePasswordService extends GetxService {
 
     // You can access user like:
     if (response.success) {
-      print("response.success : ${response.success}");
+      log("response.success : ${response.success}");
     }
 
     return response.success;

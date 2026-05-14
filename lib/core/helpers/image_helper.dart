@@ -185,7 +185,7 @@ class MultipartHelper {
     final compressed = await ImageCompressor.compressUntilUnder3MB(file);
 
     if (compressed == null) {
-      print("Image compression failed");
+      log("Image compression failed");
       return null;
     }
 

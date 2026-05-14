@@ -60,10 +60,10 @@ class UpdateProfileService extends GetxService {
   //     );
   //   }
 
-  //  print(data.fields);
-  //  print(data.files.map((e) => e.key).toList());
+  //  log(data.fields);
+  //  log(data.files.map((e) => e.key).toList());
 
-  //   print("UpdateProfileService - Storage.token: ${storage.getAccessToken}");
+  //   log("UpdateProfileService - Storage.token: ${storage.getAccessToken}");
 
   //   final response = await _apiHelper.request<ProfileDataModel>(
   //     apiCall: apiCall,
@@ -127,21 +127,21 @@ class UpdateProfileService extends GetxService {
       }
     }
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    log('fields: ${data.fields}');
+    log('files count: ${data.files.length}');
+    log('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    print('FIELDS:');
+    log('FIELDS:');
     for (var f in data.fields) {
-      print('${f.key}: ${f.value}');
+      log('${f.key}: ${f.value}');
     }
 
-    print('FILES:');
+    log('FILES:');
     for (var f in data.files) {
-      print('${f.key}: ${f.value.filename}');
+      log('${f.key}: ${f.value.filename}');
     }
 
-    print("Token: ${storage.getAccessToken}");
+    log("Token: ${storage.getAccessToken}");
 
     final response = await _apiHelper.request<ProfileDataModel>(
       apiCall: () => ApiClient().patchWithFile(
@@ -214,21 +214,21 @@ class UpdateProfileService extends GetxService {
       }
     }
 
-    print('fields: ${data.fields}');
-    print('files count: ${data.files.length}');
-    print('file keys: ${data.files.map((e) => e.key).toList()}');
+    log('fields: ${data.fields}');
+    log('files count: ${data.files.length}');
+    log('file keys: ${data.files.map((e) => e.key).toList()}');
 
-    print('FIELDS:');
+    log('FIELDS:');
     for (var f in data.fields) {
-      print('${f.key}: ${f.value}');
+      log('${f.key}: ${f.value}');
     }
 
-    print('FILES:');
+    log('FILES:');
     for (var f in data.files) {
-      print('${f.key}: ${f.value.filename}');
+      log('${f.key}: ${f.value.filename}');
     }
 
-    print("Token: ${storage.getAccessToken}");
+    log("Token: ${storage.getAccessToken}");
 
     final response = await _apiHelper.request<ProfileDataModel>(
       apiCall: () => ApiClient().patchWithFile(

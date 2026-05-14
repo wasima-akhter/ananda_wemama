@@ -255,7 +255,7 @@ String getChildAge(
 FakeUserDetailsModel? mapToUserModel(ProfileDataModel? data) {
   if (data == null) return null;
 
-  print("Mapping data.profileImage: ${data.profileImage} ");
+  log("Mapping data.profileImage: ${data.profileImage} ");
 
   return FakeUserDetailsModel(
     imageUrl: data.profileImage ?? '',

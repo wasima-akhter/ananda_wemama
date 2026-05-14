@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
 /// Normalized result from any socket event payload.
@@ -116,7 +118,7 @@ class SocketResponseHandler {
 
   static void _log(String? eventName, String msg) {
     final tag = eventName != null ? '[$eventName]' : '[Socket]';
-    print('🔌 $tag $msg');
+    log('🔌 $tag $msg');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

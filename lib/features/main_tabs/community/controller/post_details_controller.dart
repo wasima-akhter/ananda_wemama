@@ -21,7 +21,7 @@ class PostDetailsController extends GetxController {
     final args = Get.arguments as PostDetailArgModel;
     postDetailArg.value = args;
 
-    print('postId_: ${postDetailArg.value?.postItem.id}');
+    log('postId_: ${postDetailArg.value?.postItem.id}');
     await getCommentsList();
     super.onInit();
   }
@@ -67,8 +67,8 @@ class PostDetailsController extends GetxController {
     if (selectedImage != null) {
       fileImage.value = selectedImage;
 
-      print("file.name: ${selectedImage.name}");
-      print("file.path: ${selectedImage.path}");
+      log("file.name: ${selectedImage.name}");
+      log("file.path: ${selectedImage.path}");
     }
   }
 
@@ -90,7 +90,7 @@ class PostDetailsController extends GetxController {
         comments.value = data.comments ?? [];
       }
     } catch (e) {
-      print("Error fetching comments: $e");
+      log("Error fetching comments: $e");
     } finally {
       isGetCommentsLoading.value = false;
     }
@@ -188,7 +188,7 @@ class PostDetailsController extends GetxController {
         replyingToUserName.value = '';
       }
     } catch (e) {
-      print("Error adding comment: $e");
+      log("Error adding comment: $e");
     } finally {
       isAddCommentLoading.value = false;
       clearAll();

@@ -15,7 +15,7 @@ class ChatService extends GetxService {
     final response = await _apiHelper.request<List<ChatListItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        print("parserdata: ${data}");
+        log("parserdata: ${data}");
         if (data is List) {
           return data.map((e) => ChatListItemModel.fromJson(e)).toList();
         }
@@ -24,7 +24,7 @@ class ChatService extends GetxService {
       },
     );
 
-    print("response data: ${response?.data}");
+    log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 }

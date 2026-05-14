@@ -106,10 +106,10 @@ class SignupController extends GetxController {
       }
 
       clearAll();
-      print("Signup logic placeholder executed");
+      log("Signup logic placeholder executed");
     } catch (e, s) {
-      print("Signup error: $e");
-      print(s);
+      log("Signup error: $e");
+      log(s.toString());
     } finally {
       isLoading_.value = false;
     }

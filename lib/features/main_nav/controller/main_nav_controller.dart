@@ -48,7 +48,7 @@ class MainNavController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print("🧭 MainNavController onInit");
+    log("🧭 MainNavController onInit");
     _initLocationObserver();
     _initializeAppData();
   }
@@ -63,7 +63,7 @@ class MainNavController extends GetxController {
   // 🔹 Called by HomeScreen.initState → postFrameCallback
   // ─────────────────────────────
   void notifyHomeFirstBuild() {
-    print("🧭 notifyHomeFirstBuild — _homePermissionFlowDone: $_homePermissionFlowDone");
+    log("🧭 notifyHomeFirstBuild — _homePermissionFlowDone: $_homePermissionFlowDone");
     if (_homePermissionFlowDone) return;
     _homePermissionFlowDone = true;
     HomeScreen.triggerPermissionFlow();
@@ -83,7 +83,7 @@ class MainNavController extends GetxController {
   }
 
   void _onOsLocationEnabled() {
-    print("📍 OS: Location turned ON");
+    log("📍 OS: Location turned ON");
 
     // ✅ Only react if permission flow is already done —
     // otherwise the flow itself handles the first overlay
@@ -100,7 +100,7 @@ class MainNavController extends GetxController {
   }
 
   void _onOsLocationDisabled() {
-    print("📍 OS: Location turned OFF");
+    log("📍 OS: Location turned OFF");
 
     // ✅ Same guard — ignore if permission flow hasn't completed yet
     if (!_homePermissionFlowDone) return;
@@ -117,7 +117,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
     } catch (e) {
-      print("Background location update failed: $e");
+      log("Background location update failed: $e");
     }
   }
 
@@ -164,7 +164,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<ProfileController>().fetchMyProfile();
     } catch (e) {
-      print("Error loading profile: $e");
+      log("Error loading profile: $e");
     }
   }
 
@@ -172,7 +172,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
     } catch (e) {
-      print("Error fetching location: $e");
+      log("Error fetching location: $e");
     }
   }
 

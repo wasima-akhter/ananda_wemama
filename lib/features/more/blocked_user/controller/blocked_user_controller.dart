@@ -38,7 +38,7 @@ class BlockedUserController extends GetxController {
       await BlockedUserService().unblockUser(userId: userId);
       blockedUserList.removeWhere((e) => e.id == userId); // ✅ remove from list on success
     } catch (e) {
-      print("Error unblocking user: $e");
+      log("Error unblocking user: $e");
     } finally {
       isUnblockLoading.value = false;
     }
@@ -62,7 +62,7 @@ class BlockedUserController extends GetxController {
         blockedUserList.value = data;
       }
     } catch (e) {
-      print("Error fetchBlockedUsers: $e");
+      log("Error fetchBlockedUsers: $e");
     } finally {
       isLoading_.value = false;
 

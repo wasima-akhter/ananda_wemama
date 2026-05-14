@@ -15,7 +15,7 @@ class WaveRequestScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: chatRefreshKey,
       onRefresh: () async {
-        print("chat refreshed");
+        log("chat refreshed");
         // get the wave request list again
         wrc.getNewWavesList();
       },

@@ -37,7 +37,7 @@ class SignupService extends GetxService {
     // You can access user like:
     if (response.success) {
       // _saveUserDataAfterSignUp(response: response);
-      print("response.data?.user.name : ${response.data?.email}");
+      log("response.data?.user.name : ${response.data?.email}");
     }
 
     return response.success;

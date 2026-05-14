@@ -34,7 +34,7 @@ class DatePickerWithPrivacy extends StatelessWidget {
             Gap(itemGap),
 
             Obx(() {
-              print("tempSelected.value : ${tempSelected.value}");
+              log("tempSelected.value : ${tempSelected.value}");
               return CalendarDatePicker(
                 key: ValueKey(tempSelected.value), // ✅ redraws on change
                 initialDate: tempSelected.value,

@@ -9,7 +9,7 @@ class SigninService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
   Future<bool> signIn({required String email, required String password}) async {
-    print("Login started..");
+    log("Login started..");
 
     final response = await _apiHelper.request<SigninModelData>(
       apiCall: () => ApiClient().post(
@@ -19,7 +19,7 @@ class SigninService extends GetxService {
       parser: (data) => SigninModelData.fromJson(data),
     );
 
-    print("RESPONSE sign in: $response");
+    log("RESPONSE sign in: $response");
     if (response == null) return false;
 
     if (response.success) {
@@ -28,7 +28,7 @@ class SigninService extends GetxService {
       try {
         await Get.find<SocketService>().connectSocket();
       } catch (e) {
-        print("not socket connect");
+        log("not socket connect");
       }
 
       // ✅ Now safe — user is in room
@@ -50,7 +50,7 @@ class SigninService extends GetxService {
     } catch (e) {
       // SocketService not registered yet — should not happen if InitialBinding
       // is set up correctly, but log it rather than crashing.
-      print("⚠️ SocketService not found during login: $e");
+      log("⚠️ SocketService not found during login: $e");
     }
   }
 
@@ -63,8 +63,8 @@ class SigninService extends GetxService {
     storage.setUserInfo(email: user.email);
     storage.setToken(response.data!.accessToken);
 
-    print("Logged in as: ${user.email}");
-    print("Access token: ${response.data!.accessToken}");
+    log("Logged in as: ${user.email}");
+    log("Access token: ${response.data!.accessToken}");
   }
 }
 

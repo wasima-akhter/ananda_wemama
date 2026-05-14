@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:get/get.dart';import 'dart:developer' show log;
 import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_search_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
@@ -471,7 +471,7 @@ class MeetingBinding extends Bindings {
   void dependencies() {
     ///////////
     final args = Get.arguments;
-    print("--> args: $args");
+    log("--> args: $args");
 
     if (args == null || args is! MeetingCtrlAgModel) {
       throw Exception(

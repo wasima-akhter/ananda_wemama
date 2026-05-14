@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
 import '../../../../core/services/socket/socket_service.dart';
@@ -23,7 +24,7 @@ class SplashController extends GetxController {
   //   super.onInit();
   // }
   Future<void> splashScreenFunctions(BuildContext context) async {
-    print("splash controller function called");
+    log("splash controller function called");
 
     final hasNetwork = await NetworkManager().checkConnection();
 
@@ -36,9 +37,9 @@ class SplashController extends GetxController {
     // ✅ Has internet → wait 2 seconds
     await Future.delayed(const Duration(seconds: 1));
 
-    print("seenOnboarding: ${AppStorage.to.getSeenOnboarding}");
-    print("loggedIn: ${AppStorage.to.getLoggedIn}");
-    print("token: ${AppStorage.to.getToken}");
+    log("seenOnboarding: ${AppStorage.to.getSeenOnboarding}");
+    log("loggedIn: ${AppStorage.to.getLoggedIn}");
+    log("token: ${AppStorage.to.getToken}");
 
     // Check if user has seen onboarding
     // if (AppStorage.to.getSeenOnboarding) {

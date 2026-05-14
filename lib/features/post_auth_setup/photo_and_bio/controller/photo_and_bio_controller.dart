@@ -42,8 +42,8 @@ class PhotoAndBioController extends GetxController {
     if (selectedImage != null) {
       fileImage.value = selectedImage;
 
-      print("file.name: ${selectedImage.name}");
-      print("file.path: ${selectedImage.path}");
+      log("file.name: ${selectedImage.name}");
+      log("file.path: ${selectedImage.path}");
     }
   }
   /////
