@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:mama_app/app/helper_widgets_export.dart' hide Response;
 
 import '../../exceptions/exceptions.dart';
-import '../../utils/extension/string_extension.dart';
 
 // Handles server responses
 
@@ -53,6 +53,13 @@ class ApiResponseHandler {
       throw BadRequestException(message);
     } else if (statusCode >= 500) {
       throw FetchDataException("Server error. Please try again later. ");
+    } else if (statusCode == 413) {
+      log("❌ 413: File too large — server rejected the upload");
+      // Show user-facing error
+      Snack.show(
+        title: "Upload Failed",
+        "Image is too large. Please use a smaller image.",
+      );
     } else {
       throw FetchDataException(message);
     }

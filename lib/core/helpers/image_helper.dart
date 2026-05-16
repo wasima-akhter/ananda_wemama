@@ -156,7 +156,7 @@ Future<dynamic> showPickAnyFileBottomSheet({
 //
 // -------------------------------------------
 
-const int maxFileSizeInBytes = 3 * 1024 * 1024; // 3 MB
+const int maxFileSizeInBytes = 1 * 1024 * 1024; // 3 MB
 
 Future<bool> validateFileSize(dynamic data) async {
   if (data is! dio.FormData) return true;
@@ -182,16 +182,36 @@ Future<bool> validateFileSize(dynamic data) async {
 
 class MultipartHelper {
   static Future<MultipartFile?> compressedImage(File file) async {
-    final compressed = await ImageCompressor.compressUntilUnder3MB(file);
+    final compressed = await ImageCompressor.compressUntilUnder1MB(file);
 
     if (compressed == null) {
       log("Image compression failed");
       return null;
     }
 
-    return await MultipartFile.fromFile(
-      compressed.path,
-      filename: compressed.path.split('/').last,
-    );
+    // ✅ Read bytes directly — avoids Android 10 scoped storage path issues
+    final bytes = await compressed.readAsBytes();
+
+    log("Compressed path: ${compressed.path}");
+    log("Compressed exists: ${await compressed.exists()}");
+    log("Compressed size: ${await compressed.length()}");
+    final filename = compressed.path.split('/').last;
+
+    return MultipartFile.fromBytes(bytes, filename: filename);
   }
 }
+// class MultipartHelper {
+//   static Future<MultipartFile?> compressedImage(File file) async {
+//     final compressed = await ImageCompressor.compressUntilUnder3MB(file);
+
+//     if (compressed == null) {
+//       log("Image compression failed");
+//       return null;
+//     }
+
+//     return await MultipartFile.fromFile(
+//       compressed.path,
+//       filename: compressed.path.split('/').last,
+//     );
+//   }
+// }
