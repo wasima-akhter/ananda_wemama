@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
 import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
@@ -16,7 +15,6 @@ import '../../../features/more/notification/controller/notification_controller.d
 import '../../../features/more/notification/model/notifications_model.dart';
 import '../../helpers/methods_helper.dart';
 import '../../helpers/widgets_helper.dart';
-import '../../network/helpers/network_helpers.dart';
 import '../../utils/extension/context_extension.dart';
 import 'socket_events.dart';
 import 'socket_response_handler .dart';
@@ -582,7 +580,12 @@ class SocketService extends GetxService {
       if (!isConnected) {
         log("🔄 Attempting reconnect #$_retryCount...");
         try {
-          await connectSocket();
+          // ✅ Reuse existing socket if still alive
+          if (_socket != null) {
+            _socket!.connect(); // just reconnect, no listener rebuild
+          } else {
+            await connectSocket(); // full rebuild only if socket was destroyed
+          }
         } catch (e) {
           log("❌ Reconnect #$_retryCount failed: $e");
         }
