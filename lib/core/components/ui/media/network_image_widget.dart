@@ -119,62 +119,82 @@ class NetworkImageWidget extends StatelessWidget {
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
 
-          return isCircle
-              ? ShimmerWidget.circular(
-                  width: double.infinity,
-                  height: double.infinity,
-                  shimmerClr: c.inputBorder.withOpacity(0.4),
-                )
-              : ShimmerWidget.rectangular(
-                  width: double.infinity,
-                  height: double.infinity,
-                  shimmerClr: c.inputBorder.withOpacity(0.4),
-                );
+          return _ShimmerWidget(isCircle: isCircle);
         },
         errorBuilder: (context, error, stackTrace) {
-          return _FallbackWidget(
-            isCircle: isCircle,
-            isUser: isUser,
-            radius: radius ?? 12,
-            isSmall: isSmall ?? false,
-          );
+          return _FallbackWidget(widget: this);
         },
       ),
     );
   }
 }
 
-///────────────────────────────────────────
-class _FallbackWidget extends StatelessWidget {
-  final bool isCircle;
-  final bool? isUser;
-  final double radius;
-  final bool isSmall;
+class _ShimmerWidget extends StatelessWidget {
+  const _ShimmerWidget({required this.isCircle});
 
-  const _FallbackWidget({
-    required this.isCircle,
-    required this.radius,
-    this.isUser,
-    required this.isSmall,
-  });
+  final bool isCircle;
 
   @override
   Widget build(BuildContext context) {
-    final placeholderSize = isCircle
-        ? (radius * 0.7).clamp(8.0, 22.0)
-        : (isSmall ? 12.w : 22.w);
+    if (isCircle) {
+      return ShimmerWidget.circular(
+        width: double.infinity,
+        height: double.infinity,
+        shimmerClr: c.inputBorder.withOpacity(0.4),
+      );
+    }
+
+    return ShimmerWidget.rectangular(
+      width: double.infinity,
+      height: double.infinity,
+      shimmerClr: c.inputBorder.withOpacity(0.4),
+    );
+  }
+}
+
+///────────────────────────────────────────
+class _FallbackWidget extends StatelessWidget {
+  const _FallbackWidget({required this.widget});
+
+  final NetworkImageWidget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    final iconSize = widget.isCircle
+        ? ((widget.radius ?? 10.0) * 0.9).clamp(10.0, 24.0)
+        : (widget.isSmall == true ? 18.w : 22.w);
+
+    final bgColor = c.primary;
+
+    final fallbackIconColor = c.primary;
 
     return Center(
-      child: (isUser == false)
-          ? Assets.images.imagePlaceholder.image(
-              width: placeholderSize,
-              height: placeholderSize,
-              color: c.primary,
+      child: widget.isUser == true
+          ? Assets.images.userPlaceholder.image(
+              width: 10,
+              height: 10,
+              color: fallbackIconColor,
+              errorBuilder: (_, _, _) {
+                return SvgIconColored(
+                  iconPath: Assets.icons.userIconOutlined,
+                  width: iconSize,
+                  height: iconSize,
+                  iconColor: fallbackIconColor,
+                  fallbackIcon: Icons.person,
+                );
+              },
             )
-          : Assets.images.userPlaceholder.image(
-              width: placeholderSize,
-              height: placeholderSize,
-              color: c.primary,
+          : Assets.images.imagePlaceholder.image(
+              width: iconSize,
+              height: iconSize,
+              color: fallbackIconColor,
+              errorBuilder: (_, _, _) {
+                return Icon(
+                  Icons.image_not_supported_outlined,
+                  size: iconSize,
+                  color: fallbackIconColor,
+                );
+              },
             ),
     );
   }

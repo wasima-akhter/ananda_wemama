@@ -5,29 +5,61 @@ import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 import '../../../video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 
+class _NoLiveSessionCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      contClr: c.cardOngoing,
+      rad: 20,
+      hp: 16,
+      vp: 20,
+      child: Column(
+        children: [
+          Icon(Icons.videocam_off_rounded, color: c.secondary, size: 40),
+
+          Gap(itemGap),
+
+          Text("No Live Session Right Now", style: TxtStyle.urbanistSmTitle600),
+
+          Gap(6),
+
+          Text(
+            "Check back later or explore upcoming sessions",
+            style: TxtStyle.outfit(fs: 12, color: c.secondary),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class LiveOngoingSessionCard extends StatelessWidget {
   const LiveOngoingSessionCard({
     super.key,
-    required this.data,
+    this.data,
     this.isFromOngoingScreen,
   });
 
-  final Session data;
+  final Session? data;
   final bool? isFromOngoingScreen;
 
   @override
   Widget build(BuildContext context) {
-    final doctorName = (data.expert?.name ?? "Unknown").capEachWord();
-    final specialty = (data.expert?.profession?.title ?? "Specialist")
+    if (data == null) {
+      return _NoLiveSessionCard();
+    }
+    final doctorName = (data?.expert?.name ?? "Unknown").capEachWord();
+    final specialty = (data?.expert?.profession?.title ?? "Specialist")
         .capEachWord();
-    final sessionTitle = (data.title ?? "Session").capEachWord();
-    final description = (data.description ?? "").cap;
-    final time = DateHelper().formatUTCtimestamp(data.time.toString()).time;
+    final sessionTitle = (data?.title ?? "Session").capEachWord();
+    final description = (data?.description ?? "").cap;
+    final time = DateHelper().formatUTCtimestamp(data?.time.toString()).time;
 
-    final date = DateHelper().formatUTCtimestamp(data.date.toString()).date;
+    final date = DateHelper().formatUTCtimestamp(data?.date.toString()).date;
 
-    final imgUrl = data.expert?.image ?? '';
-    final channelName = data.channelName ?? '';
+    final imgUrl = data?.expert?.image ?? '';
+    final channelName = data?.channelName ?? '';
 
     return SizedBox(
       // width: S.w - 40.w,

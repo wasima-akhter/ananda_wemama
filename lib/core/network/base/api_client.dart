@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:mama_app/app/controller_export.dart' hide Response;
 
@@ -131,6 +129,7 @@ class ApiClient {
       return null;
     }
   }
+
   // Future<dynamic> postWithFile(
   //   String url, {
   //   String? reqName,

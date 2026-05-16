@@ -76,13 +76,17 @@ class _TopSection extends StatelessWidget {
         Gap(itemGap * 2),
         Transform.scale(scale: cfg.logoScale, child: weMamaLogoWithTxt),
         Gap(itemGap * 3),
-        SecurityText(iconPath: IconsPath.shieldFill, text: Strings.womenOnlySpace.toUpperCase()),
+        SecurityText(
+          iconPath: IconsPath.shieldFill,
+          text: Strings.womenOnlySpace.toUpperCase(),
+        ),
         Gap(itemGap),
         FittedBox(
           child: Text(
             Strings.motherhoodSupportLine,
             textAlign: TextAlign.center,
-            style: cfg.titleFs.titleMclrCusFS,
+            style: TxtStyle.interSemiB(fs: 18, w: 600, color: c.primary),
+            // style: cfg.titleFs.titleMclrCusFS,
           ).mHV(20, 0),
         ),
         Gap(itemGap),
@@ -128,7 +132,11 @@ class _BottomSection extends StatelessWidget {
           children: [
             Text(
               Strings.alreadyHaveAnAccount,
-              style: TxtStyle.outfit(fs: cfg.isTablet ? 17 : 15, color: black, w: 500),
+              style: TxtStyle.outfit(
+                fs: cfg.isTablet ? 17 : 15,
+                color: black,
+                w: 500,
+              ),
             ),
             Gap(itemGap),
             CusGestureDetector(

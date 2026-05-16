@@ -1,5 +1,4 @@
 import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
-import 'package:mama_app/features/main_tabs/experts/model/expert_session_list_model.dart';
 import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -72,13 +71,15 @@ class _HomeScreenState extends State<HomeScreen> {
             final isLoading = hc.isSpotLightLoading_.value;
             final state = getUIStateDetail(isLoading: isLoading);
 
-            return Container(
+            return SizedBox(
               height: S.h * 0.25,
               child: UIStateHandler(
-                loading: () => const LiveOngoingSessionCardShimmer(), // change to li
+                loading: () =>
+                    const LiveOngoingSessionCardShimmer(), // change to li
                 state: state,
-                data: () =>
-                    Container(child: LiveOngoingSessionCard(data: liveSessionData ?? Session())),
+                data: () => Container(
+                  child: LiveOngoingSessionCard(data: liveSessionData),
+                ),
               ),
             );
           }),
