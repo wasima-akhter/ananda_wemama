@@ -32,9 +32,10 @@ class UserPhotoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = (S.w * 0.2).w;
+    final size = 72.w;
 
-    final hasImage = selImage != null || (imageUrl != null && imageUrl!.isNotEmpty);
+    final hasImage =
+        selImage != null || (imageUrl != null && imageUrl!.isNotEmpty);
 
     return GestureDetector(
       onTap: hasImage ? () => _openViewer(context) : null,
@@ -51,14 +52,21 @@ class UserPhotoWidget extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: bgClr,
-          image: DecorationImage(image: FileImage(File(selImage!.path)), fit: BoxFit.cover),
+          image: DecorationImage(
+            image: FileImage(File(selImage!.path)),
+            fit: BoxFit.cover,
+          ),
         ),
       );
     }
 
     /// 2️⃣ Network image
     if (imageUrl != null && imageUrl!.isNotEmpty) {
-      return NetworkImageWidget(imageUrl: imageUrl, radius: size / 2, isCircle: true);
+      return NetworkImageWidget(
+        imageUrl: imageUrl,
+        radius: size / 2,
+        isCircle: true,
+      );
     }
 
     /// 3️⃣ Placeholder (no tap)

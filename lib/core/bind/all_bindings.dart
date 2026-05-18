@@ -1,4 +1,6 @@
-import 'package:get/get.dart';import 'dart:developer' show log;
+import 'dart:developer' show log;
+
+import 'package:get/get.dart';
 import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/main_tabs/community/controller/community_search_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
@@ -414,19 +416,26 @@ class ProfileBinding extends Bindings {
 class MoodLibraryBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<MoodLibraryController>(() => MoodLibraryController());
+    Get.lazyPut<MoodLibraryController>(
+      () => MoodLibraryController(),
+      fenix: true,
+    );
   }
 }
 
 class MoodInsightBinding extends Bindings {
   @override
   void dependencies() {
-    final args = Get.arguments as Map<String, dynamic>;
+    // In your binding or wherever MoodInsightsController is created:
+    final args = Get.arguments as MoodInsightArgs;
 
-    final mood = args['mood'] as MoodType;
-    final itemId = args['itemId'] as String;
-
-    Get.put<MoodInsightsController>(MoodInsightsController(mood, itemId));
+    Get.put(
+      MoodInsightsController(
+        args.moodType,
+        args.itemId,
+        fromHome: args.fromHome, // ✅
+      ),
+    );
   }
 }
 

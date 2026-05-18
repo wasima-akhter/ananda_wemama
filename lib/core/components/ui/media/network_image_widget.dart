@@ -106,25 +106,47 @@ class NetworkImageWidget extends StatelessWidget {
                 ),
               );
             },
-      child: Image.network(
-        makeImageUrl(
-          imageUrl: (imageUrl ?? '').startsWith('/')
-              ? (imageUrl ?? '').substring(1)
-              : (imageUrl ?? ''),
-        ),
-        opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
+      child: isCircle
+          ? ClipOval(
+              child: Image.network(
+                makeImageUrl(
+                  imageUrl: (imageUrl ?? '').startsWith('/')
+                      ? (imageUrl ?? '').substring(1)
+                      : (imageUrl ?? ''),
+                ),
+                opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
 
-          return _ShimmerWidget(isCircle: isCircle);
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return _FallbackWidget(widget: this);
-        },
-      ),
+                  return _ShimmerWidget(isCircle: isCircle);
+                },
+                errorBuilder: (context, error, stackTrace) {
+                  return _FallbackWidget(widget: this);
+                },
+              ),
+            )
+          : Image.network(
+              makeImageUrl(
+                imageUrl: (imageUrl ?? '').startsWith('/')
+                    ? (imageUrl ?? '').substring(1)
+                    : (imageUrl ?? ''),
+              ),
+              opacity: opacity ?? const AlwaysStoppedAnimation(1.0),
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+
+                return _ShimmerWidget(isCircle: isCircle);
+              },
+              errorBuilder: (context, error, stackTrace) {
+                return _FallbackWidget(widget: this);
+              },
+            ),
     );
   }
 }

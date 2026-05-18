@@ -22,7 +22,10 @@ class HeaderSection extends StatelessWidget {
             Gap(itemGap),
             CusGestureDetector(
               onTap: controller.goToSignup,
-              child: Text(Strings.createAccount, style: 13.norSecclrUnderLoutfit),
+              child: Text(
+                Strings.createAccount,
+                style: 13.norSecclrUnderLoutfit,
+              ),
             ),
             Gap(itemGap),
             SvgIcon(iconPath: IconsPath.arrowRightSm, height: 24),
@@ -38,7 +41,11 @@ class FormSection extends StatelessWidget {
   final SigninController controller;
   final GlobalKey<FormState> formKey;
 
-  const FormSection({super.key, required this.controller, required this.formKey});
+  const FormSection({
+    super.key,
+    required this.controller,
+    required this.formKey,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +54,10 @@ class FormSection extends StatelessWidget {
         CusNameTypeTextFormField(
           controller: controller.emailCtrler,
           hintText: Strings.email,
-          prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
+          prefix: SvgIcon(
+            iconPath: IconsPath.email,
+            height: 22,
+          ).mOnly(left: 15, right: 6),
           prefixSize: 45.h,
           focusNode: controller.emailFocus,
           validator: validateEmail,
@@ -58,7 +68,10 @@ class FormSection extends StatelessWidget {
           return CusPassTypeTextFormField(
             controller: controller.passwordCtrler,
             hintText: Strings.password,
-            prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
+            prefix: SvgIcon(
+              iconPath: IconsPath.lock,
+              height: 22,
+            ).mOnly(left: 15, right: 6),
             prefixSize: 48.h,
             focusNode: controller.passwordFocus,
             obscureText: controller.isPasswordHidden,
@@ -86,7 +99,10 @@ class FormSection extends StatelessWidget {
 
         CusGestureDetector(
           onTap: controller.goToForgotPassword,
-          child: Text("${Strings.forgotPassword}?", style: TxtStyle.outfit(color: c.primary)),
+          child: Text(
+            "${Strings.forgotPassword}?",
+            style: TxtStyle.outfit(color: c.primary),
+          ),
         ),
       ],
     );

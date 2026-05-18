@@ -37,14 +37,21 @@ class _CommunitySpotlightDummy extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
+              Text(
+                Strings.communitySpotlight.capEachWord(),
+                style: TxtStyle.outfitSmTitle,
+              ),
+              Gap(itemGap),
               ContainerBordered(
                 hasBrdr: true,
                 contClr: c.inputBackground,
                 rad: 18,
                 vp: 6,
                 hp: 18,
-                child: Text(Strings.joinDiscussion.capEachWord(), style: 12.titleMclrCusFSURB),
+                child: Text(
+                  Strings.joinDiscussion.capEachWord(),
+                  style: 12.titleMclrCusFSURB,
+                ),
               ),
             ],
           ),
@@ -65,11 +72,17 @@ class _CommunitySpotlightDummy extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(Strings.emotionalPostpartumQuestion.capEachWord(), style: normRsmPriURB),
+                Text(
+                  Strings.emotionalPostpartumQuestion.capEachWord(),
+                  style: normRsmPriURB,
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(Strings.postpartumRecovery.capEachWord(), style: titleBPriURB),
+                    Text(
+                      Strings.postpartumRecovery.capEachWord(),
+                      style: titleBPriURB,
+                    ),
                     Text(Strings.comments, style: normRsmPriURB),
                   ],
                 ),
@@ -114,11 +127,17 @@ class _CommunitySpotlightLive extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(Strings.communitySpotlight.capEachWord(), style: TxtStyle.outfitSmTitle),
+                  Text(
+                    Strings.communitySpotlight.capEachWord(),
+                    style: TxtStyle.outfitSmTitle,
+                  ),
                   CusGestureDetector(
                     onTap: () => Get.toNamed(
                       RoutePaths.communityDetail,
-                      arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": commId},
+                      arguments: {
+                        "btnState": MyCommunityBtnState.join,
+                        "communityItemId": commId,
+                      },
                     ),
                     child: ContainerBordered(
                       hasBrdr: true,
@@ -192,13 +211,19 @@ class StackOfImages extends StatelessWidget {
 class CommunitySpotlightInsideCard extends StatelessWidget {
   final LastPost? lastPostData;
   final String? communityname;
-  const CommunitySpotlightInsideCard({super.key, this.lastPostData, this.communityname});
+  const CommunitySpotlightInsideCard({
+    super.key,
+    this.lastPostData,
+    this.communityname,
+  });
 
   @override
   Widget build(BuildContext context) {
     final content = lastPostData?.content ?? '';
     final totalComment = (lastPostData?.totalComment ?? 0).toString();
-    final createdAt = DateHelper().formatTimeAgo((lastPostData?.createdAt ?? '').toString()).date;
+    final createdAt = DateHelper()
+        .formatTimeAgo((lastPostData?.createdAt ?? '').toString())
+        .date;
     return ContainerBordered(
       hp: 10,
       vp: 10,
@@ -207,7 +232,12 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(content.cap, maxLines: 3, overflow: TextOverflow.visible, style: normRsmPriURB),
+          Text(
+            content.cap,
+            maxLines: 3,
+            overflow: TextOverflow.visible,
+            style: normRsmPriURB,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -219,7 +249,10 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
                   style: titleBPriURB,
                 ),
               ),
-              Text("$totalComment ${Strings.comments} | $createdAt", style: normRsmPriURB),
+              Text(
+                "$totalComment ${Strings.comments} | $createdAt",
+                style: normRsmPriURB,
+              ),
             ],
           ),
         ],
@@ -247,7 +280,11 @@ class CommunitySpotlightShimmer extends StatelessWidget {
             children: [
               const ShimmerWidget.rectangular(width: 140, height: 18),
 
-              ShimmerWidget.rectangular(width: 110, height: 34, shimmerClr: c.inputBorder),
+              ShimmerWidget.rectangular(
+                width: 110,
+                height: 34,
+                shimmerClr: c.inputBorder,
+              ),
             ],
           ),
 
@@ -278,7 +315,10 @@ class CommunitySpotlightShimmer extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ShimmerWidget.rectangular(width: double.infinity, height: 120),
+              const ShimmerWidget.rectangular(
+                width: double.infinity,
+                height: 120,
+              ),
 
               const Gap(10),
 
@@ -286,7 +326,10 @@ class CommunitySpotlightShimmer extends StatelessWidget {
 
               const Gap(8),
 
-              const ShimmerWidget.rectangular(width: double.infinity, height: 14),
+              const ShimmerWidget.rectangular(
+                width: double.infinity,
+                height: 14,
+              ),
 
               const Gap(6),
 

@@ -1,6 +1,9 @@
 import 'package:mama_app/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../core/models/ui/common_data_models.dart';
+import '../../../main_tabs/home/controller/home_controller.dart';
+import '../mood_library/controller/mood_library_controller.dart';
 
 class MoodCheckInCard extends StatelessWidget {
   final MoodCheckInController mcc;
@@ -80,7 +83,8 @@ class _SelectMoodANdIllustration extends StatelessWidget {
                 GestureDetector(
                   onTap: () => mcc.selectMood(dataModel.moodType),
                   child: Obx(() {
-                    final isSelected = mcc.selectedMood.value == dataModel.moodType;
+                    final isSelected =
+                        mcc.selectedMood.value == dataModel.moodType;
 
                     return MoodChip(
                       title: dataModel.name,
@@ -105,14 +109,48 @@ class _OpenMoodLibrary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hc = Get.find<HomeController>();
+
     return Column(
       children: [
         itemGap.verticalSpace,
         GestureDetector(
-          onTap: () {
-            // Navigate to mood library here
+          onTap: () async {
+            final mlc = Get.isRegistered<MoodLibraryController>()
+                ? Get.find<MoodLibraryController>()
+                : Get.put(MoodLibraryController());
 
-            Get.toNamed(RoutePaths.moodLibrary);
+            // ✅ resolve once, non-null
+            final selectedMood = hc.mcc.selectedMood.value ?? MoodType.calm;
+
+            mlc.selectedMood.value = selectedMood;
+
+            await mlc.ensureLoaded(selectedMood);
+
+            // ✅ use the resolved non-null variable, not the nullable original
+            final items = mlc.moodReadingItems[selectedMood] ?? [];
+
+            log('🧪 selectedMood: $selectedMood');
+            log('🧪 items count: ${items.length}');
+            log(
+              '🧪 all keys in moodReadingItems: ${mlc.moodReadingItems.keys}',
+            );
+
+            if (items.isEmpty) {
+              Get.toNamed(RoutePaths.moodLibrary);
+              return;
+            }
+
+            final firstItem = items.first;
+
+            Get.toNamed(
+              RoutePaths.moodInsight,
+              arguments: MoodInsightArgs(
+                moodType: selectedMood,
+                itemId: firstItem.id,
+                fromHome: true,
+              ),
+            );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +203,12 @@ class MoodChip extends StatelessWidget {
   final double? hp;
   final bool isSelected;
 
-  const MoodChip({super.key, required this.title, this.hp, this.isSelected = false});
+  const MoodChip({
+    super.key,
+    required this.title,
+    this.hp,
+    this.isSelected = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -178,10 +221,27 @@ class MoodChip extends StatelessWidget {
       hasBrdr: true,
       brdrClr: isSelected ? c.primary : c.textPrimary,
       brdrW: 0.3,
-      child: Text(
-        title.cap,
-        style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: isSelected ? Colors.white : c.secondary),
-      ),
+      child:
+          // Text(
+          //   title.cap,
+          //   style: TxtStyle.outfitSemiB(
+          //     fs: 11,
+          //     w: 500,
+          //     color: isSelected ? Colors.white : c.secondary,
+          //   ),
+          // ),
+          Text(
+            title.cap,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
+            textAlign: TextAlign.center,
+            style: TxtStyle.outfitSemiB(
+              fs: 11,
+              w: 500,
+              color: isSelected ? Colors.white : c.secondary,
+            ),
+          ),
     );
   }
 }

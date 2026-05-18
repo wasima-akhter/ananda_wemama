@@ -1,5 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../mood_library/controller/mood_library_controller.dart';
 import 'mood_row_model.dart';
 
 class MoodCheckInController extends GetxController {
@@ -19,4 +20,7 @@ class MoodCheckInController extends GetxController {
       selectedMood.value = type;
     }
   }
+
+  final Rxn<MoodReadingItem> item = Rxn<MoodReadingItem>();
+  final RxBool isLoading = false.obs;
 }

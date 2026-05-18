@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
 import '../../../../core/services/socket/socket_service.dart';
-import '../../../../routes/route_paths.dart';
 
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
@@ -42,17 +38,17 @@ class SplashController extends GetxController {
     log("token: ${AppStorage.to.getToken}");
 
     // Check if user has seen onboarding
-    // if (AppStorage.to.getSeenOnboarding) {
-    // Already seen + signed in → go to Sign In
-    // if (AppStorage.to.getLoggedIn) {
-    // Get.offNamed(RoutePaths.mainNav);
-    // } else {
-    //   // Already seen + not signed in → go to Sign In
-    // Get.offNamed(RoutePaths.signin);
-    // }
-    // } else {
-    //   // Not seen → go to Onboarding
-    Get.offNamed(RoutePaths.onboardScreen);
-    // }
+    if (AppStorage.to.getSeenOnboarding) {
+      // Already seen + signed in → go to Sign In
+      if (AppStorage.to.getLoggedIn) {
+        Get.offNamed(RoutePaths.mainNav);
+      } else {
+        // Already seen + not signed in → go to Sign In
+        Get.offNamed(RoutePaths.signin);
+      }
+    } else {
+      // Not seen → go to Onboarding
+      Get.offNamed(RoutePaths.onboardScreen);
+    }
   }
 }

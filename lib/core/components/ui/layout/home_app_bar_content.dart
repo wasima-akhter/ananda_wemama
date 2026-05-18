@@ -45,8 +45,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                     backgroundColor: c.inputBackground,
                     child: SvgIcon(
                       iconPath: IconsPath.notification,
-                      height: 22.h,
-                      width: 25.w,
+                      height: 22,
                     ),
                   ),
                 ),
@@ -71,16 +70,18 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                           '';
 
                       return circledNetworkImageBgComponent(
-                        radius: 20,
+                        radius: 22,
                         imagePath: image,
                         enablePreview: false,
                       );
                     }),
 
-                    Positioned(
-                      top: -20,
-                      right: -15,
-                      child: SvgIcon(iconPath: IconsPath.crown, height: 40),
+                    Transform.rotate(
+                      angle: 0.2, // positive = tilt right
+                      child: Transform.translate(
+                        offset: const Offset(15, -22),
+                        child: SvgIcon(iconPath: IconsPath.crown, height: 40),
+                      ),
                     ),
                   ],
                 ),

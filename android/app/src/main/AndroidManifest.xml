@@ -55,9 +55,16 @@
 
     <!-- ✅ Foreground service (needed for Agora, recording in background) -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <!-- Android 14+ required for foreground service using mic -->
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
 
     <!-- ✅ Add: keeps screen/audio alive during live session -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
 
 
 

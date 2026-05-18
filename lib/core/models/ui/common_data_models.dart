@@ -1,4 +1,5 @@
 import '../../../features/main_tabs/community/model/community_item_detail_model.dart';
+import '../../enums/ui_enums.dart';
 
 class IdentityCardDataModel {
   final String title;
@@ -46,7 +47,11 @@ class CommonTitleIconpathModel {
   final String? subtitle;
   final String iconPath;
 
-  CommonTitleIconpathModel({required this.title, required this.iconPath, this.subtitle});
+  CommonTitleIconpathModel({
+    required this.title,
+    required this.iconPath,
+    this.subtitle,
+  });
 }
 
 class ChatInboxArgPassModel {
@@ -54,4 +59,16 @@ class ChatInboxArgPassModel {
   final bool isBlocked;
 
   ChatInboxArgPassModel({required this.chatId, required this.isBlocked});
+}
+
+class MoodInsightArgs {
+  final MoodType moodType;
+  final String itemId;
+  final bool fromHome; // ✅ if true → back button goes to moodLibrary
+
+  const MoodInsightArgs({
+    required this.moodType,
+    required this.itemId,
+    this.fromHome = false,
+  });
 }

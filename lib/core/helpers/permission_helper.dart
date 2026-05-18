@@ -8,22 +8,18 @@ import '../components/ui/dialogs/popups.dart';
 import '../components/ui/dialogs/small_popup_dialog.dart';
 
 Future<bool> requestPermissions() async {
-  final permissions = <Permission>[Permission.camera, Permission.microphone];
+  final permissions = <Permission>[
+    Permission.camera,
+    Permission.microphone,
+    Permission.bluetoothConnect, // ✅ add — needed for Agora BT audio routing
+  ];
 
   if (Platform.isAndroid) {
     final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
 
     if (sdk >= 33) {
-      // Android 13+ — granular media permissions
-      // Permission.photos   → READ_MEDIA_IMAGES
-      // Permission.videos   → READ_MEDIA_VIDEO
-      // Permission.audio    → READ_MEDIA_AUDIO  ← needed for recordings
-      permissions.addAll([
-        Permission.photos, 
-        Permission.audio,
-      ]);
+      permissions.addAll([Permission.photos, Permission.audio]);
     } else {
-      // Android 10–12 — legacy storage covers everything
       permissions.add(Permission.storage);
     }
   }

@@ -17,17 +17,35 @@ class TopContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Gap(50.h),
+
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.max,
           children: [
             Gap(50.w),
-            Column(
-              children: [
-                Text(mc.agrModel.sessionTitle, style: TxtStyle.outfit(fs: 16, w: 600)),
-                Text(mc.agrModel.hostName, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
-              ],
+
+            Expanded(
+              child: Column(
+                children: [
+                  SizedBox(
+                    // color: Colors.amber,
+                    width: double.infinity,
+                    child: Text(
+                      mc.agrModel.sessionTitle,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TxtStyle.outfit(fs: 16, w: 600),
+                    ),
+                  ),
+                  Text(
+                    mc.agrModel.hostName,
+                    style: TxtStyle.outfit(fs: 13, color: c.secondary),
+                  ),
+                ],
+              ),
             ),
+
+            Gap(12.w),
+
             ContainerBordered(
               rad: 8,
               hp: 16,
@@ -36,10 +54,52 @@ class TopContent extends StatelessWidget {
               vp: 6,
               contClr: c.error,
 
-              child: Text("LIVE", style: TxtStyle.inter(fs: 12, w: 600, color: white)),
+              child: Text(
+                "LIVE",
+                style: TxtStyle.inter(fs: 12, w: 600, color: white),
+              ),
             ),
           ],
-        ).get10cm,
+        ),
+
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   mainAxisSize: MainAxisSize.max,
+        //   children: [
+        //     Gap(50.w),
+        //     Column(
+        //       children: [
+        //         Container(
+        //           color: Colors.amber,
+        //           width: S.w * 0.5,
+        //           child: Text(
+        //             mc.agrModel.sessionTitle,
+        //             textAlign: TextAlign.center,
+        //             maxLines: 1,
+        //             style: TxtStyle.outfit(fs: 16, w: 600),
+        //           ),
+        //         ),
+        //         Text(
+        //           mc.agrModel.hostName,
+        //           style: TxtStyle.outfit(fs: 13, color: c.secondary),
+        //         ),
+        //       ],
+        //     ),
+        //     ContainerBordered(
+        //       rad: 8,
+        //       hp: 16,
+        //       hasBrdr: true,
+        //       brdrClr: c.primary,
+        //       vp: 6,
+        //       contClr: c.error,
+
+        //       child: Text(
+        //         "LIVE",
+        //         style: TxtStyle.inter(fs: 12, w: 600, color: white),
+        //       ),
+        //     ),
+        //   ],
+        // ).get10cm,
         Gap(itemGap * 1.5),
 
         AspectRatio(
@@ -54,18 +114,25 @@ class TopContent extends StatelessWidget {
               children: [
                 Obx(() {
                   if (!mc.isEngineReady.value || mc.agoraEngine == null) {
-                    return _buildPlaceholder(child: const CircularProgressIndicator());
+                    return _buildPlaceholder(child: const LoadingPrimary());
                   }
                   if (mc.hasLiveEnded.value) {
                     return _buildPlaceholder(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.live_tv_outlined, color: Colors.white54, size: 36),
+                          const Icon(
+                            Icons.live_tv_outlined,
+                            color: Colors.white54,
+                            size: 36,
+                          ),
                           const Gap(10),
                           Text(
                             "The live has ended\nThanks for joining!",
-                            style: TxtStyle.inter(fs: 15, color: Colors.white70),
+                            style: TxtStyle.inter(
+                              fs: 15,
+                              color: Colors.white70,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -94,7 +161,9 @@ class TopContent extends StatelessWidget {
                       rtcEngine: mc.agoraEngine!,
                       canvas: VideoCanvas(uid: mc.hostUid.value!),
 
-                      connection: RtcConnection(channelId: mc.channelName.value),
+                      connection: RtcConnection(
+                        channelId: mc.channelName.value,
+                      ),
                     ),
                   );
                 }),
@@ -125,7 +194,10 @@ class TopContent extends StatelessWidget {
                   left: 12,
                   top: 12,
                   child: Obx(
-                    () => _buildFloatingIcon(text: mc.formattedDuration, icon: Icons.circle),
+                    () => _buildFloatingIcon(
+                      text: mc.formattedDuration,
+                      icon: Icons.circle,
+                    ),
                   ),
                 ),
               ],
@@ -166,7 +238,11 @@ class TopContent extends StatelessWidget {
             //   backgroundColor: ctransp,
             //   child: Icon(icon, size: 12.h, color: icon == Icons.circle ? c.secondary : white),
             // ),
-            Icon(icon, size: 12.h, color: icon == Icons.circle ? c.secondary : white),
+            Icon(
+              icon,
+              size: 12.h,
+              color: icon == Icons.circle ? c.secondary : white,
+            ),
             Gap(6.w),
             FittedBox(
               child: Text(
@@ -236,7 +312,10 @@ class LiveStackOfImages extends StatelessWidget {
           children: List.generate(itemCount, (index) {
             // Last slot → show +N bubble
             if (remainder > 0 && index == itemCount - 1) {
-              return Positioned(left: index * overlap, child: _buildCountBubble(remainder, radius));
+              return Positioned(
+                left: index * overlap,
+                child: _buildCountBubble(remainder, radius),
+              );
             }
 
             final path = list[index].avatar ?? '';
@@ -275,6 +354,10 @@ class LiveStackOfImages extends StatelessWidget {
   }
 
   Widget _buildImage({String? path, double? radius}) {
-    return circledNetworkImageBgComponent(radius: radius, imagePath: path, isUser: true);
+    return circledNetworkImageBgComponent(
+      radius: radius,
+      imagePath: path,
+      isUser: true,
+    );
   }
 }

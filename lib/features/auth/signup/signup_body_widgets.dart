@@ -24,7 +24,10 @@ class SignupHeaderSection extends StatelessWidget {
           mh: 20,
           rad: 6,
           contClr: c.inputBackground,
-          child: Text(Strings.joinOurSafeCommunity, style: 12.norSecclrCusFSoutfit),
+          child: Text(
+            Strings.joinOurSafeCommunity,
+            style: 12.norSecclrCusFSoutfit,
+          ),
         ),
 
         Gap(itemGap * 2),
@@ -53,7 +56,10 @@ class SignupFormSection extends StatelessWidget {
         CusNameTypeTextFormField(
           controller: controller.emailCtrl,
           hintText: Strings.enterEmail,
-          prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
+          prefix: SvgIcon(
+            iconPath: IconsPath.email,
+            height: 22,
+          ).mOnly(left: 15, right: 6),
           prefixSize: 45.h,
           focusNode: controller.emailFocus,
           validator: validateEmail,
@@ -65,11 +71,17 @@ class SignupFormSection extends StatelessWidget {
           return CusPassTypeTextFormField(
             controller: controller.passCtrl,
             hintText: Strings.enterPassword,
-            prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
+            prefix: SvgIcon(
+              iconPath: IconsPath.lock,
+              height: 22,
+            ).mOnly(left: 15, right: 6),
             prefixSize: 48,
             focusNode: controller.passFocus,
             obscureText: controller.isPassHidden,
-            suffix: VisibilitySuffix(onTap: controller.togglePass, icon: controller.passwordIcon),
+            suffix: VisibilitySuffix(
+              onTap: controller.togglePass,
+              icon: controller.passwordIcon,
+            ),
             validator: validatePassword,
           );
         }),
@@ -81,13 +93,21 @@ class SignupFormSection extends StatelessWidget {
           return CusPassTypeTextFormField(
             controller: controller.confirmPassCtrl,
             hintText: Strings.retypePassword,
-            prefix: SvgIcon(iconPath: IconsPath.lock).mOnly(left: 15, right: 6),
+            prefix: SvgIcon(
+              iconPath: IconsPath.lock,
+              height: 22,
+            ).mOnly(left: 15, right: 6),
             prefixSize: 48,
             focusNode: controller.confirmPassFocus,
             obscureText: controller.isConPassHidden,
-            suffix: VisibilitySuffix(onTap: controller.toggleConPass, icon: controller.conPassIcon),
-            validator: (value) =>
-                validateConfirmPass(confirmPass: value, password: controller.passCtrl.text),
+            suffix: VisibilitySuffix(
+              onTap: controller.toggleConPass,
+              icon: controller.conPassIcon,
+            ),
+            validator: (value) => validateConfirmPass(
+              confirmPass: value,
+              password: controller.passCtrl.text,
+            ),
           );
         }),
 

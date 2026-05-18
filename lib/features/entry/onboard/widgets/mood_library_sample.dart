@@ -30,10 +30,15 @@ class MoodLibrarySample extends StatelessWidget {
             children: [
               ...moodDataList.map((dataModel) {
                 return Expanded(
+                  flex: 1,
                   child: Column(
                     children: [
                       /// Static chip (no selection)
-                      MoodChip(title: dataModel.name, hp: dataModel.hp, isSelected: false),
+                      MoodChip(
+                        title: dataModel.name,
+                        hp: dataModel.hp,
+                        isSelected: false,
+                      ),
 
                       /// Mood illustration
                       MoodChipAnimation(moodType: dataModel.moodType),

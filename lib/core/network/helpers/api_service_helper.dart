@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 
 import '../../../app/helper_widgets_export.dart' hide Response;
@@ -16,6 +14,8 @@ class ApiServiceHelper {
   }) async {
     try {
       final res = await apiCall();
+
+      log("res:---> $res");
 
       //
       if (res == null) {

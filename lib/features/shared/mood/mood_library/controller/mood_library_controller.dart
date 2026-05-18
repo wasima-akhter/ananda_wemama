@@ -10,7 +10,11 @@ class MoodReadingItem {
   final String title;
   final String description; // ✅ raw HTML — no bullets list
 
-  MoodReadingItem({required this.id, required this.title, required this.description});
+  MoodReadingItem({
+    required this.id,
+    required this.title,
+    required this.description,
+  });
 }
 
 class MoodLibraryController extends GetxController {
@@ -19,7 +23,7 @@ class MoodLibraryController extends GetxController {
   late final Rx<MoodType> selectedMood;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
 
     selectedMood = (moodCheckInC.selectedMood.value ?? MoodType.calm).obs;
@@ -31,10 +35,32 @@ class MoodLibraryController extends GetxController {
     // ✅ React to tab changes — refetch content whenever mood switches
     ever(selectedMood, (_) => _loadForCurrentMood());
 
-    await getAllMoodsImages();
-    await getAllMoodContent();
+    //   getAllMoodsImages();
+    //   getAllMoodContent();
   }
 
+  bool _isEnsuring = false;
+
+  Future<void> ensureLoaded(MoodType mood) async {
+    if (_isEnsuring) return;
+    _isEnsuring = true;
+
+    try {
+      selectedMood.value = mood;
+
+      // ✅ always fetch images if empty
+      if (allMoodImageData.isEmpty) {
+        await getAllMoodsImages();
+      }
+
+      // ✅ fetch content only if not cached for this mood
+      if (moodReadingItems[mood] == null || moodReadingItems[mood]!.isEmpty) {
+        await getAllMoodContent();
+      }
+    } finally {
+      _isEnsuring = false;
+    }
+  }
   // ── State ────────────────────────────────────────────────────────────────
 
   final isMoodsImagesLoading_ = false.obs;
@@ -58,6 +84,7 @@ class MoodLibraryController extends GetxController {
 
   // ── Refresh (images + content for current mood) ──────────────────────────
 
+  @override
   Future<void> refresh() async {
     await getAllMoodsImages();
     await getAllMoodContent();
@@ -76,7 +103,9 @@ class MoodLibraryController extends GetxController {
   String getSelMoodId() {
     return allMoodImageData
             .firstWhere(
-              (m) => (m.title ?? '').toLowerCase() == selectedMood.value.name.toLowerCase(),
+              (m) =>
+                  (m.title ?? '').toLowerCase() ==
+                  selectedMood.value.name.toLowerCase(),
               orElse: () => GetAllMoodItemModel(id: ''),
             )
             .id ??
@@ -124,7 +153,8 @@ class MoodLibraryController extends GetxController {
             (item) => MoodReadingItem(
               id: item.id ?? '',
               title: item.title ?? '',
-              description: item.description ?? '', // ✅ adjust field name to your model
+              description:
+                  item.description ?? '', // ✅ adjust field name to your model
             ),
           )
           .toList();

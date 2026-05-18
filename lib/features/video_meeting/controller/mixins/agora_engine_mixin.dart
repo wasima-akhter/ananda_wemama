@@ -1,5 +1,3 @@
-
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/core/helpers/permission_helper.dart';
@@ -177,18 +175,46 @@ mixin AgoraEngineMixin on GetxController {
             }
           },
 
+          // onUserJoined: (connection, uid, elapsed) async {
+          //   try {
+          //     log('🎥 Host joined: uid=$uid');
+
+          //     // ✅ If this is the host
+          //     if (hostUid.value == null) {
+          //       // fallback (if backend didn't provide)
+          //       hostUid.value = uid;
+          //       log('🎯 Assigned HOST uid=$uid');
+          //     }
+
+          //     // ✅ Always keep list (optional)
+          //     if (!_self.remoteUids.contains(uid)) {
+          //       _self.remoteUids.add(uid);
+          //     }
+
+          //     _self.hasLiveStarted.value = true;
+          //     _self.hasLiveEnded.value = false;
+
+          //     await _self.agoraEngine?.muteRemoteAudioStream(
+          //       uid: uid,
+          //       mute: false,
+          //     );
+
+          //     if (uid == hostUid.value) {
+          //       _self.startSessionTimer(); // ✅ only for host
+          //     }
+          //   } catch (e) {
+          //     log('❌ onUserJoined handler error: $e');
+          //   }
+          // },
           onUserJoined: (connection, uid, elapsed) async {
             try {
               log('🎥 Host joined: uid=$uid');
 
-              // ✅ If this is the host
               if (hostUid.value == null) {
-                // fallback (if backend didn't provide)
                 hostUid.value = uid;
                 log('🎯 Assigned HOST uid=$uid');
               }
 
-              // ✅ Always keep list (optional)
               if (!_self.remoteUids.contains(uid)) {
                 _self.remoteUids.add(uid);
               }
@@ -196,13 +222,12 @@ mixin AgoraEngineMixin on GetxController {
               _self.hasLiveStarted.value = true;
               _self.hasLiveEnded.value = false;
 
-              await _self.agoraEngine?.muteRemoteAudioStream(
-                uid: uid,
-                mute: false,
-              );
+              // ❌ Remove the muteRemoteAudioStream call here
+              // ✅ Instead, set speaker on immediately
+              await _self.agoraEngine?.setEnableSpeakerphone(true);
 
               if (uid == hostUid.value) {
-                _self.startSessionTimer(); // ✅ only for host
+                _self.startSessionTimer();
               }
             } catch (e) {
               log('❌ onUserJoined handler error: $e');
@@ -272,25 +297,51 @@ mixin AgoraEngineMixin on GetxController {
                 }
               },
 
+          // onRemoteAudioStateChanged:
+          //     (connection, remoteUid, state, reason, elapsed) {
+          //       try {
+          //         log('🔊 Audio state: uid=$remoteUid, state=$state');
+
+          //         if (state == RemoteAudioState.remoteAudioStateStopped ||
+          //             state == RemoteAudioState.remoteAudioStateFailed) {
+          //           _self.isHostAudioOn.value = false;
+          //         } else if (state ==
+          //             RemoteAudioState.remoteAudioStateDecoding) {
+          //           _self.isHostAudioOn.value = true;
+
+          //           // ✅ Re-apply speaker AFTER audio track is active
+          //           // This defeats Android's audio re-routing after track starts
+          //           _self.agoraEngine?.setEnableSpeakerphone(true).then((_) {
+          //             log('🔊 Speaker re-applied after decode started');
+          //           });
+          //         }
+          //       } catch (e) {
+          //         log('❌ onRemoteAudioStateChanged error: $e');
+          //       }
+          //     },
           onRemoteAudioStateChanged:
-              (connection, remoteUid, state, reason, elapsed) {
-                try {
-                  log('🔊 Audio state: uid=$remoteUid, state=$state');
+              (connection, uid, state, reason, elapsed) async {
+                log('🔊 Audio state: uid=$uid, state=$state, reason=$reason');
 
-                  if (state == RemoteAudioState.remoteAudioStateStopped) {
-                    _self.isHostAudioOn.value = false;
-                  } else if (state ==
-                      RemoteAudioState.remoteAudioStateDecoding) {
-                    _self.isHostAudioOn.value = true;
+                // Audio stopped or failed — force a re-subscribe cycle
+                if (state == RemoteAudioState.remoteAudioStateStopped ||
+                    state == RemoteAudioState.remoteAudioStateFailed) {
+                  await Future.delayed(const Duration(milliseconds: 800));
 
-                    // ✅ Re-apply speaker AFTER audio track is active
-                    // This defeats Android's audio re-routing after track starts
-                    _self.agoraEngine?.setEnableSpeakerphone(true).then((_) {
-                      log('🔊 Speaker re-applied after decode started');
-                    });
+                  try {
+                    await _self.agoraEngine?.muteRemoteAudioStream(
+                      uid: uid,
+                      mute: true,
+                    );
+                    await Future.delayed(const Duration(milliseconds: 300));
+                    await _self.agoraEngine?.muteRemoteAudioStream(
+                      uid: uid,
+                      mute: false,
+                    );
+                    log('🔄 Re-subscribed audio for uid=$uid');
+                  } catch (e) {
+                    log('❌ Re-subscribe error: $e');
                   }
-                } catch (e) {
-                  log('❌ onRemoteAudioStateChanged error: $e');
                 }
               },
           onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {

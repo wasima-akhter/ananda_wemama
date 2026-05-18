@@ -1,4 +1,5 @@
 import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:mama_app/features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
 import 'package:mama_app/features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
 import 'package:mama_app/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
@@ -16,9 +17,21 @@ class MumsStageController extends GetxController {
 
   /// 🔹 Dynamic stage list
   List<MumStageUIDataModel> get stageList => [
-    MumStageUIDataModel(info: '', leftIcon: IconsPath.ttcMagnet, title: Strings.ttc),
-    MumStageUIDataModel(info: '', leftIcon: IconsPath.pregnant, title: Strings.pregnant),
-    MumStageUIDataModel(info: Strings.newMumAge, leftIcon: IconsPath.newMum, title: Strings.newMum),
+    MumStageUIDataModel(
+      info: '',
+      leftIcon: IconsPath.ttcMagnet,
+      title: Strings.ttc,
+    ),
+    MumStageUIDataModel(
+      info: '',
+      leftIcon: IconsPath.pregnant,
+      title: Strings.pregnant,
+    ),
+    MumStageUIDataModel(
+      info: Strings.newMumAge,
+      leftIcon: IconsPath.newMum,
+      title: Strings.newMum,
+    ),
     MumStageUIDataModel(
       info: Strings.infantMumAge,
       leftIcon: IconsPath.newMum,
@@ -82,14 +95,13 @@ class MumsStageController extends GetxController {
 
     if (success) {
       Get.toNamed(RoutePaths.mumsStageFinish);
+
+      if (Get.isRegistered<ProfileController>()) {
+        await Get.find<ProfileController>().fetchMyProfile();
+      }
     }
 
     isLoading_.value = false;
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   void onTapFinish() {
@@ -102,5 +114,9 @@ class MumStageUIDataModel {
   final String title;
   final String info;
 
-  MumStageUIDataModel({required this.leftIcon, required this.title, required this.info});
+  MumStageUIDataModel({
+    required this.leftIcon,
+    required this.title,
+    required this.info,
+  });
 }

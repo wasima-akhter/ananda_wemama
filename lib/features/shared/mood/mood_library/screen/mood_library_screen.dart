@@ -1,11 +1,30 @@
+import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
+
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../../core/enums/app_enums.dart';
+import '../../../../../core/models/ui/common_data_models.dart';
 import '../controller/mood_library_controller.dart';
 import '../widgets/mood_library_comp.dart';
 
-class MoodLibraryScreen extends StatelessWidget {
+// In MoodLibraryScreen, add this once:
+class MoodLibraryScreen extends StatefulWidget {
+  // change to StatefulWidget
   const MoodLibraryScreen({super.key});
+  @override
+  State<MoodLibraryScreen> createState() => _MoodLibraryScreenState();
+}
+
+class _MoodLibraryScreenState extends State<MoodLibraryScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // ✅ trigger load when screen opens normally
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mlc = Get.find<MoodLibraryController>();
+      mlc.ensureLoaded(mlc.selectedMood.value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +37,10 @@ class MoodLibraryScreen extends StatelessWidget {
           iconPath: IconsPath.bookmarkOutlined,
           goToPath: RoutePaths.bookmark,
         ),
+        onTapBack: () {
+          Get.offAllNamed(RoutePaths.mainNav);
+          MainNavController.to.goToTab(0);
+        },
       ),
       onRefresh: mlc.refresh, // ✅ refresh images + content together
       child: Column(
@@ -34,7 +57,9 @@ class MoodLibraryScreen extends StatelessWidget {
           /// Mood Image
           Obx(() {
             if (mlc.isMoodsImagesloading) return LoadingPrimary();
-            return MoodIllustrationCard(imageUrl: mlc.getMoodImage(mlc.selectedMood.value));
+            return MoodIllustrationCard(
+              imageUrl: mlc.getMoodImage(mlc.selectedMood.value),
+            );
           }),
 
           /// Mood Content
@@ -45,7 +70,9 @@ class MoodLibraryScreen extends StatelessWidget {
             final currentMood = mlc.selectedMood.value;
 
             if (items.isEmpty) {
-              return const EmptyNoSearchWidgetScrollable(title: "No content available");
+              return const EmptyNoSearchWidgetScrollable(
+                title: "No content available",
+              );
             }
 
             return Column(
@@ -55,7 +82,12 @@ class MoodLibraryScreen extends StatelessWidget {
                   description: item.description,
                   onTapRead: () => Get.toNamed(
                     RoutePaths.moodInsight,
-                    arguments: {'itemId': item.id, 'mood': currentMood},
+
+                    arguments: MoodInsightArgs(
+                      moodType: currentMood,
+                      itemId: item.id,
+                      fromHome: true, // 👈 flag so back goes to moodLibrary
+                    ),
                   ),
                 );
               }).toList(),
@@ -73,7 +105,12 @@ class MoodTabSelector extends StatelessWidget {
 
   const MoodTabSelector({super.key, required this.selected, this.onTap});
 
-  static const moods = [MoodType.calm, MoodType.tired, MoodType.anxious, MoodType.stressed];
+  static const moods = [
+    MoodType.calm,
+    MoodType.tired,
+    MoodType.anxious,
+    MoodType.stressed,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +134,7 @@ class MoodTabSelector extends StatelessWidget {
               child: Container(
                 padding: 10.pv,
                 decoration: BoxDeco.decBrdrOneSideCustom(
-                  rad: 8,
+                  rad: 6,
                   clr: isSelected ? c.primary : ctransp,
                   brdrClr: c.primary,
                   side: isLast ? null : BrdrSideType.right, // no border if last
