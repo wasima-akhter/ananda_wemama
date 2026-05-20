@@ -73,29 +73,28 @@ class _TopSection extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Gap(itemGap * 2),
+        Gap(itemGap),
         Transform.scale(scale: cfg.logoScale, child: weMamaLogoWithTxt),
-        Gap(itemGap * 3),
+        Gap(itemGap * 1.5),
         SecurityText(
           iconPath: IconsPath.shieldFill,
           text: Strings.womenOnlySpace.toUpperCase(),
         ),
         Gap(itemGap),
-        FittedBox(
+        Container(
           child: Text(
             Strings.motherhoodSupportLine,
             textAlign: TextAlign.center,
-            style: TxtStyle.interSemiB(fs: 18, w: 600, color: c.primary),
+            style: TxtStyle.interSemiB(fs: 19, w: 600, color: c.primary),
             // style: cfg.titleFs.titleMclrCusFS,
-          ).mHV(20, 0),
+          ).mHV(40, 0),
         ),
-        Gap(itemGap),
+        Gap(4.w),
         Text(
           Strings.builtForMotherhoodStages,
           textAlign: TextAlign.center,
           style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
         ).mHV(cfg.textHMargin, 0),
-        Gap(itemGap),
       ],
     );
   }
@@ -155,6 +154,7 @@ class _BottomSection extends StatelessWidget {
           rad: 8,
           bgClr: c.inputBackground,
           fs: 11,
+          iconH: 15,
           iconPath: IconsPath.shieldCheck,
           text: Strings.yourPrivacyIsOurPriority.capEachWord(),
         ),

@@ -6,6 +6,7 @@ class SecurityText extends StatelessWidget {
   final Color? bgClr;
   final double? rad;
   final double? fs;
+  final double? iconH;
 
   const SecurityText({
     super.key,
@@ -14,6 +15,7 @@ class SecurityText extends StatelessWidget {
     this.bgClr,
     this.rad,
     this.fs,
+    this.iconH,
   });
 
   @override
@@ -28,7 +30,7 @@ class SecurityText extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 4,
         children: [
-          SvgIcon(iconPath: iconPath, height: 28),
+          SvgIcon(iconPath: iconPath, height: iconH ?? 25),
           Text(
             text,
             style: TxtStyle.inter(fs: fs ?? 11, color: c.secondary),
