@@ -1,23 +1,37 @@
 import '../../experts/model/expert_session_list_model.dart';
 
 class CommunitySpotlightModel {
-  CommunitySpotlightModel({this.communitySpotlight, this.liveSession});
+  CommunitySpotlightModel({
+    this.communitySpotlight,
+    this.liveSession = const [],
+  });
 
   final CommunitySpotlightData? communitySpotlight;
-  final Session? liveSession;
+  final List<Session>? liveSession;
 
   factory CommunitySpotlightModel.fromJson(Map<String, dynamic> json) {
     return CommunitySpotlightModel(
       communitySpotlight: json["communitySpotlight"] == null
           ? null
           : CommunitySpotlightData.fromJson(json["communitySpotlight"]),
-      liveSession: json["liveSession"] == null ? null : Session.fromJson(json["liveSession"]),
+
+      liveSession: json["liveSession"] == null
+          ? []
+          : List<Session>.from(
+              (json["liveSession"] as List).map((x) => Session.fromJson(x)),
+            ),
     );
   }
 }
 
 class CommunitySpotlightData {
-  CommunitySpotlightData({this.id, this.name, this.totalMember, this.createdAt, this.lastPost});
+  CommunitySpotlightData({
+    this.id,
+    this.name,
+    this.totalMember,
+    this.createdAt,
+    this.lastPost,
+  });
 
   final String? id;
   final String? name;
@@ -31,13 +45,21 @@ class CommunitySpotlightData {
       name: json["name"],
       totalMember: json["totalMember"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      lastPost: json["lastPost"] == null ? null : LastPost.fromJson(json["lastPost"]),
+      lastPost: json["lastPost"] == null
+          ? null
+          : LastPost.fromJson(json["lastPost"]),
     );
   }
 }
 
 class LastPost {
-  LastPost({this.id, this.content, this.totalLike, this.totalComment, this.createdAt});
+  LastPost({
+    this.id,
+    this.content,
+    this.totalLike,
+    this.totalComment,
+    this.createdAt,
+  });
 
   final String? id;
   final String? content;
@@ -71,7 +93,9 @@ class Expert {
       name: json["name"],
       email: json["email"],
       image: json["image"],
-      profession: json["profession"] == null ? null : Profession.fromJson(json["profession"]),
+      profession: json["profession"] == null
+          ? null
+          : Profession.fromJson(json["profession"]),
     );
   }
 }

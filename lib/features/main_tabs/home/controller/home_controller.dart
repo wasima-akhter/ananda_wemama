@@ -4,6 +4,8 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../../station_location/controller/station_location_controller.dart';
+import '../../experts/controller/session_action_controller.dart';
+import '../../experts/controller/session_controller.dart';
 import '../dialogs/permanent_denied_dialog.dart';
 import '../dialogs/rationale_dialog.dart';
 import '../dialogs/turnon_service_dialog.dart';
@@ -13,18 +15,19 @@ import '../service/home_service.dart';
 
 class HomeController extends GetxController {
   final mcc = findCont<MoodCheckInController>();
+  static HomeController get to => findCont<HomeController>();
 
   @override
   void onInit() {
     log(' token :$getToken ');
 
     getCommunitySpotLight();
+    getGentleRemindData();
     super.onInit();
   }
 
-  @override
-  void onClose() => super.onClose();
-
+  final sessionCtrl = Get.find<SessionController>();
+  final actionCtrl = Get.find<SessionActionController>();
   void closeAllPopups() {}
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -65,7 +68,8 @@ class HomeController extends GetxController {
     log("🔑 serviceOn: $serviceOn | permission: $permission");
 
     final alreadyGranted =
-        permission == LocationPermission.always || permission == LocationPermission.whileInUse;
+        permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse;
 
     // ── Happy path ────────────────────────────────────────────────────────────
     if (serviceOn && alreadyGranted) {
@@ -128,7 +132,8 @@ class HomeController extends GetxController {
       );
       log("🔑 requestPermission result: $result");
 
-      if (result == LocationPermission.denied || result == LocationPermission.deniedForever) {
+      if (result == LocationPermission.denied ||
+          result == LocationPermission.deniedForever) {
         HomeScreen.showLocationStatusOverlay(isActive: false);
         return;
       }
@@ -181,7 +186,10 @@ class HomeController extends GetxController {
   }
 
   Future<void> _showPermanentlyDeniedDialog() async {
-    await showAnimatedDialog(context: Get.context!, child: PermanentDeniedDialog());
+    await showAnimatedDialog(
+      context: Get.context!,
+      child: PermanentDeniedDialog(),
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -202,7 +210,9 @@ class HomeController extends GetxController {
 
       if (data != null) {
         spotLightData.value = data;
-        log(' spotlightData : ${spotLightData?.value?.communitySpotlight?.name}');
+        log(
+          ' spotlightData : ${spotLightData.value?.communitySpotlight?.name}',
+        );
       }
     } catch (e) {
       log("Error fetch Community SpotLight : $e");
@@ -210,8 +220,34 @@ class HomeController extends GetxController {
       isSpotLightLoading_.value = false;
     }
   }
+
+  //---------------------------
+  //---------------------------
+  var isGentleRemindLoading_ = false.obs;
+  bool get isGentleRemindLoading => isGentleRemindLoading_.value;
+
+  // ✅ Correct way to declare nullable Rx
+  final gentleRemindData = Rxn<GentleRemindData>();
+
+  Future<void> getGentleRemindData() async {
+    if (isGentleRemindLoading_.value) return;
+    isGentleRemindLoading_.value = true;
+    try {
+      final data = await HomeService().fetchGentleRemindData();
+
+      if (data != null) {
+        gentleRemindData.value = data;
+        log(' GentleRemindData : ${gentleRemindData.value?.message}');
+      }
+    } catch (e) {
+      log("Error fetch Gentle Reminder Data : $e");
+    } finally {
+      isGentleRemindLoading_.value = false;
+    }
+  }
 }
- /*
+
+/*
 First visit to HomeScreen
 │
 ├─ Service ON + Permission granted

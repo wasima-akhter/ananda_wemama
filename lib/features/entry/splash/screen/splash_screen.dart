@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
 
     // Run after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await sc.splashScreenFunctions(context);
+      await sc.splashScreenFunctions();
     });
 
     return SafeArea(
@@ -19,9 +19,14 @@ class SplashScreen extends StatelessWidget {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            image: DecorationImage(image: AssetImage(ImagesPath.splashImage), fit: BoxFit.cover),
+            image: DecorationImage(
+              image: AssetImage(ImagesPath.splashImage),
+              fit: BoxFit.cover,
+            ),
           ),
-          child: Center(child: Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.5)),
+          child: Center(
+            child: Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.5),
+          ),
         ),
       ),
     );

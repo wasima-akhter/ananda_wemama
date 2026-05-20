@@ -9,10 +9,15 @@ class ExpertsService extends GetxService {
   Future<ExpertSessionsListModel?> fetchExpertSessionList({
     required String sessionStatus,
     required String page,
+    required String searchTxt,
   }) async {
     apiCall() {
       return ApiClient().get(
-        Endpoints.getExpertSessionList(page: page, sessionStatus: sessionStatus).getUrl,
+        Endpoints.getExpertSessionList(
+          page: page,
+          sessionStatus: sessionStatus,
+          searchTxt: searchTxt,
+        ).getUrl,
         reqName: Strings.experts,
         headers: HeaderHelpers.jsonHeader(),
       );
@@ -21,7 +26,7 @@ class ExpertsService extends GetxService {
     final response = await _apiHelper.request<ExpertSessionsListModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
 
         final responseData = ExpertSessionsListModel.fromJson(data);
 

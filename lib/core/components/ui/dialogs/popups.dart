@@ -1,4 +1,3 @@
-import 'package:mama_app/app/service_export.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/ask_ques_popup.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
@@ -11,7 +10,6 @@ import '../../../../features/shared/wave_request/widgets/new_waves_user_details_
 import '../../app_ui/popup_widgets/awaiting_verification_popup.dart';
 import '../../app_ui/popup_widgets/daily_limit_popup.dart';
 import '../../app_ui/popup_widgets/delete_confirm_dialog.dart';
-import '../../app_ui/popup_widgets/edit_fuel_diesel_rate_popup.dart';
 import '../../app_ui/popup_widgets/image_viewer.dart';
 import '../../app_ui/popup_widgets/loading_popup.dart';
 import '../../app_ui/popup_widgets/lock_comment_popup.dart';
@@ -30,15 +28,20 @@ class Popups {
       barrierLabel: '',
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 280),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-      transitionBuilder: (_, animation, __, ___) {
-        final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
+      pageBuilder: (_, _, _) => const SizedBox.shrink(),
+      transitionBuilder: (_, animation, _, _) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        );
         return ScaleTransition(
           scale: Tween<double>(begin: 0.85, end: 1.0).animate(curved),
           child: FadeTransition(
             opacity: animation,
             child: Dialog(
-              insetPadding: insetPadding ?? EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
+              insetPadding:
+                  insetPadding ??
+                  EdgeInsets.symmetric(horizontal: 5.w, vertical: 20.h),
               backgroundColor: Colors.transparent,
               clipBehavior: Clip.none,
               child: content,
@@ -61,15 +64,20 @@ Future<T?> showAnimatedDialog<T>({
     barrierLabel: '',
     barrierColor: Colors.black54,
     transitionDuration: const Duration(milliseconds: 280),
-    pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+    pageBuilder: (_, _, _) => const SizedBox.shrink(),
 
-    transitionBuilder: (context, animation, __, ___) {
-      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutBack);
+    transitionBuilder: (context, animation, _, _) {
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutBack,
+      );
 
       return AnimatedPadding(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
         child: SafeArea(
           child: Center(
             child: ScaleTransition(
@@ -164,7 +172,10 @@ Future<void> newWavesUserDetailsDialog({
 }
 
 Future<void> showReqAcceptedDialog() async {
-  await Popups().baseAlert(context: Get.context!, content: NewWavesReqAcceptPopup());
+  await Popups().baseAlert(
+    context: Get.context!,
+    content: NewWavesReqAcceptPopup(),
+  );
 }
 
 Future<void> showBothConnectedDialog({
@@ -203,12 +214,17 @@ Future<void> showLiveExitPopup(
   VoidCallback? onRejoin,
   Function(bool)? onTapCancel,
 }) {
-  final isBlocking = reason == LiveExitReason.kicked || reason == LiveExitReason.connectionLost;
+  final isBlocking =
+      reason == LiveExitReason.kicked ||
+      reason == LiveExitReason.connectionLost;
   return showDialog(
     context: Get.context!,
     barrierDismissible: !isBlocking,
-    builder: (_) =>
-        LiveSessionExitPopup(reason: reason, onRejoin: onRejoin, onTapCancel: onTapCancel),
+    builder: (_) => LiveSessionExitPopup(
+      reason: reason,
+      onRejoin: onRejoin,
+      onTapCancel: onTapCancel,
+    ),
   );
 }
 
@@ -225,37 +241,11 @@ Future<void> showLoading({required RxBool isupdateIsSeenLoading}) {
     barrierDismissible: false,
     builder: (_) {
       return Obx(() {
-        return isupdateIsSeenLoading.value ? const LoadingPopup() : const SizedBox.shrink();
+        return isupdateIsSeenLoading.value
+            ? const LoadingPopup()
+            : const SizedBox.shrink();
       });
     },
-  );
-}
-
-/// 🔹 editFuelDieselRate Popup
-Future<void> editFuelDieselRate({
-  required String title,
-  required FuelType type,
-  required TextEditingController controller,
-  required FocusNode focusNode,
-  required RxBool isLoading,
-  bool? isLoad,
-
-  required VoidCallback onTapUpdatePrice,
-  required GlobalKey<FormState> updatePriceFormKey,
-}) async {
-  await Popups().baseAlert(
-    context: Get.context!,
-
-    content: EditFuelDieselRatePopup(
-      title: title,
-      type: type,
-      controller: controller,
-      focusNode: focusNode,
-      isLoading: isLoading,
-      isLoad: isLoad,
-      onTapUpdatePrice: onTapUpdatePrice,
-      updatePriceFormKey: updatePriceFormKey,
-    ),
   );
 }
 

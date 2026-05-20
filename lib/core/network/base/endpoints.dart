@@ -21,7 +21,10 @@ class Endpoints {
     return "chat/block-user-app?userId=$userId";
   }
 
-  static String unblockUser({required String blockedUserId, required String blockeRUserId}) {
+  static String unblockUser({
+    required String blockedUserId,
+    required String blockeRUserId,
+  }) {
     return "chat/unblock-user-app?blockerId=$blockeRUserId&blockedId=$blockedUserId";
   }
 
@@ -44,8 +47,12 @@ class Endpoints {
     return "profile/match-user?latitude=$lat&longitude=$long";
   }
 
-  static String getExpertSessionList({required String sessionStatus, required String page}) {
-    return "expert/get-all-session-app?sessionStatus=$sessionStatus&page=$page";
+  static String getExpertSessionList({
+    required String sessionStatus,
+    required String page,
+    required String searchTxt,
+  }) {
+    return "expert/get-all-session-app?sessionStatus=$sessionStatus&page=$page&searchText=$searchTxt";
   }
 
   static String getUserProfile({required String userId}) {
@@ -63,24 +70,31 @@ class Endpoints {
   static String createCommunity = "community/create-community";
   static String updateCommunity = "community/edit-community";
   static String getMyCommunity = "community/get-my-community";
-  static String getJoinedCommunity = "community/get-joined-community?searchText=";
+  static String getJoinedCommunity =
+      "community/get-joined-community?searchText=";
   static String getSuggestedCommunity = "community/get-community-suggestion";
   static String getSearchedCommunity({required String searchTxt}) =>
       "community/search-community?searchText=$searchTxt";
 
-  static String getCommunityDetail({required String id}) => "community/get-community-detail/$id";
+  static String getCommunityDetail({required String id}) =>
+      "community/get-community-detail/$id";
   static String postToggleLike = "post/toggle-like";
   static String pinPost({required String id}) => "post/pin-post/$id";
-  static String lockCommentOfPost({required String id}) => "post/lock-comment/$id";
+  static String lockCommentOfPost({required String id}) =>
+      "post/lock-comment/$id";
   static String createNewPost = "post/create-new-post";
   static String postAddComment = "post/add-comment";
   static String joinCommunity({required String communityId}) =>
       "community/join-community?communityId=$communityId";
-  static String getAllCommentsOfAPost({required String postId}) => "post/get-all-comment/$postId";
-  static String deletePost({required String postId}) => "post/delete-post/$postId";
+  static String getAllCommentsOfAPost({required String postId}) =>
+      "post/get-all-comment/$postId";
+  static String deletePost({required String postId}) =>
+      "post/delete-post/$postId";
 
   //
   static String get communitySpotlight => "community/get-community-spotlight";
+  static String get gentleReminder => "gentle-reminder/get-today-reminder";
+  static String get addTodayMood => "mood/add-today-mood";
 
   // Chat
   static String getSearchedChatList({required String searchTxt}) =>

@@ -1,7 +1,8 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../buttons/back_arrow_in_circle.dart';
 
-class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget {
+class CommonAppBarContent extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final Widget? suffix;
   final VoidCallback? onTapBack;
@@ -10,6 +11,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
   final bool? titleInLeft;
   final Widget? titleLeftWidget;
   final Widget? titleWidget;
+  final bool? expandTitle;
 
   const CommonAppBarContent({
     super.key,
@@ -21,6 +23,7 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
     this.titleInLeft,
     this.titleLeftWidget,
     this.titleWidget,
+    this.expandTitle,
   });
 
   @override
@@ -36,9 +39,72 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
             // color: Colors.amber,
             color: finalBg,
           ),
-          padding: EdgeInsets.only(top: 30.h, left: 20.w, right: 20.w, bottom: 10.h),
+          padding: EdgeInsets.only(
+            top: 30.h,
+            left: 20.w,
+            right: 20.w,
+            bottom: 10.h,
+          ),
 
-          child: Row(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              /// LEFT + RIGHT ACTIONS
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (hasBackNavArrow == null)
+                    BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop())
+                  else if (hasBackNavArrow == false)
+                    SizedBox(width: 40)
+                  else
+                    SizedBox(width: 40),
+
+                  suffix ?? const SizedBox(width: 40),
+                ],
+              ),
+
+              /// CENTER TITLE
+              Positioned.fill(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: expandTitle == true
+                        ? (hasBackNavArrow == false ? 0 : 50)
+                        : 60,
+
+                    right: expandTitle == true ? (suffix != null ? 50 : 0) : 60,
+                  ),
+                  child:
+                      titleWidget ??
+                      (titleInLeft == true
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                titleLeftWidget ?? const SizedBox.shrink(),
+
+                                Flexible(
+                                  child: Text(
+                                    title.capEachWord(),
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.left,
+                                    style: 18.titleMclrCusFSOutfit,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              title.capEachWord(),
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: 18.titleMclrCusFSOutfit,
+                            )),
+                ),
+              ),
+            ],
+          ),
+          /*
+           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -82,6 +148,8 @@ class CommonAppBarContent extends StatelessWidget implements PreferredSizeWidget
               suffix ?? Container(width: 40.w),
             ],
           ),
+
+      */
         ),
       ),
       toolbarHeight: 60.h,
@@ -113,7 +181,12 @@ class CommunityTopbarContent extends StatelessWidget {
   final VoidCallback? onTapBack;
   final bool? isBgTransp;
 
-  const CommunityTopbarContent({super.key, this.suffix, this.onTapBack, this.isBgTransp});
+  const CommunityTopbarContent({
+    super.key,
+    this.suffix,
+    this.onTapBack,
+    this.isBgTransp,
+  });
 
   @override
   Widget build(BuildContext context) {

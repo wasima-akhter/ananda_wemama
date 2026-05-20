@@ -37,7 +37,8 @@ class Strings {
   static const String alreadyHaveAnAccount = "Already have an account?";
   static const String dontHaveAnAccount = "Don't have an account?";
   static const String loginWelcomeText = "Welcome back! glad to see you again";
-  static const String signupChooseRoleTxt = "Create account as a customer or Supplier";
+  static const String signupChooseRoleTxt =
+      "Create account as a customer or Supplier";
   static const String signupTxt = "Signup to get started..";
   static const String email = "Email";
   static const String name = "Name";
@@ -51,7 +52,8 @@ class Strings {
   static const String gladToSeeUAgain = "Glad to see you again";
   static const String passwordChangedContinueLogin =
       "Your password has been changed, continue to login";
-  static const String enterCodeSentToMail = "Enter the code we've sent to your mail";
+  static const String enterCodeSentToMail =
+      "Enter the code we've sent to your mail";
 
   static const String verificationSuccessfulSetLocation =
       "Verification successful set location & continue to login";
@@ -66,7 +68,8 @@ class Strings {
   static const String sendConfirmation = "Send confirmation";
   static const String newPassword = "New password";
   static const String changePassword = "Change password";
-  static const String addSpecialChar = "Add Special Characters to make it Strong";
+  static const String addSpecialChar =
+      "Add Special Characters to make it Strong";
 
   // ===========================
   // Home / Dashboard
@@ -98,11 +101,14 @@ class Strings {
   static const String youAreInactiveNow = "You Are Inactive Now!";
   static const String youAreActiveNow = "You Are Active Now!";
 
-  static const String visibleForMatching = "You will be visible for matching to others nearby.";
+  static const String visibleForMatching =
+      "You will be visible for matching to others nearby.";
 
-  static const String inactiveNotVisible = "When inactive, you won't appear in match searches.";
+  static const String inactiveNotVisible =
+      "When inactive, you won't appear in match searches.";
 
-  static const String enableLocationForMatching = "**Enable location to appear in match searches.";
+  static const String enableLocationForMatching =
+      "**Enable location to appear in match searches.";
 
   // ─────────────────────────────────────────────────────────────────────────────
   // ADD THESE to your existing Strings class / localization file
@@ -112,11 +118,14 @@ class Strings {
   static const String locationPermissionRationale =
       'We need your location to connect you with nearby moms and help you find the best matches.';
 
-  static const String locationBenefitMatching = 'Find moms near you for matching';
+  static const String locationBenefitMatching =
+      'Find moms near you for matching';
 
-  static const String locationBenefitVisibility = 'Appear in other moms\' match results';
+  static const String locationBenefitVisibility =
+      'Appear in other moms\' match results';
 
-  static const String locationBenefitPrivacy = 'Your exact location is never shared';
+  static const String locationBenefitPrivacy =
+      'Your exact location is never shared';
 
   static const String allowLocationAccess = 'allow location access';
   static const String allowLocation = 'allow';
@@ -130,8 +139,10 @@ class Strings {
 
   // Overlay strings
   static const String locationEnabled = 'location enabled';
-  static const String locationActiveVisible = 'You are now visible to nearby moms.';
-  static const String youCanNowFindMatches = 'You can now find and be found for matches!';
+  static const String locationActiveVisible =
+      'You are now visible to nearby moms.';
+  static const String youCanNowFindMatches =
+      'You can now find and be found for matches!';
   static const String gotIt = 'got it';
 
   // locationNeededForMatchingExplained
@@ -145,7 +156,8 @@ class Strings {
   static const String googleMap = "Google Map";
   static const String searchLocation = "Search Location";
   static const String searchCityOrRegion = "Search City or region";
-  static const String nearestSupplierAndPriceStats = "Nearest Suppliers And Price Stats";
+  static const String nearestSupplierAndPriceStats =
+      "Nearest Suppliers And Price Stats";
 
   // Indiv pages
   static const String bookmark = "Bookmark";
@@ -159,7 +171,8 @@ class Strings {
   static const String pleaseCheckYourInternetOrTryAgain =
       "Please check your internet or try again.";
 
-  static const String somethingWentWrong = "Something went wrong. Please try again.";
+  static const String somethingWentWrong =
+      "Something went wrong. Please try again.";
   static const String areYouSure = "Are you sure!";
   static const String confirmToLogout = "Confirm To Logout?";
   static const String available = "Available";
@@ -208,7 +221,8 @@ class Strings {
   static const String updatePrice = "Update Price";
   static const String updateLoad = "Update Load";
   static const String updateProfile = "Update Profile";
-  static const String passwordChangedSuccessfully = "Your password has been changed successfully";
+  static const String passwordChangedSuccessfully =
+      "Your password has been changed successfully";
   static const String editDetails = "Edit details";
   static const String addDetails = "Add details";
   static const String selectPhoto = "Select Photo";
@@ -234,7 +248,8 @@ class Strings {
       "mama_app is a platform that connects customers with verified petroleum / diesel to perform services.";
   static const String techPlatformInfo =
       "We are a technology platform, not a courier company. All deliveries are fulfilled by authentic and well vetted fuel delivery companies.";
-  static const String securePayments = "All payments are processed securely via [paystack].";
+  static const String securePayments =
+      "All payments are processed securely via [paystack].";
   static const String paymentFailInfo =
       "If a payment fails, your order may be canceled automatically.";
   static const String userEligibility = "User Eligibility";
@@ -255,7 +270,8 @@ class Strings {
   static const String awaitingVerification = "Awaiting for verification";
   static const String authorityCheckDocs =
       "Authority will be check your documents and ensure that you are able to use it.";
-  static const String setLocationAwaitingVerification = "Set location & awaiting for verification";
+  static const String setLocationAwaitingVerification =
+      "Set location & awaiting for verification";
   static const String authorityCheckLegit =
       "Authority will be check your documents and ensure that you are legit or Not";
   static const String backToLogin = "Back to login";
@@ -306,7 +322,8 @@ class Strings {
   static const String locationServicesOffMessage = "Location Services Off";
   static const String turnOn = "Turn On";
   static const String permissionDenied = "Permission Denied";
-  static const String locationPermissionIsRequired = 'Location permission is required';
+  static const String locationPermissionIsRequired =
+      'Location permission is required';
   static const String permissionIsRequired = 'Permission is required';
   static const String openSettings = 'Open Settings';
   static const String locationPermissionDeniedForeverPlzEnable =
@@ -326,7 +343,8 @@ class Strings {
   static const String selectCity = "Select City";
   static const String useYourCurrentLocation = "Use Your Current Location";
   static const String stationLocation = "Station Location";
-  static const String savedLocallyButFailedToSync = "Saved Locally But Failed To Sync";
+  static const String savedLocallyButFailedToSync =
+      "Saved Locally But Failed To Sync";
 
   // new for this project:
 
@@ -341,16 +359,21 @@ class Strings {
       "Every member is verified to ensure a genuine, women-only environment where you can feel secure.";
 
   static const String photoGuidlines = "Photo Guidlines";
-  static const String clearFaceForward = "Clear face-forward photos work best for matching.";
-  static const String noSunglasses = "No sunglasses or heavy filters that obscure your face";
+  static const String clearFaceForward =
+      "Clear face-forward photos work best for matching.";
+  static const String noSunglasses =
+      "No sunglasses or heavy filters that obscure your face";
   static const String yourphotosAreOnly =
       "your photos are only visible to verified community members.";
 
   static const String createAccount = "Create an account";
-  static const String enterSixDigitCodeEmail = "Enter The 6 Digit Code Sent To Your Email Address";
+  static const String enterSixDigitCodeEmail =
+      "Enter The 6 Digit Code Sent To Your Email Address";
   static const String findMumsNearYou = "Find mums near you";
-  static const String motherhoodSupportLine = "You don't have to do motherhood alone";
-  static const String friendshipSupportUnderstanding = "Friendship . Support. Understanding";
+  static const String motherhoodSupportLine =
+      "You don't have to do motherhood alone";
+  static const String friendshipSupportUnderstanding =
+      "Friendship . Support. Understanding";
 
   static const String feelBetterTogether = "Feel better, together";
   static const String moodToolsExpertSessionsRealCommunity =
@@ -370,8 +393,10 @@ class Strings {
   static const String mumIsDiscussingThis = "mum is discussing this >";
   static const String communitySpotlight = "Community spotlight";
   static const String joinDiscussion = "Join discussion";
-  static const String joinOurSafeCommunity = "Join our safe, Verified community for women";
-  static const String agreeToTerms = "I agree to the Terms of Services and Privacy Policy";
+  static const String joinOurSafeCommunity =
+      "Join our safe, Verified community for women";
+  static const String agreeToTerms =
+      "I agree to the Terms of Services and Privacy Policy";
   static const String learnMore = "Learn more.";
   static const String emotionalPostpartumQuestion =
       "\"Is it normal to feel this emotional at 5 weeks postpartum?\"";
@@ -389,6 +414,7 @@ class Strings {
   static const String selfCare = "Self-care";
   static const String mindfulness = "mindfulness";
   static const String gentleFitness = "gentle fitness";
+  static const String gentleReminder = "gentle reminder";
   static const String mumsStage = "Mum's stage";
   static const String fillAllDetails = "Fill-up all details";
   static const String addPhotoAndBio = "Add a photo and a short bio";
@@ -426,8 +452,10 @@ class Strings {
   static const String educationalPlay = "Educational play";
   static const String artsCrafts = "Arts & crafts";
   static const String reading = "Reading";
-  static const String accountCreatedSuccessfully = "Account created successfully";
-  static const String personalizedSpaceReady = "Your personalized motherhood space is ready.";
+  static const String accountCreatedSuccessfully =
+      "Account created successfully";
+  static const String personalizedSpaceReady =
+      "Your personalized motherhood space is ready.";
   static const String sleeping = "Sleeping";
   static const String writing = "writing";
   static const String musicPodcasts = "Music & podcasts";
@@ -451,7 +479,8 @@ class Strings {
   static const String premium = "Premium";
 
   static const String month = "month";
-  static const String dailySupportInfo = "Less than ₦170 per day for daily support ♡";
+  static const String dailySupportInfo =
+      "Less than ₦170 per day for daily support ♡";
 
   static const String moodSelfCare = "MOOD & SELF-CARE";
 
@@ -466,7 +495,8 @@ class Strings {
   static const String attendLiveSessions = "Attend live expert sessions";
   static const String mostPopular = "MOST POPULAR";
   static const String cancelAnytime = "Cancel anytime";
-  static const String lessThanPerDay = "Less than ₦170 per day for daily support ♡";
+  static const String lessThanPerDay =
+      "Less than ₦170 per day for daily support ♡";
   static const String unlockEverything = "Unlock Everything";
   static const String unlimitedWaves = "Unlimited Waves";
   static const String saveMoodEntries = "Save Mood Entries";
@@ -488,21 +518,27 @@ class Strings {
   static const String whatThisMeans = "What This Means";
   static const String howMumsUse = "How Most Mums Use WeMama";
   static const String ourPromise = "Our Promise To You";
-  static const String passwordChangedContinue = "Your password has been changed continue to login";
+  static const String passwordChangedContinue =
+      "Your password has been changed continue to login";
   static const String thankYouEarly = "Thank you for joining early.";
   static const String checkIn = "Check In";
   static const String spaceBuiltOnKindness =
       "This is a space built on kindness, privacy, and respect.";
-  static const String calmSpaceForMums = "WeMama is a calm space for mums to connect.";
+  static const String calmSpaceForMums =
+      "WeMama is a calm space for mums to connect.";
   static const String firstCircle = "You are part of our first circle";
   static const String tapHowFeeling = "Tap how you are feeling today";
-  static const String honestlyNoPressure = "Honestly - without noise or pressure.";
-  static const String neverPressured = "You will never be pressured to share more than you want";
+  static const String honestlyNoPressure =
+      "Honestly - without noise or pressure.";
+  static const String neverPressured =
+      "You will never be pressured to share more than you want";
   static const String presenceSetsTone = "Your presence helps set the tone.";
-  static const String shapeCommunityTone = "You help shape the tone of the community";
+  static const String shapeCommunityTone =
+      "You help shape the tone of the community";
   static const String listen = "Listen";
   static const String readOrReply = "Read or reply when it resonates";
-  static const String noObligation = "There is no obligation to post or reply daily";
+  static const String noObligation =
+      "There is no obligation to post or reply daily";
   static const String rest = "Rest";
   static const String stepAway = "Step away whenever you need";
   static const String showUpGently = "Show up gently, in your own way";
@@ -510,8 +546,10 @@ class Strings {
   static const String readyToJoin = "I am ready to join gently";
   static const String iUnderstand = "I understand";
   static const String enterWeMama = "Enter WeMama";
-  static const String foundingBadgeAdded = "Founding Mum badge added to your profile";
-  static const String earlyMemberHelpingShape = "early member helping shape the WeMama Community";
+  static const String foundingBadgeAdded =
+      "Founding Mum badge added to your profile";
+  static const String earlyMemberHelpingShape =
+      "early member helping shape the WeMama Community";
 
   static const String waveRequest = "Wave request";
 
@@ -540,10 +578,12 @@ class Strings {
   static const String goodEveningAda = "Good evening, Ada";
   static const String howIsYourFeeling = "how is your feeling?";
   static const String howAreYourFeeling = "How are your feeling?";
-  static const String checkInStreak1 = "❤️ 3-days check-in streak";
-  static const String checkInStreak2 = "🌿 Great to see you are calm today";
+  static const String checkInStreakHeart = "❤️ ";
+  static const String checkInStreak1 = "-days check-in streak";
+  static const String checkInStreak2 = " 🌿 ";
   static const String todaysReminder = "Today's gentle reminder";
-  static const String restCounts = "You don't have to fix everything today. rest counts.";
+  static const String restCounts =
+      "You don't have to fix everything today. rest counts.";
 
   // ongoing expert session card
 
@@ -572,7 +612,8 @@ class Strings {
   static const String read = "Read";
   static const String goToExpertCategory = "Go To Expert Category";
   static const String waveSent = "wave sent";
-  static const String waveBackToChat = "If they wave back, you can start chatting.";
+  static const String waveBackToChat =
+      "If they wave back, you can start chatting.";
 
   // Report
   static const String addPhotos = "Add Photos";
@@ -640,10 +681,12 @@ class Strings {
   static const String keepBrowsing = "Keep Browsing";
   static const String directMessaging = "Direct Messaging";
   static const String chatUnlock = "Chat Unlock";
-  static const String unlimitedMessagesInfo = "You can now send unlimited message to each other";
+  static const String unlimitedMessagesInfo =
+      "You can now send unlimited message to each other";
 
   static const String safeEnvironment = "Safe Environment";
-  static const String verifiedMembersOnly = "Verified members only. Your safety is our priority.";
+  static const String verifiedMembersOnly =
+      "Verified members only. Your safety is our priority.";
 
   // Match
   static const String tapToFindNearbyMums = "Tap to find \nWeMamas Near You";
@@ -661,13 +704,15 @@ class Strings {
 
   static const String dailyWaveLimitReached = "Daily wave limit reached!";
   static const String waveResetAtMidnight = "Resets at midnight.";
-  static const String getPremiumUnlimitedWaves = "Get Premium for unlimited waves.";
+  static const String getPremiumUnlimitedWaves =
+      "Get Premium for unlimited waves.";
 
   // Subscription
   static const String subscriptionUpgrade = "Subscription Upgrade";
 
   static const String noWeMamasNearby = "No WeMamas nearby right now 🤍";
-  static const String checkBackLater = "Check back later — new mums join every day.";
+  static const String checkBackLater =
+      "Check back later — new mums join every day.";
 
   // community
   static const String managePassword = "Manage Password";
@@ -707,15 +752,18 @@ class Strings {
 
   static const String memberManagement = "Member Management";
 
-  static const String commentLocked = "Comment has been locked. No one can comment now.";
-  static const String commentUnlocked = "Comment has been unlocked. You can comment now.";
+  static const String commentLocked =
+      "Comment has been locked. No one can comment now.";
+  static const String commentUnlocked =
+      "Comment has been unlocked. You can comment now.";
 
   static const String confirmDeletePost = "Do you want to delete this post?";
   static const String noBookmarks = "No Bookmarks";
 
   //
   static const String moodChipLibrary = "Mood Chip Library";
-  static const String subscribeToAccessOurLibrary = "Subscribe To Access Our Library";
+  static const String subscribeToAccessOurLibrary =
+      "Subscribe To Access Our Library";
 
   static const String noQuestionYet = "No question yet.";
   static const String beTheFirstToAsk = "Be the first to ask the expert";

@@ -99,7 +99,8 @@ class ProfileSection extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            backgroundColor: c.bottomSheetBackground.withOpacity(0.5),
+                            backgroundColor: c.bottomSheetBackground
+                                .withOpacity(0.5),
                             radius: 9,
                             child: SvgIconColored(
                               iconPath: IconsPath.curvedInfo,
@@ -131,7 +132,11 @@ class ProfileSection extends StatelessWidget {
                       Gap(5.h),
                       Text(
                         Strings.enableLocationForMatching,
-                        style: TxtStyle.interSemiB(fs: 10, w: 400, color: c.primary),
+                        style: TxtStyle.interSemiB(
+                          fs: 10,
+                          w: 400,
+                          color: c.primary,
+                        ),
                       ),
                     ],
                   ),

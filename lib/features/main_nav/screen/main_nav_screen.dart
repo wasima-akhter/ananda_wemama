@@ -12,7 +12,8 @@ class MainNavScreen extends StatelessWidget {
     log("🏗️ MainNavigationPage build called");
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) => didPop ? null : mnc.handleWillPop(),
+      onPopInvokedWithResult: (didPop, result) =>
+          didPop ? null : mnc.handleWillPop(),
       child: SafeArea(
         top: false,
 
@@ -21,11 +22,14 @@ class MainNavScreen extends StatelessWidget {
           backgroundColor: bgClr,
           body: Obx(() {
             final currentIndex = mnc.currentIndex.value;
-            log("📄 Displaying page at index: ${currentIndex}");
+            log("📄 Displaying page at index: $currentIndex");
             return mnc.pages[currentIndex];
           }),
           bottomNavigationBar: Container(
-            decoration: BoxDecoration(boxShadow: boxShadowTopOnly, color: c.inputBackground),
+            decoration: BoxDecoration(
+              boxShadow: boxShadowTopOnly,
+              color: c.inputBackground,
+            ),
             height: 60.h,
 
             // ((S.h * 0.06) + S.bottomInset).h,
@@ -35,7 +39,11 @@ class MainNavScreen extends StatelessWidget {
               //  bottom:  S.bottomInset> 25 ? S.bottomInset : 10
             ),
 
-            child: CustomBottomNavBar(length: mnc.pages.length, roleId: roleId, mnc: mnc),
+            child: CustomBottomNavBar(
+              length: mnc.pages.length,
+              roleId: roleId,
+              mnc: mnc,
+            ),
           ),
         ),
       ),

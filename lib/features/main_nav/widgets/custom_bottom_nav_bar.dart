@@ -6,17 +6,48 @@ class CustomBottomNavBar extends StatelessWidget {
   final int length;
   final dynamic roleId;
   final MainNavController mnc;
-  const CustomBottomNavBar({super.key, required this.length, this.roleId, required this.mnc});
+  const CustomBottomNavBar({
+    super.key,
+    required this.length,
+    this.roleId,
+    required this.mnc,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
+
+      children: List.generate(length, (index) {
+        return Expanded(
+          child: CusGestureDetector(
+            onTap: () async => mnc.onTapIndex(index),
+            child: Center(
+              child: Obx(() {
+                final currentIndex = mnc.currentIndex.value;
+                final isCurrIndex = index == currentIndex;
+
+                return NavbarItem(
+                  iconPath: mnc.icons[index],
+                  label: mnc.labels[index],
+                  isSelected: isCurrIndex,
+                  width: 26.w,
+                  height: 26.h,
+                  currenIndex: index,
+                );
+              }),
+            ),
+          ),
+        );
+      }),
+
+      /*
       children: [
         ...List.generate(length, (index) {
           return CusGestureDetector(
-            onTap: () async => mnc.onTapIndex(index), // assign clicked index into currentIndex
+            onTap: () async =>
+                mnc.onTapIndex(index), // assign clicked index into currentIndex
             child: Obx(() {
               final currentIndex = mnc.currentIndex.value;
               final isCurrIndex = index == currentIndex;
@@ -44,6 +75,8 @@ class CustomBottomNavBar extends StatelessWidget {
           );
         }),
       ],
+
+      */
     );
   }
 }

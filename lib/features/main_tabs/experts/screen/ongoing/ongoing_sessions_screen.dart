@@ -1,8 +1,9 @@
+import 'package:mama_app/features/main_tabs/experts/controller/session_controller.dart';
+
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../../core/components/ui/inputs/cus_search_bar.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
-import '../../../../../core/components/ui/scroll/cus_scrollbar_widget.dart';
 import '../../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../controller/experts_controller.dart';
 
@@ -12,79 +13,121 @@ class OngoingSessionsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exc = Get.find<ExpertsController>();
+    final sc = Get.find<SessionController>();
 
     return AppScreenTemplate(
       isScrollable: false,
       appBar: CommonAppBarContent(
         title: Strings.ongoingSession,
-
-        onTapBack: () {
-          goToMainNavWithTab(4);
-        },
+        onTapBack: () => goToMainNavWithTab(4),
       ),
-      onRefresh: () async {
-        await exc.getOngoingSessions();
-      },
 
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// 🔍 SEARCH
+          /// 🔍 SEARCH BAR
           CusSearchBar(
             fillColor: ctransp,
             rad: 12,
             controller: exc.searchOngoingCtrl,
             focusNode: exc.searchOngoingFocusNode,
+            onEditingComplete: () => exc.onSubmitOngoingSearch(),
           ),
 
           Gap(itemGap * 0.5),
 
+          /// 🏷️ SEARCH TAG
+          Obx(() {
+            if (!exc.showOngoingTag.value) return const SizedBox.shrink();
+            return Padding(
+              padding: EdgeInsets.only(bottom: itemGap * 0.5),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ContainerBordered(
+                    vp: 6,
+                    hp: 12,
+                    rad: 30,
+                    contClr: c.secondary.withOpacity(0.3),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFit(
+                          exc.searchedOngoingTxt.value,
+                          style: TxtStyle.urbanistSemiB(
+                            fs: 14,
+                            w: 600,
+                            color: c.primary,
+                          ),
+                        ),
+                        Gap(8),
+                        CusGestureDetector(
+                          onTap: exc.clearOngoingSearch,
+                          child: SvgIconColored(
+                            iconPath: IconsPath.closeCircle,
+                            iconColor: c.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+
           /// 🔥 LIST SECTION
           Expanded(
             child: Obx(() {
-              final list = exc.ongoingList;
-              final isLoading = exc.isOngoingLoading.value;
-
+              final list = sc.ongoingList;
+              final isLoading = sc.isOngoingLoading.value;
               final state = getUIStateList(isLoading: isLoading, list: list);
-
+              final isPaginating = sc.isOngoingPaginating.value;
               return UIStateHandler(
                 state: state,
 
                 /// 🔵 LOADING
-                loading: () => ListView.builder(
+                loading: () => ListView.separated(
+                  separatorBuilder: (context, index) => Gap(itemGap),
                   itemCount: 6,
-                  itemBuilder: (context, index) => const LiveOngoingSessionCardShimmer(),
+                  itemBuilder: (_, _) => const LiveOngoingSessionCardShimmer(),
                 ),
 
                 /// 🟡 EMPTY
-                empty: () => const Center(child: EmptySessionWidget(title: "No ongoing sessions")),
+                empty: () => CusRefreshIndicator(
+                  onRefresh: () async {
+                    exc.clearOngoingSearch();
+                    await sc.getOngoingSessions();
+                  },
+                  child: EmptyWidgetScrollable(title: "No ongoing sessions"),
+                ),
 
                 /// 🟢 DATA
-                data: () => CusScrollbarWidget(
-                  controller: exc.ongoingScrollController,
+                data: () => RefreshIndicator(
+                  onRefresh: () async {
+                    exc.clearOngoingSearch();
+                    await sc.getOngoingSessions();
+                  },
                   child: ListView.separated(
-                    controller: exc.ongoingScrollController,
+                    controller: sc.ongoingScrollController,
+                    physics:
+                        const AlwaysScrollableScrollPhysics(), // ← refresh works even on short lists
                     padding: EdgeInsets.only(bottom: 20.h),
-                    itemCount: list.length + 1, // 🔥 for loader at bottom
-                    separatorBuilder: (_, __) => Gap(itemGap),
-
-                    itemBuilder: (context, index) {
+                    itemCount: list.length + 1, // ← +1 for pagination loader
+                    separatorBuilder: (_, _) => Gap(itemGap),
+                    itemBuilder: (_, index) {
                       /// 🔥 pagination loader
                       if (index == list.length) {
-                        return Obx(() {
-                          return exc.isOngoingLoading.value
-                              ? const Padding(
-                                  padding: EdgeInsets.all(16),
-                                  child: Center(child: CircularProgressIndicator()),
-                                )
-                              : const SizedBox.shrink();
-                        });
+                        return isPaginating
+                            ? const LoadingPrimary()
+                            : const SizedBox.shrink();
                       }
 
-                      final item = list[index];
-
-                      return LiveOngoingSessionCard(data: item, isFromOngoingScreen: true);
+                      return LiveOngoingSessionCard(
+                        data: list[index],
+                        isFromOngoingScreen: true,
+                      );
                     },
                   ),
                 ),

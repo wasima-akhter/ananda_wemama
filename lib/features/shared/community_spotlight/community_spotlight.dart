@@ -127,27 +127,33 @@ class _CommunitySpotlightLive extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    Strings.communitySpotlight.capEachWord(),
-                    style: TxtStyle.outfitSmTitle,
-                  ),
-                  CusGestureDetector(
-                    onTap: () => Get.toNamed(
-                      RoutePaths.communityDetail,
-                      arguments: {
-                        "btnState": MyCommunityBtnState.join,
-                        "communityItemId": commId,
-                      },
+                  Expanded(
+                    child: Text(
+                      Strings.communitySpotlight.capEachWord(),
+                      style: TxtStyle.outfitSmTitle,
                     ),
-                    child: ContainerBordered(
-                      hasBrdr: true,
-                      contClr: c.inputBackground,
-                      rad: 18,
-                      vp: 6,
-                      hp: 18,
-                      child: Text(
-                        Strings.joinDiscussion.capEachWord(),
-                        style: 12.titleMclrCusFSURB,
+                  ),
+                  Gap(itemGap),
+                  Container(
+                    // color: Colors.amber,
+                    child: CusGestureDetector(
+                      onTap: () => Get.toNamed(
+                        RoutePaths.communityDetail,
+                        arguments: {
+                          "btnState": MyCommunityBtnState.join,
+                          "communityItemId": commId,
+                        },
+                      ),
+                      child: ContainerBordered(
+                        hasBrdr: true,
+                        contClr: c.inputBackground,
+                        rad: 18,
+                        vp: 6,
+                        hp: 18,
+                        child: Text(
+                          Strings.joinDiscussion.capEachWord(),
+                          style: 12.titleMclrCusFSURB,
+                        ),
                       ),
                     ),
                   ),
@@ -158,10 +164,15 @@ class _CommunitySpotlightLive extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   StackOfImages(),
-                  Gap(itemGap),
-                  Text(
-                    "$totalMembers ${(spotlightData?.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
-                    style: normRsmSecURB,
+                  Gap(itemGap * 2),
+                  Expanded(
+                    child: Container(
+                      // color: Colors.amber,
+                      child: Text(
+                        "$totalMembers ${(spotlightData?.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
+                        style: normRsmSecURB,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -186,7 +197,7 @@ class StackOfImages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double radius = 15;
-    const double overlap = 25;
+    const double overlap = 24;
     return SizedBox(
       width: (radius * 2) + (overlap * 2), // total visual width
       height: radius * 2,

@@ -73,6 +73,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                         radius: 22,
                         imagePath: image,
                         enablePreview: false,
+                        isUser: true,
                       );
                     }),
 

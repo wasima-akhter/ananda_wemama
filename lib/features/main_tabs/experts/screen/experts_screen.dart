@@ -1,4 +1,5 @@
 import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
+import 'package:mama_app/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -7,6 +8,7 @@ import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.d
 import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
 import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
 import '../controller/experts_controller.dart';
+import '../controller/session_controller.dart';
 import '../widgets/card_session_list.dart';
 import '../widgets/paid_past_sessions_component.dart';
 
@@ -16,13 +18,17 @@ class ExpertsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final exc = Get.find<ExpertsController>();
-    final refreshKey = GlobalKey<RefreshIndicatorState>();
+    final sc = Get.find<SessionController>();
+    final act = Get.find<SessionActionController>();
 
     return AppScreenTemplate(
-      appBar: CommonAppBarContent(title: Strings.experts, hasBackNavArrow: false),
+      appBar: CommonAppBarContent(
+        title: Strings.experts,
+        hasBackNavArrow: false,
+      ),
       onRefresh: () async {
-        exc.getOngoingSessions();
-        exc.getUpcomingSessions();
+        sc.getOngoingSessions();
+        sc.getUpcomingSessions();
       },
 
       child: Column(
@@ -30,28 +36,26 @@ class ExpertsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: itemGap,
         children: [
-          /// horizontal live session list
+          /// 🔴 ONGOING sessions
           Obx(() {
-            final isLoading = exc.isOngoingLoading.value;
-            final list = exc.ongoingList;
-
-            final displayList = list.length > 5 ? list.sublist(0, 5) : list;
-
-            final state = getUIStateList(isLoading: isLoading, list: displayList);
+            final isLoading = sc.isOngoingLoading.value;
+            final displayList = exc.limitList(sc.ongoingList);
+            final state = getUIStateList(
+              isLoading: isLoading,
+              list: displayList,
+            );
 
             return UIStateHandler(
               state: state,
 
-              /// 🔵 LOADING
               loading: () => CardHorizontalList(
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () {},
                 itemCount: 5,
-                itemBuilder: (index) => const LiveOngoingSessionCardShimmer(),
+                itemBuilder: (_) => const LiveOngoingSessionCardShimmer(),
               ),
 
-              /// 🟡 EMPTY
               empty: () => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -61,35 +65,31 @@ class ExpertsScreen extends StatelessWidget {
                 ],
               ),
 
-              /// 🟢 DATA
               data: () => CardHorizontalList(
-                aspectRatio: 1.6,
+                aspectRatio: 1.8,
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () => exc.onTapViewAll(true),
                 itemCount: displayList.length,
-                itemBuilder: (index) {
-                  final item = displayList[index];
-                  return LiveOngoingSessionCard(data: item);
-                },
+                itemBuilder: (index) =>
+                    LiveOngoingSessionCard(data: displayList[index]),
               ),
             );
           }),
 
           Gap(itemGap * 0.5),
 
-          /// horizontal upcoming session list
-          ///
+          /// 🟡 UPCOMING sessions
           Obx(() {
-            final isLoading = exc.isUpcomingLoading.value;
-            final list = exc.upcomingList;
-
-            final displayList = list.length > 5 ? list.sublist(0, 5) : list;
-
-            final uiState = getUIStateList(isLoading: isLoading, list: displayList);
+            final isLoading = sc.isUpcomingLoading.value;
+            final displayList = exc.limitList(sc.upcomingList);
+            final state = getUIStateList(
+              isLoading: isLoading,
+              list: displayList,
+            );
 
             return UIStateHandler(
-              state: uiState,
+              state: state,
 
               loading: () => CardHorizontalList(
                 title: Strings.upcomingExpertSession,
@@ -109,44 +109,45 @@ class ExpertsScreen extends StatelessWidget {
               ),
 
               data: () => CardHorizontalList(
-                aspectRatio: 1.45,
-                onViewAll: () => exc.onTapViewAll(false),
+                // aspectRatio: 1.45,
                 title: Strings.upcomingExpertSession,
                 exc: exc,
+                onViewAll: () => exc.onTapViewAll(false),
                 itemCount: displayList.length,
                 itemBuilder: (index) {
                   final item = displayList[index];
-
                   return UpcomingExpertSessionCard(
                     data: item,
-                    writeQuesCtrl: exc.writeQuesCtrl,
-                    isSendQuesLoading: exc.isuploadQuesLoading,
-                    writeQuesFocusNode: exc.writeQuesFocusNode,
                     onTapQues: ({required expertId, required sessionId}) =>
-                        exc.onTapQues(expertId: expertId, sessionId: sessionId),
+                        act.uploadSessionQues(
+                          expertId: expertId,
+                          sessionId: sessionId,
+                        ),
+                    writeQuesCtrl: act.writeQuesCtrl,
+                    writeQuesFocusNode: act.writeQuesFocusNode,
+                    isSendQuesLoading: act.isSendQuesLoading,
                   );
                 },
               ),
             );
           }),
+
           Gap(itemGap * 0.5),
 
-          // show past sessions
           PastSessionsLibraryCard(
             onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
           ),
 
           Text(
-            " This component is for you to see the pov of paid user:".capEachWord(),
+            " This component is for you to see the pov of paid user:"
+                .capEachWord(),
             style: TxtStyle.outfitSmTitle,
           ),
 
           PaidPastSessionsComponent(),
 
-          // show mood chip librtary
           MoodLibraryChipCard(
             moodDataList: exc.moodDataList,
-
             onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
           ),
         ],
@@ -159,7 +160,10 @@ Widget makeCardHeader(String title, {required void Function() onTap}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(title.capEachWord(), style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.primary)),
+      Text(
+        title.capEachWord(),
+        style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.primary),
+      ),
       GestureDetector(
         onTap: onTap,
         child: Text(

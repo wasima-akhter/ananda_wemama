@@ -47,7 +47,10 @@ class CommunityDetailsScreen extends StatelessWidget {
                   loading: () => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ShimmerWidget.rectangular(height: S.h * 0.25, width: double.infinity),
+                      ShimmerWidget.rectangular(
+                        height: S.h * 0.25,
+                        width: double.infinity,
+                      ),
                       ContainerBordered(
                         rad: 0,
                         vp: 12,
@@ -65,7 +68,10 @@ class CommunityDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  data: () => CommunityDetailTopContent(itemDetail: itemDetail, cdc: cdc),
+                  data: () => CommunityDetailTopContent(
+                    itemDetail: itemDetail,
+                    cdc: cdc,
+                  ),
                 ),
 
                 // your real header
@@ -76,28 +82,43 @@ class CommunityDetailsScreen extends StatelessWidget {
                   right: 0,
                   left: 0,
                   child: CommunityTopbarContent(
-                    suffix: CusGestureDetector(
-                      onTap: () {
-                        communityGuidlineDialog(
-                          isLoading: false,
-                          onTapAction: () async {
-                            Get.back();
-                          },
-                        );
-                        // if (cdc.btnState.value == MyCommunityBtnState.manage) {
-                        //   // edit the community
-                        //   communityGuidlineDialog(isLoading: false, onTapAction: () async {});
-                        // }
-                        // if (cdc.btnState.value == MyCommunityBtnState.visit) {}
-                        // if (cdc.btnState.value == MyCommunityBtnState.join) {
-                        //   communityGuidlineDialog(isLoading: false, onTapAction: () async {});
-                        // }
-                      },
-                      child: CusCircleIconButton(
-                        radius: 15.r,
-                        child: SvgIcon(iconPath: IconsPath.info, height: 30),
-                      ),
-                    ),
+                    suffix: (cdc.btnState.value == MyCommunityBtnState.join)
+                        ? CusGestureDetector(
+                            onTap: () {
+                              if (cdc.btnState.value ==
+                                  MyCommunityBtnState.manage) {
+                                // edit the community
+                                // communityGuidlineDialog(isLoading: false, onTapAction: () async {});
+
+                                // Get.toNamed(
+                                //   RoutePaths.manageCommunity,
+                                //   arguments: CreateCommunityArgModel(
+                                //     communityImg: itemDetail.community?.image ?? '',
+                                //     communityName: itemDetail.community?.name ?? '',
+                                //     communityId: itemDetail.community?.id ?? '',
+                                //     isEdit: true,
+                                //   ),
+                                // );
+                              }
+                              if (cdc.btnState.value ==
+                                  MyCommunityBtnState.visit) {}
+                              if (cdc.btnState.value ==
+                                  MyCommunityBtnState.join) {
+                                communityGuidlineDialog(
+                                  isLoading: false,
+                                  onTapAction: () async {},
+                                );
+                              }
+                            },
+                            child: CusCircleIconButton(
+                              radius: 15.r,
+                              child: SvgIcon(
+                                iconPath: IconsPath.info,
+                                height: 30,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                   ),
                 ),
               ],
@@ -123,7 +144,10 @@ class CommunityDetailsScreen extends StatelessWidget {
               },
               state: state,
               loading: () => Column(
-                children: List.generate(5, (index) => const PostItemShimmer().mB(itemGap)),
+                children: List.generate(
+                  5,
+                  (index) => const PostItemShimmer().mB(itemGap),
+                ),
               ).getcm,
               empty: () => const EmptyNoSearchWidget(title: "No Posts yet"),
 
@@ -158,7 +182,11 @@ class CommunityDetailTopContent extends StatelessWidget {
 
   final CommunityDetailController cdc;
 
-  const CommunityDetailTopContent({super.key, required this.itemDetail, required this.cdc});
+  const CommunityDetailTopContent({
+    super.key,
+    required this.itemDetail,
+    required this.cdc,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +230,11 @@ class CommunityDetailTopContent extends StatelessWidget {
                             communityName.capEachWord(),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 7,
-                            style: TxtStyle.outfitSemiB(fs: 18, w: 500, color: white),
+                            style: TxtStyle.outfitSemiB(
+                              fs: 18,
+                              w: 500,
+                              color: white,
+                            ),
                           ),
                         ),
                         Row(
@@ -211,7 +243,11 @@ class CommunityDetailTopContent extends StatelessWidget {
                             Gap(4),
                             TextFit(
                               "${Strings.members.capEachWord()} $membersNum",
-                              style: TxtStyle.outfit(fs: 12, w: 400, color: white),
+                              style: TxtStyle.outfit(
+                                fs: 12,
+                                w: 400,
+                                color: white,
+                              ),
                             ),
                           ],
                         ),
@@ -254,7 +290,8 @@ class CommunityDetailTopContent extends StatelessWidget {
                                   RoutePaths.communityDetail,
                                   arguments: {
                                     "btnState": MyCommunityBtnState.visit,
-                                    "communityItemId": itemDetail.community?.id ?? '',
+                                    "communityItemId":
+                                        itemDetail.community?.id ?? '',
                                   },
                                 );
                               }
@@ -270,7 +307,10 @@ class CommunityDetailTopContent extends StatelessWidget {
 
               CusGestureDetector(
                 onTap: () {
-                  Get.toNamed(RoutePaths.postInCommunity, arguments: community?.id ?? '');
+                  Get.toNamed(
+                    RoutePaths.postInCommunity,
+                    arguments: community?.id ?? '',
+                  );
                 },
                 child: ContainerBordered(
                   rad: 30,
@@ -296,5 +336,5 @@ class CommunityDetailTopContent extends StatelessWidget {
     );
   }
 }
- 
- //
+
+//

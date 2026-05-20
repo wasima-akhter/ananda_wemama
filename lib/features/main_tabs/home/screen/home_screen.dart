@@ -1,5 +1,6 @@
 import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
 import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
+import 'package:mama_app/features/shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -54,7 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return AppScreenTemplate(
       onRefresh: () async {
-        await hc.getCommunitySpotLight();
+        hc.getCommunitySpotLight();
+        hc.getGentleRemindData();
       },
       appBar: HomeAppBarContent(),
       child: Column(
@@ -71,15 +73,39 @@ class _HomeScreenState extends State<HomeScreen> {
             final isLoading = hc.isSpotLightLoading_.value;
             final state = getUIStateDetail(isLoading: isLoading);
 
+            if (liveSessionData == null || liveSessionData.isEmpty) {
+              return NoLiveSessionCard();
+            }
+
+            final firstSession = liveSessionData.first;
+            final status = firstSession.status;
+            final isLive = (status ?? '').toLowerCase() == "ongoing";
+
             return SizedBox(
-              height: S.h * 0.25,
               child: UIStateHandler(
-                loading: () =>
-                    const LiveOngoingSessionCardShimmer(), // change to li
-                state: state,
-                data: () => Container(
-                  child: LiveOngoingSessionCard(data: liveSessionData),
+                loading: () => SizedBox(
+                  height: S.h * 0.25,
+                  child: const LiveOngoingSessionCardShimmer(),
                 ),
+                state: state,
+                data: () {
+                  if (isLive) {
+                    return SizedBox(
+                      height: S.h * 0.25,
+                      child: LiveOngoingSessionCard(data: firstSession),
+                    );
+                  }
+
+                  final actionCtrl = hc.actionCtrl;
+
+                  return UpcomingExpertSessionCard(
+                    data: firstSession,
+                    writeQuesCtrl: actionCtrl.writeQuesCtrl,
+                    writeQuesFocusNode: actionCtrl.writeQuesFocusNode,
+                    isSendQuesLoading: actionCtrl.isSendQuesLoading,
+                    onTapQues: actionCtrl.uploadSessionQues,
+                  );
+                },
               ),
             );
           }),

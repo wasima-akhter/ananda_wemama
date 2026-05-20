@@ -128,7 +128,9 @@ class ChatController extends GetxController {
     searchedChatList.value = [];
 
     try {
-      final data = await service.fetchSearchedChatList(searchTxt: searchController.text.trim());
+      final data = await service.fetchSearchedChatList(
+        searchTxt: searchController.text.trim(),
+      );
 
       if (data.isNotEmpty) {
         log('get Searched ChatList : $data');
@@ -146,7 +148,10 @@ class ChatController extends GetxController {
   void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);
 
   // -------------update
-  void updateChatBlockStatus({required String chatId, required bool isBlocked}) {
+  void updateChatBlockStatus({
+    required String chatId,
+    required bool isBlocked,
+  }) {
     final index = realChatList.indexWhere((e) => e.id == chatId);
 
     if (index == -1) return;
@@ -156,7 +161,9 @@ class ChatController extends GetxController {
 
     final searchIndex = searchedChatList.indexWhere((e) => e.id == chatId);
     if (searchIndex != -1) {
-      searchedChatList[searchIndex] = searchedChatList[searchIndex].copyWith(isBlocked: isBlocked);
+      searchedChatList[searchIndex] = searchedChatList[searchIndex].copyWith(
+        isBlocked: isBlocked,
+      );
 
       searchedChatList.refresh();
     }

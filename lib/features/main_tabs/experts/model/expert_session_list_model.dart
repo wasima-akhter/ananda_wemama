@@ -9,7 +9,9 @@ class ExpertSessionsListModel {
       meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
       sessions: json["sessions"] == null
           ? []
-          : List<Session>.from(json["sessions"]!.map((x) => Session.fromJson(x))),
+          : List<Session>.from(
+              json["sessions"]!.map((x) => Session.fromJson(x)),
+            ),
     );
   }
 }
@@ -103,7 +105,9 @@ class Session {
       isApproved: json["isApproved"],
       recordingFiles: json["recordingFiles"] == null
           ? []
-          : List<RecordingFile>.from(json["recordingFiles"]!.map((x) => RecordingFile.fromJson(x))),
+          : List<RecordingFile>.from(
+              json["recordingFiles"]!.map((x) => RecordingFile.fromJson(x)),
+            ),
 
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
@@ -127,7 +131,9 @@ class Expert {
       name: json["name"],
       email: json["email"],
       image: json["image"],
-      profession: json["profession"] == null ? null : Profession.fromJson(json["profession"]),
+      profession: json["profession"] == null
+          ? null
+          : Profession.fromJson(json["profession"]),
     );
   }
 }
@@ -158,6 +164,10 @@ class RecordingFile {
   final String? type;
 
   factory RecordingFile.fromJson(Map<String, dynamic> json) {
-    return RecordingFile(filename: json["filename"], url: json["url"], type: json["type"]);
+    return RecordingFile(
+      filename: json["filename"],
+      url: json["url"],
+      type: json["type"],
+    );
   }
 }

@@ -6,7 +6,7 @@ import '../../../../core/services/socket/socket_service.dart';
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
   final socketService = Get.find<SocketService>();
-  @override
+  // @override
   // void onInit() {
   //   ever(socketService.status, (status) {
   //     if (status == SocketStatus.failed) {
@@ -19,7 +19,7 @@ class SplashController extends GetxController {
   //   });
   //   super.onInit();
   // }
-  Future<void> splashScreenFunctions(BuildContext context) async {
+  Future<void> splashScreenFunctions() async {
     log("splash controller function called");
 
     final hasNetwork = await NetworkManager().checkConnection();
@@ -31,24 +31,24 @@ class SplashController extends GetxController {
     }
 
     // ✅ Has internet → wait 2 seconds
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 2));
 
     log("seenOnboarding: ${AppStorage.to.getSeenOnboarding}");
     log("loggedIn: ${AppStorage.to.getLoggedIn}");
     log("token: ${AppStorage.to.getToken}");
 
     // Check if user has seen onboarding
-    if (AppStorage.to.getSeenOnboarding) {
-      // Already seen + signed in → go to Sign In
-      if (AppStorage.to.getLoggedIn) {
-        Get.offNamed(RoutePaths.mainNav);
-      } else {
-        // Already seen + not signed in → go to Sign In
-        Get.offNamed(RoutePaths.signin);
-      }
-    } else {
-      // Not seen → go to Onboarding
-      Get.offNamed(RoutePaths.onboardScreen);
-    }
+    // if (AppStorage.to.getSeenOnboarding) {
+    //   // Already seen + signed in → go to Sign In
+    //   if (AppStorage.to.getLoggedIn) {
+    //     Get.offNamed(RoutePaths.mainNav);
+    //   } else {
+    //     // Already seen + not signed in → go to Sign In
+    //     Get.offNamed(RoutePaths.signin);
+    //   }
+    // } else {
+    // Not seen → go to Onboarding
+    Get.offNamed(RoutePaths.onboardScreen);
+    // }
   }
 }

@@ -29,6 +29,8 @@ import '../../features/main_tabs/community/controller/create_community_controlle
 import '../../features/main_tabs/community/controller/member_management_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/experts/controller/past_sessions_controller.dart';
+import '../../features/main_tabs/experts/controller/session_action_controller.dart';
+import '../../features/main_tabs/experts/controller/session_controller.dart';
 import '../../features/main_tabs/home/controller/home_controller.dart';
 import '../../features/main_tabs/home/sub_feature/edit_profile/controller/edit_profile_controller.dart';
 import '../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
@@ -151,6 +153,7 @@ class PostSignupScreensBinding extends Bindings {
 // ─────────────────────────────
 // 🔹 Main Navigation / Home Flow
 // ─────────────────────────────
+/*
 class MainNavBinding extends Bindings {
   @override
   void dependencies() {
@@ -173,11 +176,52 @@ class MainNavBinding extends Bindings {
     Get.lazyPutFenix(() => CommunityController());
     Get.lazyPutFenix(() => ExpertsController());
 
+    //
+    Get.lazyPutFenix(() => SessionController());
+    Get.lazyPutFenix(() => SessionActionController());
+
     // Page controllers
     Get.lazyPutFenix(() => EditProfileController());
     Get.lazyPutFenix(() => SuccessController());
     Get.lazyPutFenix(() => PrivacyPolicyController());
     Get.lazyPutFenix(() => PaymentController());
+  }
+}
+*/
+
+class MainNavBinding extends Bindings {
+  @override
+  void dependencies() {
+    // =======================
+    // GLOBAL SINGLETONS
+    // =======================
+    Get.putPermanent(StationLocationController());
+    Get.putPermanent(ProfileController());
+    Get.putPermanent(MainNavController());
+    Get.putPermanent(BookmarkController());
+
+    // =======================
+    // FEATURE SHARED CONTROLLERS
+    // (used by Home + Experts + others)
+    // =======================
+    Get.lazyPutFenix(() => MoodCheckInController());
+    Get.lazyPutFenix(() => SessionController());
+    Get.lazyPutFenix(() => SessionActionController());
+    Get.lazyPutFenix(() => HomeController());
+    Get.lazyPutFenix(() => ExpertsController());
+
+    // =======================
+    // PAGE CONTROLLERS
+    // =======================
+    Get.lazyPut(() => EditProfileController());
+    Get.lazyPut(() => SuccessController());
+    Get.lazyPut(() => PrivacyPolicyController());
+    Get.lazyPut(() => PaymentController());
+    Get.lazyPut(() => CommunityController());
+    Get.lazyPut(() => MatchController());
+
+    // Chat (careful with lifecycle)
+    Get.lazyPutFenix(() => ChatController());
   }
 }
 

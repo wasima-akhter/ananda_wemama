@@ -27,26 +27,23 @@ class OnboardScreen extends StatelessWidget {
               return BounceSingleChildScrollView(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: cfg.height),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: cfg.hPadding),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _TopSection(cfg: cfg),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _TopSection(cfg: cfg),
 
-                        Flexible(
-                          child: Image.asset(
-                            ImagesPath.onboardingImage,
-                            width: double.infinity,
-                            fit: BoxFit.fitWidth,
-                          ),
+                      Flexible(
+                        child: Image.asset(
+                          ImagesPath.onboardingImage,
+                          width: double.infinity,
+                          fit: BoxFit.fitWidth,
                         ),
-                        Gap(itemGap * 0.5),
-                        _BottomSection(cfg: cfg),
-                      ],
-                    ),
+                      ),
+                      Gap(itemGap * 0.5),
+                      _BottomSection(cfg: cfg),
+                    ],
                   ),
                 ),
               );
@@ -94,7 +91,7 @@ class _TopSection extends StatelessWidget {
           Strings.builtForMotherhoodStages,
           textAlign: TextAlign.center,
           style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
-        ).mHV(cfg.textHMargin, 0),
+        ).mHV(40, 0),
       ],
     );
   }

@@ -27,8 +27,10 @@ class S {
       MediaQueryData.fromView(WidgetsBinding.instance.window).viewInsets.bottom;
 
   /// Orientation
-  static bool get isPortrait => ScreenUtil().orientation == Orientation.portrait;
-  static bool get isLandscape => ScreenUtil().orientation == Orientation.landscape;
+  static bool get isPortrait =>
+      ScreenUtil().orientation == Orientation.portrait;
+  static bool get isLandscape =>
+      ScreenUtil().orientation == Orientation.landscape;
 
   /// Screen padding top (status bar)
   static double get topPadding => ScreenUtil().statusBarHeight;
@@ -79,7 +81,10 @@ extension StringExtension_ on String {
 
   String lowerEachWord() {
     if (isEmpty) return this;
-    return split(' ').where((word) => word.isNotEmpty).map((word) => word.toLowerCase()).join(' ');
+    return split(' ')
+        .where((word) => word.isNotEmpty)
+        .map((word) => word.toLowerCase())
+        .join(' ');
   }
 }
 
@@ -115,7 +120,10 @@ class Snack {
             children: [
               Align(
                 alignment: Alignment.bottomCenter,
-                child: FoundingMumBadgeSnack(title: title ?? '', message: message),
+                child: FoundingMumBadgeSnack(
+                  title: title ?? '',
+                  message: message,
+                ),
               ),
             ],
           ),
@@ -158,7 +166,12 @@ class Snack {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(title ?? '', style: TxtStyle.inter(color: c.primary, w: 600))],
+                    children: [
+                      Text(
+                        title ?? '',
+                        style: TxtStyle.inter(color: c.primary, w: 600),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -201,7 +214,10 @@ class Snack {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr)),
+                  Text(
+                    message,
+                    style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr),
+                  ),
                 ],
               ),
             ),
@@ -247,7 +263,10 @@ class Snack {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Text(message, style: TxtStyle.norTxt.copyWith(color: snackSuccessTxtClr)),
+                  Text(
+                    message,
+                    style: TxtStyle.norTxt.copyWith(color: snackSuccessTxtClr),
+                  ),
                 ],
               ),
             ),
@@ -295,8 +314,14 @@ class Snack {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (title != null)
-                    Text(title, style: TxtStyle.outfit(color: snackWarningTxtClr, w: 600)),
-                  Text(message, style: TxtStyle.outfit(color: snackWarningTxtClr)),
+                    Text(
+                      title,
+                      style: TxtStyle.outfit(color: snackWarningTxtClr, w: 600),
+                    ),
+                  Text(
+                    message,
+                    style: TxtStyle.outfit(color: snackWarningTxtClr),
+                  ),
                 ],
               ),
             ),
@@ -343,7 +368,11 @@ class GNav {
     Object? arguments,
     bool Function(Route<dynamic>)? predicate,
   }) async {
-    return Get.offAllNamed<T>(routeName, arguments: arguments, predicate: predicate ?? (_) => false)
+    return Get.offAllNamed<T>(
+          routeName,
+          arguments: arguments,
+          predicate: predicate ?? (_) => false,
+        )
         as Future<T?>;
   }
 
@@ -360,7 +389,8 @@ class TxtStyle {
   static TextTheme get textThemeUrbanist => GoogleFonts.urbanistTextTheme();
   static TextTheme get textThemeOutfit => GoogleFonts.outfitTextTheme();
 
-  static FontWeight getFontWeight(int weight) => FontWeight.values[(weight ~/ 100) - 1];
+  static FontWeight getFontWeight(int weight) =>
+      FontWeight.values[(weight ~/ 100) - 1];
 
   static TextStyle inter({
     double fs = 13,
@@ -398,7 +428,8 @@ class TxtStyle {
 
   static TextStyle get txtMclr => inter(fs: 14, w: 400, color: c.primary);
   static TextStyle get txtSclr => inter(fs: 14, w: 400, color: c.textSecondary);
-  static TextStyle get txtSclrSm => inter(fs: 12, w: 400, color: c.textSecondary);
+  static TextStyle get txtSclrSm =>
+      inter(fs: 12, w: 400, color: c.textSecondary);
   static TextStyle get txtSmMclr => inter(fs: 13, w: 400, color: c.primary);
   static TextStyle get titleMclr => inter(fs: 17, w: 600, color: c.primary);
 
@@ -409,14 +440,16 @@ class TxtStyle {
   static TextStyle get txtGrey => inter(fs: 11, color: greyLoc, w: 500);
   static TextStyle get confirmTxt => inter(fs: 11, color: c.secondary);
   static TextStyle get btnTxt => inter(fs: 13, w: 600, color: c.textPrimary);
-  static TextStyle get italicInter => inter(fs: 17, w: 600).copyWith(fontStyle: FontStyle.italic);
+  static TextStyle get italicInter =>
+      inter(fs: 17, w: 600).copyWith(fontStyle: FontStyle.italic);
 
   static TextStyle get titleBPri => inter(fs: 16, w: 600, color: c.primary);
 
   static TextStyle get normRPri => inter(fs: 16, w: 400, color: c.primary);
 
   static TextStyle get normRsmPri => inter(fs: 14, w: 400, color: c.primary);
-  static TextStyle get normRsmSec => inter(fs: 14, w: 400, color: c.textSecondary);
+  static TextStyle get normRsmSec =>
+      inter(fs: 14, w: 400, color: c.textSecondary);
 
   static TextStyle get normSmBPri => inter(fs: 14, w: 500, color: c.primary);
   ///////////////////////////////////////////////////////////
@@ -459,10 +492,12 @@ class TxtStyle {
 
   static TextStyle get urbanistSmTitle600 =>
       TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary);
-  static TextStyle get urbanistSmTitle => TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary);
+  static TextStyle get urbanistSmTitle =>
+      TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary);
   static TextStyle get urbanistSmTitleSec =>
-      TxtStyle.urbanistSemiB(fs: 13, w: 500, color: c.secondary);
-  static TextStyle get urbanistSmSecNor => TxtStyle.urbanist(fs: 13, color: c.secondary);
+      TxtStyle.urbanistSemiB(fs: 12, w: 500, color: c.secondary);
+  static TextStyle get urbanistSmSecNor =>
+      TxtStyle.urbanist(fs: 13, color: c.secondary);
 
   ///////////////////////////Outfit
   static TextStyle outfit({
@@ -498,20 +533,30 @@ class TxtStyle {
     decoration: dec,
   );
 
-  static TextStyle get outfitUnderLTxt =>
-      outfit(fs: 14, w: 400, color: c.textSecondary, dec: TextDecoration.underline);
+  static TextStyle get outfitUnderLTxt => outfit(
+    fs: 14,
+    w: 400,
+    color: c.textSecondary,
+    dec: TextDecoration.underline,
+  );
 
-  static TextStyle get outfitLarTitle => TxtStyle.outfitSemiB(fs: 18, w: 500, color: c.primary);
-  static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
-  static TextStyle get outfitSmTitleSec => TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
+  static TextStyle get outfitLarTitle =>
+      TxtStyle.outfitSemiB(fs: 18, w: 500, color: c.primary);
+  static TextStyle get outfitSmTitle =>
+      TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
+  static TextStyle get outfitSmTitleSec =>
+      TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);
   static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11);
-  static TextStyle get outfitxSmNorSec => TxtStyle.outfit(fs: 11, color: c.secondary);
+  static TextStyle get outfitxSmNorSec =>
+      TxtStyle.outfit(fs: 11, color: c.secondary);
   static TextStyle get outfitxSmNor500 => TxtStyle.outfitSemiB(fs: 10, w: 500);
-  static TextStyle get outfitSmSecNor => TxtStyle.outfit(fs: 13, color: c.secondary);
+  static TextStyle get outfitSmSecNor =>
+      TxtStyle.outfit(fs: 13, color: c.secondary);
   static TextStyle get outfitSmSecNor500 =>
       TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.secondary);
-  static TextStyle get outfitSmNor500 => TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
+  static TextStyle get outfitSmNor500 =>
+      TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
 }
 
 /// --------------------
@@ -542,53 +587,70 @@ class BoxDeco {
     ),
   );
 
-  static BoxDecoration decRadiusDownBrderAll(double rad, {Color? clr, Color? brdrClr}) =>
-      BoxDecoration(
-        color: clr ?? bgClr,
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(rad.r),
-          bottomRight: Radius.circular(rad.r),
-        ),
-        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
-      );
+  static BoxDecoration decRadiusDownBrderAll(
+    double rad, {
+    Color? clr,
+    Color? brdrClr,
+  }) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      bottomLeft: Radius.circular(rad.r),
+      bottomRight: Radius.circular(rad.r),
+    ),
+    border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+  );
 
-  static BoxDecoration decRadiusUpBrderAll(double rad, {Color? clr, Color? brdrClr}) =>
-      BoxDecoration(
-        color: clr ?? bgClr,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(rad.r),
-          topRight: Radius.circular(rad.r),
-        ),
-        border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
-      );
+  static BoxDecoration decRadiusUpBrderAll(
+    double rad, {
+    Color? clr,
+    Color? brdrClr,
+  }) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(rad.r),
+      topRight: Radius.circular(rad.r),
+    ),
+    border: Border.all(color: brdrClr ?? c.inputBorder, width: 1.w),
+  );
 
   static BoxDecoration decRadiusAll(double rad, {Color? clr}) =>
       BoxDecoration(color: clr ?? bgClr, borderRadius: (rad).brdrRad);
 
-  static BoxDecoration decRadAllBorderedAll(double rad, {Color? clr, Color? brdrClr}) =>
-      BoxDecoration(
-        color: clr ?? bgClr,
-        borderRadius: rad.brdrRad,
-        border: Border.all(color: brdrClr ?? c.inputBorder, width: 0.6.w),
-      );
-
-  static BoxDecoration decBrdrBottom({Color? brdrClr, double? w}) => BoxDecoration(
-    border: Border(
-      bottom: BorderSide(color: brdrClr ?? c.inputBorder, width: (w ?? 1).w),
-    ),
+  static BoxDecoration decRadAllBorderedAll(
+    double rad, {
+    Color? clr,
+    Color? brdrClr,
+  }) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: rad.brdrRad,
+    border: Border.all(color: brdrClr ?? c.inputBorder, width: 0.6.w),
   );
 
-  static BoxDecoration decBrdrTop({Color? brdrClr, double? w, double? rad, Color? clr}) =>
+  static BoxDecoration decBrdrBottom({Color? brdrClr, double? w}) =>
       BoxDecoration(
-        color: clr ?? bgClr,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular((rad ?? 4).r),
-          topRight: Radius.circular((rad ?? 4).r),
-        ),
         border: Border(
-          top: BorderSide(color: brdrClr ?? c.inputBorder, width: (w ?? 1).w),
+          bottom: BorderSide(
+            color: brdrClr ?? c.inputBorder,
+            width: (w ?? 1).w,
+          ),
         ),
       );
+
+  static BoxDecoration decBrdrTop({
+    Color? brdrClr,
+    double? w,
+    double? rad,
+    Color? clr,
+  }) => BoxDecoration(
+    color: clr ?? bgClr,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular((rad ?? 4).r),
+      topRight: Radius.circular((rad ?? 4).r),
+    ),
+    border: Border(
+      top: BorderSide(color: brdrClr ?? c.inputBorder, width: (w ?? 1).w),
+    ),
+  );
 
   static BoxDecoration decBrdrOneSideCustom({
     Color? brdrClr,
@@ -622,10 +684,18 @@ class BoxDeco {
       color: clr ?? bgClr,
       border: getBorder(),
       borderRadius: BorderRadius.only(
-        topLeft: radiusCorners?.contains(BrdrCorner.topLeft) ?? false ? r : Radius.zero,
-        topRight: radiusCorners?.contains(BrdrCorner.topRight) ?? false ? r : Radius.zero,
-        bottomLeft: radiusCorners?.contains(BrdrCorner.bottomLeft) ?? false ? r : Radius.zero,
-        bottomRight: radiusCorners?.contains(BrdrCorner.bottomRight) ?? false ? r : Radius.zero,
+        topLeft: radiusCorners?.contains(BrdrCorner.topLeft) ?? false
+            ? r
+            : Radius.zero,
+        topRight: radiusCorners?.contains(BrdrCorner.topRight) ?? false
+            ? r
+            : Radius.zero,
+        bottomLeft: radiusCorners?.contains(BrdrCorner.bottomLeft) ?? false
+            ? r
+            : Radius.zero,
+        bottomRight: radiusCorners?.contains(BrdrCorner.bottomRight) ?? false
+            ? r
+            : Radius.zero,
       ),
     );
   }

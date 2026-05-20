@@ -75,22 +75,6 @@ class NetworkImageWidget extends StatelessWidget {
         ? (radius * 0.7).clamp(8.0, 22.0) // 70% of radius, clamped between 8–22
         : (isSmall == true ? 12.w : 22.w);
 
-    if (imageUrl == null || imageUrl!.isEmpty || !isImageUrl(imageUrl!)) {
-      return Center(
-        child: isUser == false
-            ? Assets.images.imagePlaceholder.image(
-                width: placeholderSize,
-                height: placeholderSize,
-                color: c.primary,
-              )
-            : Assets.images.userPlaceholder.image(
-                width: placeholderSize,
-                height: placeholderSize,
-                color: c.primary,
-              ),
-      );
-    }
-
     log("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
     return CusGestureDetector(
@@ -182,41 +166,25 @@ class _FallbackWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = widget.isCircle
-        ? ((widget.radius ?? 10.0) * 0.9).clamp(10.0, 24.0)
-        : (widget.isSmall == true ? 18.w : 22.w);
-
-    final bgColor = c.primary;
-
+    final double size = widget.isCircle
+        ? ((widget.radius ?? 16))
+        : (widget.isSmall == true ? 18 : 22);
     final fallbackIconColor = c.primary;
-
     return Center(
       child: widget.isUser == true
-          ? Assets.images.userPlaceholder.image(
-              width: 10,
-              height: 10,
-              color: fallbackIconColor,
-              errorBuilder: (_, _, _) {
-                return SvgIconColored(
-                  iconPath: Assets.icons.userIconOutlined,
-                  width: iconSize,
-                  height: iconSize,
-                  iconColor: fallbackIconColor,
-                  fallbackIcon: Icons.person,
-                );
-              },
-            )
+          ? Icon(Icons.person_2_rounded, size: size, color: fallbackIconColor)
+          // SvgIconColored(
+          //     iconPath: Assets.icons.userIconOutlined,
+          //     width: size,
+          //     height: size,
+          //     iconColor: fallbackIconColor,
+          //     fallbackIcon: Icons.person,
+          //   )
           : Assets.images.imagePlaceholder.image(
-              width: iconSize,
-              height: iconSize,
+              width: size,
+              height: size,
+              fit: BoxFit.contain,
               color: fallbackIconColor,
-              errorBuilder: (_, _, _) {
-                return Icon(
-                  Icons.image_not_supported_outlined,
-                  size: iconSize,
-                  color: fallbackIconColor,
-                );
-              },
             ),
     );
   }

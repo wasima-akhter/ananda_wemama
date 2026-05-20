@@ -6,14 +6,21 @@ import '../../../../core/utils/validator/validators.dart';
 class ForgotPassBeforeVerify extends StatelessWidget {
   final ForgotPasswordController fpc;
   final GlobalKey<FormState> sendVerificationKey;
-  const ForgotPassBeforeVerify({super.key, required this.fpc, required this.sendVerificationKey});
+  const ForgotPassBeforeVerify({
+    super.key,
+    required this.fpc,
+    required this.sendVerificationKey,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // Main title
-        Text(Strings.forgotPassword.capEachWord(), style: 22.titleMclrCusFSOutfit),
+        Text(
+          Strings.forgotPassword.capEachWord(),
+          style: 22.titleMclrCusFSOutfit,
+        ),
         Gap(itemGap),
 
         // Subtitle
@@ -32,8 +39,10 @@ class ForgotPassBeforeVerify extends StatelessWidget {
                 controller: fpc.emailCtrl,
                 focusNode: fpc.emailFocus,
                 hintText: Strings.email,
-                prefix: SvgIcon(iconPath: IconsPath.email).mOnly(left: 15, right: 6),
-                prefixSize: 45.h,
+                prefix: SvgIcon(
+                  iconPath: IconsPath.email,
+                ).mOnly(left: 15, right: 6),
+                prefixSize: 45,
                 validator: (value) => validateEmail(value),
                 hintW: 600,
               ),

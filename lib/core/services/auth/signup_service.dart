@@ -23,7 +23,11 @@ class SignupService extends GetxService {
         //     "password": "123456",
         //     "confirmPassword": "123456"
         // }
-        data: {"email": email, "password": password, "confirmPassword": conPassword},
+        data: {
+          "email": email,
+          "password": password,
+          "confirmPassword": conPassword,
+        },
       );
     }
 
@@ -38,12 +42,19 @@ class SignupService extends GetxService {
     if (response.success) {
       // _saveUserDataAfterSignUp(response: response);
       log("response.data?.user.name : ${response.data?.email}");
+
+      if (Get.isRegistered<ProfileController>()) {
+        final profileController = Get.find<ProfileController>();
+        profileController.fetchMyProfile(); // fetch latest profile data
+      }
     }
 
     return response.success;
   }
 
-  void _saveUserDataAfterSignUp({required BaseResponse<SigninModelData> response}) {
+  void _saveUserDataAfterSignUp({
+    required BaseResponse<SigninModelData> response,
+  }) {
     // as success,
     // save the access token in app storage
     // save the user info in appstorage

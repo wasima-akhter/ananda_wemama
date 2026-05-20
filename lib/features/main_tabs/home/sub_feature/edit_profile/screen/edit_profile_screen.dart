@@ -35,7 +35,10 @@ class EditProfileScreen extends StatelessWidget {
 
             final imageUrl = profileData?.profileImage ?? '';
 
-            return UserPhotoWidget(imageUrl: imageUrl, selImage: epc.fileImage.value);
+            return UserPhotoWidget(
+              imageUrl: imageUrl,
+              selImage: epc.fileImage.value,
+            );
           }),
 
           Gap(itemGap),

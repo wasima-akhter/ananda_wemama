@@ -44,7 +44,9 @@ class ChatScreen extends StatelessWidget {
             Gap(itemGap * 1.5),
 
             Expanded(
-              child: showSearch ? _buildSearchResult(cc) : _buildChatList(cc, chatRefreshKey),
+              child: showSearch
+                  ? _buildSearchResult(cc)
+                  : _buildChatList(cc, chatRefreshKey),
             ),
           ],
         ).mR(10);
@@ -71,7 +73,11 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   TextFit(
                     cc.searchedTxt.value,
-                    style: TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary),
+                    style: TxtStyle.urbanistSemiB(
+                      fs: 14,
+                      w: 600,
+                      color: c.primary,
+                    ),
                   ),
                   Gap(8),
                   CusGestureDetector(
@@ -79,7 +85,10 @@ class ChatScreen extends StatelessWidget {
                       cc.showSearchedTag.value = false;
                       cc.clearAll();
                     },
-                    child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: c.primary),
+                    child: SvgIconColored(
+                      iconPath: IconsPath.closeCircle,
+                      iconColor: c.primary,
+                    ),
                   ),
                 ],
               ),
@@ -122,7 +131,9 @@ class ChatScreen extends StatelessWidget {
                         isblocked: e.isBlocked ?? false,
                         name: e.otherUser?.name ?? '',
                         lastMessage: e.lastMessage ?? '',
-                        time: DateHelper().formatTimeAgo(e.time.toString()).date,
+                        time: DateHelper()
+                            .formatTimeAgo(e.time.toString())
+                            .date,
                         imageUrl: e.otherUser?.profileImage ?? '',
                         id: e.id ?? '',
                       ),
@@ -137,7 +148,10 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildChatList(ChatController cc, GlobalKey<RefreshIndicatorState> refreshKey) {
+  Widget _buildChatList(
+    ChatController cc,
+    GlobalKey<RefreshIndicatorState> refreshKey,
+  ) {
     return Obx(() {
       final list = cc.realChatList;
 
@@ -146,10 +160,12 @@ class ChatScreen extends StatelessWidget {
       }
 
       if (list.isEmpty) {
-        return RefreshIndicator(
+        return CusRefreshIndicator(
           key: refreshKey,
           onRefresh: cc.getChatList,
-          child: const EmptyWidgetScrollable(title: "No Conversations yet..!"),
+          child: const EmptyWidgetScrollable(
+            title: "No Conversations yet..!",
+          ).mL(10),
         );
       }
 
@@ -182,4 +198,7 @@ class ChatScreen extends StatelessWidget {
       );
     });
   }
+
+
+
 }

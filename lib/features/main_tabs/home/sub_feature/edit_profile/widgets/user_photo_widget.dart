@@ -66,6 +66,7 @@ class UserPhotoWidget extends StatelessWidget {
         imageUrl: imageUrl,
         radius: size / 2,
         isCircle: true,
+        isUser: true,
       );
     }
 

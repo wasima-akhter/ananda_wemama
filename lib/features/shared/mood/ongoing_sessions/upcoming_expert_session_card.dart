@@ -6,36 +6,38 @@ import '../../../../core/helpers/date_helper.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
-  final void Function({required String expertId, required String sessionId}) onTapQues;
+  final void Function({required String expertId, required String sessionId})
+  onTapQues;
   final RxBool isSendQuesLoading;
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
-  final Session data;
+  final Session? data;
   final bool? isFromUpcomgScreen;
   const UpcomingExpertSessionCard({
     super.key,
     required this.onTapQues,
     required this.writeQuesCtrl,
     required this.writeQuesFocusNode,
-    required this.data,
+    this.data,
     this.isFromUpcomgScreen,
     required this.isSendQuesLoading,
   });
 
   @override
   Widget build(BuildContext context) {
-    final doctorName = (data.expert?.name ?? "Unknown").capEachWord();
-    final specialty = (data.expert?.profession?.title ?? "Specialist").capEachWord();
-    final sessionTitle = (data.title ?? "Session").capEachWord();
-    final description = (data.description ?? "").cap;
-    final time = DateHelper().formatUTCtimestamp(data.time.toString()).time;
-    final date = DateHelper().formatUTCtimestamp(data.date.toString()).date;
+    final doctorName = (data?.expert?.name ?? "Unknown").capEachWord();
+    final specialty = (data?.expert?.profession?.title ?? "Specialist")
+        .capEachWord();
+    final sessionTitle = (data?.title ?? "Session").capEachWord();
+    final description = (data?.description ?? "").cap;
+    final time = DateHelper().formatUTCtimestamp(data?.time.toString()).time;
+    final date = DateHelper().formatUTCtimestamp(data?.date.toString()).date;
 
-    final imgUrl = data.expert?.image ?? '';
-    final channelName = data.channelName ?? '';
+    final imgUrl = data?.expert?.image ?? '';
+    final channelName = data?.channelName ?? '';
 
-    final expertId_ = data.expert?.id ?? '';
-    final sessionId_ = data.id ?? '';
+    final expertId_ = data?.expert?.id ?? '';
+    final sessionId_ = data?.id ?? '';
 
     return ContainerBordered(
       contClr: c.cardOngoing,
@@ -46,7 +48,10 @@ class UpcomingExpertSessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.upcomingExpertSession.capEachWord(), style: TxtStyle.outfitSmTitle),
+          Text(
+            Strings.upcomingExpertSession.capEachWord(),
+            style: TxtStyle.outfitSmTitle,
+          ),
 
           Gap(itemGap),
 
@@ -56,15 +61,29 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              circledNetworkImageBgComponent(imagePath: imgUrl, radius: 22),
+              circledNetworkImageBgComponent(
+                imagePath: imgUrl,
+                radius: 22,
+                isUser: true,
+              ),
               Gap(itemGap),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    Text(doctorName, style: TxtStyle.urbanistSmTitle),
-                    Text(specialty, style: TxtStyle.urbanistSmTitleSec),
+                    Text(
+                      doctorName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TxtStyle.urbanistSmTitle,
+                    ),
+                    Text(
+                      specialty,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TxtStyle.urbanistSmTitleSec,
+                    ),
                   ],
                 ),
               ),
@@ -72,7 +91,14 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(time, style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary)),
+                  Text(
+                    time,
+                    style: TxtStyle.outfitSemiB(
+                      fs: 11,
+                      w: 500,
+                      color: c.primary,
+                    ),
+                  ),
                   Text(date, style: TxtStyle.outfit(fs: 11)),
                 ],
               ),
@@ -84,8 +110,11 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle600),
 
           Text(description, style: TxtStyle.outfit(fs: 13, color: c.secondary)),
-          isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
-
+          // isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
+          isFromUpcomgScreen == true
+              ? Gap(itemGap)
+              : const SizedBox(height: 12),
+          /*
           Row(
             children: [
               ContainerBordered(
@@ -123,17 +152,102 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                       Text(
                         Strings.remindMe.capEachWord(),
                         textAlign: TextAlign.center,
-                        style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.textOnPrimary),
+                        style: TxtStyle.outfitSemiB(
+                          fs: 13,
+                          w: 600,
+                          color: c.textOnPrimary,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
               Gap(itemGap),
-              Expanded(
+
+              if (isFromUpcomgScreen != null)
+                //
+                Expanded(
+                  child: CusGestureDetector(
+                    onTap: () => showAskYourQuesDialog(
+                      onTap: () =>
+                          onTapQues(expertId: expertId_, sessionId: sessionId_),
+                      isSendQuesLoading: isSendQuesLoading,
+                      writeQuesCtrl: writeQuesCtrl,
+                      writeQuesFocusNode: writeQuesFocusNode,
+                    ),
+                    child: ContainerBordered(
+                      contClr: c.buttonPrimary,
+                      rad: 30,
+                      vp: 8,
+                      // hp: 4,
+                      child: SvgIcon(
+                        iconPath: IconsPath.chatDotSquare,
+                        height: 21,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+
+      */
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ContainerBordered(
+                hasBrdr: true,
+                brdrClr: c.primary,
+                rad: 30,
+                contClr: ctransp,
+                hp: 12,
+                vp: 7,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgIcon(iconPath: IconsPath.share),
+                    Gap(itemGap),
+                    Text(Strings.share.cap, style: TxtStyle.outfitSmTitle),
+                  ],
+                ),
+              ),
+
+              Gap(itemGap),
+
+              Flexible(
+                child: ContainerBordered(
+                  contClr: c.buttonPrimary,
+                  rad: 30,
+                  vp: 8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgIcon(iconPath: IconsPath.reminderBellSkew),
+                      Gap(itemGap),
+                      Flexible(
+                        child: Text(
+                          Strings.remindMe.capEachWord(),
+                          overflow: TextOverflow.ellipsis,
+                          style: TxtStyle.outfitSemiB(
+                            fs: 13,
+                            w: 600,
+                            color: c.textOnPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Gap(itemGap),
+
+              // if (isFromUpcomgScreen != null)
+              Container(
                 child: CusGestureDetector(
                   onTap: () => showAskYourQuesDialog(
-                    onTap: () => onTapQues(expertId: expertId_, sessionId: sessionId_),
+                    onTap: () =>
+                        onTapQues(expertId: expertId_, sessionId: sessionId_),
                     isSendQuesLoading: isSendQuesLoading,
                     writeQuesCtrl: writeQuesCtrl,
                     writeQuesFocusNode: writeQuesFocusNode,
@@ -142,8 +256,10 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                     contClr: c.buttonPrimary,
                     rad: 30,
                     vp: 8,
-                    // hp: 4,
-                    child: SvgIcon(iconPath: IconsPath.chatDotSquare, height: 21),
+                    child: SvgIcon(
+                      iconPath: IconsPath.chatDotSquare,
+                      height: 21,
+                    ),
                   ),
                 ),
               ),

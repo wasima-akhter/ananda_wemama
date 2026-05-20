@@ -5,7 +5,9 @@ import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 import '../../../video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 
-class _NoLiveSessionCard extends StatelessWidget {
+class NoLiveSessionCard extends StatelessWidget {
+  const NoLiveSessionCard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
@@ -47,7 +49,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (data == null) {
-      return _NoLiveSessionCard();
+      return NoLiveSessionCard();
     }
     final doctorName = (data?.expert?.name ?? "Unknown").capEachWord();
     final specialty = (data?.expert?.profession?.title ?? "Specialist")
@@ -82,6 +84,8 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     circledNetworkImageBgComponent(
                       imagePath: imgUrl,
                       brdrClr: c.error,
+                      radius: 22,
+                      isUser: true,
                     ),
                     Positioned(
                       bottom: -(10.h),
@@ -112,8 +116,18 @@ class LiveOngoingSessionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(doctorName, style: TxtStyle.urbanistSmTitle),
-                      Text(specialty, style: TxtStyle.urbanistSmTitleSec),
+                      Text(
+                        doctorName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TxtStyle.urbanistSmTitle,
+                      ),
+                      Text(
+                        specialty,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TxtStyle.urbanistSmTitleSec,
+                      ),
                     ],
                   ),
                 ),
@@ -224,7 +238,8 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: S.w - 40.w,
+      width: S.w - 40,
+      height: S.h * 0.25,
       child: ContainerBordered(
         contClr: c.cardOngoing,
         rad: 20,
@@ -303,7 +318,7 @@ class LiveOngoingSessionCardShimmer extends StatelessWidget {
               shimmerClr: c.cardReminder,
             ),
 
-            Spacer(),
+            Gap(itemGap),
 
             Row(
               children: [

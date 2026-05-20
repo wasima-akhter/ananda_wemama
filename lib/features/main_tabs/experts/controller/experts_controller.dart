@@ -1,212 +1,147 @@
-import 'dart:developer';
-
-import 'package:mama_app/features/main_tabs/experts/services/experts_service.dart';
-
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
 import '../../../shared/mood/mood_check_in/mood_row_model.dart';
 import '../model/expert_session_list_model.dart';
+import 'session_action_controller.dart';
+import 'session_controller.dart';
 
 class ExpertsController extends GetxController {
-  var moodDataList = [
+  late final SessionController _sessionCtrl;
+  late final SessionActionController _actionCtrl;
+
+  // ── Mood data ─────────────────────────────────────────────────────────────
+
+  final moodDataList = [
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
     MoodRowModel(name: Strings.tired, moodType: MoodType.tired),
     MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 8),
     MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 8),
   ];
 
-  var pastSessionList = [
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
+  final pastSessionList = [
+    ...List.generate(
+      9,
+      (_) => MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
+    ),
   ];
 
-  final writeQuesCtrl = TextEditingController();
-
-  final writeQuesFocusNode = FocusNode();
+  // ── Search (expert screen only) ───────────────────────────────────────────
 
   final searchOngoingCtrl = TextEditingController();
-
   final searchOngoingFocusNode = FocusNode();
-  final searchUpcomingCtrl = TextEditingController();
 
+  final searchUpcomingCtrl = TextEditingController();
   final searchUpcomingFocusNode = FocusNode();
+
+  final RxString searchedOngoingTxt = ''.obs;
+  final RxString searchedUpcomingTxt = ''.obs;
+
+  final RxBool showOngoingTag = false.obs;
+  final RxBool showUpcomingTag = false.obs;
+
+  final PageController upcomingPageController = PageController();
+
+  // ── Proxies ───────────────────────────────────────────────────────────────
+
+  RxList<Session> get ongoingList => _sessionCtrl.ongoingList;
+  RxList<Session> get upcomingList => _sessionCtrl.upcomingList;
+
+  RxBool get isOngoingLoading => _sessionCtrl.isOngoingLoading;
+  RxBool get isUpcomingLoading => _sessionCtrl.isUpcomingLoading;
+
+  ScrollController get ongoingScrollController =>
+      _sessionCtrl.ongoingScrollController;
+
+  TextEditingController get writeQuesCtrl => _actionCtrl.writeQuesCtrl;
+  FocusNode get writeQuesFocusNode => _actionCtrl.writeQuesFocusNode;
+  RxBool get isUploadQuesLoading => _actionCtrl.isSendQuesLoading;
+
+  // ── Lifecycle ─────────────────────────────────────────────────────────────
 
   @override
   void onInit() {
-    getOngoingSessions();
-    getUpcomingSessions();
-    _setupPagination();
     super.onInit();
-  }
-
-  void _setupPagination() {
-    ongoingScrollController.addListener(() {
-      if (ongoingScrollController.position.pixels >=
-          ongoingScrollController.position.maxScrollExtent - 100) {
-        /// 🔥 load next page
-        getOngoingSessions(fetchNext: true);
-      }
-    });
+    _sessionCtrl = Get.find<SessionController>();
+    _actionCtrl = Get.find<SessionActionController>();
   }
 
   @override
   void onClose() {
-    writeQuesCtrl.dispose();
-    writeQuesFocusNode.dispose();
-
     searchOngoingCtrl.dispose();
     searchOngoingFocusNode.dispose();
-
     searchUpcomingCtrl.dispose();
     searchUpcomingFocusNode.dispose();
-
+    upcomingPageController.dispose();
     super.onClose();
   }
 
-  Future<void> onTapQues({required String expertId, required String sessionId}) async {
-    log('expertId: $expertId ');
-    log('sessionId: $sessionId ');
+  // ── Search actions ────────────────────────────────────────────────────────
 
-    // upload to the backend
-
-    await uploadSessionQues(expertId: expertId, sessionId: sessionId);
+  Future<void> onSubmitOngoingSearch() async {
+    final txt = searchOngoingCtrl.text.trim();
+    if (txt.isEmpty) return;
+    searchedOngoingTxt.value = txt;
+    showOngoingTag.value = true;
+    searchOngoingFocusNode.unfocus();
+    await _sessionCtrl.getOngoingSessions(searchTxt: txt);
   }
 
-  /////////
+  Future<void> clearOngoingSearch() async {
+    searchOngoingCtrl.clear();
+    searchedOngoingTxt.value = '';
+    showOngoingTag.value = false;
+    await _sessionCtrl.getOngoingSessions();
+  }
+
+  Future<void> onSubmitUpcomingSearch() async {
+    final txt = searchUpcomingCtrl.text.trim();
+    if (txt.isEmpty) return;
+    searchedUpcomingTxt.value = txt;
+    showUpcomingTag.value = true;
+    searchUpcomingFocusNode.unfocus();
+    await _sessionCtrl.getUpcomingSessions(searchTxt: txt);
+  }
+
+  Future<void> clearUpcomingSearch() async {
+    searchUpcomingCtrl.clear();
+    searchedUpcomingTxt.value = '';
+    showUpcomingTag.value = false;
+    await _sessionCtrl.getUpcomingSessions();
+  }
+
+  // ── Session actions ───────────────────────────────────────────────────────
+
+  Future<void> onTapQues({
+    required String expertId,
+    required String sessionId,
+  }) async {
+    await _actionCtrl.uploadSessionQues(
+      expertId: expertId,
+      sessionId: sessionId,
+    );
+  }
+
+  Future<void> getOngoingSessions({bool fetchNext = false}) =>
+      _sessionCtrl.getOngoingSessions(fetchNext: fetchNext);
+
+  Future<void> getUpcomingSessions({bool fetchNext = false}) =>
+      _sessionCtrl.getUpcomingSessions(fetchNext: fetchNext);
+
+  // ── UI helpers ────────────────────────────────────────────────────────────
 
   void unfocusAll() {
     writeQuesFocusNode.unfocus();
     searchOngoingFocusNode.unfocus();
     searchUpcomingFocusNode.unfocus();
-
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  ////
-
-  RxList<Session> ongoingList = <Session>[].obs;
-  RxList<Session> upcomingList = <Session>[].obs;
-
-  RxBool isOngoingLoading = false.obs;
-  RxBool isUpcomingLoading = false.obs;
-
-  RxInt ongoingPage = 1.obs;
-  RxInt upcomingPage = 1.obs;
-
-  final sessionListData = ExpertSessionsListModel().obs;
-
-  ///----------------------- Actions ----------------------------///
-
-  Future<void> _fetchSessions({
-    required SessionStatus status,
-    required RxList<Session> targetList,
-    required RxBool loading,
-    required RxInt page,
-    bool fetchNext = false,
-  }) async {
-    if (loading.value) return;
-
-    loading.value = true;
-
-    if (fetchNext) {
-      page.value++;
-    } else {
-      page.value = 1;
-    }
-
-    try {
-      final data = await ExpertsService().fetchExpertSessionList(
-        sessionStatus: status.name.cap,
-        page: page.value.toString(),
-      );
-
-      if (data != null) {
-        if (fetchNext) {
-          targetList.addAll(data.sessions ?? []);
-        } else {
-          targetList.value = data.sessions ?? [];
-        }
-      }
-    } catch (e) {
-      log('fetchSessions error: $e');
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  //
-  Future<void> getOngoingSessions({bool fetchNext = false}) async {
-    await _fetchSessions(
-      status: SessionStatus.ongoing,
-      targetList: ongoingList,
-      loading: isOngoingLoading,
-      page: ongoingPage,
-      fetchNext: fetchNext,
-    );
-  }
-
-  Future<void> getUpcomingSessions({bool fetchNext = false}) async {
-    await _fetchSessions(
-      status: SessionStatus.upcoming,
-      targetList: upcomingList,
-      loading: isUpcomingLoading,
-      page: upcomingPage,
-      fetchNext: fetchNext,
-    );
-  }
-
-  //////////////////////
-
-  RxBool isuploadQuesLoading = false.obs;
-  Future<void> uploadSessionQues({required String expertId, required String sessionId}) async {
-    if (isuploadQuesLoading.value) return;
-
-    isuploadQuesLoading.value = true;
-
-    try {
-      final response = await ExpertsService().uploadUpcomingSessionQues(
-        expertId: expertId,
-        question: writeQuesCtrl.text,
-        sessionId: sessionId,
-      );
-      if (response == true) {
-        log('quest sent successfully!');
-        Get.back();
-      } else {
-        log('quest sent failed!');
-      }
-    } catch (e) {
-      log('upload ques of Session error: $e');
-    } finally {
-      isuploadQuesLoading.value = false;
-      writeQuesCtrl.text = '';
-    }
-  }
-
-  ////////////---------------------------->
-
-  List<Session> limitList(List<Session> list) {
-    return list.length > 5 ? list.sublist(0, 5) : list;
-  }
+  List<Session> limitList(List<Session> list) =>
+      list.length > 5 ? list.sublist(0, 5) : list;
 
   void onTapViewAll(bool isOngoing) {
-    if (isOngoing) {
-      Get.toNamed(RoutePaths.ongoingSessions);
-    } else {
-      Get.toNamed(RoutePaths.upcomingSessions);
-    }
+    Get.toNamed(
+      isOngoing ? RoutePaths.ongoingSessions : RoutePaths.upcomingSessions,
+    );
   }
-
-  //////////////-----Individual
-  final ongoingScrollController = ScrollController();
-  final upcomingScrollController = ScrollController();
-
-  final PageController upcomingPageController = PageController();
 }

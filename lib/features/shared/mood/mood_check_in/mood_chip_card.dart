@@ -1,6 +1,8 @@
+import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
 import 'package:mama_app/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../../../main_tabs/home/controller/home_controller.dart';
 import '../mood_library/controller/mood_library_controller.dart';
@@ -70,6 +72,7 @@ class _SelectMoodANdIllustration extends StatelessWidget {
   const _SelectMoodANdIllustration({super.key, required this.mcc});
   @override
   Widget build(BuildContext context) {
+    /*
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
@@ -100,6 +103,37 @@ class _SelectMoodANdIllustration extends StatelessWidget {
           );
         }),
       ],
+    );
+*/
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: mcc.moodDataList.map((dataModel) {
+        return Flexible(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: itemGap * 0.25),
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () => mcc.selectMood(dataModel.moodType),
+                  child: Obx(() {
+                    final isSelected =
+                        mcc.selectedMood.value == dataModel.moodType;
+
+                    return MoodChip(
+                      title: dataModel.name,
+                      hp: dataModel.hp,
+                      isSelected: isSelected,
+                    );
+                  }),
+                ),
+
+                MoodChipAnimation(moodType: dataModel.moodType),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -174,25 +208,87 @@ class _CheckInStreakRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mcc = MoodCheckInController.to;
+
+    return Obx(() {
+      final state = getUIStateDetail(isLoading: mcc.isLoading.value);
+      final data = mcc.checkInResponseData.value;
+
+      return UIStateHandler(
+        state: state,
+
+        loading: () => const CheckInStreakShimmer(),
+
+        data: () {
+          /// ✅ CASE 1: no data → show nothing
+          if (data == null) {
+            return const SizedBox.shrink();
+          }
+
+          final streakText =
+              "${Strings.checkInStreakHeart}${data.streak ?? 0}${Strings.checkInStreak1}";
+          final messageText = Strings.checkInStreak2 + (data.message ?? "");
+
+          return ContainerBordered(
+            contClr: c.cardMood,
+            rad: 8,
+            hp: 8,
+            vp: 6,
+            alignment: Alignment.centerLeft,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: streakText,
+                    style: TxtStyle.outfitSemiB(
+                      fs: 9,
+                      w: 500,
+                      color: c.primary,
+                    ),
+                  ),
+                  const TextSpan(text: " "),
+                  TextSpan(
+                    text: messageText,
+                    style: TxtStyle.outfit(fs: 9, color: c.secondary),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+}
+
+class CheckInStreakShimmer extends StatelessWidget {
+  const CheckInStreakShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return ContainerBordered(
       contClr: c.cardMood,
       rad: 8,
       hp: 8,
       vp: 6,
-      child: Text.rich(
-        TextSpan(
-          children: [
-            TextSpan(
-              text: Strings.checkInStreak1.capEachWord(),
-              style: TxtStyle.outfitSemiB(fs: 9, w: 500, color: c.primary),
-            ),
-            TextSpan(text: ""),
-            TextSpan(
-              text: Strings.checkInStreak2.capEachWord(),
-              style: TxtStyle.outfit(fs: 9, color: c.secondary),
-            ),
-          ],
-        ),
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ShimmerWidget.rectangular(
+            width: 70,
+            height: 10,
+            shimmerClr: c.inputBorder.withOpacity(0.4),
+          ),
+
+          const SizedBox(width: 4),
+
+          ShimmerWidget.rectangular(
+            width: 90,
+            height: 10,
+            shimmerClr: c.inputBorder.withOpacity(0.25),
+          ),
+        ],
       ),
     );
   }

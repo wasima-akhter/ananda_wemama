@@ -20,7 +20,9 @@ class CommunitySearchScreen extends StatelessWidget {
       child: Obx(() {
         final showTag = csc.showSearchedTag.value;
 
-        return showTag ? _buildSearchResult(csc) : SuggestedCommunitySection(csc: csc);
+        return showTag
+            ? _buildSearchResult(csc)
+            : SuggestedCommunitySection(csc: csc);
       }),
     );
   }
@@ -43,7 +45,11 @@ class CommunitySearchScreen extends StatelessWidget {
                 children: [
                   TextFit(
                     csc.searchedTxt.value,
-                    style: TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary),
+                    style: TxtStyle.urbanistSemiB(
+                      fs: 14,
+                      w: 600,
+                      color: c.primary,
+                    ),
                   ),
                   Gap(8),
                   CusGestureDetector(
@@ -52,7 +58,10 @@ class CommunitySearchScreen extends StatelessWidget {
 
                       csc.clearAll();
                     },
-                    child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: c.primary),
+                    child: SvgIconColored(
+                      iconPath: IconsPath.closeCircle,
+                      iconColor: c.primary,
+                    ),
 
                     // Icon(Icons.close, size: 16, color: white),
                   ),
@@ -84,15 +93,19 @@ class CommunitySearchScreen extends StatelessWidget {
                     //  ListView.builder(itemCount: 10, itemBuilder: (context, index) => Text("data")),
                     ListView.separated(
                       controller: csc.searchedCommCtrl,
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
                       padding: EdgeInsets.only(bottom: itemGap * 2),
                       itemCount: 10,
-                      separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                      separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                       itemBuilder: (_, index) => CommunityItemShimmer(),
                     ).getcm,
               ),
 
-              empty: () => const EmptyNoSearchWidgetScrollable(title: "No Community found").getcm,
+              empty: () => const EmptyNoSearchWidgetScrollable(
+                title: "No Community found",
+              ).getcm,
 
               data: () => AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
@@ -106,10 +119,14 @@ class CommunitySearchScreen extends StatelessWidget {
                       item: item,
                       btnTxt: item.btnText,
                       isLoading: false,
-                      onTapItem: () =>
-                          csc.onTapItem(btnState: item.btnState, communityItemId: item.id ?? ''),
-                      onTapItemBtn: () =>
-                          csc.onTapItemBtn(btnState: item.btnState, communityItemId: item.id ?? ''),
+                      onTapItem: () => csc.onTapItem(
+                        btnState: item.btnState,
+                        communityItemId: item.id ?? '',
+                      ),
+                      onTapItemBtn: () => csc.onTapItemBtn(
+                        btnState: item.btnState,
+                        communityItemId: item.id ?? '',
+                      ),
                     );
                   },
                 ),
@@ -124,22 +141,23 @@ class CommunitySearchScreen extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(CommunitySearchController csc) {
     return CommonAppBarContent(
       title: '',
-      titleWidget: SizedBox(
-        // width: S.w * 0.7,
-        child: CusSearchBar(
-          fillColor: ctransp,
-          controller: csc.searchController,
-          focusNode: csc.searchFocus,
-          onEditingComplete: () async {
-            csc.showSearchedTag.value = true;
-            csc.searchedTxt.value = csc.searchController.text;
+      expandTitle: true,
 
-            await csc.getSearchedCommunityList();
-            csc.clearAll();
-            csc.unFocusAll();
-          },
-        ).getcm.mHV(0, 6),
-      ),
+      titleWidget: CusSearchBar(
+        fillColor: ctransp,
+        controller: csc.searchController,
+        focusNode: csc.searchFocus,
+
+        onEditingComplete: () async {
+          csc.showSearchedTag.value = true;
+          csc.searchedTxt.value = csc.searchController.text;
+
+          await csc.getSearchedCommunityList();
+
+          csc.clearAll();
+          csc.unFocusAll();
+        },
+      ).mHV(0, 4),
     );
   }
 }
@@ -155,7 +173,9 @@ Widget buildCommunityList({
     child: ListView.builder(
       shrinkWrap: shrinkWrap ?? false,
       controller: scrollController,
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
       itemCount: itemCount,
       itemBuilder: (context, index) {
         return itemBuilder(index).getcm.mB(itemGap * 0.6);
@@ -192,7 +212,11 @@ class SuggestedCommunitySection extends StatelessWidget {
                 vp: 4,
                 child: TextFit(
                   "You may like",
-                  style: TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.secondary),
+                  style: TxtStyle.outfitSemiB(
+                    fs: 13,
+                    w: 500,
+                    color: c.secondary,
+                  ),
                 ),
               ),
             ],
@@ -210,14 +234,18 @@ class SuggestedCommunitySection extends StatelessWidget {
 
               loading: () => ListView.separated(
                 controller: csc.suggCommunityScrlCtrl,
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 padding: EdgeInsets.only(bottom: itemGap * 2),
                 itemCount: 10,
-                separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                 itemBuilder: (_, index) => CommunityItemShimmer(),
               ).getcm,
 
-              empty: () => const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
+              empty: () => const EmptyNoSearchWidgetScrollable(
+                title: "No Communities yet",
+              ).getcm,
 
               data: () => buildCommunityList(
                 scrollController: csc.suggCommunityScrlCtrl,
