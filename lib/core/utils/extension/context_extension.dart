@@ -717,3 +717,68 @@ class BoxDeco {
     ),
   );
 }
+
+class Responsive {
+  Responsive._();
+
+  /// -------- DEVICE TYPES --------
+
+  static bool get isSmallMobile => S.w < 360;
+
+  static bool get isMobile => S.w < 600;
+
+  static bool get isTablet => S.w >= 600 && S.w < 1024;
+
+  static bool get isDesktop => S.w >= 1024;
+
+  /// -------- HEIGHT TYPES --------
+
+  static bool get isShortHeight => S.h < 700;
+
+  static bool get isMediumHeight => S.h >= 700 && S.h < 850;
+
+  static bool get isTallHeight => S.h >= 850;
+
+  /// -------- CARD HEIGHTS --------
+
+  static double get upcomingSessionCardHeight {
+    if (isSmallMobile) return 200.h;
+
+    if (isShortHeight) return 220.h;
+
+    return 220.h;
+  }
+
+  /// Ongoing / Live Session Card
+  static double get ongoingSessionCardHeight {
+    if (isSmallMobile) return 180.h;
+
+    if (isShortHeight) return 180.h;
+
+    return 200.h;
+  }
+
+  /// -------- COMMON SPACING --------
+
+  static double get pageHorizontalPadding {
+    if (isTablet) return 24.w;
+
+    return 16.w;
+  }
+
+  static double get cardRadius {
+    if (isTablet) return 24.r;
+
+    return 20.r;
+  }
+
+  /// -------- TEXT SCALE HELPERS --------
+
+  static double font(double size) {
+    if (isSmallMobile) return size - 1;
+
+    if (isTablet) return size + 1;
+
+    return size;
+  }
+}

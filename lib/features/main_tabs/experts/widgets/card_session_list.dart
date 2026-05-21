@@ -13,6 +13,7 @@ class CardHorizontalList extends StatefulWidget {
     required this.onViewAll,
     this.aspectRatio,
     required this.exc,
+    required this.height,
   });
 
   final String title;
@@ -20,6 +21,7 @@ class CardHorizontalList extends StatefulWidget {
   final int itemCount;
   final void Function() onViewAll;
   final double? aspectRatio;
+  final double height;
   final ExpertsController exc;
 
   @override
@@ -42,7 +44,10 @@ class _CardHorizontalList extends State<CardHorizontalList> {
 
   void next() {
     if (currentIndex < widget.itemCount - 1) {
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
   }
 
@@ -71,9 +76,9 @@ class _CardHorizontalList extends State<CardHorizontalList> {
           Gap(itemGap),
 
           /// Carousel
-          AspectRatio(
-            aspectRatio: widget.aspectRatio ?? 1.6,
-            // height: S.h * 0.3, // adjust or make responsive
+          SizedBox(
+            // aspectRatio: widget.aspectRatio ?? 1.6,
+            height: widget.height, // adjust or make responsive
             child: Stack(
               children: [
                 PageView.builder(
@@ -105,7 +110,10 @@ class _CardHorizontalList extends State<CardHorizontalList> {
                         child: CircleAvatar(
                           radius: 20.r,
                           backgroundColor: c.inputBackground,
-                          child: SvgIcon(iconPath: IconsPath.arrowForwardSmall, height: 26),
+                          child: SvgIcon(
+                            iconPath: IconsPath.arrowForwardSmall,
+                            height: 26,
+                          ),
                         ),
                       ),
                     ),
@@ -147,7 +155,10 @@ class ExpertCardShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(color: c.cardPrimary, borderRadius: BorderRadius.circular(12.r)),
+      decoration: BoxDecoration(
+        color: c.cardPrimary,
+        borderRadius: BorderRadius.circular(12.r),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

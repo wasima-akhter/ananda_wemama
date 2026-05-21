@@ -32,8 +32,8 @@ class CustomBottomNavBar extends StatelessWidget {
                   iconPath: mnc.icons[index],
                   label: mnc.labels[index],
                   isSelected: isCurrIndex,
-                  width: 26.w,
-                  height: 26.h,
+                  width: 24,
+                  height: 24,
                   currenIndex: index,
                 );
               }),

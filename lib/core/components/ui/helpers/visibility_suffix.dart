@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../../../utils/extension/context_extension.dart';
-import '../buttons/gesture_detector_cus.dart';
+import 'package:mama_app/app/helper_widgets_export.dart';
 
 class VisibilitySuffix extends StatelessWidget {
   final void Function()? onTap;
@@ -12,7 +9,7 @@ class VisibilitySuffix extends StatelessWidget {
   Widget build(BuildContext context) {
     return CusGestureDetector(
       onTap: onTap,
-      child: Icon(icon, color: c.primary),
+      child: Icon(icon, color: c.primary, size: 22.w),
     );
   }
 }

@@ -77,6 +77,11 @@ class NetworkImageWidget extends StatelessWidget {
 
     log("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
+    final validImage =
+        imageUrl != null &&
+        (imageUrl ?? '').isNotEmpty &&
+        (imageUrl ?? '').startsWith('http');
+
     return CusGestureDetector(
       onTap: (!(enablePreview == true) || imageUrl == null || imageUrl!.isEmpty)
           ? null

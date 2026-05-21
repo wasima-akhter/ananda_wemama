@@ -37,9 +37,11 @@ class _CommunitySpotlightDummy extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                Strings.communitySpotlight.capEachWord(),
-                style: TxtStyle.outfitSmTitle,
+              FittedBox(
+                child: Text(
+                  Strings.communitySpotlight.capEachWord(),
+                  style: TxtStyle.outfitSmTitle,
+                ),
               ),
               Gap(itemGap),
               ContainerBordered(
@@ -47,7 +49,7 @@ class _CommunitySpotlightDummy extends StatelessWidget {
                 contClr: c.inputBackground,
                 rad: 18,
                 vp: 6,
-                hp: 18,
+                hp: 12,
                 child: Text(
                   Strings.joinDiscussion.capEachWord(),
                   style: 12.titleMclrCusFSURB,
@@ -127,7 +129,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
+                  FittedBox(
                     child: Text(
                       Strings.communitySpotlight.capEachWord(),
                       style: TxtStyle.outfitSmTitle,
@@ -149,7 +151,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
                         contClr: c.inputBackground,
                         rad: 18,
                         vp: 6,
-                        hp: 18,
+                        hp: 12,
                         child: Text(
                           Strings.joinDiscussion.capEachWord(),
                           style: 12.titleMclrCusFSURB,

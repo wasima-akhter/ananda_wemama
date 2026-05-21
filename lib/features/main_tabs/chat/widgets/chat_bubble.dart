@@ -13,7 +13,9 @@ class ChatBubbleCont extends StatelessWidget {
     return Padding(
       padding: 4.pv,
       child: Row(
-        mainAxisAlignment: _isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment: _isMe
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (_isMe) _timeWidget(),
@@ -64,7 +66,7 @@ class ChatBubbleCont extends StatelessWidget {
         child: ContainerBordered(
           hideAlignment: true,
           rad: 12,
-          vp: 10,
+          vp: 6,
           hp: 12,
           contClr: _isMe ? c.bottomSheetBackground : c.cardPrimary,
           alignment: null, // ← stop ContainerBordered from forcing full width
@@ -76,7 +78,10 @@ class ChatBubbleCont extends StatelessWidget {
                 child: Text(
                   message.msg,
                   textAlign: TextAlign.start,
-                  style: TxtStyle.outfit(w: _isMe ? 500 : 400, color: c.secondary),
+                  style: TxtStyle.outfit(
+                    w: _isMe ? 500 : 400,
+                    color: c.secondary,
+                  ),
                 ),
               ),
               Gap(itemGap),

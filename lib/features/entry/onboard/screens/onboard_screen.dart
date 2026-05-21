@@ -71,7 +71,7 @@ class _TopSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Gap(itemGap),
-        Transform.scale(scale: cfg.logoScale, child: weMamaLogoWithTxt),
+        weMamaLogoWithTxt,
         Gap(itemGap * 1.5),
         SecurityText(
           iconPath: IconsPath.shieldFill,

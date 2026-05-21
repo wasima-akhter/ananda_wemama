@@ -23,25 +23,33 @@ class ChatInboxScreen extends StatelessWidget {
       appBar: CommonAppBarContent(
         titleInLeft: true,
         title: '',
-        titleLeftWidget: Obx(() {
+        expandTitle: true,
+        titleWidget: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
           return Expanded(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                NetworkImageWidget(imageUrl: user?.profileImage ?? '', isCircle: true, radius: 16),
+                NetworkImageWidget(
+                  imageUrl: user?.profileImage ?? '',
+                  isCircle: true,
+                  radius: 16,
+                ),
                 Gap(itemGap),
                 Flexible(
                   // width: S.w * 0.5,
-                  child: Text(
-                    user?.name ?? Strings.chat,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: 18.titleMclrCusFSOutfit,
+                  child: Container(
+                    // color: Colors.amber,
+                    child: Text(
+                      user?.name ?? Strings.chat,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: 18.titleMclrCusFSOutfit,
+                    ),
                   ),
                 ),
               ],
-            ).mL(12),
+            ),
           );
         }),
 
@@ -77,7 +85,9 @@ class ChatInboxScreen extends StatelessWidget {
         onRefresh: () async => cic.emitGetMessages(),
         child: SingleChildScrollView(
           controller: cic.scrollController,
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -115,7 +125,9 @@ class ChatInboxScreen extends StatelessWidget {
                         message: FakeMsgItemData(
                           msg: msg.text ?? '',
                           time: DateHelper()
-                              .formatUTCtimestamp(msg.createdAt?.toString() ?? '')
+                              .formatUTCtimestamp(
+                                msg.createdAt?.toString() ?? '',
+                              )
                               .time,
                           isSentByMe: msg.sender == currentProfileId(),
                         ),
@@ -146,12 +158,14 @@ class DateDivider extends StatelessWidget {
         _dateVerLine(),
         Padding(
           padding: 10.ph,
-          child: Text(item, style: TxtStyle.outfitSemiB(fs: 12, color: c.textSecondary)),
+          child: Text(
+            item,
+            style: TxtStyle.outfitSemiB(fs: 12, color: c.textSecondary),
+          ),
         ),
         _dateVerLine(),
       ],
     ).mOnly(bottom: 12, top: 12);
-    ;
   }
 
   Widget _dateVerLine() {

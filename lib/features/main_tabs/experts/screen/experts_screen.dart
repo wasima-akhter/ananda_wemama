@@ -49,6 +49,7 @@ class ExpertsScreen extends StatelessWidget {
               state: state,
 
               loading: () => CardHorizontalList(
+                height: Responsive.ongoingSessionCardHeight,
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () {},
@@ -67,6 +68,7 @@ class ExpertsScreen extends StatelessWidget {
 
               data: () => CardHorizontalList(
                 aspectRatio: 1.8,
+                height: Responsive.ongoingSessionCardHeight,
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () => exc.onTapViewAll(true),
@@ -92,6 +94,7 @@ class ExpertsScreen extends StatelessWidget {
               state: state,
 
               loading: () => CardHorizontalList(
+                height: Responsive.upcomingSessionCardHeight,
                 title: Strings.upcomingExpertSession,
                 exc: exc,
                 itemCount: 5,
@@ -109,7 +112,9 @@ class ExpertsScreen extends StatelessWidget {
               ),
 
               data: () => CardHorizontalList(
-                // aspectRatio: 1.45,
+                aspectRatio: 1.45,
+
+                height: Responsive.upcomingSessionCardHeight,
                 title: Strings.upcomingExpertSession,
                 exc: exc,
                 onViewAll: () => exc.onTapViewAll(false),

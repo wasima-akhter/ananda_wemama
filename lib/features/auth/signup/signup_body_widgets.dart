@@ -75,7 +75,7 @@ class SignupFormSection extends StatelessWidget {
               iconPath: IconsPath.lock,
               height: 22,
             ).mOnly(left: 15, right: 6),
-            prefixSize: 48,
+            prefixSize: 45,
             focusNode: controller.passFocus,
             obscureText: controller.isPassHidden,
             suffix: VisibilitySuffix(
@@ -97,7 +97,7 @@ class SignupFormSection extends StatelessWidget {
               iconPath: IconsPath.lock,
               height: 22,
             ).mOnly(left: 15, right: 6),
-            prefixSize: 48,
+            prefixSize: 45,
             focusNode: controller.confirmPassFocus,
             obscureText: controller.isConPassHidden,
             suffix: VisibilitySuffix(

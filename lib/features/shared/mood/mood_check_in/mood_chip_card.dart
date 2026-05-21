@@ -227,7 +227,14 @@ class _CheckInStreakRow extends StatelessWidget {
 
           final streakText =
               "${Strings.checkInStreakHeart}${data.streak ?? 0}${Strings.checkInStreak1}";
-          final messageText = Strings.checkInStreak2 + (data.message ?? "");
+          final msg = data.message.toString() == "null"
+              ? ""
+              : data.message ?? '';
+          final messageText = msg.isEmpty
+              ? ''
+              : Strings.checkInStreak2 + (data.message ?? "");
+
+          // if (messageText.isEmpty) return const SizedBox.shrink();
 
           return ContainerBordered(
             contClr: c.cardMood,
@@ -247,10 +254,11 @@ class _CheckInStreakRow extends StatelessWidget {
                     ),
                   ),
                   const TextSpan(text: " "),
-                  TextSpan(
-                    text: messageText,
-                    style: TxtStyle.outfit(fs: 9, color: c.secondary),
-                  ),
+                  if (messageText.isNotEmpty)
+                    TextSpan(
+                      text: messageText,
+                      style: TxtStyle.outfit(fs: 9, color: c.secondary),
+                    ),
                 ],
               ),
             ),

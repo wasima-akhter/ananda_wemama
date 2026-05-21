@@ -80,13 +80,14 @@ class CommunityScreen extends StatelessWidget {
                               ),
                               padding: EdgeInsets.only(bottom: itemGap * 2),
                               itemCount: 10,
-                              separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                              separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                               itemBuilder: (_, index) => CommunityItemShimmer(),
                             ).getcm,
                       ),
 
-                      empty: () =>
-                          const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
+                      empty: () => const EmptyNoSearchWidgetScrollable(
+                        title: "No Communities yet",
+                      ).getcm,
 
                       data: () => AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
@@ -100,11 +101,13 @@ class CommunityScreen extends StatelessWidget {
                             isLoading: false,
                             onTapItem: () => cc.onTapItem(
                               btnState: MyCommunityBtnState.visit,
-                              communityItemId: displayListJoined[index].id ?? '',
+                              communityItemId:
+                                  displayListJoined[index].id ?? '',
                             ),
                             onTapItemBtn: () => cc.onTapItemBtn(
                               btnState: MyCommunityBtnState.visit,
-                              communityItemId: displayListJoined[index].id ?? '',
+                              communityItemId:
+                                  displayListJoined[index].id ?? '',
                             ),
                           ),
                         ),
@@ -129,13 +132,14 @@ class CommunityScreen extends StatelessWidget {
                               ),
                               padding: EdgeInsets.only(bottom: itemGap * 2),
                               itemCount: 10,
-                              separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                              separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                               itemBuilder: (_, index) => CommunityItemShimmer(),
                             ).getcm,
                       ),
 
-                      empty: () =>
-                          const EmptyNoSearchWidgetScrollable(title: "No Communities yet").getcm,
+                      empty: () => const EmptyNoSearchWidgetScrollable(
+                        title: "No Communities yet",
+                      ).getcm,
 
                       data: () => AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),
@@ -149,11 +153,13 @@ class CommunityScreen extends StatelessWidget {
                             isLoading: false,
                             onTapItem: () => cc.onTapItem(
                               btnState: MyCommunityBtnState.manage,
-                              communityItemId: displayListManaged[index].id ?? '',
+                              communityItemId:
+                                  displayListManaged[index].id ?? '',
                             ),
                             onTapItemBtn: () => cc.onTapItemBtn(
                               btnState: MyCommunityBtnState.manage,
-                              communityItemId: displayListManaged[index].id ?? '',
+                              communityItemId:
+                                  displayListManaged[index].id ?? '',
                             ),
                           ),
                         ),
@@ -193,7 +199,11 @@ class CommunityScreen extends StatelessWidget {
                   vp: 2,
                   hp: 2,
                   contClr: c.primary,
-                  child: SvgIconColored(iconPath: IconsPath.addPlus, iconColor: white, height: 20),
+                  child: SvgIconColored(
+                    iconPath: IconsPath.addPlus,
+                    iconColor: white,
+                    height: 20,
+                  ),
                 ),
               ],
             ),
@@ -202,6 +212,8 @@ class CommunityScreen extends StatelessWidget {
       ),
     );
   }
+
+  //
 }
 
 // ── Scrollable list with scrollbar ─────────────────────────────────────────────
@@ -225,10 +237,12 @@ class _CommunityListView extends StatelessWidget {
           //  ListView.builder(itemCount: 10, itemBuilder: (context, index) => Text("data")),
           ListView.separated(
             controller: scrollController,
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: EdgeInsets.only(bottom: itemGap * 2),
             itemCount: itemCount,
-            separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+            separatorBuilder: (_, _) => Gap(itemGap * 0.6),
             itemBuilder: (_, index) => itemBuilder(index).getcm,
           ),
     );
@@ -236,7 +250,11 @@ class _CommunityListView extends StatelessWidget {
 }
 
 // ── Tab item ───────────────────────────────────────────────────────────────────
-Widget _buildTabItem({required String title, required bool isSelected, void Function()? onTap}) {
+Widget _buildTabItem({
+  required String title,
+  required bool isSelected,
+  void Function()? onTap,
+}) {
   final selClr = c.primary;
   final unselClr = c.inputBackground;
   final selTxtClr = white;
@@ -252,7 +270,11 @@ Widget _buildTabItem({required String title, required bool isSelected, void Func
       contClr: isSelected ? selClr : unselClr,
       child: TextFit(
         title,
-        style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: isSelected ? selTxtClr : unselTxtClr),
+        style: TxtStyle.outfitSemiB(
+          fs: 14,
+          w: 500,
+          color: isSelected ? selTxtClr : unselTxtClr,
+        ),
       ),
     ),
   );
@@ -263,7 +285,12 @@ Widget buildCommunityListNoScroll({
   required int itemCount,
   required CommunityItem Function(int index) itemBuilder,
 }) {
-  return Column(children: List.generate(12, (index) => itemBuilder(index).getcm.mB(itemGap * 0.5)));
+  return Column(
+    children: List.generate(
+      12,
+      (index) => itemBuilder(index).getcm.mB(itemGap * 0.5),
+    ),
+  );
   //  CusScrollbarWidget(
   //   controller: scrollController,
   //   child: Column(children: List.generate(itemCount, (index) => itemBuilder(index).mB(itemGap))),

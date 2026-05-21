@@ -72,13 +72,14 @@ class FormSection extends StatelessWidget {
               iconPath: IconsPath.lock,
               height: 22,
             ).mOnly(left: 15, right: 6),
-            prefixSize: 48,
+            prefixSize: 45,
             focusNode: controller.passwordFocus,
             obscureText: controller.isPasswordHidden,
             suffix: VisibilitySuffix(
               onTap: controller.togglePasswordVisibility,
               icon: controller.passwordIcon,
             ),
+
             validator: validatePassword,
           );
         }),
