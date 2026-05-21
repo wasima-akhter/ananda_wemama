@@ -8,7 +8,7 @@ class SocketEvents {
   static const newConversationRequest = "new_conversation_request"; // receiver listens
 
   // Wave List
-  static const getConversationRequests = "get_conversation_requests"; // receiver listens
+  static const getConversationRequests = "get_conversation_requests"; // receiver emits
   static const conversationRequests = "conversation_requests"; // receiver listens
   static const acceptConversationRequest = "accept_conversation_request"; // receiver listens
   static const rejectConversationRequest = "reject_conversation_request"; // receiver listens

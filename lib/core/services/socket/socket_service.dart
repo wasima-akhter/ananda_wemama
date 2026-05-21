@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
@@ -32,6 +33,8 @@ class SocketService extends GetxService {
   // ═══════════════════════════════════════════════════════════════════════════
   // CONNECT
   // ═══════════════════════════════════════════════════════════════════════════
+
+  /*
   Future<void> connectSocket() async {
     // Reset completer
     _connectCompleter = Completer<void>();
@@ -89,54 +92,84 @@ class SocketService extends GetxService {
       }
     }
   }
-  // Future<void> connectSocket() async {
-  //   // Reset completer
-  //   _connectCompleter = Completer<void>();
+  */
 
-  //   // cleanup old socket
-  //   if (_socket != null) {
-  //     _socket!.clearListeners();
-  //     _socket!.disconnect();
-  //     _socket!.destroy();
-  //     _socket = null;
-  //   }
+  void _removeAllListeners() {
+    final events = [
+      SocketEvents.sendConversationRequest,
+      SocketEvents.newConversationRequest,
+      SocketEvents.newNotification,
+      SocketEvents.conversationRequests,
+      SocketEvents.conversationAccepted,
+      SocketEvents.conversationRejected,
+      SocketEvents.chatList,
+      SocketEvents.messages,
+      SocketEvents.newMessage,
+    ];
+    _socket!.off(SocketEvents.chatList);
+    _socket!.off(SocketEvents.messages);
+    _socket!.off(SocketEvents.newMessage);
+    _socket!.off(SocketEvents.newNotification);
+    _socket!.off(SocketEvents.newConversationRequest);
+    _socket!.off(SocketEvents.sendConversationRequest);
+    _socket!.off(SocketEvents.conversationRequests);
+    _socket!.off(SocketEvents.conversationAccepted);
+    _socket!.off(SocketEvents.conversationRejected);
 
-  //   _socket = IO.io(
-  //     baseUrl,
-  //     IO.OptionBuilder()
-  //         .setTransports(['websocket'])
-  //         .setAuth({'token': getToken})
-  //         .disableAutoConnect() // 👈 important
-  //         .build(),
-  //   );
+    for (final event in events) {
+      _socket?.off(event);
+    }
+  }
 
-  //   try {
-  //     _socket!.onConnect((_) {
-  //       log("✅ Socket Connected: ${_socket!.id}");
+  Future<void> connectSocket() async {
+    _connectCompleter = Completer<void>();
 
-  //       // complete future
-  //       if (!(_connectCompleter?.isCompleted ?? true)) {
-  //         _connectCompleter?.complete();
-  //       }
-  //     });
-  //   } catch (e) {}
+    try {
+      if (_socket != null) {
+        _removeAllListeners();
+        _socket?.clearListeners();
+        _socket?.disconnect();
+        _socket?.dispose();
+        _socket?.destroy();
+        _socket = null;
+      }
 
-  //   _socket!.onConnectError((err) {
-  //     log("❌ Socket error: $err");
+      _socket = IO.io(
+        baseUrl,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .setAuth({'token': getToken}) // ✅ picks up NEW user's token
+            .disableAutoConnect()
+            .enableForceNew()
+            .build(),
+      );
 
-  //     if (!(_connectCompleter?.isCompleted ?? true)) {
-  //       _connectCompleter?.completeError(err);
-  //     }
-  //   });
+      _socket!.onConnect((_) {
+        log("✅ Socket Connected: ${_socket!.id}");
+        if (!(_connectCompleter?.isCompleted ?? true)) {
+          _connectCompleter?.complete();
+        }
+      });
 
-  //   _registerListeners();
+      _socket!.onConnectError((err) {
+        log("❌ Socket error: $err");
+        if (!(_connectCompleter?.isCompleted ?? true)) {
+          _connectCompleter?.completeError(err);
+        }
+      });
 
-  //   _socket!.connect();
+      _registerListeners(); // registers fresh on the new socket instance
 
-  //   // 👇 WAIT here until connected
-  //   return _connectCompleter!.future;
-  // }
+      _socket!.connect();
 
+      return _connectCompleter!.future;
+    } catch (e) {
+      log("Socket connect crashed: $e");
+      if (!(_connectCompleter?.isCompleted ?? true)) {
+        _connectCompleter?.complete();
+      }
+    }
+  }
   // ═══════════════════════════════════════════════════════════════════════════
   // LISTENERS — registered once per connectSocket() call
   // ═══════════════════════════════════════════════════════════════════════════
@@ -147,6 +180,8 @@ class SocketService extends GetxService {
     _registerRetryListeners(); //
 
     // ── send_conversation_request ─────────────────────────────────────────────
+    _off(SocketEvents.sendConversationRequest);
+    _off(SocketEvents.sendConversationRequest);
     _on(SocketEvents.sendConversationRequest, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -156,6 +191,7 @@ class SocketService extends GetxService {
     });
 
     // ── new_conversation_request ──────────────────────────────────────────────
+    _off(SocketEvents.newConversationRequest);
     _on(SocketEvents.newConversationRequest, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -249,7 +285,7 @@ class SocketService extends GetxService {
     //     snackPosition: SnackPosition.TOP,
     //   );
     // });
-
+    _off(SocketEvents.newNotification);
     _on(SocketEvents.newNotification, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -287,6 +323,7 @@ class SocketService extends GetxService {
       );
     });
     // ── conversation_requests (list) ──────────────────────────────────────────
+    _off(SocketEvents.conversationRequests);
     _on(SocketEvents.conversationRequests, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -298,12 +335,16 @@ class SocketService extends GetxService {
           .map((e) => NewWaveListItemModel.fromJson(e))
           .toList();
 
+      debugPrint("list of wave list : ${list.length}");
+      debugPrint("list of wave res.dataAsList  : ${res.dataAsList?.length}");
+
       if (Get.isRegistered<WaveRequestController>()) {
         Get.find<WaveRequestController>().updateWaveList(list);
       }
     });
 
     // ── conversation_accepted ─────────────────────────────────────────────────
+    _off(SocketEvents.conversationAccepted);
     _on(SocketEvents.conversationAccepted, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -359,6 +400,7 @@ class SocketService extends GetxService {
     });
 
     // ── conversation_rejected ─────────────────────────────────────────────────
+    _off(SocketEvents.conversationRejected);
     _on(SocketEvents.conversationRejected, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -388,6 +430,8 @@ class SocketService extends GetxService {
     });
 
     // ── chat_list (list) ──────────────────────────────────────────
+
+    _off(SocketEvents.chatList);
     _on(SocketEvents.chatList, (data) {
       final res = SocketResponseHandler.handle(
         data,
@@ -403,7 +447,6 @@ class SocketService extends GetxService {
         Get.find<ChatController>().updateChatList(list);
       }
     });
-
     // ── chat_inbox_msg_list (list) ──────────────────────────────────────────
     _on(SocketEvents.messages, (data) {
       final res = SocketResponseHandler.handle(
@@ -432,6 +475,16 @@ class SocketService extends GetxService {
 
       if (Get.isRegistered<ChatInboxController>()) {
         Get.find<ChatInboxController>().addMessage(msgData); // ✅ correct
+      }
+
+      //
+      // ✅ Update chat list for incoming messages too
+      if (Get.isRegistered<ChatController>()) {
+        Get.find<ChatController>().updateLastMessage(
+          chatId: msgData.conversationId ?? '',
+          lastMessage: msgData.text ?? '',
+          time: msgData.createdAt ?? DateTime.now(),
+        );
       }
     });
     //
@@ -463,6 +516,7 @@ class SocketService extends GetxService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void emit(String event, dynamic data) {
+    log("token now: $getToken");
     if (!isConnected) {
       log("⚠️ Emit skipped — socket not connected → $event");
       return;
@@ -485,6 +539,12 @@ class SocketService extends GetxService {
         log("❌ Callback error [$event]: $e\n$stack");
       }
     });
+  }
+
+  /// Internal — removes a listener before re-registering, prevents stacking.
+  void _off(String event) {
+    _socket?.off(event);
+    log("🧹 Removed listener: $event");
   }
 
   /// Public — for one-off listeners added externally (e.g. from a controller).
@@ -519,10 +579,11 @@ class SocketService extends GetxService {
   void disconnectSocket() {
     _retryTimer?.cancel();
     _retryTimer = null;
+    _retryCount = 0; // ✅ reset so retry logic starts clean for new user
     _socket?.clearListeners();
     _socket?.disconnect();
     _socket?.destroy();
-    _socket = null;
+    _socket = null; // ✅ critical — forces full rebuild on next connect
     log("🔴 Socket manually disconnected");
   }
   // ═══════════════════════════════════════════════════════════════════════════
@@ -601,8 +662,15 @@ class SocketService extends GetxService {
         log("🔄 Attempting reconnect #$_retryCount...");
         try {
           // ✅ Reuse existing socket if still alive
+          // if (_socket != null) {
+          //   _socket!.connect(); // just reconnect, no listener rebuild
+          // }
           if (_socket != null) {
-            _socket!.connect(); // just reconnect, no listener rebuild
+            _socket!.io.options?['auth'] = {'token': getToken};
+
+            log("🔐 Reconnect token: $getToken");
+
+            _socket!.connect();
           } else {
             await connectSocket(); // full rebuild only if socket was destroyed
           }

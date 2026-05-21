@@ -24,14 +24,21 @@ class SigninService extends GetxService {
 
     if (response.success) {
       _saveUserDataAfterLogin(response: response);
-      // ✅ IMPORTANT: wait for socket connection
+
       try {
-        await Get.find<SocketService>().connectSocket();
+        final socket = Get.find<SocketService>();
+        // ✅ CRITICAL: Always disconnect old socket before reconnecting with new user's token
+        // This ensures the old user's authenticated connection is cleared
+        socket.disconnectSocket();
+        log("🔴 Old socket disconnected before new login");
+
+        // Now connect with the NEW token (saved in _saveUserDataAfterLogin)
+        await socket.connectSocket();
+        log("✅ New socket connected with new user's token");
       } catch (e) {
-        log("not socket connect");
+        log("Socket connect failed: $e");
       }
 
-      // ✅ Now safe — user is in room
       if (Get.isRegistered<ProfileController>()) {
         await Get.find<ProfileController>().fetchMyProfile();
       }

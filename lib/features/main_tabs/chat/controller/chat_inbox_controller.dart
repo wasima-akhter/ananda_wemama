@@ -90,15 +90,28 @@ class ChatInboxController extends GetxController {
 
   // Called by SocketService when full message list arrives
   void updateChatInboxMsgItem(ChatInboxMessageItemModel item) {
+    // ✅ Ignore if this response is for a different conversation
+    if (item.messages?.isNotEmpty == true) {
+      final incomingChatId = item.messages!.first.conversationId ?? '';
+      if (incomingChatId.isNotEmpty && incomingChatId != chatId) {
+        log(
+          "⚠️ Ignoring messages for different chat: $incomingChatId (mine: $chatId)",
+        );
+        return;
+      }
+    }
+
     realChatInboxMsgItem.value = item;
     messages.assignAll(item.messages ?? []);
-    isLoading_.value = false; // ← data arrived, stop loading
+    isLoading_.value = false;
     scrollToBottom();
   }
 
   // Called by SocketService on each new incoming message
   void addMessage(Message msg) {
-    // Avoid duplicate if we just sent it optimistically
+    // ✅ Ignore messages for other conversations
+    if (msg.conversationId != null && msg.conversationId != chatId) return;
+
     final alreadyExists = messages.any(
       (m) =>
           m.sender == msg.sender &&
@@ -112,7 +125,6 @@ class ChatInboxController extends GetxController {
       scrollToBottom();
     }
   }
-
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   void emitGetMessages() {
@@ -432,6 +444,15 @@ class ChatInboxController extends GetxController {
     );
     scrollToBottom();
     _emitSendMessage(text, receiverId, attachments: []);
+
+    // ✅ Update chat list immediately (optimistic)
+    if (Get.isRegistered<ChatController>()) {
+      Get.find<ChatController>().updateLastMessage(
+        chatId: chatId,
+        lastMessage: text,
+        time: DateTime.now().toUtc(),
+      );
+    }
     clearAll();
   }
 

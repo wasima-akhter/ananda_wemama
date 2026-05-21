@@ -123,15 +123,25 @@ class UpdateProfileService extends GetxService {
         fields['children[$i][gender]'] = children[i]['gender']!;
         fields['children[$i][dob]'] = children[i]['dob']!;
       }
+    } else {
+      // ✅ Tell backend explicitly: no children
+      fields['children'] = '[]';
     }
+
+    // ── Logs ────────────────────────────────────────────────────────────────
+    log("── updateProfileWithChildren ──────────────────────");
+    log("fields: $fields");
+    log("profileImage: ${profileImage?.path ?? 'null'}");
+    log(
+      "descriptionImages (${descriptionImages.length}): ${descriptionImages.map((f) => f.path).toList()}",
+    );
+    log("───────────────────────────────────────────────────");
 
     final response = await _apiHelper.request<ProfileDataModel>(
       apiCall: () => ApiClient().patchWithFile(
         Endpoints.updateProfile.getUrl,
         reqName: Strings.updateProfile,
-        file:
-            profileImage !=
-                null // ← null safe
+        file: profileImage != null
             ? MapEntry('profile-image', profileImage)
             : null,
         files: descriptionImages

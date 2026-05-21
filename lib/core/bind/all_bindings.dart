@@ -196,7 +196,7 @@ class MainNavBinding extends Bindings {
     // GLOBAL SINGLETONS
     // =======================
     Get.putPermanent(StationLocationController());
-    Get.putPermanent(ProfileController());
+   Get.lazyPutFenix(() => ProfileController());
     Get.putPermanent(MainNavController());
     Get.putPermanent(BookmarkController());
 
@@ -240,7 +240,7 @@ class ChatInboxBinding extends Bindings {
     if (Get.isRegistered<ChatInboxController>()) {
       Get.delete<ChatInboxController>();
     }
-    Get.putPermanent(ChatInboxController(args));
+    Get.put(ChatInboxController(args));
   }
 }
 
@@ -383,13 +383,7 @@ class AccountSettingsBinding extends Bindings {
   }
 }
 
-class EditProfileBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<EditProfileController>(() => EditProfileController());
-  }
-}
-
+ 
 class ChangePasswordBinding extends Bindings {
   @override
   void dependencies() {
@@ -447,13 +441,7 @@ class NotificationBinding extends Bindings {
   }
 }
 
-class ProfileBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<EditProfileController>(() => EditProfileController());
-  }
-}
-
+ 
 // ─────────────────────────────
 // 🔹 Individual but Shared
 // ─────────────────────────────

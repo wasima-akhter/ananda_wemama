@@ -39,6 +39,7 @@ class ChatListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TxtStyle.outfitSmTitle,
                   ),
+                  if( chatModel.lastMessage .isNotEmpty)
                   Text(
                     chatModel.lastMessage,
                     maxLines: 1,

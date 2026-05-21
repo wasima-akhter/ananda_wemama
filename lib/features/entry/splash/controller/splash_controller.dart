@@ -5,7 +5,7 @@ import '../../../../core/services/socket/socket_service.dart';
 
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
-  final socketService = Get.find<SocketService>();
+  // final socketService = Get.find<SocketService>();
   // @override
   // void onInit() {
   //   ever(socketService.status, (status) {
@@ -42,6 +42,12 @@ class SplashController extends GetxController {
     //   // Already seen + signed in → go to Sign In
     //   if (AppStorage.to.getLoggedIn) {
     //     Get.offNamed(RoutePaths.mainNav);
+
+    //  try {
+    //   await Get.find<SocketService>().connectSocket();
+    // } catch (e) {
+    //   log("Socket reconnect failed: $e");
+    // }
     //   } else {
     //     // Already seen + not signed in → go to Sign In
     //     Get.offNamed(RoutePaths.signin);

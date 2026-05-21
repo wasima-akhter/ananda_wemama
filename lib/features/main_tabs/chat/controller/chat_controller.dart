@@ -51,6 +51,11 @@ class ChatController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
+  void clearData() {
+    realChatList.clear();
+    searchedChatList.clear();
+    isLoading_.value = false;
+  }
   // ── State ────────────────────────────────────────────────────────────────
 
   final isLoading_ = true.obs; // ← start true, data hasn't arrived yet
@@ -64,10 +69,17 @@ class ChatController extends GetxController {
   // ── Called by SocketService when data arrives ────────────────────────────
 
   void updateChatList(List<ChatListItemModel> list) {
-    realChatList.assignAll(list);
+    // Deduplicate by id — last occurrence wins (most recent data)
+    final seen = <String>{};
+    final deduped = list.reversed
+        .where((e) => e.id != null && seen.add(e.id!))
+        .toList()
+        .reversed
+        .toList();
+
+    realChatList.assignAll(deduped);
     isLoading_.value = false;
 
-    // ✅ Complete the pending refresh/load completer
     if (!(_chatListCompleter?.isCompleted ?? true)) {
       _chatListCompleter?.complete();
     }
@@ -85,7 +97,7 @@ class ChatController extends GetxController {
     _chatListCompleter = Completer<void>();
 
     try {
-      socket.emit(SocketEvents.getChatList, {"receiverId": currentProfileId()});
+      socket.emit(SocketEvents.getChatList, {});
 
       // Wait for updateChatList() to complete the completer (with timeout)
       await _chatListCompleter!.future.timeout(
@@ -101,6 +113,26 @@ class ChatController extends GetxController {
     }
   }
 
+  //
+
+  void updateLastMessage({
+    required String chatId,
+    required String lastMessage,
+    required DateTime time,
+  }) {
+    final index = realChatList.indexWhere((e) => e.id == chatId);
+    if (index == -1) return;
+
+    realChatList[index] = realChatList[index].copyWith(
+      lastMessage: lastMessage,
+      time: time,
+    );
+
+    // Move this chat to the top
+    final updated = realChatList.removeAt(index);
+    realChatList.insert(0, updated);
+    realChatList.refresh();
+  }
   // ── Emit ─────────────────────────────────────────────────────────────────
 
   final socket = Get.find<SocketService>();

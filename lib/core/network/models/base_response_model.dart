@@ -17,14 +17,14 @@ class BaseResponse<T> {
       final rawData = json['data'];
 
 
-      log("res before parsing: ${rawData.toString()}");
+     // log("res before parsing: ${rawData.toString()}");
 
 
       // Just pass rawData safely to parser
       parsedData = fromJsonT(rawData);
     }
   } catch (e, st) {
-    log("❌ BaseResponse parsing error: $e\n$st");
+   // log("❌ BaseResponse parsing error: $e\n$st");
     parsedData = null;
   }
 

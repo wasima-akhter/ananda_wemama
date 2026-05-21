@@ -250,7 +250,7 @@ class WaveRequestController extends GetxController {
 
   void getConversationRequestList(String receiverId) {
     socket.emit(SocketEvents.getConversationRequests, {
-      "receiverId": receiverId,
+      
     });
   }
 

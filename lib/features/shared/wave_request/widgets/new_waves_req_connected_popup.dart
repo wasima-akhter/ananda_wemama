@@ -1,3 +1,5 @@
+import 'package:mama_app/core/models/ui/common_data_models.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 
 class NewWavesReqConnectedPopup extends StatelessWidget {
@@ -43,7 +45,10 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                   style: TxtStyle.outfitSemiB(fs: 12, color: c.textOnPrimary, w: 500),
                   onTap: () {
                     Get.back();
-                    Get.offAndToNamed(RoutePaths.chatInbox, arguments: conversationId);
+                    Get.offAndToNamed(RoutePaths.chatInbox,  
+                    
+                        arguments: ChatInboxArgPassModel(chatId: conversationId, isBlocked: false),);
+       
                   },
                   btnTxt: Strings.sayHello,
                   isLoading: false,

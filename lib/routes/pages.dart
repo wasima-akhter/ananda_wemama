@@ -246,11 +246,11 @@ class RoutePageList {
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: ProfileBinding()),
+    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: MainNavBinding()),
     GetPage(
       name: RoutePaths.editProfile,
       page: () => const EditProfileScreen(),
-      binding: ProfileBinding(),
+      binding: MainNavBinding(),
     ),
     GetPage(
       name: RoutePaths.changePassword,
