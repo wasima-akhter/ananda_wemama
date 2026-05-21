@@ -26,33 +26,27 @@ class ChatInboxScreen extends StatelessWidget {
         expandTitle: true,
         titleWidget: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
-          return Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                NetworkImageWidget(
-                  imageUrl: user?.profileImage ?? '',
-                  isCircle: true,
-                  radius: 16,
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NetworkImageWidget(
+                imageUrl: user?.profileImage ?? '',
+                isCircle: true,
+                isUser: true,
+                radius: 16,
+              ),
+              Gap(itemGap),
+              Flexible(
+                child: Text(
+                  user?.name ?? Strings.chat,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: 18.titleMclrCusFSOutfit,
                 ),
-                Gap(itemGap),
-                Flexible(
-                  // width: S.w * 0.5,
-                  child: Container(
-                    // color: Colors.amber,
-                    child: Text(
-                      user?.name ?? Strings.chat,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: 18.titleMclrCusFSOutfit,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+              ),
+            ],
+          ).mL(6);
         }),
-
         suffix: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
 
@@ -77,9 +71,16 @@ class ChatInboxScreen extends StatelessWidget {
           );
         }),
       ),
-      inputRow:
-          // cic.isBlocked ? const SizedBox.shrink() :
-          ChatInputRow(cic: cic).get10cm,
+
+      inputRow: cic.isBlocked
+          ? ContainerBordered(
+              contClr: c.componentFill.withValues(alpha: 0.5),
+              child: Text(
+                "You have blocked this user",
+                style: TxtStyle.outfit(),
+              ),
+            ).mHV(10, 20)
+          : ChatInputRow(cic: cic).get10cm,
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
         onRefresh: () async => cic.emitGetMessages(),
@@ -113,14 +114,18 @@ class ChatInboxScreen extends StatelessWidget {
 
                 // 3. Message list — use cic.messages (RxList), not realChatInboxMsgItem
                 final grouped = cic.groupMessagesByDate();
+
                 return Column(
                   children: [
                     const SocketStatusBanner(),
+
                     ...grouped.map((item) {
                       if (item is String) {
                         return DateDivider(item: item);
                       }
+
                       final msg = item as Message;
+
                       return ChatBubbleCont(
                         message: FakeMsgItemData(
                           msg: msg.text ?? '',
@@ -130,6 +135,9 @@ class ChatInboxScreen extends StatelessWidget {
                               )
                               .time,
                           isSentByMe: msg.sender == currentProfileId(),
+
+                          /// NEW
+                          attachments: msg.attachments ?? [],
                         ),
                       );
                     }),

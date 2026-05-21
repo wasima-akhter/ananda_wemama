@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../app/helper_widgets_export.dart' hide MultipartFile;
 import '../components/app_ui/popup_widgets/file_size_excedeed_popup.dart';
@@ -146,6 +147,17 @@ Future<dynamic> showPickAnyFileBottomSheet({
   );
 }
 
+////////////
+///
+bool isImageFile(XFile file) {
+  final path = file.path.toLowerCase();
+  return path.endsWith('.jpg') ||
+      path.endsWith('.jpeg') ||
+      path.endsWith('.png') ||
+      path.endsWith('.webp');
+}
+
+///
 // ------------------------------------
 //
 // -------------------------------------------

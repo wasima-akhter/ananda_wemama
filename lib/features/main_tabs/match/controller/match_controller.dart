@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
 
@@ -37,8 +39,6 @@ class MatchController extends GetxController {
   }
 
   // ─────────────────────────────────────────────────────────────────────────
-  @override
-  void onInit() => super.onInit();
 
   @override
   void onClose() {
@@ -196,7 +196,7 @@ class MatchController extends GetxController {
   final stopSearching = false.obs;
 
   final isSuccessSentReq = false.obs;
-
+  /*
   Future<void> onAction(bool hasWaved, {required String receiverId}) async {
     if (hasWaved) {
       isWaveLoading.value = true;
@@ -228,6 +228,57 @@ class MatchController extends GetxController {
       await _showNextMatch();
     }
   }
+*/
+  // In MatchController
+
+  Completer<bool>? _waveCompleter;
+
+  void onWaveConfirmed(bool success) {
+    if (_waveCompleter != null && !_waveCompleter!.isCompleted) {
+      _waveCompleter!.complete(success);
+    }
+  }
+
+  Future<void> onAction(bool hasWaved, {required String receiverId}) async {
+    if (hasWaved) {
+      isWaveLoading.value = true;
+    } else {
+      isPassLoading.value = true;
+    }
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (hasWaved) {
+      isWaveLoading.value = false;
+
+      // Reset flag and set up completer BEFORE emitting
+      isSuccessSentReq.value = false;
+      _waveCompleter = Completer<bool>();
+
+      sendConversationRequest(receiverId);
+
+      // Wait for socket response (with timeout fallback)
+      final success = await _waveCompleter!.future.timeout(
+        const Duration(seconds: 8),
+        onTimeout: () => false,
+      );
+
+      if (success) {
+        await showWaveSentDialog(stopSearching: stopSearching);
+
+        if (stopSearching.value) {
+          matchState.value = MatchState.idle;
+        } else {
+          await _showNextMatch();
+        }
+      }
+    } else {
+      isPassLoading.value = false;
+      matchState.value = MatchState.idle;
+      await Future.delayed(const Duration(milliseconds: 600));
+      await _showNextMatch();
+    }
+  }
 
   /// Advances to the next match in the cached list.
   /// Only hits the API again when the list is fully exhausted.
@@ -240,7 +291,9 @@ class MatchController extends GetxController {
       // matchState staying as MatchState.found while currentMatch getter
       // returns the new index. Force a notify by toggling state briefly.
       matchState.value = MatchState.searching;
-      await Future.delayed(const Duration(milliseconds: 400)); // brief transition
+      await Future.delayed(
+        const Duration(milliseconds: 400),
+      ); // brief transition
       matchState.value = MatchState.found;
 
       log(
@@ -257,7 +310,9 @@ class MatchController extends GetxController {
   }
 
   void sendConversationRequest(String receiverId) {
-    socket.emit(SocketEvents.sendConversationRequest, {"receiverId": receiverId});
+    socket.emit(SocketEvents.sendConversationRequest, {
+      "receiverId": receiverId,
+    });
   }
 
   Future<void> onTapUpgradeNow() async {
@@ -266,7 +321,7 @@ class MatchController extends GetxController {
     log("result: $result");
   }
 }
-/* socket 
+/* socket
 
 
  final socket = Get.find<SocketService>();
@@ -312,10 +367,10 @@ startSearching()
       /*
 
 user 1" ananda:
-I/flutter (10351):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI1Mjg0ZTJhNjg1YjQwOGQ4ZmY4MDciLCJlbWFpbCI6ImFuYW5kYUB5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjUyODRlMmE2ODViNDA4ZDhmZjgwOSIsImlhdCI6MTc3NDM0ODQ3OCwiZXhwIjoxODA1ODg0NDc4fQ.jtVoZZOpuniKm4gbc7FCO746cffDZP7esa9Zp_SbchY 
-     
-     
+I/flutter (10351):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI1Mjg0ZTJhNjg1YjQwOGQ4ZmY4MDciLCJlbWFpbCI6ImFuYW5kYUB5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjUyODRlMmE2ODViNDA4ZDhmZjgwOSIsImlhdCI6MTc3NDM0ODQ3OCwiZXhwIjoxODA1ODg0NDc4fQ.jtVoZZOpuniKm4gbc7FCO746cffDZP7esa9Zp_SbchY
+
+
      user 2 : abc
-     
-I/flutter (18447):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI2NjFkNmFiYzExMDM3MDVhYTc3MDIiLCJlbWFpbCI6ImFiY0B5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjY2MWQ2YWJjMTEwMzcwNWFhNzcwNCIsImlhdCI6MTc3NDM0ODQ5NCwiZXhwIjoxODA1ODg0NDk0fQ.yX446f1F8PQGLIYxpB_bpWmtBHUg64qZow_XeQzf7H0 
+
+I/flutter (18447):  token :eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoSWQiOiI2OWI2NjFkNmFiYzExMDM3MDVhYTc3MDIiLCJlbWFpbCI6ImFiY0B5b3BtYWlsLmNvbSIsInByb2ZpbGVJZCI6IjY5YjY2MWQ2YWJjMTEwMzcwNWFhNzcwNCIsImlhdCI6MTc3NDM0ODQ5NCwiZXhwIjoxODA1ODg0NDk0fQ.yX446f1F8PQGLIYxpB_bpWmtBHUg64qZow_XeQzf7H0
       */

@@ -77,11 +77,22 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                       );
                     }),
 
-                    Transform.rotate(
-                      angle: 0.2, // positive = tilt right
-                      child: Transform.translate(
-                        offset: const Offset(15, -22),
-                        child: SvgIcon(iconPath: IconsPath.crown, height: 40),
+                    // Transform.rotate(
+                    //   angle: 0.2, // positive = tilt right
+                    //   child: Transform.translate(
+                    //     offset: const Offset(15, -22),
+                    //     child: SvgIcon(iconPath: IconsPath.crown, height: 40),
+                    //   ),
+                    // ),
+                    Positioned(
+                      top: Responsive.isTallHeight ? -16.w : -14.w,
+                      right: Responsive.isTallHeight ? -17.w : -10.w,
+                      child: Transform.rotate(
+                        angle: 0.2,
+                        child: SvgIcon(
+                          iconPath: IconsPath.crown,
+                          height: Responsive.isTallHeight ? 46 : 40,
+                        ),
                       ),
                     ),
                   ],

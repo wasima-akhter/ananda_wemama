@@ -10,11 +10,13 @@ import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/app_ui/popup_widgets/block_user_dialog.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../core/helpers/image_helper.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../more/blocked_user/service/blocked_user_service.dart';
 import '../model/chat_inbox_msg_item_model.dart';
+import '../service/chat_inbox_service.dart';
 
 class FakeChatInboxModel {
   final FakeChatModel senderData;
@@ -28,10 +30,14 @@ class FakeMsgItemData {
   final String time;
   final bool isSentByMe;
 
+  /// NEW
+  final List<Attachment> attachments;
+
   FakeMsgItemData({
     required this.msg,
     required this.time,
     required this.isSentByMe,
+    this.attachments = const [],
   });
 }
 
@@ -107,41 +113,6 @@ class ChatInboxController extends GetxController {
     }
   }
 
-  // ── Send message ─────────────────────────────────────────────────────────
-
-  void onTapSendMsg() {
-    final text = msgInputController.text.trim();
-    if (text.isEmpty) {
-      "Type something...".showToast();
-      return;
-    }
-
-    if (isBlocked) {
-      "Can't send message right now. Unblock the user first.".showToast();
-    }
-
-    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
-
-    // Optimistic add — user sees message instantly
-    final newMsg = Message(
-      conversationId: chatId,
-      createdAt: DateTime.now(),
-      receiver: receiverId,
-      seen: false,
-      sender: currentProfileId(),
-      text: text,
-    );
-
-    messages.add(newMsg);
-    scrollToBottom();
-
-    // Emit to socketio
-    _emitSendMessage(text, receiverId);
-
-    // ← NO getChatInboxMsgList() here — that caused the empty flicker
-    clearAll();
-  }
-
   // ── Helpers ───────────────────────────────────────────────────────────────
 
   void emitGetMessages() {
@@ -150,11 +121,36 @@ class ChatInboxController extends GetxController {
     });
   }
 
-  void _emitSendMessage(String message, String receiverId) {
+  //
+  List<Map<String, dynamic>> normalizeAttachments(dynamic data) {
+    if (data is List) {
+      return data.cast<Map<String, dynamic>>();
+    }
+
+    if (data is Map<String, dynamic>) {
+      final inner = data['data'];
+
+      if (inner is List) {
+        return inner.cast<Map<String, dynamic>>();
+      }
+
+      /// single file fallback
+      return [data];
+    }
+
+    return [];
+  }
+
+  void _emitSendMessage(
+    String message,
+    String receiverId, {
+    required List<Map<String, dynamic>> attachments,
+  }) {
     Get.find<SocketService>().emit(SocketEvents.sendMessage, {
       "senderId": currentProfileId(),
       "receiverId": receiverId,
       "text": message,
+      "attachments": attachments,
     });
   }
 
@@ -200,8 +196,6 @@ class ChatInboxController extends GetxController {
 
     return result;
   }
-
-  // ── File picking (unchanged) ──────────────────────────────────────────────
 
   var pickedImageOrFile = Rxn<XFile>();
   var filePicked = Rx<File?>(null);
@@ -296,4 +290,193 @@ class ChatInboxController extends GetxController {
     await showReportBottomSheet(isUserReport: true, userId: userId);
     Get.back(); // report user dropdown collapse
   }
+
+  //-----------------> Upload chat files
+
+  //
+
+  // ── File picking ──────────────────────────────────────────────────────────
+  static const int maxImages = 10;
+  static const int maxFiles = 5;
+
+  bool canAddImages(int count) {
+    final currentImages = pickedFiles.where((f) => isImageFile(f)).length;
+
+    return (currentImages + count) <= maxImages;
+  }
+
+  bool canAddFiles(int count) {
+    final currentFiles = pickedFiles.where((f) => !isImageFile(f)).length;
+
+    return (currentFiles + count) <= maxFiles;
+  }
+
+  //
+  final pickedFiles = <XFile>[].obs;
+
+  Future<void> pickMultipleFiles({ImageSource? source}) async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+
+    if (result == null) return;
+
+    final newFiles = result.files
+        .where((e) => e.path != null)
+        .map((e) => XFile(e.path!))
+        .toList();
+
+    final images = newFiles.where(isImageFile).toList();
+    final others = newFiles.where((f) => !isImageFile(f)).toList();
+
+    if (!canAddImages(images.length)) {
+      Get.snackbar("Limit reached", "Max 10 images allowed");
+      return;
+    }
+
+    if (!canAddFiles(others.length)) {
+      Get.snackbar("Limit reached", "Max 5 files allowed");
+      return;
+    }
+
+    pickedFiles.addAll(newFiles);
+  }
+
+  void removeFile(int index) {
+    pickedFiles.removeAt(index);
+  }
+
+  void removeFileByValue(XFile file) {
+    pickedFiles.remove(file);
+  }
+
+  // old
+
+  /*
+  // ── Send message ─────────────────────────────────────────────────────────
+
+  void onTapSendMsg() {
+    final text = msgInputController.text.trim();
+    if (text.isEmpty) {
+      "Type something...".showToast();
+      return;
+    }
+
+    if (isBlocked) {
+      "Can't send message right now. Unblock the user first.".showToast();
+    }
+
+    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
+
+    // Optimistic add — user sees message instantly
+    final newMsg = Message(
+      conversationId: chatId,
+      createdAt: DateTime.now(),
+      receiver: receiverId,
+      seen: false,
+      sender: currentProfileId(),
+      text: text,
+    );
+
+    messages.add(newMsg);
+    scrollToBottom();
+
+    // Emit to socketio
+    _emitSendMessage(text, receiverId);
+
+    // ← NO getChatInboxMsgList() here — that caused the empty flicker
+    clearAll();
+  }
+
+
+*/
+  // new
+  //// ── Send message ──────────────────────────────────────────────────────────
+
+  void onTapSendMsg() {
+    final text = msgInputController.text.trim();
+    final hasFile = pickedFiles.value.isNotEmpty;
+
+    if (text.isEmpty && !hasFile) {
+      "Type something or pick a file...".showToast();
+      return;
+    }
+
+    if (isBlocked) {
+      "Can't send message right now. Unblock the user first.".showToast();
+      return;
+    }
+
+    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
+
+    if (receiverId.isEmpty) {
+      "Something went wrong. Please try again.".showToast();
+      return;
+    }
+
+    if (hasFile) {
+      sendFileMessage(receiverId, text);
+    } else {
+      _sendTextMessage(text, receiverId);
+    }
+  }
+
+  void _sendTextMessage(String text, String receiverId) {
+    messages.add(
+      Message(
+        conversationId: chatId,
+        createdAt: DateTime.now(),
+        receiver: receiverId,
+        seen: false,
+        sender: currentProfileId(),
+        text: text,
+      ),
+    );
+    scrollToBottom();
+    _emitSendMessage(text, receiverId, attachments: []);
+    clearAll();
+  }
+
+  //
+  void clearAttachments() {
+    pickedFiles.clear();
+    msgInputController.clear();
+  }
+
+  Future<void> sendFileMessage(String receiverId, String text) async {
+    if (isSending_.value) return;
+    isSending_.value = true;
+
+    /// 1️⃣ TAKE SNAPSHOT (DO NOT MUTATE ORIGINAL YET)
+    final files = List<XFile>.from(pickedFiles);
+
+    try {
+      /// 2️⃣ UPLOAD FIRST
+      final result = await ChatInboxService().sendChatFile(chatFiles: files);
+
+      if (result == null) {
+        "Failed to send file. Please try again.".showToast();
+        return;
+      }
+
+      /// 3️⃣ BUILD SOCKET PAYLOAD
+      final attachments = normalizeAttachments(result);
+
+      /// 4️⃣ EMIT MESSAGE
+      _emitSendMessage(text, receiverId, attachments: attachments);
+
+      /// 5️⃣ ONLY NOW CLEAR STATE (SUCCESS PATH)
+      clearAttachments();
+      unFocusAll();
+    } catch (e) {
+      log("_sendFileMessage error: $e");
+
+      "Something went wrong while sending the file.".showToast();
+
+      /// ❗ IMPORTANT: DO NOT CLEAR ON ERROR
+      /// user should retry without re-picking files
+    } finally {
+      isSending_.value = false;
+    }
+  }
+
+  ///
 }

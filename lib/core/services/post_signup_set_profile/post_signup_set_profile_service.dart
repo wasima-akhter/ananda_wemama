@@ -1,16 +1,11 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart' as dio;
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/service_export.dart';
 import '../../../features/post_auth_setup/mums_stage/model/complete_profile_model.dart';
-import '../../helpers/image_helper.dart';
 
 class PostSignupSetProfileService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
+  /*
   Future<bool> uploadCompleteProfile({
     required String name,
     required String dob,
@@ -89,5 +84,41 @@ class PostSignupSetProfileService extends GetxService {
     }
 
     return response.success;
+  }
+
+*/
+  Future<bool> uploadCompleteProfile({
+    required String name,
+    required String dob,
+    required String state,
+    required String city,
+    String? bioDes,
+    required List<String> interestedFields,
+    required String mumStage,
+    XFile? profileImage,
+  }) async {
+    final response = await _apiHelper.request<CompleteProfileModel>(
+      apiCall: () => ApiClient().postWithFile(
+        Endpoints.completeProfile.getUrl,
+        reqName: Strings.setupProfile,
+        file: profileImage != null
+            ? MapEntry('profile-image', profileImage)
+            : null,
+        fields: {
+          'name': name,
+          'DOB': dob,
+          'state': state,
+          'city': city,
+          'mumStage': mumStage,
+          if (bioDes != null && bioDes.trim().isNotEmpty) 'bio': bioDes.trim(),
+        },
+        extraFields: interestedFields
+            .map((f) => MapEntry('interesteds', f))
+            .toList(),
+      ),
+      parser: (data) => CompleteProfileModel.fromJson(data),
+    );
+
+    return response != null && response.success;
   }
 }

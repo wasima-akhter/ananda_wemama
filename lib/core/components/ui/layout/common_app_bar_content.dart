@@ -25,133 +25,58 @@ class CommonAppBarContent extends StatelessWidget
     this.titleWidget,
     this.expandTitle,
   });
-
   @override
   Widget build(BuildContext context) {
     final finalBg = isBgTransp == true ? ctransp : bgClr;
+
     return AppBar(
       backgroundColor: finalBg,
-      leading: SizedBox.shrink(),
+      elevation: 0,
+      centerTitle: titleInLeft != true,
 
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            // color: Colors.amber,
-            color: finalBg,
-          ),
-          padding: EdgeInsets.only(
-            top: 30.h,
-            left: 20.w,
-            right: 20.w,
-            bottom: 10.h,
-          ),
+      leadingWidth: 60.w,
 
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              /// LEFT + RIGHT ACTIONS
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (hasBackNavArrow == null)
-                    BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop())
-                  else if (hasBackNavArrow == false)
-                    SizedBox(width: 40)
-                  else
-                    SizedBox(width: 40),
+      leading: hasBackNavArrow == false
+          ? const SizedBox.shrink()
+          : Padding(
+              padding: EdgeInsets.only(left: 20.w),
+              child: BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop()),
+            ),
 
-                  suffix ?? const SizedBox(width: 40),
-                ],
-              ),
+      titleSpacing: titleInLeft == true ? 0 : null,
 
-              /// CENTER TITLE
-              Positioned.fill(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    left: expandTitle == true
-                        ? (hasBackNavArrow == false ? 0 : 50)
-                        : 60,
+      title:
+          titleWidget ??
+          (titleInLeft == true
+              ? Row(
+                  children: [
+                    titleLeftWidget ?? const SizedBox.shrink(),
 
-                    right: expandTitle == true ? (suffix != null ? 50 : 0) : 60,
-                  ),
-                  child:
-                      titleWidget ??
-                      (titleInLeft == true
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                titleLeftWidget ?? const SizedBox.shrink(),
+                    Gap(itemGap),
 
-                                Flexible(
-                                  child: Text(
-                                    title.capEachWord(),
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.left,
-                                    style: 18.titleMclrCusFSOutfit,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              title.capEachWord(),
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: 18.titleMclrCusFSOutfit,
-                            )),
-                ),
-              ),
-            ],
-          ),
-          /*
-           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (hasBackNavArrow == null)
-                BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop())
-              else if (hasBackNavArrow == false)
-                SizedBox(width: 40.w),
-
-              Expanded(
-                child:
-                    titleWidget ??
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: titleInLeft == true
-                              ? Row(
-                                  children: [
-                                    titleLeftWidget ?? const SizedBox.shrink(),
-
-                                    Text(
-                                      title.capEachWord(),
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: true,
-                                      textAlign: TextAlign.left,
-                                      style: 18.titleMclrCusFSOutfit,
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  title.capEachWord(),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  textAlign: TextAlign.center,
-                                  style: 18.titleMclrCusFSOutfit,
-                                ),
-                        ),
-                      ],
+                    Expanded(
+                      child: Text(
+                        title.capEachWord(),
+                        overflow: TextOverflow.ellipsis,
+                        style: 18.titleMclrCusFSOutfit,
+                      ),
                     ),
-              ),
-              suffix ?? Container(width: 40.w),
-            ],
-          ),
+                  ],
+                )
+              : Text(
+                  title.capEachWord(),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: 18.titleMclrCusFSOutfit,
+                )),
 
-      */
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(right: 20.w),
+          child: suffix ?? SizedBox(width: 40.w),
         ),
-      ),
+      ],
+
       toolbarHeight: 60.h,
     );
   }

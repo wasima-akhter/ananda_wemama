@@ -16,6 +16,7 @@ class Endpoints {
   static const resetPassword = "auth/reset-password";
 
   static String get notifications => "notification/get-all-notification";
+  static String get sendChatFile => "chat/upload-chat-files";
   static String get blockedUsers => "chat/get-blocked-user";
   static String blockUser({required String userId}) {
     return "chat/block-user-app?userId=$userId";

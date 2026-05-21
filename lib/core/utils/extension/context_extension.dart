@@ -744,7 +744,7 @@ class Responsive {
   static double get upcomingSessionCardHeight {
     if (isSmallMobile) return 200.h;
 
-    if (isShortHeight) return 220.h;
+    if (isTallHeight) return 220.h;
 
     return 220.h;
   }
@@ -753,7 +753,7 @@ class Responsive {
   static double get ongoingSessionCardHeight {
     if (isSmallMobile) return 180.h;
 
-    if (isShortHeight) return 180.h;
+    if (isTallHeight) return 190.h;
 
     return 200.h;
   }

@@ -176,12 +176,23 @@ class SocketService extends GetxService {
         '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
       );
 
+      // if (isSender) {
+      //   // ✅ Flag for MatchController (sender only)
+      //   if (Get.isRegistered<MatchController>()) {
+      //     Get.find<MatchController>().isSuccessSentReq.value = true;
+      //   }
+      //   return; // sender gets no snackbar — MatchController shows Wave Sent dialog
+      // }
+
+      // In socket_service.dart — inside the newConversationRequest handler
+
       if (isSender) {
-        // ✅ Flag for MatchController (sender only)
         if (Get.isRegistered<MatchController>()) {
-          Get.find<MatchController>().isSuccessSentReq.value = true;
+          final mc = Get.find<MatchController>();
+          mc.isSuccessSentReq.value = true;
+          mc.onWaveConfirmed(true); // ← signals the completer
         }
-        return; // sender gets no snackbar — MatchController shows Wave Sent dialog
+        return;
       }
 
       if (isReceiver) {
@@ -505,6 +516,15 @@ class SocketService extends GetxService {
     super.onClose();
   }
 
+  void disconnectSocket() {
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _socket?.clearListeners();
+    _socket?.disconnect();
+    _socket?.destroy();
+    _socket = null;
+    log("🔴 Socket manually disconnected");
+  }
   // ═══════════════════════════════════════════════════════════════════════════
   // PARSER
   // ═══════════════════════════════════════════════════════════════════════════

@@ -218,6 +218,8 @@ class EditProfileController extends GetxController {
 
     unfocusAll();
 
+
+
     final data = await _service.updateProfileWithChildren(
       name: nameCtrl.text.trim(),
       descriptionImages: desImageFiles.value ?? [],
@@ -237,6 +239,8 @@ class EditProfileController extends GetxController {
                 )
                 .toList(),
     );
+
+
 
     if (data != null) {
       storage.setUserImageUrl(data.profileImage ?? '');

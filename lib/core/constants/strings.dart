@@ -276,6 +276,7 @@ class Strings {
       "Authority will be check your documents and ensure that you are legit or Not";
   static const String backToLogin = "Back to login";
   static const String upload = "Upload";
+  static const String uploadChatFile = "upload Chat File";
   static const String addBankName = "Enter bank name";
   static const String addAccountName = "Enter account name";
   static const String addAccountNumber = "Enter account number";

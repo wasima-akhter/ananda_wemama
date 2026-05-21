@@ -32,7 +32,9 @@ class VerifyOtpService extends GetxService {
     return response.success;
   }
 
-  void _saveUserDataAfterVerify({required BaseResponse<VerifyOtpDataModel> response}) {
+  void _saveUserDataAfterVerify({
+    required BaseResponse<VerifyOtpDataModel> response,
+  }) {
     // as success,
     // save the access token in app storage
     // save the user info in appstorage

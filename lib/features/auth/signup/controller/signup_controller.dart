@@ -33,9 +33,11 @@ class SignupController extends GetxController {
   bool get isPassHidden => !showPassword.value;
   bool get isConPassHidden => !showConPassword.value;
 
-  IconData get passwordIcon => showPassword.value ? Icons.visibility : Icons.visibility_off;
+  IconData get passwordIcon =>
+      showPassword.value ? Icons.visibility : Icons.visibility_off;
 
-  IconData get conPassIcon => showConPassword.value ? Icons.visibility : Icons.visibility_off;
+  IconData get conPassIcon =>
+      showConPassword.value ? Icons.visibility : Icons.visibility_off;
 
   void togglePass() => showPassword.toggle();
   void toggleConPass() => showConPassword.toggle();
@@ -95,12 +97,17 @@ class SignupController extends GetxController {
       );
 
       if (success) {
-        final sentOtpSuccess = await VerifyOtpService().resendOtp(email: emailCtrl.text.trim());
+        final sentOtpSuccess = await VerifyOtpService().resendOtp(
+          email: emailCtrl.text.trim(),
+        );
 
         if (sentOtpSuccess) {
           final result = await Get.toNamed(
             RoutePaths.verifyOtp,
-            arguments: {'flow': OtpFlowType.signup, 'email': emailCtrl.text.trim()},
+            arguments: {
+              'flow': OtpFlowType.signup,
+              'email': emailCtrl.text.trim(),
+            },
           );
         }
       }

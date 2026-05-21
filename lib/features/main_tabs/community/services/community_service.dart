@@ -1,18 +1,13 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart' as dio;
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/features/main_tabs/community/model/community_item_model.dart';
 
 import '../../../../app/service_export.dart';
-import '../../../../core/helpers/image_helper.dart';
 
 class CommunityService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
   /// Fetch inventory details from API
-
+  /* old
   Future<bool> createCommunity({
     required XFile? communityImg,
     required String communityName,
@@ -136,6 +131,43 @@ class CommunityService extends GetxService {
     log('community id while update : ${response.data}');
 
     return true;
+  }
+*/
+  Future<bool> createCommunity({
+    required XFile? communityImg,
+    required String communityName,
+  }) async {
+    final response = await _apiHelper.request(
+      apiCall: () => ApiClient().postWithFile(
+        Endpoints.createCommunity.getUrl,
+        reqName: Strings.createCommunity,
+        file: communityImg != null
+            ? MapEntry('community-image', communityImg)
+            : null,
+        fields: {'name': communityName},
+      ),
+    );
+
+    return response != null && response.success;
+  }
+
+  Future<bool> updateCommunity({
+    required XFile? communityImg,
+    required String? communityName,
+    required String communityId,
+  }) async {
+    final response = await _apiHelper.request(
+      apiCall: () => ApiClient().patchWithFile(
+        Endpoints.updateCommunity.getUrl,
+        reqName: Strings.updateCommunity,
+        file: communityImg != null
+            ? MapEntry('community-image', communityImg)
+            : null,
+        fields: {'name': ?communityName, 'communityId': communityId},
+      ),
+    );
+
+    return response != null && response.success;
   }
 
   Future<List<CommunityItemModel>> fetchManagedCommunityList() async {

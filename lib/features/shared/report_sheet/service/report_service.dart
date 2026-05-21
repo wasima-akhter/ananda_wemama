@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart' as dio;
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
 
@@ -16,64 +13,27 @@ class ReportService extends GetxService {
     required bool isUserReport,
     required String note,
   }) async {
-    final data = dio.FormData();
-
-    // ───────────────── IMAGE (COMPRESS) ─────────────────
-
-    if (reportImage != null) {
-      final compressed = await MultipartHelper.compressedImage(
-        File(reportImage.path),
-      );
-
-      if (compressed == null) {
-        "Image compression failed".showToast();
-        return null;
-      }
-
-      data.files.add(MapEntry('report-image', compressed));
-    }
-
-    // ───────────────── TEXT FIELDS ─────────────────
-
-    final type = isUserReport ? "User".cap : "Content".cap;
-
-    data.fields
-      ..add(MapEntry('type', type))
-      ..add(MapEntry('note', note))
-      ..add(MapEntry('report', id_))
-      ..add(MapEntry('name', name));
-
-    // ───────────────── DEBUG ─────────────────
-
-    log('fields: ${data.fields}');
-    log('files count: ${data.files.length}');
-    log('file keys: ${data.files.map((e) => e.key).toList()}');
-
-    for (final f in data.fields) {
-      log('${f.key}: ${f.value}');
-    }
-
-    for (final f in data.files) {
-      log('${f.key}: ${f.value.filename}');
-    }
-
-    log("Token: ${storage.getAccessToken}");
-
-    // ───────────────── API CALL ─────────────────
-
     final response = await _apiHelper.request<ReportInfoModel>(
       apiCall: () => ApiClient().postWithFile(
         Endpoints.reportUser.getUrl,
         reqName: Strings.reportUser,
-        data: data,
+        file: reportImage != null
+            ? MapEntry('report-image', reportImage)
+            : null,
+        fields: {
+          'type': isUserReport ? "User".cap : "Content".cap,
+          'note': note,
+          'report': id_,
+          'name': name,
+        },
       ),
       parser: (data) => ReportInfoModel.fromJson(data),
     );
 
-    if (response == null || !response.success) return null;
-
-    return response.data;
+    return (response == null || !response.success) ? null : response.data;
   }
+
+  //
 }
 
 class ReportInfoModel {

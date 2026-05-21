@@ -1,5 +1,4 @@
 import '../../../../app/service_export.dart';
-import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/auth/signup/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
@@ -53,14 +52,13 @@ class SignupService extends GetxService {
   }
 
   void _saveUserDataAfterSignUp({
-    required BaseResponse<SigninModelData> response,
+    required BaseResponse<SignUpModelData> response,
   }) {
     // as success,
     // save the access token in app storage
     // save the user info in appstorage
     if (response.data != null) {
-      final user = response.data?.user;
-      final fetchedEmail = user?.email;
+      final fetchedEmail = response.data?.email;
 
       storage.setUserInfo(email: fetchedEmail);
 
@@ -68,7 +66,7 @@ class SignupService extends GetxService {
       // UserRole
 
       // token
-      storage.setToken(response.data!.accessToken);
+      storage.setToken(response.data!.accessToken ?? '');
 
       // ✅ Now call ProfileController to refresh the profile
       if (Get.isRegistered<ProfileController>()) {
