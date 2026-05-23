@@ -30,6 +30,35 @@ class HomeController extends GetxController {
   final actionCtrl = Get.find<SessionActionController>();
   void closeAllPopups() {}
 
+  Future<bool> runLocationPermissionFlowForSearch() async {
+    try {
+      final enabled = await Geolocator.isLocationServiceEnabled();
+
+      if (!enabled) {
+        HomeScreen.showLocationStatusOverlay(isActive: false);
+        return false;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        return false;
+      }
+
+      await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
+
+      return true;
+    } catch (e) {
+      log("Location permission flow error: $e");
+      return false;
+    }
+  }
+
   // ─────────────────────────────────────────────────────────────────────────
   // 🔹 Location permission flow
   // ─────────────────────────────────────────────────────────────────────────

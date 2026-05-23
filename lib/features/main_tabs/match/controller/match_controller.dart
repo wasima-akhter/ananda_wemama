@@ -6,6 +6,7 @@ import 'package:mama_app/core/services/socket/socket_events.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../station_location/controller/station_location_controller.dart';
+import '../../home/controller/home_controller.dart';
 import '../model/match_model.dart';
 import '../services/match_service.dart';
 
@@ -88,7 +89,7 @@ class MatchController extends GetxController {
   // ═══════════════════════════════════════════════════════════════════════════
 
   RxBool isSearchLoading = false.obs;
-
+  /*
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
 
@@ -138,7 +139,84 @@ class MatchController extends GetxController {
       isSearchLoading.value = false;
     }
   }
+*/
+  Future<void> startSearching() async {
+    final int currentSearchId = ++_searchId;
 
+    // ─────────────────────────────────────
+    // 1. LOCATION / PERMISSION CHECK
+    // ─────────────────────────────────────
+    final homeC = Get.find<HomeController>();
+
+    final hasLocation = await homeC.runLocationPermissionFlowForSearch();
+
+    if (!hasLocation) {
+      matchState.value = MatchState.noMatch;
+      return;
+    }
+
+    // ─────────────────────────────────────
+    // 2. FREE USER LIMIT
+    // ─────────────────────────────────────
+    if (!isPaidUser && searchesToday >= freeDailyLimit) {
+      subUpgradeNeeded.value = true;
+      showDailyLimitDialog();
+      _fetchMatchesAndUpgrade();
+      return;
+    }
+
+    // ─────────────────────────────────────
+    // 3. FREE USER COUNT
+    // ─────────────────────────────────────
+    if (!isPaidUser) searchesToday++;
+
+    // ─────────────────────────────────────
+    // 4. SEARCHING STATE
+    // ─────────────────────────────────────
+    matchState.value = MatchState.searching;
+
+    await Future.delayed(const Duration(seconds: 5));
+
+    if (currentSearchId != _searchId) return;
+
+    // ─────────────────────────────────────
+    // 5. FETCH MATCHES
+    // ─────────────────────────────────────
+    if (isSearchLoading.value) return;
+
+    isSearchLoading.value = true;
+
+    try {
+      final slc = Get.find<StationLocationController>();
+
+      final data = await MatchService().fetchMatches(
+        latitude: slc.latitude.toString(),
+        longitude: slc.longitude.toString(),
+      );
+
+      if (currentSearchId != _searchId) return;
+
+      if (data.isEmpty) {
+        matchState.value = MatchState.noMatch;
+        return;
+      }
+
+      fetchedMatches.value = data;
+      _currentMatchIndex = 0;
+
+      matchState.value = MatchState.found;
+    } catch (e) {
+      log('startSearching fetch error: $e');
+
+      if (currentSearchId == _searchId) {
+        matchState.value = MatchState.noMatch;
+      }
+    } finally {
+      isSearchLoading.value = false;
+    }
+  }
+
+  //
   Future<void> _fetchMatchesAndUpgrade() async {
     if (isSearchLoading.value) return;
     isSearchLoading.value = true;

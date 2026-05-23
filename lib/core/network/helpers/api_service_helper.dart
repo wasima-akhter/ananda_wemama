@@ -32,7 +32,7 @@ class ApiServiceHelper {
         json = res;
       }
 
-      log("res before calling BaseResponse: $json");
+      //  log("res before calling BaseResponse: $json");
 
       final response = BaseResponse<T>.fromJson(res, parser);
 

@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
 import 'package:mama_app/core/helpers/widgets_helper.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
+import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart' as p;
@@ -275,6 +276,8 @@ class ChatInboxController extends GetxController {
             }
 
             Get.back(result: true);
+            Get.offAndToNamed(RoutePaths.mainNav);
+            MainNavController.to.goToTab(1);
           } finally {
             isBlockLoading.value = false;
           }
@@ -299,6 +302,9 @@ class ChatInboxController extends GetxController {
           chatId: chatId,
           isBlocked: false,
         );
+
+        Get.offAndToNamed(RoutePaths.mainNav);
+        MainNavController.to.goToTab(1);
       }
     } finally {
       isUnblockLoading.value = false;
