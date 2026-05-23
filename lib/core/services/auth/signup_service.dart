@@ -15,7 +15,7 @@ class SignupService extends GetxService {
     apiCall() {
       return ApiClient().post(
         Endpoints.register.getUrl,
-        headers: HeaderHelpers.getAuthHeader(),
+        // headers: HeaderHelpers.getAuthHeader(),
 
         //         {
         //     "email": "ananda@yopmail.com",

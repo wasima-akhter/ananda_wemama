@@ -1,5 +1,13 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart';
+import 'package:gal/gal.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mama_app/core/config/app_info.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
@@ -28,7 +36,8 @@ String currentProfileName() {
 
 String currentUserImage() {
   if (Get.isRegistered<ProfileController>()) {
-    return Get.find<ProfileController>().userProfileData.value?.profileImage ?? '';
+    return Get.find<ProfileController>().userProfileData.value?.profileImage ??
+        '';
   } else {
     return '';
   }
@@ -53,7 +62,9 @@ List<BoxShadow> boxShadow({bool? isLess}) => [
   BoxShadow(
     color: grey200.withOpacity(isLess == true ? 0.1 : 0.5), // light grey
     blurRadius: isLess == true ? 6 : 12,
-    offset: isLess == true ? Offset(2, 2) : Offset(6, 6), // right (x) and bottom (y)
+    offset: isLess == true
+        ? Offset(2, 2)
+        : Offset(6, 6), // right (x) and bottom (y)
   ),
 ];
 List<BoxShadow> get boxShadowAllSides => [
@@ -115,7 +126,12 @@ CustomBtnWTxt filledBtnWTxt({
   void Function()? onTap,
   required String btnTxt,
   required bool isLoading,
-}) => CustomBtnWTxt(onTap: onTap, isSmall: true, btnTxt: btnTxt, isLoading: isLoading);
+}) => CustomBtnWTxt(
+  onTap: onTap,
+  isSmall: true,
+  btnTxt: btnTxt,
+  isLoading: isLoading,
+);
 
 // open gallery
 
@@ -125,14 +141,14 @@ String makeImageUrl({required String imageUrl}) {
   if (imageUrl.contains("http")) {
     return imageUrl;
   } else {
-    return "${baseUrl}/$imageUrl";
+    return "$baseUrl/$imageUrl";
   }
 }
 
 Future<bool> willPopFunction({required DateTime? currentBackPressTime}) async {
   final now = DateTime.now();
   if (currentBackPressTime == null ||
-      now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      now.difference(currentBackPressTime) > const Duration(seconds: 2)) {
     currentBackPressTime = now;
     // showToast("Press again to exit");
     return false;
@@ -192,7 +208,10 @@ Future<List<String>> getTwoLineAddress({
   log("getTwoLineAddress called with lat=$latitude, lng=$longitude");
 
   // Only attempt reverse geocoding if lat/lng are valid numbers
-  if (latitude != null && longitude != null && latitude.isNotEmpty && longitude.isNotEmpty) {
+  if (latitude != null &&
+      longitude != null &&
+      latitude.isNotEmpty &&
+      longitude.isNotEmpty) {
     try {
       final lat = double.tryParse(latitude);
       final lng = double.tryParse(longitude);
@@ -204,8 +223,17 @@ Future<List<String>> getTwoLineAddress({
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
           // Build readable address
-          final parts = [p.street, p.subLocality, p.locality, p.administrativeArea, p.country];
-          line2 = parts.where((e) => e != null && e.isNotEmpty).join(", ").capEachWord();
+          final parts = [
+            p.street,
+            p.subLocality,
+            p.locality,
+            p.administrativeArea,
+            p.country,
+          ];
+          line2 = parts
+              .where((e) => e != null && e.isNotEmpty)
+              .join(", ")
+              .capEachWord();
         }
       }
     } catch (e) {
@@ -234,9 +262,18 @@ Future<String> getOneLineAddress({
       if (placemarks.isNotEmpty) {
         final p = placemarks.first;
 
-        final parts = [p.street, p.subLocality, p.locality, p.administrativeArea, p.country];
+        final parts = [
+          p.street,
+          p.subLocality,
+          p.locality,
+          p.administrativeArea,
+          p.country,
+        ];
 
-        return parts.where((e) => e != null && e.isNotEmpty).join(", ").capEachWord();
+        return parts
+            .where((e) => e != null && e.isNotEmpty)
+            .join(", ")
+            .capEachWord();
       }
     }
   } catch (e) {
@@ -252,7 +289,8 @@ String makeCurrencyValue(String value) {
   return "${Strings.currency} $value";
 }
 
-CustomDivider get greyDividerFull => CustomDivider(clr: grey200, isFullWidth: true, h: 0.6);
+CustomDivider get greyDividerFull =>
+    CustomDivider(clr: grey200, isFullWidth: true, h: 0.6);
 
 String get generateChannel => DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -260,4 +298,117 @@ void goToMainNavWithTab(int tabIndex) {
   GNav.pushNamed(RoutePaths.mainNav);
 
   Get.find<MainNavController>().goToTab(tabIndex);
+}
+
+//
+
+Future<void> downloadFile(
+  String url,
+  void Function(double progress)? onProgress,
+) async {
+  try {
+    debugPrint("⬇️ Original URL: $url");
+
+    final headResponse = await Dio().head(url);
+    final contentType = headResponse.headers.value('content-type') ?? '';
+
+    String fileName = p.basename(url.split('?').first);
+
+    if (fileName.isEmpty || !fileName.contains('.')) {
+      if (contentType.contains('pdf')) {
+        fileName = 'document.pdf';
+      } else if (contentType.contains('image/jpeg')) {
+        fileName = 'image.jpg';
+      } else if (contentType.contains('image/png')) {
+        fileName = 'image.png';
+      } else if (contentType.contains('video')) {
+        fileName = 'video.mp4';
+      } else {
+        fileName = 'file';
+      }
+    }
+
+    final tempDir = await getTemporaryDirectory();
+    final tempPath = '${tempDir.path}/$fileName';
+
+    await Dio().download(
+      url,
+      tempPath,
+      onReceiveProgress: (received, total) {
+        if (total != -1) {
+          final progress = received / total;
+          onProgress?.call(progress);
+
+          debugPrint("📥 Progress: ${(progress * 100).toStringAsFixed(0)}%");
+        }
+      },
+    );
+
+    final lower = fileName.toLowerCase();
+
+    if (lower.endsWith(".jpg") ||
+        lower.endsWith(".jpeg") ||
+        lower.endsWith(".png") ||
+        lower.endsWith(".webp") ||
+        lower.endsWith(".gif")) {
+      await Gal.putImage(tempPath);
+      Snack.showSuccess("Image saved to gallery");
+    } else if (lower.endsWith(".mp4") || lower.endsWith(".mov")) {
+      await Gal.putVideo(tempPath);
+      Snack.showSuccess("Video saved to gallery");
+    } else {
+      await _saveToDownloads(tempPath: tempPath, fileName: fileName);
+    }
+
+    final tempFile = File(tempPath);
+    if (await tempFile.exists()) await tempFile.delete();
+  } catch (e) {
+    debugPrint("❌ Download error: $e");
+    Snack.showError("Download failed");
+  }
+}
+
+// Future<void> _saveToDownloads({
+//   required String tempPath,
+//   required String fileName,
+// }) async {
+//   if (Platform.isAndroid) {
+//     final downloadsDir = Directory('/storage/emulated/0/Download');
+//     if (!await downloadsDir.exists()) {
+//       await downloadsDir.create(recursive: true);
+//     }
+//     final savePath = '${downloadsDir.path}/$fileName';
+//     await File(tempPath).copy(savePath);
+//     debugPrint("💾 Saved to Downloads: $savePath");
+//     Snack.showSuccess("Saved to Downloads: $fileName");
+//     await OpenFile.open(savePath);
+//   } else {
+//     final dir = await getApplicationDocumentsDirectory();
+//     final savePath = '${dir.path}/$fileName';
+//     await File(tempPath).copy(savePath);
+//     Snack.showSuccess("File saved: $fileName");
+//     await OpenFile.open(savePath);
+//   }
+// }
+Future<void> _saveToDownloads({
+  required String tempPath,
+  required String fileName,
+}) async {
+  try {
+    final bytes = await File(tempPath).readAsBytes();
+
+    final ext = fileName.split('.').last;
+
+    await FileSaver.instance.saveFile(
+      name: fileName.replaceAll(".$ext", ""),
+      bytes: Uint8List.fromList(bytes),
+      fileExtension: ext,
+      mimeType: MimeType.other,
+    );
+
+    Snack.showSuccess("Saved to Downloads");
+  } catch (e) {
+    debugPrint("❌ Save error: $e");
+    Snack.showError("Failed to save file");
+  }
 }

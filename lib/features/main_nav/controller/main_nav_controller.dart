@@ -5,7 +5,9 @@ import 'package:mama_app/features/main_tabs/match/screen/match_screen.dart';
 
 import '../../../app/helper_widgets_export.dart';
 import '../../../core/network/helpers/location/location_observer.dart';
+import '../../../core/services/socket/socket_service.dart';
 import '../../../core/state_screens/not_found/not_found_page.dart';
+import '../../main_tabs/chat/controller/chat_controller.dart';
 import '../../main_tabs/home/screen/home_screen.dart';
 import '../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../station_location/controller/station_location_controller.dart';
@@ -51,6 +53,12 @@ class MainNavController extends GetxController {
     log("🧭 MainNavController onInit");
     _initLocationObserver();
     _initializeAppData();
+
+    // ✅ Pre-fetch chat list as soon as mainNav loads
+    // Use addPostFrameCallback so socket is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _prefetchChatList();
+    });
   }
 
   @override
@@ -63,7 +71,9 @@ class MainNavController extends GetxController {
   // 🔹 Called by HomeScreen.initState → postFrameCallback
   // ─────────────────────────────
   void notifyHomeFirstBuild() {
-    log("🧭 notifyHomeFirstBuild — _homePermissionFlowDone: $_homePermissionFlowDone");
+    log(
+      "🧭 notifyHomeFirstBuild — _homePermissionFlowDone: $_homePermissionFlowDone",
+    );
     if (_homePermissionFlowDone) return;
     _homePermissionFlowDone = true;
     HomeScreen.triggerPermissionFlow();
@@ -143,12 +153,15 @@ class MainNavController extends GetxController {
   }
 
   void _handleReturnToHome() {
-    if (!_homePermissionFlowDone) return; // first build handles itself via notifyHomeFirstBuild
+    if (!_homePermissionFlowDone)
+      return; // first build handles itself via notifyHomeFirstBuild
 
     if (_locationStateChangedWhileAway) {
       _locationStateChangedWhileAway = false;
       Future.delayed(const Duration(milliseconds: 400), () {
-        HomeScreen.showLocationStatusOverlay(isActive: _locationTurnedOnWhileAway);
+        HomeScreen.showLocationStatusOverlay(
+          isActive: _locationTurnedOnWhileAway,
+        );
       });
     }
   }
@@ -168,6 +181,21 @@ class MainNavController extends GetxController {
     }
   }
 
+  void _prefetchChatList() {
+    // Only fetch if socket is connected
+    if (Get.isRegistered<SocketService>()) {
+      final socket = Get.find<SocketService>();
+      if (socket.isConnected) {
+        // Force-create ChatController if not already created
+        final chatCtrl = Get.put(ChatController());
+        chatCtrl.getChatList();
+        log("💬 Chat list pre-fetched from MainNav");
+      } else {
+        log("⚠️ Socket not connected — skipping chat prefetch");
+      }
+    }
+  }
+
   Future<void> _getCurrentLocation() async {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
@@ -176,14 +204,17 @@ class MainNavController extends GetxController {
     }
   }
 
-  Widget get currentPageWidget =>
-      _isValidIndex(currentIndex.value) ? pages[currentIndex.value] : const RouteNotFoundPage();
+  Widget get currentPageWidget => _isValidIndex(currentIndex.value)
+      ? pages[currentIndex.value]
+      : const RouteNotFoundPage();
 
-  String get currentIcon =>
-      _isValidIndex(currentIndex.value) ? icons[currentIndex.value] : IconsPath.home;
+  String get currentIcon => _isValidIndex(currentIndex.value)
+      ? icons[currentIndex.value]
+      : IconsPath.home;
 
-  String get currentLabel =>
-      _isValidIndex(currentIndex.value) ? labels[currentIndex.value] : Strings.home.capEachWord();
+  String get currentLabel => _isValidIndex(currentIndex.value)
+      ? labels[currentIndex.value]
+      : Strings.home.capEachWord();
 
   bool _isValidIndex(int index) => index >= 0 && index < pages.length;
 
@@ -224,4 +255,3 @@ runLocationPermissionFlow()
   └─ permanently denied              → _showPermanentlyDeniedDialog() → app settings
 ///
  */
-

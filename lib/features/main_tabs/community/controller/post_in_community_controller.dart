@@ -96,8 +96,8 @@ class PostInCommunityController extends GetxController {
       );
       if (response == true) {
         log('Post created successfully!');
-        Get.find<CommunityDetailController>().onRefresh();
         Get.back();
+        await Get.find<CommunityDetailController>().onRefresh();
       } else {
         log('Post created failed!');
       }

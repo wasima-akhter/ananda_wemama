@@ -14,7 +14,7 @@ class MatchService extends GetxService {
     apiCall() {
       return ApiClient().get(
         // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
-        Endpoints.getMatch(long: "90.4075757", lat: "23.7808752").getUrl,
+        Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
         reqName: Strings.match,
         headers: HeaderHelpers.getAuthHeader(),
       );
@@ -23,7 +23,7 @@ class MatchService extends GetxService {
     final response = await _apiHelper.request<List<MatchResponseModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
 
         if (data is List) {
           return data.map((e) => MatchResponseModel.fromJson(e)).toList();

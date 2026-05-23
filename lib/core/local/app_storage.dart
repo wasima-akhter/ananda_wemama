@@ -50,7 +50,8 @@ class AppStorage extends GetxService {
     // Initialize reactive values
     service.isLoggedIn.value = service._storage.read(_isLoggedInKey) ?? false;
     service.rememberMe.value = service._storage.read(_rememberMeKey) ?? true;
-    service.seenOnboarding.value = service._storage.read(_seenOnboardingKey) ?? false;
+    service.seenOnboarding.value =
+        service._storage.read(_seenOnboardingKey) ?? false;
 
     return service;
   }
@@ -81,7 +82,11 @@ class AppStorage extends GetxService {
     address: _storage.read(_keyUserAddress) ?? '',
   );
 
-  void setUserBankDetails({String? bankName, String? accountName, String? accountNumber}) {
+  void setUserBankDetails({
+    String? bankName,
+    String? accountName,
+    String? accountNumber,
+  }) {
     if (bankName != null) _storage.write(_bankNameKey, bankName);
     if (accountName != null) _storage.write(_accountNameKey, accountName);
     if (accountNumber != null) _storage.write(_accountNumberKey, accountNumber);
@@ -93,8 +98,6 @@ class AppStorage extends GetxService {
   //   accountNumber: _storage.read(_accountNumberKey) ?? '',
   // );
   // ---------------------------  ACCESS TOKEN  ---------------------------
-  void setAccessToken(String token) => _storage.write(_accessTokenKey, token);
-  String get getAccessToken => _storage.read(_accessTokenKey) ?? '';
 
   // ---------------------------  AUTH STATE  ---------------------------
   void setRememberMe(bool value) {
@@ -122,10 +125,12 @@ class AppStorage extends GetxService {
   void setToken(String token) => _storage.write(_accessTokenKey, token);
   String get getToken => _storage.read(_accessTokenKey) ?? '';
 
-  void setUserPhone(String userPhone) => _storage.write(_userPhoneKey, userPhone);
+  void setUserPhone(String userPhone) =>
+      _storage.write(_userPhoneKey, userPhone);
   String get getUserPhone => _storage.read(_userPhoneKey) ?? '';
 
-  void setUserEmail(String userEmail) => _storage.write(_userEmailKey, userEmail);
+  void setUserEmail(String userEmail) =>
+      _storage.write(_userEmailKey, userEmail);
   String get getUserEmail => _storage.read(_userEmailKey) ?? '';
 
   ///---------------map address of user ----------------//
@@ -138,11 +143,14 @@ class AppStorage extends GetxService {
 
   // Save address
 
-  void setUserAddress(String userAddress) => _storage.write(_keyUserAddress, userAddress);
+  void setUserAddress(String userAddress) =>
+      _storage.write(_keyUserAddress, userAddress);
 
-  void setUserLatitude(double latitude) => _storage.write(_keyUserLatitude, latitude);
+  void setUserLatitude(double latitude) =>
+      _storage.write(_keyUserLatitude, latitude);
 
-  void setUserLongitude(double longitude) => _storage.write(_keyUserLongitude, longitude);
+  void setUserLongitude(double longitude) =>
+      _storage.write(_keyUserLongitude, longitude);
 
   void setUserCity(String city) => _storage.write(_keyUserCity, city);
 
@@ -180,7 +188,8 @@ class AppStorage extends GetxService {
 
   ////
 
-  void setUserImageUrl(String userImageUrl) => _storage.write(_imageUrlKey, userImageUrl);
+  void setUserImageUrl(String userImageUrl) =>
+      _storage.write(_imageUrlKey, userImageUrl);
   String get getUserImageUrl => _storage.read(_imageUrlKey) ?? '';
 
   static const _userIdKey = 'userId';
@@ -196,7 +205,8 @@ class AppStorage extends GetxService {
   String get getUsername => _storage.read(_userNameKey) ?? '';
 
   // ---------------------------  THEME  ---------------------------
-  void setTheme(bool isDark) => _storage.write(_themeKey, isDark ? 'dark' : 'light');
+  void setTheme(bool isDark) =>
+      _storage.write(_themeKey, isDark ? 'dark' : 'light');
   bool get getIsDarkMode {
     final theme = _storage.read(_themeKey);
     if (theme == 'dark') return true;
@@ -243,5 +253,10 @@ class UserAddressDataModel {
   final double? longitude;
   final String? city;
 
-  UserAddressDataModel({this.address, this.latitude, this.longitude, this.city});
+  UserAddressDataModel({
+    this.address,
+    this.latitude,
+    this.longitude,
+    this.city,
+  });
 }

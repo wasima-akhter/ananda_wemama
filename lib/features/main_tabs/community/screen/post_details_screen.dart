@@ -57,7 +57,10 @@ class PostDetailsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Replying to $replyingTo", style: TxtStyle.outfit(fs: 14)),
+                    Text(
+                      "Replying to $replyingTo",
+                      style: TxtStyle.outfit(fs: 14),
+                    ),
                     Gap(6),
                     CusGestureDetector(
                       onTap: () {
@@ -73,7 +76,9 @@ class PostDetailsScreen extends StatelessWidget {
             CusDesTypeTextFormField(
               controller: pcc.commentCtrl,
               focusNode: pcc.commentFocus,
-              hintText: replyingTo.isNotEmpty ? "Reply to $replyingTo" : Strings.writeSomething,
+              hintText: replyingTo.isNotEmpty
+                  ? "Reply to $replyingTo"
+                  : Strings.writeSomething,
               minLines: 1,
               minHeight: 40,
               maxHeight: 65,
@@ -87,7 +92,10 @@ class PostDetailsScreen extends StatelessWidget {
                       child: Obx(
                         () => pcc.isAddCommentLoading.value
                             ? LoadingWhite()
-                            : SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 20),
+                            : SvgIcon(
+                                iconPath: IconsPath.sendSmallWhite,
+                                height: 20,
+                              ),
                       ),
                     ),
                   ).mAll(5),
@@ -106,7 +114,8 @@ class PostDetailsScreen extends StatelessWidget {
           // ── Post at top ──
           Builder(
             builder: (context) {
-              final communityData = pcc.postDetailArg.value?.communityData ?? Community();
+              final communityData =
+                  pcc.postDetailArg.value?.communityData ?? Community();
 
               final postItem = pcc.postDetailArg.value?.postItem ?? AllPost();
               return PostItemWidget(
@@ -142,17 +151,19 @@ class PostDetailsScreen extends StatelessWidget {
                   shrinkWrap: true,
                   padding: EdgeInsets.only(bottom: itemGap),
                   itemCount: 6,
-                  separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                  separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                   itemBuilder: (_, index) => const CommentItemShimmer(),
                 ),
 
-                empty: () => const EmptyNoSearchWidgetScrollable(title: "No comments yet"),
+                empty: () => const EmptyNoSearchWidgetScrollable(
+                  title: "No comments yet",
+                ),
 
                 data: () => ListView.separated(
                   shrinkWrap: true,
                   padding: EdgeInsets.only(bottom: itemGap * 2),
                   itemCount: pcc.comments.length,
-                  separatorBuilder: (_, __) => Gap(itemGap * 0.6),
+                  separatorBuilder: (_, _) => Gap(itemGap * 0.6),
                   itemBuilder: (_, index) {
                     final item = pcc.comments[index];
 
@@ -168,7 +179,10 @@ class PostDetailsScreen extends StatelessWidget {
                           Gap(itemGap),
 
                           Expanded(
-                            child: CommentItemInPostDetail(item: item, pcc: pcc),
+                            child: CommentItemInPostDetail(
+                              item: item,
+                              pcc: pcc,
+                            ),
                           ),
                         ],
                       ),
@@ -187,12 +201,18 @@ class PostDetailsScreen extends StatelessWidget {
 class CommentItemInPostDetail extends StatelessWidget {
   final CommentModelOfPost item;
   final PostDetailsController pcc;
-  const CommentItemInPostDetail({super.key, required this.item, required this.pcc});
+  const CommentItemInPostDetail({
+    super.key,
+    required this.item,
+    required this.pcc,
+  });
 
   @override
   Widget build(BuildContext context) {
     final childCommentList = item.replies ?? [];
-    log('childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0]?.id : ''}');
+    log(
+      'childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0].id : ''}',
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -232,9 +252,15 @@ class CommentItemInPostDetail extends StatelessWidget {
                         children: [
                           Text(
                             child.creator?.name ?? 'N/A',
-                            style: TxtStyle.outfitSemiB(fs: 13, color: c.textPrimary),
+                            style: TxtStyle.outfitSemiB(
+                              fs: 13,
+                              color: c.textPrimary,
+                            ),
                           ),
-                          Text(child.content ?? '--', style: TxtStyle.outfit(fs: 12)),
+                          Text(
+                            child.content ?? '--',
+                            style: TxtStyle.outfit(fs: 12),
+                          ),
                         ],
                       ),
                     ),

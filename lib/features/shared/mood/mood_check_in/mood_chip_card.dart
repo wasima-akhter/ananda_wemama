@@ -19,14 +19,16 @@ class MoodCheckInCard extends StatelessWidget {
         Row(
           children: [
             Text(
-              Strings.goodEveningAda.capEachWord(),
+              "${mcc.getGreetingMessage()} Ada",
               style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
             ),
+
             Gap(4),
 
             SvgIcon(iconPath: IconsPath.leaf),
           ],
         ).mL(4),
+
         Gap(6.h),
 
         // how are you feeling card

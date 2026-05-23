@@ -3,7 +3,6 @@ import 'package:mama_app/core/components/app_ui/cards/add_photo_widget.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../home/modules/profile_tile.dart';
 
 class ManageCommunityScreen extends StatelessWidget {
   const ManageCommunityScreen({super.key});
@@ -35,7 +34,8 @@ class ManageCommunityScreen extends StatelessWidget {
         children: [
           Obx(() {
             return AddPhotoWidget(
-              onTapAddPhoto: () async => await mcc.pickSingleImage(ImageSource.gallery),
+              onTapAddPhoto: () async =>
+                  await mcc.pickSingleImage(ImageSource.gallery),
               selImage: mcc.fileImage.value,
               imageUrl: mcc.existingImageUrl.value, // ← pass URL as fallback
             );
@@ -56,14 +56,14 @@ class ManageCommunityScreen extends StatelessWidget {
 
           Gap(itemGap * 3),
 
-          ProfileTile(
-            title: Strings.memberManagement,
-            iconPath: IconsPath.userGroup,
+          // ProfileTile(
+          //   title: Strings.memberManagement,
+          //   iconPath: IconsPath.userGroup,
 
-            tileClr: c.secondary.withOpacity(0.3),
-            onTap: () => Get.toNamed(RoutePaths.memberManagement),
-          ),
-          Gap(itemGap),
+          //   tileClr: c.secondary.withOpacity(0.3),
+          //   onTap: () => Get.toNamed(RoutePaths.memberManagement),
+          // ),
+          // Gap(itemGap),
         ],
       ).getcm,
     );

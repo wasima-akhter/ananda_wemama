@@ -2,7 +2,10 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
 
 class VerifyOtpController extends GetxController {
-  VerifyOtpController({this.flowType = OtpFlowType.signup, required this.email});
+  VerifyOtpController({
+    this.flowType = OtpFlowType.signup,
+    required this.email,
+  });
 
   final OtpFlowType flowType; //  which flow is using this OTP screen
   final String email;
@@ -27,7 +30,10 @@ class VerifyOtpController extends GetxController {
 
     isLoading_.value = true;
 
-    final success = await VerifyOtpService().verify(email: email, otp: otpCntrler.text);
+    final success = await VerifyOtpService().verify(
+      email: email,
+      otp: otpCntrler.text,
+    );
 
     isLoading_.value = false;
 
@@ -39,7 +45,8 @@ class VerifyOtpController extends GetxController {
         // Existing behavior (UNCHANGED)
 
         // save the access token in storage
-
+        // ✅ Small delay ensures storage write completes before next screen loads
+        await Future.delayed(const Duration(milliseconds: 500));
         // mock code for design
         Get.offAllNamed(RoutePaths.setupProfile);
         storage.setLoggedIn(true);
@@ -76,7 +83,7 @@ class VerifyOtpController extends GetxController {
 
 
 //  () {
-   
+
 
 //                     if (roleId == 1) GNav.pushNamed(RoutePaths.signin);
 //                     if (roleId == 2) GNav.pushNamed(RoutePaths.uploadDocument);

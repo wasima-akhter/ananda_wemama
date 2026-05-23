@@ -5,7 +5,7 @@ import '../network_manager.dart';
 
 Future<bool> get hasNet async => await NetworkManager().checkConnection();
 
-String? get getToken => AppStorage.to.getAccessToken;
+String? get getToken => AppStorage.to.getToken;
 
 AppStorage get storage => AppStorage.to;
 
@@ -60,11 +60,17 @@ class NetworkHelpers {
   // Check if permission is granted
   static Future<bool> hasLocationPermission() async {
     final permission = await Geolocator.checkPermission();
-    return permission == LocationPermission.always || permission == LocationPermission.whileInUse;
+    return permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse;
   }
 
   // Calculate distance between two coordinates (in meters)
-  static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  static double calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
     return Geolocator.distanceBetween(lat1, lon1, lat2, lon2);
   }
 

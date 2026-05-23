@@ -67,7 +67,8 @@ class CommunityDetailController extends GetxController {
   RxBool commentLockFlag(String postId) => _ensureFlags(postId).isCommentLocked;
   RxBool deleteLockFlag(String postId) => _ensureFlags(postId).isCommentDeleted;
 
-  RxBool deleteLoadingFlag(String postId) => _ensureFlags(postId).isdeleteLoading;
+  RxBool deleteLoadingFlag(String postId) =>
+      _ensureFlags(postId).isdeleteLoading;
 
   /// Always returns a _PostFlags — creates a default one if missing.
   /// This prevents Obx from tracking zero observables on first build.
@@ -106,8 +107,9 @@ class CommunityDetailController extends GetxController {
   void toggleCommentLock(String postId) => commentLockFlag(postId).toggle();
 
   // ── Label helpers ──
-  String getPinBtnTxt(String postId) =>
-      pinFlag(postId).value ? Strings.unpinPost.capEachWord() : Strings.pinPost.capEachWord();
+  String getPinBtnTxt(String postId) => pinFlag(postId).value
+      ? Strings.unpinPost.capEachWord()
+      : Strings.pinPost.capEachWord();
 
   String getLockBtnTxt(String postId) => commentLockFlag(postId).value
       ? Strings.unlockComment.capEachWord()
@@ -275,7 +277,9 @@ class CommunityDetailController extends GetxController {
     flags.isCommentLocked.toggle();
     flags.isLockLoading.value = true;
 
-    final success = await CommunityDetailService().lockCommentOfPost(postItemId: postId);
+    final success = await CommunityDetailService().lockCommentOfPost(
+      postItemId: postId,
+    );
 
     if (!success) {
       flags.isCommentLocked.value = oldValue;
@@ -293,7 +297,9 @@ class CommunityDetailController extends GetxController {
     flags.isdeleteLoading.value = true;
 
     try {
-      final success = await CommunityDetailService().deletePost(postItemId: postId);
+      final success = await CommunityDetailService().deletePost(
+        postItemId: postId,
+      );
 
       if (success) {
         // ✅ mark as deleted → UI will react
@@ -345,8 +351,8 @@ class CommunityDetailController extends GetxController {
     }
   }
 
-  void onRefresh() {
-    getCommunityDetail();
+  Future<void> onRefresh() async {
+    await getCommunityDetail();
   }
 
   //----------------------------------

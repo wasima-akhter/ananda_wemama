@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
 <!-- <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.CAMERA"/>
@@ -27,7 +27,8 @@
     <!-- ✅ Needed for saving recordings to external storage on Android 10–12 -->
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29"/>
+        android:maxSdkVersion="29"
+        tools:replace="android:maxSdkVersion" />
     <!--
         ⚠️  You removed this — put it back, but cap it at API 29.
         On Android 10 (API 29), saving audio files outside app-private

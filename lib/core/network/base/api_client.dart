@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/app/controller_export.dart' hide Response;
 
 import '../../helpers/image_helper.dart';
+import '../../local/app_storage.dart';
 import '../helpers/header_helpers.dart';
 import 'api_response_handler.dart';
 import 'dio_client.dart';
@@ -140,6 +143,103 @@ class ApiClient {
 
   // generic
 
+  Future<dynamic> patchWithFile2(
+    String url, {
+    String? reqName,
+    MapEntry<String, XFile>? file,
+    List<MapEntry<String, XFile>>? files,
+    Map<String, String>? fields,
+  }) async {
+    final token = AppStorage.to.getToken;
+    if (token.isEmpty) {
+      log("❌ patchWithFile aborted: no token");
+      return null;
+    }
+
+    try {
+      final uri = Uri.parse(url);
+      final request = http.MultipartRequest('PATCH', uri);
+
+      // ✅ Auth header
+      request.headers['Authorization'] = 'Bearer $token';
+      request.headers['Accept'] = 'application/json';
+
+      // ✅ Fields
+      if (fields != null) {
+        request.fields.addAll(fields);
+      }
+
+      // ✅ Single file (profile-image)
+      if (file != null) {
+        final compressed = await MultipartHelper.compressedImage(
+          File(file.value.path),
+        );
+
+        if (compressed != null) {
+          // compressed is dio.MultipartFile — need to convert to http.MultipartFile
+          final bytes = await File(file.value.path).readAsBytes();
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              file.key,
+              bytes,
+              filename: file.value.name,
+            ),
+          );
+        } else {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              file.key,
+              file.value.path,
+              filename: file.value.name,
+            ),
+          );
+        }
+      }
+
+      // ✅ Multiple files (description-image)
+      for (final f in files ?? []) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            f.key,
+            f.value.path,
+            filename: f.value.name,
+          ),
+        );
+      }
+
+      // ✅ Log request
+      log("➡️ REQUEST[PATCH] => $url");
+      log("Headers: ${request.headers}");
+      log("Fields: ${request.fields}");
+      log(
+        "Files: ${request.files.map((f) => '${f.field}: ${f.filename}').toList()}",
+      );
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      log("✅ RESPONSE[${response.statusCode}] => ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decoded = jsonDecode(response.body);
+        return ApiResponseHandler.handle(
+          Response(
+            requestOptions: RequestOptions(path: url),
+            statusCode: response.statusCode,
+            data: decoded,
+          ),
+          reqName,
+        );
+      } else {
+        log("❌ ERROR[${response.statusCode}] => ${response.body}");
+        return null;
+      }
+    } catch (e) {
+      log("PATCH request error: $e");
+      return null;
+    }
+  }
+
   Future<dynamic> patchWithFile(
     String url, {
     String? reqName,
@@ -148,6 +248,12 @@ class ApiClient {
     Map<String, String>? fields,
     Map<String, dynamic>? headers,
   }) async {
+    // ✅ Guard: don't proceed if no token
+    final token = getToken;
+    if (token == null || token.isEmpty) {
+      log("❌ patchWithFile aborted: no token");
+      return null;
+    }
     final data = dio.FormData();
 
     if (file != null) {
@@ -187,6 +293,8 @@ class ApiClient {
         reqName,
       );
     }
+
+    log("── patchWithFile token: '$token'"); // ← add this
 
     final options = Options(
       method: 'PATCH',
@@ -266,6 +374,8 @@ class ApiClient {
     }
   }
 */
+
+  // with any file comppression:
   Future<dynamic> postWithFile(
     String url, {
     String? reqName,
@@ -278,17 +388,13 @@ class ApiClient {
     final data = dio.FormData();
 
     if (file != null) {
-      final compressed = await MultipartHelper.compressedImage(
-        File(file.value.path),
-      );
-      if (compressed != null) data.files.add(MapEntry(file.key, compressed));
+      final multipart = await MultipartHelper.anyFile(file.value);
+      data.files.add(MapEntry(file.key, multipart));
     }
 
     for (final f in files ?? []) {
-      final compressed = await MultipartHelper.compressedImage(
-        File(f.value.path),
-      );
-      if (compressed != null) data.files.add(MapEntry(f.key, compressed));
+      final multipart = await MultipartHelper.anyFile(f.value);
+      data.files.add(MapEntry(f.key, multipart));
     }
 
     fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
@@ -319,6 +425,59 @@ class ApiClient {
       return null;
     }
   }
+  // Future<dynamic> postWithFile(
+  //   String url, {
+  //   String? reqName,
+  //   MapEntry<String, XFile>? file,
+  //   List<MapEntry<String, XFile>>? files,
+  //   Map<String, String>? fields,
+  //   List<MapEntry<String, String>>? extraFields,
+  //   Map<String, dynamic>? headers,
+  // }) async {
+  //   final data = dio.FormData();
+
+  //   if (file != null) {
+  //     final compressed = await MultipartHelper.compressedImage(
+  //       File(file.value.path),
+  //     );
+  //     if (compressed != null) data.files.add(MapEntry(file.key, compressed));
+  //   }
+
+  //   for (final f in files ?? []) {
+  //     final compressed = await MultipartHelper.compressedImage(
+  //       File(f.value.path),
+  //     );
+  //     if (compressed != null) data.files.add(MapEntry(f.key, compressed));
+  //   }
+
+  //   fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
+  //   extraFields?.forEach((entry) => data.fields.add(entry));
+
+  //   final isValid = await validateFileSize(data);
+  //   if (!isValid) {
+  //     return ApiResponseHandler.handle(
+  //       Response(
+  //         requestOptions: RequestOptions(path: url),
+  //         statusCode: 400,
+  //         data: {"message": "File size must be less than 3 MB"},
+  //       ),
+  //       reqName,
+  //     );
+  //   }
+
+  //   final options = Options(
+  //     method: 'POST',
+  //     headers: {"Authorization": "Bearer $getToken"},
+  //   );
+
+  //   try {
+  //     final response = await _dio.request(url, data: data, options: options);
+  //     return ApiResponseHandler.handle(response, reqName);
+  //   } catch (e) {
+  //     log("POST request error: $e");
+  //     return null;
+  //   }
+  // }
 
   /// PUT request
   Future<dynamic> put(

@@ -20,5 +20,6 @@ class UnauthorisedException extends AppException {
 
 // 🌐 Other server / network errors
 class FetchDataException extends AppException {
-  FetchDataException(String message) : super(message, "Error During Communication: ");
+  FetchDataException(String message)
+    : super(message, "Error During Communication: ");
 }

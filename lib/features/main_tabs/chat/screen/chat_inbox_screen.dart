@@ -34,6 +34,7 @@ class ChatInboxScreen extends StatelessWidget {
                 isCircle: true,
                 isUser: true,
                 radius: 16,
+                enablePreview: true,
               ),
               Gap(itemGap),
               Flexible(
@@ -127,6 +128,7 @@ class ChatInboxScreen extends StatelessWidget {
                       final msg = item as Message;
 
                       return ChatBubbleCont(
+                        cic: cic,
                         message: FakeMsgItemData(
                           msg: msg.text ?? '',
                           time: DateHelper()

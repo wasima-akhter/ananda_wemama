@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:gal/gal.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mama_app/core/helpers/date_helper.dart';
 import 'package:mama_app/core/helpers/widgets_helper.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
 import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/app_ui/popup_widgets/block_user_dialog.dart';
@@ -47,6 +52,8 @@ class ChatInboxController extends GetxController {
   ChatInboxController(this.args);
 
   String get chatId => args.chatId;
+
+  static ChatInboxController get to => ChatInboxController.to;
 
   final isBlockedRx = false.obs;
   bool get isBlocked => isBlockedRx.value;
@@ -462,15 +469,73 @@ class ChatInboxController extends GetxController {
     msgInputController.clear();
   }
 
+  Future<void> downloadFile(String url) async {
+    try {
+      downloadingUrl.value = url;
+      downloadProgress.value = 0;
+
+      final fileName = p.basename(url.split('?').first);
+
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/$fileName';
+
+      await Dio().download(
+        url,
+        tempPath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            downloadProgress.value = received / total;
+          }
+        },
+      );
+
+      debugPrint("Downloaded to temp: $tempPath");
+
+      final lower = fileName.toLowerCase();
+
+      if (lower.endsWith(".jpg") ||
+          lower.endsWith(".jpeg") ||
+          lower.endsWith(".png") ||
+          lower.endsWith(".webp")) {
+        await Gal.putImage(tempPath);
+        Snack.showSuccess("Image saved to gallery");
+      } else if (lower.endsWith(".mp4") || lower.endsWith(".mov")) {
+        await Gal.putVideo(tempPath);
+        Snack.showSuccess("Video saved to gallery");
+      } else {
+        final dir = await getApplicationDocumentsDirectory();
+        final savePath = '${dir.path}/$fileName';
+
+        await File(tempPath).copy(savePath);
+
+        Snack.showSuccess("File saved in app storage");
+        await OpenFile.open(savePath);
+      }
+    } catch (e) {
+      debugPrint("Download error: $e");
+      Snack.showError("Download failed");
+    } finally {
+      downloadProgress.value = 0;
+      downloadingUrl.value = '';
+    }
+  }
+
+  //
+  final downloadingUrl = ''.obs;
+  final downloadProgress = 0.0.obs;
+
+  //
+
   Future<void> sendFileMessage(String receiverId, String text) async {
     if (isSending_.value) return;
+
     isSending_.value = true;
 
-    /// 1️⃣ TAKE SNAPSHOT (DO NOT MUTATE ORIGINAL YET)
+    /// 1️⃣ TAKE SNAPSHOT
     final files = List<XFile>.from(pickedFiles);
 
     try {
-      /// 2️⃣ UPLOAD FIRST
+      /// 2️⃣ UPLOAD FILES
       final result = await ChatInboxService().sendChatFile(chatFiles: files);
 
       if (result == null) {
@@ -478,26 +543,87 @@ class ChatInboxController extends GetxController {
         return;
       }
 
-      /// 3️⃣ BUILD SOCKET PAYLOAD
+      /// 3️⃣ NORMALIZE ATTACHMENTS
       final attachments = normalizeAttachments(result);
 
-      /// 4️⃣ EMIT MESSAGE
+      /// 4️⃣ CREATE LOCAL MESSAGE (OPTIMISTIC)
+      final localMessage = Message(
+        conversationId: chatId,
+        createdAt: DateTime.now(),
+        receiver: receiverId,
+        seen: false,
+        sender: currentProfileId(),
+        text: text,
+
+        /// IMPORTANT
+        attachments: attachments.map((e) => Attachment.fromJson(e)).toList(),
+      );
+
+      /// 5️⃣ ADD LOCALLY
+      messages.add(localMessage);
+
+      scrollToBottom();
+
+      /// 6️⃣ SOCKET EMIT
       _emitSendMessage(text, receiverId, attachments: attachments);
 
-      /// 5️⃣ ONLY NOW CLEAR STATE (SUCCESS PATH)
+      /// 7️⃣ UPDATE CHAT LIST
+      if (Get.isRegistered<ChatController>()) {
+        Get.find<ChatController>().updateLastMessage(
+          chatId: chatId,
+          lastMessage: text.isNotEmpty ? text : "📎 Attachment",
+          time: DateTime.now().toUtc(),
+        );
+      }
+
+      /// 8️⃣ CLEAR
       clearAttachments();
       unFocusAll();
     } catch (e) {
-      log("_sendFileMessage error: $e");
+      log("sendFileMessage error: $e");
 
       "Something went wrong while sending the file.".showToast();
-
-      /// ❗ IMPORTANT: DO NOT CLEAR ON ERROR
-      /// user should retry without re-picking files
     } finally {
       isSending_.value = false;
     }
+    //
   }
+  // Future<void> sendFileMessage(String receiverId, String text) async {
+  //   if (isSending_.value) return;
+  //   isSending_.value = true;
+
+  //   /// 1️⃣ TAKE SNAPSHOT (DO NOT MUTATE ORIGINAL YET)
+  //   final files = List<XFile>.from(pickedFiles);
+
+  //   try {
+  //     /// 2️⃣ UPLOAD FIRST
+  //     final result = await ChatInboxService().sendChatFile(chatFiles: files);
+
+  //     if (result == null) {
+  //       "Failed to send file. Please try again.".showToast();
+  //       return;
+  //     }
+
+  //     /// 3️⃣ BUILD SOCKET PAYLOAD
+  //     final attachments = normalizeAttachments(result);
+
+  //     /// 4️⃣ EMIT MESSAGE
+  //     _emitSendMessage(text, receiverId, attachments: attachments);
+
+  //     /// 5️⃣ ONLY NOW CLEAR STATE (SUCCESS PATH)
+  //     clearAttachments();
+  //     unFocusAll();
+  //   } catch (e) {
+  //     log("_sendFileMessage error: $e");
+
+  //     "Something went wrong while sending the file.".showToast();
+
+  //     /// ❗ IMPORTANT: DO NOT CLEAR ON ERROR
+  //     /// user should retry without re-picking files
+  //   } finally {
+  //     isSending_.value = false;
+  //   }
+  // }
 
   ///
 }

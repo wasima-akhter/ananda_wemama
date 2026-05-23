@@ -200,4 +200,6 @@ class ChatController extends GetxController {
       searchedChatList.refresh();
     }
   }
+
+  //
 }

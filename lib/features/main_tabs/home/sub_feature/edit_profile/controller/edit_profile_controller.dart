@@ -70,53 +70,23 @@ class EditProfileController extends GetxController {
   }
 
   void _initializeFields() {
-    // ✅ pull from ProfileController if available
-    final profileData = Get.isRegistered<ProfileController>()
-        ? Get.find<ProfileController>().userProfileData.value
+    final profileController = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
         : null;
 
+    final profileData = profileController?.userProfileData.value;
+
     if (profileData != null) {
-      nameCtrl.text = profileData.name ?? storage.getUsername;
-      bioCtrl.text = profileData.bio ?? '';
+      _populateFields(profileData);
+    } else if (profileController != null) {
+      // ✅ Profile not loaded yet — wait for it
+      once(profileController.userProfileData, (data) {
+        if (data != null) _populateFields(data);
+      });
 
-      // dob — convert DateTime back to display format
-      if (profileData.dob != null) {
-        selectedDob.value = formatDate(profileData.dob!); // your dd/MM/yyyy formatter
-      }
-
-      selectedState.value = profileData.state ?? '';
-      selectedCity.value = profileData.city ?? '';
-
-      // description images — existing server URLs as display
-      // (these are strings, not XFile — handle separately in UI if needed)
-
-      // children
-
-      children.assignAll(
-        profileData.children.map((e) {
-          final child = ChildModel();
-
-          log(' child.gender.value  : ${e.gender}');
-          log(' child.dob.value  : ${e.dob}');
-          child.gender.value = (e.gender?.toString() ?? '').toLowerCase();
-          // parse timestamp back to display format
-          final dobRaw = e.dob?.toString() ?? '';
-          if (dobRaw.isNotEmpty) {
-            final dt = DateTime.tryParse(dobRaw);
-            if (dt != null) {
-              child.dob.value = DateFormat("dd-MM-yyyy").format(dt);
-            }
-          }
-
-          return child;
-        }).toList(),
-      );
-
-      if (profileData != null) {
-        existingImageUrls.assignAll(profileData.images.where((e) => e.trim().isNotEmpty).toList());
-      }
+      // ✅ Also trigger a fetch in case it hasn't started
+      profileController.fetchMyProfile();
     } else {
-      // fallback to storage
       nameCtrl.text = storage.getUsername;
     }
 
@@ -124,6 +94,36 @@ class EditProfileController extends GetxController {
     desImageFiles.value = [];
   }
 
+  void _populateFields(ProfileDataModel profileData) {
+    nameCtrl.text = profileData.name ?? storage.getUsername;
+    bioCtrl.text = profileData.bio ?? '';
+
+    if (profileData.dob != null) {
+      selectedDob.value = formatDate(profileData.dob!);
+    }
+
+    selectedState.value = profileData.state ?? '';
+    selectedCity.value = profileData.city ?? '';
+
+    children.assignAll(
+      profileData.children.map((e) {
+        final child = ChildModel();
+        child.gender.value = (e.gender?.toString() ?? '').toLowerCase();
+        final dobRaw = e.dob?.toString() ?? '';
+        if (dobRaw.isNotEmpty) {
+          final dt = DateTime.tryParse(dobRaw);
+          if (dt != null) {
+            child.dob.value = DateFormat("dd-MM-yyyy").format(dt);
+          }
+        }
+        return child;
+      }).toList(),
+    );
+
+    existingImageUrls.assignAll(
+      profileData.images.where((e) => e.trim().isNotEmpty).toList(),
+    );
+  }
   // ─────────────────────────────────────────────
   // Bottom Sheets
   // ─────────────────────────────────────────────
@@ -150,8 +150,10 @@ class EditProfileController extends GetxController {
 
   void addChild() => children.add(ChildModel());
   void removeChild(int index) => children.removeAt(index);
-  void updateChildDob(int index, String value) => children[index].dob.value = value;
-  void updateChildGender(int index, String value) => children[index].gender.value = value;
+  void updateChildDob(int index, String value) =>
+      children[index].dob.value = value;
+  void updateChildGender(int index, String value) =>
+      children[index].gender.value = value;
 
   // ─────────────────────────────────────────────
   // Image Picking
@@ -159,7 +161,8 @@ class EditProfileController extends GetxController {
 
   Future<void> pickSingleImage(ImageSource source) async {
     final picker = ImagePicker();
-    final selected = await picker.pickImage( imageQuality: 60,
+    final selected = await picker.pickImage(
+      imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
@@ -178,7 +181,12 @@ class EditProfileController extends GetxController {
     }
 
     final List<XFile> selected = remaining == 1
-        ? [if (await picker.pickImage( imageQuality: 60, source: ImageSource.gallery) case final img?) img]
+        ? [
+            ?await picker.pickImage(
+              imageQuality: 60,
+              source: ImageSource.gallery,
+            ),
+          ]
         : await picker.pickMultiImage(limit: remaining);
 
     if (selected.isEmpty) return;
@@ -208,7 +216,9 @@ class EditProfileController extends GetxController {
     unfocusAll();
   }
 
-  Future<void> updateProfileDetails({required GlobalKey<FormState> formkey}) async {
+  Future<void> updateProfileDetails({
+    required GlobalKey<FormState> formkey,
+  }) async {
     if (isLoading_.value) return;
 
     if (!_validateInputs(formkey)) return;
@@ -217,8 +227,6 @@ class EditProfileController extends GetxController {
     isLoading_.value = true;
 
     unfocusAll();
-
-
 
     final data = await _service.updateProfileWithChildren(
       name: nameCtrl.text.trim(),
@@ -239,8 +247,6 @@ class EditProfileController extends GetxController {
                 )
                 .toList(),
     );
-
-
 
     if (data != null) {
       storage.setUserImageUrl(data.profileImage ?? '');

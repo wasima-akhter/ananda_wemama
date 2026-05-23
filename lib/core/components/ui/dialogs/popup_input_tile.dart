@@ -29,18 +29,25 @@ class PopupInputTile extends StatelessWidget {
       borderRadius: 30.brdrRad,
       child: Container(
         height: height,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
         decoration: BoxDecoration(
           color: bgClr ?? c.cardPrimary,
           borderRadius: 30.brdrRad,
-          border: Border.all(color: brdrClr ?? c.inputBorder, width: brdrW ?? 1.5),
+          border: Border.all(
+            color: brdrClr ?? c.inputBorder,
+            width: brdrW ?? 1.5,
+          ),
         ),
         child: Row(
           children: [
             Expanded(
               child: Text(
                 hasValue ? value! : hintText,
-                style: TxtStyle.outfitSemiB(fs: 14, w: hasValue ? 400 : 500, color: c.primary),
+                style: TxtStyle.outfitSemiB(
+                  fs: 14,
+                  w: hasValue ? 400 : 500,
+                  color: c.primary,
+                ),
               ),
             ),
 

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/config/app_info.dart';
+import 'package:mama_app/core/network/helpers/network_helpers.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
@@ -57,7 +58,10 @@ class DioClient {
           // 🔐 Attach token automatically
           // final token = AuthStorage.getToken();
           // if (token != null) options.headers["Authorization"] = "Bearer $token";
-
+          final token = storage.getToken;
+          if (token.isNotEmpty) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
           return handler.next(options);
         },
         onResponse: (response, handler) {

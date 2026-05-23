@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../../../../app/service_export.dart';
 
 class LocationService extends GetxService {
@@ -28,14 +26,19 @@ class LocationService extends GetxService {
     }
 
     try {
-      final response = await _apiHelper.request(apiCall: apiCall, parser: (data) => data);
+      final response = await _apiHelper.request(
+        apiCall: apiCall,
+        parser: (data) => data,
+      );
 
       if (response?.success == true) {
         //
 
         log("✅ Location updated successfully in backend");
       } else {
-        log("❌ Failed to update location: ${response?.message ?? 'Unknown error'}");
+        log(
+          "❌ Failed to update location: ${response?.message ?? 'Unknown error'}",
+        );
       }
 
       return response?.success ?? false;

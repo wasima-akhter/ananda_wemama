@@ -200,24 +200,30 @@ class Snack {
           children: [
             SizedBox(
               width: S.w * 0.15,
-              child: SvgIcon(iconPath: IconsPath.smallTick, height: 30),
+              child: SvgIconColored(
+                iconPath: IconsPath.info,
+                iconColor: snackErrTxtClr,
+                height: 30,
+              ),
             ),
             Gap(itemGap),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title ?? '',
-                    style: TxtStyle.norTxt.copyWith(
-                      color: snackErrTxtClr,
-                      fontWeight: FontWeight.w600,
+                  if ((title ?? '').isNotEmpty)
+                    Text(
+                      title ?? '',
+                      style: TxtStyle.norTxt.copyWith(
+                        color: snackErrTxtClr,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    message,
-                    style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr),
-                  ),
+                  if (message.isNotEmpty)
+                    Text(
+                      message,
+                      style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr),
+                    ),
                 ],
               ),
             ),
@@ -245,8 +251,9 @@ class Snack {
           children: [
             SizedBox(
               width: S.w * 0.15,
-              child: SvgIcon(
-                iconPath: IconsPath.successTick,
+              child: SvgIconColored(
+                iconPath: IconsPath.smallTick,
+                iconColor: snackSuccessTxtClr,
                 height: 30, // fixed icon height
               ),
             ),
@@ -256,13 +263,14 @@ class Snack {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title ?? '',
-                    style: TxtStyle.norTxt.copyWith(
-                      color: snackSuccessTxtClr,
-                      fontWeight: FontWeight.w600,
+                  if ((title ?? '').isNotEmpty)
+                    Text(
+                      title ?? '',
+                      style: TxtStyle.norTxt.copyWith(
+                        color: snackSuccessTxtClr,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
                   Text(
                     message,
                     style: TxtStyle.norTxt.copyWith(color: snackSuccessTxtClr),
@@ -742,11 +750,11 @@ class Responsive {
   /// -------- CARD HEIGHTS --------
 
   static double get upcomingSessionCardHeight {
-    if (isSmallMobile) return 200.h;
+    if (isSmallMobile) return 220.h;
 
     if (isTallHeight) return 220.h;
 
-    return 220.h;
+    return 240.h;
   }
 
   /// Ongoing / Live Session Card

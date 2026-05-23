@@ -41,20 +41,26 @@ class PostInCommunityScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Lagos Mom's Community".capEachWord(), style: TxtStyle.outfitLarTitle),
+          // Text("--".capEachWord(), style: TxtStyle.outfitLarTitle),
           Gap(itemGap),
           ContainerBordered(
             vp: 8,
             hp: 18,
             rad: 12,
             contClr: c.inputBackground,
-            boxShadow: boxShadowBottomRight(color: c.secondary.withOpacity(0.8)),
+            boxShadow: boxShadowBottomRight(
+              color: c.secondary.withOpacity(0.8),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Post Anonymously",
-                  style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary),
+                  style: TxtStyle.outfitSemiB(
+                    fs: 14,
+                    w: 500,
+                    color: c.secondary,
+                  ),
                 ),
 
                 Obx(

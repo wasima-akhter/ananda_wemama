@@ -7,25 +7,61 @@ import '../../app/helper_widgets_export.dart';
 import '../components/ui/dialogs/popups.dart';
 import '../components/ui/dialogs/small_popup_dialog.dart';
 
+// Future<bool> requestPermissions() async {
+//   final permissions = <Permission>[
+//     Permission.camera,
+//     Permission.microphone,
+//     Permission.bluetoothConnect, // ✅ add — needed for Agora BT audio routing
+//   ];
+
+//   if (Platform.isAndroid) {
+//     final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
+
+//     if (sdk >= 33) {
+//       permissions.addAll([Permission.photos, Permission.audio]);
+//     } else {
+//       permissions.add(Permission.storage);
+//     }
+//   }
+
+//   final result = await permissions.request();
+//   final allGranted = result.values.every((status) => status.isGranted);
+
+//   if (!allGranted) {
+//     await showAnimatedDialog(
+//       context: Get.context!,
+//       barrierDismissible: true,
+//       child: const PermissionDeniedPopup(),
+//     );
+//   }
+
+//   return allGranted;
+// }
+
 Future<bool> requestPermissions() async {
   final permissions = <Permission>[
     Permission.camera,
     Permission.microphone,
-    Permission.bluetoothConnect, // ✅ add — needed for Agora BT audio routing
+    Permission.bluetoothConnect,
   ];
 
   if (Platform.isAndroid) {
     final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
 
+    //
+
+    //
     if (sdk >= 33) {
+      // Android 13+: granular media permissions
       permissions.addAll([Permission.photos, Permission.audio]);
     } else {
+      // Android 10–12: legacy storage (capped in manifest at API 29/32)
       permissions.add(Permission.storage);
     }
   }
 
   final result = await permissions.request();
-  final allGranted = result.values.every((status) => status.isGranted);
+  final allGranted = result.values.every((s) => s.isGranted);
 
   if (!allGranted) {
     await showAnimatedDialog(

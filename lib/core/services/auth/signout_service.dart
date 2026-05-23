@@ -5,17 +5,12 @@ import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
 import '../../../features/main_tabs/community/controller/community_controller.dart';
 import '../../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../../features/main_tabs/home/controller/home_controller.dart';
+import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../../features/main_tabs/match/controller/match_controller.dart';
 import '../../../features/more/notification/controller/notification_controller.dart';
 import '../../../features/shared/wave_request/controller/wave_request_controller.dart';
 import '../../local/app_storage.dart';
 import '../socket/socket_service.dart';
-
-import 'package:get/get.dart';
-
-import '../../local/app_storage.dart';
-import '../socket/socket_service.dart';
-import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 // class SignoutService {
 //   void signOut() {
@@ -63,7 +58,7 @@ class SignoutService {
       }
     }
 
-        if (Get.isRegistered<ChatController>()) {
+    if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().clearData();
     }
 

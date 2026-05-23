@@ -85,8 +85,8 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                     //   ),
                     // ),
                     Positioned(
-                      top: Responsive.isTallHeight ? -16.w : -14.w,
-                      right: Responsive.isTallHeight ? -17.w : -10.w,
+                      top: Responsive.isTallHeight ? -16.w : -18.w,
+                      right: Responsive.isTallHeight ? -17.w : -18.w,
                       child: Transform.rotate(
                         angle: 0.2,
                         child: SvgIcon(

@@ -178,6 +178,9 @@ class PostDetailsController extends GetxController {
               replies: [],
             ),
           );
+
+          // ✅ Refresh from server to get real IDs
+          await getCommentsList();
         }
 
         // 🔥 IMPORTANT: force UI update

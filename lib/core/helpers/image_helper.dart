@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
-import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -187,37 +186,37 @@ Future<bool> validateFileSize(dynamic data) async {
 }
 
 class MultipartHelper {
-  static Future<MultipartFile?> compressedImage(File file) async {
+  // ✅ Images only
+  static Future<dio.MultipartFile?> compressedImage(File file) async {
     final compressed = await ImageCompressor.compressUntilUnder1MB(file);
-
     if (compressed == null) {
       log("Image compression failed");
       return null;
     }
-
-    // ✅ Read bytes directly — avoids Android 10 scoped storage path issues
     final bytes = await compressed.readAsBytes();
-
     log("Compressed path: ${compressed.path}");
     log("Compressed exists: ${await compressed.exists()}");
     log("Compressed size: ${await compressed.length()}");
     final filename = compressed.path.split('/').last;
+    return dio.MultipartFile.fromBytes(bytes, filename: filename);
+  }
 
-    return MultipartFile.fromBytes(bytes, filename: filename);
+  // ✅ Any file — compresses images, sends others as-is
+  static Future<dio.MultipartFile> anyFile(XFile xfile) async {
+    final file = File(xfile.path);
+
+    if (isImageFile(xfile)) {
+      final compressed = await ImageCompressor.compressUntilUnder1MB(file);
+      final target = compressed ?? file;
+      final bytes = await target.readAsBytes();
+      final filename = target.path.split('/').last;
+      log("🖼️ Image compressed: ${bytes.length} bytes — $filename");
+      return dio.MultipartFile.fromBytes(bytes, filename: filename);
+    } else {
+      final bytes = await file.readAsBytes();
+      final filename = xfile.name;
+      log("📎 File (raw): ${bytes.length} bytes — $filename");
+      return dio.MultipartFile.fromBytes(bytes, filename: filename);
+    }
   }
 }
-// class MultipartHelper {
-//   static Future<MultipartFile?> compressedImage(File file) async {
-//     final compressed = await ImageCompressor.compressUntilUnder3MB(file);
-
-//     if (compressed == null) {
-//       log("Image compression failed");
-//       return null;
-//     }
-
-//     return await MultipartFile.fromFile(
-//       compressed.path,
-//       filename: compressed.path.split('/').last,
-//     );
-//   }
-// }

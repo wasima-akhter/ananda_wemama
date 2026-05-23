@@ -35,14 +35,10 @@ class VerifyOtpService extends GetxService {
   void _saveUserDataAfterVerify({
     required BaseResponse<VerifyOtpDataModel> response,
   }) {
-    // as success,
-    // save the access token in app storage
-    // save the user info in appstorage
     if (response.data != null) {
-      // token
-      storage.setToken(response.data?.accessToken ?? '');
-
-      log("after verify access token: ${response.data?.accessToken}");
+      final token = response.data?.accessToken ?? '';
+      storage.setToken(token);
+      log("✅ Token saved: '$token'"); // ← confirm it's not empty
 
       // ✅ Now call ProfileController to refresh the profile
       if (Get.isRegistered<ProfileController>()) {
