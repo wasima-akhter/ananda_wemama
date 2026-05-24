@@ -18,79 +18,179 @@ class TermsAndConditionsScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: bgClr,
         appBar: CommonAppBarContent(title: Strings.termsCondition),
-        body: Obx(() {
-          /// 🔄 LOADING
-          if (tc.isLoading.value) {
-            return Center(child: LoadingPrimary());
-          }
-
-          /// ❌ ERROR
-          if (tc.errorMessage.value != null) {
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      tc.errorMessage.value!,
-                      textAlign: TextAlign.center,
-                      style: TxtStyle.inter(),
-                    ),
-                    Gap(itemGap * 2),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [SmallNavBtn(onTap: () => tc.fetchTerms(), text: Strings.retry)],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          final data = tc.termsData.value;
-
-          /// 📭 EMPTY
-          if (data == null) {
-            return Center(child: Text("No terms available"));
-          }
-
-          /// ✅ DATA
-          return CusRefreshIndicator(
+        body: Padding(
+          padding: EdgeInsets.only(bottom: 40.w),
+          child: CusRefreshIndicator(
             refreshKey: refreshKey,
             onRefresh: () => tc.fetchTerms(isRefresh: true),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// 📜 TERMS CONTENT
-                  PassageComponent(
-                    title: '',
-                    content: SafeAutoHeightWebView(description: data.description ?? ''),
+            child: Obx(() {
+              /// 🔄 LOADING
+              if (tc.isLoading.value) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: 0.8.sh,
+                    child: Center(child: LoadingPrimary()),
                   ),
+                );
+              }
 
-                  Gap(itemGap * 4),
+              /// ❌ ERROR
+              /// ❌ ERROR
+              if (tc.errorMessage.value != null) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: 0.8.sh,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.error_outline_rounded,
+                              size: 70,
+                              color: c.primary,
+                            ),
 
-                  /// 🗓 LAST UPDATED
-                  Builder(
-                    builder: (context) {
-                      final date = DateHelper().formatUTCtimestamp(data.updatedAt.toString()).date;
-                      final time = DateHelper().formatUTCtimestamp(data.updatedAt.toString()).time;
-                      return PassageComponent(
-                        title: Strings.lastUpdatedAt,
-                        content: Text("$date, $time", style: TxtStyle.outfit(fs: 11)),
-                      );
-                    },
+                            Gap(itemGap * 2),
+
+                            Text(
+                              "Unable to Load Terms & Conditions",
+                              textAlign: TextAlign.center,
+                              style: TxtStyle.outfit(fs: 18, w: 600),
+                            ),
+
+                            Gap(itemGap),
+
+                            Text(
+                              "Please pull down to refresh or try again later.",
+                              textAlign: TextAlign.center,
+                              style: TxtStyle.inter(
+                                fs: 13,
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+
+                            Gap(itemGap * 3),
+
+                            SmallNavBtn(
+                              onTap: () => tc.fetchTerms(isRefresh: true),
+                              text: Strings.retry,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                );
+              }
 
-                  Gap(40),
-                ],
-              ),
-            ),
-          );
-        }),
+              final data = tc.termsData.value;
+
+              /// 📭 EMPTY
+              if (data == null || (data.description?.trim().isEmpty ?? true)) {
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+
+                  child: SizedBox(
+                    height: 0.8.sh,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.description_outlined,
+                              size: 70,
+                              color: Colors.grey.shade400,
+                            ),
+
+                            Gap(itemGap * 2),
+
+                            Text(
+                              "No Terms & Conditions Available",
+                              textAlign: TextAlign.center,
+                              style: TxtStyle.outfit(
+                                fs: 18,
+                                w: 600,
+                                color: Colors.grey.shade700,
+                              ),
+                            ),
+
+                            Gap(itemGap),
+
+                            Text(
+                              "There is currently no Terms & Conditions information available. Please check again later.",
+                              textAlign: TextAlign.center,
+                              style: TxtStyle.inter(
+                                fs: 13,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+
+                            Gap(itemGap * 3),
+
+                            SmallNavBtn(
+                              onTap: () => tc.fetchTerms(isRefresh: true),
+                              text: Strings.retry,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              /// ✅ DATA
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PassageComponent(
+                      title: '',
+                      content: SafeAutoHeightWebView(
+                        description: data.description ?? '',
+                      ),
+                    ),
+
+                    Gap(itemGap * 4),
+
+                    Builder(
+                      builder: (context) {
+                        final date = DateHelper()
+                            .formatUTCtimestamp(data.updatedAt.toString())
+                            .date;
+
+                        final time = DateHelper()
+                            .formatUTCtimestamp(data.updatedAt.toString())
+                            .time;
+
+                        return PassageComponent(
+                          title: Strings.lastUpdatedAt,
+                          content: Text(
+                            "$date, $time",
+                            style: TxtStyle.outfit(fs: 11),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const Gap(40),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ),
       ),
     );
   }
@@ -110,7 +210,7 @@ class PassageComponent extends StatelessWidget {
         if (title.isNotEmpty) Text(title, style: title_600_mClr_Outfit),
         Gap(itemGap * 2),
 
-        if (content != null) content!,
+        ?content,
       ],
     );
   }
@@ -119,7 +219,7 @@ class PassageComponent extends StatelessWidget {
 /*
 {
     "description":  "<div><p style=\"margin-top:0pt; margin-bottom:0pt;\"> </p><p style=\"margin-top:0pt; margin-bottom:0pt; background-color:#f5f6fa;\"><span style=\"font-family:Roboto; color:#363840;\">Terms and Conditions isduidsfvi idufvb dfuvghf vodufvou doudv iu</span></p></div>"
- 
+
 
 }
 */

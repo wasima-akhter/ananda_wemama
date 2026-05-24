@@ -512,6 +512,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/nothing-yet.json
   String get nothingYet => 'assets/images/nothing-yet.json';
 
+  /// File path: assets/images/onboard_screen_heart.png
+  AssetGenImage get onboardScreenHeart =>
+      const AssetGenImage('assets/images/onboard_screen_heart.png');
+
   /// File path: assets/images/onboarding_1.png
   AssetGenImage get onboarding1 =>
       const AssetGenImage('assets/images/onboarding_1.png');
@@ -622,6 +626,7 @@ class $AssetsImagesGen {
     noNet2,
     noSearchImg,
     nothingYet,
+    onboardScreenHeart,
     onboarding1,
     onboarding2,
     onboarding3,

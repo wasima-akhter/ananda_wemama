@@ -226,7 +226,10 @@ class RoutePageList {
       page: () => const MumsStageScreen(),
       binding: PostSignupScreensBinding(),
     ),
-    GetPage(name: RoutePaths.mumsStageFinish, page: () => const MumsStageFinishScreen()),
+    GetPage(
+      name: RoutePaths.mumsStageFinish,
+      page: () => const MumsStageFinishScreen(),
+    ),
     GetPage(
       name: RoutePaths.subChoosePlan,
       page: () => const SubscriptionChoosePlanScreen(),
@@ -246,7 +249,11 @@ class RoutePageList {
       page: () => const NotificationScreen(),
       binding: NotificationBinding(),
     ),
-    GetPage(name: RoutePaths.profile, page: () => const ProfileScreen(), binding: MainNavBinding()),
+    GetPage(
+      name: RoutePaths.profile,
+      page: () => const ProfileScreen(),
+      binding: MainNavBinding(),
+    ),
     GetPage(
       name: RoutePaths.editProfile,
       page: () => const EditProfileScreen(),
@@ -262,7 +269,11 @@ class RoutePageList {
       page: () => const BlockedUserScreen(),
       binding: BlockedUserBinding(),
     ),
-    GetPage(name: RoutePaths.about, page: () => const AboutScreen(), binding: AboutBinding()),
+    GetPage(
+      name: RoutePaths.about,
+      page: () => const AboutScreen(),
+      binding: AboutBinding(),
+    ),
     GetPage(
       name: RoutePaths.contactSupport,
       page: () => const ContactSupportScreen(),
@@ -280,7 +291,7 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.moodLibrary,
       page: () => const MoodLibraryScreen(),
-      binding: MoodLibraryBinding(),
+      binding: MainNavBinding(),
     ),
     GetPage(
       name: RoutePaths.bookmark,

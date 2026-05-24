@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
 
 import '../../../app/helper_widgets_export.dart' hide Response;
-import '../base/api_client.dart';
 import '../models/base_response_model.dart';
 
 class ApiServiceHelper {
-  final ApiClient _apiClient = ApiClient();
-
   /// Generic request handler
   Future<BaseResponse<T>?> request<T>({
     required Future<dynamic> Function() apiCall,
@@ -36,7 +33,7 @@ class ApiServiceHelper {
 
       final response = BaseResponse<T>.fromJson(res, parser);
 
-      response.message.capEachWord().showToast();
+      // response.message.capEachWord().showToast();
       return response;
     } catch (e) {
       String errorMsg = "Something went wrong. Please try again.";

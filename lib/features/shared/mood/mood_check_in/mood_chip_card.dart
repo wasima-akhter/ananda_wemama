@@ -1,4 +1,6 @@
 import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:mama_app/core/helpers/string_helper.dart';
+import 'package:mama_app/features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import 'package:mama_app/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
@@ -18,10 +20,15 @@ class MoodCheckInCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(
-              "${mcc.getGreetingMessage()} Ada",
-              style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
-            ),
+            Obx(() {
+              final userName =
+                  Get.find<ProfileController>().userProfileData.value?.name ??
+                  '';
+              return Text(
+                "${mcc.getGreetingMessage()}, ${userName.isNotEmpty ? getFirstWord(userName).cap : "Ada"}",
+                style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
+              );
+            }),
 
             Gap(4),
 
@@ -152,38 +159,27 @@ class _OpenMoodLibrary extends StatelessWidget {
         itemGap.verticalSpace,
         GestureDetector(
           onTap: () async {
-            final mlc = Get.isRegistered<MoodLibraryController>()
-                ? Get.find<MoodLibraryController>()
-                : Get.put(MoodLibraryController());
-
-            // ✅ resolve once, non-null
             final selectedMood = hc.mcc.selectedMood.value ?? MoodType.calm;
+            final mlc = Get.find<MoodLibraryController>();
 
-            mlc.selectedMood.value = selectedMood;
-
+            mlc.setMood(selectedMood);
             await mlc.ensureLoaded(selectedMood);
 
-            // ✅ use the resolved non-null variable, not the nullable original
             final items = mlc.moodReadingItems[selectedMood] ?? [];
 
             log('🧪 selectedMood: $selectedMood');
             log('🧪 items count: ${items.length}');
-            log(
-              '🧪 all keys in moodReadingItems: ${mlc.moodReadingItems.keys}',
-            );
 
             if (items.isEmpty) {
               Get.toNamed(RoutePaths.moodLibrary);
               return;
             }
 
-            final firstItem = items.first;
-
             Get.toNamed(
               RoutePaths.moodInsight,
               arguments: MoodInsightArgs(
                 moodType: selectedMood,
-                itemId: firstItem.id,
+                itemId: items.first.id,
                 fromHome: true,
               ),
             );

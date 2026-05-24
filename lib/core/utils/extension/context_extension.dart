@@ -105,6 +105,7 @@ class Snack {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
+    closeAllSnackbar();
     Get.generalDialog(
       barrierDismissible: true,
       barrierLabel: "Snack",
@@ -145,6 +146,7 @@ class Snack {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
+    closeAllSnackbar();
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(
@@ -194,6 +196,7 @@ class Snack {
 
   static void showError(String message, {String? title}) {
     Get.closeCurrentSnackbar();
+    closeAllSnackbar();
     Get.showSnackbar(
       GetSnackBar(
         messageText: Row(
@@ -244,6 +247,7 @@ class Snack {
   /// Success snackbar with green check icon
   static void showSuccess(String message, {String? title}) {
     Get.closeCurrentSnackbar();
+    closeAllSnackbar();
     Get.showSnackbar(
       GetSnackBar(
         messageText: Row(
@@ -253,7 +257,7 @@ class Snack {
               width: S.w * 0.15,
               child: SvgIconColored(
                 iconPath: IconsPath.smallTick,
-                iconColor: snackSuccessTxtClr,
+                iconColor: c.primary ?? snackSuccessTxtClr,
                 height: 30, // fixed icon height
               ),
             ),
@@ -267,13 +271,15 @@ class Snack {
                     Text(
                       title ?? '',
                       style: TxtStyle.norTxt.copyWith(
-                        color: snackSuccessTxtClr,
+                        color: c.primary ?? snackSuccessTxtClr,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   Text(
                     message,
-                    style: TxtStyle.norTxt.copyWith(color: snackSuccessTxtClr),
+                    style: TxtStyle.norTxt.copyWith(
+                      color: c.primary ?? snackSuccessTxtClr,
+                    ),
                   ),
                 ],
               ),
@@ -281,7 +287,7 @@ class Snack {
           ],
         ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: snackSuccessBg,
+        backgroundColor: c.cardPrimary ?? snackSuccessBg,
         // backgroundColor: c.secondary.withOpacity(0.2),
         margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
         padding: EdgeInsets.all(12.w),
@@ -300,6 +306,7 @@ class Snack {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
+    closeAllSnackbar();
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(

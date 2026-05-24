@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
 
 import '../../app/helper_widgets_export.dart' hide MultipartFile;
 import '../components/app_ui/popup_widgets/file_size_excedeed_popup.dart';
@@ -154,6 +156,59 @@ bool isImageFile(XFile file) {
       path.endsWith('.jpeg') ||
       path.endsWith('.png') ||
       path.endsWith('.webp');
+}
+
+String getSafeFileName(String url, String contentType) {
+  final uri = Uri.parse(url);
+  String name = p.basename(uri.path);
+
+  if (!name.contains('.')) {
+    if (contentType.contains('jpeg')) {
+      name = 'image.jpg';
+    } else if (contentType.contains('png')) {
+      name = 'image.png';
+    } else {
+      name = 'image.jpg'; // fallback safest
+    }
+  }
+
+  // force backend-friendly extension
+  if (name.endsWith('.webp') || name.endsWith('.gif')) {
+    name = name.replaceAll(RegExp(r'\.(webp|gif)$'), '.jpg');
+  }
+
+  return name;
+}
+
+String safePathFromUri(String rawPath) {
+  return Uri.decodeFull(Uri.decodeFull(rawPath)); // double-decode safety
+}
+
+XFile sanitizeXFile(XFile file) {
+  final dir = p.dirname(file.path);
+  final ext = p.extension(file.path); // e.g. ".jpg"
+  final timestamp = DateTime.now().millisecondsSinceEpoch;
+  final cleanName = 'image_$timestamp$ext'; // e.g. "image_1234567890.jpg"
+  final cleanPath = p.join(dir, cleanName);
+
+  // Create a symlink or copy with the clean name
+  final original = File(file.path);
+  final cleaned = original.copySync(cleanPath);
+
+  return XFile(cleaned.path);
+}
+
+// Helper to get correct MediaType from file path
+MediaType imageMediaType(String path) {
+  final ext = path.split('.').last.toLowerCase();
+  switch (ext) {
+    case 'png':
+      return MediaType('image', 'png');
+    case 'jpg':
+    case 'jpeg':
+    default:
+      return MediaType('image', 'jpeg');
+  }
 }
 
 ///

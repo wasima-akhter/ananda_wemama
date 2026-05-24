@@ -10,9 +10,12 @@ extension SizedBoxExtension on num {
 }
 
 extension TxtStyleExtension on num {
-  TextStyle get titleMclrCusFS => TxtStyle.inter(fs: toDouble(), w: 600, color: c.primary);
-  TextStyle get titleMclrCusFSsemi => TxtStyle.interSemiB(fs: toDouble(), w: 600, color: c.primary);
-  TextStyle get norMclrCusFS => TxtStyle.inter(fs: toDouble(), w: 400, color: c.primary);
+  TextStyle get titleMclrCusFS =>
+      TxtStyle.interSemiB(fs: toDouble(), w: 600, color: c.primary);
+  TextStyle get titleMclrCusFSsemi =>
+      TxtStyle.interSemiB(fs: toDouble(), w: 600, color: c.primary);
+  TextStyle get norMclrCusFS =>
+      TxtStyle.inter(fs: toDouble(), w: 400, color: c.primary);
 
   TextStyle get titleMclrCusFSURB =>
       TxtStyle.urbanistSemiB(fs: toDouble(), w: 600, color: c.primary);
@@ -20,7 +23,8 @@ extension TxtStyleExtension on num {
       TxtStyle.urbanistSemiB(fs: toDouble(), w: 600, color: c.textSecondary);
   TextStyle get titleMclrCusFSsemiURB =>
       TxtStyle.urbanistSemiB(fs: toDouble(), w: 600, color: c.primary);
-  TextStyle get norMclrCusFSURB => TxtStyle.urbanist(fs: toDouble(), w: 400, color: c.primary);
+  TextStyle get norMclrCusFSURB =>
+      TxtStyle.urbanist(fs: toDouble(), w: 400, color: c.primary);
 
   TextStyle get titleMclrCusFSOutfit =>
       TxtStyle.outfitSemiB(fs: toDouble(), w: 600, color: c.primary);
@@ -28,10 +32,16 @@ extension TxtStyleExtension on num {
       TxtStyle.outfitSemiB(fs: toDouble(), w: 600, color: c.textSecondary);
   TextStyle get titleMclrCusFSsemioutfit =>
       TxtStyle.outfitSemiB(fs: toDouble(), w: 600, color: c.primary);
-  TextStyle get norMclrCusFSoutfit => TxtStyle.outfit(fs: toDouble(), w: 400, color: c.primary);
-  TextStyle get norSecclrCusFSoutfit => TxtStyle.outfit(fs: toDouble(), w: 400, color: c.secondary);
-  TextStyle get norSecclrUnderLoutfit =>
-      TxtStyle.outfit(fs: 14, w: 400, color: c.textSecondary, dec: TextDecoration.underline);
+  TextStyle get norMclrCusFSoutfit =>
+      TxtStyle.outfit(fs: toDouble(), w: 400, color: c.primary);
+  TextStyle get norSecclrCusFSoutfit =>
+      TxtStyle.outfit(fs: toDouble(), w: 400, color: c.secondary);
+  TextStyle get norSecclrUnderLoutfit => TxtStyle.outfit(
+    fs: 14,
+    w: 400,
+    color: c.textSecondary,
+    dec: TextDecoration.underline,
+  );
 
   // titleB -> 16px, semi, 600
   // normRL --> 16px, reg, 400
@@ -51,11 +61,12 @@ extension RadiusExtension_ on num {
 /// BOX DECORATION EXTENSIONS
 /// --------------------
 extension BoxdecorationExtension on num {
-  BoxDecoration circleBrdr({Color? clr, Color? brdrClr, double? brdrW}) => BoxDecoration(
-    shape: BoxShape.circle,
-    color: clr,
-    border: Border.all(color: brdrClr ?? c.primary, width: brdrW ?? 0.6),
-  );
+  BoxDecoration circleBrdr({Color? clr, Color? brdrClr, double? brdrW}) =>
+      BoxDecoration(
+        shape: BoxShape.circle,
+        color: clr,
+        border: Border.all(color: brdrClr ?? c.primary, width: brdrW ?? 0.6),
+      );
 }
 
 /// --------------------
@@ -98,8 +109,18 @@ extension PaddingExtensions on Widget {
 
   Widget pAll(double a) => Padding(padding: EdgeInsets.all(a.r), child: this);
 
-  Widget pOnly({double left = 0, double top = 0, double right = 0, double bottom = 0}) => Padding(
-    padding: EdgeInsets.only(left: left.w, top: top.h, right: right.w, bottom: bottom.h),
+  Widget pOnly({
+    double left = 0,
+    double top = 0,
+    double right = 0,
+    double bottom = 0,
+  }) => Padding(
+    padding: EdgeInsets.only(
+      left: left.w,
+      top: top.h,
+      right: right.w,
+      bottom: bottom.h,
+    ),
     child: this,
   );
 
@@ -121,8 +142,18 @@ extension MarginExtensions on Widget {
 
   Widget mAll(double a) => Container(margin: EdgeInsets.all(a.r), child: this);
 
-  Widget mOnly({double left = 0, double top = 0, double right = 0, double bottom = 0}) => Container(
-    margin: EdgeInsets.only(left: left.w, top: top.h, right: right.w, bottom: bottom.h),
+  Widget mOnly({
+    double left = 0,
+    double top = 0,
+    double right = 0,
+    double bottom = 0,
+  }) => Container(
+    margin: EdgeInsets.only(
+      left: left.w,
+      top: top.h,
+      right: right.w,
+      bottom: bottom.h,
+    ),
     child: this,
   );
 
@@ -203,6 +234,6 @@ extension NumberFormatting on num? {
       }
     }
 
-    return this.toString();
+    return toString();
   }
 }

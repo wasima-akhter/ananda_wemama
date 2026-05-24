@@ -17,17 +17,13 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       color: bgClr,
-      // padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 8.h),
       padding: EdgeInsets.only(top: itemGap * 6, bottom: itemGap),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Left:logo without text
           mamaLogoWithoutTxtImageSmall,
 
-          // Right: Notification Icon
           Row(
             children: [
               CusGestureDetector(
@@ -52,51 +48,57 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
               ),
 
               Gap(itemGap),
+              Builder(
+                builder: (context) {
+                  final double avatarRadius = 22;
+                  final double crownSize = 35;
 
-              ///
-              CusGestureDetector(
-                onTap: () {
-                  GNav.pushNamed(RoutePaths.profile);
-                },
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Obx(() {
-                      final image =
-                          Get.find<ProfileController>()
-                              .userProfileData
-                              .value
-                              ?.profileImage ??
-                          '';
+                  return CusGestureDetector(
+                    onTap: () {
+                      Get.toNamed(RoutePaths.profile);
+                    },
+                    child: SizedBox(
+                      width: avatarRadius * 2,
+                      height: avatarRadius * 2,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          // Avatar
+                          Positioned.fill(
+                            child: Obx(() {
+                              final image =
+                                  Get.find<ProfileController>()
+                                      .userProfileData
+                                      .value
+                                      ?.profileImage ??
+                                  '';
 
-                      return circledNetworkImageBgComponent(
-                        radius: 22,
-                        imagePath: image,
-                        enablePreview: false,
-                        isUser: true,
-                      );
-                    }),
+                              return circledNetworkImageBgComponent(
+                                radius: avatarRadius,
+                                imagePath: image,
+                                enablePreview: false,
+                                isUser: true,
+                              );
+                            }),
+                          ),
 
-                    // Transform.rotate(
-                    //   angle: 0.2, // positive = tilt right
-                    //   child: Transform.translate(
-                    //     offset: const Offset(15, -22),
-                    //     child: SvgIcon(iconPath: IconsPath.crown, height: 40),
-                    //   ),
-                    // ),
-                    Positioned(
-                      top: Responsive.isTallHeight ? -16.w : -18.w,
-                      right: Responsive.isTallHeight ? -17.w : -18.w,
-                      child: Transform.rotate(
-                        angle: 0.2,
-                        child: SvgIcon(
-                          iconPath: IconsPath.crown,
-                          height: Responsive.isTallHeight ? 46 : 40,
-                        ),
+                          // Crown
+                          Positioned(
+                            top: -(crownSize * 0.5),
+                            right: -(crownSize * 0.5),
+                            child: Transform.rotate(
+                              angle: 0.3,
+                              child: SvgIcon(
+                                iconPath: IconsPath.crown,
+                                height: crownSize,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
@@ -106,5 +108,5 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(70.h); // responsive height
+  Size get preferredSize => Size.fromHeight(70.h);
 }

@@ -1,6 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/services/more/support/contact_support/contact_support_service.dart';
-import '../../../../../core/state_screens/success/screen/success_screen.dart';
 import '../../../../../core/utils/validator/validators.dart';
 
 class ContactSupportController extends GetxController {
@@ -59,14 +58,6 @@ class ContactSupportController extends GetxController {
 
     if (success) {
       clearForm();
-
-      GNav.pushNamed(
-        RoutePaths.success,
-        arguments: SuccessViewDataModel(
-          title: Strings.submitSuccessfully,
-          btnTxt: Strings.continueTxt,
-        ),
-      );
     }
   }
 }

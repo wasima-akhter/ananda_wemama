@@ -1,17 +1,25 @@
-import 'package:geolocator/geolocator.dart';
-
 import '../../../../app/controller_export.dart';
-import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../shared/mood/mood_check_in/mood_check_in_controller.dart';
-import '../../../station_location/controller/station_location_controller.dart';
 import '../../experts/controller/session_action_controller.dart';
 import '../../experts/controller/session_controller.dart';
-import '../dialogs/permanent_denied_dialog.dart';
-import '../dialogs/rationale_dialog.dart';
-import '../dialogs/turnon_service_dialog.dart';
 import '../model/community_spotlight_model.dart';
 import '../screen/home_screen.dart';
 import '../service/home_service.dart';
+
+String getGreetingMessage() {
+  final hour = DateTime.now().hour;
+
+  if (hour >= 5 && hour < 12) {
+    return "Good Morning";
+  } else if (hour >= 12 && hour < 17) {
+    return "Good Afternoon";
+  } else if (hour >= 17 && hour < 21) {
+    return "Good Evening";
+  } else {
+    return "Good Night";
+  }
+}
 
 class HomeController extends GetxController {
   final mcc = findCont<MoodCheckInController>();
@@ -30,39 +38,10 @@ class HomeController extends GetxController {
   final actionCtrl = Get.find<SessionActionController>();
   void closeAllPopups() {}
 
-  Future<bool> runLocationPermissionFlowForSearch() async {
-    try {
-      final enabled = await Geolocator.isLocationServiceEnabled();
-
-      if (!enabled) {
-        HomeScreen.showLocationStatusOverlay(isActive: false);
-        return false;
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        return false;
-      }
-
-      await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
-
-      return true;
-    } catch (e) {
-      log("Location permission flow error: $e");
-      return false;
-    }
-  }
-
   // ─────────────────────────────────────────────────────────────────────────
   // 🔹 Location permission flow
   // ─────────────────────────────────────────────────────────────────────────
-
+  /*
   Future<void> runLocationPermissionFlow() async {
     log("🔑 runLocationPermissionFlow START");
 
@@ -173,52 +152,13 @@ class HomeController extends GetxController {
     await _refreshLocationData();
     HomeScreen.showLocationStatusOverlay(isActive: true);
   }
+*/
+  Future<void> runLocationPermissionFlow() async {
+    final result = await AppLocationManager.to.ensureFreshLocation();
 
-  Future<void> _refreshLocationData() async {
-    try {
-      await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
-    } catch (e) {
-      log("HomeController: error refreshing location — $e");
-    }
-  }
+    final active = result == LocationFlowResult.success;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // 🔹 Dialogs
-  // ─────────────────────────────────────────────────────────────────────────
-  Future<bool> _showTurnOnServiceDialog() async {
-    bool tapped = false;
-
-    await showAnimatedDialog(
-      context: Get.context!,
-      barrierDismissible: false,
-      child: TurnOnServiceDialog(onTurnOn: () => tapped = true),
-    );
-
-    return tapped;
-  }
-
-  Future<bool> _showRationaleDialog() async {
-    bool agreed = false;
-
-    await showAnimatedDialog(
-      context: Get.context!,
-      barrierDismissible: false,
-      child: RationaleDialog(
-        onAllowLocation: () {
-          agreed = true;
-          Get.back();
-        },
-      ),
-    );
-
-    return agreed;
-  }
-
-  Future<void> _showPermanentlyDeniedDialog() async {
-    await showAnimatedDialog(
-      context: Get.context!,
-      child: PermanentDeniedDialog(),
-    );
+    HomeScreen.showLocationStatusOverlay(isActive: active);
   }
 
   // ─────────────────────────────────────────────────────────────────────────

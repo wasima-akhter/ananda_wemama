@@ -2,6 +2,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../controller/match_controller.dart';
 import '../widgets/match_states/match_found_state.dart';
 import '../widgets/match_states/match_idle_state.dart';
+import '../widgets/match_states/match_location_unavailable_state.dart';
 import '../widgets/match_states/match_no_match_state.dart';
 import '../widgets/match_states/match_searching_state.dart';
 
@@ -22,6 +23,9 @@ class MatchScreen extends StatelessWidget {
           MatchState.searching => MatchSearchingState(mc: mc),
           MatchState.found => MatchFoundState(mc: mc),
           MatchState.noMatch => MatchNoMatchState(mc: mc),
+          MatchState.locationUnavailable => MatchLocationUnavailableState(
+            mc: mc,
+          ),
         };
       }).getcm,
     );

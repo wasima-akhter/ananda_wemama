@@ -138,13 +138,16 @@ class ImagesPath {
   // Splash / Onboarding
   static String get splashImageWLogo => Assets.images.splashWholeScreen.path;
   static String get weMamaLogoPng => Assets.images.weMamaLogoPng.path;
-  static String get weMamaLogoWithouTxtPng => Assets.images.mamaLogoWithoutTxt.path;
+  static String get weMamaLogoWithouTxtPng =>
+      Assets.images.mamaLogoWithoutTxt.path;
   static String get splashImage => Assets.images.splashImage.path;
   static String get onboardingBgImage => Assets.images.onboardingBg.path;
   static String get onboardingImage => Assets.images.onboardingImage.path;
   static String get onboarding1 => Assets.images.onboarding1.path;
   static String get onboarding2 => Assets.images.onboarding2.path;
   static String get onboarding3 => Assets.images.onboarding3.path;
+  //
+  static String get onboardScreenHeart => Assets.images.onboardScreenHeart.path;
 
   // Profile demo pictures
   static String get profileDemo1 => Assets.images.profileDemoPic1.path;

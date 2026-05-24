@@ -1,16 +1,16 @@
 import 'dart:async';
 
+import 'package:geolocator/geolocator.dart';
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../../core/services/socket/socket_service.dart';
-import '../../../station_location/controller/station_location_controller.dart';
-import '../../home/controller/home_controller.dart';
 import '../model/match_model.dart';
 import '../services/match_service.dart';
 
-enum MatchState { idle, searching, found, noMatch }
+enum MatchState { idle, searching, found, noMatch, locationUnavailable }
 
 class MatchController extends GetxController {
   Rx<MatchState> matchState = MatchState.idle.obs;
@@ -89,57 +89,8 @@ class MatchController extends GetxController {
   // ═══════════════════════════════════════════════════════════════════════════
 
   RxBool isSearchLoading = false.obs;
+
   /*
-  Future<void> startSearching() async {
-    final int currentSearchId = ++_searchId;
-
-    // ── 1. FREE USER DAILY LIMIT HIT ──────────────────────────────────────────
-    if (!isPaidUser && searchesToday >= freeDailyLimit) {
-      subUpgradeNeeded.value = true;
-      showDailyLimitDialog();
-      _fetchMatchesAndUpgrade();
-      return;
-    }
-
-    // ── 2. FREE USER WITHIN LIMIT ─────────────────────────────────────────────
-    if (!isPaidUser) searchesToday++;
-
-    // ── 3. SEARCHING STATE + SIMULATED DELAY ──────────────────────────────────
-    matchState.value = MatchState.searching;
-    await Future.delayed(const Duration(seconds: 5));
-
-    if (currentSearchId != _searchId) return;
-
-    // ── 4. FETCH REAL MATCHES FROM BACKEND ────────────────────────────────────
-    if (isSearchLoading.value) return;
-    isSearchLoading.value = true;
-
-    try {
-      final slc = Get.find<StationLocationController>();
-      final data = await MatchService().fetchMatches(
-        latitude: slc.latitude.toString(),
-        longitude: slc.longitude.toString(),
-      );
-
-      if (currentSearchId != _searchId) return;
-
-      if (data.isEmpty) {
-        matchState.value = MatchState.noMatch;
-        return;
-      }
-
-      // Fresh results — reset queue to start
-      fetchedMatches.value = data;
-      _currentMatchIndex = 0;
-      matchState.value = MatchState.found;
-    } catch (e) {
-      log('startSearching fetch error: $e');
-      if (currentSearchId == _searchId) matchState.value = MatchState.noMatch;
-    } finally {
-      isSearchLoading.value = false;
-    }
-  }
-*/
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
 
@@ -239,6 +190,175 @@ class MatchController extends GetxController {
       navToSubUpgrade();
     } catch (e) {
       log('_fetchMatchesAndUpgrade error: $e');
+      navToSubUpgrade();
+    } finally {
+      isSearchLoading.value = false;
+    }
+  }
+*/
+  Future<void> enableLocationGatewayFlow() async {
+    final result = await AppLocationManager.to.enableLocationGateway();
+
+    if (result == LocationFlowResult.success) {
+      matchState.value = MatchState.searching;
+      await startSearching();
+      return;
+    }
+
+    if (result == LocationFlowResult.serviceDisabled) {
+      Snack.showWarning("Please turn on location service");
+      await Geolocator.openLocationSettings();
+      return;
+    }
+
+    if (result == LocationFlowResult.permissionDenied) {
+      Snack.showWarning("Location permission required");
+      return;
+    }
+
+    if (result == LocationFlowResult.permissionDeniedForever) {
+      Snack.showError("Enable permission from app settings");
+      await Geolocator.openAppSettings();
+      return;
+    }
+
+    Snack.showError("Location unavailable");
+  }
+
+  Future<void> startSearching() async {
+    final int currentSearchId = ++_searchId;
+
+    // ─────────────────────────────────────
+    // 1. LOCATION + PERMISSION FLOW
+    // ─────────────────────────────────────
+    final locationResult = await AppLocationManager.to.ensureFreshLocation(
+      showDialogs: true,
+      forceRefresh: true,
+    );
+
+    if (locationResult != LocationFlowResult.success) {
+      matchState.value = MatchState.locationUnavailable;
+      return;
+    }
+    // ─────────────────────────────────────
+    // 2. FREE USER LIMIT
+    // ─────────────────────────────────────
+    if (!isPaidUser && searchesToday >= freeDailyLimit) {
+      subUpgradeNeeded.value = true;
+
+      showDailyLimitDialog();
+
+      await _fetchMatchesAndUpgrade();
+
+      return;
+    }
+
+    // ─────────────────────────────────────
+    // 3. FREE USER COUNT
+    // ─────────────────────────────────────
+    if (!isPaidUser) {
+      searchesToday++;
+    }
+
+    // ─────────────────────────────────────
+    // 4. SEARCHING UI STATE
+    // ─────────────────────────────────────
+    matchState.value = MatchState.searching;
+
+    await Future.delayed(const Duration(seconds: 5));
+
+    if (currentSearchId != _searchId) return;
+
+    // ─────────────────────────────────────
+    // 5. FETCH MATCHES
+    // ─────────────────────────────────────
+    if (isSearchLoading.value) return;
+
+    isSearchLoading.value = true;
+
+    try {
+      final alm = AppLocationManager.to;
+
+      final data = await MatchService().fetchMatches(
+        latitude: alm.latitude.value.toString(),
+        longitude: alm.longitude.value.toString(),
+      );
+
+      if (currentSearchId != _searchId) return;
+
+      if (data.isEmpty) {
+        matchState.value = MatchState.noMatch;
+        return;
+      }
+
+      fetchedMatches.value = data;
+
+      _currentMatchIndex = 0;
+
+      matchState.value = MatchState.found;
+    } catch (e) {
+      log("❌ startSearching fetch error: $e");
+
+      if (currentSearchId == _searchId) {
+        matchState.value = MatchState.noMatch;
+      }
+    } finally {
+      isSearchLoading.value = false;
+    }
+  }
+
+  Future<void> _fetchMatchesAndUpgrade() async {
+    // ─────────────────────────────────────
+    // 1. PREVENT DUPLICATE CALLS
+    // ─────────────────────────────────────
+    if (isSearchLoading.value) return;
+
+    isSearchLoading.value = true;
+
+    try {
+      // ─────────────────────────────────────
+      // 2. ENSURE LOCATION
+      // ─────────────────────────────────────
+      final locationResult = await AppLocationManager.to.ensureFreshLocation(
+        showDialogs: true,
+        forceRefresh: false,
+      );
+
+      if (locationResult != LocationFlowResult.success) {
+        matchState.value = MatchState.locationUnavailable;
+
+        navToSubUpgrade();
+
+        return;
+      }
+
+      // ─────────────────────────────────────
+      // 3. FETCH MATCHES
+      // ─────────────────────────────────────
+      final alm = AppLocationManager.to;
+
+      final data = await MatchService().fetchMatches(
+        latitude: alm.latitude.value.toString(),
+        longitude: alm.longitude.value.toString(),
+      );
+
+      if (data.isEmpty) {
+        matchState.value = MatchState.noMatch;
+      } else {
+        fetchedMatches.value = data;
+
+        _currentMatchIndex = 0;
+      }
+
+      // ─────────────────────────────────────
+      // 4. NAVIGATE TO SUBSCRIPTION
+      // ─────────────────────────────────────
+      await Future.delayed(const Duration(milliseconds: 600));
+
+      navToSubUpgrade();
+    } catch (e) {
+      log("❌ _fetchMatchesAndUpgrade error: $e");
+
       navToSubUpgrade();
     } finally {
       isSearchLoading.value = false;

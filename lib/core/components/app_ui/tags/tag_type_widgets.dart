@@ -13,7 +13,11 @@ class ActiveTag extends StatelessWidget {
       hp: 9,
       child: Text(
         isActive ? Strings.active : Strings.inactive,
-        style: TxtStyle.outfitSemiB(fs: 13, w: 400, color: isActive ? c.scaffoldBackground : white),
+        style: TxtStyle.outfitSemiB(
+          fs: 13,
+          w: 400,
+          color: isActive ? c.scaffoldBackground : white,
+        ),
       ),
     );
   }
@@ -26,7 +30,9 @@ class ActiveInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      backgroundColor: isActive ? c.secondary.withOpacity(0.3) : Colors.grey.shade300,
+      backgroundColor: isActive
+          ? c.secondary.withOpacity(0.3)
+          : Colors.grey.shade300,
       radius: 9,
       child: SvgIconColored(
         iconPath: IconsPath.curvedInfo,

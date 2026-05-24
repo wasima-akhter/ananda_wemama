@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:file_saver/file_saver.dart';
-import 'package:flutter/foundation.dart';
 import 'package:gal/gal.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:mama_app/core/config/app_info.dart';
@@ -372,22 +370,22 @@ Future<void> downloadFile(
 //   required String tempPath,
 //   required String fileName,
 // }) async {
-//   if (Platform.isAndroid) {
-//     final downloadsDir = Directory('/storage/emulated/0/Download');
-//     if (!await downloadsDir.exists()) {
-//       await downloadsDir.create(recursive: true);
-//     }
-//     final savePath = '${downloadsDir.path}/$fileName';
-//     await File(tempPath).copy(savePath);
-//     debugPrint("💾 Saved to Downloads: $savePath");
-//     Snack.showSuccess("Saved to Downloads: $fileName");
-//     await OpenFile.open(savePath);
-//   } else {
-//     final dir = await getApplicationDocumentsDirectory();
-//     final savePath = '${dir.path}/$fileName';
-//     await File(tempPath).copy(savePath);
-//     Snack.showSuccess("File saved: $fileName");
-//     await OpenFile.open(savePath);
+//   try {
+//     final bytes = await File(tempPath).readAsBytes();
+
+//     final ext = fileName.split('.').last;
+
+//     await FileSaver.instance.saveFile(
+//       name: fileName.replaceAll(".$ext", ""),
+//       bytes: Uint8List.fromList(bytes),
+//       fileExtension: ext,
+//       mimeType: MimeType.other,
+//     );
+
+//     Snack.showSuccess("Saved to Downloads");
+//   } catch (e) {
+//     debugPrint("❌ Save error: $e");
+//     Snack.showError("Failed to save file");
 //   }
 // }
 Future<void> _saveToDownloads({
@@ -395,20 +393,38 @@ Future<void> _saveToDownloads({
   required String fileName,
 }) async {
   try {
-    final bytes = await File(tempPath).readAsBytes();
+    /// App-specific external storage
+    final dir = await getExternalStorageDirectory();
 
-    final ext = fileName.split('.').last;
+    if (dir == null) {
+      throw Exception("Storage directory unavailable");
+    }
 
-    await FileSaver.instance.saveFile(
-      name: fileName.replaceAll(".$ext", ""),
-      bytes: Uint8List.fromList(bytes),
-      fileExtension: ext,
-      mimeType: MimeType.other,
-    );
+    final downloadDir = Directory('${dir.path}/Downloads');
 
-    Snack.showSuccess("Saved to Downloads");
+    if (!await downloadDir.exists()) {
+      await downloadDir.create(recursive: true);
+    }
+
+    final savePath = '${downloadDir.path}/$fileName';
+
+    final savedFile = await File(tempPath).copy(savePath);
+
+    debugPrint("✅ File saved at: ${savedFile.path}");
+
+    Snack.showSuccess("File saved successfully");
   } catch (e) {
     debugPrint("❌ Save error: $e");
     Snack.showError("Failed to save file");
   }
+}
+
+void closeAllSnackbar() {
+  // Close snackbar queue
+  Get.closeAllSnackbars();
+
+  // Close any open dialog (safe guard)
+  // if (Get.isDialogOpen ?? false) {
+  //   Get.back();
+  // }
 }

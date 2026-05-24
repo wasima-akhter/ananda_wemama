@@ -171,42 +171,29 @@ class ApiClient {
 
       // ✅ Single file (profile-image)
       if (file != null) {
-        final compressed = await MultipartHelper.compressedImage(
-          File(file.value.path),
-        );
-
-        if (compressed != null) {
-          // compressed is dio.MultipartFile — need to convert to http.MultipartFile
-          final bytes = await File(file.value.path).readAsBytes();
-          request.files.add(
-            http.MultipartFile.fromBytes(
-              file.key,
-              bytes,
-              filename: file.value.name,
-            ),
-          );
-        } else {
-          request.files.add(
-            await http.MultipartFile.fromPath(
-              file.key,
-              file.value.path,
-              filename: file.value.name,
-            ),
-          );
-        }
-      }
-
-      // ✅ Multiple files (description-image)
-      for (final f in files ?? []) {
+        final bytes = await File(file.value.path).readAsBytes();
         request.files.add(
-          await http.MultipartFile.fromPath(
-            f.key,
-            f.value.path,
-            filename: f.value.name,
+          http.MultipartFile.fromBytes(
+            file.key,
+            bytes,
+            filename: file.value.name,
+            contentType: imageMediaType(file.value.path), // 👈 add this
           ),
         );
       }
 
+      // ✅ Multiple files (description-image)
+      for (final f in files ?? []) {
+        final bytes = await File(f.value.path).readAsBytes();
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            f.key,
+            bytes,
+            filename: f.value.name,
+            contentType: imageMediaType(f.value.path), // 👈 add this
+          ),
+        );
+      }
       // ✅ Log request
       log("➡️ REQUEST[PATCH] => $url");
       log("Headers: ${request.headers}");

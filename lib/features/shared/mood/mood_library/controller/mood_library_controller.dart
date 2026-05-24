@@ -8,7 +8,7 @@ import '../service/mood_library_service.dart';
 class MoodReadingItem {
   final String id;
   final String title;
-  final String description; // ✅ raw HTML — no bullets list
+  final String description;
 
   MoodReadingItem({
     required this.id,
@@ -22,49 +22,8 @@ class MoodLibraryController extends GetxController {
 
   late final Rx<MoodType> selectedMood;
 
-  @override
-  void onInit() {
-    super.onInit();
-
-    selectedMood = (moodCheckInC.selectedMood.value ?? MoodType.calm).obs;
-
-    ever(moodCheckInC.selectedMood, (MoodType? mood) {
-      selectedMood.value = mood ?? MoodType.calm;
-    });
-
-    // ✅ React to tab changes — refetch content whenever mood switches
-    ever(selectedMood, (_) => _loadForCurrentMood());
-
-    //   getAllMoodsImages();
-    //   getAllMoodContent();
-  }
-
-  bool _isEnsuring = false;
-
-  Future<void> ensureLoaded(MoodType mood) async {
-    if (_isEnsuring) return;
-    _isEnsuring = true;
-
-    try {
-      selectedMood.value = mood;
-
-      // ✅ always fetch images if empty
-      if (allMoodImageData.isEmpty) {
-        await getAllMoodsImages();
-      }
-
-      // ✅ fetch content only if not cached for this mood
-      if (moodReadingItems[mood] == null || moodReadingItems[mood]!.isEmpty) {
-        await getAllMoodContent();
-      }
-    } finally {
-      _isEnsuring = false;
-    }
-  }
-  // ── State ────────────────────────────────────────────────────────────────
-
   final isMoodsImagesLoading_ = false.obs;
-  bool get isMoodsImagesloading => isMoodsImagesLoading_.value;
+  bool get isMoodsImagesLoading => isMoodsImagesLoading_.value;
 
   final isContentLoading_ = false.obs;
   bool get isContentLoading => isContentLoading_.value;
@@ -74,31 +33,54 @@ class MoodLibraryController extends GetxController {
 
   final service = MoodLibraryService();
 
-  // ── Set Mood ─────────────────────────────────────────────────────────────
-
-  void setMood(MoodType mood) {
-    selectedMood.value = mood;
-    moodCheckInC.selectMood(mood); // ✅ sync back to home
-    // ever() above handles the fetch automatically
-  }
-
-  // ── Refresh (images + content for current mood) ──────────────────────────
+  bool _isEnsuring = false;
 
   @override
-  Future<void> refresh() async {
-    await getAllMoodsImages();
-    await getAllMoodContent();
+  void onInit() {
+    super.onInit();
+
+    selectedMood = (moodCheckInC.selectedMood.value ?? MoodType.calm).obs;
+
+    // Sync selectedMood when MoodCheckIn changes — no fetch triggered here
+    ever(moodCheckInC.selectedMood, (MoodType? mood) {
+      final resolved = mood ?? MoodType.calm;
+      if (selectedMood.value != resolved) {
+        selectedMood.value = resolved;
+      }
+    });
   }
 
-  // ── Internal: load both for current mood ────────────────────────────────
+  // Called from home before navigating — always re-fetches
+  Future<void> ensureLoaded(MoodType mood) async {
+    if (_isEnsuring) return;
+    _isEnsuring = true;
 
-  Future<void> _loadForCurrentMood() async {
-    // Only fetch content if not already cached for this mood
+    try {
+      selectedMood.value = mood;
+
+      if (allMoodImageData.isEmpty) {
+        await getAllMoodsImages();
+      }
+
+      await getAllMoodContent();
+    } finally {
+      _isEnsuring = false;
+    }
+  }
+
+  // Called from in-library tab switching — respects cache
+  Future<void> loadForCurrentMood() async {
     if (moodReadingItems.containsKey(selectedMood.value)) return;
     await getAllMoodContent();
   }
 
-  // ── Mood ID helper ───────────────────────────────────────────────────────
+  // Only syncs back when user changes mood inside library UI
+  void setMood(MoodType mood, {bool syncBack = false}) {
+    selectedMood.value = mood;
+    if (syncBack) {
+      moodCheckInC.selectMood(mood);
+    }
+  }
 
   String getSelMoodId() {
     return allMoodImageData
@@ -113,19 +95,18 @@ class MoodLibraryController extends GetxController {
   }
 
   String getMoodImage(MoodType mood) {
-    final data = allMoodImageData.firstWhere(
-      (m) => (m.title ?? '').toLowerCase() == mood.name.toLowerCase(),
-      orElse: () => GetAllMoodItemModel(),
-    );
-    return data.image ?? '';
+    return allMoodImageData
+            .firstWhere(
+              (m) => (m.title ?? '').toLowerCase() == mood.name.toLowerCase(),
+              orElse: () => GetAllMoodItemModel(),
+            )
+            .image ??
+        '';
   }
-
-  // ── API: Mood Images ─────────────────────────────────────────────────────
 
   Future<void> getAllMoodsImages() async {
     if (isMoodsImagesLoading_.value) return;
     isMoodsImagesLoading_.value = true;
-
     try {
       final data = await service.fetchMoodImageData();
       allMoodImageData.assignAll(data);
@@ -136,30 +117,25 @@ class MoodLibraryController extends GetxController {
     }
   }
 
-  // ── API: Mood Content (per mood tab) ─────────────────────────────────────
-
   Future<void> getAllMoodContent() async {
     if (isContentLoading_.value) return;
     isContentLoading_.value = true;
-
     try {
       final moodId = getSelMoodId();
       if (moodId.isEmpty) return;
 
       final data = await service.fetchAllMoodContents(moodId: moodId);
 
-      final items = data
+      moodReadingItems[selectedMood.value] = data
           .map(
             (item) => MoodReadingItem(
               id: item.id ?? '',
               title: item.title ?? '',
-              description:
-                  item.description ?? '', // ✅ adjust field name to your model
+              description: item.description ?? '',
             ),
           )
           .toList();
 
-      moodReadingItems[selectedMood.value] = items;
       moodReadingItems.refresh();
     } catch (e) {
       log("Error fetching mood content: $e");
@@ -168,13 +144,11 @@ class MoodLibraryController extends GetxController {
     }
   }
 
-  // ── Bullet Parser ─────────────────────────────────────────────────────────
-
-  List<String> _extractBullets(GetAllMoodItemModel item) {
-    return ["Explore ${item.title ?? ''}"];
+  @override
+  Future<void> refresh() async {
+    await getAllMoodsImages();
+    await getAllMoodContent();
   }
-
-  // ── User ─────────────────────────────────────────────────────────────────
 
   UserInfoModel get userInfo => storage.getUserInfo;
 }

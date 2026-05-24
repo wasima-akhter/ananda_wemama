@@ -49,7 +49,7 @@ class ChatScreen extends StatelessWidget {
                   : _buildChatList(cc, chatRefreshKey),
             ),
           ],
-        ).mR(10);
+        ).mR(0);
       }),
     );
   }
@@ -168,9 +168,9 @@ class ChatScreen extends StatelessWidget {
           ).mL(10),
         );
       }
-      list.forEach((e) {
+      for (var e in list) {
         log("chatList id and name : ${e.id} , ${e.lastMessage}");
-      });
+      }
       // ✅ RefreshIndicator lives here — direct parent of ListView, no Column in between
       return CusRefreshIndicator(
         key: refreshKey,

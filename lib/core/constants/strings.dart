@@ -372,7 +372,7 @@ class Strings {
       "Enter The 6 Digit Code Sent To Your Email Address";
   static const String findMumsNearYou = "Find mums near you";
   static const String motherhoodSupportLine =
-      "You don't have to do motherhood alone";
+      "You don't have to do\nmotherhood alone";
   static const String friendshipSupportUnderstanding =
       "Friendship . Support. Understanding";
 
@@ -383,7 +383,7 @@ class Strings {
   static const String enterEmail = "Enter Email";
 
   static const String builtForMotherhoodStages =
-      "Built for every stage of motherhood - even before it begins.";
+      "Built for every stage of motherhood - even\nbefore it begins.";
 
   static const String enterPassword = "Enter Password";
   static const String dateOfBirth = "Date of birth";

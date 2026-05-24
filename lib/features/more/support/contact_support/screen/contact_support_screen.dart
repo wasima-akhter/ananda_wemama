@@ -17,7 +17,9 @@ class ContactSupportScreen extends StatelessWidget {
       top: false,
       child: Scaffold(
         backgroundColor: bgClr,
-        appBar: CommonAppBarContent(title: Strings.contactSupport.capEachWord()),
+        appBar: CommonAppBarContent(
+          title: Strings.contactSupport.capEachWord(),
+        ),
         body: SingleChildScrollView(
           child: Form(
             key: formKey,
@@ -29,6 +31,7 @@ class ContactSupportScreen extends StatelessWidget {
                   focusNode: csc.nameFocus,
                   hintText: Strings.enterYourName,
                   validator: (v) => validateName(v),
+                  brdrW: 0.6,
                 ),
                 Gap(itemGap * 2),
 
@@ -37,6 +40,7 @@ class ContactSupportScreen extends StatelessWidget {
                   focusNode: csc.emailFocus,
                   hintText: Strings.enterEmailAddress,
                   validator: (v) => validateEmail(v),
+                  brdrW: 0.6,
                 ),
 
                 Gap(itemGap * 2),

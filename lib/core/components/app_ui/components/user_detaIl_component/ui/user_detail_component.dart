@@ -47,7 +47,10 @@ class UserDetailComponent extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: CusGestureDetector(
               onTap: () => Get.back(),
-              child: SvgIcon(iconPath: IconsPath.closeCircle, height: 20).mOnly(top: 2, right: 10),
+              child: SvgIcon(
+                iconPath: IconsPath.closeCircle,
+                height: 20,
+              ).mOnly(top: 2, right: 10),
             ),
           ),
 
@@ -117,11 +120,16 @@ class UserDetailComponent extends StatelessWidget {
 
           return Row(
             children: [
-              SvgIconColored(iconPath: e.iconPath, height: index == 0 ? 22 : 18),
+              SvgIconColored(
+                iconPath: e.iconPath,
+                height: index == 0 ? 22 : 18,
+              ),
               Gap(itemGap),
               Expanded(
                 child: Text(
-                  index == 1 ? "TTC: ${e.text.capEachWord()}" : e.text.capEachWord(),
+                  index == 1
+                      ? "Stage: ${e.text.capEachWord()}"
+                      : e.text.capEachWord(),
                   style: TxtStyle.outfitSmNor,
                 ),
               ),
@@ -169,7 +177,9 @@ class UserDetailComponent extends StatelessWidget {
         SingleChildScrollView(
           padding: EdgeInsets.zero,
           scrollDirection: Axis.horizontal,
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           child: Row(
             children: List.generate(user!.children.length, (index) {
               return Padding(

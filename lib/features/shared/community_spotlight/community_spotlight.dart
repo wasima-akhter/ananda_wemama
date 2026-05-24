@@ -136,25 +136,30 @@ class _CommunitySpotlightLive extends StatelessWidget {
                     ),
                   ),
                   Gap(itemGap),
-                  Container(
-                    // color: Colors.amber,
-                    child: CusGestureDetector(
-                      onTap: () => Get.toNamed(
-                        RoutePaths.communityDetail,
-                        arguments: {
-                          "btnState": MyCommunityBtnState.join,
-                          "communityItemId": commId,
+                  Opacity(
+                    opacity: commId.trim().isEmpty ? 0.5 : 1,
+                    child: IgnorePointer(
+                      ignoring: commId.trim().isEmpty,
+                      child: CusGestureDetector(
+                        onTap: () {
+                          Get.toNamed(
+                            RoutePaths.communityDetail,
+                            arguments: {
+                              "btnState": MyCommunityBtnState.join,
+                              "communityItemId": commId,
+                            },
+                          );
                         },
-                      ),
-                      child: ContainerBordered(
-                        hasBrdr: true,
-                        contClr: c.inputBackground,
-                        rad: 18,
-                        vp: 6,
-                        hp: 12,
-                        child: Text(
-                          Strings.joinDiscussion.capEachWord(),
-                          style: 12.titleMclrCusFSURB,
+                        child: ContainerBordered(
+                          hasBrdr: true,
+                          contClr: c.inputBackground,
+                          rad: 18,
+                          vp: 6,
+                          hp: 12,
+                          child: Text(
+                            Strings.joinDiscussion.capEachWord(),
+                            style: 12.titleMclrCusFSURB,
+                          ),
                         ),
                       ),
                     ),

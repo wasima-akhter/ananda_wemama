@@ -13,6 +13,6 @@ class OnboardLayoutConfig {
   double get titleFs => isTablet ? 22.0 : 16.0;
   double get subFs => isTablet ? 15.0 : 12.0;
   double get loginFs => isTablet ? 14.0 : 12.0;
-  double get btnW => isTablet ? S.w * 0.4 : S.w * 0.6;
+  double get btnW => !isTablet ? S.w * 0.4 : S.w * 0.6;
   double get textHMargin => isTablet ? 80.0 : 40.0;
 }

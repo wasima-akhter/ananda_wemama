@@ -6,7 +6,9 @@ import '../../models/ui/my_location_result_model.dart';
 
 class LocationHelper {
   /// Get current location with permission handling and user feedback
-  static Future<LocationData?> getCurrentLocation({bool showSnackbar = true}) async {
+  static Future<LocationData?> getCurrentLocation({
+    bool showSnackbar = true,
+  }) async {
     try {
       log('📍 Starting location fetch...');
 
@@ -35,7 +37,7 @@ class LocationHelper {
                   onTap: () => Get.back(),
                   rad: 8,
                 ),
-                Gap(itemGap * 2),
+                SizedBox(width: itemGap * 2),
                 CustomBtnWTxt(
                   btnTxt: Strings.turnOn.capEachWord(),
                   isLoading: false,
@@ -47,7 +49,8 @@ class LocationHelper {
                     // retry takking the current location
                     // 🔁 Retry getting current location after returning from settings
                     await Future.delayed(const Duration(seconds: 1));
-                    final accuracyStatus = await Geolocator.getLocationAccuracy();
+                    final accuracyStatus =
+                        await Geolocator.getLocationAccuracy();
                     log("Accuracy status: $accuracyStatus");
                     await getCurrentLocation(showSnackbar: showSnackbar);
                   },
@@ -88,9 +91,14 @@ class LocationHelper {
           Get.dialog(
             AlertDialog(
               title: Text(Strings.permissionIsRequired.capEachWord()),
-              content: Text(Strings.locationPermissionDeniedForeverPlzEnable.capEachWord()),
+              content: Text(
+                Strings.locationPermissionDeniedForeverPlzEnable.capEachWord(),
+              ),
               actions: [
-                TextButton(onPressed: () => Get.back(), child: Text(Strings.cancel)),
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(Strings.cancel),
+                ),
                 TextButton(
                   onPressed: () {
                     Geolocator.openAppSettings();
@@ -176,7 +184,7 @@ class LocationHelper {
           place.locality,
           place.administrativeArea,
           place.country,
-        ].where((e) => e != null && e!.isNotEmpty).join(', ');
+        ].where((e) => e != null && e.isNotEmpty).join(', ');
 
         log('📍 Address: $address');
         if (city != null) log('📍 City: $city');

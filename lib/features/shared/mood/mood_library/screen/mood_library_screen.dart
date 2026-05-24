@@ -50,13 +50,13 @@ class _MoodLibraryScreenState extends State<MoodLibraryScreen> {
           Obx(
             () => MoodTabSelector(
               selected: mlc.selectedMood.value,
-              onTap: (mood) => mlc.setMood(mood),
+              onTap: (mood) => mlc.setMood(mood, syncBack: true),
             ),
           ),
 
           /// Mood Image
           Obx(() {
-            if (mlc.isMoodsImagesloading) return LoadingPrimary();
+            if (mlc.isMoodsImagesLoading) return LoadingPrimary();
             return MoodIllustrationCard(
               imageUrl: mlc.getMoodImage(mlc.selectedMood.value),
             );

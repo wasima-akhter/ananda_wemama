@@ -10,7 +10,7 @@ import '../../constants/strings.dart';
 import '../../enums/ui_enums.dart';
 
 extension ShowToastExtension on String {
-  showToast({bgColor, txtColor}) {
+  void showToast({bgColor, txtColor}) {
     Fluttertoast.cancel();
     Fluttertoast.showToast(
       msg: this,
@@ -76,9 +76,12 @@ extension BuildEmailBodyExtension on String {
                 lineHeight: LineHeight.number(1.5),
               ),
               "p": Style(margin: Margins.only(bottom: 12)),
-              "a": Style(color: Colors.blue, textDecoration: TextDecoration.underline),
+              "a": Style(
+                color: Colors.blue,
+                textDecoration: TextDecoration.underline,
+              ),
             },
-            onLinkTap: (url, _, __) async {
+            onLinkTap: (url, _, _) async {
               if (url == null) return;
               final uri = Uri.parse(url);
               if (await canLaunchUrl(uri)) await launchUrl(uri);

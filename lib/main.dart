@@ -17,7 +17,10 @@ void main() async {
   ]);
 
   SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(statusBarColor: ctransp, statusBarIconBrightness: Brightness.light),
+    SystemUiOverlayStyle(
+      statusBarColor: ctransp,
+      statusBarIconBrightness: Brightness.light,
+    ),
   );
 
   // Initialize LocalStorageService singleton

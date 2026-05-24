@@ -1,37 +1,53 @@
 import 'package:flutter/material.dart';
 import 'package:mama_app/core/utils/extension/context_extension.dart';
 
-TextStyle get titleBPri => TxtStyle.interSemiB(fs: 14, w: 600, color: c.primary);
-TextStyle get titleSmBPri => TxtStyle.interSemiB(fs: 13, w: 600, color: c.primary);
+TextStyle get titleBPri =>
+    TxtStyle.interSemiB(fs: 14, w: 600, color: c.primary);
+TextStyle get titleSmBPri =>
+    TxtStyle.interSemiB(fs: 13, w: 600, color: c.primary);
 
 TextStyle get normRPri => TxtStyle.inter(fs: 14, w: 400, color: c.primary);
 
 TextStyle get normRsmPri => TxtStyle.inter(fs: 13, w: 400, color: c.primary);
-TextStyle get normRsmSec => TxtStyle.inter(fs: 13, w: 400, color: c.textSecondary);
+TextStyle get normRsmSec =>
+    TxtStyle.inter(fs: 13, w: 400, color: c.textSecondary);
 
-TextStyle get normSmBPri => TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary);
+TextStyle get normSmBPri =>
+    TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary);
 
 ////////////////Urbanist
-TextStyle get titleBPriURB => TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary);
-TextStyle get titleSmBPriURB => TxtStyle.urbanistSemiB(fs: 12, w: 600, color: c.primary);
+TextStyle get titleBPriURB =>
+    TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary);
+TextStyle get titleSmBPriURB =>
+    TxtStyle.urbanistSemiB(fs: 12, w: 600, color: c.primary);
 
-TextStyle get normRPriURB => TxtStyle.urbanist(fs: 14, w: 400, color: c.primary);
+TextStyle get normRPriURB =>
+    TxtStyle.urbanist(fs: 14, w: 400, color: c.primary);
 
-TextStyle get normRsmPriURB => TxtStyle.urbanist(fs: 12, w: 400, color: c.primary);
-TextStyle get normRsmSecURB => TxtStyle.urbanist(fs: 12, w: 400, color: c.textSecondary);
+TextStyle get normRsmPriURB =>
+    TxtStyle.urbanist(fs: 12, w: 400, color: c.primary);
+TextStyle get normRsmSecURB =>
+    TxtStyle.urbanist(fs: 12, w: 400, color: c.textSecondary);
 
-TextStyle get normSmBPriURB => TxtStyle.urbanistSemiB(fs: 13, w: 500, color: c.primary);
+TextStyle get normSmBPriURB =>
+    TxtStyle.urbanistSemiB(fs: 13, w: 500, color: c.primary);
 
 ////////////////Outfit
-TextStyle get title_600_mClr_Outfit => TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary);
-TextStyle get title_Sm_600_mClr_Outfit => TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.primary);
+TextStyle get title_600_mClr_Outfit =>
+    TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary);
+TextStyle get title_Sm_600_mClr_Outfit =>
+    TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.primary);
 
-TextStyle get norm_mClr_Outfit => TxtStyle.outfit(fs: 14, w: 400, color: c.primary);
+TextStyle get norm_mClr_Outfit =>
+    TxtStyle.outfit(fs: 14, w: 400, color: c.primary);
 
-TextStyle get norm_Sm_mClr_Outfit => TxtStyle.outfit(fs: 13, w: 400, color: c.primary);
-TextStyle get norm_Sm_Sec_Outfit => TxtStyle.outfit(fs: 13, w: 400, color: c.textSecondary);
+TextStyle get norm_Sm_mClr_Outfit =>
+    TxtStyle.outfit(fs: 13, w: 400, color: c.primary);
+TextStyle get norm_Sm_Sec_Outfit =>
+    TxtStyle.outfit(fs: 13, w: 400, color: c.textSecondary);
 
-TextStyle get norm_Sm_500_mClr_Outfit => TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
+TextStyle get norm_Sm_500_mClr_Outfit =>
+    TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
 
 double findTextWidth(String text, {double? fs}) {
   TextPainter textPainter = TextPainter(
@@ -156,4 +172,10 @@ class StateAndCityData {
   static List<String> getCities(String state) {
     return citiesByState[state] ?? [];
   }
+}
+
+String getFirstWord(String text) {
+  if (text.trim().isEmpty) return '';
+
+  return text.trim().split(RegExp(r'\s+')).first;
 }

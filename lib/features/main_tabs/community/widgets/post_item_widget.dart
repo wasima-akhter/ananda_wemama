@@ -112,7 +112,9 @@ class _PostHeader extends StatelessWidget {
         // ✅ Obx wraps only the reactive trailing section
         Obx(() {
           final isPinned = cc.pinFlag(postId).value;
-          final isLocked = (postItem.isCommentLocked ?? false) || cc.commentLockFlag(postId).value;
+          final isLocked =
+              (postItem.isCommentLocked ?? false) ||
+              cc.commentLockFlag(postId).value;
 
           return Row(
             mainAxisSize: MainAxisSize.min,
@@ -134,7 +136,10 @@ class _PostHeader extends StatelessWidget {
                       onTap: () => cc.onTapReportContent(postId: postId),
                     ),
                   ],
-                  child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+                  child: SvgIconColored(
+                    iconPath: IconsPath.moreVertical,
+                    height: 20,
+                  ),
                 ),
 
               // Manager dropdown
@@ -173,7 +178,10 @@ class _PostHeader extends StatelessWidget {
                       ),
                     ),
                   ],
-                  child: SvgIconColored(iconPath: IconsPath.moreVertical, height: 20),
+                  child: SvgIconColored(
+                    iconPath: IconsPath.moreVertical,
+                    height: 20,
+                  ),
                 ),
             ],
           );
@@ -218,7 +226,9 @@ class _PostActions extends StatelessWidget {
       // ✅ _ensureFlags guarantees a valid RxBool — Obx always has a subscription
       final isLiked = cc.likeFlag(postId).value;
 
-      final isLocked = (postItem.isCommentLocked ?? false) || cc.commentLockFlag(postId).value;
+      final isLocked =
+          (postItem.isCommentLocked ?? false) ||
+          cc.commentLockFlag(postId).value;
       final canSeeLockedComment =
           ((btnState == MyCommunityBtnState.manage) &&
               (communityData.creator ?? '') == currentProfileId())
@@ -230,10 +240,16 @@ class _PostActions extends StatelessWidget {
         children: [
           CusGestureDetector(
             // onTap: () => cc.toggleLike(postId),
-            onTap: () => cc.toggleLikeApi(postId, userName), // pass real username
+            onTap: () =>
+                cc.toggleLikeApi(postId, userName), // pass real username
             child: Row(
               children: [
-                SvgIcon(iconPath: isLiked ? IconsPath.likeHeartFilled : IconsPath.like, height: 22),
+                SvgIcon(
+                  iconPath: isLiked
+                      ? IconsPath.likeHeartFilled
+                      : IconsPath.like,
+                  height: 22,
+                ),
                 Gap(4),
                 TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
               ],
@@ -245,7 +261,10 @@ class _PostActions extends StatelessWidget {
                 ? null
                 : Get.toNamed(
                     RoutePaths.postDetails,
-                    arguments: PostDetailArgModel(communityData: communityData, postItem: postItem),
+                    arguments: PostDetailArgModel(
+                      communityData: communityData,
+                      postItem: postItem,
+                    ),
                   ),
             child: Row(
               children: [
@@ -253,7 +272,9 @@ class _PostActions extends StatelessWidget {
                 Gap(4),
                 TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
                 Gap(4),
-                isLocked ? SvgIcon(iconPath: IconsPath.lock, height: 12) : const SizedBox.shrink(),
+                isLocked
+                    ? SvgIcon(iconPath: IconsPath.lock, height: 12)
+                    : const SizedBox.shrink(),
               ],
             ),
           ),

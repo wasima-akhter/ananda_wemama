@@ -57,6 +57,7 @@ import '../../features/video_meeting/controller/meeting_comment_controller.dart'
 import '../../features/video_meeting/controller/meeting_controller.dart';
 import '../enums/app_enums.dart';
 import '../enums/ui_enums.dart';
+import '../network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../network/helpers/network_helpers.dart';
 import '../services/socket/socket_service.dart';
 import '../services/socket/socket_status_controller.dart';
@@ -196,7 +197,8 @@ class MainNavBinding extends Bindings {
     // GLOBAL SINGLETONS
     // =======================
     Get.putPermanent(StationLocationController());
-   Get.lazyPutFenix(() => ProfileController());
+    Get.put(AppLocationManager(), permanent: true);
+    Get.lazyPutFenix(() => ProfileController());
     Get.putPermanent(MainNavController());
     Get.putPermanent(BookmarkController());
 
@@ -204,7 +206,10 @@ class MainNavBinding extends Bindings {
     // FEATURE SHARED CONTROLLERS
     // (used by Home + Experts + others)
     // =======================
-    Get.lazyPutFenix(() => MoodCheckInController());
+    // MoodCheckInController MUST be registered before MoodLibraryController
+    Get.putPermanent(MoodCheckInController());
+    Get.putPermanent(MoodLibraryController());
+    // Get.lazyPutFenix(() => MoodLibraryController());
     Get.lazyPutFenix(() => SessionController());
     Get.lazyPutFenix(() => SessionActionController());
     Get.lazyPutFenix(() => HomeController());
@@ -383,7 +388,6 @@ class AccountSettingsBinding extends Bindings {
   }
 }
 
- 
 class ChangePasswordBinding extends Bindings {
   @override
   void dependencies() {
@@ -441,19 +445,18 @@ class NotificationBinding extends Bindings {
   }
 }
 
- 
 // ─────────────────────────────
 // 🔹 Individual but Shared
 // ─────────────────────────────
-class MoodLibraryBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<MoodLibraryController>(
-      () => MoodLibraryController(),
-      fenix: true,
-    );
-  }
-}
+// class MoodLibraryBinding extends Bindings {
+//   @override
+//   void dependencies() {
+//     Get.lazyPut<MoodLibraryController>(
+//       () => MoodLibraryController(),
+//       fenix: true,
+//     );
+//   }
+// }
 
 class MoodInsightBinding extends Bindings {
   @override

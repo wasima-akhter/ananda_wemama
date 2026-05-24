@@ -5,7 +5,7 @@ class Endpoints {
   static const verifyCode = "auth/verify-code";
   static const resendCode = "auth/send-verify-code";
 
-  static const contactSupportSubmit = "settings/submit-help-and-support";
+  static const contactSupportSubmit = "settings/submit-contact-us";
   static const termsAndConditions = "settings/get-terms-and-conditions";
   static const privacyPolicy = "settings/get-privacy-policy";
 
