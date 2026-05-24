@@ -46,6 +46,8 @@ class ApiClient {
       data: data,
       options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
     );
+    log("response:---> ${response.data}");
+    log("response:---> ${ApiResponseHandler.handle(response, reqName)}");
 
     return ApiResponseHandler.handle(response, reqName);
   }

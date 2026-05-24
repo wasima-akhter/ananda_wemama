@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:mama_app/features/auth/signin/model/signin_model.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
@@ -16,7 +17,8 @@ class SigninController extends GetxController {
   final _showPassword = false.obs;
   bool get isPasswordHidden => !_showPassword.value;
 
-  IconData get passwordIcon => _showPassword.value ? Icons.visibility : Icons.visibility_off;
+  IconData get passwordIcon =>
+      _showPassword.value ? Icons.visibility : Icons.visibility_off;
 
   void togglePasswordVisibility() => _showPassword.toggle();
 
@@ -43,16 +45,40 @@ class SigninController extends GetxController {
       final email = emailCtrler.text.trim();
       final password = passwordCtrler.text.trim();
 
-      final success = await SigninService().signIn(email: email, password: password);
+      final result = await SigninService().signIn(
+        email: email,
+        password: password,
+      );
 
-      if (!success) return;
+      switch (result.type) {
+        // ❌ EMAIL NOT VERIFIED
+        case LoginResultType.emailNotVerified:
+          Get.toNamed(
+            RoutePaths.verifyOtp,
+            arguments: {'flow': OtpFlowType.signup, 'email': email},
+          );
+          return;
 
-      storage.setLoggedIn(true);
-      storage.setSeenOnboarding(true);
+        // ❌ PROFILE NOT COMPLETED
+        case LoginResultType.profileIncomplete:
+          Get.offAllNamed(RoutePaths.setupProfile);
+          return;
 
-      _handleLoginSuccess();
-    } catch (e) {
+        // ✅ SUCCESS
+        case LoginResultType.success:
+          storage.setLoggedIn(true);
+          storage.setSeenOnboarding(true);
+
+          _handleLoginSuccess();
+          return;
+
+        // ❌ FAILED
+        case LoginResultType.failed:
+          return;
+      }
+    } catch (e, stack) {
       log('Login Error: $e');
+      log('STACK: $stack');
     } finally {
       _isLoading.value = false;
     }

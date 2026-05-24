@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
@@ -8,7 +6,10 @@ import '../socket/socket_service.dart';
 class SigninService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
-  Future<bool> signIn({required String email, required String password}) async {
+  Future<LoginResult> signIn({
+    required String email,
+    required String password,
+  }) async {
     log("Login started..");
 
     final response = await _apiHelper.request<SigninModelData>(
@@ -16,35 +17,67 @@ class SigninService extends GetxService {
         Endpoints.login.getUrl,
         data: {"email": email, "password": password},
       ),
-      parser: (data) => SigninModelData.fromJson(data),
+      parser: (data) {
+        log("before parse data : $data");
+        return SigninModelData.fromJson(data);
+      },
     );
 
     log("RESPONSE sign in: $response");
-    if (response == null) return false;
 
-    if (response.success) {
-      _saveUserDataAfterLogin(response: response);
-
-      try {
-        final socket = Get.find<SocketService>();
-        // ✅ CRITICAL: Always disconnect old socket before reconnecting with new user's token
-        // This ensures the old user's authenticated connection is cleared
-        socket.disconnectSocket();
-        log("🔴 Old socket disconnected before new login");
-
-        // Now connect with the NEW token (saved in _saveUserDataAfterLogin)
-        await socket.connectSocket();
-        log("✅ New socket connected with new user's token");
-      } catch (e) {
-        log("Socket connect failed: $e");
-      }
-
-      if (Get.isRegistered<ProfileController>()) {
-        await Get.find<ProfileController>().fetchMyProfile();
-      }
+    if (response == null) {
+      return LoginResult(type: LoginResultType.failed);
     }
 
-    return response.success;
+    final data = response.data;
+
+    if (data == null) {
+      return LoginResult(type: LoginResultType.failed);
+    }
+
+    // 🔥 IMPORTANT: backend sends status inside data
+    final isEmailVerified = data.isEmailVerified ?? true;
+    final isProfileCompleted = data.isProfileCompleted ?? true;
+
+    final accessToken = data.accessToken ?? '';
+
+    // ❌ EMAIL NOT VERIFIED
+    if (isEmailVerified == false) {
+      return LoginResult(
+        type: LoginResultType.emailNotVerified,
+        message: data.msg,
+      );
+    }
+
+    // ❌ PROFILE NOT COMPLETED
+    if (isProfileCompleted == false) {
+      return LoginResult(
+        type: LoginResultType.profileIncomplete,
+        message: data.msg,
+      );
+    }
+
+    // ❌ NO TOKEN
+    if (accessToken.isEmpty) {
+      return LoginResult(type: LoginResultType.failed);
+    }
+
+    // ✅ SUCCESS FLOW
+    _saveUserDataAfterLogin(response: response);
+
+    try {
+      final socket = Get.find<SocketService>();
+      socket.disconnectSocket();
+      await socket.connectSocket();
+    } catch (e) {
+      log("Socket error: $e");
+    }
+
+    if (Get.isRegistered<ProfileController>()) {
+      await Get.find<ProfileController>().fetchMyProfile();
+    }
+
+    return LoginResult(type: LoginResultType.success);
   }
 
   /// Connects the socket using the token that was just saved by
@@ -67,10 +100,10 @@ class SigninService extends GetxService {
     if (response.data == null) return;
 
     final user = response.data!.user;
-    storage.setUserInfo(email: user.email);
-    storage.setToken(response.data!.accessToken);
+    storage.setUserInfo(email: user?.email ?? '');
+    storage.setToken(response.data?.accessToken ?? '');
 
-    log("Logged in as: ${user.email}");
+    log("Logged in as: ${user?.email}");
     log("Access token: ${response.data!.accessToken}");
   }
 }
