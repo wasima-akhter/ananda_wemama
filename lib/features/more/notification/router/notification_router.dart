@@ -26,12 +26,15 @@ class NotificationRouter {
 
         Get.toNamed(
           RoutePaths.communityDetail,
-          arguments: {'btnState': MyCommunityBtnState.manage, 'communityItemId': n.referenceId},
+          arguments: {
+            'btnState': MyCommunityBtnState.manage,
+            'communityItemId': n.referenceId,
+          },
         );
         break;
 
       case NotificationTypes.acceptWave:
-        Get.offAllNamed(RoutePaths.mainNav);
+        Get.offAllNamed(RoutePaths.mainNav); //chat
         MainNavController.to.goToTab(1);
         break;
 

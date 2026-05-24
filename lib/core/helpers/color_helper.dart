@@ -24,6 +24,8 @@ Color get snackWarningBg => c.scaffoldBackground;
 Color get snackWarningTxtClr => c.primary;
 
 Color get bgClr => c.scaffoldBackground;
+//
+Color get deepPrimary => Color(0xFF512814);
 
 class AppColors {
   const AppColors._();

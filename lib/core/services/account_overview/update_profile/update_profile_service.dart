@@ -52,7 +52,7 @@ class UpdateProfileService extends GetxService {
 
     try {
       final response = await _apiHelper.request<ProfileDataModel>(
-        apiCall: () => ApiClient().patchWithFile2(
+        apiCall: () => ApiClient().patchWithFile(
           Endpoints.updateProfile.getUrl,
           reqName: Strings.updateProfile,
           file: sanitizedProfile != null

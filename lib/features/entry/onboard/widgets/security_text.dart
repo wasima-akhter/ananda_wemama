@@ -4,6 +4,7 @@ class SecurityText extends StatelessWidget {
   final String iconPath;
   final String text;
   final Color? bgClr;
+  final Color? txtClr;
   final double? rad;
   final double? fs;
   final double? iconH;
@@ -16,6 +17,7 @@ class SecurityText extends StatelessWidget {
     this.rad,
     this.fs,
     this.iconH,
+    this.txtClr,
   });
 
   @override
@@ -31,9 +33,10 @@ class SecurityText extends StatelessWidget {
         spacing: 4,
         children: [
           SvgIcon(iconPath: iconPath, height: iconH ?? 25),
+
           Text(
             text,
-            style: TxtStyle.inter(fs: fs ?? 11, color: c.secondary),
+            style: TxtStyle.inter(fs: fs ?? 11, color: txtClr ?? c.secondary),
           ),
         ],
       ),

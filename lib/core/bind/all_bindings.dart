@@ -226,7 +226,7 @@ class MainNavBinding extends Bindings {
     Get.lazyPut(() => MatchController());
 
     // Chat (careful with lifecycle)
-    Get.lazyPutFenix(() => ChatController());
+    Get.lazyPut(() => ChatController());
   }
 }
 

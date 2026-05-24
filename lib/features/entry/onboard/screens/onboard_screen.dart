@@ -1,3 +1,5 @@
+import 'package:mama_app/core/components/ui/buttons/custom_btn_w_icon.dart';
+import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -84,7 +86,7 @@ class _TopSection extends StatelessWidget {
           child: Text(
             Strings.motherhoodSupportLine,
             textAlign: TextAlign.center,
-            style: TxtStyle.interSemiB(fs: 22, w: 600, color: c.primary),
+            style: TxtStyle.interSemiB(fs: 22, w: 600, color: deepPrimary),
             // style: cfg.titleFs.titleMclrCusFS,
           ),
         ),
@@ -98,7 +100,7 @@ class _TopSection extends StatelessWidget {
         Text(
           Strings.builtForMotherhoodStages,
           textAlign: TextAlign.center,
-          style: TxtStyle.outfitSemiB(fs: 13, w: 400, color: c.primary),
+          style: TxtStyle.outfitSemiB(fs: 13, w: 400, color: deepPrimary),
         ),
       ],
     );
@@ -121,13 +123,20 @@ class _BottomSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        CustomBtnWTxt(
+        CustomBtnWIcon(
           w: cfg.btnW,
           btnTxt: Strings.getStarted,
-          isUppCase: true,
+          btnColor: c.secondary,
+
+          // ✅ right icon
+          iconPosition: IconPosition.right,
+
+          // ✅ exact text
+          textCaseType: TextCaseType.normal,
+          iconPath: IconsPath.arrowRightSm,
           isLoading: false,
           style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: white),
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           onTap: () => Get.toNamed(RoutePaths.onboardScreen2),
         ),
         Gap(itemGap * 0.5),
@@ -138,7 +147,7 @@ class _BottomSection extends StatelessWidget {
               Strings.alreadyHaveAnAccount,
               style: TxtStyle.outfit(
                 fs: cfg.isTablet ? 17 : 14,
-                color: black,
+                color: deepPrimary,
                 w: 400,
               ),
             ),
@@ -146,9 +155,18 @@ class _BottomSection extends StatelessWidget {
             CusGestureDetector(
               onTap: () => Get.toNamed(RoutePaths.signin),
               child: ContainerBordered(
-                child: Text(
-                  Strings.loginWithSpace.capEachWord(),
-                  style: cfg.loginFs.titleMclrCusFS,
+                child: Column(
+                  children: [
+                    Text(
+                      Strings.login.capEachWord(),
+                      style: TxtStyle.interSemiB(
+                        fs: cfg.loginFs,
+                        w: 600,
+                        color: c.secondary,
+                      ),
+                    ),
+                    CustomDivider(w: 40, h: 2, clr: c.secondary),
+                  ],
                 ),
               ),
             ),
@@ -159,7 +177,8 @@ class _BottomSection extends StatelessWidget {
           rad: 8,
           bgClr: c.inputBackground,
           fs: 11,
-          iconH: 18,
+          iconH: 16,
+          txtClr: deepPrimary,
           iconPath: IconsPath.shieldCheck,
           text: Strings.yourPrivacyIsOurPriority.capEachWord(),
         ),

@@ -96,31 +96,34 @@ class AppLocationManager extends GetxService {
     });
   }
 
-  Future<void> disableLocation() async {
+  Future<bool> disableLocation() async {
     try {
       // Clear in-memory state
       isLocationActive.value = false;
+
       latitude.value = 0.0;
       longitude.value = 0.0;
       address.value = '';
       city.value = '';
 
-      // Clear persisted storage
+      // Clear storage
       storage.setUserLatitude(0.0);
       storage.setUserLongitude(0.0);
       storage.setUserAddress('');
       storage.setUserCity('');
 
-      // Update backend with zeroed location
+      // Update backend
       await _updateBackend();
 
-      // Send user to app settings to revoke permission themselves
-      // await Geolocator.openAppSettings();
+      // Open location settings only
       await Geolocator.openLocationSettings();
 
-      log("📍 Location disabled — app settings opened");
+      log("📍 Location disabled");
+
+      return true;
     } catch (e) {
       log("❌ disableLocation error: $e");
+      return false;
     }
   }
 

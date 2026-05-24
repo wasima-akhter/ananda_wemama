@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 
 import '../../../app/helper_widgets_export.dart' hide Response;
+import '../base/api_error_parser.dart';
 import '../models/base_response_model.dart';
 
 class ApiServiceHelper {
@@ -31,7 +32,13 @@ class ApiServiceHelper {
 
       //  log("res before calling BaseResponse: $json");
 
-      final response = BaseResponse<T>.fromJson(res, parser);
+      // final response = BaseResponse<T>.fromJson(res, parser);
+      final response = BaseResponse<T>.fromJson(json, parser);
+
+      if (res is Response) {
+        log("STATUS: ${res.statusCode}");
+        log("DATA: ${res.data}");
+      }
 
       // response.message.capEachWord().showToast();
       return response;
@@ -48,12 +55,19 @@ class ApiServiceHelper {
             errorMsg = "Request was canceled.";
             break;
           case DioExceptionType.badResponse:
-            if (e.response?.data is Map &&
-                e.response!.data["message"] != null) {
-              errorMsg = e.response!.data["message"].toString();
-            } else {
-              errorMsg = "Server error. Please try again later.";
-            }
+            final data = e.response?.data;
+
+            log("━━━━━━━━ DIO BAD RESPONSE ━━━━━━━━");
+            log("STATUS: ${e.response?.statusCode}");
+            log("DATA: $data");
+
+            final message = ApiErrorParser.extractMessage(data);
+            final stack = ApiErrorParser.extractStack(data);
+
+            log("MESSAGE: $message");
+            if (stack != null) log("STACK:\n$stack");
+
+            errorMsg = message;
             break;
           case DioExceptionType.unknown:
             errorMsg = "Unable to connect. Check your internet.";

@@ -103,7 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     writeQuesCtrl: actionCtrl.writeQuesCtrl,
                     writeQuesFocusNode: actionCtrl.writeQuesFocusNode,
                     isSendQuesLoading: actionCtrl.isSendQuesLoading,
-                    onTapQues: actionCtrl.uploadSessionQues,
+
+                    onTapQues:
+                        ({
+                          required String expertId,
+                          required String sessionId,
+                        }) {
+                          actionCtrl.uploadSessionQues(
+                            expertId: expertId,
+                            sessionId: sessionId,
+                          );
+                        },
                   );
                 },
               ),

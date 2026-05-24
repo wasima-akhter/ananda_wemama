@@ -5,6 +5,7 @@ import 'package:mama_app/core/utils/extension/string_extension.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../main_nav/controller/main_nav_controller.dart';
 import '../model/chat_list_item_model.dart';
 import '../service/chat_service.dart';
 
@@ -31,18 +32,40 @@ class ChatController extends GetxController {
   final searchFocus = FocusNode();
 
   final chatScrollCtrl = ScrollController();
-
-  @override
-  void onClose() {
-    searchController.dispose();
-    searchFocus.dispose();
-    super.onClose();
-  }
+  Worker? _tabWorker;
 
   @override
   void onInit() {
     super.onInit();
-    getChatList();
+
+    final nav = Get.find<MainNavController>();
+
+    _tabWorker = ever(nav.currentIndex, (index) {
+      // chat tab index
+      if (index == 1) {
+        log("🔄 Chat tab opened");
+
+        getChatList(forceRefresh: true);
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    _tabWorker?.dispose();
+
+    searchController.dispose();
+    searchFocus.dispose();
+
+    super.onClose();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+
+    // Force refresh every time screen opens
+    getChatList(forceRefresh: true);
   }
 
   void clearAll() => searchController.clear();
@@ -87,32 +110,31 @@ class ChatController extends GetxController {
 
   // ── Emit ─────────────────────────────────────────────────────────────────
 
-  Future<void> getChatList() async {
-    // Only show full loading spinner when list is empty
-    if (realChatList.isEmpty) {
-      isLoading_.value = true;
+  Future<void> getChatList({bool forceRefresh = true}) async {
+    if (forceRefresh) {
+      realChatList.clear();
     }
 
-    // ✅ Create a new completer so callers can await the socket response
+    isLoading_.value = true;
+
     _chatListCompleter = Completer<void>();
 
     try {
       socket.emit(SocketEvents.getChatList, {});
 
-      // Wait for updateChatList() to complete the completer (with timeout)
       await _chatListCompleter!.future.timeout(
         const Duration(seconds: 10),
         onTimeout: () {
           log("⚠️ getChatList timeout — no socket response");
         },
       );
-    } catch (e) {
-      log("Error fetching chat list: $e");
+    } catch (e, stack) {
+      log("❌ Error fetching chat list: $e");
+      log("STACK: $stack");
     } finally {
       isLoading_.value = false;
     }
   }
-
   //
 
   void updateLastMessage({

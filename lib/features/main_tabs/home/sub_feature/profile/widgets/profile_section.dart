@@ -1,13 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/core/components/app_ui/tags/tag_type_widgets.dart';
-import 'package:mama_app/core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../../../../../../core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
-import '../../../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../controller/profile_controller.dart';
+import '../modules/location_status/active_info_dropdown.dart';
 import 'profile_shimmer.dart';
 
 class ProfileSection extends StatelessWidget {
@@ -71,6 +69,11 @@ class ProfileSection extends StatelessWidget {
     );
   }
 
+  Widget _buildInactiveInfo() {
+    return const ActiveInfoDropdown();
+  }
+
+  /*
   Widget _buildInactiveInfo() {
     final alm = AppLocationManager.to;
 
@@ -142,17 +145,29 @@ class ProfileSection extends StatelessWidget {
                                         ),
                                         CusGestureDetector(
                                           onTap: () async {
-                                            // disable location
-                                            await AppLocationManager.to
-                                                .disableLocation();
+                                            final success =
+                                                await AppLocationManager.to
+                                                    .disableLocation();
 
-                                            Get.back();
+                                            if (success) {
+                                              AppLocationManager
+                                                      .to
+                                                      .isLocationActive
+                                                      .value =
+                                                  false;
+
+                                              Get.back();
+
+                                              Snack.showWarning(
+                                                "Location disabled. You are now inactive.",
+                                              );
+                                            }
                                           },
                                           child: ContainerBordered(
                                             rad: 30,
                                             contClr: c.cardReminder.withValues(
                                               alpha: 0.5,
-                                            ), // or any red/danger color you have
+                                            ),
                                             vp: 2.5,
                                             hp: 9,
                                             child: Text(
@@ -261,4 +276,5 @@ class ProfileSection extends StatelessWidget {
       );
     });
   }
+*/
 }

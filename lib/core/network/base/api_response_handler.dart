@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mama_app/app/helper_widgets_export.dart' hide Response;
 
 import '../../exceptions/exceptions.dart';
+import 'api_error_parser.dart';
 
 // Handles server responses
 
@@ -21,48 +22,42 @@ class ApiResponseHandler {
   }
 
   static void _handleError(dynamic data, int statusCode, String? reqName) {
-    String message = "Something went wrong";
+    final message = ApiErrorParser.extractMessage(data);
+    final stack = ApiErrorParser.extractStack(data);
 
-    if (data is Map) {
-      /// 🔴 1️⃣ Main backend message (MOST IMPORTANT)
-      if (data["message"] != null && data["message"].toString().isNotEmpty) {
-        message = data["message"].toString();
-      }
+    // ─── FULL DEBUG LOG ─────────────────────────────
+    log("━━━━━━━━ API ERROR ━━━━━━━━");
+    log("REQ: $reqName");
+    log("STATUS: $statusCode");
+    log("MESSAGE: $message");
 
-      /// 🟠 2️⃣ ZOD VALIDATION ERRORS (errorDetails.issues)
-      final errorDetails = data["errorDetails"];
-      if (errorDetails is Map && errorDetails["issues"] is List) {
-        final issues = errorDetails["issues"] as List;
-        if (issues.isNotEmpty && issues.first["message"] != null) {
-          message = issues.first["message"].toString();
-        }
-      }
+    if (stack != null) {
+      log("🔥 BACKEND STACK:\n$stack");
     }
 
-    /// 🔔 Show toast with request name (optional)
-    ///
-    if (reqName != null && reqName.isNotEmpty) {
-      "$reqName : $message".showToast();
-    } else {
-      message.showToast();
-    }
+    log("RAW RESPONSE: $data");
+    log("━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-    /// 🚨 Throw proper exception for repository layer
+    // toast (clean)
+    final toastMsg = reqName != null && reqName.isNotEmpty
+        ? "$reqName : $message"
+        : message;
+
+    toastMsg.showToast();
+
+    // ─── THROW CLEAN EXCEPTIONS ─────────────────────
     if (statusCode == 401) {
       throw UnauthorisedException(message);
-    } else if (statusCode >= 400 && statusCode < 500) {
-      throw BadRequestException(message);
-    } else if (statusCode >= 500) {
-      throw FetchDataException("Server error. Please try again later. ");
-    } else if (statusCode == 413) {
-      log("❌ 413: File too large — server rejected the upload");
-      // Show user-facing error
-      Snack.show(
-        title: "Upload Failed",
-        "Image is too large. Please use a smaller image.",
-      );
-    } else {
-      throw FetchDataException(message);
     }
+
+    if (statusCode >= 400 && statusCode < 500) {
+      throw BadRequestException(message);
+    }
+
+    if (statusCode == 413) {
+      throw FetchDataException("File too large");
+    }
+
+    throw FetchDataException(message);
   }
 }

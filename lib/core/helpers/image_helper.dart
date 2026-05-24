@@ -274,4 +274,21 @@ class MultipartHelper {
       return dio.MultipartFile.fromBytes(bytes, filename: filename);
     }
   }
+
+  // returns compressed file only
+  static Future<File?> compressedImageHttp(File file) async {
+    final compressed = await ImageCompressor.compressUntilUnder1MB(file);
+
+    if (compressed == null) {
+      log("Image compression failed");
+      return null;
+    }
+
+    log("Compressed path: ${compressed.path}");
+    log("Compressed exists: ${await compressed.exists()}");
+
+    log("Compressed size: ${await compressed.length()}");
+
+    return compressed;
+  }
 }

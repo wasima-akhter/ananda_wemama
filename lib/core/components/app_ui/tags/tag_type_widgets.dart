@@ -16,7 +16,7 @@ class ActiveTag extends StatelessWidget {
         style: TxtStyle.outfitSemiB(
           fs: 13,
           w: 400,
-          color: isActive ? c.scaffoldBackground : white,
+          color: isActive ? c.scaffoldBackground : greyLoc,
         ),
       ),
     );
@@ -37,7 +37,7 @@ class ActiveInfo extends StatelessWidget {
       child: SvgIconColored(
         iconPath: IconsPath.curvedInfo,
 
-        iconColor: isActive ? null : white,
+        iconColor: isActive ? c.secondary : greyLoc,
         height: 11,
       ),
     );

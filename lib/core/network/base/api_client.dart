@@ -76,70 +76,6 @@ class ApiClient {
       return null;
     }
   }
-  //old
-  // Future<dynamic> patchWithFile(
-  //   String url, {
-  //   String? reqName,
-  //   dynamic data,
-  //   Map<String, dynamic>? headers,
-  // }) async {
-  //   // For FormData, don't set Content-Type - let Dio handle it automatically
-  //   final options = Options(method: 'PATCH', headers: {"Authorization": "Bearer $getToken"});
-
-  //   try {
-  //     log("DATA TYPE: ${data.runtimeType}");
-
-  //     final response = await _dio.request(url, data: data, options: options);
-
-  //     log('response in patch  : $response ');
-  //     return ApiResponseHandler.handle(response, reqName);
-  //   } catch (e) {
-  //     log("PATCH request error: $e");
-  //     return null;
-  //   }
-  // }
-
-  //final
-  /*
-  Future<dynamic> patchWithFile(
-    String url, {
-    String? reqName,
-    dynamic data,
-    Map<String, dynamic>? headers,
-  }) async {
-    /// ✅ FILE SIZE VALIDATION
-    final isValid = await validateFileSize(data);
-
-    if (!isValid) {
-      return ApiResponseHandler.handle(
-        Response(
-          requestOptions: RequestOptions(path: url),
-          statusCode: 400,
-          data: {"message": "File size must be less than 3 MB"},
-        ),
-        reqName,
-      );
-    }
-
-    final options = Options(
-      method: 'PATCH',
-      headers: {"Authorization": "Bearer $getToken"},
-    );
-
-    try {
-      log("DATA TYPE: ${data.runtimeType}");
-
-      final response = await _dio.request(url, data: data, options: options);
-
-      log('response in patch  : $response ');
-
-      return ApiResponseHandler.handle(response, reqName);
-    } catch (e) {
-      log("PATCH request error: $e");
-      return null;
-    }
-  }
-*/
 
   // generic
 
@@ -233,41 +169,67 @@ class ApiClient {
     MapEntry<String, XFile>? file,
     List<MapEntry<String, XFile>>? files,
     Map<String, String>? fields,
-    Map<String, dynamic>? headers,
+    Map<String, dynamic>? headers, // 👇 add this
+    bool disableCompression = false,
   }) async {
-    // ✅ Guard: don't proceed if no token
     final token = getToken;
     if (token == null || token.isEmpty) {
       log("❌ patchWithFile aborted: no token");
       return null;
     }
+
     final data = dio.FormData();
 
+    // ─── FILES ─────────────────────────────
     if (file != null) {
-      final compressed = await MultipartHelper.compressedImage(
-        File(file.value.path),
-      );
-      // ← fallback to original if compression fails
-      final multipart =
-          compressed ??
-          dio.MultipartFile.fromFileSync(
-            file.value.path,
-            filename: file.value.name,
-          );
+      dio.MultipartFile multipart;
+
+      if (disableCompression) {
+        multipart = dio.MultipartFile.fromFileSync(
+          file.value.path,
+          filename: file.value.name,
+        );
+      } else {
+        final compressed = await MultipartHelper.compressedImage(
+          File(file.value.path),
+        );
+
+        multipart =
+            compressed ??
+            dio.MultipartFile.fromFileSync(
+              file.value.path,
+              filename: file.value.name,
+            );
+      }
+
       data.files.add(MapEntry(file.key, multipart));
     }
 
     for (final f in files ?? []) {
-      final compressed = await MultipartHelper.compressedImage(
-        File(f.value.path),
-      );
-      // ← fallback to original if compression fails
-      final multipart =
-          compressed ??
-          dio.MultipartFile.fromFileSync(f.value.path, filename: f.value.name);
+      dio.MultipartFile multipart;
+
+      if (disableCompression) {
+        multipart = dio.MultipartFile.fromFileSync(
+          f.value.path,
+          filename: f.value.name,
+        );
+      } else {
+        final compressed = await MultipartHelper.compressedImage(
+          File(f.value.path),
+        );
+
+        multipart =
+            compressed ??
+            dio.MultipartFile.fromFileSync(
+              f.value.path,
+              filename: f.value.name,
+            );
+      }
+
       data.files.add(MapEntry(f.key, multipart));
     }
-    fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
+
+    fields?.forEach((k, v) => data.fields.add(MapEntry(k, v)));
 
     final isValid = await validateFileSize(data);
     if (!isValid) {
@@ -281,86 +243,67 @@ class ApiClient {
       );
     }
 
-    log("── patchWithFile token: '$token'"); // ← add this
+    // ─── REQUEST DEBUG LOG ─────────────────────────────
+    log("━━━━━━━━ PATCH WITH FILE ━━━━━━━━");
+    log("URL: $url");
+    log("REQ_NAME: $reqName");
+    log("TOKEN: ${token.substring(0, token.length > 8 ? 8 : token.length)}...");
+    log("FIELDS: ${data.fields}");
+    log("FILES: ${data.files.map((e) => e.key).toList()}");
+    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     final options = Options(
       method: 'PATCH',
-      headers: {"Authorization": "Bearer $getToken"},
+      headers: {"Authorization": "Bearer $token", ...?headers},
     );
 
     try {
       final response = await _dio.request(url, data: data, options: options);
+
+      log("✅ RESPONSE STATUS: ${response.statusCode}");
+      log("RESPONSE DATA: ${response.data}");
+
       return ApiResponseHandler.handle(response, reqName);
-    } catch (e) {
-      log("PATCH request error: $e");
-      return null;
-    }
-  }
+    } on DioException catch (e, stackTrace) {
+      // ─── DIO ERROR DEEP LOG ─────────────────────────────
+      log("━━━━━━━━ DIO EXCEPTION ━━━━━━━━");
+      log("TYPE: ${e.type}");
+      log("MESSAGE: ${e.message}");
+      log("ERROR: ${e.error}");
+      log("STATUS CODE: ${e.response?.statusCode}");
+      log("RESPONSE DATA: ${e.response?.data}");
+      log("REQUEST PATH: ${e.requestOptions.path}");
+      log("REQUEST METHOD: ${e.requestOptions.method}");
+      log("REQUEST HEADERS: ${e.requestOptions.headers}");
+      log("STACKTRACE: $stackTrace");
+      log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-  // Future<dynamic> postWithFile(
-  //   String url, {
-  //   String? reqName,
-  //   dynamic data,
-  //   Map<String, dynamic>? headers,
-  // }) async {
-  //   // For FormData, don't set Content-Type - let Dio handle it automatically
-  //   final options = Options(
-  //     method: 'POST',
-  //     headers: {"Authorization": "Bearer $getToken"},
-  //   );
+      // 🔥 EXTRA: backend stack (MOST IMPORTANT FOR YOU)
+      if (e.response?.data is Map) {
+        final data = e.response?.data;
+        log("🔥 BACKEND MESSAGE: ${data['message']}");
+        log("🔥 BACKEND STACK:\n${data['stack']}");
+        log("🔥 ERROR DETAILS: ${data['errorDetails']}");
+      }
 
-  //   try {
-  //     log("DATA TYPE: ${data.runtimeType}");
-
-  //     final response = await _dio.request(url, data: data, options: options);
-  //     log('response in post  : $response ');
-  //     return ApiResponseHandler.handle(response, reqName);
-  //   } catch (e) {
-  //     log("POST request error: $e");
-  //     return null;
-  //   }
-  // }
-
-  /* old
-  Future<dynamic> postWithFile(
-    String url, {
-    String? reqName,
-    dynamic data,
-    Map<String, dynamic>? headers,
-  }) async {
-    /// ✅ FILE SIZE VALIDATION
-    final isValid = await validateFileSize(data);
-
-    if (!isValid) {
       return ApiResponseHandler.handle(
         Response(
-          requestOptions: RequestOptions(path: url),
-          statusCode: 400,
-          data: {"message": "File size must be less than 3 MB"},
+          requestOptions: e.requestOptions,
+          statusCode: e.response?.statusCode ?? 500,
+          data: e.response?.data ?? {"message": e.message},
         ),
         reqName,
       );
-    }
+    } catch (e, stackTrace) {
+      // ─── NON-DIO ERROR ─────────────────────────────
+      log("━━━━━━━━ UNKNOWN EXCEPTION ━━━━━━━━");
+      log("ERROR: $e");
+      log("STACKTRACE: $stackTrace");
+      log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-    final options = Options(
-      method: 'POST',
-      headers: {"Authorization": "Bearer $getToken"},
-    );
-
-    try {
-      log("DATA TYPE: ${data.runtimeType}");
-
-      final response = await _dio.request(url, data: data, options: options);
-
-      log('response in post  : $response ');
-
-      return ApiResponseHandler.handle(response, reqName);
-    } catch (e) {
-      log("POST request error: $e");
       return null;
     }
   }
-*/
 
   // with any file comppression:
   Future<dynamic> postWithFile(
@@ -412,59 +355,6 @@ class ApiClient {
       return null;
     }
   }
-  // Future<dynamic> postWithFile(
-  //   String url, {
-  //   String? reqName,
-  //   MapEntry<String, XFile>? file,
-  //   List<MapEntry<String, XFile>>? files,
-  //   Map<String, String>? fields,
-  //   List<MapEntry<String, String>>? extraFields,
-  //   Map<String, dynamic>? headers,
-  // }) async {
-  //   final data = dio.FormData();
-
-  //   if (file != null) {
-  //     final compressed = await MultipartHelper.compressedImage(
-  //       File(file.value.path),
-  //     );
-  //     if (compressed != null) data.files.add(MapEntry(file.key, compressed));
-  //   }
-
-  //   for (final f in files ?? []) {
-  //     final compressed = await MultipartHelper.compressedImage(
-  //       File(f.value.path),
-  //     );
-  //     if (compressed != null) data.files.add(MapEntry(f.key, compressed));
-  //   }
-
-  //   fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
-  //   extraFields?.forEach((entry) => data.fields.add(entry));
-
-  //   final isValid = await validateFileSize(data);
-  //   if (!isValid) {
-  //     return ApiResponseHandler.handle(
-  //       Response(
-  //         requestOptions: RequestOptions(path: url),
-  //         statusCode: 400,
-  //         data: {"message": "File size must be less than 3 MB"},
-  //       ),
-  //       reqName,
-  //     );
-  //   }
-
-  //   final options = Options(
-  //     method: 'POST',
-  //     headers: {"Authorization": "Bearer $getToken"},
-  //   );
-
-  //   try {
-  //     final response = await _dio.request(url, data: data, options: options);
-  //     return ApiResponseHandler.handle(response, reqName);
-  //   } catch (e) {
-  //     log("POST request error: $e");
-  //     return null;
-  //   }
-  // }
 
   /// PUT request
   Future<dynamic> put(
