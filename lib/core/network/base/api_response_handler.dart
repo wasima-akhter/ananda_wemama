@@ -7,17 +7,48 @@ import 'api_error_parser.dart';
 // Handles server responses
 
 class ApiResponseHandler {
-  static dynamic handle(Response response, String? reqName) {
+  // static dynamic handle(
+  //   Response response,
+  //   String? reqName, {
+  //   bool returnErrorResponse = false,
+  // }) {
+  //   final statusCode = response.statusCode ?? 0;
+  //   final data = response.data;
+
+  //   // ✅ SUCCESS
+  //   if (statusCode >= 200 && statusCode < 300) {
+  //     return data;
+  //   }
+
+  //   // ✅ RETURN ERROR RESPONSE INSTEAD OF THROWING
+  //   if (returnErrorResponse) {
+  //     _handleError(response, statusCode, reqName);
+  //     return data;
+  //   }
+
+  //   // ❌ THROW ERROR
+  //   _handleError(data, statusCode, reqName);
+  // }
+  static dynamic handle(Response response, String? reqName, {bool? isLogin_}) {
     final statusCode = response.statusCode ?? 0;
     final data = response.data;
 
+    final isLogin = isLogin_ ?? false;
+
+    final isSuccess =
+        statusCode >= 200 && statusCode < 300 && data?["success"] != false;
+
     // ✅ SUCCESS
-    if (statusCode >= 200 && statusCode < 300) {
-      //   log("response : --> $response");
+    if (isSuccess) return data;
+
+    // 🔥 LOGIN → ALWAYS RETURN (NO THROW)
+    if (isLogin) {
+      log("🔐 LOGIN FLOW → returning response (success or error)--> $response");
+      // _handleError(response, statusCode, reqName);
+
       return data;
     }
 
-    // ❌ ERROR
     _handleError(data, statusCode, reqName);
   }
 
@@ -25,7 +56,6 @@ class ApiResponseHandler {
     final message = ApiErrorParser.extractMessage(data);
     final stack = ApiErrorParser.extractStack(data);
 
-    // ─── FULL DEBUG LOG ─────────────────────────────
     log("━━━━━━━━ API ERROR ━━━━━━━━");
     log("REQ: $reqName");
     log("STATUS: $statusCode");
@@ -35,17 +65,15 @@ class ApiResponseHandler {
       log("🔥 BACKEND STACK:\n$stack");
     }
 
-    log("RAW RESPONSE: $data");
+    log("RAW RESPONSE --> : $data");
     log("━━━━━━━━━━━━━━━━━━━━━━━━━");
 
-    // toast (clean)
     final toastMsg = reqName != null && reqName.isNotEmpty
         ? "$reqName : $message"
         : message;
 
     toastMsg.showToast();
 
-    // ─── THROW CLEAN EXCEPTIONS ─────────────────────
     if (statusCode == 401) {
       throw UnauthorisedException(message);
     }

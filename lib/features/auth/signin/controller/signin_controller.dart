@@ -49,7 +49,7 @@ class SigninController extends GetxController {
         email: email,
         password: password,
       );
-
+      log("result type of login from controller : ${result.type}");
       switch (result.type) {
         // ❌ EMAIL NOT VERIFIED
         case LoginResultType.emailNotVerified:
@@ -109,7 +109,9 @@ class SigninController extends GetxController {
     log('Base URL: $baseUrl');
 
     if (kDebugMode) {
-      emailCtrler.text = "ananda@yopmail.com";
+      // emailCtrler.text = "ananda@yopmail.com";
+      // emailCtrler.text = "mojahid.office404@gmail.com";
+      emailCtrler.text = "xyzt@yopmail.com";
       passwordCtrler.text = "123456";
     }
     super.onInit();

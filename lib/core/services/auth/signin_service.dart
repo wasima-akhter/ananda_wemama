@@ -16,9 +16,13 @@ class SigninService extends GetxService {
       apiCall: () => ApiClient().post(
         Endpoints.login.getUrl,
         data: {"email": email, "password": password},
+        isLogin_: true,
+        reqName: "login",
       ),
+      reqName: "login",
       parser: (data) {
         log("before parse data : $data");
+        log("after parse data : ${SigninModelData.fromJson(data)}");
         return SigninModelData.fromJson(data);
       },
     );
@@ -36,28 +40,47 @@ class SigninService extends GetxService {
     }
 
     // 🔥 IMPORTANT: backend sends status inside data
-    final isEmailVerified = data.isEmailVerified ?? true;
-    final isProfileCompleted = data.isProfileCompleted ?? true;
-
+    final isEmailVerified = data.isEmailVerified;
+    final isProfileCompleted = data.isProfileCompleted;
     final accessToken = data.accessToken ?? '';
+    final statusCode = data.statusCode;
+    log(
+      "--> isEmailVerified: $isEmailVerified, isProfileCompleted: $isProfileCompleted, ",
+    );
 
-    // ❌ EMAIL NOT VERIFIED
-    if (isEmailVerified == false) {
+    // // Check profileIncomplete first — backend sends ONLY the relevant flag
+    // if (data.isProfileCompleted == false) {
+    //   return LoginResult(
+    //     type: LoginResultType.profileIncomplete,
+    //     message: data.msg,
+    //   );
+    // }
+
+    // if (data.isEmailVerified == false) {
+    //   return LoginResult(
+    //     type: LoginResultType.emailNotVerified,
+    //     message: data.msg,
+    //   );
+    // }
+
+    // 403 → email not verified
+    if (statusCode == 403) {
+      "Your email is not verified yet. Please verify your email.".showToast();
       return LoginResult(
         type: LoginResultType.emailNotVerified,
         message: data.msg,
       );
     }
 
-    // ❌ PROFILE NOT COMPLETED
-    if (isProfileCompleted == false) {
+    // 302 → profile incomplete
+    if (statusCode == 302) {
+      "Your profile is not completed yet. Please complete your profile."
+          .showToast();
       return LoginResult(
         type: LoginResultType.profileIncomplete,
         message: data.msg,
       );
     }
-
-    // ❌ NO TOKEN
     if (accessToken.isEmpty) {
       return LoginResult(type: LoginResultType.failed);
     }

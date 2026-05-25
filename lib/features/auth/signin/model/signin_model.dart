@@ -11,25 +11,24 @@ class SigninModelData {
     this.user,
     this.accessToken,
     this.statusCode,
-    this.isEmailVerified = false,
-    this.isProfileCompleted = false,
+    this.isEmailVerified,
+    this.isProfileCompleted,
     this.msg,
   });
 
   factory SigninModelData.fromJson(Map<String, dynamic> json) {
-    final data = json["data"] ?? {};
-
+    // json is already the inner data object
     return SigninModelData(
-      user: data["user"] != null ? SigninUser.fromJson(data["user"]) : null,
-
-      accessToken: data["accessToken"],
-
-      statusCode: data["statusCode"],
-      isEmailVerified: data["isEmailVerified"],
-      isProfileCompleted: data["isProfileCompleted"],
-      msg: data["msg"] ?? json["message"],
+      user: json["user"] != null ? SigninUser.fromJson(json["user"]) : null,
+      accessToken: json["accessToken"],
+      statusCode: json["statusCode"],
+      isEmailVerified: json["isEmailVerified"], // null on success = fine
+      isProfileCompleted: json["isProfileCompleted"], // null on success = fine
+      msg: json["msg"] ?? json["message"],
     );
   }
+
+  //
 }
 
 class SigninUser {

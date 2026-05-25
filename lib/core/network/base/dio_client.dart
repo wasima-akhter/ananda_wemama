@@ -53,6 +53,7 @@ class Result<T> {
 
   Result({required this.type, this.data, this.message});
 }
+
 // class DioClient {
 //   static final DioClient _instance = DioClient._internal();
 //   factory DioClient() => _instance;

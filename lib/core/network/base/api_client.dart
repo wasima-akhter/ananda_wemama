@@ -40,6 +40,8 @@ class ApiClient {
     String? reqName,
     dynamic data,
     Map<String, String>? headers,
+
+    bool? isLogin_,
   }) async {
     final response = await _dio.post(
       url,
@@ -47,9 +49,11 @@ class ApiClient {
       options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
     );
     log("response:---> ${response.data}");
-    log("response:---> ${ApiResponseHandler.handle(response, reqName)}");
+    log(
+      "response after handle:---> ${ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_)}",
+    );
 
-    return ApiResponseHandler.handle(response, reqName);
+    return ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_);
   }
 
   Future<dynamic> patch(
