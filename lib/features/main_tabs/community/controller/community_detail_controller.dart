@@ -335,7 +335,6 @@ class CommunityDetailController extends GetxController {
 
       if (success) {
         btnState.value = MyCommunityBtnState.visit;
-
         await Get.find<CommunitySearchController>().getSuggestedCommunityList();
         await Get.find<CommunityController>().getMyCommunityList();
 

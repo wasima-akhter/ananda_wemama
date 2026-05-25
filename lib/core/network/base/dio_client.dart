@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/core/network/helpers/network_helpers.dart';
 
@@ -23,12 +27,47 @@ class DioClient {
     );
 
     dio.interceptors.add(
+      ///////////////--------------->>>>>>>>>
       InterceptorsWrapper(
+        // onRequest: (options, handler) {
+        //   final token = storage.getToken;
+        //   if (token.isNotEmpty) {
+        //     options.headers["Authorization"] = "Bearer $token";
+        //   }
+        //   return handler.next(options);
+        // },
         onRequest: (options, handler) {
+          if (kDebugMode) {
+            log("➡️ REQUEST[${options.method}] => ${options.path}");
+            log("Headers: ${options.headers}");
+            log("Data: ${options.data}");
+
+            if (options.data != null && options.data is FormData) {
+              final formData = options.data as FormData;
+
+              log("Fields:");
+              for (final field in formData.fields) {
+                log("${field.key}: ${field.value}");
+              }
+
+              if (formData.files.isNotEmpty) {
+                log("Files:");
+                for (final file in formData.files) {
+                  log(
+                    "${file.key}: filename=${file.value.filename}, contentType=${file.value.contentType}",
+                  );
+                }
+              }
+            } else if (options.data != null) {
+              log("Data: ${jsonEncode(options.data)}");
+            }
+          }
+
           final token = storage.getToken;
           if (token.isNotEmpty) {
             options.headers["Authorization"] = "Bearer $token";
           }
+
           return handler.next(options);
         },
 

@@ -162,7 +162,7 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.communitySearch,
       page: () => const CommunitySearchScreen(),
-      binding: CommunitySearchBinding(),
+      binding: MainNavBinding(),
       // transition RouteTransitions.byName(RoutePaths.communityDetail),
     ),
 

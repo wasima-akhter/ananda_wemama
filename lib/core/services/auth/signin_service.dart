@@ -76,11 +76,16 @@ class SigninService extends GetxService {
     if (statusCode == 302) {
       "Your profile is not completed yet. Please complete your profile."
           .showToast();
+
+      // ✅ Save token so profile completion screen can make authenticated requests
+      storage.setToken(response.data?.accessToken ?? '');
       return LoginResult(
         type: LoginResultType.profileIncomplete,
         message: data.msg,
       );
     }
+
+    log("access token when setup-->: ${response.data!.accessToken}");
     if (accessToken.isEmpty) {
       return LoginResult(type: LoginResultType.failed);
     }
@@ -125,6 +130,8 @@ class SigninService extends GetxService {
     final user = response.data!.user;
     storage.setUserInfo(email: user?.email ?? '');
     storage.setToken(response.data?.accessToken ?? '');
+
+    log("access token when setup: ${response.data!.accessToken}");
 
     log("Logged in as: ${user?.email}");
     log("Access token: ${response.data!.accessToken}");

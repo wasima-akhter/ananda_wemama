@@ -23,14 +23,15 @@ class ApiClient {
     Map<String, dynamic>? query,
     Map<String, String>? headers,
   }) async {
+    log("🌐 GET URL: $url");
+
     final response = await _dio.get(
       url,
       queryParameters: query,
-      options: Options(
-        headers: headers ?? HeaderHelpers.jsonHeader(), // default if null
-      ),
+      options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
     );
 
+    // 🔥 Final parsed response returned by ApiResponseHandler
     return ApiResponseHandler.handle(response, reqName);
   }
 
@@ -40,19 +41,22 @@ class ApiClient {
     String? reqName,
     dynamic data,
     Map<String, String>? headers,
-
     bool? isLogin_,
   }) async {
+    log("🌐 POST URL: $url");
+
     final response = await _dio.post(
       url,
       data: data,
       options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
     );
+
     log("response:---> ${response.data}");
     log(
       "response after handle:---> ${ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_)}",
     );
 
+    // 🔥 Final parsed response returned by ApiResponseHandler
     return ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_);
   }
 
@@ -62,6 +66,7 @@ class ApiClient {
     dynamic data,
     Map<String, dynamic>? headers,
   }) async {
+    log("🌐 PATCH URL: $url");
     // For FormData, don't set Content-Type - let Dio handle it automatically
     final options = Options(
       method: 'PATCH',
@@ -92,6 +97,7 @@ class ApiClient {
     List<MapEntry<String, XFile>>? files,
     Map<String, String>? fields,
   }) async {
+    log("🌐 PATCHWith file URL: $url");
     final token = AppStorage.to.getToken;
     if (token.isEmpty) {
       log("❌ patchWithFile aborted: no token");
@@ -178,6 +184,7 @@ class ApiClient {
     Map<String, dynamic>? headers, // 👇 add this
     bool disableCompression = false,
   }) async {
+    log("🌐 PATCHWith file URL: $url");
     final token = getToken;
     if (token == null || token.isEmpty) {
       log("❌ patchWithFile aborted: no token");
@@ -321,6 +328,7 @@ class ApiClient {
     List<MapEntry<String, String>>? extraFields,
     Map<String, dynamic>? headers,
   }) async {
+    log("🌐 POST with file URL: $url");
     final data = dio.FormData();
 
     if (file != null) {
@@ -369,6 +377,7 @@ class ApiClient {
     dynamic data,
     Map<String, String>? headers,
   }) async {
+    log("🌐 PUT file URL: $url");
     final response = await _dio.put(
       url,
       data: data,
@@ -385,6 +394,7 @@ class ApiClient {
     dynamic data,
     Map<String, String>? headers,
   }) async {
+    log("🌐 DELETE file URL: $url");
     final response = await _dio.delete(
       url,
       data: data,

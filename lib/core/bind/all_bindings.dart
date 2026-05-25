@@ -2,7 +2,6 @@ import 'dart:developer' show log;
 
 import 'package:get/get.dart';
 import 'package:mama_app/core/models/ui/common_data_models.dart';
-import 'package:mama_app/features/main_tabs/community/controller/community_search_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/manage_community_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_details_controller.dart';
 import 'package:mama_app/features/main_tabs/community/controller/post_in_community_controller.dart';
@@ -23,7 +22,6 @@ import '../../features/entry/splash/controller/splash_controller.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
-import '../../features/main_tabs/community/controller/community_controller.dart';
 import '../../features/main_tabs/community/controller/community_detail_controller.dart';
 import '../../features/main_tabs/community/controller/create_community_controller.dart';
 import '../../features/main_tabs/community/controller/member_management_controller.dart';
@@ -199,6 +197,7 @@ class MainNavBinding extends Bindings {
     Get.putPermanent(StationLocationController());
     Get.put(AppLocationManager(), permanent: true);
     Get.lazyPutFenix(() => ProfileController());
+
     Get.putPermanent(MainNavController());
     Get.putPermanent(BookmarkController());
 
@@ -222,7 +221,7 @@ class MainNavBinding extends Bindings {
     Get.lazyPut(() => SuccessController());
     Get.lazyPut(() => PrivacyPolicyController());
     Get.lazyPut(() => PaymentController());
-    Get.lazyPut(() => CommunityController());
+
     Get.lazyPut(() => MatchController());
 
     // Chat (careful with lifecycle)
@@ -308,12 +307,12 @@ class CommunityDetailBinding extends Bindings {
   }
 }
 
-class CommunitySearchBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPutFenix(() => CommunitySearchController());
-  }
-}
+// class CommunitySearchBinding extends Bindings {
+//   @override
+//   void dependencies() {
+//     Get.lazyPutFenix(() => CommunitySearchController());
+//   }
+// }
 
 class PostInCommunityBinding extends Bindings {
   @override

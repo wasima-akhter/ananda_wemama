@@ -108,6 +108,8 @@ class _CommunitySpotlightLive extends StatelessWidget {
     return Obx(() {
       final hc = Get.find<HomeController>();
       final spotlightData = hc.spotLightData.value?.communitySpotlight;
+      final isEmpty =
+          spotlightData == null || (spotlightData.id ?? '').trim().isEmpty;
       final isLoading = hc.isSpotLightLoading_.value;
       final state = getUIStateDetail(isLoading: isLoading);
       final totalMembers = (spotlightData?.totalMember ?? 0).toString();
@@ -118,80 +120,88 @@ class _CommunitySpotlightLive extends StatelessWidget {
       return UIStateHandler(
         loading: () => const CommunitySpotlightShimmer(),
         state: state,
-        data: () => ContainerBordered(
-          vp: 10,
-          hp: 10,
-          boxShadow: boxShadowBottom(),
-          contClr: c.cardOngoing,
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  FittedBox(
-                    child: Text(
-                      Strings.communitySpotlight.capEachWord(),
-                      style: TxtStyle.outfitSmTitle,
+        data: () {
+          if (isEmpty) {
+            return const _CommunitySpotlightEmpty();
+          }
+
+          return ContainerBordered(
+            vp: 10,
+            hp: 10,
+            boxShadow: boxShadowBottom(),
+            contClr: c.cardOngoing,
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FittedBox(
+                      child: Text(
+                        Strings.communitySpotlight.capEachWord(),
+                        style: TxtStyle.outfitSmTitle,
+                      ),
                     ),
-                  ),
-                  Gap(itemGap),
-                  Opacity(
-                    opacity: commId.trim().isEmpty ? 0.5 : 1,
-                    child: IgnorePointer(
-                      ignoring: commId.trim().isEmpty,
-                      child: CusGestureDetector(
-                        onTap: () {
-                          Get.toNamed(
-                            RoutePaths.communityDetail,
-                            arguments: {
-                              "btnState": MyCommunityBtnState.join,
-                              "communityItemId": commId,
-                            },
-                          );
-                        },
-                        child: ContainerBordered(
-                          hasBrdr: true,
-                          contClr: c.inputBackground,
-                          rad: 18,
-                          vp: 6,
-                          hp: 12,
-                          child: Text(
-                            Strings.joinDiscussion.capEachWord(),
-                            style: 12.titleMclrCusFSURB,
+                    Gap(itemGap),
+                    Opacity(
+                      opacity: commId.trim().isEmpty ? 0.5 : 1,
+                      child: IgnorePointer(
+                        ignoring: commId.trim().isEmpty,
+                        child: CusGestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              RoutePaths.communityDetail,
+                              arguments: {
+                                "btnState": MyCommunityBtnState.join,
+                                "communityItemId": commId,
+                              },
+                            );
+                          },
+                          child: ContainerBordered(
+                            hasBrdr: true,
+                            contClr: c.inputBackground,
+                            rad: 18,
+                            vp: 6,
+                            hp: 12,
+                            child: Text(
+                              Strings.joinDiscussion.capEachWord(),
+                              style: 12.titleMclrCusFSURB,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  StackOfImages(),
-                  Gap(itemGap * 2),
-                  Expanded(
-                    child: Container(
-                      // color: Colors.amber,
-                      child: Text(
-                        "$totalMembers ${(spotlightData?.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
-                        style: normRsmSecURB,
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    StackOfImages(),
+                    Gap(itemGap * 2),
+                    Expanded(
+                      child: Container(
+                        // color: Colors.amber,
+                        child: Text(
+                          "$totalMembers ${(spotlightData.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
+                          style: normRsmSecURB,
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                Gap(itemGap),
+                CommunitySpotlightInsideCard(
+                  communityname: communityname,
+                  key: ValueKey(
+                    '${lastPostData?.id}_${lastPostData?.createdAt}',
                   ),
-                ],
-              ),
-              Gap(itemGap),
-              CommunitySpotlightInsideCard(
-                communityname: communityname,
-                key: ValueKey('${lastPostData?.id}_${lastPostData?.createdAt}'),
-                lastPostData: lastPostData,
-              ),
-            ],
-          ),
-        ),
+                  lastPostData: lastPostData,
+                ),
+              ],
+            ),
+          );
+        },
       );
     });
   }
@@ -359,3 +369,129 @@ class CommunitySpotlightShimmer extends StatelessWidget {
     );
   }
 }
+
+class _CommunitySpotlightEmpty extends StatelessWidget {
+  const _CommunitySpotlightEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      vp: 10,
+      hp: 10,
+      boxShadow: boxShadowBottom(),
+      contClr: c.cardOngoing.withOpacity(0.6),
+      child: Column(
+        children: [
+          /// TOP ROW (same structure as live)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                Strings.communitySpotlight.capEachWord(),
+                style: TxtStyle.outfitSmTitle.copyWith(color: c.primary),
+              ),
+
+              Opacity(
+                opacity: 0.4,
+                child: IgnorePointer(
+                  ignoring: true,
+                  child: ContainerBordered(
+                    hasBrdr: true,
+                    contClr: c.inputBackground.withOpacity(0.5),
+                    rad: 18,
+                    vp: 6,
+                    hp: 12,
+                    child: Text(
+                      Strings.joinDiscussion.capEachWord(),
+                      style: 12.titleMclrCusFSURB.copyWith(
+                        color: c.primary.withOpacity(0.5),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Gap(itemGap),
+
+          /// AVATAR ROW (disabled look)
+          Row(
+            children: [
+              Opacity(opacity: 1, child: StackOfImages(numOfImage: 3)),
+              Gap(itemGap),
+              Expanded(
+                child: Text(
+                  "No active community discussions yet",
+                  style: normRsmSecURB.copyWith(color: c.primary),
+                ),
+              ),
+            ],
+          ),
+
+          Gap(itemGap),
+
+          /// EMPTY CARD (mimics last post container)
+          ContainerBordered(
+            hp: 10,
+            vp: 12,
+            contClr: c.cardMood.withOpacity(0.5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// fake title line
+                Container(
+                  height: 12,
+                  width: double.infinity * 0.6,
+                  decoration: BoxDecoration(
+                    color: c.primary.withOpacity(0.08),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+
+                // const Gap(10),
+
+                // /// fake subtitle
+                // Container(
+                //   height: 14,
+                //   width: double.infinity * 0.8,
+                //   decoration: BoxDecoration(
+                //     color: c.primary.withOpacity(0.08),
+                //     borderRadius: BorderRadius.circular(6),
+                //   ),
+                // ),
+
+                // const Gap(10),
+
+                // /// footer row mimic
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Container(
+                //       height: 12,
+                //       width: 120,
+                //       decoration: BoxDecoration(
+                //         color: c.primary.withOpacity(0.08),
+                //         borderRadius: BorderRadius.circular(6),
+                //       ),
+                //     ),
+                //     Container(
+                //       height: 12,
+                //       width: 80,
+                //       decoration: BoxDecoration(
+                //         color: c.primary.withOpacity(0.08),
+                //         borderRadius: BorderRadius.circular(6),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+//

@@ -124,9 +124,10 @@ class UpcomingSessionsScreen extends StatelessWidget {
                                     act.uploadSessionQues(
                                       expertId: expertId,
                                       sessionId: sessionId,
+                                      question: exc.writeQuesCtrl.text.trim(),
                                     ),
-                            writeQuesCtrl: act.writeQuesCtrl,
-                            writeQuesFocusNode: act.writeQuesFocusNode,
+                            writeQuesCtrl: exc.writeQuesCtrl,
+                            writeQuesFocusNode: exc.writeQuesFocusNode,
                             isSendQuesLoading: act.isSendQuesLoading,
                           ),
                         );

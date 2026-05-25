@@ -36,6 +36,23 @@ class HomeController extends GetxController {
 
   final sessionCtrl = Get.find<SessionController>();
   final actionCtrl = Get.find<SessionActionController>();
+
+  final TextEditingController writeQuesCtrl = TextEditingController();
+  final FocusNode writeQuesFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    writeQuesCtrl.dispose();
+    writeQuesFocusNode.dispose();
+    super.dispose();
+  }
+
+  void unfocusAll() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    writeQuesCtrl.clear();
+    writeQuesFocusNode.unfocus();
+  }
+
   void closeAllPopups() {}
 
   // ─────────────────────────────────────────────────────────────────────────

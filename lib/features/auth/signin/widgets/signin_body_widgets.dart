@@ -58,7 +58,10 @@ class FormSection extends StatelessWidget {
             iconPath: IconsPath.email,
             height: 22,
           ).mOnly(left: 15, right: 6),
+
           prefixSize: 45,
+          brdrW: 0.6,
+
           focusNode: controller.emailFocus,
           validator: validateEmail,
         ),
@@ -75,6 +78,7 @@ class FormSection extends StatelessWidget {
             prefixSize: 45,
             focusNode: controller.passwordFocus,
             obscureText: controller.isPasswordHidden,
+
             suffix: VisibilitySuffix(
               onTap: controller.togglePasswordVisibility,
               icon: controller.passwordIcon,

@@ -100,19 +100,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   return UpcomingExpertSessionCard(
                     data: firstSession,
-                    writeQuesCtrl: actionCtrl.writeQuesCtrl,
-                    writeQuesFocusNode: actionCtrl.writeQuesFocusNode,
+                    writeQuesCtrl: hc.writeQuesCtrl,
+                    writeQuesFocusNode: hc.writeQuesFocusNode,
                     isSendQuesLoading: actionCtrl.isSendQuesLoading,
 
                     onTapQues:
                         ({
                           required String expertId,
                           required String sessionId,
-                        }) {
-                          actionCtrl.uploadSessionQues(
+                        }) async {
+                          final res = await actionCtrl.uploadSessionQues(
                             expertId: expertId,
                             sessionId: sessionId,
+                            question: hc.writeQuesCtrl.text.trim(),
                           );
+
+                          if (res == true) {
+                            hc.unfocusAll();
+                          }
                         },
                   );
                 },

@@ -88,7 +88,7 @@ class ApiServiceHelper {
 
       return response;
     } catch (e) {
-      log("e in dio client: $e");
+      log("e in dio client: ${e.toString()}");
       // String errorMsg = (e.toString().isNotEmpty && e.toString() != "null")
       //     ? e.toString()
       //     : "Something went wrong. Please try again.";

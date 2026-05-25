@@ -25,6 +25,18 @@ class ExpertsController extends GetxController {
     ),
   ];
 
+  //
+
+  final TextEditingController writeQuesCtrl = TextEditingController();
+  final FocusNode writeQuesFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    writeQuesCtrl.dispose();
+    writeQuesFocusNode.dispose();
+    super.dispose();
+  }
+
   // ── Search (expert screen only) ───────────────────────────────────────────
 
   final searchOngoingCtrl = TextEditingController();
@@ -52,8 +64,6 @@ class ExpertsController extends GetxController {
   ScrollController get ongoingScrollController =>
       _sessionCtrl.ongoingScrollController;
 
-  TextEditingController get writeQuesCtrl => _actionCtrl.writeQuesCtrl;
-  FocusNode get writeQuesFocusNode => _actionCtrl.writeQuesFocusNode;
   RxBool get isUploadQuesLoading => _actionCtrl.isSendQuesLoading;
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -114,10 +124,12 @@ class ExpertsController extends GetxController {
   Future<void> onTapQues({
     required String expertId,
     required String sessionId,
+    required String question,
   }) async {
     await _actionCtrl.uploadSessionQues(
       expertId: expertId,
       sessionId: sessionId,
+      question: question,
     );
   }
 
@@ -134,6 +146,8 @@ class ExpertsController extends GetxController {
     searchOngoingFocusNode.unfocus();
     searchUpcomingFocusNode.unfocus();
     FocusManager.instance.primaryFocus?.unfocus();
+
+    writeQuesCtrl.clear();
   }
 
   List<Session> limitList(List<Session> list) =>

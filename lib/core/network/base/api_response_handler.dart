@@ -44,7 +44,7 @@ class ApiResponseHandler {
     // 🔥 LOGIN → ALWAYS RETURN (NO THROW)
     if (isLogin) {
       log("🔐 LOGIN FLOW → returning response (success or error)--> $response");
-      // _handleError(response, statusCode, reqName);
+      if (statusCode == 404) _handleError(response, statusCode, reqName);
 
       return data;
     }
