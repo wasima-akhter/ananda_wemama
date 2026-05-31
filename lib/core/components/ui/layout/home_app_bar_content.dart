@@ -37,7 +37,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                     color: c.inputBackground,
                   ),
                   child: CircleAvatar(
-                    radius: 20.r,
+                    radius: 22,
                     backgroundColor: c.inputBackground,
                     child: SvgIcon(
                       iconPath: IconsPath.notification,

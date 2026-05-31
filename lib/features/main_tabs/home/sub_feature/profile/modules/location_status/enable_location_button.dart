@@ -9,10 +9,11 @@ class EnableLocationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CusGestureDetector(
       onTap: () async {
+        Get.back();
         final result = await AppLocationManager.to.enableLocationGateway();
 
-        Get.back();
-        Get.back();
+        closeAllSnackbar();
+        // Get.back();
 
         if (result == LocationFlowResult.success) {
           Snack.showSuccess("Location enabled");

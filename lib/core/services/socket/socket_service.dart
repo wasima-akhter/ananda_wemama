@@ -1,24 +1,11 @@
 import 'dart:async';
 
-import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:mama_app/core/config/app_info.dart';
-import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
-import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
-import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
-import 'package:mama_app/features/shared/wave_request/model/new_wave_req_list_item_model.dart';
+import 'package:mama_app/core/services/socket/socket_listener_registry.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../app/service_export.dart';
-import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
-import '../../../features/main_tabs/chat/model/chat_inbox_msg_item_model.dart';
-import '../../../features/main_tabs/chat/model/chat_list_item_model.dart';
-import '../../../features/more/notification/controller/notification_controller.dart';
-import '../../../features/more/notification/model/notifications_model.dart';
-import '../../helpers/methods_helper.dart';
-import '../../helpers/widgets_helper.dart';
-import '../../utils/extension/context_extension.dart';
 import 'socket_events.dart';
-import 'socket_response_handler .dart';
 import 'socket_status_controller.dart';
 
 class SocketService extends GetxService {
@@ -33,66 +20,6 @@ class SocketService extends GetxService {
   // ═══════════════════════════════════════════════════════════════════════════
   // CONNECT
   // ═══════════════════════════════════════════════════════════════════════════
-
-  /*
-  Future<void> connectSocket() async {
-    // Reset completer
-    _connectCompleter = Completer<void>();
-
-    try {
-      // cleanup old socket
-      if (_socket != null) {
-        _socket!.clearListeners();
-        _socket!.disconnect();
-        _socket!.destroy();
-        _socket = null;
-      }
-
-      _socket = IO.io(
-        baseUrl,
-        IO.OptionBuilder()
-            .setTransports(['websocket'])
-            .setAuth({'token': getToken})
-            .disableAutoConnect()
-            .build(),
-      );
-
-      try {
-        _socket!.onConnect((_) {
-          log("✅ Socket Connected: ${_socket!.id}");
-
-          if (!(_connectCompleter?.isCompleted ?? true)) {
-            _connectCompleter?.complete();
-          }
-        });
-      } catch (e) {
-        log("onConnect error ignored: $e");
-      }
-
-      _socket!.onConnectError((err) {
-        log("❌ Socket error: $err");
-
-        if (!(_connectCompleter?.isCompleted ?? true)) {
-          _connectCompleter?.completeError(err);
-        }
-      });
-
-      _registerListeners();
-
-      _socket!.connect();
-
-      // 👇 WAIT here until connected
-      return _connectCompleter!.future;
-    } catch (e) {
-      log("Socket connect crashed (ignored): $e");
-
-      // 👉 prevent app crash / interruption
-      if (!(_connectCompleter?.isCompleted ?? true)) {
-        _connectCompleter?.complete();
-      }
-    }
-  }
-  */
 
   void _removeAllListeners() {
     final events = [
@@ -179,314 +106,16 @@ class SocketService extends GetxService {
     //
     _registerRetryListeners(); //
 
-    // ── send_conversation_request ─────────────────────────────────────────────
-    _off(SocketEvents.sendConversationRequest);
-    _off(SocketEvents.sendConversationRequest);
-    _on(SocketEvents.sendConversationRequest, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.sendConversationRequest,
-      );
-      // No snackbar — MatchController.showWaveSentDialog() handles UI
-    });
+    // ---- here was the onn anf off event listeners
 
-    // ── new_conversation_request ──────────────────────────────────────────────
-    _off(SocketEvents.newConversationRequest);
-    _on(SocketEvents.newConversationRequest, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.newConversationRequest,
-      );
-      if (!res.isSuccess) return;
+    if (_socket != null) {
+      SocketListenerRegistry(_socket!).registerAll();
+    }
 
-      // final currentProfileId = Get.find<ProfileController>().userProfileData.value?.id ?? '';
-
-      // ── Determine role via message (reliable, backend-controlled) ────────────
-      // Sender  → "You have requested..."
-      // Receiver → "You have received..."
-      final isSender = res.message.toLowerCase().contains('requested');
-      final isReceiver = res.message.toLowerCase().contains('received');
-
-      log(
-        '🧪 newConversationRequest | currentId: ${currentProfileId()} '
-        '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
-      );
-
-      // if (isSender) {
-      //   // ✅ Flag for MatchController (sender only)
-      //   if (Get.isRegistered<MatchController>()) {
-      //     Get.find<MatchController>().isSuccessSentReq.value = true;
-      //   }
-      //   return; // sender gets no snackbar — MatchController shows Wave Sent dialog
-      // }
-
-      // In socket_service.dart — inside the newConversationRequest handler
-
-      if (isSender) {
-        if (Get.isRegistered<MatchController>()) {
-          final mc = Get.find<MatchController>();
-          mc.isSuccessSentReq.value = true;
-          mc.onWaveConfirmed(true); // ← signals the completer
-        }
-        return;
-      }
-
-      if (isReceiver) {
-        Get.snackbar(
-          'New Request 💬',
-          res.message,
-          snackPosition: SnackPosition.TOP,
-        );
-        return;
-      }
-
-      // ── Fallback: message was neither, use participant index as last resort ───
-      final participants =
-          (res.dataAsMap?['participants'] as List?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [];
-
-      log('🧪 fallback participants: $participants');
-
-      if (participants.length >= 2 && participants[1] == currentProfileId()) {
-        Get.snackbar(
-          'New Request 💬',
-          res.message,
-          snackPosition: SnackPosition.TOP,
-        );
-      }
-    });
-    // ── new_notification ──────────────────────────────────────────────────────
-    // _on(SocketEvents.newNotification, (data) {
-    //   final res = SocketResponseHandler.handle(data, eventName: SocketEvents.newNotification);
-    //   if (!res.isSuccess) return;
-
-    //   final notificationData = res.dataAsMap;
-    //   if (notificationData == null) return;
-
-    //   // Always push to notification list
-    //   if (Get.isRegistered<NotificationController>()) {
-    //     Get.find<NotificationController>().addNotification(notificationData);
-    //   }
-
-    //   // Suppress snackbar for SENT_WAVE — already shown via conversation_request
-    //   final type = notificationData['type'] as String? ?? '';
-    //   if (type == 'SENT_WAVE') return;
-
-    //   Get.snackbar(
-    //     notificationData['title'] ?? 'Notification',
-    //     notificationData['description'] ?? '',
-    //     // 🎨 background (optional)
-    //     backgroundColor: c.primary.withOpacity(0.1),
-    //     // ❌ default texts disabled
-    //     titleText: buildTitle(notificationData['title']),
-    //     messageText: buildMessage(notificationData['description']),
-    //     snackPosition: SnackPosition.TOP,
-    //   );
-    // });
-    _off(SocketEvents.newNotification);
-    _on(SocketEvents.newNotification, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.newNotification,
-      );
-      if (!res.isSuccess) return;
-
-      final notificationData = res.dataAsMap;
-      if (notificationData == null) return;
-
-      // ─────────────────────────────
-      // 🔹 Push to notification list
-      // ─────────────────────────────
-      if (Get.isRegistered<NotificationController>()) {
-        // ✅ NotificationItemModel.fromJson expects:
-        // _id, toId, toModel, title, description, type,
-        // referenceId, referenceModel, isSeen, createdAt, updatedAt, __v
-        final notification = NotificationItemModel.fromJson(notificationData);
-        Get.find<NotificationController>().addNotification(notification);
-      }
-
-      // ─────────────────────────────
-      // 🔹 Suppress snackbar for SENT_WAVE
-      // ─────────────────────────────
-      final type = notificationData['type'] as String? ?? '';
-      if (type == 'SENT_WAVE') return;
-
-      Get.snackbar(
-        notificationData['title'] ?? 'Notification',
-        notificationData['description'] ?? '',
-        backgroundColor: c.primary.withOpacity(0.1),
-        titleText: buildTitle(notificationData['title']),
-        messageText: buildMessage(notificationData['description']),
-        snackPosition: SnackPosition.TOP,
-      );
-    });
-    // ── conversation_requests (list) ──────────────────────────────────────────
-    _off(SocketEvents.conversationRequests);
-    _on(SocketEvents.conversationRequests, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.conversationRequests,
-      );
-      if (!res.isSuccess) return;
-
-      final list = (res.dataAsList ?? [])
-          .map((e) => NewWaveListItemModel.fromJson(e))
-          .toList();
-
-      debugPrint("list of wave list : ${list.length}");
-      debugPrint("list of wave res.dataAsList  : ${res.dataAsList?.length}");
-
-      if (Get.isRegistered<WaveRequestController>()) {
-        Get.find<WaveRequestController>().updateWaveList(list);
-      }
-    });
-
-    // ── conversation_accepted ─────────────────────────────────────────────────
-    _off(SocketEvents.conversationAccepted);
-    _on(SocketEvents.conversationAccepted, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.conversationAccepted,
-      );
-      if (!res.isSuccess) return;
-
-      final conversationId = res.dataAsMap?['_id'] as String? ?? '';
-
-      // ── Parse populated participants ──────────────────────────────────────────
-      final participantsList = res.dataAsMap?['participants'] as List? ?? [];
-      final participants = participantsList
-          .map((e) => Map<String, dynamic>.from(e as Map))
-          .toList();
-
-      final myId = currentProfileId();
-
-      // ── Role detection via message ────────────────────────────────────────────
-      // Acceptor  → "Your new conversation request accepted."  (YOU accepted)
-      // Requester → backend sends different message to the wave sender
-      final msg = res.message.toLowerCase();
-      final isAcceptor =
-          msg.contains('you have accepted') ||
-          msg.contains('your new conversation request accepted');
-
-      // ── Peer = the one who is NOT me ─────────────────────────────────────────
-      final peer = participants.firstWhereOrNull((p) => p['_id'] != myId);
-      final peerName = peer?['name'] as String? ?? '';
-      final peerImageUrl = peer?['profileImage'] as String? ?? '';
-
-      log(
-        '🧪 conversationAccepted | myId: $myId | isAcceptor: $isAcceptor'
-        ' | peer: $peerName | msg: ${res.message}',
-      );
-
-      if (Get.isRegistered<WaveRequestController>()) {
-        final wrc = Get.find<WaveRequestController>();
-
-        // Always hydrate peer info — both sides may need it
-        wrc.peerName.value = peerName;
-        wrc.peerImageUrl.value = peerImageUrl;
-
-        if (isAcceptor) {
-          // Triggers ever(isSuccessAccept) → _onAcceptSuccess()
-          wrc.isSuccessAccept.value = true;
-        }
-      }
-
-      // 🔔 Notify the wave SENDER that their request was accepted
-      // if (!isAcceptor) {
-      //   Get.snackbar('Wave Accepted! 🎉', res.message, snackPosition: SnackPosition.TOP);
-      // }
-    });
-
-    // ── conversation_rejected ─────────────────────────────────────────────────
-    _off(SocketEvents.conversationRejected);
-    _on(SocketEvents.conversationRejected, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.conversationRejected,
-      );
-      if (!res.isSuccess) return;
-
-      final msg = res.message.toLowerCase();
-      final isRejector =
-          msg.contains('you have rejected') || msg.contains('declined');
-
-      log(
-        '🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}',
-      );
-
-      if (isRejector && Get.isRegistered<WaveRequestController>()) {
-        // Triggers ever(isSuccessReject) → _onRejectSuccess()
-        Get.find<WaveRequestController>().isSuccessReject.value = true;
-        Get.snackbar(
-          'Wave Rejected! ',
-          res.message,
-          snackPosition: SnackPosition.TOP,
-        );
-      }
-
-      // 🔕 No snackbar to wave sender — bad UX to explicitly notify rejection
-    });
-
-    // ── chat_list (list) ──────────────────────────────────────────
-
-    _off(SocketEvents.chatList);
-    _on(SocketEvents.chatList, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.chatList,
-      );
-      if (!res.isSuccess) return;
-
-      final list = (res.dataAsList ?? [])
-          .map((e) => ChatListItemModel.fromJson(e))
-          .toList();
-
-      if (Get.isRegistered<ChatController>()) {
-        Get.find<ChatController>().updateChatList(list);
-      }
-    });
-    // ── chat_inbox_msg_list (list) ──────────────────────────────────────────
-    _on(SocketEvents.messages, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.messages,
-      );
-      if (!res.isSuccess) return;
-
-      final itemData = ChatInboxMessageItemModel.fromJson(res.dataAsMap ?? {});
-
-      if (Get.isRegistered<ChatInboxController>()) {
-        Get.find<ChatInboxController>().updateChatInboxMsgItem(itemData);
-      }
-    });
-
-    //
-    // ── chat_new_message listen ──────────────────────────────────────────
-    _on(SocketEvents.newMessage, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.newMessage,
-      );
-      if (!res.isSuccess) return;
-
-      final msgData = Message.fromJson(res.dataAsMap ?? {});
-
-      if (Get.isRegistered<ChatInboxController>()) {
-        Get.find<ChatInboxController>().addMessage(msgData); // ✅ correct
-      }
-
-      //
-      // ✅ Update chat list for incoming messages too
-      if (Get.isRegistered<ChatController>()) {
-        Get.find<ChatController>().updateLastMessage(
-          chatId: msgData.conversationId ?? '',
-          lastMessage: msgData.text ?? '',
-          time: msgData.createdAt ?? DateTime.now(),
-        );
-      }
-    });
+    ////
+    ///
+    ///
+    ///
     //
     //
     // ```
@@ -541,12 +170,6 @@ class SocketService extends GetxService {
     });
   }
 
-  /// Internal — removes a listener before re-registering, prevents stacking.
-  void _off(String event) {
-    _socket?.off(event);
-    log("🧹 Removed listener: $event");
-  }
-
   /// Public — for one-off listeners added externally (e.g. from a controller).
   /// Only safe to call after connectSocket().
   void on(String event, Function(Map<String, dynamic>) callback) {
@@ -569,6 +192,7 @@ class SocketService extends GetxService {
   @override
   void onClose() {
     _retryTimer?.cancel();
+    _onConnectedController.close(); // ✅ missing
     _socket?.clearListeners();
     _socket?.disconnect();
     _socket?.destroy();
@@ -604,6 +228,9 @@ class SocketService extends GetxService {
 
   int _retryCount = 0;
   Timer? _retryTimer;
+  // ✅ Add this — single source of truth for socket readiness
+  final _onConnectedController = StreamController<void>.broadcast();
+  Stream<void> get onConnected => _onConnectedController.stream;
 
   /// Called once inside _registerListeners() — hooks into socket lifecycle.
   // At the top of _registerRetryListeners()
@@ -613,6 +240,14 @@ class SocketService extends GetxService {
       _retryTimer?.cancel();
       _retryTimer = null;
       log("🔁 Retry state reset — socket healthy");
+      log("✅ Socket Connected: ${_socket!.id}");
+
+      if (!(_connectCompleter?.isCompleted ?? true)) {
+        _connectCompleter?.complete();
+      }
+
+      // ✅ Broadcast to all listeners
+      _onConnectedController.add(null);
 
       // ✅ NEW
       if (Get.isRegistered<SocketStatusController>()) {
@@ -620,8 +255,10 @@ class SocketService extends GetxService {
       }
     });
 
-    _socket!.onDisconnect((_) {
+    _socket!.onDisconnect((reason) {
+      log("🔌 Disconnected — reason: $reason");
       log("🔌 Socket disconnected — scheduling retry...");
+
       _scheduleRetry();
     });
 

@@ -39,6 +39,21 @@ class SignoutService {
       Get.find<SocketService>().disconnectSocket();
     }
 
+    if (Get.isRegistered<ChatController>()) {
+      Get.find<ChatController>().clearData();
+    }
+
+    if (Get.isRegistered<NotificationController>()) {
+      Get.find<NotificationController>().notifications.clear();
+    }
+
+    if (Get.isRegistered<WaveRequestController>()) {
+      Get.find<WaveRequestController>().newWaveList.clear();
+    }
+
+    if (Get.isRegistered<ProfileController>()) {
+      Get.find<ProfileController>().userProfileData.value = null;
+    }
     // Delete user-scoped controllers
     final controllersToDelete = [
       ChatController,
@@ -57,23 +72,6 @@ class SignoutService {
         Get.delete(tag: controller.toString(), force: true);
       }
     }
-
-    if (Get.isRegistered<ChatController>()) {
-      Get.find<ChatController>().clearData();
-    }
-
-    if (Get.isRegistered<NotificationController>()) {
-      Get.find<NotificationController>().notifications.clear();
-    }
-
-    if (Get.isRegistered<WaveRequestController>()) {
-      Get.find<WaveRequestController>().newWaveList.clear();
-    }
-
-    if (Get.isRegistered<ProfileController>()) {
-      Get.find<ProfileController>().userProfileData.value = null;
-    }
-
     // Clear storage
     AppStorage.to.logout();
 

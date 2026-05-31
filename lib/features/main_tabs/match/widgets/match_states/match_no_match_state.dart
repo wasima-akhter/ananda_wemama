@@ -21,7 +21,11 @@ class MatchNoMatchState extends StatelessWidget {
             style: TxtStyle.outfitSmTitleSec,
           ),
 
-          Text(Strings.checkBackLater, textAlign: TextAlign.center, style: TxtStyle.outfitSmSecNor),
+          Text(
+            Strings.checkBackLater,
+            textAlign: TextAlign.center,
+            style: TxtStyle.outfitSmSecNor,
+          ),
 
           Gap(itemGap * 3),
 

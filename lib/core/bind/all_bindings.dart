@@ -57,27 +57,8 @@ import '../enums/app_enums.dart';
 import '../enums/ui_enums.dart';
 import '../network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../network/helpers/network_helpers.dart';
-import '../services/socket/socket_service.dart';
-import '../services/socket/socket_status_controller.dart';
 import '../state_screens/success/controller/success_controller.dart';
 import '../utils/extension/binding_extensions.dart';
-
-class InitialBinding extends Bindings {
-  @override
-  void dependencies() {
-    // ── Register SocketService first (MatchController depends on it) ──────────
-    Get.putPermanent(SocketService());
-    Get.put(SocketStatusController(), permanent: true);
-
-    final socketService = Get.find<SocketService>();
-
-    // ── Connect immediately if user is already logged in (token exists) ───────
-    // On fresh login this is skipped — SigninService.connectSocket() handles it.
-    if ((getToken ?? '').isNotEmpty) {
-      socketService.connectSocket();
-    }
-  }
-}
 
 // ─────────────────────────────
 // 🔹 Splash & Onboarding Flow

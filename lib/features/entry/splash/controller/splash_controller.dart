@@ -1,7 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
-import '../../../../core/services/socket/socket_service.dart';
 
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();

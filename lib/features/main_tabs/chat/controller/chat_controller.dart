@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:mama_app/core/services/socket/socket_events.dart';
 import 'package:mama_app/core/utils/extension/string_extension.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../model/chat_list_item_model.dart';
@@ -33,7 +33,7 @@ class ChatController extends GetxController {
 
   final chatScrollCtrl = ScrollController();
   Worker? _tabWorker;
-
+  /*
   @override
   void onInit() {
     super.onInit();
@@ -45,9 +45,20 @@ class ChatController extends GetxController {
       if (index == 1) {
         log("🔄 Chat tab opened");
 
-        getChatList(forceRefresh: true);
+        // getChatList(forceRefresh: true);
       }
     });
+
+    // ✅ Auto-retry when socket reconnects
+
+    if (Get.isRegistered<SocketStatusController>()) {
+      ever(Get.find<SocketStatusController>().status, (status) {
+        if (status == SocketStatus.connected) {
+          log("🔌 Socket reconnected — refreshing chat list");
+          getChatList(forceRefresh: true);
+        }
+      });
+    }
   }
 
   @override
@@ -66,6 +77,40 @@ class ChatController extends GetxController {
 
     // Force refresh every time screen opens
     getChatList(forceRefresh: true);
+  }
+*/
+  bool _isFetchingChatList = false; // ✅ prevents overlapping calls
+  @override
+  void onInit() {
+    super.onInit();
+
+    final nav = Get.find<MainNavController>();
+
+    _tabWorker = ever(nav.currentIndex, (index) {
+      if (index == 1) {
+        log("🔄 Chat tab opened");
+        // ✅ Only fetch if list is empty — don't re-fetch on every tab switch
+        if (realChatList.isEmpty) {
+          getChatList(forceRefresh: true);
+        }
+      }
+    });
+
+    // ✅ Re-fetch on socket connect/reconnect
+    _socketConnectedSub = socket.onConnected.listen((_) {
+      log("🔌 Socket connected — fetching chat list");
+      getChatList(forceRefresh: true);
+    });
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    // ✅ Only if socket already connected AND list is empty
+    // _socketConnectedSub handles it if socket connects later
+    if (socket.isConnected && realChatList.isEmpty) {
+      getChatList(forceRefresh: true);
+    }
   }
 
   void clearAll() => searchController.clear();
@@ -102,6 +147,7 @@ class ChatController extends GetxController {
 
     realChatList.assignAll(deduped);
     isLoading_.value = false;
+    _isFetchingChatList = false; // ✅ unlock early on success
 
     if (!(_chatListCompleter?.isCompleted ?? true)) {
       _chatListCompleter?.complete();
@@ -109,7 +155,7 @@ class ChatController extends GetxController {
   }
 
   // ── Emit ─────────────────────────────────────────────────────────────────
-
+  /*
   Future<void> getChatList({bool forceRefresh = true}) async {
     if (forceRefresh) {
       realChatList.clear();
@@ -131,6 +177,52 @@ class ChatController extends GetxController {
     } catch (e, stack) {
       log("❌ Error fetching chat list: $e");
       log("STACK: $stack");
+    } finally {
+      isLoading_.value = false;
+    }
+  }
+*/
+  StreamSubscription? _socketConnectedSub;
+
+  Future<void> getChatList({bool forceRefresh = true}) async {
+    // ✅ Guard against overlapping calls
+    if (_isFetchingChatList) {
+      log("⏭️ getChatList already in progress — skipping");
+      return;
+    }
+    if (forceRefresh) realChatList.clear();
+
+    // ✅ If not connected, wait up to 10s for connection instead of emitting into void
+    if (!socket.isConnected) {
+      log("⏳ getChatList — waiting for socket to connect...");
+      try {
+        await socket.onConnected.first.timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException("Socket never connected"),
+        );
+      } catch (e) {
+        log("🚫 getChatList aborted — socket not available: $e");
+
+        return;
+      } finally {
+        _isFetchingChatList = false; // 🔓 unlock
+        isLoading_.value = false;
+      }
+    }
+
+    isLoading_.value = true;
+    _isFetchingChatList = true; // 🔒 lock
+    _chatListCompleter = Completer<void>();
+
+    try {
+      socket.emit(SocketEvents.getChatList, {});
+
+      await _chatListCompleter!.future.timeout(
+        const Duration(seconds: 8),
+        onTimeout: () => log("⚠️ getChatList — no response in 8s"),
+      );
+    } catch (e) {
+      log("❌ getChatList error: $e");
     } finally {
       isLoading_.value = false;
     }

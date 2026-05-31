@@ -196,87 +196,70 @@ class MatchController extends GetxController {
     }
   }
 */
+
+  RxBool isLocationProcessing = false.obs;
   Future<void> enableLocationGatewayFlow() async {
+    isLocationProcessing.value = true;
+
     final result = await AppLocationManager.to.enableLocationGateway();
 
+    isLocationProcessing.value = false;
+
     if (result == LocationFlowResult.success) {
-      matchState.value = MatchState.searching;
+      // matchState.value = MatchState.searching;
       await startSearching();
       return;
     }
-
     if (result == LocationFlowResult.serviceDisabled) {
       Snack.showWarning("Please turn on location service");
       await Geolocator.openLocationSettings();
       return;
     }
-
     if (result == LocationFlowResult.permissionDenied) {
       Snack.showWarning("Location permission required");
       return;
     }
-
     if (result == LocationFlowResult.permissionDeniedForever) {
       Snack.showError("Enable permission from app settings");
       await Geolocator.openAppSettings();
       return;
     }
-
     Snack.showError("Location unavailable");
   }
 
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
-
-    // ─────────────────────────────────────
-    // 1. LOCATION + PERMISSION FLOW
-    // ─────────────────────────────────────
-    final locationResult = await AppLocationManager.to.ensureFreshLocation(
-      showDialogs: true,
-      forceRefresh: true,
-    );
-
-    if (locationResult != LocationFlowResult.success) {
-      matchState.value = MatchState.locationUnavailable;
-      return;
-    }
-    // ─────────────────────────────────────
-    // 2. FREE USER LIMIT
-    // ─────────────────────────────────────
-    if (!isPaidUser && searchesToday >= freeDailyLimit) {
-      subUpgradeNeeded.value = true;
-
-      showDailyLimitDialog();
-
-      await _fetchMatchesAndUpgrade();
-
-      return;
-    }
-
-    // ─────────────────────────────────────
-    // 3. FREE USER COUNT
-    // ─────────────────────────────────────
-    if (!isPaidUser) {
-      searchesToday++;
-    }
-
-    // ─────────────────────────────────────
-    // 4. SEARCHING UI STATE
-    // ─────────────────────────────────────
-    matchState.value = MatchState.searching;
-
-    await Future.delayed(const Duration(seconds: 5));
-
-    if (currentSearchId != _searchId) return;
-
-    // ─────────────────────────────────────
-    // 5. FETCH MATCHES
-    // ─────────────────────────────────────
     if (isSearchLoading.value) return;
-
     isSearchLoading.value = true;
 
     try {
+      // ───────── LIMIT CHECK ─────────
+      if (!isPaidUser && searchesToday >= freeDailyLimit) {
+        subUpgradeNeeded.value = true;
+
+        await handleDailyLimitReached();
+
+        return;
+      }
+
+      matchState.value = MatchState.searching;
+      // ───────── LOCATION ─────────
+      final locationResult = await AppLocationManager.to.ensureFreshLocation(
+        showDialogs: true,
+        forceRefresh: true,
+      );
+
+      if (locationResult != LocationFlowResult.success) {
+        matchState.value = MatchState.locationUnavailable;
+        return;
+      }
+
+      if (!isPaidUser) searchesToday++;
+
+      // optional UX delay
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      // ───────── API CALL ─────────
       final alm = AppLocationManager.to;
 
       final data = await MatchService().fetchMatches(
@@ -284,6 +267,7 @@ class MatchController extends GetxController {
         longitude: alm.longitude.value.toString(),
       );
 
+      // ❗ ONLY NOW check cancellation
       if (currentSearchId != _searchId) return;
 
       if (data.isEmpty) {
@@ -292,12 +276,10 @@ class MatchController extends GetxController {
       }
 
       fetchedMatches.value = data;
-
       _currentMatchIndex = 0;
-
       matchState.value = MatchState.found;
     } catch (e) {
-      log("❌ startSearching fetch error: $e");
+      log("❌ startSearching error: $e");
 
       if (currentSearchId == _searchId) {
         matchState.value = MatchState.noMatch;
@@ -370,6 +352,28 @@ class MatchController extends GetxController {
     Get.toNamed(RoutePaths.subscriptionUpgrade);
   }
 
+  /////
+  Future<void> handleDailyLimitReached() async {
+    // Stop any search UI immediately
+    matchState.value = MatchState.idle;
+
+    // Show popup
+    showDailyLimitDialog();
+
+    // Let user read it
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Close popup if still open
+
+    Get.back();
+
+    // Navigate
+    await Get.toNamed(RoutePaths.subscriptionUpgrade);
+
+    // When user comes back
+    matchState.value = MatchState.idle;
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
   // CANCEL / RESET
   // ═══════════════════════════════════════════════════════════════════════════
@@ -377,6 +381,7 @@ class MatchController extends GetxController {
   void cancelSearch() {
     _searchId++;
     matchState.value = MatchState.idle;
+    isSearchLoading.value = false;
   }
 
   void toggleSeeMore() => isSeeMore.toggle();

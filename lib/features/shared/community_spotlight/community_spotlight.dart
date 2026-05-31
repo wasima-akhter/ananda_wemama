@@ -444,7 +444,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                   height: 12,
                   width: double.infinity * 0.6,
                   decoration: BoxDecoration(
-                    color: c.primary.withOpacity(0.08),
+                    color: c.primary.withOpacity(0.07),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),

@@ -60,7 +60,11 @@ class AllAutoheightWebview extends StatelessWidget {
           _plainText,
           maxLines: previewMaxLines,
           overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: fontSize ?? 14, height: 1.6, color: c.secondary),
+          style: TextStyle(
+            fontSize: fontSize ?? 14,
+            height: 1.6,
+            color: c.secondary,
+          ),
         ),
       );
     }
@@ -73,7 +77,8 @@ class AllAutoheightWebview extends StatelessWidget {
         NavigationDelegate(
           onNavigationRequest: (request) async {
             // allow initial about:blank load
-            if (request.url == 'about:blank') return NavigationDecision.navigate;
+            if (request.url == 'about:blank')
+              return NavigationDecision.navigate;
             final uri = Uri.tryParse(request.url);
             if (uri != null) {
               try {
@@ -203,239 +208,96 @@ $htmlContent
   }
 }
 
-// import 'package:mama_app/app/helper_widgets_export.dart';
-// import 'package:url_launcher/url_launcher.dart';
-// import 'package:webview_flutter/webview_flutter.dart';
+class SimpleWebViewWidget extends StatelessWidget {
+  final String htmlContent;
+  final double height;
+  final double? fontSize;
+  final Color backgroundColor;
+  final Color? textColor;
+  final EdgeInsets padding;
 
-// class AllAutoheightWebview extends StatefulWidget {
-//   final String htmlContent;
-//   final double? fontSize;
-//   final Color backgroundColor;
-//   final EdgeInsets padding;
-//   final bool previewOnly;
-//   final int previewMaxLines;
-//   final Color textColor;
+  const SimpleWebViewWidget({
+    super.key,
+    required this.htmlContent,
+    this.height = 300,
+    this.fontSize,
+    this.backgroundColor = Colors.transparent,
+    this.textColor,
+    this.padding = EdgeInsets.zero,
+  });
 
-//   const AllAutoheightWebview({
-//     super.key,
-//     required this.htmlContent,
-//     this.fontSize,
-//     this.backgroundColor = Colors.transparent,
-//     this.padding = EdgeInsets.zero,
-//     this.previewOnly = false,
-//     this.previewMaxLines = 3,
-//     this.textColor = const Color(0xFF333333),
-//   });
+  String _toCssColor(Color color) {
+    if (color == Colors.transparent) return 'transparent';
+    return 'rgba(${color.red},${color.green},${color.blue},${color.opacity})';
+  }
 
-//   @override
-//   State<AllAutoheightWebview> createState() => _AllAutoheightWebviewState();
-// }
+  String get _paddingCss =>
+      '${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px';
 
-// class _AllAutoheightWebviewState extends State<AllAutoheightWebview> {
-//   WebViewController? _controller;
-//   late String _channelName;
-//   double _height = 0;
-//   bool _isReady = false;
+  @override
+  Widget build(BuildContext context) {
+    final controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(backgroundColor)
+      ..enableZoom(false)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onNavigationRequest: (request) async {
+            if (request.url == 'about:blank') {
+              return NavigationDecision.navigate;
+            }
 
-//   // ── Helpers ───────────────────────────────────────────────────────────────
+            final uri = Uri.tryParse(request.url);
 
-//   String get _plainText => widget.htmlContent
-//       .replaceAll(RegExp(r'<[^>]*>'), ' ')
-//       .replaceAll(RegExp(r'&nbsp;'), ' ')
-//       .replaceAll(RegExp(r'&amp;'), '&')
-//       .replaceAll(RegExp(r'&lt;'), '<')
-//       .replaceAll(RegExp(r'&gt;'), '>')
-//       .replaceAll(RegExp(r'\s+'), ' ')
-//       .trim();
+            if (uri != null) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
 
-//   String _toCssColor(Color color) {
-//     if (color == Colors.transparent) return 'transparent';
-//     return 'rgba(${color.red},${color.green},${color.blue},${color.opacity})';
-//   }
+            return NavigationDecision.prevent;
+          },
+        ),
+      )
+      ..loadHtmlString("""
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html, body {
+  margin: 0;
+  padding: $_paddingCss;
+  background: ${_toCssColor(backgroundColor)};
+  font-family: 'Outfit', sans-serif;
+  font-size: ${fontSize ?? 14}px;
+  color: ${_toCssColor(textColor ?? c.primary)};
+}
 
-//   String get _paddingCss {
-//     final p = widget.padding;
-//     return '${p.top}px ${p.right}px ${p.bottom}px ${p.left}px';
-//   }
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
-//   // ── Lifecycle ─────────────────────────────────────────────────────────────
+img, iframe, table, video {
+  max-width: 100% !important;
+  height: auto !important;
+}
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     if (!widget.previewOnly) {
-//       _channelName = 'HC${hashCode.abs()}';
-//       _initController();
-//     }
-//   }
+a {
+  color: blue;
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+$htmlContent
+</body>
+</html>
+""");
 
-//   @override
-//   void didUpdateWidget(AllAutoheightWebview old) {
-//     super.didUpdateWidget(old);
-//     if (widget.previewOnly) return;
-
-//     if (old.htmlContent != widget.htmlContent) {
-//       setState(() {
-//         _height = 0;
-//         _isReady = false;
-//       });
-//       _controller?.loadHtmlString(_html);
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _controller = null;
-//     super.dispose();
-//   }
-
-//   // ── Controller ────────────────────────────────────────────────────────────
-
-//   void _initController() {
-//     _controller = WebViewController()
-//       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-//       ..setBackgroundColor(widget.backgroundColor)
-//       ..enableZoom(false)
-//       ..setNavigationDelegate(
-//         NavigationDelegate(
-//           onNavigationRequest: (req) async {
-//             if (req.url == 'about:blank') return NavigationDecision.navigate;
-//             final uri = Uri.tryParse(req.url);
-//             if (uri != null) {
-//               try {
-//                 await launchUrl(uri, mode: LaunchMode.externalApplication);
-//               } catch (e) {
-//                 log('launch error: $e');
-//               }
-//             }
-//             return NavigationDecision.prevent;
-//           },
-//         ),
-//       )
-//       ..addJavaScriptChannel(
-//         _channelName,
-//         onMessageReceived: (msg) {
-//           final h = double.tryParse(msg.message) ?? 0;
-//           if (h > 0 && mounted) {
-//             setState(() {
-//               _height = h;
-//               _isReady = true;
-//             });
-//           }
-//         },
-//       )
-//       ..loadHtmlString(_html);
-//   }
-
-//   // ── HTML ──────────────────────────────────────────────────────────────────
-
-//   String get _html =>
-//       '''
-// <!DOCTYPE html>
-// <html>
-// <head>
-// <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-// <style>
-//   html, body {
-//     margin: 0 !important;
-//     padding: $_paddingCss !important;
-//     background: ${_toCssColor(widget.backgroundColor)} !important;
-//     font-family: sans-serif !important;
-//     font-size: ${widget.fontSize ?? 14}px !important;
-//     color: ${_toCssColor(widget.textColor)} !important;
-//     word-wrap: break-word;
-//     overflow-x: hidden;
-//   }
-//   * {
-//     background-color: transparent !important;
-//     background-image: none !important;
-//     max-width: 100% !important;
-//     box-sizing: border-box !important;
-//     font-family: sans-serif !important;
-//   }
-//   /* preserve bold/italic but strip color overrides */
-//   span, p, li, td, div {
-//     color: inherit !important;
-//     line-height: 1.6 !important;
-//   }
-//   img, video, iframe, table {
-//     max-width: 100% !important;
-//     height: auto !important;
-//     display: block;
-//   }
-//   a { color: #2196F3 !important; text-decoration: underline; word-break: break-word; }
-//   p:empty, li:empty, br + br { display: none; }
-// </style>
-// </head>
-// <body>
-// ${widget.htmlContent}
-// <script>
-//   var _sent = false;
-//   function sendHeight() {
-//     var h = Math.max(
-//       document.body.scrollHeight,
-//       document.documentElement.scrollHeight,
-//       document.body.offsetHeight,
-//       document.documentElement.offsetHeight
-//     );
-//     if (h > 0) {
-//       $_channelName.postMessage(String(h));
-//     }
-//   }
-//   // staggered — catches fonts, images, deferred rendering
-//   function scheduleAll() {
-//     sendHeight();
-//     [50, 200, 500, 1000, 2000].forEach(function(ms) {
-//       setTimeout(sendHeight, ms);
-//     });
-//   }
-//   if (document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', scheduleAll);
-//   } else {
-//     scheduleAll();
-//   }
-//   // images
-//   document.querySelectorAll('img').forEach(function(img) {
-//     if (!img.complete) {
-//       img.addEventListener('load', sendHeight);
-//       img.addEventListener('error', sendHeight);
-//     }
-//   });
-//   // resize (orientation change)
-//   window.addEventListener('resize', sendHeight);
-// </script>
-// </body>
-// </html>
-// ''';
-
-//   // ── Build ─────────────────────────────────────────────────────────────────
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Preview mode — no WebView at all
-//     if (widget.previewOnly) {
-//       return Padding(
-//         padding: widget.padding,
-//         child: Text(
-//           _plainText,
-//           maxLines: widget.previewMaxLines,
-//           overflow: TextOverflow.ellipsis,
-//           style: TextStyle(fontSize: widget.fontSize ?? 14, height: 1.6, color: widget.textColor),
-//         ),
-//       );
-//     }
-
-//     return AnimatedCrossFade(
-//       duration: const Duration(milliseconds: 350),
-//       crossFadeState: _isReady ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-//       firstChild: const SizedBox(height: 100, child: Center(child: LoadingPrimary())),
-//       secondChild: SizedBox(
-//         width: double.infinity,
-//         height: _height,
-//         child: _controller != null
-//             ? WebViewWidget(controller: _controller!)
-//             : const SizedBox.shrink(),
-//       ),
-//     );
-//   }
-// }
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: WebViewWidget(controller: controller),
+    );
+  }
+}

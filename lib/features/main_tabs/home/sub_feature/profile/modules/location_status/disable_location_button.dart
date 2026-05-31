@@ -8,12 +8,12 @@ class DisableLocationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CusGestureDetector(
       onTap: () async {
+        Get.back();
         final success = await AppLocationManager.to.disableLocation();
 
         if (success) {
           AppLocationManager.to.isLocationActive.value = false;
-
-          Get.back();
+          closeAllSnackbar();
 
           Snack.showWarning("Location disabled. You are now inactive.");
         }

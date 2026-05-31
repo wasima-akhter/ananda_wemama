@@ -18,7 +18,7 @@ class App extends StatelessWidget {
   const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
-    return hasInternet ? RoutePaths.signin : RoutePaths.offlineScreen;
+    return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;
   }
 
   @override
@@ -64,8 +64,15 @@ class App extends StatelessWidget {
 
             // ── Connect immediately if user is already logged in (token exists) ───────
             // On fresh login this is skipped — SigninService.connectSocket() handles it.
+            // if ((getToken ?? '').isNotEmpty) {
+            //   socketService.connectSocket();
+            // }
+
+            // ✅ Delay until after first frame so widget tree is ready
             if ((getToken ?? '').isNotEmpty) {
-              socketService.connectSocket();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                socketService.connectSocket();
+              });
             }
           }),
         );

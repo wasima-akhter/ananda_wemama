@@ -90,7 +90,7 @@ class MoodTypeInsightDesItem extends StatelessWidget {
           Text(title, style: TxtStyle.outfitLarTitle),
           Gap(itemGap),
           // Full view with custom background + padding
-          AllAutoheightWebview(
+          SimpleWebViewWidget(
             htmlContent: description,
             backgroundColor: c.cardOngoing,
             padding: EdgeInsets.symmetric(horizontal: 4),
@@ -113,7 +113,9 @@ class MoodTypeInsightDesItem extends StatelessWidget {
                   vp: 8,
                   hp: 12,
                   child: SvgIconColored(
-                    iconPath: isBookmarked ? IconsPath.bookmarkFilled : IconsPath.bookmarkOutlined,
+                    iconPath: isBookmarked
+                        ? IconsPath.bookmarkFilled
+                        : IconsPath.bookmarkOutlined,
                     iconColor: white,
                   ),
                 ),

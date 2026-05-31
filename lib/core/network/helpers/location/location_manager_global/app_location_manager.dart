@@ -112,15 +112,17 @@ class AppLocationManager extends GetxService {
       storage.setUserAddress('');
       storage.setUserCity('');
 
-      // Update backend
-      await _updateBackend();
-
       // Open location settings only
-      await Geolocator.openLocationSettings();
+      final res = await Geolocator.openLocationSettings();
 
-      log("📍 Location disabled");
+      if (res == true) {
+        // Update backend
+        await _updateBackend();
+        log("📍 Location disabled");
+        return true;
+      }
 
-      return true;
+      return false;
     } catch (e) {
       log("❌ disableLocation error: $e");
       return false;

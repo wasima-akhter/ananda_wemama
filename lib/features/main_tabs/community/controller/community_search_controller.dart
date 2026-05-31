@@ -6,13 +6,20 @@ import '../model/community_item_model.dart';
 import '../services/community_service.dart';
 import 'community_action_controller.dart';
 
-class CommunitySearchController extends GetxController with WidgetsBindingObserver {
+class CommunitySearchController extends GetxController
+    with WidgetsBindingObserver {
   final isKeyboardOpen = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+
+    // ✅ Skip API calls if not logged in — will be triggered after login
+    if ((getToken ?? '').isEmpty) {
+      log("CommunityController: no token, skipping initial fetch");
+      return;
+    }
 
     getSuggestedCommunityList();
   }
@@ -119,7 +126,10 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
   //--------------------->
   final actionCtrl = Get.find<CommunityActionController>();
 
-  void onTapItemBtn({required MyCommunityBtnState btnState, required String communityItemId}) {
+  void onTapItemBtn({
+    required MyCommunityBtnState btnState,
+    required String communityItemId,
+  }) {
     if (btnState == MyCommunityBtnState.join) {
       communityGuidlineDialog(
         isLoading: actionCtrl.isJoinLoading.value,
@@ -137,25 +147,36 @@ class CommunitySearchController extends GetxController with WidgetsBindingObserv
               },
             );
 
-            searchedCommunityList.removeWhere((item) => item.id == communityItemId);
+            searchedCommunityList.removeWhere(
+              (item) => item.id == communityItemId,
+            );
           }
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.manage, "communityItemId": communityItemId},
+        arguments: {
+          'btnState': MyCommunityBtnState.manage,
+          "communityItemId": communityItemId,
+        },
       );
     } else if (btnState == MyCommunityBtnState.visit) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.visit, "communityItemId": communityItemId},
+        arguments: {
+          'btnState': MyCommunityBtnState.visit,
+          "communityItemId": communityItemId,
+        },
       );
     }
   }
 
   // ← tapping the item row (not the button) = just viewing
-  void onTapItem({required MyCommunityBtnState btnState, required String communityItemId}) {
+  void onTapItem({
+    required MyCommunityBtnState btnState,
+    required String communityItemId,
+  }) {
     Get.toNamed(
       RoutePaths.communityDetail,
       arguments: {'btnState': btnState, "communityItemId": communityItemId},

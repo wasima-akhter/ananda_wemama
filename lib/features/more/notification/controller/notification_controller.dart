@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:mama_app/app/service_export.dart';
 
-import '../../../../app/controller_export.dart';
 import '../model/notifications_model.dart';
 import '../service/notification_service.dart';
 
@@ -51,12 +49,16 @@ class NotificationController extends GetxController {
   Future<void> updateIsSeen({required String notificationId}) async {
     isupdateIsSeenLoading_.value = true;
     try {
-      final isSuccess = await _service.updateIsSeen(notificationId: notificationId);
+      final isSuccess = await _service.updateIsSeen(
+        notificationId: notificationId,
+      );
       if (isSuccess) {
         final index = notifications.indexWhere((e) => e.id == notificationId);
         if (index != -1) {
           notifications[index] = notifications[index].copyWith(isSeen: true);
         }
+
+        "Notification marked as seen".showToast();
       }
     } catch (e) {
       log("Error updateIsSeen: $e");

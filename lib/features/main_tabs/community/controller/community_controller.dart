@@ -10,6 +10,12 @@ class CommunityController extends GetxController {
   void onInit() {
     super.onInit();
 
+    // ✅ Skip API calls if not logged in — will be triggered after login
+    if ((getToken ?? '').isEmpty) {
+      log("CommunityController: no token, skipping initial fetch");
+      return;
+    }
+
     getMyCommunityList();
     getManagedCommunityList();
   }
@@ -94,7 +100,10 @@ class CommunityController extends GetxController {
     }
   }
 
-  void onTapItemBtn({required MyCommunityBtnState btnState, required String communityItemId}) {
+  void onTapItemBtn({
+    required MyCommunityBtnState btnState,
+    required String communityItemId,
+  }) {
     if (btnState == MyCommunityBtnState.join) {
       communityGuidlineDialog(
         isLoading: false,
@@ -102,28 +111,40 @@ class CommunityController extends GetxController {
           Get.back();
           Get.toNamed(
             RoutePaths.communityDetail,
-            arguments: {"btnState": MyCommunityBtnState.join, "communityItemId": communityItemId},
+            arguments: {
+              "btnState": MyCommunityBtnState.join,
+              "communityItemId": communityItemId,
+            },
           );
         },
       );
     } else if (btnState == MyCommunityBtnState.manage) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.manage, "communityItemId": communityItemId},
+        arguments: {
+          'btnState': MyCommunityBtnState.manage,
+          "communityItemId": communityItemId,
+        },
       );
     } else if (btnState == MyCommunityBtnState.visit) {
       Get.toNamed(
         RoutePaths.communityDetail,
-        arguments: {'btnState': MyCommunityBtnState.visit, "communityItemId": communityItemId},
+        arguments: {
+          'btnState': MyCommunityBtnState.visit,
+          "communityItemId": communityItemId,
+        },
       );
     }
   }
 
   // ← tapping the item row (not the button) = just viewing
-  void onTapItem({required MyCommunityBtnState btnState, required String communityItemId}) {
+  void onTapItem({
+    required MyCommunityBtnState btnState,
+    required String communityItemId,
+  }) {
     Get.toNamed(
       RoutePaths.communityDetail,
-      
+
       arguments: {'btnState': btnState, "communityItemId": communityItemId},
     );
   }

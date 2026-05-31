@@ -29,11 +29,13 @@ class MatchLocationUnavailableState extends StatelessWidget {
 
           Gap(itemGap * 3),
 
-          CustomBtnWTxt(
-            btnTxt: "Enable Location",
-            onTap: () => mc.enableLocationGatewayFlow(),
-            isLoading: false,
-          ),
+          Obx(() {
+            return CustomBtnWTxt(
+              btnTxt: "Enable Location",
+              onTap: () => mc.enableLocationGatewayFlow(),
+              isLoading: mc.isLocationProcessing.value,
+            );
+          }),
 
           Gap(itemGap * 2),
         ],

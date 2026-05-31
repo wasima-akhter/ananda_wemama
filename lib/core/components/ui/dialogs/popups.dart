@@ -111,7 +111,11 @@ Future<void> showWaveSentDialog({required RxBool stopSearching}) {
 }
 
 Future<void> showDailyLimitDialog() {
-  return showAnimatedDialog(context: Get.context!, child: DailyLimitPopup());
+  return showAnimatedDialog(
+    context: Get.context!,
+    barrierDismissible: true,
+    child: DailyLimitPopup(),
+  );
 }
 
 Future<void> showLockCommentialog({required bool isLocked}) {
