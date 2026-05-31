@@ -18,6 +18,7 @@ class MoodInsightsScreen extends StatelessWidget {
         title: Strings.moodInsights,
         onTapBack: mic.handleBack,
       ),
+      isScrollable: false,
       child: Obx(() {
         if (mic.isLoading.value) {
           return const Center(child: LoadingPrimary());
@@ -83,24 +84,26 @@ class MoodInsightsScreen extends StatelessWidget {
 
             Gap(itemGap),
 
-            MoodTypeInsightDesItem(
-              id: item.id,
-              title: item.title,
-              description: item.description, // ✅ was bullets
-              isBookmarked: bc.isBookmarked(item.id),
-              onTapBookmark: () {
-                bc.toggleBookmark(
-                  BookmarkItem(
-                    id: item.id,
-                    title: item.title,
-                    description:
-                        item.description, // ✅ update BookmarkItem too if needed
-                    moodType: mic.passedMoodType,
-                    imageUrl: mlc.getMoodImage(mic.passedMoodType),
-                  ),
-                );
-              },
-              onTapExpertBtn: () => goToMainNavWithTab(4),
+            Flexible(
+              child: MoodTypeInsightDesItem(
+                id: item.id,
+                title: item.title,
+                description: item.description, // ✅ was bullets
+                isBookmarked: bc.isBookmarked(item.id),
+                onTapBookmark: () {
+                  bc.toggleBookmark(
+                    BookmarkItem(
+                      id: item.id,
+                      title: item.title,
+                      description: item
+                          .description, // ✅ update BookmarkItem too if needed
+                      moodType: mic.passedMoodType,
+                      imageUrl: mlc.getMoodImage(mic.passedMoodType),
+                    ),
+                  );
+                },
+                onTapExpertBtn: () => goToMainNavWithTab(4),
+              ),
             ),
           ],
         ).get10cm;

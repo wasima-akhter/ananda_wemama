@@ -210,16 +210,16 @@ $htmlContent
 
 class SimpleWebViewWidget extends StatelessWidget {
   final String htmlContent;
-  final double height;
+  final double? height;
   final double? fontSize;
   final Color backgroundColor;
   final Color? textColor;
   final EdgeInsets padding;
 
-  const SimpleWebViewWidget({
+  SimpleWebViewWidget({
     super.key,
     required this.htmlContent,
-    this.height = 300,
+    this.height,
     this.fontSize,
     this.backgroundColor = Colors.transparent,
     this.textColor,
@@ -233,6 +233,9 @@ class SimpleWebViewWidget extends StatelessWidget {
 
   String get _paddingCss =>
       '${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px';
+
+  String scrollbarColor =
+      '#${c.primary.withValues(alpha: 0.5).toARGB32().toRadixString(16).substring(2)}';
 
   @override
   Widget build(BuildContext context) {
@@ -270,6 +273,18 @@ html, body {
   font-family: 'Outfit', sans-serif;
   font-size: ${fontSize ?? 14}px;
   color: ${_toCssColor(textColor ?? c.primary)};
+
+  height: 100%;
+  overflow: hidden;
+}
+
+
+
+
+#content {
+  height: 100vh;
+  overflow-y: auto;
+  padding-right: 16px; /* gap between content and scrollbar */
 }
 
 * {
@@ -286,16 +301,50 @@ a {
   color: blue;
   text-decoration: underline;
 }
+
+
+/* Width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px;
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background: $scrollbarColor;
+  border-radius: 10px;
+}
+
+/* Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #9B6DE3;
+}
 </style>
 </head>
 <body>
-$htmlContent
+  <div id="content">
+    $htmlContent
+  </div>
+
+
 </body>
 </html>
 """);
 
+    if (height != null) {
+      return SizedBox(
+        height: height,
+        width: double.infinity,
+        child: WebViewWidget(controller: controller),
+      );
+    }
+
     return SizedBox(
-      height: height,
       width: double.infinity,
       child: WebViewWidget(controller: controller),
     );

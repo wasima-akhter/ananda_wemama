@@ -82,47 +82,52 @@ class MoodTypeInsightDesItem extends StatelessWidget {
     return ContainerBordered(
       contClr: c.cardOngoing,
       rad: 24,
-      hp: 14,
+      hp: 0,
       vp: 18,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: TxtStyle.outfitLarTitle),
-          Gap(itemGap),
-          // Full view with custom background + padding
-          SimpleWebViewWidget(
-            htmlContent: description,
-            backgroundColor: c.cardOngoing,
-            padding: EdgeInsets.symmetric(horizontal: 4),
-          ),
-          16.verticalSpace,
-          Row(
-            children: [
-              Expanded(
-                child: SmallNavBtn(
-                  text: Strings.goToExpertCategory.capEachWord(),
-                  onTap: onTapExpertBtn,
-                ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: TxtStyle.outfitLarTitle),
+            Gap(itemGap),
+            // Full view with custom background + padding
+            Flexible(
+              child: SimpleWebViewWidget(
+                htmlContent: description,
+                backgroundColor: c.cardOngoing,
+                textColor: c.secondary,
               ),
-              Gap(itemGap),
-              CusGestureDetector(
-                onTap: onTapBookmark,
-                child: ContainerBordered(
-                  contClr: c.primary,
-                  rad: 18,
-                  vp: 8,
-                  hp: 12,
-                  child: SvgIconColored(
-                    iconPath: isBookmarked
-                        ? IconsPath.bookmarkFilled
-                        : IconsPath.bookmarkOutlined,
-                    iconColor: white,
+            ),
+            16.verticalSpace,
+            Row(
+              children: [
+                Expanded(
+                  child: SmallNavBtn(
+                    text: Strings.goToExpertCategory.capEachWord(),
+                    onTap: onTapExpertBtn,
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+                Gap(itemGap),
+                CusGestureDetector(
+                  onTap: onTapBookmark,
+                  child: ContainerBordered(
+                    contClr: c.primary,
+                    rad: 18,
+                    vp: 8,
+                    hp: 12,
+                    child: SvgIconColored(
+                      iconPath: isBookmarked
+                          ? IconsPath.bookmarkFilled
+                          : IconsPath.bookmarkOutlined,
+                      iconColor: white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     ).mB(itemGap);
   }
