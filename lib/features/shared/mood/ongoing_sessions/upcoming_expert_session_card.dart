@@ -47,6 +47,9 @@ class UpcomingExpertSessionCard extends StatelessWidget {
       boxShadow: boxShadowBottom(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: isFromUpcomgScreen == true
+            ? MainAxisAlignment.spaceBetween
+            : MainAxisAlignment.spaceBetween,
         children: [
           Text(
             Strings.upcomingExpertSession.capEachWord(),
@@ -116,7 +119,12 @@ class UpcomingExpertSessionCard extends StatelessWidget {
             style: TxtStyle.outfit(fs: 13, color: c.secondary),
           ),
           // isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
-          isFromUpcomgScreen == true ? Gap(itemGap) : const SizedBox(height: 6),
+          isFromUpcomgScreen == true
+              ? Gap(itemGap)
+              :
+                //
+                // Spacer(),
+                const SizedBox(height: 12),
           /*
           Row(
             children: [

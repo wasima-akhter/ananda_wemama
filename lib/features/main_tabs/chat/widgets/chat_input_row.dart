@@ -147,30 +147,66 @@ class ChatInputRow extends StatelessWidget {
                   hintText: Strings.typeSomething,
                   minLines: 1,
                   minHeight: 40,
-
                   suffix: CusCircleIconButton(
                     radius: 15,
                     onTap: () async {
+                      final canPickMore =
+                          cic.canAddImages(1) || cic.canAddFiles(1);
+
+                      if (!canPickMore) {
+                        Get.snackbar(
+                          "Limit reached",
+                          "You can upload maximum 5 files only.",
+                        );
+                        return;
+                      }
+
                       await showPickAnyFileBottomSheet(
                         onTapGallery: () async {
-                          Get.back(); // ✅ close sheet first
+                          Get.back();
+
+                          if (!cic.canAddImages(1)) {
+                            Get.snackbar(
+                              "Limit reached",
+                              "You can upload maximum 5 images only.",
+                            );
+                            return;
+                          }
+
                           await cic.pickMultipleFiles(
                             source: ImageSource.gallery,
                           );
                         },
                         onTapCamera: () async {
                           Get.back();
+
+                          if (!cic.canAddImages(1)) {
+                            Get.snackbar(
+                              "Limit reached",
+                              "You can upload maximum 5 images only.",
+                            );
+                            return;
+                          }
+
                           await cic.pickMultipleFiles(
                             source: ImageSource.camera,
                           );
                         },
                         onTapFile: () async {
                           Get.back();
+
+                          if (!cic.canAddFiles(1)) {
+                            Get.snackbar(
+                              "Limit reached",
+                              "You can upload maximum 5 files only.",
+                            );
+                            return;
+                          }
+
                           await cic.pickMultipleFiles();
                         },
                       );
                     },
-
                     child: SvgIcon(
                       iconPath: IconsPath.addPlusCircle,
                       height: 26,

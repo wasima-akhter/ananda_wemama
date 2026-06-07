@@ -18,7 +18,10 @@ class ChatListItem extends StatelessWidget {
         Get.delete<ChatInboxController>(force: true);
         Get.toNamed(
           RoutePaths.chatInbox,
-          arguments: ChatInboxArgPassModel(chatId: chatModel.id, isBlocked: chatModel.isblocked),
+          arguments: ChatInboxArgPassModel(
+            chatId: chatModel.id,
+            isBlocked: chatModel.isblocked,
+          ),
         );
       },
       child: ContainerBordered(
@@ -39,13 +42,13 @@ class ChatListItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: TxtStyle.outfitSmTitle,
                   ),
-                  if( chatModel.lastMessage .isNotEmpty)
-                  Text(
-                    chatModel.lastMessage,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TxtStyle.outfitSmSecNor,
-                  ),
+                  if (chatModel.lastMessage.isNotEmpty)
+                    Text(
+                      chatModel.lastMessage,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TxtStyle.outfitSmSecNor,
+                    ),
                 ],
               ),
             ),

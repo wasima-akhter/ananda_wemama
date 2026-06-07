@@ -6,6 +6,7 @@ import '../model/community_item_model.dart';
 import '../services/community_service.dart';
 
 class CommunityController extends GetxController {
+  static CommunityController get to => Get.find<CommunityController>();
   @override
   void onInit() {
     super.onInit();

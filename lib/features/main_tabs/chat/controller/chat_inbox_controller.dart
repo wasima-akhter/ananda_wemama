@@ -99,8 +99,8 @@ class ChatInboxController extends GetxController {
   // Called by SocketService when full message list arrives
   void updateChatInboxMsgItem(ChatInboxMessageItemModel item) {
     // ✅ Ignore if this response is for a different conversation
-    if (item.messages?.isNotEmpty == true) {
-      final incomingChatId = item.messages!.first.conversationId ?? '';
+    if (item.messages.isNotEmpty == true) {
+      final incomingChatId = item.messages.first.conversationId ?? '';
       if (incomingChatId.isNotEmpty && incomingChatId != chatId) {
         log(
           "⚠️ Ignoring messages for different chat: $incomingChatId (mine: $chatId)",
@@ -118,7 +118,7 @@ class ChatInboxController extends GetxController {
   // Called by SocketService on each new incoming message
   void addMessage(Message msg) {
     // ✅ Ignore messages for other conversations
-    if (msg.conversationId != null && msg.conversationId != chatId) return;
+    if (msg.conversationId != chatId) return;
 
     final alreadyExists = messages.any(
       (m) =>
@@ -177,7 +177,6 @@ class ChatInboxController extends GetxController {
   void clearAll() {
     msgInputController.clear();
     msgInputFocus.unfocus();
-    pickedImageOrFile.value = null;
   }
 
   void unFocusAll() {
@@ -215,35 +214,6 @@ class ChatInboxController extends GetxController {
     }
 
     return result;
-  }
-
-  var pickedImageOrFile = Rxn<XFile>();
-  var filePicked = Rx<File?>(null);
-
-  Future<void> pickSingleImageOrFile({ImageSource? source}) async {
-    if (source != null) {
-      final picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        imageQuality: 60,
-        source: source,
-        preferredCameraDevice: CameraDevice.front,
-      );
-      if (image != null) pickedImageOrFile.value = image;
-      return;
-    }
-
-    try {
-      final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-      if (result != null && result.files.isNotEmpty) {
-        final path = result.files.single.path;
-        if (path != null) {
-          filePicked.value = File(path);
-          pickedImageOrFile.value = result.files.single.xFile;
-        }
-      }
-    } catch (e) {
-      log("FilePicker error: $e");
-    }
   }
 
   // Blocked users part---------------->>>>>>>
@@ -321,7 +291,7 @@ class ChatInboxController extends GetxController {
   //
 
   // ── File picking ──────────────────────────────────────────────────────────
-  static const int maxImages = 10;
+  static const int maxImages = 5;
   static const int maxFiles = 5;
 
   bool canAddImages(int count) {

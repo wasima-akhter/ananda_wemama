@@ -4,6 +4,7 @@ import 'package:mama_app/features/auth/signin/model/signin_model.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
 import '../../../../core/services/auth/signin_service.dart';
+import '../../../../core/services/auth/verify_otp_service.dart';
 
 class SigninController extends GetxController {
   /// ================= FORM CONTROLLERS =================
@@ -53,10 +54,21 @@ class SigninController extends GetxController {
       switch (result.type) {
         // ❌ EMAIL NOT VERIFIED
         case LoginResultType.emailNotVerified:
-          Get.toNamed(
-            RoutePaths.verifyOtp,
-            arguments: {'flow': OtpFlowType.signup, 'email': email},
+          // Get.toNamed(
+          //   RoutePaths.verifyOtp,
+          //   arguments: {'flow': OtpFlowType.signup, 'email': email},
+          // );
+
+          final sentOtpSuccess = await VerifyOtpService().resendOtp(
+            email: email,
           );
+
+          if (sentOtpSuccess) {
+            final result = await Get.toNamed(
+              RoutePaths.verifyOtp,
+              arguments: {'flow': OtpFlowType.signup, 'email': email},
+            );
+          }
           return;
 
         // ❌ PROFILE NOT COMPLETED

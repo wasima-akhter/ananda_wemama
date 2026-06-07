@@ -1,3 +1,4 @@
+/*
 class ChatInboxMessageItemModel {
   ChatInboxMessageItemModel({this.receiver, this.messages});
 
@@ -108,4 +109,144 @@ class Receiver {
       profileImage: json["profileImage"],
     );
   }
+}
+*/
+
+import '../../../../core/helpers/parser_helper.dart';
+
+class ChatInboxMessageItemModel {
+  const ChatInboxMessageItemModel({this.receiver, this.messages = const []});
+
+  final Receiver? receiver;
+  final List<Message> messages;
+
+  factory ChatInboxMessageItemModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const ChatInboxMessageItemModel();
+
+    return ChatInboxMessageItemModel(
+      receiver: SafeParser.object(json['receiver'], Receiver.fromJson),
+      messages: SafeParser.list<Message>(json['messages'], Message.fromJson),
+    );
+  }
+}
+
+class Message {
+  const Message({
+    this.id = '',
+    this.conversationId = '',
+    this.sender = '',
+    this.receiver = '',
+    this.text = '',
+    this.seen = false,
+    this.createdAt,
+    this.v = 0,
+    this.attachments = const [],
+  });
+
+  final String id;
+  final String conversationId;
+  final String sender;
+  final String receiver;
+  final String text;
+  final bool seen;
+  final DateTime? createdAt;
+  final int v;
+
+  final List<Attachment> attachments;
+
+  factory Message.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const Message();
+
+    return Message(
+      id: SafeParser.id(json['_id']),
+      conversationId: SafeParser.str(json['conversationId']),
+      sender: SafeParser.str(json['sender']),
+      receiver: SafeParser.str(json['receiver']),
+      text: SafeParser.str(json['text']),
+      seen: SafeParser.boolVal(json['seen']),
+      v: SafeParser.intVal(json['__v']),
+      createdAt: SafeParser.date(json['createdAt']),
+
+      attachments: SafeParser.list<Attachment>(
+        json['attachments'],
+        Attachment.fromJson,
+      ),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'conversationId': conversationId,
+    'sender': sender,
+    'receiver': receiver,
+    'text': text,
+    'seen': seen,
+    'createdAt': createdAt?.toIso8601String(),
+    '__v': v,
+    'attachments': attachments.map((e) => e.toJson()).toList(),
+  };
+}
+
+class Attachment {
+  const Attachment({
+    this.url = '',
+    this.key = '',
+    this.type = '',
+    this.size = 0,
+    this.originalName = '',
+    this.id = '',
+  });
+
+  final String url;
+  final String key;
+  final String type;
+  final int size;
+  final String originalName;
+  final String id;
+
+  factory Attachment.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const Attachment();
+
+    return Attachment(
+      url: SafeParser.str(json['url']),
+      key: SafeParser.str(json['key']),
+      type: SafeParser.str(json['type']),
+      size: SafeParser.intVal(json['size']),
+      originalName: SafeParser.str(json['originalName']),
+      id: SafeParser.id(json['_id']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'url': url,
+    'key': key,
+    'type': type,
+    'size': size,
+    'originalName': originalName,
+    '_id': id,
+  };
+}
+
+class Receiver {
+  const Receiver({this.id = '', this.name = '', this.profileImage = ''});
+
+  final String id;
+  final String name;
+  final String profileImage;
+
+  factory Receiver.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const Receiver();
+
+    return Receiver(
+      id: SafeParser.id(json['_id']),
+      name: SafeParser.str(json['name']),
+      profileImage: SafeParser.str(json['profileImage']),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    '_id': id,
+    'name': name,
+    'profileImage': profileImage,
+  };
 }

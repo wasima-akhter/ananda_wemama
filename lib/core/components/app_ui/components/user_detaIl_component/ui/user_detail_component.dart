@@ -149,10 +149,11 @@ class UserDetailComponent extends StatelessWidget {
         return Expanded(
           child: AspectRatio(
             aspectRatio: 1, // square
-            child: Padding(
+            child: Container(
               padding: 4.pa,
               child: hasImage
                   ? NetworkImageWidget(
+                      bgColor: c.cardPrimary,
                       radius: 8,
                       enablePreview: true,
                       imageUrl: user!.galleryImages[index].trim(),

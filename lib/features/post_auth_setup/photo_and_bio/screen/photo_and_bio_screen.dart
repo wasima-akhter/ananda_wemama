@@ -40,7 +40,10 @@ class PhotoAndBioScreen extends StatelessWidget {
                       children: [
                         SvgIcon(iconPath: IconsPath.security),
 
-                        Text(Strings.photoGuidlines, style: TxtStyle.inter(w: 600, fs: 13)),
+                        Text(
+                          Strings.photoGuidlines,
+                          style: TxtStyle.inter(w: 600, fs: 13),
+                        ),
                       ],
                     ),
                     Gap(itemGap),
@@ -59,7 +62,11 @@ class PhotoAndBioScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               list[index].capEachWord(),
-                              style: TxtStyle.inter(w: 400, color: c.secondary, fs: 11),
+                              style: TxtStyle.inter(
+                                w: 400,
+                                color: c.secondary,
+                                fs: 11,
+                              ),
                             ),
                           ),
                         ],
@@ -92,6 +99,7 @@ class PhotoAndBioScreen extends StatelessWidget {
               return UserPhotoWidget(
                 imageUrl: storage.getUserInfo.imageUrl ?? '',
                 selImage: selImage,
+                isFromSetup: true,
               );
             }),
             Gap(itemGap),

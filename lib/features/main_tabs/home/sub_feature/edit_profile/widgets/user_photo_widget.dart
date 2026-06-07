@@ -7,10 +7,16 @@ import '../../../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../../../gen/assets.gen.dart';
 
 class UserPhotoWidget extends StatelessWidget {
+  final bool isFromSetup;
   final XFile? selImage;
   final String? imageUrl;
 
-  const UserPhotoWidget({super.key, this.selImage, this.imageUrl});
+  const UserPhotoWidget({
+    super.key,
+    this.selImage,
+    this.imageUrl,
+    this.isFromSetup = false,
+  });
 
   void _openViewer(BuildContext context) {
     if (selImage != null) {
@@ -60,8 +66,8 @@ class UserPhotoWidget extends StatelessWidget {
       );
     }
 
-    /// 2️⃣ Network image
-    if (imageUrl != null && imageUrl!.isNotEmpty) {
+    // / 2️⃣ Network image
+    if (imageUrl != null && imageUrl!.isNotEmpty && isFromSetup == false) {
       return NetworkImageWidget(
         imageUrl: imageUrl,
         radius: size / 2,

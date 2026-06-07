@@ -15,6 +15,7 @@ class NetworkImageWidget extends StatelessWidget {
   final Animation<double>? opacity;
   final bool? hasBrdr;
   final bool? enablePreview;
+  final Color? bgColor;
 
   const NetworkImageWidget({
     super.key,
@@ -28,6 +29,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.isSmall,
     this.isUser,
     this.enablePreview,
+    this.bgColor,
   });
 
   bool isImageUrl(String url) {
@@ -60,7 +62,7 @@ class NetworkImageWidget extends StatelessWidget {
       width: width ?? 30.w,
       height: height ?? 30.w,
       decoration: BoxDecoration(
-        color: c.inputBackground,
+        color: bgColor ?? c.inputBackground,
         borderRadius: fallbackRadius.brdrRad,
       ),
       clipBehavior: Clip.antiAlias,

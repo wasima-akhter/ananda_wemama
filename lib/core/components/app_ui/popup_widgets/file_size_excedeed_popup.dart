@@ -21,7 +21,7 @@ class FileSizeExceededPopup extends StatelessWidget {
           Gap(4),
 
           Text(
-            "Please upload files smaller than 3 MB.",
+            "Please upload files smaller than 1 MB.",
             textAlign: TextAlign.center,
             style: TxtStyle.inter(fs: 12, color: c.primary),
           ),

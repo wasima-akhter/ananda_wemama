@@ -31,6 +31,7 @@ class CommonAppBarContent extends StatelessWidget
 
     return AppBar(
       backgroundColor: finalBg,
+      surfaceTintColor: finalBg,
       elevation: 0,
       centerTitle: titleInLeft != true,
 

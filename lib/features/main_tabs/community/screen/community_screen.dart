@@ -7,8 +7,46 @@ import '../../../../core/components/ui/scroll/cus_scrollbar_widget.dart';
 import '../controller/community_controller.dart';
 import '../widgets/community_item.dart';
 
-class CommunityScreen extends StatelessWidget {
+class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
+
+  @override
+  State<CommunityScreen> createState() => _CommunityScreenState();
+}
+
+class _CommunityScreenState extends State<CommunityScreen>
+    with WidgetsBindingObserver {
+  final CommunityController cc = Get.find<CommunityController>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    // Initial load
+    _refreshCurrentTab();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      _refreshCurrentTab();
+    }
+  }
+
+  Future<void> _refreshCurrentTab() async {
+    if (cc.selTab.value == CommunityTab.myCommunities) {
+      await cc.getMyCommunityList();
+    } else {
+      await cc.getManagedCommunityList();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
