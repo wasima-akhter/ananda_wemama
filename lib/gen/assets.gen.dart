@@ -212,6 +212,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/new_mum.svg
   String get newMum => 'assets/icons/new_mum.svg';
 
+  /// File path: assets/icons/no-net.svg
+  String get noNet => 'assets/icons/no-net.svg';
+
   /// File path: assets/icons/no_ques.svg
   String get noQues => 'assets/icons/no_ques.svg';
 
@@ -388,6 +391,7 @@ class $AssetsIconsGen {
     muteAudio,
     mutedAudio,
     newMum,
+    noNet,
     noQues,
     notification,
     password,
@@ -499,18 +503,9 @@ class $AssetsImagesGen {
   AssetGenImage get momsGroupPhoto =>
       const AssetGenImage('assets/images/moms_group_photo.png');
 
-  /// File path: assets/images/no_net.png
-  AssetGenImage get noNet => const AssetGenImage('assets/images/no_net.png');
-
-  /// File path: assets/images/no_net_2.png
-  AssetGenImage get noNet2 => const AssetGenImage('assets/images/no_net_2.png');
-
   /// File path: assets/images/no_search_img.png
   AssetGenImage get noSearchImg =>
       const AssetGenImage('assets/images/no_search_img.png');
-
-  /// File path: assets/images/nothing-yet.json
-  String get nothingYet => 'assets/images/nothing-yet.json';
 
   /// File path: assets/images/onboard_screen_heart.png
   AssetGenImage get onboardScreenHeart =>
@@ -622,10 +617,7 @@ class $AssetsImagesGen {
     locationMap,
     mamaLogoWithoutTxt,
     momsGroupPhoto,
-    noNet,
-    noNet2,
     noSearchImg,
-    nothingYet,
     onboardScreenHeart,
     onboarding1,
     onboarding2,

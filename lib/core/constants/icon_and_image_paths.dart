@@ -16,6 +16,9 @@ class IconsPath {
   static String get visibilityOff => Assets.icons.visibilityOff;
   static String get visibilityOn => Assets.icons.visibilityOn;
 
+  // net
+  static String get noNet => Assets.icons.noNet;
+
   // Status / Feedback
   static String get largeTick => Assets.icons.tickL;
   static String get smallTick => Assets.icons.tickSm;
@@ -176,15 +179,12 @@ class ImagesPath {
 
   // Net Images/json animation
 
-  static String get noNet => Assets.images.noNet.path;
-  static String get noNet2 => Assets.images.noNet2.path;
   static String get loadingJson => Assets.images.loadingGray;
   static String get loadingDotsDefault => Assets.images.loadingDotsDefault;
   static String get whiteLoading => Assets.images.whiteLoading;
   static String get primaryLoading => Assets.images.primaryLoading;
 
   //
-  static String get nothingYetJson => Assets.images.nothingYet;
   static String get doneJson => Assets.images.doneAnimation;
 
   static String get gallery => Assets.images.gallery.path;

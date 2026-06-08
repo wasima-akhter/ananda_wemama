@@ -16,10 +16,13 @@ class OfflineScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(ImagesPath.noNet, height: 1.sh * 0.2),
+                SvgIconColored(iconPath: IconsPath.noNet, height: S.w * 0.3),
 
                 Gap(itemGap * 6),
-                Text(Strings.waitingForConnection, style: TxtStyle.inter(fs: 13, w: 600)),
+                Text(
+                  Strings.waitingForConnection,
+                  style: TxtStyle.inter(fs: 13, w: 600),
+                ),
               ],
             ),
           ),

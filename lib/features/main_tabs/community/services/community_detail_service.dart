@@ -5,7 +5,9 @@ import '../model/community_item_detail_model.dart';
 class CommunityDetailService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
-  Future<CommunityItemDetailModel?> fetchCommunityDetail({required String communityItemId}) async {
+  Future<CommunityItemDetailModel?> fetchCommunityDetail({
+    required String communityItemId,
+  }) async {
     apiCall() {
       return ApiClient().get(
         Endpoints.getCommunityDetail(id: communityItemId).getUrl,
@@ -17,7 +19,7 @@ class CommunityDetailService extends GetxService {
     final response = await _apiHelper.request<CommunityItemDetailModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
         final parsedData = CommunityItemDetailModel.fromJson(data);
 
         return parsedData;
@@ -28,7 +30,9 @@ class CommunityDetailService extends GetxService {
     return response?.data;
   }
 
-  Future<CommentOfPostResponseModel?> fetchCommentsOfAPost({required String postId}) async {
+  Future<CommentOfPostResponseModel?> fetchCommentsOfAPost({
+    required String postId,
+  }) async {
     apiCall() {
       return ApiClient().get(
         Endpoints.getAllCommentsOfAPost(postId: postId).getUrl,
@@ -40,7 +44,7 @@ class CommunityDetailService extends GetxService {
     final response = await _apiHelper.request<CommentOfPostResponseModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
         final parsedData = CommentOfPostResponseModel.fromJson(data);
 
         return parsedData;
@@ -60,7 +64,11 @@ class CommunityDetailService extends GetxService {
       return ApiClient().post(
         Endpoints.postToggleLike.getUrl,
         reqName: Strings.post,
-        data: {"community": communityItemId, "post": postItemId, "name": likerName},
+        data: {
+          "community": communityItemId,
+          "post": postItemId,
+          "name": likerName,
+        },
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
@@ -127,7 +135,11 @@ class CommunityDetailService extends GetxService {
       return ApiClient().post(
         Endpoints.createNewPost.getUrl,
         reqName: Strings.post,
-        data: {"community": communityItemId, "content": content, "isAnonymous": isAnonymous},
+        data: {
+          "community": communityItemId,
+          "content": content,
+          "isAnonymous": isAnonymous,
+        },
 
         headers: HeaderHelpers.getAuthHeader(),
       );

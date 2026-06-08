@@ -10,7 +10,9 @@ class CommunityActionController extends GetxController {
     isJoinLoading.value = true;
 
     try {
-      final success = await CommunityDetailService().joinCommunity(communityItemId: communityId);
+      final success = await CommunityDetailService().joinCommunity(
+        communityItemId: communityId,
+      );
 
       return success;
     } finally {

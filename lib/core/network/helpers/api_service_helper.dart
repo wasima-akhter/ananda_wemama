@@ -11,6 +11,7 @@ class ApiServiceHelper {
     T Function(dynamic)? parser,
     String? reqName,
     bool? isLogin_,
+    bool? showErrorToast,
   }) async {
     // try {
     //   final res = await apiCall();
@@ -45,13 +46,14 @@ class ApiServiceHelper {
     //   // response.message.capEachWord().showToast();
     //   return response;
     // }
+
     try {
       final res = await apiCall();
 
       log("res:---> $res");
 
-      if (res == null) {
-        "Something went wrong. Try again".showToast();
+      if (res == null && showErrorToast == null) {
+        Strings.somethingWentWrong.showToast();
         return null;
       }
 
@@ -91,7 +93,7 @@ class ApiServiceHelper {
       log("e in dio client: ${e.toString()}");
       // String errorMsg = (e.toString().isNotEmpty && e.toString() != "null")
       //     ? e.toString()
-      //     : "Something went wrong. Please try again.";
+      //     :  Strings.somethingWentWrong;
       String errorMsg = "";
 
       if (e is DioException) {
@@ -112,7 +114,7 @@ class ApiServiceHelper {
                 data?["message"] ??
                 data?["data"]?["msg"] ??
                 ApiErrorParser.extractMessage(data) ??
-                "Something went wrong. Please try again.";
+                Strings.somethingWentWrong;
             final stack = ApiErrorParser.extractStack(data);
             log("MESSAGE--->: $message");
             if (stack != null) log("STACK:\n$stack");
@@ -124,10 +126,12 @@ class ApiServiceHelper {
             errorMsg = "Unable to connect. Check your internet.";
             break;
           default:
-            errorMsg = "Something went wrong. Please try again.";
+            errorMsg = Strings.somethingWentWrong;
         }
       }
-      errorMsg.isNotEmpty ? errorMsg.showToast() : null;
+      errorMsg.isNotEmpty && showErrorToast == null
+          ? errorMsg.showToast()
+          : null;
       return null;
     }
   }

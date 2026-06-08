@@ -25,7 +25,9 @@ class SplashController extends GetxController {
 
     // ❌ No internet → go immediately
     if (!hasNetwork) {
-      Get.toNamed(RoutePaths.offlineScreen);
+      if (Get.currentRoute != RoutePaths.offlineScreen) {
+        Get.toNamed(RoutePaths.offlineScreen);
+      }
       return;
     }
 

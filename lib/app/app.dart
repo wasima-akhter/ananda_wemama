@@ -71,7 +71,7 @@ class App extends StatelessWidget {
             // ✅ Delay until after first frame so widget tree is ready
             if ((getToken ?? '').isNotEmpty) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                socketService.connectSocket();
+                // socketService.connectSocket();
               });
             }
           }),

@@ -134,13 +134,18 @@ CustomBtnWTxt filledBtnWTxt({
 // open gallery
 
 int roleId = 1; // 1 = user, 2= supplier
-
 String makeImageUrl({required String imageUrl}) {
-  if (imageUrl.contains("http")) {
-    return imageUrl;
-  } else {
-    return "$baseUrl/$imageUrl";
+  final path = imageUrl.trim();
+
+  if (path.isEmpty) {
+    return '';
   }
+
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+
+  return '$baseUrl/$path';
 }
 
 Future<bool> willPopFunction({required DateTime? currentBackPressTime}) async {
@@ -428,5 +433,3 @@ void closeAllSnackbar() {
   //   Get.back();
   // }
 }
-
-

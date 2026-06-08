@@ -180,6 +180,7 @@ class CommunityService extends GetxService {
     }
 
     final response = await _apiHelper.request<List<CommunityItemModel>>(
+      showErrorToast: false,
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -205,6 +206,7 @@ class CommunityService extends GetxService {
     }
 
     final response = await _apiHelper.request<List<CommunityItemModel>>(
+      showErrorToast: false,
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -230,6 +232,7 @@ class CommunityService extends GetxService {
     }
 
     final response = await _apiHelper.request<List<CommunityItemModel>>(
+      showErrorToast: false,
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");

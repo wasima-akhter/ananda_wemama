@@ -403,7 +403,7 @@ class ChatInboxController extends GetxController {
     final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
 
     if (receiverId.isEmpty) {
-      "Something went wrong. Please try again.".showToast();
+      Strings.somethingWentWrong.showToast();
       return;
     }
 

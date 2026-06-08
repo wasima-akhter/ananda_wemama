@@ -41,13 +41,15 @@ void main() async {
       hasNet_ = isConnected; // ✅ UPDATE STATE
 
       if (isConnected == false) {
-        Get.toNamed(RoutePaths.offlineScreen);
+        if (Get.currentRoute != RoutePaths.offlineScreen) {
+          Get.toNamed(RoutePaths.offlineScreen);
+        }
       } else {
         if (Get.currentRoute == RoutePaths.offlineScreen) {
           // If there is NO previous route in stack
           if (!(Get.key.currentState?.canPop() ?? false)) {
             // Offline was the first screen → start app from splash
-            Get.offAllNamed(RoutePaths.home);
+            Get.offAllNamed(RoutePaths.splashScreen);
           } else {
             // There are routes under it → just go back
             Get.close(1);
