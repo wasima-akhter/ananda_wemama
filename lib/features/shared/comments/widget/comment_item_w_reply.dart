@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
-import '../../../main_tabs/community/model/all_comments_of_post_model.dart';
+import '../../../main_tabs/community/core/models/all_comments_of_post_model.dart';
 
 class CommentItem extends StatelessWidget {
   final CommentModelOfPost item;
@@ -23,7 +23,10 @@ class CommentItem extends StatelessWidget {
                   item.creator?.name ?? '',
                   style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
                 ),
-                Text(item.content ?? '', style: TxtStyle.outfit(fs: 13, w: 400)),
+                Text(
+                  item.content ?? '',
+                  style: TxtStyle.outfit(fs: 13, w: 400),
+                ),
                 CusGestureDetector(
                   onTap: () {},
                   child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
@@ -61,7 +64,10 @@ class CommentItemShimmer extends StatelessWidget {
                 Gap(itemGap * 0.5),
 
                 // comment line 1
-                const ShimmerWidget.rectangular(width: double.infinity, height: 12),
+                const ShimmerWidget.rectangular(
+                  width: double.infinity,
+                  height: 12,
+                ),
 
                 Gap(itemGap * 0.3),
 

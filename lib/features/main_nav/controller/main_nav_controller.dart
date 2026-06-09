@@ -1,5 +1,4 @@
 import 'package:mama_app/features/main_tabs/chat/screen/chat_screen.dart';
-import 'package:mama_app/features/main_tabs/community/screen/community_screen.dart';
 import 'package:mama_app/features/main_tabs/experts/screen/experts_screen.dart';
 import 'package:mama_app/features/main_tabs/match/screen/match_screen.dart';
 
@@ -8,6 +7,7 @@ import '../../../core/network/helpers/location/location_observer.dart';
 import '../../../core/services/socket/socket_service.dart';
 import '../../../core/state_screens/not_found/not_found_page.dart';
 import '../../main_tabs/chat/controller/chat_controller.dart';
+import '../../main_tabs/community/feed/screens/community_screen.dart';
 import '../../main_tabs/home/screen/home_screen.dart';
 import '../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../../station_location/controller/station_location_controller.dart';

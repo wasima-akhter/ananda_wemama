@@ -371,28 +371,6 @@ Future<void> downloadFile(
   }
 }
 
-// Future<void> _saveToDownloads({
-//   required String tempPath,
-//   required String fileName,
-// }) async {
-//   try {
-//     final bytes = await File(tempPath).readAsBytes();
-
-//     final ext = fileName.split('.').last;
-
-//     await FileSaver.instance.saveFile(
-//       name: fileName.replaceAll(".$ext", ""),
-//       bytes: Uint8List.fromList(bytes),
-//       fileExtension: ext,
-//       mimeType: MimeType.other,
-//     );
-
-//     Snack.showSuccess("Saved to Downloads");
-//   } catch (e) {
-//     debugPrint("❌ Save error: $e");
-//     Snack.showError("Failed to save file");
-//   }
-// }
 Future<void> _saveToDownloads({
   required String tempPath,
   required String fileName,
@@ -432,4 +410,22 @@ void closeAllSnackbar() {
   // if (Get.isDialogOpen ?? false) {
   //   Get.back();
   // }
+}
+
+List<Widget> buildSeparatedItems({
+  required int itemCount,
+  required Widget Function(int index) itemBuilder,
+  required Widget separator,
+}) {
+  final widgets = <Widget>[];
+
+  for (int i = 0; i < itemCount; i++) {
+    widgets.add(itemBuilder(i));
+
+    if (i != itemCount - 1) {
+      widgets.add(separator);
+    }
+  }
+
+  return widgets;
 }

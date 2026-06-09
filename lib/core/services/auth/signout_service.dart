@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
-import '../../../features/main_tabs/community/controller/community_controller.dart';
+import '../../../features/main_tabs/community/feed/controller/community_controller.dart';
 import '../../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../../features/main_tabs/home/controller/home_controller.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';

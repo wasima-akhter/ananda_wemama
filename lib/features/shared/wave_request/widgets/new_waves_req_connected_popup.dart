@@ -1,4 +1,5 @@
 import 'package:mama_app/core/models/ui/common_data_models.dart';
+import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 
@@ -29,7 +30,10 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
           child: BounceSingleChildScrollView(
             child: Column(
               children: [
-                _TopImageRow(myImageUrl: myImageUrl, peerImageUrl: peerImageUrl),
+                _TopImageRow(
+                  myImageUrl: myImageUrl,
+                  peerImageUrl: peerImageUrl,
+                ),
 
                 Gap(itemGap * 2),
 
@@ -42,13 +46,26 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
 
                 CustomBtnWTxt(
                   padding: EdgeInsets.symmetric(vertical: 12.h),
-                  style: TxtStyle.outfitSemiB(fs: 12, color: c.textOnPrimary, w: 500),
+                  style: TxtStyle.outfitSemiB(
+                    fs: 12,
+                    color: c.textOnPrimary,
+                    w: 500,
+                  ),
                   onTap: () {
                     Get.back();
-                    Get.offAndToNamed(RoutePaths.chatInbox,  
-                    
-                        arguments: ChatInboxArgPassModel(chatId: conversationId, isBlocked: false),);
-       
+                    Get.offAndToNamed(
+                      RoutePaths.chatInbox,
+
+                      arguments: ChatInboxArgPassModel(
+                        chatId: conversationId,
+                        isBlocked: false,
+                      ),
+                    );
+
+                    // update chatList
+                    if (Get.isRegistered<ChatController>()) {
+                      ChatController.to.getChatList();
+                    }
                   },
                   btnTxt: Strings.sayHello,
                   isLoading: false,
@@ -126,7 +143,10 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary)),
+              Text(
+                title,
+                style: TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary),
+              ),
               Gap(6),
               Text(subtitle, style: TxtStyle.inter(fs: 12, color: c.secondary)),
             ],

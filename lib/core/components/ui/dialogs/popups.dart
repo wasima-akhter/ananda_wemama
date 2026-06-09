@@ -3,7 +3,7 @@ import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup
 import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../features/main_tabs/community/widgets/community_guildline.dart';
+import '../../../../features/main_tabs/community/shared_ui/community_guildline.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';

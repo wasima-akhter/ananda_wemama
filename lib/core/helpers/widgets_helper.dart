@@ -1,7 +1,7 @@
 import 'package:pinput/pinput.dart';
 
 import '../../app/helper_widgets_export.dart';
-import '../../features/main_tabs/community/modules/comments_bottom_sheet.dart';
+import '../../features/main_tabs/community/comments/widgets/comments_bottom_sheet.dart';
 import '../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
 import '../../features/video_meeting/modules/meeting_comments_bottom_sheet.dart';
@@ -26,7 +26,11 @@ PinTheme? focusedPinTheme = defaultPinTheme?.copyWith(
     borderRadius: 30.brdrRad,
     border: Border.all(color: c.primary, width: 2),
     boxShadow: [
-      BoxShadow(color: c.primary.withOpacity(0.15), blurRadius: 8, offset: const Offset(0, 3)),
+      BoxShadow(
+        color: c.primary.withOpacity(0.15),
+        blurRadius: 8,
+        offset: const Offset(0, 3),
+      ),
     ],
   ),
 );
@@ -65,7 +69,11 @@ Future<dynamic> showReportBottomSheet({
         height: bSheetH * 1 * (heightFactor ?? 1),
 
         // width: 1.sw,
-        child: ReportBottomSheet(isUserReport: isUserReport, postId: postId, userId: userId),
+        child: ReportBottomSheet(
+          isUserReport: isUserReport,
+          postId: postId,
+          userId: userId,
+        ),
       ).getBtmSheetM,
     ),
 
@@ -118,7 +126,10 @@ Future<dynamic> showLiveCommentsBottomSheet({
   );
 }
 
-Future<dynamic> showChildrenBottomSheet({double? heightFactor, bool isScrollControlled = true}) {
+Future<dynamic> showChildrenBottomSheet({
+  double? heightFactor,
+  bool isScrollControlled = true,
+}) {
   return Get.bottomSheet(
     ignoreSafeArea: false,
     isDismissible: true,
@@ -274,7 +285,10 @@ List<UiInfoItem> buildInfoList(ProfileDataModel data) {
 
   if (coords != null && coords.length >= 2) {
     list.add(
-      UiInfoItem(iconPath: IconsPath.locationBold, text: "${data.city ?? ''}, ${data.state ?? ''}"),
+      UiInfoItem(
+        iconPath: IconsPath.locationBold,
+        text: "${data.city ?? ''}, ${data.state ?? ''}",
+      ),
     );
   }
 
@@ -283,7 +297,12 @@ List<UiInfoItem> buildInfoList(ProfileDataModel data) {
   }
 
   if (data.interesteds.isNotEmpty) {
-    list.add(UiInfoItem(iconPath: IconsPath.heartHalfFilled, text: data.interesteds.join(', ')));
+    list.add(
+      UiInfoItem(
+        iconPath: IconsPath.heartHalfFilled,
+        text: data.interesteds.join(', '),
+      ),
+    );
   }
 
   return list;
@@ -293,7 +312,8 @@ int calculateAge(DateTime? dob) {
   if (dob == null) return 0;
   final now = DateTime.now();
   int age = now.year - dob.year;
-  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day)) age--;
+  if (now.month < dob.month || (now.month == dob.month && now.day < dob.day))
+    age--;
   return age;
 }
 

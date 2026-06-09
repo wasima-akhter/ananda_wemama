@@ -5,7 +5,7 @@ import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/core/utils/extension/context_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../features/main_tabs/community/model/community_item_model.dart';
+import '../../../features/main_tabs/community/core/models/community_item_model.dart';
 import '../../constants/strings.dart';
 import '../../enums/ui_enums.dart';
 

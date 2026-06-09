@@ -9,9 +9,9 @@ import '../core/config/app_info.dart';
 import '../core/network/helpers/network_helpers.dart';
 import '../core/services/socket/socket_service.dart';
 import '../core/utils/extension/binding_extensions.dart';
-import '../features/main_tabs/community/controller/community_action_controller.dart';
-import '../features/main_tabs/community/controller/community_controller.dart';
-import '../features/main_tabs/community/controller/community_search_controller.dart';
+import '../features/main_tabs/community/core/controllers_shared/community_action_controller.dart';
+import '../features/main_tabs/community/feed/controller/community_controller.dart';
+import '../features/main_tabs/community/search/controller/community_search_controller.dart';
 
 class App extends StatelessWidget {
   final bool hasInternet;

@@ -1,4 +1,4 @@
-import '../../../features/main_tabs/community/model/community_item_detail_model.dart';
+import '../../../features/main_tabs/community/core/models/community_item_detail_model.dart';
 import '../../enums/ui_enums.dart';
 
 class IdentityCardDataModel {

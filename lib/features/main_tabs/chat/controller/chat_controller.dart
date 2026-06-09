@@ -28,6 +28,7 @@ class FakeChatModel {
 }
 
 class ChatController extends GetxController {
+  static ChatController get to => Get.find<ChatController>();
   final searchController = TextEditingController();
   final searchFocus = FocusNode();
 
@@ -140,7 +141,7 @@ class ChatController extends GetxController {
     // Deduplicate by id — last occurrence wins (most recent data)
     final seen = <String>{};
     final deduped = list.reversed
-        .where((e) => e.id != null && seen.add(e.id!))
+        .where((e) => seen.add(e.id))
         .toList()
         .reversed
         .toList();

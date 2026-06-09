@@ -1,7 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 
 class CusScrollbarWidget extends StatelessWidget {
-  final Widget child; // ✅ FIXED (not Column)
+  final Widget child;
   final Color? thumbColor;
   final ScrollController controller;
 
@@ -21,13 +21,14 @@ class CusScrollbarWidget extends StatelessWidget {
         trackBorderColor: WidgetStateProperty.all(Colors.transparent),
       ),
       child: Scrollbar(
-        controller: controller,
+        // ✅ NO controller here — Scrollbar finds the position via
+        //    ScrollNotification from the CustomScrollView below
         thumbVisibility: true,
         interactive: true,
         radius: Radius.circular(8.r),
         child: ScrollConfiguration(
           behavior: const ScrollBehavior().copyWith(overscroll: false),
-          child: child, // ✅ NO forced SingleChildScrollView
+          child: child,
         ),
       ),
     );
