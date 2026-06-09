@@ -9,23 +9,6 @@ import '../../../main_nav/controller/main_nav_controller.dart';
 import '../model/chat_list_item_model.dart';
 import '../service/chat_service.dart';
 
-class FakeChatModel {
-  final String id;
-  final String name;
-  final bool isblocked;
-  final String lastMessage;
-  final String time;
-  final String imageUrl;
-
-  FakeChatModel({
-    required this.name,
-    required this.lastMessage,
-    required this.time,
-    required this.imageUrl,
-    required this.id,
-    required this.isblocked,
-  });
-}
 
 class ChatController extends GetxController {
   static ChatController get to => Get.find<ChatController>();

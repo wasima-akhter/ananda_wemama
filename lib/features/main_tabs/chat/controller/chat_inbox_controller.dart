@@ -24,29 +24,6 @@ import '../../../more/blocked_user/service/blocked_user_service.dart';
 import '../model/chat_inbox_msg_item_model.dart';
 import '../service/chat_inbox_service.dart';
 
-class FakeChatInboxModel {
-  final FakeChatModel senderData;
-  final List<FakeMsgItemData>? msgList;
-
-  FakeChatInboxModel({required this.senderData, required this.msgList});
-}
-
-class FakeMsgItemData {
-  final String msg;
-  final String time;
-  final bool isSentByMe;
-
-  /// NEW
-  final List<Attachment> attachments;
-
-  FakeMsgItemData({
-    required this.msg,
-    required this.time,
-    required this.isSentByMe,
-    this.attachments = const [],
-  });
-}
-
 class ChatInboxController extends GetxController {
   final ChatInboxArgPassModel args;
 

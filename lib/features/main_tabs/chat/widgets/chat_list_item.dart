@@ -1,7 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/models/ui/common_data_models.dart';
-import '../controller/chat_controller.dart';
 import '../controller/chat_inbox_controller.dart';
+import 'chat_ui_models.dart';
 import 'chat_user_image.dart';
 
 class ChatListItem extends StatelessWidget {

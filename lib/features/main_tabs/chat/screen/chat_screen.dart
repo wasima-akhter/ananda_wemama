@@ -7,6 +7,7 @@ import '../../../../core/helpers/date_helper.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
 import '../controller/chat_controller.dart';
 import '../widgets/chat_list_item.dart';
+import '../widgets/chat_ui_models.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});

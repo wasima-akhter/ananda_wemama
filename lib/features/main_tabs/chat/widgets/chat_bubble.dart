@@ -1,6 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/chat_inbox_controller.dart';
 import '../model/chat_inbox_msg_item_model.dart';
+import 'chat_ui_models.dart';
 
 class ChatBubbleCont extends StatelessWidget {
   final FakeMsgItemData message;

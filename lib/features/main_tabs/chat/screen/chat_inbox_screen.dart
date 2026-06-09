@@ -10,6 +10,7 @@ import '../model/chat_inbox_msg_item_model.dart';
 import '../widgets/chat_bubble.dart';
 import '../widgets/chat_input_row.dart';
 import '../widgets/chat_screen_template.dart';
+import '../widgets/chat_ui_models.dart';
 
 class ChatInboxScreen extends StatelessWidget {
   const ChatInboxScreen({super.key});
