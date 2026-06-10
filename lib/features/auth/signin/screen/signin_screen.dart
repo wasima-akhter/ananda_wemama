@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/signin_controller.dart';
 import '../widgets/signin_body_widgets.dart';
@@ -15,7 +17,18 @@ class SigninScreen extends StatelessWidget {
       appBar: CommonAppBarContent(title: '', hasBackNavArrow: false),
       child:
           //  Text("data"),
-          _SigninBody(controller: controller, formKey: formKey),
+          Column(
+            children: [
+              if (kDebugMode)
+                TextButton(
+                  onPressed: () {
+                    Get.toNamed(RoutePaths.onboardScreen);
+                  },
+                  child: Text("Onboard screen"),
+                ),
+              _SigninBody(controller: controller, formKey: formKey),
+            ],
+          ),
     );
   }
 }

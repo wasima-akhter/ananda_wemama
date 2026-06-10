@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:flutter/services.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:path/path.dart' as p;
 
 import '../../app/helper_widgets_export.dart' hide MultipartFile;
@@ -15,9 +16,9 @@ import '../components/ui/sheets/image_picker_bottom_sheet.dart';
 import 'image/image_compressor.dart';
 
 Image get mamaLogoWithoutTxtImage =>
-    Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.2);
+    Image.asset(ImagesPath.weMamaHandsLogoPng, height: S.w * 0.2);
 Image get mamaLogoWithoutTxtImageSmall =>
-    Image.asset(ImagesPath.weMamaLogoWithouTxtPng, height: S.w * 0.11);
+    Image.asset(ImagesPath.weMamaHandsLogoPng, height: S.w * 0.11);
 
 ImageErrorBuilder defaultErrorBuilder({double? height, double? width}) =>
     ImageErrorBuilder(height: height, width: width);
@@ -41,7 +42,18 @@ Future<String> svgPathWNewWidth({
 Column get weMamaLogoWithTxt => Column(
   children: [
     Gap(itemGap * 3),
-    Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+    SafeAssetImage(assetPath: ImagesPath.weMamaLogoPng, height: S.w * 0.3),
+  ],
+);
+Column get weMamaLogoWithTitle => Column(
+  children: [
+    Gap(itemGap * 3),
+    SafeAssetImage(
+      assetPath: ImagesPath.wemamaHandsTitleLogo,
+      // height: S.w * 0.26,
+      width: 170.w,
+      // height: 120.h,
+    ),
   ],
 );
 

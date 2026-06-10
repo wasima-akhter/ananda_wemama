@@ -35,6 +35,22 @@ class ColorModel {
   final Color error;
   final Color success;
 
+  //
+  final Color foregroundPrimary;
+  final Color foregroundSecondary;
+
+  final Color backgroundPrimary;
+  final Color backgroundSecondary;
+
+  final Color strokePrimary;
+  final Color strokeSecondary;
+
+  final Color accentBackground;
+  final Color accentForeground;
+
+  final Color disabled;
+  final Color overlay;
+
   ColorModel({
     required this.primary,
     required this.secondary,
@@ -60,5 +76,15 @@ class ColorModel {
     required this.warning,
     required this.error,
     required this.success,
+    required this.foregroundPrimary,
+    required this.foregroundSecondary,
+    required this.backgroundPrimary,
+    required this.backgroundSecondary,
+    required this.strokePrimary,
+    required this.strokeSecondary,
+    required this.accentBackground,
+    required this.accentForeground,
+    required this.disabled,
+    required this.overlay,
   });
 }

@@ -546,6 +546,7 @@ class TxtStyle {
     color: color ?? c.primary,
     height: h,
     decoration: dec,
+    decorationColor: color ?? c.primary,
   );
 
   static TextStyle get outfitUnderLTxt => outfit(

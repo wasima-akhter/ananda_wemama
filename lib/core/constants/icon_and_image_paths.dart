@@ -10,7 +10,7 @@ class IconsPath {
   static String get arrowForwardInCircle => Assets.icons.arrowForwardInCircle;
   static String get arrowForwardSmall => Assets.icons.arrowForwordSm;
   static String get arrowUpRight => Assets.icons.arrowUpRight;
-  static String get arrowRightSm => Assets.icons.arrowRightSm;
+  static String get arrowRightLg => Assets.icons.arrowRightLg;
 
   // Login
   static String get visibilityOff => Assets.icons.visibilityOff;
@@ -110,7 +110,7 @@ class IconsPath {
   static String get restSit => Assets.icons.restSit;
 
   // Misc / App Branding
-  static String get appLogo => Assets.icons.weMamaLogo;
+
   static String get appleBg => Assets.icons.appleBg;
   static String get apple => Assets.icons.apple;
   static String get imagePlaceholder => Assets.icons.imagePlaceholderIcon;
@@ -141,8 +141,9 @@ class ImagesPath {
   // Splash / Onboarding
   static String get splashImageWLogo => Assets.images.splashWholeScreen.path;
   static String get weMamaLogoPng => Assets.images.weMamaLogoPng.path;
-  static String get weMamaLogoWithouTxtPng =>
-      Assets.images.mamaLogoWithoutTxt.path;
+  static String get weMamaHandsLogoPng => Assets.images.weMamaHandsLogo.path;
+  static String get wemamaHandsTitleLogo =>
+      Assets.images.wemamaHandsTitleLogo.path;
   static String get splashImage => Assets.images.splashImage.path;
   static String get onboardingBgImage => Assets.images.onboardingBg.path;
   static String get onboardingImage => Assets.images.onboardingImage.path;

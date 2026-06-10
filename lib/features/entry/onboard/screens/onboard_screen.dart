@@ -1,12 +1,13 @@
-import 'package:mama_app/core/components/ui/buttons/custom_btn_w_icon.dart';
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/buttons/custom_btn_w_icon.dart';
+import '../../../../core/components/ui/helpers/shapes/custom_divider.dart';
 import '../../../../core/components/ui/layout/bg_image_container.dart';
 import '../controller/onboard_controller.dart';
 import '../widgets/onboard_layout_config.dart';
-import '../widgets/security_text.dart';
 
 class OnboardScreen extends StatelessWidget {
   const OnboardScreen({super.key});
@@ -17,6 +18,7 @@ class OnboardScreen extends StatelessWidget {
 
     return SafeArea(
       top: false,
+      bottom: false,
       child: Scaffold(
         backgroundColor: c.scaffoldBackground,
         extendBodyBehindAppBar: true,
@@ -38,12 +40,10 @@ class OnboardScreen extends StatelessWidget {
                     children: [
                       _TopSection(cfg: cfg),
 
-                      Container(
-                        child: Image.asset(
-                          ImagesPath.onboardingImage,
-                          width: double.infinity,
-                          fit: BoxFit.fitWidth,
-                        ),
+                      SafeAssetImage(
+                        assetPath: ImagesPath.onboardingImage,
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth,
                       ),
                       _BottomSection(cfg: cfg),
                     ],
@@ -74,33 +74,74 @@ class _TopSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Gap(itemGap),
-        weMamaLogoWithTxt,
-        Gap(itemGap * 1.5),
-        SecurityText(
-          iconPath: IconsPath.shieldFill,
-          text: Strings.womenOnlySpace.toUpperCase(),
-          fs: 10,
-        ),
-        Gap(itemGap),
-        Container(
-          child: Text(
-            Strings.motherhoodSupportLine,
-            textAlign: TextAlign.center,
-            style: TxtStyle.interSemiB(fs: 22, w: 600, color: deepPrimary),
-            // style: cfg.titleFs.titleMclrCusFS,
+        weMamaLogoWithTitle,
+        Gap(2),
+        Text(
+          Strings.motherhoodTogether,
+          textAlign: TextAlign.center,
+          style: TxtStyle.outfitSemiB(
+            fs: 11,
+            w: 500,
+            color: c.foregroundPrimary,
+            ls: 0.56,
+            h: 1.0,
           ),
         ),
-        // Gap(4.w),
+
+        Gap(itemGap * 2),
+
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 3.w, horizontal: 14.w),
+          decoration: BoxDecoration(
+            borderRadius: 30.brdrRad,
+            // color: c.backgroundSecondary,
+            color: Color(0xFFFDECE4),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgIcon(iconPath: Assets.icons.shieldFill, height: 22),
+              Gap(4),
+              Text(
+                Strings.womenOnlySpace.toUpperCase(),
+                style: TxtStyle.inter(fs: 10),
+              ),
+            ],
+          ),
+        ),
+        Gap(itemGap * 2),
+        Text(
+          Strings.motherhoodSupportLine,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.dmSerifDisplay(
+            fontSize: 32.sp,
+            color: c.foregroundSecondary,
+            fontWeight: FontWeight.w400,
+            height: 1.2, // line-height: 100%
+            letterSpacing: 0.0,
+          ),
+        ),
+        Gap(4),
         SafeAssetImage(
           assetPath: ImagesPath.onboardScreenHeart,
           width: S.w * 0.9,
           height: cfg.height * 0.05,
           fit: BoxFit.contain,
         ),
-        Text(
-          Strings.builtForMotherhoodStages,
-          textAlign: TextAlign.center,
-          style: TxtStyle.outfitSemiB(fs: 13, w: 400, color: deepPrimary),
+        Container(
+          // color: Colors.amber,
+          // padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            Strings.builtForMotherhoodStages,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w500,
+              fontSize: 12.5.sp,
+              height: 1.3,
+              letterSpacing: 0.64,
+              color: c.foregroundSecondary,
+            ),
+          ),
         ),
       ],
     );
@@ -124,66 +165,82 @@ class _BottomSection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         CustomBtnWIcon(
-          w: cfg.btnW,
-          btnTxt: Strings.getStarted,
-          btnColor: c.secondary,
-
-          // ✅ right icon
+          text: Strings.getStarted,
+          bgColor: c.strokePrimary,
+          textColor: c.backgroundPrimary,
+          iconPath: IconsPath.arrowRightLg,
           iconPosition: IconPosition.right,
-
-          // ✅ exact text
-          textCaseType: TextCaseType.normal,
-          iconPath: IconsPath.arrowRightSm,
-          isLoading: false,
-          style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: white),
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           onTap: () => Get.toNamed(RoutePaths.onboardScreen2),
         ),
-        Gap(itemGap * 0.5),
+        Gap(itemGap * 1.5),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               Strings.alreadyHaveAnAccount,
-              style: TxtStyle.outfit(
-                fs: cfg.isTablet ? 17 : 14,
-                color: deepPrimary,
-                w: 400,
+              style: TxtStyle.outfitSemiB(
+                fs: 14,
+                // w: 400,
+                h: 1.0,
+                ls: 0,
+                color: Colors.black,
               ),
             ),
-            Gap(itemGap),
             CusGestureDetector(
               onTap: () => Get.toNamed(RoutePaths.signin),
               child: ContainerBordered(
                 child: Column(
                   children: [
                     Text(
-                      Strings.login.capEachWord(),
-                      style: TxtStyle.interSemiB(
-                        fs: cfg.loginFs,
+                      Strings.loginWithSpace.capEachWord(),
+                      style: TxtStyle.outfitSemiB(
+                        fs: 14,
                         w: 600,
-                        color: c.secondary,
+                        h: 1.0,
+                        ls: 0,
+                        color: c.primary,
+                        // dec: TextDecoration.underline,
                       ),
                     ),
-                    CustomDivider(w: 40, h: 2, clr: c.secondary),
+                    CustomDivider(w: 50, h: 1, clr: c.primary),
                   ],
                 ),
               ),
             ),
           ],
         ),
-        Gap(itemGap * 0.5),
-        SecurityText(
-          rad: 8,
-          bgClr: c.inputBackground,
-          fs: 11,
-          iconH: 16,
-          txtClr: deepPrimary,
-          iconPath: IconsPath.shieldCheck,
-          text: Strings.yourPrivacyIsOurPriority.capEachWord(),
+        Gap(itemGap * 1),
+
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 10.w),
+          decoration: BoxDecoration(
+            borderRadius: 8.brdrRad,
+            color: c.backgroundSecondary,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SvgIconColored(
+                iconPath: IconsPath.shieldCheck, // iconPath
+                height: 22, // iconH
+              ),
+              Gap(4), // spacing
+              Text(
+                Strings.yourPrivacyIsOurPriority.capEachWord(), // text
+                style: TxtStyle.inter(
+                  fs: 10,
+                  w: 400,
+                  h: 1.0,
+                  ls: 0,
+                  color: c.primary,
+                ),
+              ),
+            ],
+          ),
         ),
-        Gap(itemGap * 2),
+        Gap(itemGap),
       ],
-    );
+    ).mHV(18, 0);
   }
 }

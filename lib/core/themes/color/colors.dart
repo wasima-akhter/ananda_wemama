@@ -6,96 +6,178 @@ import 'color_model.dart';
 /// LIGHT THEME COLORS
 /// =======================
 final lightColors = ColorModel(
-  /// BRAND COLORS
-  primary: const Color(0xFF904224),
-  secondary: const Color(0xFFC76D46),
+  // Foreground / Text
+  foregroundPrimary: AppPalette.brown950,
+  foregroundSecondary: AppPalette.brown925,
 
-  /// NAVIGATION
-  navItemSelected: const Color(0xFF904224),
-  navItemUnselected: const Color(0xFFA6827F),
+  // Backgrounds
+  backgroundPrimary: AppPalette.cream100,
+  backgroundSecondary: AppPalette.cream200,
 
-  /// TEXT COLORS
-  textPrimary: const Color(0xFF904224),
-  textSecondary: const Color(0xFFC76D46),
-  textOnPrimary: const Color(0xFFFDECE9),
+  // Borders / strokes
+  strokePrimary: AppPalette.brown850,
+  strokeSecondary: AppPalette.brown650,
 
-  /// BUTTONS
-  buttonPrimary: const Color(0xFF904224),
-  buttonText: const Color(0xFFFDECE9),
+  // Accents
+  accentBackground: AppPalette.rose50,
+  accentForeground: AppPalette.brown650,
 
-  /// INPUT FIELDS
-  inputBackground: const Color(0xFFFDECE4),
-  inputBorder: const Color(0xFFC76D46),
+  // Misc
+  disabled: AppPalette.cream75,
+  overlay: AppPalette.brown900_10,
 
-  /// COMPONENTS
-  componentBorder: const Color(0xFFC76D46),
-  componentFill: const Color(0xFFC76D46),
+  // Brand colors
+  primary: AppPalette.brown900,
+  secondary: AppPalette.brown700,
 
-  /// BACKGROUNDS
-  scaffoldBackground: const Color(0xFFFBF2ED),
-  bottomSheetBackground: const Color(0xFFF6CBC1),
+  // Navigation
+  navItemSelected: AppPalette.brown900,
+  navItemUnselected: AppPalette.brown650,
 
-  /// CARDS
-  cardPrimary: const Color(0xFFFAE0D8),
-  cardOngoing: const Color(0xFFEADBD2),
-  cardReminder: const Color(0xFFE1C6B6),
-  cardMood: const Color(0xFFDFCECE),
+  // Text
+  textPrimary: AppPalette.brown900,
+  textSecondary: AppPalette.brown700,
+  textOnPrimary: AppPalette.cream100,
 
-  /// MOOD CARD INTERNAL
-  moodGistBackground: const Color(0xFFF6E6DC),
-  moodTagBackground: const Color(0xFFF6E6DC),
+  // Buttons
+  buttonPrimary: AppPalette.brown900,
+  buttonText: AppPalette.cream100,
 
-  /// warning, error, success
-  warning: Colors.amber,
-  error: Colors.redAccent,
-  success: Colors.green,
+  // Input fields
+  inputBackground: AppPalette.cream200,
+  inputBorder: AppPalette.brown700,
+
+  // Components
+  componentBorder: AppPalette.brown700,
+  componentFill: AppPalette.brown700,
+
+  // Scaffold / Bottom sheet
+  scaffoldBackground: AppPalette.cream50,
+  bottomSheetBackground: AppPalette.rose200,
+
+  // Cards
+  cardPrimary: AppPalette.rose100,
+  cardOngoing: AppPalette.rose200,
+  cardReminder: AppPalette.cream200,
+  cardMood: AppPalette.cream100,
+
+  // Mood card internal
+  moodGistBackground: AppPalette.cream75,
+  moodTagBackground: AppPalette.cream75,
+
+  // Status
+  warning: AppPalette.warning,
+  error: AppPalette.error,
+  success: AppPalette.success,
 );
 
 /// =======================
 /// DARK THEME COLORS
 /// =======================
 final darkColors = ColorModel(
-  /// BRAND COLORS
-  primary: const Color(0xFF904224),
-  secondary: const Color(0xFFC76D46),
+  // Foreground / Text
+  foregroundPrimary: AppPalette.cream100,
+  foregroundSecondary: AppPalette.cream75,
 
-  /// NAVIGATION
-  navItemSelected: const Color(0xFF904224),
-  navItemUnselected: const Color(0xFF6E5A55),
+  // Backgrounds
+  backgroundPrimary: AppPalette.brown950,
+  backgroundSecondary: AppPalette.brown925,
 
-  /// TEXT COLORS
-  textPrimary: const Color(0xFFFDECE9), // Light text for dark bg
-  textSecondary: const Color(0xFFE1C6B6),
-  textOnPrimary: const Color(0xFFFDECE9),
+  // Borders / strokes
+  strokePrimary: AppPalette.brown700,
+  strokeSecondary: AppPalette.brown650,
 
-  /// BUTTONS
-  buttonPrimary: const Color(0xFF904224),
-  buttonText: const Color(0xFFFDECE9),
+  // Accents
+  accentBackground: AppPalette.brown850,
+  accentForeground: AppPalette.cream100,
 
-  /// INPUT FIELDS
-  inputBackground: const Color(0xFF2A1F1C),
-  inputBorder: const Color(0xFFC76D46),
+  // Misc
+  disabled: AppPalette.brown900_10,
+  overlay: Colors.black26, // overlay can stay as semi-transparent black
+  // Brand colors
+  primary: AppPalette.brown900,
+  secondary: AppPalette.brown700,
 
-  /// COMPONENTS
-  componentBorder: const Color(0xFFC76D46),
-  componentFill: const Color(0xFF3A2A25),
+  // Navigation
+  navItemSelected: AppPalette.brown900,
+  navItemUnselected: AppPalette.brown650,
 
-  /// BACKGROUNDS
-  scaffoldBackground: const Color(0xFF1A1412),
-  bottomSheetBackground: const Color(0xFF2A1F1C),
+  // Text
+  textPrimary: AppPalette.cream100,
+  textSecondary: AppPalette.cream75,
+  textOnPrimary: AppPalette.cream100,
 
-  /// CARDS
-  cardPrimary: const Color(0xFF2C1F1A),
-  cardOngoing: const Color(0xFF3A2A25),
-  cardReminder: const Color(0xFF3F2E29),
-  cardMood: const Color(0xFF352622),
+  // Buttons
+  buttonPrimary: AppPalette.brown900,
+  buttonText: AppPalette.cream100,
 
-  /// MOOD CARD INTERNAL
-  moodGistBackground: const Color(0xFF3A2A25),
-  moodTagBackground: const Color(0xFF4A3731),
+  // Input fields
+  inputBackground: AppPalette.brown925,
+  inputBorder: AppPalette.brown700,
 
-  /// warning, error, success
-  warning: Colors.amber,
-  error: Colors.redAccent,
-  success: Colors.green,
+  // Components
+  componentBorder: AppPalette.brown700,
+  componentFill: AppPalette.brown925,
+
+  // Scaffold / Bottom sheet
+  scaffoldBackground: AppPalette.brown950,
+  bottomSheetBackground: AppPalette.brown925,
+
+  // Cards
+  cardPrimary: AppPalette.brown925,
+  cardOngoing: AppPalette.brown850,
+  cardReminder: AppPalette.brown850,
+  cardMood: AppPalette.brown850,
+
+  // Mood card internal
+  moodGistBackground: AppPalette.brown850,
+  moodTagBackground: AppPalette.brown700_10,
+
+  // Status
+  warning: AppPalette.warning,
+  error: AppPalette.error,
+  success: AppPalette.success,
 );
+
+/// =======================
+/// CENTRALIZED APP PALETTE
+/// =======================
+class AppPalette {
+  // =======================
+  // BRAND
+  // =======================
+  static const brown950 = Color(0xFF3B1D0F);
+  static const brown925 = Color(0xFF512712);
+  static const brown900 = Color(0xFF904224);
+  static const brown850 = Color(0xFF922604);
+  static const brown700 = Color(0xFFC76D46);
+  static const brown700_10 = Color(0xFFF6E6DC);
+  static const brown650 = Color(0xFFC96C4F);
+
+  // =======================
+  // LIGHT SURFACES
+  // =======================
+  static const cream50 = Color(0xFFFBF2ED);
+  static const cream75 = Color(0xFFF9EFE6);
+  static const cream100 = Color(0xFFFDECE9);
+  static const cream200 = Color(0xFFFDECE4);
+
+  // =======================
+  // ACCENTS
+  // =======================
+  static const rose50 = Color(0xFFF9E0D6);
+  static const rose100 = Color(0xFFFAE0D8);
+  static const rose200 = Color(0xFFF6CBC1);
+
+  // =======================
+  // OVERLAYS
+  // =======================
+  static const brown900_10 = Color(0x1A904224);
+
+  // =======================
+  // STATUS
+  // =======================
+  static const success = Colors.green;
+  static const warning = Colors.amber;
+  static const error = Colors.redAccent;
+}

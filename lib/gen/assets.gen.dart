@@ -38,14 +38,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow_forword_sm.svg
   String get arrowForwordSm => 'assets/icons/arrow_forword_sm.svg';
 
-  /// File path: assets/icons/arrow_right_sm.svg
-  String get arrowRightSm => 'assets/icons/arrow_right_sm.svg';
+  /// File path: assets/icons/arrow_right_lg.svg
+  String get arrowRightLg => 'assets/icons/arrow_right_lg.svg';
 
   /// File path: assets/icons/arrow_up_right.svg
   String get arrowUpRight => 'assets/icons/arrow_up_right.svg';
 
   /// File path: assets/icons/back_nav_arrow.svg
   String get backNavArrow => 'assets/icons/back_nav_arrow.svg';
+
+  /// File path: assets/icons/badge_new.svg
+  String get badgeNew => 'assets/icons/badge_new.svg';
 
   /// File path: assets/icons/blocked_user.svg
   String get blockedUser => 'assets/icons/blocked_user.svg';
@@ -56,8 +59,20 @@ class $AssetsIconsGen {
   /// File path: assets/icons/bookmark_outlined.svg
   String get bookmarkOutlined => 'assets/icons/bookmark_outlined.svg';
 
+  /// File path: assets/icons/breastfeeding.svg
+  String get breastfeeding => 'assets/icons/breastfeeding.svg';
+
+  /// File path: assets/icons/budgeting.svg
+  String get budgeting => 'assets/icons/budgeting.svg';
+
+  /// File path: assets/icons/calender_new.svg
+  String get calenderNew => 'assets/icons/calender_new.svg';
+
   /// File path: assets/icons/camera.svg
   String get camera => 'assets/icons/camera.svg';
+
+  /// File path: assets/icons/camera_new.svg
+  String get cameraNew => 'assets/icons/camera_new.svg';
 
   /// File path: assets/icons/chart_filled.svg
   String get chartFilled => 'assets/icons/chart_filled.svg';
@@ -80,6 +95,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/check_in.svg
   String get checkIn => 'assets/icons/check_in.svg';
 
+  /// File path: assets/icons/child.svg
+  String get child => 'assets/icons/child.svg';
+
   /// File path: assets/icons/circle_check.svg
   String get circleCheck => 'assets/icons/circle_check.svg';
 
@@ -101,6 +119,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/community.svg
   String get community => 'assets/icons/community.svg';
 
+  /// File path: assets/icons/connect_w_mums.svg
+  String get connectWMums => 'assets/icons/connect_w_mums.svg';
+
+  /// File path: assets/icons/cooking.svg
+  String get cooking => 'assets/icons/cooking.svg';
+
   /// File path: assets/icons/crown.svg
   String get crown => 'assets/icons/crown.svg';
 
@@ -110,17 +134,32 @@ class $AssetsIconsGen {
   /// File path: assets/icons/curved_info.svg
   String get curvedInfo => 'assets/icons/curved_info.svg';
 
+  /// File path: assets/icons/delete_new.svg
+  String get deleteNew => 'assets/icons/delete_new.svg';
+
   /// File path: assets/icons/email.svg
   String get email => 'assets/icons/email.svg';
 
   /// File path: assets/icons/emoji_with_heart.svg
   String get emojiWithHeart => 'assets/icons/emoji_with_heart.svg';
 
+  /// File path: assets/icons/emotional_support.svg
+  String get emotionalSupport => 'assets/icons/emotional_support.svg';
+
   /// File path: assets/icons/experts.svg
   String get experts => 'assets/icons/experts.svg';
 
+  /// File path: assets/icons/explore_comm.svg
+  String get exploreComm => 'assets/icons/explore_comm.svg';
+
   /// File path: assets/icons/eye_visible.svg
   String get eyeVisible => 'assets/icons/eye_visible.svg';
+
+  /// File path: assets/icons/fitness.svg
+  String get fitness => 'assets/icons/fitness.svg';
+
+  /// File path: assets/icons/freindship.svg
+  String get freindship => 'assets/icons/freindship.svg';
 
   /// File path: assets/icons/gallery.svg.svg
   String get gallerySvg => 'assets/icons/gallery.svg.svg';
@@ -146,11 +185,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/home.svg
   String get home => 'assets/icons/home.svg';
 
+  /// File path: assets/icons/ideas.svg
+  String get ideas => 'assets/icons/ideas.svg';
+
   /// File path: assets/icons/image_placeholder_icon.svg
   String get imagePlaceholderIcon => 'assets/icons/image_placeholder_icon.svg';
 
   /// File path: assets/icons/info.svg
   String get info => 'assets/icons/info.svg';
+
+  /// File path: assets/icons/join_conversation.svg
+  String get joinConversation => 'assets/icons/join_conversation.svg';
 
   /// File path: assets/icons/leaf.svg
   String get leaf => 'assets/icons/leaf.svg';
@@ -176,6 +221,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/live_dot.svg
   String get liveDot => 'assets/icons/live_dot.svg';
 
+  /// File path: assets/icons/live_session.svg
+  String get liveSession => 'assets/icons/live_session.svg';
+
   /// File path: assets/icons/location_bold.svg
   String get locationBold => 'assets/icons/location_bold.svg';
 
@@ -188,6 +236,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/lock_outlined.svg
   String get lockOutlined => 'assets/icons/lock_outlined.svg';
 
+  /// File path: assets/icons/lock_privacy.svg
+  String get lockPrivacy => 'assets/icons/lock_privacy.svg';
+
   /// File path: assets/icons/logout.svg
   String get logout => 'assets/icons/logout.svg';
 
@@ -196,6 +247,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/match.svg
   String get match => 'assets/icons/match.svg';
+
+  /// File path: assets/icons/mental_wellness.svg
+  String get mentalWellness => 'assets/icons/mental_wellness.svg';
 
   /// File path: assets/icons/minus.svg
   String get minus => 'assets/icons/minus.svg';
@@ -221,11 +275,20 @@ class $AssetsIconsGen {
   /// File path: assets/icons/notification.svg
   String get notification => 'assets/icons/notification.svg';
 
+  /// File path: assets/icons/older.svg
+  String get older => 'assets/icons/older.svg';
+
+  /// File path: assets/icons/other.svg
+  String get other => 'assets/icons/other.svg';
+
   /// File path: assets/icons/password.svg
   String get password => 'assets/icons/password.svg';
 
   /// File path: assets/icons/pin.svg
   String get pin => 'assets/icons/pin.svg';
+
+  /// File path: assets/icons/pregnancy.svg
+  String get pregnancy => 'assets/icons/pregnancy.svg';
 
   /// File path: assets/icons/pregnant.svg
   String get pregnant => 'assets/icons/pregnant.svg';
@@ -251,6 +314,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/security.svg
   String get security => 'assets/icons/security.svg';
 
+  /// File path: assets/icons/select_filled.svg
+  String get selectFilled => 'assets/icons/select_filled.svg';
+
+  /// File path: assets/icons/selfcare.svg
+  String get selfcare => 'assets/icons/selfcare.svg';
+
   /// File path: assets/icons/send_l_w.svg
   String get sendLW => 'assets/icons/send_l_w.svg';
 
@@ -266,8 +335,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/shield_fill.svg
   String get shieldFill => 'assets/icons/shield_fill.svg';
 
+  /// File path: assets/icons/shield_support.svg
+  String get shieldSupport => 'assets/icons/shield_support.svg';
+
+  /// File path: assets/icons/sleep_refresh.svg
+  String get sleepRefresh => 'assets/icons/sleep_refresh.svg';
+
   /// File path: assets/icons/star_filled.svg
   String get starFilled => 'assets/icons/star_filled.svg';
+
+  /// File path: assets/icons/star_new.svg
+  String get starNew => 'assets/icons/star_new.svg';
 
   /// File path: assets/icons/terms_conditions.svg
   String get termsConditions => 'assets/icons/terms_conditions.svg';
@@ -281,6 +359,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/tick_sm.svg
   String get tickSm => 'assets/icons/tick_sm.svg';
 
+  /// File path: assets/icons/toddler.svg
+  String get toddler => 'assets/icons/toddler.svg';
+
   /// File path: assets/icons/ttc_magnet.svg
   String get ttcMagnet => 'assets/icons/ttc_magnet.svg';
 
@@ -289,6 +370,12 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/unmuted_audio.svg
   String get unmutedAudio => 'assets/icons/unmuted_audio.svg';
+
+  /// File path: assets/icons/unselect_outlined.svg
+  String get unselectOutlined => 'assets/icons/unselect_outlined.svg';
+
+  /// File path: assets/icons/user_double.svg
+  String get userDouble => 'assets/icons/user_double.svg';
 
   /// File path: assets/icons/user_icon_outlined.svg
   String get userIconOutlined => 'assets/icons/user_icon_outlined.svg';
@@ -301,6 +388,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/user_stack3.svg
   String get userStack3 => 'assets/icons/user_stack3.svg';
+
+  /// File path: assets/icons/users_all_new.svg
+  String get usersAllNew => 'assets/icons/users_all_new.svg';
 
   /// File path: assets/icons/users_group.svg
   String get usersGroup => 'assets/icons/users_group.svg';
@@ -320,8 +410,8 @@ class $AssetsIconsGen {
   /// File path: assets/icons/warning_.svg
   String get warning => 'assets/icons/warning_.svg';
 
-  /// File path: assets/icons/we_mama_logo.svg
-  String get weMamaLogo => 'assets/icons/we_mama_logo.svg';
+  /// File path: assets/icons/working_mum_life.svg
+  String get workingMumLife => 'assets/icons/working_mum_life.svg';
 
   /// List of all assets
   List<String> get values => [
@@ -333,13 +423,18 @@ class $AssetsIconsGen {
     arrowBackSm,
     arrowForwardInCircle,
     arrowForwordSm,
-    arrowRightSm,
+    arrowRightLg,
     arrowUpRight,
     backNavArrow,
+    badgeNew,
     blockedUser,
     bookmarkFilled,
     bookmarkOutlined,
+    breastfeeding,
+    budgeting,
+    calenderNew,
     camera,
+    cameraNew,
     chartFilled,
     chatDotSquare,
     chat,
@@ -347,6 +442,7 @@ class $AssetsIconsGen {
     chatCircleOutlined,
     chatWDot,
     checkIn,
+    child,
     circleCheck,
     circleCheckBold,
     closeCircleOutlined,
@@ -354,13 +450,20 @@ class $AssetsIconsGen {
     closeWhite,
     communities,
     community,
+    connectWMums,
+    cooking,
     crown,
     currencyNSvg,
     curvedInfo,
+    deleteNew,
     email,
     emojiWithHeart,
+    emotionalSupport,
     experts,
+    exploreComm,
     eyeVisible,
+    fitness,
+    freindship,
     gallerySvg,
     google,
     handRaise,
@@ -369,8 +472,10 @@ class $AssetsIconsGen {
     heartHand,
     heartOutlined,
     home,
+    ideas,
     imagePlaceholderIcon,
     info,
+    joinConversation,
     leaf,
     leafInHand,
     leave,
@@ -379,13 +484,16 @@ class $AssetsIconsGen {
     likeHeartFilled,
     listen,
     liveDot,
+    liveSession,
     locationBold,
     locationOutlined,
     lock,
     lockOutlined,
+    lockPrivacy,
     logout,
     mapPin,
     match,
+    mentalWellness,
     minus,
     moreVertical,
     muteAudio,
@@ -394,8 +502,11 @@ class $AssetsIconsGen {
     noNet,
     noQues,
     notification,
+    older,
+    other,
     password,
     pin,
+    pregnancy,
     pregnant,
     profileSelected,
     quesContact,
@@ -404,35 +515,51 @@ class $AssetsIconsGen {
     restSit,
     search,
     security,
+    selectFilled,
+    selfcare,
     sendLW,
     sendSmW,
     share,
     shieldCheck,
     shieldFill,
+    shieldSupport,
+    sleepRefresh,
     starFilled,
+    starNew,
     termsConditions,
     tickL,
     tickL2,
     tickSm,
+    toddler,
     ttcMagnet,
     twoLeaf,
     unmutedAudio,
+    unselectOutlined,
+    userDouble,
     userIconOutlined,
     userStack1,
     userStack2,
     userStack3,
+    usersAllNew,
     usersGroup,
     verifiedSecurity,
     verifiedTick,
     visibilityOff,
     visibilityOn,
     warning,
-    weMamaLogo,
+    workingMumLife,
   ];
 }
 
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/Frame.png
+  AssetGenImage get frame => const AssetGenImage('assets/images/Frame.png');
+
+  /// File path: assets/images/all_set_image.png
+  AssetGenImage get allSetImage =>
+      const AssetGenImage('assets/images/all_set_image.png');
 
   /// File path: assets/images/angry_emoji.png
   AssetGenImage get angryEmoji =>
@@ -466,6 +593,10 @@ class $AssetsImagesGen {
   AssetGenImage get foundingMum =>
       const AssetGenImage('assets/images/founding_mum.png');
 
+  /// File path: assets/images/founding_mum_new_image.png
+  AssetGenImage get foundingMumNewImage =>
+      const AssetGenImage('assets/images/founding_mum_new_image.png');
+
   /// File path: assets/images/gallery.png
   AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
 
@@ -476,6 +607,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/heart_emoji.png
   AssetGenImage get heartEmoji =>
       const AssetGenImage('assets/images/heart_emoji.png');
+
+  /// File path: assets/images/heart_gradient_image.png
+  AssetGenImage get heartGradientImage =>
+      const AssetGenImage('assets/images/heart_gradient_image.png');
 
   /// File path: assets/images/image_placeholder.png
   AssetGenImage get imagePlaceholder =>
@@ -494,10 +629,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/location_map.png
   AssetGenImage get locationMap =>
       const AssetGenImage('assets/images/location_map.png');
-
-  /// File path: assets/images/mama_logo_without_txt.png
-  AssetGenImage get mamaLogoWithoutTxt =>
-      const AssetGenImage('assets/images/mama_logo_without_txt.png');
 
   /// File path: assets/images/moms_group_photo.png
   AssetGenImage get momsGroupPhoto =>
@@ -558,6 +689,18 @@ class $AssetsImagesGen {
   AssetGenImage get sadEmoji =>
       const AssetGenImage('assets/images/sad_emoji.png');
 
+  /// File path: assets/images/session_mock_user_1.png
+  AssetGenImage get sessionMockUser1 =>
+      const AssetGenImage('assets/images/session_mock_user_1.png');
+
+  /// File path: assets/images/session_mock_user_2.png
+  AssetGenImage get sessionMockUser2 =>
+      const AssetGenImage('assets/images/session_mock_user_2.png');
+
+  /// File path: assets/images/session_mock_user_3.png
+  AssetGenImage get sessionMockUser3 =>
+      const AssetGenImage('assets/images/session_mock_user_3.png');
+
   /// File path: assets/images/splash_image.png
   AssetGenImage get splashImage =>
       const AssetGenImage('assets/images/splash_image.png');
@@ -585,9 +728,17 @@ class $AssetsImagesGen {
   AssetGenImage get userPlaceholder =>
       const AssetGenImage('assets/images/user_placeholder.png');
 
+  /// File path: assets/images/we_mama_hands_logo.png
+  AssetGenImage get weMamaHandsLogo =>
+      const AssetGenImage('assets/images/we_mama_hands_logo.png');
+
   /// File path: assets/images/we_mama_logo_png.png
   AssetGenImage get weMamaLogoPng =>
       const AssetGenImage('assets/images/we_mama_logo_png.png');
+
+  /// File path: assets/images/wemama_hands_title_logo.png
+  AssetGenImage get wemamaHandsTitleLogo =>
+      const AssetGenImage('assets/images/wemama_hands_title_logo.png');
 
   /// File path: assets/images/white_loading.json
   String get whiteLoading => 'assets/images/white_loading.json';
@@ -598,6 +749,8 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<dynamic> get values => [
+    frame,
+    allSetImage,
     angryEmoji,
     anxious,
     calm,
@@ -607,15 +760,16 @@ class $AssetsImagesGen {
     emptyList,
     folderAttach,
     foundingMum,
+    foundingMumNewImage,
     gallery,
     hahaEmoji,
     heartEmoji,
+    heartGradientImage,
     imagePlaceholder,
     likeEmoji,
     loadingDotsDefault,
     loadingGray,
     locationMap,
-    mamaLogoWithoutTxt,
     momsGroupPhoto,
     noSearchImg,
     onboardScreenHeart,
@@ -631,6 +785,9 @@ class $AssetsImagesGen {
     profileDemoPic4,
     refuelSplashImage,
     sadEmoji,
+    sessionMockUser1,
+    sessionMockUser2,
+    sessionMockUser3,
     splashImage,
     splashWholeScreen,
     stressed,
@@ -638,7 +795,9 @@ class $AssetsImagesGen {
     userDemoL,
     userDemoSm,
     userPlaceholder,
+    weMamaHandsLogo,
     weMamaLogoPng,
+    wemamaHandsTitleLogo,
     whiteLoading,
     wowEmoji,
   ];

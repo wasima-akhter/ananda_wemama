@@ -23,8 +23,7 @@ dependencies:
   # -----------------------------
   agora_rtc_engine: ^6.5.3      # Audio & Video Calling (Agora RTC)
   agora_rtm: ^2.2.5             # Real-time Messaging (Live chat/comments)
-#   agora_rtc_engine: 6.3.2
-# agora_rtm: 2.1.10
+
 
   # -----------------------------
   # 🌍 Location & Maps

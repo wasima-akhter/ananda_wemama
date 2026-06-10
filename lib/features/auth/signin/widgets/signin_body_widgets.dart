@@ -28,7 +28,7 @@ class HeaderSection extends StatelessWidget {
               ),
             ),
             Gap(itemGap),
-            SvgIcon(iconPath: IconsPath.arrowRightSm, height: 24),
+            SvgIcon(iconPath: IconsPath.arrowRightLg, height: 24),
           ],
         ),
         Gap(itemGap * 3),

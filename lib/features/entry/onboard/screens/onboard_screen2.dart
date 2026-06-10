@@ -1,5 +1,3 @@
-import 'package:mama_app/core/components/ui/buttons/back_arrow_in_circle.dart';
-
 import '../../../../app/helper_widgets_export.dart';
 import '../../../shared/community_spotlight/community_spotlight.dart';
 import '../controller/onboard_controller.dart';
@@ -23,7 +21,13 @@ class OnboardScreen2 extends StatelessWidget {
           Positioned(
             top: itemGap * 5,
             left: itemGap * 3,
-            child: Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: SvgIconColored(
+                iconPath: IconsPath.arrowBackSmall,
+                iconColor: c.strokePrimary,
+              ),
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,

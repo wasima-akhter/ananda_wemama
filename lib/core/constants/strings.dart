@@ -370,6 +370,8 @@ class Strings {
   static const String createAccount = "Create an account";
   static const String enterSixDigitCodeEmail =
       "Enter The 6 Digit Code Sent To Your Email Address";
+
+  static const String motherhoodTogether = "Motherhood, together.";
   static const String findMumsNearYou = "Find mums near you";
   static const String motherhoodSupportLine =
       "You don't have to do\nmotherhood alone";
@@ -404,7 +406,7 @@ class Strings {
   static const String postpartumRecovery = "Postpartum Recovery";
   static const String comments = "comments";
   static const String signUpWith = "Sign up with";
-  static const String getStarted = "Get Started";
+  static const String getStarted = "Let's Get Started";
   static const String alreadyHaveAccount = "Already have an account?";
   static const String logIn = "Log In";
   static const String lifestyleInterests = "lifestyle & interests";
