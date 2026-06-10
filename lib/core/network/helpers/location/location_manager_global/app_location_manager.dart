@@ -19,6 +19,10 @@ enum LocationFlowResult {
   failed,
 }
 
+bool get isIOS {
+  return Theme.of(Get.context!).platform == TargetPlatform.iOS;
+}
+
 // Add this field
 StreamSubscription<ServiceStatus>? _serviceStatusSubscription;
 
@@ -152,6 +156,13 @@ class AppLocationManager extends GetxService {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
       if (!serviceEnabled) {
+        if (isIOS) {
+          // iOS: always go to settings, no retry delay needed
+          await Geolocator.openLocationSettings();
+
+          return LocationFlowResult.serviceDisabled;
+        }
+
         // ❗ THIS is the ONLY way to open system location settings
         await Geolocator.openLocationSettings();
 
@@ -179,8 +190,14 @@ class AppLocationManager extends GetxService {
       }
 
       if (permission == LocationPermission.deniedForever) {
-        // ❗ THIS is required for "forever denied"
-        await Geolocator.openAppSettings();
+        if (isIOS) {
+          // iOS: direct jump to settings (required behavior)
+          await Geolocator.openAppSettings();
+        } else {
+          // Android: same behavior
+          // ❗ THIS is required for "forever denied"
+          await Geolocator.openAppSettings();
+        }
 
         return LocationFlowResult.permissionDeniedForever;
       }
@@ -227,6 +244,12 @@ class AppLocationManager extends GetxService {
 
       if (!serviceEnabled) {
         isLocationActive.value = false;
+
+        if (isIOS) {
+          locationFlowResult.value = LocationFlowResult.serviceDisabled;
+          return LocationFlowResult.serviceDisabled;
+        }
+
         locationFlowResult.value = LocationFlowResult.serviceDisabled;
 
         return LocationFlowResult.serviceDisabled;

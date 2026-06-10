@@ -1,7 +1,55 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+# # Uncomment this line to define a global platform for your project
+# # platform :ios, '13.0'
 
-# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+# # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+# ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+# project 'Runner', {
+#   'Debug' => :debug,
+#   'Profile' => :release,
+#   'Release' => :release,
+# }
+
+# def flutter_root
+#   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+#   unless File.exist?(generated_xcode_build_settings_path)
+#     raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+#   end
+
+#   File.foreach(generated_xcode_build_settings_path) do |line|
+#     matches = line.match(/FLUTTER_ROOT\=(.*)/)
+#     return matches[1].strip if matches
+#   end
+#   raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+# end
+
+# require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+# flutter_ios_podfile_setup
+
+# target 'Runner' do
+#   use_frameworks!
+
+#   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+#   target 'RunnerTests' do
+#     inherit! :search_paths
+#   end
+# end
+
+# post_install do |installer|
+#   installer.pods_project.targets.each do |target|
+#     flutter_additional_ios_build_settings(target)
+#   end
+# end
+
+
+
+
+# platform MUST be set for App Store + modern iOS
+install! 'cocoapods',
+  :disable_input_output_paths => true
+platform :ios, '13.0'
+
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
 project 'Runner', {
@@ -13,31 +61,84 @@ project 'Runner', {
 def flutter_root
   generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
   unless File.exist?(generated_xcode_build_settings_path)
-    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+    raise "#{generated_xcode_build_settings_path} must exist"
   end
 
   File.foreach(generated_xcode_build_settings_path) do |line|
     matches = line.match(/FLUTTER_ROOT\=(.*)/)
     return matches[1].strip if matches
   end
-  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+  raise "FLUTTER_ROOT not found"
 end
 
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
 flutter_ios_podfile_setup
 
+# ✅ FIX 1: Remove duplicate aosl.xcframework from AgoraRtm.
+# Both agora_rtc_engine (>=4.5.0) and agora_rtm (>=2.2.0) bundle it.
+# AgoraRtcEngine already provides the authoritative copy.
+pre_install do |installer|
+  rtm_pod_path = File.join(installer.sandbox.root, 'AgoraRtm')
+  aosl_path = File.join(rtm_pod_path, 'aosl.xcframework')
+  if File.exist?(aosl_path)
+    puts "✅ Removing duplicate aosl.xcframework from AgoraRtm..."
+    FileUtils.rm_rf(aosl_path)
+  else
+    puts "ℹ️  aosl.xcframework not found in AgoraRtm (already clean)."
+  end
+end
+
 target 'Runner' do
-  use_frameworks!
+  # ✅ FIX 2: Modular headers for SDWebImage only.
+  # DKPhotoGallery (Swift) needs to import SDWebImage (ObjC) as a module.
+  # This avoids enabling use_frameworks! globally, which breaks Agora.
+  pod 'SDWebImage', :modular_headers => true
+  pod 'SDWebImageWebPCoder', :modular_headers => true
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
   target 'RunnerTests' do
     inherit! :search_paths
   end
 end
 
 post_install do |installer|
+  # Pods that have a broken swiftinterface due to the Swift compiler bug
+  # where a public type shares the same name as its module.
+  # BUILD_LIBRARY_FOR_DISTRIBUTION must be NO for these or the verifier
+  # will reject their pre-compiled .swiftinterface files at build time.
+  broken_interface_pods = %w[
+    DKPhotoGallery
+    DKImagePickerController
+    DKPhotoGallery
+    SwiftyGif
+  ]
+
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      config.build_settings['VALIDATE_WORKSPACE'] = 'NO'
+      config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
+
+      if broken_interface_pods.include?(target.name)
+        # ✅ FIX 3: Disable library-for-distribution + interface verification
+        # for pods whose .swiftinterface has the module-name == type-name bug.
+        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'NO'
+        config.build_settings['SWIFT_EMIT_MODULE_INTERFACE'] = 'NO'
+        puts "⚠️  Disabled BUILD_LIBRARY_FOR_DISTRIBUTION for #{target.name} (broken swiftinterface)"
+      else
+        config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+      end
+    end
+  end
+
+  installer.aggregate_targets.each do |aggregate_target|
+    aggregate_target.xcconfigs.each do |config_name, config_file|
+      config_file.attributes['OTHER_LDFLAGS'] ||= '$(inherited)'
+    end
   end
 end
