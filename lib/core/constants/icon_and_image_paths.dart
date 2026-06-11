@@ -133,6 +133,10 @@ class IconsPath {
 
   // payment
   static String get currency => Assets.icons.currencyNSvg;
+
+  //New
+
+  static String get heartGradient => Assets.icons.heartGradient;
 }
 
 class ImagesPath {
@@ -201,4 +205,7 @@ class ImagesPath {
   static String get wowEmoji => Assets.images.wowEmoji.path;
   static String get sadEmoji => Assets.images.sadEmoji.path;
   static String get angryEmoji => Assets.images.angryEmoji.path;
+
+  //New
+  static String get heartGradientImage => Assets.images.heartGradientImage.path;
 }

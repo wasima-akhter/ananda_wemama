@@ -173,6 +173,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/hand_wave.svg
   String get handWave => 'assets/icons/hand_wave.svg';
 
+  /// File path: assets/icons/heart_black.svg
+  String get heartBlack => 'assets/icons/heart_black.svg';
+
+  /// File path: assets/icons/heart_gradient.svg
+  String get heartGradient => 'assets/icons/heart_gradient.svg';
+
   /// File path: assets/icons/heart_half_filled.svg
   String get heartHalfFilled => 'assets/icons/heart_half_filled.svg';
 
@@ -468,6 +474,8 @@ class $AssetsIconsGen {
     google,
     handRaise,
     handWave,
+    heartBlack,
+    heartGradient,
     heartHalfFilled,
     heartHand,
     heartOutlined,

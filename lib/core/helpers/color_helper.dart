@@ -24,6 +24,7 @@ Color get snackWarningBg => c.scaffoldBackground;
 Color get snackWarningTxtClr => c.primary;
 
 Color get bgClr => c.scaffoldBackground;
+Color get bgClrNew => Color(0xFFFDF8F5);
 //
 Color get deepPrimary => Color(0xFF512814);
 

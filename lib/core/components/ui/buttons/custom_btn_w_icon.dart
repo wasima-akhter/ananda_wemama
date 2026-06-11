@@ -38,7 +38,7 @@ class CustomBtnWIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTallDevice = S.h > 700;
+    final isTallDevice = ScreenSize.isTallHeight;
 
     TextStyle style_ = GoogleFonts.poppins(
       fontSize: isTallDevice ? 17.sp : 15.sp,
@@ -54,7 +54,7 @@ class CustomBtnWIcon extends StatelessWidget {
             padding ??
             EdgeInsets.symmetric(
               horizontal: 16.w,
-              vertical: isTallDevice ? 12.w : 12.w,
+              vertical: isTallDevice ? 14.h : 12.h,
             ),
         decoration: BoxDecoration(color: bgColor, borderRadius: radius.brdrRad),
         child: Stack(

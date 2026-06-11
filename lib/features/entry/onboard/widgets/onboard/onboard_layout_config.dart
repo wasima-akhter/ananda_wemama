@@ -1,4 +1,4 @@
-import '../../../../app/helper_widgets_export.dart';
+import '../../../../../app/helper_widgets_export.dart';
 
 class OnboardLayoutConfig {
   const OnboardLayoutConfig({required this.width, required this.height});

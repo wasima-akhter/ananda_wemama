@@ -374,9 +374,12 @@ class Strings {
   static const String motherhoodTogether = "Motherhood, together.";
   static const String findMumsNearYou = "Find mums near you";
   static const String motherhoodSupportLine =
-      "You don't have to do\nmotherhood alone";
+      "You don’t have to do\nmotherhood alone";
+
   static const String friendshipSupportUnderstanding =
       "Friendship . Support. Understanding";
+
+  static const String builtForWomen = "Built for women\nnavigating\nmotherhood";
 
   static const String feelBetterTogether = "Feel better, together";
   static const String moodToolsExpertSessionsRealCommunity =

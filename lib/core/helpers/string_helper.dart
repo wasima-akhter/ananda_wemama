@@ -49,17 +49,6 @@ TextStyle get norm_Sm_Sec_Outfit =>
 TextStyle get norm_Sm_500_mClr_Outfit =>
     TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
 
-double findTextWidth(String text, {double? fs}) {
-  TextPainter textPainter = TextPainter(
-    text: TextSpan(
-      text: text,
-      style: TextStyle(fontSize: fs ?? 13),
-    ),
-    textDirection: TextDirection.ltr,
-  )..layout();
-  return textPainter.width;
-}
-
 double measureTextHeight(String text, TextStyle style) {
   final textPainter = TextPainter(
     text: TextSpan(text: text, style: style),
@@ -178,4 +167,18 @@ String getFirstWord(String text) {
   if (text.trim().isEmpty) return '';
 
   return text.trim().split(RegExp(r'\s+')).first;
+}
+
+double findTextWidth({
+  required String text,
+  required TextStyle style,
+  int maxLines = 1,
+}) {
+  final textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: maxLines,
+    textDirection: TextDirection.ltr,
+  )..layout();
+
+  return textPainter.width;
 }
