@@ -77,7 +77,7 @@ class SplashScreenBinding extends Bindings {
 class SigninScreenBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<SigninController>(() => SigninController());
+    Get.lazyPut<SigninController>(() => SigninController(), fenix: true);
   }
 }
 
@@ -200,7 +200,7 @@ class MainNavBinding extends Bindings {
     // =======================
     Get.lazyPut(() => EditProfileController());
     Get.lazyPut(() => SuccessController());
-    Get.lazyPut(() => PrivacyPolicyController());
+
     Get.lazyPut(() => PaymentController());
 
     Get.lazyPut(() => MatchController());
@@ -412,6 +412,13 @@ class TermsAndConditionsBinding extends Bindings {
     Get.lazyPut<TermsAndConditionsController>(
       () => TermsAndConditionsController(),
     );
+  }
+}
+
+class PrivacyPolicyBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => PrivacyPolicyController());
   }
 }
 

@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/services/auth/forgot_password_service.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/enums/ui_enums.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
 import '../../signin/controller/signin_controller.dart';
@@ -29,10 +31,12 @@ class ForgotPasswordController extends GetxController {
   bool get isNewPassHidden => !_showNewPassword.value;
   bool get isConfirmPassHidden => !_showConfirmPassword.value;
 
-  IconData get newPasswordIcon => _showNewPassword.value ? Icons.visibility : Icons.visibility_off;
+  String get newPasswordIcon =>
+      _showNewPassword.value ? IconsPath.visibilityOn : IconsPath.visibilityOff;
 
-  IconData get confirmPasswordIcon =>
-      _showConfirmPassword.value ? Icons.visibility : Icons.visibility_off;
+  String get confirmPasswordIcon => _showConfirmPassword.value
+      ? IconsPath.visibilityOn
+      : IconsPath.visibilityOff;
 
   void toggleNewPass() => _showNewPassword.toggle();
   void toggleConfirmPass() => _showConfirmPassword.toggle();
@@ -53,12 +57,17 @@ class ForgotPasswordController extends GetxController {
     unfocusAll();
     _isSendOtpLoading.value = true;
 
-    final success = await VerifyOtpService().resendOtp(email: emailCtrl.text.trim());
+    final success = await VerifyOtpService().resendOtp(
+      email: emailCtrl.text.trim(),
+    );
 
     if (success) {
       final result = await Get.toNamed(
         RoutePaths.verifyOtp,
-        arguments: {'flow': OtpFlowType.forgotPassword, 'email': emailCtrl.text.trim()},
+        arguments: {
+          'flow': OtpFlowType.forgotPassword,
+          'email': emailCtrl.text.trim(),
+        },
       );
 
       if (result == true) {
@@ -99,6 +108,14 @@ class ForgotPasswordController extends GetxController {
     Get.find<SigninController>().clearFields();
     clearAllFields();
     Get.toNamed(RoutePaths.signin);
+  }
+
+  @override
+  void onInit() {
+    if (kDebugMode) {
+      emailCtrl.text = "abc@yopmail.com";
+    }
+    super.onInit();
   }
 
   /// ================= HELPERS =================

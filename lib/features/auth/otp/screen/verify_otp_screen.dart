@@ -1,9 +1,12 @@
 import 'package:easy_countdown_timer/easy_countdown_timer_widget.dart';
 import 'package:flutter/services.dart';
+import 'package:mama_app/features/auth/core/auth_button_templates.dart';
+import 'package:mama_app/features/entry/onboard/screens/onboard_screen2.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/widgets_helper.dart';
+import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
 import '../controller/verify_otp_controller.dart';
 
 class VerifyOtpScreen extends StatelessWidget {
@@ -15,26 +18,36 @@ class VerifyOtpScreen extends StatelessWidget {
 
     return SafeArea(
       top: false,
-      child: Scaffold(
-        appBar: CommonAppBarContent(title: "", hasBackNavArrow: false),
-        backgroundColor: bgClr,
-        resizeToAvoidBottomInset: true,
-        body: Center(
-          child: SingleChildScrollView(
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) =>
+            didPop ? null : Get.offNamed(RoutePaths.signin),
+        child: Scaffold(
+          appBar: getOnboardAppBar(),
+          backgroundColor: bgClrNew,
+          resizeToAvoidBottomInset: true,
+          body: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                OnboardLogoHeaderRow(
+                  onTap: () => Get.offNamed(RoutePaths.signin),
+                ),
+
+                Gap(20.h),
                 // Welcome tetxt
                 Text(
                   Strings.verification.capEachWord(),
-                  style: TxtStyle.outfit(fs: 16, w: 600, color: c.primary),
+                  style: TxtStyle.dmSerifDisplayRegular(),
                 ),
+
                 Gap(itemGap),
 
                 Text(
                   Strings.enterSixDigitCodeEmail.capEachWord(),
-                  style: TxtStyle.outfit(color: c.primary, w: 600),
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.poppinsSemiBold13Center(),
                 ),
 
                 Gap(itemGap * 5),
@@ -45,7 +58,13 @@ class VerifyOtpScreen extends StatelessWidget {
                   controller: otpc.otpCntrler,
                   focusNode: otpc.otpFocusNode,
 
-                  errorTextStyle: TxtStyle.outfit(w: 600),
+                  cursor: Container(
+                    width: 1, // thinner cursor
+                    height: 22.h,
+                    color: c.primary,
+                  ),
+
+                  errorTextStyle: TxtStyle.poppinsSemiB(w: 600),
                   errorBuilder: (errorText, pin) {
                     return const Text("Invalid OTP");
                   },
@@ -71,8 +90,7 @@ class VerifyOtpScreen extends StatelessWidget {
                 Gap(itemGap * 3),
 
                 Obx(() {
-                  return filledBtnWTxt(
-                    btnTxt: Strings.continueTxt,
+                  return AuthButton(
                     isLoading: otpc.isLoading,
                     onTap: otpc.onTapVerify,
                   );
@@ -80,35 +98,26 @@ class VerifyOtpScreen extends StatelessWidget {
                 Gap(itemGap * 3),
 
                 Obx(() {
-                  return Row(
+                  return Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Expanded(
-                        child: Text(
-                          otpc.showTimer
-                              ? Strings
-                                    .youCanReqOTP // While timer running
-                              : Strings.youHaventGotOTP,
-                          style: TxtStyle.outfit(w: 500, color: c.secondary),
-                        ),
+                      Text(
+                        otpc.showTimer
+                            ? Strings
+                                  .youCanReqOTP // While timer running
+                            : Strings.youHaventGotOTP,
+                        style: TxtStyle.poppinsSemiB(color: c.secondary),
                       ),
                       otpc.showTimer
                           ? DefaultTextStyle(
-                              style: TxtStyle.outfitSemiB(
-                                fs: 14,
-                                w: 600,
-                                color: c.primary,
-                              ),
+                              style: TxtStyle.poppinsSemiB(color: c.primary),
                               child: EasyCountdownTimerWidget(
                                 key: ValueKey(DateTime.now()),
                                 duration: Duration(seconds: 5),
-                                digitTextStyle: TxtStyle.outfit(
-                                  fs: 14,
-                                  w: 600,
+                                digitTextStyle: TxtStyle.poppinsSemiB(
                                   color: c.primary,
                                 ),
-                                separatorTextStyle: TxtStyle.outfit(
-                                  fs: 14,
+                                separatorTextStyle: TxtStyle.poppinsSemiB(
                                   color: c.primary,
                                 ),
                                 onFinished: () {
@@ -124,8 +133,7 @@ class VerifyOtpScreen extends StatelessWidget {
                                 showSeconds: true,
                                 separatedWidget: Text(
                                   " : ",
-                                  style: TxtStyle.outfit(
-                                    fs: 14,
+                                  style: TxtStyle.poppinsSemiB(
                                     color: c.primary,
                                   ),
                                 ),
@@ -135,12 +143,29 @@ class VerifyOtpScreen extends StatelessWidget {
                               onTap: otpc.onTapResendOtp,
                               child: otpc.isResendLoading
                                   ? LoadingPrimary()
-                                  : Text(
-                                      Strings.resendOTP,
-                                      style: TxtStyle.outfit(
-                                        w: 600,
-                                        color: c.primary,
-                                      ),
+                                  : Stack(
+                                      children: [
+                                        Text(
+                                          Strings.resendOTP,
+                                          style: TxtStyle.poppinsSemiB(
+                                            w: 600,
+                                            fs: 12,
+                                            color: c.primary,
+                                            h: 1.02,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            height: 1,
+                                            color: c.primary.withValues(
+                                              alpha: 0.6,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                             ),
                     ],

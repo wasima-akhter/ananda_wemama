@@ -15,6 +15,10 @@ class CusPassTypeTextFormField extends StatelessWidget {
   final Widget? prefix;
   final int? hintW;
   final double? prefixSize;
+  final Color? fillColor;
+  final Color? brClr;
+  final TextStyle? style;
+  final TextStyle? hintStyle;
 
   const CusPassTypeTextFormField({
     super.key,
@@ -32,10 +36,15 @@ class CusPassTypeTextFormField extends StatelessWidget {
     this.prefixSize,
     this.hintW,
     this.focusNode,
+    this.fillColor,
+    this.brClr,
+    this.style,
+    this.hintStyle,
   });
 
   @override
   Widget build(BuildContext context) {
+    final borderColr = brClr ?? c.inputBorder;
     return TextFormField(
       onFieldSubmitted: onFieldSubmitted,
       onTap: onTap,
@@ -43,49 +52,58 @@ class CusPassTypeTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText ?? false,
       keyboardType: keyboardType ?? TextInputType.text,
-      style: TxtStyle.outfit(color: c.primary),
+      style: style ?? TxtStyle.outfit(color: c.primary),
       autofillHints: const [AutofillHints.password],
       decoration: InputDecoration(
         filled: true,
-        fillColor: c.inputBackground,
+        fillColor: fillColor ?? c.inputBackground,
         hintText: hintText,
-        hintStyle: TxtStyle.outfit(fs: 13, color: c.primary, w: hintW ?? 500),
+        hintStyle:
+            hintStyle ??
+            TxtStyle.outfit(fs: 13, color: c.primary, w: hintW ?? 500),
         isDense: false, // important
-        contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 14),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 14.w,
+          vertical: ScreenSize.isSmallWidth ? 12.h : 14.h,
+        ),
         focusedBorder: isNoBrder == true
             ? InputBorder.none
             : OutlineInputBorder(
-                borderSide: BorderSide(color: c.inputBorder, width: 1.5),
-                borderRadius: 30.brdrRad,
+                borderSide: BorderSide(color: borderColr, width: 1),
+                borderRadius: 12.brdrRad,
               ),
         errorBorder: isNoBrder == true
             ? InputBorder.none
             : OutlineInputBorder(
-                borderSide: BorderSide(color: c.error, width: 1.5),
-                borderRadius: 30.brdrRad,
+                borderSide: BorderSide(color: c.error, width: 1),
+                borderRadius: 12.brdrRad,
               ),
         focusedErrorBorder: isNoBrder == true
             ? InputBorder.none
             : OutlineInputBorder(
-                borderSide: BorderSide(color: c.error, width: 1.5),
-                borderRadius: 30.brdrRad,
+                borderSide: BorderSide(color: c.error, width: 1),
+                borderRadius: 12.brdrRad,
               ),
         enabledBorder: isNoBrder == true
             ? InputBorder.none
             : (isUnderLineBrdr == true
                   ? UnderlineInputBorder(
-                      borderSide: BorderSide(color: c.inputBorder, width: 1),
-                      borderRadius: 30.brdrRad,
+                      borderSide: BorderSide(color: borderColr, width: 1),
+                      borderRadius: 12.brdrRad,
                     )
                   : OutlineInputBorder(
-                      borderSide: BorderSide(color: c.inputBorder, width: 0.8),
-                      borderRadius: 30.brdrRad,
+                      borderSide: BorderSide(color: borderColr, width: 1),
+                      borderRadius: 12.brdrRad,
                     )),
         suffixIcon: suffix,
         prefixIcon: prefix,
         prefixIconConstraints: BoxConstraints(
-          minWidth: prefixSize ?? 48,
-          minHeight: prefixSize ?? 48,
+          minWidth: (prefixSize ?? 48).w,
+          minHeight: (prefixSize ?? 48).h,
+        ),
+        suffixIconConstraints: BoxConstraints(
+          minWidth: (prefixSize ?? 48).w,
+          minHeight: (prefixSize ?? 48).h,
         ),
       ),
       onChanged: (value) => log(value),

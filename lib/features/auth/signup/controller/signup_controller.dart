@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/services/auth/signup_service.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
 
@@ -33,11 +34,11 @@ class SignupController extends GetxController {
   bool get isPassHidden => !showPassword.value;
   bool get isConPassHidden => !showConPassword.value;
 
-  IconData get passwordIcon =>
-      showPassword.value ? Icons.visibility : Icons.visibility_off;
+  String get passwordIcon =>
+      showPassword.value ? IconsPath.visibilityOn : IconsPath.visibilityOff;
 
-  IconData get conPassIcon =>
-      showConPassword.value ? Icons.visibility : Icons.visibility_off;
+  String get conPassIcon =>
+      showConPassword.value ? IconsPath.visibilityOn : IconsPath.visibilityOff;
 
   void togglePass() => showPassword.toggle();
   void toggleConPass() => showConPassword.toggle();

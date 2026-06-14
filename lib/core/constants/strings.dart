@@ -30,13 +30,13 @@ class Strings {
   static const String forgotPassword = "Forgot Password";
   static const String signup = "Sign Up";
   static const String loginWithSpace = "Log in";
-  static const String login = "Login";
+  static const String signIn = "Sign In";
   static const String register = "Register";
   static const String customer = "Customer";
   static const String supplier = "Suppiler";
   static const String alreadyHaveAnAccount = "Already have an account?";
   static const String dontHaveAnAccount = "Don't have an account?";
-  static const String loginWelcomeText = "Welcome back! glad to see you again";
+  static const String loginWelcomeText = "Log in and stay connected";
   static const String signupChooseRoleTxt =
       "Create account as a customer or Supplier";
   static const String signupTxt = "Signup to get started..";
@@ -51,7 +51,7 @@ class Strings {
   static const String enter6DigitCode = "Enter your 6 digit code";
   static const String gladToSeeUAgain = "Glad to see you again";
   static const String passwordChangedContinueLogin =
-      "Your password has been changed, continue to login";
+      "Your password has been\nchanged, continue to login";
   static const String enterCodeSentToMail =
       "Enter the code we've sent to your mail";
 
@@ -60,10 +60,10 @@ class Strings {
   static const String setLocation = "Set Location";
   static const String getOtp = "Get OTP";
   static const String resendOTP = "Resend OTP";
-  static const String youHaventGotOTP = "You haven't got the OTP?";
+  static const String youHaventGotOTP = "Didn’t receive the code?";
   static const String youCanReqOTP = "You can request OTP again after: ";
   static const String sendVerificationEmail =
-      "We'll send a verification code to this email to confirm your account";
+      "We'll send a verification\ncode to this email address";
   static const String enterEmailAddress = "Enter email address";
   static const String sendConfirmation = "Send confirmation";
   static const String newPassword = "New password";
@@ -367,14 +367,19 @@ class Strings {
   static const String yourphotosAreOnly =
       "your photos are only visible to verified community members.";
 
-  static const String createAccount = "Create an account";
+  static const String createAccount = "Create account";
+  static const String createYourAccount = "Create your account";
+  static const String joinOurTrustedCommunity =
+      "Join our trusted community of mums";
   static const String enterSixDigitCodeEmail =
-      "Enter The 6 Digit Code Sent To Your Email Address";
+      "Enter The 6 Digit Code Sent To\nYour Email Address";
 
   static const String motherhoodTogether = "Motherhood, together.";
   static const String findMumsNearYou = "Find mums near you";
   static const String motherhoodSupportLine =
       "You don’t have to do\nmotherhood alone";
+  static const String motherhoodFeelsAlone =
+      "Because motherhood feels lighter when\nyou don’t do it alone.";
 
   static const String friendshipSupportUnderstanding =
       "Friendship . Support. Understanding";
@@ -516,10 +521,10 @@ class Strings {
   static const String createCommunityPosts = "Create community posts";
   static const String commentAndReply = "Comment & reply";
   static const String limitedDailyWaves = "Send  Limited Daily Waves";
-  static const String sendVerification = "Send Verification";
+  static const String sendCode = "Send Code";
 
   static const String enterSixDigitCode = "Enter your 6 digit code";
-  static const String welcomeBack = "Glad to see you again";
+  static const String welcomeBack = "Welcome Back";
   static const String welcomeFoundingMum = "Welcome, Founding Mum";
   static const String whatThisMeans = "What This Means";
   static const String howMumsUse = "How Most Mums Use WeMama";

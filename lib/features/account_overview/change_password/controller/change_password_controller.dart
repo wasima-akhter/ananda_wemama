@@ -1,3 +1,5 @@
+import 'package:mama_app/core/constants/icon_and_image_paths.dart';
+
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/account_overview/change_password/change_password_service.dart';
 
@@ -21,9 +23,11 @@ class ChangePasswordController extends GetxController {
   var showPassword = false.obs;
   var showConPassword = false.obs;
 
-  IconData get newPasswordIcon => !showPassword.value ? Icons.visibility_off : Icons.visibility;
+  String get newPasswordIcon =>
+      !showPassword.value ? IconsPath.visibilityOff : IconsPath.visibilityOn;
   bool get isNewPassHidden => !showPassword.value;
-  IconData get conPassIcon => !showConPassword.value ? Icons.visibility_off : Icons.visibility;
+  String get conPassIcon =>
+      !showConPassword.value ? IconsPath.visibilityOff : IconsPath.visibilityOn;
   bool get isConPassHidden => !showConPassword.value;
 
   void toggleNewPass() {
@@ -54,11 +58,6 @@ class ChangePasswordController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onClose() {
     /// Dispose controllers
     oldPassCtrl.dispose();
@@ -73,7 +72,9 @@ class ChangePasswordController extends GetxController {
     super.onClose();
   }
 
-  Future<void> onTapUpdatePassword({required GlobalKey<FormState> formKey}) async {
+  Future<void> onTapUpdatePassword({
+    required GlobalKey<FormState> formKey,
+  }) async {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;

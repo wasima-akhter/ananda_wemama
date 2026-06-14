@@ -25,6 +25,8 @@ Color get snackWarningTxtClr => c.primary;
 
 Color get bgClr => c.scaffoldBackground;
 Color get bgClrNew => Color(0xFFFDF8F5);
+Color get inputBgClr => Color(0xFFFEFCFA);
+Color get newBorderClr => c.primary.withValues(alpha: 0.1);
 //
 Color get deepPrimary => Color(0xFF512814);
 

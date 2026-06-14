@@ -95,6 +95,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/check_in.svg
   String get checkIn => 'assets/icons/check_in.svg';
 
+  /// File path: assets/icons/checkbox_tick.svg
+  String get checkboxTick => 'assets/icons/checkbox_tick.svg';
+
   /// File path: assets/icons/child.svg
   String get child => 'assets/icons/child.svg';
 
@@ -151,9 +154,6 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/explore_comm.svg
   String get exploreComm => 'assets/icons/explore_comm.svg';
-
-  /// File path: assets/icons/eye_visible.svg
-  String get eyeVisible => 'assets/icons/eye_visible.svg';
 
   /// File path: assets/icons/fitness.svg
   String get fitness => 'assets/icons/fitness.svg';
@@ -448,6 +448,7 @@ class $AssetsIconsGen {
     chatCircleOutlined,
     chatWDot,
     checkIn,
+    checkboxTick,
     child,
     circleCheck,
     circleCheckBold,
@@ -467,7 +468,6 @@ class $AssetsIconsGen {
     emotionalSupport,
     experts,
     exploreComm,
-    eyeVisible,
     fitness,
     freindship,
     gallerySvg,

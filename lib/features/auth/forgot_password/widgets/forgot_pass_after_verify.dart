@@ -1,7 +1,7 @@
+import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
+
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/components/ui/helpers/visibility_suffix.dart';
-import '../../../../core/components/ui/inputs/cus_pass_type_text_form_field.dart';
-import '../../../../core/utils/validator/validators.dart';
+import '../../core/auth_button_templates.dart';
 import '../controller/forgot_password_controller.dart';
 
 class ForgotPassAfterVerify extends StatelessWidget {
@@ -19,17 +19,19 @@ class ForgotPassAfterVerify extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // Main title
+
+        //
         Text(
           Strings.createNewPassword.capEachWord(),
-          style: 22.titleMclrCusFSOutfit,
+          style: TxtStyle.dmSerifDisplayRegular(),
         ),
         Gap(itemGap),
 
         // Subtitle
         Text(
-          Strings.addSpecialChar,
+          Strings.addSpecialChar.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary),
+          style: TxtStyle.poppinsSemiBold13Center(),
         ),
         Gap(itemGap * 5),
 
@@ -39,53 +41,33 @@ class ForgotPassAfterVerify extends StatelessWidget {
           child: Column(
             children: [
               Obx(
-                () => CusPassTypeTextFormField(
-                  controller: fpc.newPassCtrl,
-                  focusNode: fpc.newPassFocus,
+                () => AuthFormPasswordField(
+                  passwordCtrler: fpc.newPassCtrl,
+                  passwordFocus: fpc.newPassFocus,
+                  isPasswordHidden: fpc.isNewPassHidden,
+                  togglePasswordVisibility: fpc.toggleNewPass,
+                  passwordIcon: fpc.newPasswordIcon,
                   hintText: Strings.newPassword,
-                  obscureText: fpc.isNewPassHidden,
-                  prefix: SvgIcon(
-                    iconPath: IconsPath.lock,
-                  ).mOnly(left: 15, right: 6),
-                  prefixSize: 48,
-                  suffix: VisibilitySuffix(
-                    onTap: fpc.toggleNewPass,
-                    icon: fpc.newPasswordIcon,
-                  ),
-                  validator: (value) => validatePassword(value),
-                  hintW: 600,
                 ),
               ),
               Gap(itemGap * 1.5),
               Obx(
-                () => CusPassTypeTextFormField(
-                  controller: fpc.confirmPassCtrl,
-                  focusNode: fpc.confirmPassFocus,
+                () => AuthFormPasswordField(
+                  passwordCtrler: fpc.confirmPassCtrl,
+                  passwordFocus: fpc.confirmPassFocus,
+                  isPasswordHidden: fpc.isConfirmPassHidden,
+                  togglePasswordVisibility: fpc.toggleConfirmPass,
+                  passwordIcon: fpc.confirmPasswordIcon,
                   hintText: Strings.confirmPassword,
-                  obscureText: fpc.isConfirmPassHidden,
-                  prefix: SvgIcon(
-                    iconPath: IconsPath.lock,
-                  ).mOnly(left: 15, right: 6),
-                  prefixSize: 48,
-                  suffix: VisibilitySuffix(
-                    onTap: fpc.toggleConfirmPass,
-                    icon: fpc.confirmPasswordIcon,
-                  ),
-                  validator: (value) => validateConfirmPass(
-                    confirmPass: value,
-                    password: fpc.newPassCtrl.text,
-                  ),
-                  hintW: 600,
                 ),
               ),
               Gap(itemGap * 2),
-              CustomBtnWTxt(
-                rad: 30,
-                isSmall: true,
-                btnTxt: Strings.continueTxt,
+
+              AuthButton(
                 isLoading: fpc.isResetPassLoading,
                 onTap: () => fpc.onTapResetPass(formKey: resetPassFormKey),
               ),
+
               Gap(itemGap * 1.5),
             ],
           ),

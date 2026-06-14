@@ -10,6 +10,7 @@ class Onboard2FeaturesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      spacing: 10.h,
       children: [
         OnboardFeatureCard(
           icon: Assets.icons.shieldSupport,

@@ -1,43 +1,41 @@
-import 'package:flutter/foundation.dart';
-
 import '../../../../app/helper_widgets_export.dart';
-import '../controller/signin_controller.dart';
+import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
+import '../../../entry/onboard/screens/onboard_screen2.dart';
 import '../widgets/signin_body_widgets.dart';
 
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<SigninController>();
-    final formKey = GlobalKey<FormState>();
+  State<SigninScreen> createState() => _SigninScreenState();
+}
 
+class _SigninScreenState extends State<SigninScreen> {
+  final formKey = GlobalKey<FormState>(); // stable across rebuilds
+
+  @override
+  Widget build(BuildContext context) {
     return AppScreenTemplate(
-      bottomWidget: const SocialSection(),
-      appBar: CommonAppBarContent(title: '', hasBackNavArrow: false),
-      child:
-          //  Text("data"),
+      appBar: getOnboardAppBar(),
+      child: Column(
+        children: [
           Column(
-            children: [
-              if (kDebugMode)
-                TextButton(
-                  onPressed: () {
-                    Get.toNamed(RoutePaths.onboardScreen);
-                  },
-                  child: Text("Onboard screen"),
-                ),
-              _SigninBody(controller: controller, formKey: formKey),
-            ],
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [OnboardLogoHeaderRow()],
           ),
+          Gap(20.h),
+          _SigninBody(formKey: formKey),
+        ],
+      ).getcm,
     );
   }
 }
 
 class _SigninBody extends StatelessWidget {
-  final SigninController controller;
   final GlobalKey<FormState> formKey;
 
-  const _SigninBody({required this.controller, required this.formKey});
+  const _SigninBody({required this.formKey});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +45,10 @@ class _SigninBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          HeaderSection(controller: controller),
-          FormSection(controller: controller, formKey: formKey),
+          SignInTopSection(),
+          FormSection(formKey: formKey),
         ],
-      ).getcm,
+      ),
     );
   }
 }

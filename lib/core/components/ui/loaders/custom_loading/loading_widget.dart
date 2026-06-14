@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'spin_kit_circle.dart';
+import 'package:mama_app/app/helper_widgets_export.dart';
 
 class LoadingWidget extends StatelessWidget {
   const LoadingWidget({super.key, this.color});
@@ -8,6 +6,15 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: SpinKitCircle(color: color ?? Colors.black, size: 40.0));
+    return Center(
+      child: SizedBox(
+        height: 30.0.h,
+        width: 30.0.w,
+        child: CircularProgressIndicator(
+          color: color ?? Colors.black,
+          strokeWidth: 1.5,
+        ),
+      ),
+    );
   }
 }

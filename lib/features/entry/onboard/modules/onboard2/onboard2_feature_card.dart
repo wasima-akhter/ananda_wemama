@@ -1,5 +1,3 @@
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../../app/helper_widgets_export.dart';
 
 class OnboardFeatureCard extends StatelessWidget {
@@ -21,11 +19,11 @@ class OnboardFeatureCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFEFCFA),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: c.primary.withValues(alpha: 0.1)),
+        border: Border.all(color: newBorderClr),
       ),
       child: Row(
         children: [
-          SvgIcon(iconPath: icon, height: ScreenSize.isSmallWidth ? 45 : 60),
+          SvgIcon(iconPath: icon, height: ScreenSize.isSmallWidth ? 41 : 54),
 
           Gap(14),
 
@@ -33,11 +31,11 @@ class OnboardFeatureCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: poppinsSemiBold18()),
+                Text(title, style: TxtStyle.poppinsSemiBold15(fs: 13)),
 
                 SizedBox(height: ScreenSize.isSmallWidth ? 4.h : 6.h),
 
-                Text(subtitle, style: poppinsMedium16()),
+                Text(subtitle, style: TxtStyle.poppinsMedium13(fs: 12)),
               ],
             ),
           ),
@@ -45,24 +43,4 @@ class OnboardFeatureCard extends StatelessWidget {
       ),
     );
   }
-}
-
-TextStyle poppinsMedium16({Color? color}) {
-  return GoogleFonts.poppins(
-    fontSize: 13.sp,
-    fontWeight: FontWeight.w500,
-    height: ScreenSize.isSmallWidth ? 1.4 : 1.6,
-    letterSpacing: 0.0,
-    color: color ?? c.foregroundSecondary.withValues(alpha: 0.8),
-  );
-}
-
-TextStyle poppinsSemiBold18({Color? color}) {
-  return GoogleFonts.poppins(
-    fontSize: 15.sp,
-    fontWeight: FontWeight.w600,
-    height: 1,
-    letterSpacing: 0.0,
-    color: color ?? c.foregroundSecondary,
-  );
 }

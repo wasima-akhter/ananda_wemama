@@ -104,7 +104,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
           fillColor: fillColor ?? c.inputBackground,
           contentPadding:
               contentPadding ??
-              EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+              EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
           isDense: isDense, // reduces default vertical padding
           hint:
               hint ??

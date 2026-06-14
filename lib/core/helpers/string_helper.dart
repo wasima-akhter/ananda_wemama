@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mama_app/core/components/ui/buttons/gesture_detector_cus.dart';
 import 'package:mama_app/core/utils/extension/context_extension.dart';
 
 TextStyle get titleBPri =>
@@ -181,4 +182,31 @@ double findTextWidth({
   )..layout();
 
   return textPainter.width;
+}
+
+Widget linkText(String text, {void Function()? onTap}) {
+  return CusGestureDetector(
+    onTap: onTap,
+    child: Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 1),
+          child: Text(
+            text,
+            style: TxtStyle.poppinsSemiB(
+              w: 700,
+              color: c.foregroundSecondary,
+              fs: 11,
+            ).copyWith(height: 1),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(height: 1, color: c.foregroundSecondary),
+        ),
+      ],
+    ),
+  );
 }

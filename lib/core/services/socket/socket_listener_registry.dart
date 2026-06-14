@@ -275,7 +275,7 @@ class SocketListenerRegistry {
       Get.snackbar(
         notificationData['title'] ?? 'Notification',
         notificationData['description'] ?? '',
-        backgroundColor: c.primary.withValues(alpha: 0.1),
+        backgroundColor: newBorderClr,
         titleText: buildTitle(notificationData['title']),
         messageText: buildMessage(notificationData['description']),
         snackPosition: SnackPosition.TOP,

@@ -1,7 +1,6 @@
-import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../../app/helper_widgets_export.dart';
-import '../../modules/onboard2/onboard2_feature_card.dart';
+import '../../modules/core/onboard_heart_icon.dart';
+import '../../modules/onboard3/onboard3_headline_section.dart';
 
 class Onboard3TopSection extends StatelessWidget {
   const Onboard3TopSection({super.key});
@@ -9,37 +8,32 @@ class Onboard3TopSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-
-      spacing: 6.h,
+      mainAxisSize: MainAxisSize.min,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 10.h,
       children: [
-        Text(
-          "Expert Guidance",
-          textAlign: TextAlign.center,
-          style: GoogleFonts.dmSerifDisplay(
-            fontSize: 26.sp,
-            fontWeight: FontWeight.w400,
-            color: c.foregroundSecondary,
+        // OnboardLogoHeaderRow(),
+        Container(
+          //color: Colors.blue,
+          child: Onboard3HeadlineSection(),
+        ),
+
+        Container(
+          // color: Colors.grey,
+          child: OnboardHeartIcon(
+            height: ScreenSize.isSmallWidth ? 22.h : 15.h,
           ),
         ),
 
+        //
         Text(
-          "Join live sessions with trusted experts.",
+          Strings.motherhoodFeelsAlone,
           textAlign: TextAlign.center,
-          style: poppinsMedium16(),
+          style: TxtStyle.poppinsSemiBold13Center().copyWith(
+            // letterSpacing: -0.1,
+          ),
         ),
       ],
     );
   }
-}
-
-TextStyle poppinsSemiBold16Center({Color? color}) {
-  return GoogleFonts.poppins(
-    fontSize: 13.sp,
-    fontWeight: FontWeight.w600,
-    height: 1.4,
-    letterSpacing: 0.04 * 16, // 4% = 0.64px
-    textBaseline: TextBaseline.alphabetic,
-    color: color ?? c.foregroundPrimary,
-  );
 }

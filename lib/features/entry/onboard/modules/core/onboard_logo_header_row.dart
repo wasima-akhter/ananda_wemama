@@ -2,7 +2,8 @@ import '../../../../../app/helper_widgets_export.dart';
 import '../onboard/onboard_logo_section.dart';
 
 class OnboardLogoHeaderRow extends StatelessWidget {
-  const OnboardLogoHeaderRow({super.key});
+  final void Function()? onTap;
+  const OnboardLogoHeaderRow({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,17 @@ class OnboardLogoHeaderRow extends StatelessWidget {
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
-            child: SvgIconColored(iconPath: IconsPath.arrowBackSmall),
+            child: CusGestureDetector(
+              onTap:
+                  onTap ??
+                  () {
+                    Get.back();
+                  },
+              child: SvgIconColored(
+                iconPath: IconsPath.arrowBackSmall,
+                height: 14,
+              ),
+            ),
           ),
         ),
 
@@ -23,6 +34,19 @@ class OnboardLogoHeaderRow extends StatelessWidget {
         // Right spacer (for balance)
         const Expanded(child: SizedBox(width: 48)),
       ],
+    );
+  }
+}
+
+class LogoPartHeader extends StatelessWidget {
+  const LogoPartHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [OnboardLogoHeaderRow()],
     );
   }
 }

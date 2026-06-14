@@ -9,25 +9,25 @@ import '../components/app_ui/components/user_detaIl_component/controller/user_de
 import '../components/app_ui/sheets/set_children_bottom_sheet.dart';
 
 PinTheme? defaultPinTheme = PinTheme(
-  width: 56.w,
-  height: 58.h,
-  textStyle: TxtStyle.urbanist(fs: 20, w: 600, color: c.primary),
+  width: ScreenSize.isSmallWidth ? 42.w : 51.w,
+  height: 56.h,
+  textStyle: TxtStyle.poppinsSemiB(fs: 20, w: 600, color: c.primary),
   decoration: BoxDecoration(
-    color: c.inputBackground,
+    color: bgClrNew,
     borderRadius: 30.brdrRad,
 
-    border: Border.all(color: c.inputBorder),
+    border: Border.all(color: c.strokePrimary.withValues(alpha: 0.3), width: 2),
   ),
 );
 
 PinTheme? focusedPinTheme = defaultPinTheme?.copyWith(
   decoration: BoxDecoration(
-    color: c.inputBackground,
+    color: bgClrNew,
     borderRadius: 30.brdrRad,
-    border: Border.all(color: c.primary, width: 2),
+    border: Border.all(color: c.strokePrimary, width: 2),
     boxShadow: [
       BoxShadow(
-        color: c.primary.withOpacity(0.15),
+        color: c.primary.withValues(alpha: 0.15),
         blurRadius: 8,
         offset: const Offset(0, 3),
       ),
@@ -37,9 +37,9 @@ PinTheme? focusedPinTheme = defaultPinTheme?.copyWith(
 
 PinTheme? followingPinTheme = defaultPinTheme?.copyWith(
   decoration: BoxDecoration(
-    color: c.inputBackground,
+    color: bgClrNew,
     borderRadius: 30.brdrRad,
-    border: Border.all(color: c.inputBorder),
+    border: Border.all(width: 2, color: c.strokePrimary.withValues(alpha: 0.3)),
   ),
 );
 
@@ -65,7 +65,7 @@ Future<dynamic> showReportBottomSheet({
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
 
-      child: Container(
+      child: SizedBox(
         height: bSheetH * 1 * (heightFactor ?? 1),
 
         // width: 1.sw,
@@ -94,7 +94,7 @@ Future<dynamic> showCommentsBottomSheet({
     AnimatedPadding(
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
-      child: Container(
+      child: SizedBox(
         height: S.h * 0.9 * (heightFactor ?? 1),
         child: CommentsBottomSheet(postId: postId), // ← pass postId
       ).getBtmSheetM,
@@ -116,7 +116,7 @@ Future<dynamic> showLiveCommentsBottomSheet({
     AnimatedPadding(
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
-      child: Container(
+      child: SizedBox(
         height: bSheetH * (heightFactor ?? 1),
         child: MeetingCommentsBottomSheet(postId: postId), // ← pass postId
       ).getBtmSheetM,
@@ -139,7 +139,7 @@ Future<dynamic> showChildrenBottomSheet({
       duration: const Duration(milliseconds: 250),
       padding: EdgeInsets.only(bottom: S.bottomInset),
 
-      child: Container(
+      child: SizedBox(
         height: bSheetH * 0.8 * (heightFactor ?? 1),
 
         // width: 1.sw,

@@ -1,9 +1,8 @@
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
-import '../../modules/onboard2/onboard2_feature_card.dart';
-import '../../modules/onboard3/cards/onboard_expert_session_card.dart';
-import '../../modules/onboard3/models/expert_session_model.dart';
+import '../../modules/onboard4/cards/onboard_expert_session_card.dart';
+import '../../modules/onboard4/models/expert_session_model.dart';
 
 class OnboardExpertGuidanceSection extends StatelessWidget {
   const OnboardExpertGuidanceSection({super.key});
@@ -42,16 +41,23 @@ class OnboardExpertGuidanceSection extends StatelessWidget {
       children: [
         Align(
           alignment: Alignment.centerLeft,
-          child: Text("Upcoming Sessions", style: poppinsSemiBold18()),
+          child: Text(
+            "Upcoming Sessions",
+            style: TxtStyle.poppinsSemiBold15().copyWith(
+              fontSize: ScreenSize.isSmallWidth ? 14.sp : 16.sp,
+            ),
+          ),
         ),
 
-        Gap(14.h),
+        Gap(ScreenSize.isSmallWidth ? 10.h : 14.h),
 
         Column(
           children: sessions
               .map(
                 (session) => Padding(
-                  padding: EdgeInsets.only(bottom: 4.h),
+                  padding: EdgeInsets.only(
+                    bottom: ScreenSize.isSmallWidth ? 4.h : 8.h,
+                  ),
                   child:
                       //Container(height: 100, color: Colors.amber),
                       OnboardExpertSessionCard(session: session),

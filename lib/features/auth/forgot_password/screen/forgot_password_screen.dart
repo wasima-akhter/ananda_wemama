@@ -1,5 +1,7 @@
 import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_after_verify.dart';
 import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_before_verify.dart';
+import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_final_view.dart';
+import 'package:mama_app/features/entry/onboard/screens/onboard_screen2.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/forgot_password_controller.dart';
@@ -18,66 +20,64 @@ class ForgotPasswordScreen extends StatelessWidget {
       top: false,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: bgClr,
-        appBar: CommonAppBarContent(title: ''),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Obx(() {
-              final beforeVerification = fpc.isEnterEmail;
-              final afterVerification = fpc.isResetPassword;
+        backgroundColor: bgClrNew,
+        appBar: getOnboardAppBar(hasBack: true),
+        body: SingleChildScrollView(
+          child: Obx(() {
+            final beforeVerification = fpc.isEnterEmail;
+            final afterVerification = fpc.isResetPassword;
 
-              final isFinalContinueVisible = fpc.isCompleted;
+            final isFinalContinueVisible = fpc.isCompleted;
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+            return Align(
+              // alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
 
                 children: [
+                  // Back button (left aligned)
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: CusGestureDetector(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: SvgIconColored(
+                        iconPath: IconsPath.arrowBackSmall,
+                        height: 14,
+                      ),
+                    ),
+                  ),
+                  Gap(30.h),
                   if (beforeVerification)
-                    ForgotPassBeforeVerify(fpc: fpc, sendVerificationKey: sendVerificationKey),
+                    ForgotPassBeforeVerify(
+                      fpc: fpc,
+                      sendVerificationKey: sendVerificationKey,
+                    ),
 
                   if (afterVerification)
                     // Form section
-                    ForgotPassAfterVerify(fpc: fpc, resetPassFormKey: resetPassFormKey),
+                    ForgotPassAfterVerify(
+                      fpc: fpc,
+                      resetPassFormKey: resetPassFormKey,
+                    ),
 
                   if (isFinalContinueVisible)
                     // last continue button
-                    buildFinalSection(
+                    ForgotPassFinalView(
                       isLoading: false,
-                      onTapContinueToLogin: fpc.onTapContinueToLogin,
+                      onTap: fpc.onTapContinueToLogin,
                     ),
+
+                  //
+                  Gap(60.h),
                 ],
-              ).getcm;
-            }),
-          ),
+              ).getcm,
+            );
+          }),
         ),
       ),
-    );
-  }
-
-  Column buildFinalSection({void Function()? onTapContinueToLogin, required bool isLoading}) {
-    return Column(
-      children: [
-        // Main title
-        Text(Strings.gladToSeeUAgain.capEachWord(), style: 22.titleMclrCusFSOutfit),
-        Gap(itemGap),
-
-        // Subtitle
-        Text(
-          Strings.passwordChangedContinueLogin,
-          textAlign: TextAlign.center,
-          style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary),
-        ),
-        Gap(itemGap * 3),
-        CustomBtnWTxt(
-          rad: 30,
-          isSmall: true,
-          btnTxt: Strings.continueTxt,
-          isLoading: isLoading,
-          onTap: onTapContinueToLogin,
-        ),
-        Gap(itemGap * 1.5),
-      ],
     );
   }
 }

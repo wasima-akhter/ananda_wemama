@@ -50,11 +50,11 @@ class AppScreenTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _fabHeight = ValueNotifier<double>(0);
+    final fabHeight = ValueNotifier<double>(0);
     return SafeArea(
       top: safeAreaTop,
       child: Scaffold(
-        backgroundColor: backgroundColor ?? bgClr,
+        backgroundColor: backgroundColor ?? bgClrNew,
         resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         appBar: appBar,
         extendBodyBehindAppBar: extendBodyBehindAppBar ?? false,
@@ -64,11 +64,12 @@ class AppScreenTemplate extends StatelessWidget {
         floatingActionButton: floatingActionButton == null
             ? null
             : MeasuredWidget(
-                onMeasured: (size) => _fabHeight.value = size.height,
+                onMeasured: (size) => fabHeight.value = size.height,
                 child: floatingActionButton!.mB(0),
               ),
         floatingActionButtonLocation:
-            floatingActionButtonLocation ?? FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation ??
+            FloatingActionButtonLocation.centerDocked,
 
         drawer: drawer,
         endDrawer: endDrawer,
@@ -76,13 +77,18 @@ class AppScreenTemplate extends StatelessWidget {
           builder: (context, constraints) {
             if (isScrollable == false) {
               return ValueListenableBuilder<double>(
-                valueListenable: _fabHeight,
-                builder: (_, height, __) {
+                valueListenable: fabHeight,
+                builder: (_, height, _) {
                   return Column(
                     children: [
-                      Expanded(child: child), // 👈 bounded height — Expanded/PageView works here
+                      Expanded(
+                        child: child,
+                      ), // 👈 bounded height — Expanded/PageView works here
                       if (bottomWidget != null) ...[
-                        if (getcmLess == true) bottomWidget!.get10cm else bottomWidget!.getcm,
+                        if (getcmLess == true)
+                          bottomWidget!.get10cm
+                        else
+                          bottomWidget!.getcm,
                         Gap(itemGap * 3),
                       ],
                       if (floatingActionButton != null) Gap(height),
@@ -110,19 +116,28 @@ class AppScreenTemplate extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          if (getcmLess == true) bottomWidget!.get10cm else bottomWidget!.getcm,
+                          if (getcmLess == true)
+                            bottomWidget!.get10cm
+                          else
+                            bottomWidget!.getcm,
                           Builder(
                             builder: (context) {
-                              final kb = MediaQuery.of(context).viewInsets.bottom;
+                              final kb = MediaQuery.of(
+                                context,
+                              ).viewInsets.bottom;
                               return Gap(kb > 0 ? 0 : itemGap * 3);
                             },
                           ),
                           if (floatingActionButton != null)
                             ValueListenableBuilder<double>(
-                              valueListenable: _fabHeight,
-                              builder: (_, height, __) {
-                                final kb = MediaQuery.of(context).viewInsets.bottom;
-                                final totalGap = kb > 0 ? height + kb : height + 30.h;
+                              valueListenable: fabHeight,
+                              builder: (_, height, _) {
+                                final kb = MediaQuery.of(
+                                  context,
+                                ).viewInsets.bottom;
+                                final totalGap = kb > 0
+                                    ? height + kb
+                                    : height + 30.h;
                                 return Gap(totalGap);
                               },
                             ),
@@ -136,10 +151,14 @@ class AppScreenTemplate extends StatelessWidget {
                           Gap(itemGap * 3),
                           if (floatingActionButton != null)
                             ValueListenableBuilder<double>(
-                              valueListenable: _fabHeight,
-                              builder: (_, height, __) {
-                                final kb = MediaQuery.of(context).viewInsets.bottom;
-                                final totalGap = kb > 0 ? height + kb : height + 30.h;
+                              valueListenable: fabHeight,
+                              builder: (_, height, _) {
+                                final kb = MediaQuery.of(
+                                  context,
+                                ).viewInsets.bottom;
+                                final totalGap = kb > 0
+                                    ? height + kb
+                                    : height + 30.h;
                                 return Gap(totalGap);
                               },
                             ),
@@ -159,7 +178,11 @@ class AppScreenTemplate extends StatelessWidget {
 class MeasuredWidget extends StatefulWidget {
   final Widget child;
   final void Function(Size) onMeasured;
-  const MeasuredWidget({super.key, required this.child, required this.onMeasured});
+  const MeasuredWidget({
+    super.key,
+    required this.child,
+    required this.onMeasured,
+  });
 
   @override
   State<MeasuredWidget> createState() => _MeasuredWidgetState();
@@ -178,5 +201,6 @@ class _MeasuredWidgetState extends State<MeasuredWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => KeyedSubtree(key: _key, child: widget.child);
+  Widget build(BuildContext context) =>
+      KeyedSubtree(key: _key, child: widget.child);
 }

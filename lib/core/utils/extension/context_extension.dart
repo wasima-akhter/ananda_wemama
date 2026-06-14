@@ -403,6 +403,9 @@ class TxtStyle {
   static TextTheme get textThemeInter => GoogleFonts.interTextTheme();
   static TextTheme get textThemeUrbanist => GoogleFonts.urbanistTextTheme();
   static TextTheme get textThemeOutfit => GoogleFonts.outfitTextTheme();
+  static TextTheme get textThemePoppins => GoogleFonts.poppinsTextTheme();
+  static TextTheme get textThemedmSerifDisplay =>
+      GoogleFonts.dmSerifDisplayTextTheme();
 
   static FontWeight getFontWeight(int weight) =>
       FontWeight.values[(weight ~/ 100) - 1];
@@ -573,6 +576,102 @@ class TxtStyle {
       TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor500 =>
       TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
+
+  ///------------------
+  /// POPPINS
+  ///------------------
+  static TextStyle poppins({
+    double? fs,
+    int? w,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => textThemePoppins.bodyMedium!.copyWith(
+    fontSize: (fs ?? 13).sp,
+    fontWeight: getFontWeight(w ?? 500),
+    letterSpacing: ls,
+    color: color ?? c.foregroundPrimary,
+    height: h,
+    decoration: dec,
+    decorationColor: color ?? c.foregroundPrimary,
+    textBaseline: TextBaseline.alphabetic,
+  );
+
+  static TextStyle poppinsSemiB({
+    double? fs,
+    int? w,
+    Color? color,
+    double? ls,
+    double? h,
+    TextDecoration? dec,
+  }) => GoogleFonts.poppins(
+    fontSize: (fs ?? 13).sp,
+    fontWeight: getFontWeight(w ?? 500),
+    letterSpacing: ls ?? 0.05,
+
+    color: color ?? c.foregroundPrimary,
+    height: h ?? 1.4,
+    decoration: dec,
+    decorationColor: color ?? c.foregroundPrimary,
+    textBaseline: TextBaseline.alphabetic,
+  );
+
+  static TextStyle poppinsSemiBold13Center({Color? color, double? fs}) {
+    return poppinsSemiB(
+      fs: (fs ?? 13),
+      w: 600,
+      h: 1.4,
+      ls: 0.05, // 4% = 0.64px
+      color: color,
+    );
+  }
+
+  static TextStyle poppinsMedium13({Color? color, double? fs}) {
+    return textThemePoppins.bodyLarge!.copyWith(
+      fontSize: (fs ?? 13).sp,
+      fontWeight: FontWeight.w500,
+      height: ScreenSize.isSmallWidth ? 1.4 : 1.6,
+      letterSpacing: 0.0,
+      color: color ?? c.foregroundSecondary.withValues(alpha: 0.8),
+    );
+  }
+
+  static TextStyle poppinsSemiBold15({Color? color, double? fs}) {
+    return textThemePoppins.bodyLarge!.copyWith(
+      fontSize: (fs ?? 15).sp,
+      fontWeight: FontWeight.w600,
+      height: 1,
+      letterSpacing: 0.0,
+      color: color ?? c.foregroundSecondary,
+    );
+  }
+
+  ///------------------
+  /// DM Serif Display
+  ///------------------
+
+  static TextStyle dmSerifDisplay26Regular({Color? color}) {
+    return textThemedmSerifDisplay.bodyLarge!.copyWith(
+      fontSize: 28.sp,
+      fontWeight: FontWeight.w400,
+      color: c.foregroundSecondary,
+    );
+  }
+
+  static TextStyle dmSerifDisplayRegular({Color? color, double? fs}) {
+    return textThemedmSerifDisplay.bodyLarge!.copyWith(
+      fontSize: fs != null
+          ? fs.sp
+          : ScreenSize.isTallHeight
+          ? 30.sp
+          : 28.sp,
+      letterSpacing: -0.1,
+      color: c.foregroundSecondary,
+      fontWeight: FontWeight.w400,
+      height: ScreenSize.isTallHeight ? 1.4 : 1.2,
+    );
+  }
 }
 
 /// --------------------

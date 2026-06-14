@@ -1,6 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
 import '../../modules/core/onboard_heart_icon.dart';
-import '../../modules/core/onboard_logo_header_row.dart';
 import '../../modules/onboard2/onboard2_headline_section.dart';
 
 class Onboard2TopSection extends StatelessWidget {
@@ -10,10 +9,10 @@ class Onboard2TopSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 10.h,
       children: [
-        OnboardLogoHeaderRow(),
-
+        // OnboardLogoHeaderRow(),
         Container(
           //color: Colors.blue,
           child: Onboard2HeadlineSection(),

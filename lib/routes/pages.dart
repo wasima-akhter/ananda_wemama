@@ -4,6 +4,7 @@ import 'package:mama_app/features/main_tabs/experts/screen/past_sessions_screen%
 import 'package:mama_app/features/main_tabs/experts/screen/upcoming/upcoming_sessions_screen.dart';
 import 'package:mama_app/features/more/about/screen/about_screen.dart';
 import 'package:mama_app/features/more/blocked_user/screen/blocked_user_screen.dart';
+import 'package:mama_app/features/more/legal/privacy_policy/screen/privacy_policy_screen.dart';
 import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_and_conditions_screen.dart';
 import 'package:mama_app/features/more/support/contact_support/screen/contact_support_screen.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_upgrade_screen.dart';
@@ -283,6 +284,11 @@ class RoutePageList {
       name: RoutePaths.termsAndConditions,
       page: () => const TermsAndConditionsScreen(),
       binding: TermsAndConditionsBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.privacyPolicy,
+      page: () => const PrivacyPolicyScreen(),
+      binding: PrivacyPolicyBinding(),
     ),
 
     // ─────────────────────────────

@@ -27,6 +27,7 @@ class VerifyOtpController extends GetxController {
 
   void onTapVerify() async {
     if (isLoading_.value) return;
+    if (otpCntrler.text.trim().isEmpty || otpCntrler.text.length < 6) return;
 
     isLoading_.value = true;
 

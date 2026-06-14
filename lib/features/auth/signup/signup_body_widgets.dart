@@ -1,36 +1,41 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../../core/components/ui/helpers/visibility_suffix.dart';
-import '../../../core/components/ui/inputs/cus_pass_type_text_form_field.dart';
-import '../../../core/utils/validator/validators.dart';
+import '../../../core/helpers/string_helper.dart';
+import '../core/auth_button_templates.dart';
+import '../core/auth_form_fields_templates.dart';
+import '../signin/widgets/signin_body_widgets.dart';
 import 'controller/signup_controller.dart';
 
 class SignupHeaderSection extends StatelessWidget {
-  final double itemGap;
-
-  const SignupHeaderSection({super.key, required this.itemGap});
+  const SignupHeaderSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 8.h,
       children: [
-        mamaLogoWithoutTxtImage,
-        Gap(itemGap),
-
-        Text(Strings.signup, style: 17.titleMclrCusFSURB),
-
-        Gap(itemGap * 2),
-
-        ContainerBordered(
-          mh: 20,
-          rad: 6,
-          contClr: c.inputBackground,
+        Container(
+          // color: Colors.grey,
           child: Text(
-            Strings.joinOurSafeCommunity,
-            style: 12.norSecclrCusFSoutfit,
+            Strings.createYourAccount,
+            textAlign: TextAlign.center,
+            style: TxtStyle.dmSerifDisplayRegular(
+              fs: ScreenSize.isSmallWidth ? 24 : 28,
+            ),
           ),
         ),
 
-        Gap(itemGap * 2),
+        Text(
+          Strings.joinOurTrustedCommunity,
+          textAlign: TextAlign.center,
+          style: TxtStyle.poppinsSemiB(
+            fs: ScreenSize.isSmallWidth ? 11 : 12,
+            w: 600,
+            // h: 1.4,
+            ls: 0.5, // 4% = 0.64px
+          ),
+        ),
       ],
     );
   }
@@ -39,13 +44,11 @@ class SignupHeaderSection extends StatelessWidget {
 class SignupFormSection extends StatelessWidget {
   final SignupController controller;
   final GlobalKey<FormState> formKey;
-  final double itemGap;
 
   const SignupFormSection({
     super.key,
     required this.controller,
     required this.formKey,
-    required this.itemGap,
   });
 
   @override
@@ -53,36 +56,23 @@ class SignupFormSection extends StatelessWidget {
     return Column(
       children: [
         /// EMAIL
-        CusNameTypeTextFormField(
-          controller: controller.emailCtrl,
+        ///
+        AuthFormEmailField(
+          emailCtrler: controller.emailCtrl,
+          emailFocus: controller.emailFocus,
           hintText: Strings.enterEmail,
-          prefix: SvgIcon(
-            iconPath: IconsPath.email,
-            height: 22,
-          ).mOnly(left: 15, right: 6),
-          prefixSize: 45,
-          focusNode: controller.emailFocus,
-          validator: validateEmail,
         ),
         Gap(itemGap),
 
         /// PASSWORD
         Obx(() {
-          return CusPassTypeTextFormField(
-            controller: controller.passCtrl,
+          return AuthFormPasswordField(
+            passwordCtrler: controller.passCtrl,
+            passwordFocus: controller.passFocus,
+            isPasswordHidden: controller.isPassHidden,
+            togglePasswordVisibility: controller.togglePass,
+            passwordIcon: controller.passwordIcon,
             hintText: Strings.enterPassword,
-            prefix: SvgIcon(
-              iconPath: IconsPath.lock,
-              height: 22,
-            ).mOnly(left: 15, right: 6),
-            prefixSize: 45,
-            focusNode: controller.passFocus,
-            obscureText: controller.isPassHidden,
-            suffix: VisibilitySuffix(
-              onTap: controller.togglePass,
-              icon: controller.passwordIcon,
-            ),
-            validator: validatePassword,
           );
         }),
 
@@ -90,24 +80,13 @@ class SignupFormSection extends StatelessWidget {
 
         /// CONFIRM PASSWORD
         Obx(() {
-          return CusPassTypeTextFormField(
-            controller: controller.confirmPassCtrl,
+          return AuthFormPasswordField(
+            passwordCtrler: controller.confirmPassCtrl,
+            passwordFocus: controller.confirmPassFocus,
+            isPasswordHidden: controller.isConPassHidden,
+            togglePasswordVisibility: controller.toggleConPass,
+            passwordIcon: controller.conPassIcon,
             hintText: Strings.retypePassword,
-            prefix: SvgIcon(
-              iconPath: IconsPath.lock,
-              height: 22,
-            ).mOnly(left: 15, right: 6),
-            prefixSize: 45,
-            focusNode: controller.confirmPassFocus,
-            obscureText: controller.isConPassHidden,
-            suffix: VisibilitySuffix(
-              onTap: controller.toggleConPass,
-              icon: controller.conPassIcon,
-            ),
-            validator: (value) => validateConfirmPass(
-              confirmPass: value,
-              password: controller.passCtrl.text,
-            ),
           );
         }),
 
@@ -115,12 +94,47 @@ class SignupFormSection extends StatelessWidget {
 
         /// CONTINUE BUTTON
         Obx(() {
-          return filledBtnWTxt(
-            btnTxt: Strings.continueTxt,
+          return AuthButton(
             isLoading: controller.isLoading,
             onTap: () => controller.onTapSignup(formKey),
           );
         }),
+
+        Gap(itemGap * 2),
+        const SocialSection(),
+        Gap(itemGap * 3),
+        // terms
+        Column(
+          children: [
+            Text(
+              'By continuing, you agree to our',
+              style: TxtStyle.poppinsSemiB(
+                color: c.foregroundSecondary,
+                fs: 11,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                linkText(
+                  'Terms of Service',
+                  onTap: () => Get.toNamed(RoutePaths.termsAndConditions),
+                ),
+                Text(
+                  ' and ',
+                  style: TxtStyle.poppinsSemiB(
+                    color: c.foregroundSecondary,
+                    fs: 11,
+                  ),
+                ),
+                linkText(
+                  'Privacy Policy',
+                  onTap: () => Get.toNamed(RoutePaths.privacyPolicy),
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     );
   }

@@ -1,7 +1,8 @@
+import 'package:mama_app/features/auth/core/auth_button_templates.dart';
+import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
 import 'package:mama_app/features/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/utils/validator/validators.dart';
 
 class ForgotPassBeforeVerify extends StatelessWidget {
   final ForgotPasswordController fpc;
@@ -19,38 +20,31 @@ class ForgotPassBeforeVerify extends StatelessWidget {
         // Main title
         Text(
           Strings.forgotPassword.capEachWord(),
-          style: 22.titleMclrCusFSOutfit,
+          style: TxtStyle.dmSerifDisplayRegular(),
         ),
-        Gap(itemGap),
+        Gap(20.h),
 
         // Subtitle
         Text(
           Strings.sendVerificationEmail.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary),
+          style: TxtStyle.poppinsSemiBold13Center(),
         ),
-        Gap(itemGap * 5),
+        Gap(30.h),
         // SEND OTP SECTION
         Form(
           key: sendVerificationKey,
           child: Column(
             children: [
-              CusNameTypeTextFormField(
-                controller: fpc.emailCtrl,
-                focusNode: fpc.emailFocus,
-                hintText: Strings.email,
-                prefix: SvgIcon(
-                  iconPath: IconsPath.email,
-                ).mOnly(left: 15, right: 6),
-                prefixSize: 45,
-                validator: (value) => validateEmail(value),
-                hintW: 600,
+              AuthFormEmailField(
+                emailCtrler: fpc.emailCtrl,
+                emailFocus: fpc.emailFocus,
               ),
+
               Gap(itemGap * 3),
               Obx(
-                () => CustomBtnWTxt(
-                  rad: 30,
-                  btnTxt: Strings.sendVerification,
+                () => AuthButton(
+                  btnText: Strings.sendCode,
                   isLoading: fpc.isSendOtpLoading,
                   onTap: () => fpc.onTapSendOtp(formKey: sendVerificationKey),
                 ),

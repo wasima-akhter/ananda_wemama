@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:mama_app/core/constants/icon_and_image_paths.dart';
 import 'package:mama_app/features/auth/signin/model/signin_model.dart';
 
 import '../../../../app/controller_export.dart';
@@ -7,6 +8,8 @@ import '../../../../core/services/auth/signin_service.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
 
 class SigninController extends GetxController {
+  static SigninController get to => Get.find<SigninController>();
+
   /// ================= FORM CONTROLLERS =================
   final emailCtrler = TextEditingController();
   final passwordCtrler = TextEditingController();
@@ -18,10 +21,13 @@ class SigninController extends GetxController {
   final _showPassword = false.obs;
   bool get isPasswordHidden => !_showPassword.value;
 
-  IconData get passwordIcon =>
-      _showPassword.value ? Icons.visibility : Icons.visibility_off;
+  String get passwordIcon =>
+      _showPassword.value ? IconsPath.visibilityOn : IconsPath.visibilityOff;
 
   void togglePasswordVisibility() => _showPassword.toggle();
+
+  //
+  final rememberMe = false.obs;
 
   /// ================= LOADING STATE =================
   final _isLoading = false.obs;

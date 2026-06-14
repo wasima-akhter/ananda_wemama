@@ -1,4 +1,3 @@
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mama_app/app/helper_widgets_export.dart';
 
 class CustomBtnWTxt extends StatelessWidget {
@@ -127,6 +126,7 @@ class CustomBtnWTxtNew extends StatelessWidget {
   final double? w;
   final double? h;
   final double? rad;
+  final double? fs;
   final EdgeInsetsGeometry? padding;
 
   final bool isLoading;
@@ -147,17 +147,18 @@ class CustomBtnWTxtNew extends StatelessWidget {
     required this.isLoading,
     this.isUppCase,
     this.outlined,
+    this.fs,
   });
 
   @override
   Widget build(BuildContext context) {
     final isTallDevice = ScreenSize.isTallHeight;
 
-    final defaultStyle = GoogleFonts.poppins(
-      fontSize: isTallDevice ? 17.sp : 15.sp,
-      fontWeight: FontWeight.w600,
-      height: 1.0,
-      letterSpacing: 0,
+    final defaultStyle = TxtStyle.poppinsSemiB(
+      fs: fs ?? (isTallDevice ? 17 : 15),
+      w: 600,
+      h: 1.0,
+      ls: 0,
       color: txtClr ?? c.backgroundSecondary,
     );
 

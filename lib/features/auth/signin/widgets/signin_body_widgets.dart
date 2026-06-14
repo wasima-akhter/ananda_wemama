@@ -1,112 +1,132 @@
+import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:mama_app/features/auth/core/auth_button_templates.dart';
+import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
+
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/components/ui/helpers/visibility_suffix.dart';
-import '../../../../core/components/ui/inputs/cus_pass_type_text_form_field.dart';
-import '../../../../core/utils/validator/validators.dart';
 import '../controller/signin_controller.dart';
 
-class HeaderSection extends StatelessWidget {
-  final SigninController controller;
-  const HeaderSection({super.key, required this.controller});
+class SignInTopSection extends StatelessWidget {
+  const SignInTopSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      spacing: 8.h,
       children: [
-        mamaLogoWithoutTxtImage,
-        Gap(itemGap),
-        Text(Strings.login, style: 17.titleMclrCusFSURB),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(Strings.or.capEachWord(), style: 16.titleMclrCusFSURB),
-            Gap(itemGap),
-            CusGestureDetector(
-              onTap: controller.goToSignup,
-              child: Text(
-                Strings.createAccount,
-                style: 13.norSecclrUnderLoutfit,
-              ),
-            ),
-            Gap(itemGap),
-            SvgIcon(iconPath: IconsPath.arrowRightLg, height: 24),
-          ],
+        Container(
+          // color: Colors.grey,
+          child: Text(
+            Strings.welcomeBack,
+            textAlign: TextAlign.center,
+            style: TxtStyle.dmSerifDisplayRegular(fs: 28),
+          ),
         ),
-        Gap(itemGap * 3),
+
+        Text(
+          Strings.loginWelcomeText,
+          textAlign: TextAlign.center,
+          style: TxtStyle.poppinsSemiB(
+            fs: 12,
+            w: 600,
+            // h: 1.4,
+            // ls: 0.05, // 4% = 0.64px
+          ),
+        ),
       ],
     );
   }
 }
 
 class FormSection extends StatelessWidget {
-  final SigninController controller;
   final GlobalKey<FormState> formKey;
 
-  const FormSection({
-    super.key,
-    required this.controller,
-    required this.formKey,
-  });
+  const FormSection({super.key, required this.formKey});
 
   @override
   Widget build(BuildContext context) {
+    final controller = SigninController.to;
     return Column(
       children: [
-        CusNameTypeTextFormField(
-          controller: controller.emailCtrler,
-          hintText: Strings.email,
-          prefix: SvgIcon(
-            iconPath: IconsPath.email,
-            height: 22,
-          ).mOnly(left: 15, right: 6),
-
-          prefixSize: 45,
-          brdrW: 0.6,
-
-          focusNode: controller.emailFocus,
-          validator: validateEmail,
+        Gap(20.h),
+        AuthFormEmailField(
+          emailCtrler: controller.emailCtrler,
+          emailFocus: controller.emailFocus,
         ),
         Gap(itemGap),
 
         Obx(() {
-          return CusPassTypeTextFormField(
-            controller: controller.passwordCtrler,
-            hintText: Strings.password,
-            prefix: SvgIcon(
-              iconPath: IconsPath.lock,
-              height: 22,
-            ).mOnly(left: 15, right: 6),
-            prefixSize: 45,
-            focusNode: controller.passwordFocus,
-            obscureText: controller.isPasswordHidden,
+          return AuthFormPasswordField(
+            passwordCtrler: controller.passwordCtrler,
+            passwordFocus: controller.passwordFocus,
+            isPasswordHidden: controller.isPasswordHidden,
+            togglePasswordVisibility: controller.togglePasswordVisibility,
+            passwordIcon: controller.passwordIcon,
+          );
+        }),
 
-            suffix: VisibilitySuffix(
-              onTap: controller.togglePasswordVisibility,
-              icon: controller.passwordIcon,
+        Gap(itemGap * 2),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Obx(
+              () => AppCheckbox(
+                value: controller.rememberMe.value,
+                onChanged: (val) => controller.rememberMe.value = val,
+                label: 'Remember me',
+              ),
             ),
 
-            validator: validatePassword,
-          );
-        }),
-
-        Gap(itemGap * 2.5),
-
+            CusGestureDetector(
+              onTap: controller.goToForgotPassword,
+              child: Text(
+                "${Strings.forgotPassword}?",
+                style: TxtStyle.outfitSemiB(color: c.secondary, fs: 11),
+              ),
+            ),
+          ],
+        ),
+        Gap(itemGap * 2),
         Obx(() {
-          return CustomBtnWTxt(
-            rad: 30,
-            isSmall: true,
-            onTap: () => controller.onTapLogin(formKey),
-            btnTxt: Strings.login,
+          return AuthButton(
             isLoading: controller.isLoading,
+            btnText: Strings.signIn,
+            onTap: () => controller.onTapLogin(formKey),
           );
         }),
 
-        Gap(itemGap * 1.5),
+        Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
+        const SocialSection(),
+        Gap(itemGap * 4),
 
+        //
         CusGestureDetector(
-          onTap: controller.goToForgotPassword,
-          child: Text(
-            "${Strings.forgotPassword}?",
-            style: TxtStyle.outfit(color: c.primary),
+          onTap: () {
+            Get.toNamed(RoutePaths.signup);
+          },
+          child: Row(
+            spacing: 6.w,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                Strings.dontHaveAnAccount.capEachWord(),
+                style: TxtStyle.poppinsSemiB(
+                  w: 600,
+                  color: c.secondary,
+                  fs: 11,
+                ),
+              ),
+              Text(
+                Strings.createAccount.capEachWord(),
+                style: TxtStyle.poppinsSemiB(
+                  w: 600,
+                  color: c.secondary,
+                  fs: 11,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -122,26 +142,72 @@ class SocialSection extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(Strings.signUpWith, style: 13.norSecclrCusFSoutfit),
+        // or,
         Row(
+          spacing: 20.w,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              child: ContainerBordered(
-                contClr: c.cardPrimary,
-                vp: 20,
-                child: SvgIcon(height: 35, iconPath: IconsPath.apple),
-              ),
+              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
             ),
-            Gap(itemGap * 1.5),
+            Text(
+              Strings.or.capEachWord(),
+              style: TxtStyle.poppinsSemiB(w: 600, fs: 13),
+            ),
             Expanded(
-              child: ContainerBordered(
-                contClr: c.cardPrimary,
-                vp: 20,
-                child: SvgIcon(height: 35, iconPath: IconsPath.google),
-              ),
+              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
             ),
           ],
-        ).mHV(0, 10),
+        ).mHV(S.w * 0.1, 0),
+
+        Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
+        ContainerBordered(
+          contClr: inputBgClr,
+          hasBrdr: true,
+          brdrClr: newBorderClr,
+          brdrW: 1,
+          vp: 8,
+          alignment: Alignment.center,
+          child: Row(
+            spacing: 10.w,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgIcon(
+                height: ScreenSize.isSmallWidth ? 22 : 28,
+                iconPath: IconsPath.google,
+              ),
+              Text(
+                "Continue with google".capEachWord(),
+
+                style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
+              ),
+            ],
+          ),
+        ),
+        Gap(itemGap),
+        ContainerBordered(
+          contClr: inputBgClr,
+          hasBrdr: true,
+          brdrClr: newBorderClr,
+          brdrW: 1,
+          vp: 8,
+          alignment: Alignment.center,
+          child: Row(
+            spacing: 12.w,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgIcon(
+                height: ScreenSize.isSmallWidth ? 24 : 30,
+                iconPath: IconsPath.apple,
+              ),
+              Text(
+                "Continue with Apple".capEachWord(),
+
+                style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

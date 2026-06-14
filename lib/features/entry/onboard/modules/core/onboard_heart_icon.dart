@@ -15,7 +15,7 @@ class OnboardHeartIcon extends StatelessWidget {
         colors: [Color(0xFFF8221E), Color(0xFFFF9191)],
         stops: [0.0, 0.88],
       ),
-      height: height ?? (ScreenSize.isSmallWidth ? 32.h : 30.h),
+      height: height ?? (ScreenSize.isSmallWidth ? 38.h : 28.h),
     );
   }
 }

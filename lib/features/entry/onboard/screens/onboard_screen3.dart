@@ -1,5 +1,4 @@
 import 'package:mama_app/core/components/ui/buttons/back_arrow_in_circle.dart';
-import 'package:mama_app/features/entry/onboard/widgets/onboard/mood_library_sample.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/onboard_controller.dart';
@@ -23,7 +22,10 @@ class OnboardScreen3 extends StatelessWidget {
           Positioned(
             top: itemGap * 5,
             left: itemGap * 3,
-            child: Align(alignment: Alignment.centerLeft, child: BackArrowInCircle()),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: BackArrowInCircle(),
+            ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,10 +48,13 @@ class OnboardScreen3 extends StatelessWidget {
                 style: 12.norMclrCusFS,
               ),
               Gap(itemGap * 2),
-              MoodLibrarySample(moodDataList: oc.moodDataList),
+              // MoodLibrarySample(moodDataList: oc.moodDataList),
               Gap(itemGap * 1.5),
               Container(
-                decoration: BoxDeco.decRadAllBorderedAll(12, brdrClr: c.primary),
+                decoration: BoxDeco.decRadAllBorderedAll(
+                  12,
+                  brdrClr: c.primary,
+                ),
                 child: Image.asset(ImagesPath.onboarding3),
               ),
 

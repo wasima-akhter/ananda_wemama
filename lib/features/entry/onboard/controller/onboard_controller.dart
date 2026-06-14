@@ -1,45 +1,67 @@
 import '../../../../app/controller_export.dart';
-import '../../../../core/enums/ui_enums.dart';
-import '../../../shared/mood/mood_check_in/mood_row_model.dart';
 
 class OnboardController extends GetxController {
-  var moodDataList = [
-    MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    MoodRowModel(name: Strings.tired, moodType: MoodType.tired),
-    MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 8),
-    MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 8),
-  ];
-  var currPage = 0.obs;
-  var isLastPage__ = false.obs;
-
-  final PageController pageController = PageController();
+  final pageController = PageController();
+  final currentPage = 0.obs;
+  final isLastPage = false.obs;
 
   static OnboardController get to => findCont<OnboardController>();
+  static const int totalPages = 3;
+
+  @override
+  void onInit() {
+    super.onInit();
+    ever(currentPage, (page) {
+      isLastPage.value = page == totalPages - 1;
+    });
+  }
+
+  void nextPage() {
+    if (isLastPage.value) {
+      finishOnboarding();
+    } else {
+      pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void finishOnboarding() {
+    storage.seenOnboarding(true);
+    Get.offAllNamed(RoutePaths.signin);
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
+  }
 
   /// 👉 Next button logic (safe)
 
   /// 👉 Called when swiping pages
 
   /// 👉 Final navigation (safe & smooth)
-  void finishOnboarding() {
-    storage.setSeenOnboarding(true); // make true later
-    log("Seen onboarding saved: ${storage.getSeenOnboarding}");
+  // void finishOnboarding() {
+  //   storage.setSeenOnboarding(true); // make true later
+  //   log("Seen onboarding saved: ${storage.getSeenOnboarding}");
 
-    // Unfocus anything just in case
-    FocusManager.instance.primaryFocus?.unfocus();
+  //   // Unfocus anything just in case
+  //   FocusManager.instance.primaryFocus?.unfocus();
 
-    // Small frame delay to prevent gesture/navigation crash
-    Future.delayed(const Duration(milliseconds: 150), () {
-      if (Get.isOverlaysOpen) Get.back(); // close dialogs if any
-      GNav.pushNamedReplace(RoutePaths.signin);
-    });
-  }
+  //   // Small frame delay to prevent gesture/navigation crash
+  //   Future.delayed(const Duration(milliseconds: 150), () {
+  //     if (Get.isOverlaysOpen) Get.back(); // close dialogs if any
+  //     GNav.pushNamedReplace(RoutePaths.signin);
+  //   });
+  // }
 
-  @override
-  void onClose() {
-    pageController.dispose(); // 🔥 VERY IMPORTANT
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   pageController.dispose(); // 🔥 VERY IMPORTANT
+  //   super.onClose();
+  // }
 }
 
 class OnBoardDataModel {
@@ -47,5 +69,9 @@ class OnBoardDataModel {
   final String description;
   final String image;
 
-  OnBoardDataModel({required this.title, required this.description, required this.image});
+  OnBoardDataModel({
+    required this.title,
+    required this.description,
+    required this.image,
+  });
 }
