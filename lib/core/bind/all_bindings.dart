@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/more/about/controller/about_controller.dart';
 import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
+import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/controller/subscription_upgrade_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
@@ -121,6 +122,7 @@ class PostSignupScreensBinding extends Bindings {
       () => LifestyleAndInterestsController(),
     );
     Get.lazyPut<MumsStageController>(() => MumsStageController());
+    Get.lazyPut<AddChildrenController>(() => AddChildrenController());
     Get.lazyPut<SubscriptionChoosePlanController>(
       () => SubscriptionChoosePlanController(),
     );

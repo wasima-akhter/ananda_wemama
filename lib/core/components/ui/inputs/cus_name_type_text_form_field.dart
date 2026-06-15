@@ -36,6 +36,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
   final double? cursorHeight;
   final double? cursorWidth;
   final TextAlign? textAlign;
+  final String? label;
 
   const CusNameTypeTextFormField({
     super.key,
@@ -73,71 +74,100 @@ class CusNameTypeTextFormField extends StatelessWidget {
     this.brdrW,
     this.fillColor,
     this.onEditingComplete,
+    this.label,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: h,
-      decoration: BoxDecoration(borderRadius: (rad ?? 30).r.brdrRad),
-      child: TextFormField(
-        controller: controller,
-        textInputAction: textInputAction ?? TextInputAction.done,
-        textAlign: textAlign ?? TextAlign.start,
-        focusNode: focusNode,
-        inputFormatters: regExp != null
-            ? <TextInputFormatter>[FilteringTextInputFormatter.deny(regExp!)]
-            : [],
-        keyboardType: keyboardType ?? TextInputType.text,
-        style: style ?? TxtStyle.outfit(fs: 14, color: c.primary),
-        readOnly: readOnly ?? false,
-        autofillHints: keyboardType == TextInputType.emailAddress
-            ? [AutofillHints.email]
-            : [AutofillHints.name],
-        scrollController: ScrollController(),
-        cursorWidth: cursorWidth ?? 1,
-        cursorColor: c.textPrimary,
-        cursorHeight: cursorHeight ?? 18.h,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //label text
+        if (label != null && label!.isNotEmpty) ...[
+          Text(
+            label ?? '',
+            style: TxtStyle.poppinsSemiB(w: 600, ls: 0.64, fs: 14),
+          ),
 
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: fillColor ?? c.inputBackground,
-          contentPadding:
-              contentPadding ??
-              EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-          isDense: isDense, // reduces default vertical padding
-          hint:
-              hint ??
-              Text(
-                hintText,
-                style:
-                    hintStyle ??
-                    TxtStyle.outfit(fs: 13, color: c.primary, w: hintW ?? 500),
+          Gap(10.h),
+        ],
+        //
+        Container(
+          height: h,
+          decoration: BoxDecoration(borderRadius: (rad ?? 30).r.brdrRad),
+          child: TextFormField(
+            controller: controller,
+            textInputAction: textInputAction ?? TextInputAction.done,
+            textAlign: textAlign ?? TextAlign.start,
+            focusNode: focusNode,
+            inputFormatters: regExp != null
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.deny(regExp!),
+                  ]
+                : [],
+            keyboardType: keyboardType ?? TextInputType.text,
+            style: style ?? TxtStyle.outfit(fs: 14, color: c.primary),
+            readOnly: readOnly ?? false,
+            autofillHints: keyboardType == TextInputType.emailAddress
+                ? [AutofillHints.email]
+                : [AutofillHints.name],
+            scrollController: ScrollController(),
+            cursorWidth: cursorWidth ?? 1,
+            cursorColor: c.textPrimary,
+            cursorHeight: cursorHeight ?? 18.h,
+
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: fillColor ?? c.inputBackground,
+              contentPadding:
+                  contentPadding ??
+                  EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+              isDense: isDense, // reduces default vertical padding
+              hint:
+                  hint ??
+                  Text(
+                    hintText,
+                    style:
+                        hintStyle ??
+                        TxtStyle.outfit(
+                          fs: 13,
+                          color: c.primary,
+                          w: hintW ?? 500,
+                        ),
+                  ),
+
+              suffixIcon: suffix,
+              prefixIcon: prefix,
+              prefixIconConstraints: BoxConstraints(
+                minWidth: (prefixSize ?? 48).w, // default is 48
+                minHeight: (prefixSize ?? 48).h,
+              ),
+              suffixIconConstraints: BoxConstraints(
+                minWidth: (suffixSize ?? 48).w, // default is 48
+                minHeight: (suffixSize ?? 48).h,
               ),
 
-          suffixIcon: suffix,
-          prefixIcon: prefix,
-          prefixIconConstraints: BoxConstraints(
-            minWidth: (prefixSize ?? 48).w, // default is 48
-            minHeight: (prefixSize ?? 48).h,
-          ),
-          suffixIconConstraints: BoxConstraints(
-            minWidth: (suffixSize ?? 48).w, // default is 48
-            minHeight: (suffixSize ?? 48).h,
-          ),
-
-          focusedBorder: isNoBrder == true
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: brdrClr ?? c.inputBorder,
-                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
-                  ),
-                  borderRadius: (rad ?? 30).brdrRad,
-                ),
-          errorBorder:
-              errorBorder ??
-              (isNoBrder == true
+              focusedBorder: isNoBrder == true
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: brdrClr ?? c.inputBorder,
+                        width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
+                      ),
+                      borderRadius: (rad ?? 30).brdrRad,
+                    ),
+              errorBorder:
+                  errorBorder ??
+                  (isNoBrder == true
+                      ? InputBorder.none
+                      : OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: c.error,
+                            width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
+                          ),
+                          borderRadius: (rad ?? 30).brdrRad,
+                        )),
+              focusedErrorBorder: isNoBrder == true
                   ? InputBorder.none
                   : OutlineInputBorder(
                       borderSide: BorderSide(
@@ -145,38 +175,31 @@ class CusNameTypeTextFormField extends StatelessWidget {
                         width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
                       ),
                       borderRadius: (rad ?? 30).brdrRad,
-                    )),
-          focusedErrorBorder: isNoBrder == true
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: c.error,
-                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
-                  ),
-                  borderRadius: (rad ?? 30).brdrRad,
-                ),
+                    ),
 
-          enabledBorder: isNoBrder == true
-              ? InputBorder.none
-              : OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: brdrClr ?? c.inputBorder,
-                    width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
-                  ),
-                  borderRadius: (rad ?? 30).brdrRad,
-                ),
+              enabledBorder: isNoBrder == true
+                  ? InputBorder.none
+                  : OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: brdrClr ?? c.inputBorder,
+                        width: brdrW ?? (brdrClr != null ? 0.8 : 1.5),
+                      ),
+                      borderRadius: (rad ?? 30).brdrRad,
+                    ),
+            ),
+            onChanged: onChanged,
+            validator: validator,
+            onTap: onTap,
+            // ✅ ADD THIS: Prevents text from being submitted/cleared when keyboard closes
+            onEditingComplete:
+                onEditingComplete ??
+                () {
+                  // Do nothing - just prevent default behavior
+                  log('controller.text: ${controller.text}');
+                },
+          ),
         ),
-        onChanged: onChanged,
-        validator: validator,
-        onTap: onTap,
-        // ✅ ADD THIS: Prevents text from being submitted/cleared when keyboard closes
-        onEditingComplete:
-            onEditingComplete ??
-            () {
-              // Do nothing - just prevent default behavior
-              log('controller.text: ${controller.text}');
-            },
-      ),
+      ],
     );
   }
 }

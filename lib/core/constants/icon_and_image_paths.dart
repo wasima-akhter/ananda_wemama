@@ -123,6 +123,8 @@ class IconsPath {
   static String get password => Assets.icons.password;
 
   // Motherhood
+  static String get older => Assets.icons.older;
+  static String get toddler => Assets.icons.toddler;
   static String get newMum => Assets.icons.newMum;
   static String get pregnant => Assets.icons.pregnant;
   static String get ttcMagnet => Assets.icons.ttcMagnet;

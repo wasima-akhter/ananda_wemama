@@ -2,6 +2,7 @@ import 'package:mama_app/features/entry/onboard/sections/pageview_contents/pagev
 import 'package:mama_app/features/entry/onboard/sections/pageview_contents/pageview3.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../auth/core/auth_scaffold.dart';
 import '../controller/onboard_controller.dart';
 import '../modules/core/onboard_logo_header_row.dart';
 import '../sections/onboard2/onboard2_bottom_section.dart';
@@ -56,14 +57,4 @@ class OnboardScreen2 extends StatelessWidget {
       ),
     );
   }
-}
-
-AppBar getOnboardAppBar({bool? hasBack}) {
-  return AppBar(
-    toolbarHeight: 18.h,
-    backgroundColor: bgClrNew,
-    leading: Container(),
-
-    surfaceTintColor: bgClrNew,
-  );
 }

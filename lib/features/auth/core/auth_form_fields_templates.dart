@@ -95,3 +95,44 @@ class AuthFormPasswordField extends StatelessWidget {
     );
   }
 }
+
+class AuthFormNameField extends StatelessWidget {
+  final TextEditingController nameCtrler;
+  final FocusNode nameFocus;
+  final String? hintText;
+  final String? label;
+  final Color? hintColor;
+  const AuthFormNameField({
+    super.key,
+    required this.nameCtrler,
+    required this.nameFocus,
+    this.hintText,
+    this.label,
+    this.hintColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CusNameTypeTextFormField(
+      h: 40.h,
+      label: label,
+      controller: nameCtrler,
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 14.w,
+        vertical: ScreenSize.isSmallWidth ? 12.h : 14.h,
+      ),
+      fillColor: inputBgClr,
+      brdrClr: newBorderClr,
+      hintStyle: TxtStyle.poppinsSemiBold13Center(color: hintColor),
+      style: TxtStyle.poppins(),
+
+      hintText: hintText ?? Strings.enterYourFirstName,
+      brdrW: 1,
+
+      rad: 12,
+
+      focusNode: nameFocus,
+      validator: (value) => validateName(value),
+    );
+  }
+}

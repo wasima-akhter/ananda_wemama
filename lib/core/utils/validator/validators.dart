@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 String? validateEmail(String? value) {
   if (value == null || value.trim().isEmpty) {
@@ -78,7 +79,10 @@ String? validatePhone(String? value) {
   return null; // ✅ valid
 }
 
-String? validateConfirmPass({required String? confirmPass, required String password}) {
+String? validateConfirmPass({
+  required String? confirmPass,
+  required String password,
+}) {
   if (confirmPass == null || confirmPass.trim().isEmpty) {
     return "Confirm password is required";
   }
@@ -103,4 +107,12 @@ bool isValidUrl(String? url) {
   } catch (_) {
     return false;
   }
+}
+
+Worker bindValidation({required RxString value, required RxString error}) {
+  return ever(value, (String v) {
+    if (v.trim().isNotEmpty) {
+      error.value = '';
+    }
+  });
 }

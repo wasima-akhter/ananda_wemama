@@ -26,17 +26,29 @@ class DateHelper {
   DateAndTimeMap formatUTCtimestamp(String? timestamp) {
     // Handle null or empty timestamp
     if (timestamp == null || timestamp.trim().isEmpty) {
-      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: 'N/A',
+        dateYear: 'N/A',
+        fullDate: 'N/A',
+      );
     }
 
     try {
       // Detect if timestamp is UTC (has Z or ±hh:mm)
-      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc =
+          timestamp.endsWith('Z') ||
+          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       // Try to parse safely
       DateTime? dt = DateTime.tryParse(timestamp);
       if (dt == null) {
-        return DateAndTimeMap(date: 'N/A', time: '', dateYear: 'N/A', fullDate: 'N/A');
+        return DateAndTimeMap(
+          date: 'N/A',
+          time: '',
+          dateYear: 'N/A',
+          fullDate: 'N/A',
+        );
       }
 
       if (isUtc) dt = dt.toLocal(); // Convert to local if UTC
@@ -48,7 +60,9 @@ class DateHelper {
 
       final formattedDateYear = DateFormat('MMM yyyy').format(dt); // Nov 2026
 
-      final formattedFullDate = DateFormat('d MMM yyyy').format(dt); // 8 Nov 2026
+      final formattedFullDate = DateFormat(
+        'd MMM yyyy',
+      ).format(dt); // 8 Nov 2026
 
       return DateAndTimeMap(
         date: formattedDate,
@@ -58,7 +72,12 @@ class DateHelper {
       );
     } catch (e) {
       log('❌ formatUTCtimestamp failed for "$timestamp": $e');
-      return DateAndTimeMap(date: 'N/A', time: 'N/A', dateYear: 'N/A', fullDate: 'N/A');
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: 'N/A',
+        dateYear: 'N/A',
+        fullDate: 'N/A',
+      );
     }
   }
 
@@ -104,7 +123,8 @@ class DateHelper {
       if (timeSegments.length < 2) return '--:--';
 
       int hour = int.tryParse(timeSegments[0]) ?? 0;
-      final minute = int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
+      final minute =
+          int.tryParse(timeSegments[1])?.toString().padLeft(2, '0') ?? '00';
       final second = timeSegments.length > 2
           ? (int.tryParse(timeSegments[2])?.toString().padLeft(2, '0') ?? '00')
           : '00';
@@ -147,7 +167,9 @@ class DateHelper {
       }
 
       // Convert to local if UTC
-      final bool isUtc = timestamp.endsWith('Z') || timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+      final bool isUtc =
+          timestamp.endsWith('Z') ||
+          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
 
       if (isUtc) dt = dt.toLocal();
 
@@ -197,7 +219,12 @@ class DateAndTimeMap {
   final String dateYear;
   final String? fullDate;
 
-  DateAndTimeMap({required this.date, required this.time, required this.dateYear, this.fullDate});
+  DateAndTimeMap({
+    required this.date,
+    required this.time,
+    required this.dateYear,
+    this.fullDate,
+  });
 }
 
 bool isIso8601Utc(String input) {
@@ -235,12 +262,17 @@ Theme buildDatePickerTheme({
       ),
 
       primaryTextTheme: TextTheme(
-        titleMedium: TxtStyle.outfit(fs: 14, color: c.primary), // typed text color
+        titleMedium: TxtStyle.outfit(
+          fs: 14,
+          color: c.primary,
+        ), // typed text color
       ),
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
         labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: c.primary)),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: c.primary),
+        ),
       ),
       //   Forces the typed input text color
       textSelectionTheme: TextSelectionThemeData(
@@ -281,7 +313,8 @@ Future<DateTime?> pickDateGeneric({
           colorScheme: ColorScheme.light(
             primary: primaryColor ?? c.primary, // header/date circle
             onPrimary: c.secondary, // text on selected day
-            surface: backgroundColor ?? c.inputBackground, // calendar background
+            surface:
+                backgroundColor ?? c.inputBackground, // calendar background
             onSurface: c.textPrimary, // normal day text
           ),
           textTheme: TextTheme(
@@ -290,12 +323,20 @@ Future<DateTime?> pickDateGeneric({
           ),
 
           primaryTextTheme: TextTheme(
-            titleMedium: TxtStyle.outfit(fs: 14, color: c.primary), // typed text color
+            titleMedium: TxtStyle.outfit(
+              fs: 14,
+              color: c.primary,
+            ), // typed text color
           ),
           inputDecorationTheme: InputDecorationTheme(
-            hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
+            hintStyle: TxtStyle.outfit(
+              fs: 14,
+              color: c.primary.withOpacity(0.6),
+            ),
             labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: c.primary)),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: c.primary),
+            ),
           ),
           //   Forces the typed input text color
           textSelectionTheme: TextSelectionThemeData(
@@ -367,6 +408,7 @@ Future<void> pickDateWithOptions({
   void Function()? unfocusAll,
   DateTime? firstDate,
   DateTime? lastDate,
+  bool? showKeepPrivate,
 }) async {
   unfocusAll?.call();
 
@@ -396,6 +438,7 @@ Future<void> pickDateWithOptions({
         keepPrivate: keepPrivate,
         firstDate: firstDate,
         lastDate: lastDate,
+        showKeepPrivate: showKeepPrivate ?? true,
       ),
     ),
     barrierDismissible: true,

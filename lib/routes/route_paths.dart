@@ -33,6 +33,7 @@ class RoutePaths {
   static const mumsStageFinish = '/mumsStageFinish';
   static const subChoosePlan = '/subChoosePlan';
   static const welcomeFundingMum = '/welcomeFundingMum';
+  static const addChildren = '/addChildren';
 
   // ─────────────────────────────
   // 🔹 Main Navigation / Tabs Flow

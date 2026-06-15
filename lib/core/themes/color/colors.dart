@@ -149,7 +149,7 @@ class AppPalette {
   static const brown950 = Color(0xFF3B1D0F);
   static const brown925 = Color(0xFF512712);
   static const brown900 = Color(0xFF904224);
-  static const brown850 = Color(0xFF922604);
+  static const brown850 = Color(0xFF922604); // 942200
   static const brown700 = Color(0xFFC76D46);
   static const brown700_10 = Color(0xFFF6E6DC);
   static const brown650 = Color(0xFFC96C4F);

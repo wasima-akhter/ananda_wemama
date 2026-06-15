@@ -5,8 +5,10 @@ class DatePickerWithPrivacy extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final RxString selectedDate;
-  final Rx<DateTime> tempSelected; // ✅ reactive
+  final Rx<DateTime> tempSelected;
   final RxBool keepPrivate;
+
+  final bool showKeepPrivate; // 👈 added
 
   const DatePickerWithPrivacy({
     super.key,
@@ -15,6 +17,7 @@ class DatePickerWithPrivacy extends StatelessWidget {
     required this.selectedDate,
     required this.tempSelected,
     required this.keepPrivate,
+    this.showKeepPrivate = true, // 👈 default
   });
 
   @override
@@ -35,47 +38,50 @@ class DatePickerWithPrivacy extends StatelessWidget {
                 Strings.dateOfBirth.cap,
                 style: TxtStyle.outfitSemiB(fs: 16, color: c.primary),
               ),
+
               Gap(itemGap),
 
-              Obx(() {
-                log("tempSelected.value : ${tempSelected.value}");
-                return CalendarDatePicker(
-                  key: ValueKey(tempSelected.value), // ✅ redraws on change
+              Obx(
+                () => CalendarDatePicker(
+                  key: ValueKey(tempSelected.value),
                   initialDate: tempSelected.value,
                   firstDate: firstDate ?? DateTime(1900),
                   lastDate: lastDate ?? now,
                   onDateChanged: (date) => tempSelected.value = date,
-                );
-              }),
-
-              Gap(itemGap),
-
-              CusGestureDetector(
-                onTap: () => keepPrivate.toggle(),
-                child: Obx(
-                  () => Row(
-                    children: [
-                      CustomCheckBox(
-                        value: keepPrivate.value,
-                        onChanged: (_) => keepPrivate.toggle(),
-                        borderColor: c.secondary,
-                        checkColor: c.scaffoldBackground,
-                        activeColor: c.secondary,
-                        size: 18,
-                      ),
-                      Gap(8),
-                      Text(
-                        Strings.keepPrivate,
-                        style: TxtStyle.outfit(
-                          fs: 13,
-                          w: 500,
-                          color: c.secondary,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
+
+              // 👇 only show when enabled
+              if (showKeepPrivate) ...[
+                Gap(itemGap),
+
+                CusGestureDetector(
+                  onTap: () => keepPrivate.toggle(),
+                  child: Obx(
+                    () => Row(
+                      children: [
+                        CustomCheckBox(
+                          value: keepPrivate.value,
+                          onChanged: (_) => keepPrivate.toggle(),
+                          borderColor: c.secondary,
+                          checkColor: c.scaffoldBackground,
+                          activeColor: c.secondary,
+                          size: 18,
+                        ),
+                        Gap(8),
+                        Text(
+                          Strings.keepPrivate,
+                          style: TxtStyle.outfit(
+                            fs: 13,
+                            w: 500,
+                            color: c.secondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
 
               Gap(itemGap * 2),
 

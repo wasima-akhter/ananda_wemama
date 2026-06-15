@@ -18,6 +18,62 @@ class SetupProfileController extends GetxController {
   // Focus Node (only needed for actual text field)
   final nameFocus = FocusNode();
 
+  // Errors
+  final dobError = ''.obs;
+  final stateError = ''.obs;
+  final cityError = ''.obs;
+
+  late Worker _dobWorker;
+  late Worker _stateWorker;
+  late Worker _cityWorker;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    _dobWorker = bindValidation(value: selectedDob, error: dobError);
+
+    _stateWorker = bindValidation(value: selectedState, error: stateError);
+
+    _cityWorker = bindValidation(value: selectedCity, error: cityError);
+  }
+
+  @override
+  void onClose() {
+    _dobWorker.dispose();
+    _stateWorker.dispose();
+    _cityWorker.dispose();
+
+    nameCtrl.dispose();
+    nameFocus.dispose();
+    super.onClose();
+  }
+
+  bool validateSelections() {
+    bool isValid = true;
+
+    dobError.value = '';
+    stateError.value = '';
+    cityError.value = '';
+
+    if (selectedDob.value.trim().isEmpty) {
+      dobError.value = 'Date of birth is required';
+      isValid = false;
+    }
+
+    if (selectedState.value.trim().isEmpty) {
+      stateError.value = 'State is required';
+      isValid = false;
+    }
+
+    if (selectedCity.value.trim().isEmpty) {
+      cityError.value = 'City is required';
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
   // Loading state
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
@@ -42,14 +98,9 @@ class SetupProfileController extends GetxController {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
-
-    if (selectedDob.value.trim().isEmpty ||
-        selectedState.value.trim().isEmpty ||
-        selectedCity.value.trim().isEmpty) {
-      Snack.showWarning("All Fields must be filled");
+    if (!validateSelections()) {
       return;
     }
-
     unfocusAll();
     isLoading_.value = true;
 
@@ -57,16 +108,9 @@ class SetupProfileController extends GetxController {
     log("State: ${selectedState.value}");
     log("City: ${selectedCity.value}");
 
-    Get.toNamed(RoutePaths.photoAndBio);
+    Get.toNamed(RoutePaths.mumsStage);
 
     isLoading_.value = false;
-  }
-
-  @override
-  void onClose() {
-    nameCtrl.dispose();
-    nameFocus.dispose();
-    super.onClose();
   }
 
   void openStateBottomSheet() {

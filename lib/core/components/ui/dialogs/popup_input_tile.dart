@@ -8,6 +8,8 @@ class PopupInputTile extends StatelessWidget {
   final double? brdrW;
   final Color? brdrClr;
   final Color? bgClr;
+  final double? rad;
+  final EdgeInsetsGeometry? padding;
 
   const PopupInputTile({
     super.key,
@@ -18,6 +20,8 @@ class PopupInputTile extends StatelessWidget {
     this.brdrW,
     this.brdrClr,
     this.bgClr,
+    this.rad,
+    this.padding,
   });
 
   @override
@@ -26,13 +30,14 @@ class PopupInputTile extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: 30.brdrRad,
+      borderRadius: (rad ?? 30).brdrRad,
       child: Container(
         height: height,
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+        padding:
+            padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
         decoration: BoxDecoration(
           color: bgClr ?? c.cardPrimary,
-          borderRadius: 30.brdrRad,
+          borderRadius: (rad ?? 30).brdrRad,
           border: Border.all(
             color: brdrClr ?? c.inputBorder,
             width: brdrW ?? 1.5,

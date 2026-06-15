@@ -234,6 +234,7 @@ class Strings {
   // Input Hints
   // ===========================
   static const String enterYourName = "Enter your name";
+  static const String enterYourFirstName = "Enter your first name";
   static const String enterYourEmail = "Enter your email address";
   static const String writeHere = "Write here";
   static const String submitSuccessfully = "Submit successfully";
@@ -416,6 +417,7 @@ class Strings {
   static const String signUpWith = "Sign up with";
   static const String getStarted = "Let's Get Started";
   static const String alreadyHaveAccount = "Already have an account?";
+  static const String getToKnowBetter = "Let's get to know you better";
   static const String logIn = "Log In";
   static const String lifestyleInterests = "lifestyle & interests";
   static const String selectYourLikes = "Select your likes";
@@ -436,26 +438,31 @@ class Strings {
   static const String budgeting = "Budgeting";
   static const String babyCare = "Baby care";
   static const String stayAtHome = "Stay-at-home";
-  static const String ttc = "TTC (Trying to Conceive)";
+  static const String ttc = "Trying to Conceive (TTC)";
 
   static const String mustSelectOne = "Must Select One";
 
   static const String newMum = "New Mum";
-  static const String newMumAge = "(Baby age: 0-3 months)";
-
-  static const String infantMum = "Infant Mum";
-  static const String infantMumAge = "(Baby age: 3-12 months)";
+  static const String newMumAge = "(0-12 months)";
 
   static const String toddlerMum = "Toddler Mum";
-  static const String toddlerMumAge = "(Child age: 1-3 years)";
+  static const String toddlerMumAge = "(1-3 years)";
 
-  static const String kindergartenMum = "Kindergarten Mum";
-  static const String kindergartenMumAge = "(Child age: 4-5 years)";
+  static const String kindergartenMum = "Mum of Older";
+  static const String kindergartenMumAge = "(3+ years)";
 
   static const String respectfulParenting = "respectful parenting";
   static const String minimalistLifestyle = "Minimalist lifestyle";
   static const String pregnant = "Pregnant";
   static const String writeBioHere = "Write your bio here";
+  static const String motherhoodJourneyTitle = "Your Motherhood\nJourney";
+
+  static const String motherhoodJourneySubtitle =
+      "Connect with mums on a similiar journey";
+
+  static const String motherhoodStageQuestion = "Which stage describe you?";
+
+  static const String selectAllThatApply = "Select all that apply";
 
   static const String keepPrivate = "Keep Private";
 
@@ -572,6 +579,7 @@ class Strings {
   static const String securityAlertMsg =
       "For your safety, never share your bank details. You can block or report Sarah by tapping the menu above.";
   static const String about = "About";
+  static const String aboutYou = "About you";
 
   static const String termsAndConditions = "Terms & conditions";
   static const String search = "search";

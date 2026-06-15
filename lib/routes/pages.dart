@@ -38,6 +38,7 @@ import '../features/main_tabs/home/sub_feature/edit_profile/screen/edit_profile_
 import '../features/main_tabs/home/sub_feature/profile/screen/profile_screen.dart';
 import '../features/main_tabs/match/screen/match_screen.dart';
 import '../features/more/notification/screen/notification_screen.dart';
+import '../features/post_auth_setup/add_children/screen/add_children_screen.dart';
 import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
@@ -225,6 +226,11 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.mumsStage,
       page: () => const MumsStageScreen(),
+      binding: PostSignupScreensBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.addChildren,
+      page: () => const AddChildrenScreen(),
       binding: PostSignupScreensBinding(),
     ),
     GetPage(

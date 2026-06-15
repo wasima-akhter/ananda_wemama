@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
-import '../../../entry/onboard/screens/onboard_screen2.dart';
+import '../../core/auth_scaffold.dart';
 import '../widgets/signin_body_widgets.dart';
 
 class SigninScreen extends StatefulWidget {

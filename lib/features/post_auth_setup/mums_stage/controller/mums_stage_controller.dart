@@ -33,18 +33,13 @@ class MumsStageController extends GetxController {
       title: Strings.newMum,
     ),
     MumStageUIDataModel(
-      info: Strings.infantMumAge,
-      leftIcon: IconsPath.newMum,
-      title: Strings.infantMum,
-    ),
-    MumStageUIDataModel(
       info: Strings.toddlerMumAge,
-      leftIcon: IconsPath.newMum,
+      leftIcon: IconsPath.toddler,
       title: Strings.toddlerMum,
     ),
     MumStageUIDataModel(
       info: Strings.kindergartenMumAge,
-      leftIcon: IconsPath.newMum,
+      leftIcon: IconsPath.older,
       title: Strings.kindergartenMum,
     ),
   ];

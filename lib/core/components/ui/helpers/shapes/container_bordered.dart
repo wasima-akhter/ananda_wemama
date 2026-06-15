@@ -70,7 +70,7 @@ class ContainerBordered extends StatelessWidget {
                   boxShadow: boxShadow,
                 ),
 
-            child: child.pHV((hp ?? 5).w, (vp ?? 5).w),
+            child: child.pHV((hp ?? 5).w, (vp ?? 5).h),
           )
         : AnimatedContainer(
             clipBehavior: clipBehavior ?? Clip.none,

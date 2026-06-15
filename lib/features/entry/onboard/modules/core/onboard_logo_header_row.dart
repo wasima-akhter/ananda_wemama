@@ -50,3 +50,37 @@ class LogoPartHeader extends StatelessWidget {
     );
   }
 }
+
+class BrandedHeaderSection extends StatelessWidget {
+  final String titleText;
+  final String subtitleText;
+  const BrandedHeaderSection({
+    super.key,
+    required this.titleText,
+    required this.subtitleText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        OnboardLogoHeaderRow(),
+        Gap(10.h),
+        // Welcome tetxt
+        Text(
+          titleText.capEachWord(),
+          textAlign: TextAlign.center,
+          style: TxtStyle.dmSerifDisplayRegular(),
+        ),
+
+        Gap(itemGap),
+        if (subtitleText.isNotEmpty)
+          Text(
+            subtitleText.capEachWord(),
+            textAlign: TextAlign.center,
+            style: TxtStyle.poppinsSemiBold13Center(),
+          ),
+      ],
+    );
+  }
+}

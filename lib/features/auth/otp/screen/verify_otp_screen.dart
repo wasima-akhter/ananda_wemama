@@ -1,12 +1,12 @@
 import 'package:easy_countdown_timer/easy_countdown_timer_widget.dart';
 import 'package:flutter/services.dart';
 import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/entry/onboard/screens/onboard_screen2.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/widgets_helper.dart';
 import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
+import '../../core/auth_scaffold.dart';
 import '../controller/verify_otp_controller.dart';
 
 class VerifyOtpScreen extends StatelessWidget {

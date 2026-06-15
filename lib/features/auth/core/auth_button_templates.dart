@@ -17,7 +17,7 @@ class AuthButton extends StatelessWidget {
     return CustomBtnWTxtNew(
       btnTxt: btnText ?? Strings.continueTxt,
       fs: ScreenSize.isSmallWidth ? 14 : 14,
-      btnColor: c.strokePrimary,
+      btnColor: Color(0xFF942200), //c.strokePrimary,
       txtClr: c.backgroundPrimary,
       isLoading: isLoading,
       onTap: onTap,
