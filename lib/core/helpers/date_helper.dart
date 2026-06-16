@@ -399,6 +399,38 @@ Future<DateTime?> pickDatePickerForChildren({
   );
 }
 
+Future<DateTime?> pickDatePickerToAddChild({
+  DateTime? initialDate,
+  DateTime? firstDate,
+  DateTime? lastDate,
+  VoidCallback? unfocusAll,
+}) {
+  unfocusAll?.call();
+
+  final now = DateTime.now();
+
+  final minDate = firstDate ?? DateTime(1950);
+  final maxDate = lastDate ?? now;
+
+  final safeInitialDate = initialDate == null
+      ? now
+      : initialDate.isBefore(minDate)
+      ? minDate
+      : initialDate.isAfter(maxDate)
+      ? maxDate
+      : initialDate;
+
+  return showDatePicker(
+    context: Get.context!,
+    initialDate: safeInitialDate,
+    firstDate: minDate,
+    lastDate: maxDate,
+    builder: (context, child) {
+      return buildDatePickerTheme(child: child!, context: context);
+    },
+  );
+}
+
 ///
 ///
 

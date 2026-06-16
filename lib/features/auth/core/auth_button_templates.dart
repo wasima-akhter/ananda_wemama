@@ -5,22 +5,45 @@ class AuthButton extends StatelessWidget {
   final void Function()? onTap;
   final String? btnText;
 
+  final BtnVariant? variant;
+  final double? fs;
+
   const AuthButton({
     super.key,
     required this.isLoading,
     this.onTap,
     this.btnText,
+    this.fs,
+    this.variant,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool small = ScreenSize.isSmallWidth;
+
+    final double fontSize = fs ?? (small ? 14 : 14);
+
     return CustomBtnWTxtNew(
       btnTxt: btnText ?? Strings.continueTxt,
-      fs: ScreenSize.isSmallWidth ? 14 : 14,
-      btnColor: Color(0xFF942200), //c.strokePrimary,
-      txtClr: c.backgroundPrimary,
+      variant: variant ?? BtnVariant.primary,
+      fs: fontSize,
       isLoading: isLoading,
       onTap: onTap,
     );
   }
 }
+
+// class IconTextButton extends StatelessWidget {
+//   const IconTextButton({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return CustomBtnWIcon(
+//       onTap: onTap,
+//       text: text,
+//       bgColor: bgColor,
+//       textColor: textColor,
+//       iconPath: iconPath,
+//     );
+//   }
+// }

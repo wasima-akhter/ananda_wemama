@@ -54,10 +54,12 @@ class LogoPartHeader extends StatelessWidget {
 class BrandedHeaderSection extends StatelessWidget {
   final String titleText;
   final String subtitleText;
+  final Color? subtitleTextColor;
   const BrandedHeaderSection({
     super.key,
     required this.titleText,
     required this.subtitleText,
+    this.subtitleTextColor,
   });
 
   @override
@@ -78,7 +80,7 @@ class BrandedHeaderSection extends StatelessWidget {
           Text(
             subtitleText.capEachWord(),
             textAlign: TextAlign.center,
-            style: TxtStyle.poppinsSemiBold13Center(),
+            style: TxtStyle.poppinsSemiBold13Center(color: subtitleTextColor),
           ),
       ],
     );

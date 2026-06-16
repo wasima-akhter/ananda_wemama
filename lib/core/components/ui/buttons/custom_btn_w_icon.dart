@@ -10,7 +10,6 @@ class CustomBtnWIcon extends StatelessWidget {
   final String text;
 
   final Color bgColor;
-  final Color textColor;
 
   final TextStyle? style;
 
@@ -27,7 +26,6 @@ class CustomBtnWIcon extends StatelessWidget {
     required this.onTap,
     required this.text,
     required this.bgColor,
-    required this.textColor,
     required this.iconPath,
     this.iconPosition = IconPosition.right,
     this.style,
@@ -61,11 +59,60 @@ class CustomBtnWIcon extends StatelessWidget {
           alignment: Alignment.center,
           children: [
             Center(
-              child: Text(
-                text,
-                textAlign: TextAlign.center,
-                style: style ?? style_,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (iconPosition == IconPosition.left)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgIcon(
+                          iconPath: iconPath,
+                          width: iconSize,
+                          height: iconSize,
+                        ),
+                        SizedBox(width: 12), // 👈 spacing between icon & text
+                      ],
+                    ),
+
+                  Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: style ?? style_,
+                  ),
+                ],
               ),
+              //  Stack(
+              //   children: [
+              //     Container(
+              //       // width: double.infinity,
+              //       padding: const EdgeInsets.symmetric(horizontal: 40.0),
+              //       // color: Colors.amber,
+              //       child: Text(
+              //         text,
+              //         textAlign: TextAlign.center,
+              //         style: style ?? style_,
+              //       ),
+              //     ),
+
+              //     if (iconPosition == IconPosition.left)
+              //       Positioned(
+              //         left: 0
+              //             .w, // 👈 adjust this value to control how close it is
+              //         child: Row(
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: [
+              //             SvgIcon(
+              //               iconPath: iconPath,
+              //               width: iconSize,
+              //               height: iconSize,
+              //             ),
+              //             SizedBox(width: 6), // 👈 spacing between icon & text
+              //           ],
+              //         ),
+              //       ),
+              //   ],
+              // ),
             ),
 
             if (iconPosition == IconPosition.right)
@@ -78,15 +125,15 @@ class CustomBtnWIcon extends StatelessWidget {
                 ),
               ),
 
-            if (iconPosition == IconPosition.left)
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SvgIcon(
-                  iconPath: iconPath,
-                  width: iconSize,
-                  height: iconSize,
-                ),
-              ),
+            // if (iconPosition == IconPosition.left)
+            //   Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: SvgIcon(
+            //       iconPath: iconPath,
+            //       width: iconSize,
+            //       height: iconSize,
+            //     ),
+            //   ),
           ],
         ),
       ),

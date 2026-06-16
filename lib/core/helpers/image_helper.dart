@@ -23,18 +23,26 @@ Image get mamaLogoWithoutTxtImageSmall =>
 ImageErrorBuilder defaultErrorBuilder({double? height, double? width}) =>
     ImageErrorBuilder(height: height, width: width);
 
+//
+final Map<String, String> _svgCache = {};
 Future<String> svgPathWNewWidth({
   required String iconPath,
   required double strokeWidth,
 }) async {
-  // 1️⃣ Load SVG as string
+  final cacheKey = '$iconPath-$strokeWidth';
+
+  if (_svgCache.containsKey(cacheKey)) {
+    return _svgCache[cacheKey]!;
+  }
+
   String svgStr = await rootBundle.loadString(iconPath);
 
-  // 2️⃣ Replace stroke-width with desired value
   String modifiedSvg = svgStr.replaceAll(
     RegExp(r'stroke-width="[^"]+"'),
     'stroke-width="$strokeWidth"',
   );
+
+  _svgCache[cacheKey] = modifiedSvg;
 
   return modifiedSvg;
 }

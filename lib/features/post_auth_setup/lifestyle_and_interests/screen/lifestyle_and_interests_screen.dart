@@ -1,7 +1,9 @@
-import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/widgets/lifestyle_tag.dart';
-
 import '../../../../app/helper_widgets_export.dart';
+import '../../../auth/core/auth_button_templates.dart';
+import '../../../auth/core/auth_scaffold.dart';
+import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
 import '../controller/lifestyle_and_interests_controller.dart';
+import '../widgets/lifestyle_interest_grid.dart';
 
 class LifestyleAndInterestsScreen extends StatelessWidget {
   const LifestyleAndInterestsScreen({super.key});
@@ -10,88 +12,27 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final lic = Get.find<LifestyleAndInterestsController>();
 
-    final photoAndBioFormKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
-    return SafeArea(
-      top: false,
-
-      child: Scaffold(
-        backgroundColor: bgClr,
-        resizeToAvoidBottomInset: true,
-        appBar: CommonAppBarContent(title: Strings.lifestyleInterests.capEachWord()),
-
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return BounceSingleChildScrollView(
-              padding: EdgeInsets.zero,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Form(
-                  key: photoAndBioFormKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min, // ✅ min, not max
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            Strings.selectYourLikes.capEachWord(),
-                            textAlign: TextAlign.center,
-                            style: 13.titleMclrCusFSOutfit,
-                          ),
-                          Gap(itemGap),
-                          Obx(
-                            () => Text(
-                              "${lic.selectedInterests.length}/10",
-                              textAlign: TextAlign.center,
-                              style: 13.titleMclrCusFSOutfit,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Gap(itemGap * 5),
-
-                      Wrap(
-                        direction: Axis.horizontal,
-                        spacing: 12.w,
-                        runSpacing: 14.w,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          ...List.generate(lic.interestsList.length, (index) {
-                            final item = lic.interestsList[index];
-                            return Obx(() {
-                              final isSelected = lic.selectedInterests.contains(item);
-                              return LifestyleTag(
-                                item: item,
-                                onTap: () => lic.toggleInterest(item),
-                                isSelected: isSelected,
-                              );
-                            });
-                          }),
-                        ],
-                      ).mHV(10, 0),
-
-                      Gap(itemGap * 5), // ✅ fixed gap instead of Spacer
-                      // ===== BOTTOM SECTION =====
-                      Obx(
-                        () => filledBtnWTxt(
-                          btnTxt: Strings.continueTxt,
-                          isLoading: lic.isLoading,
-                          onTap: lic.onTapContinue,
-                        ),
-                      ),
-
-                      Gap(itemGap * 3),
-                    ],
-                  ).getcm,
-                ),
-              ),
-            );
-          },
-        ),
+    return AuthScaffold(
+      bottomWidget: AuthButton(
+        isLoading: false,
+        onTap: () => Get.toNamed(RoutePaths.photoAndBio),
+        //  isLoading: msc.isLoading,
+        //  msc.onTapContinue(mumStageFormKey),
       ),
+      child: Column(
+        children: [
+          BrandedHeaderSection(
+            titleText: Strings.whatMattersToYou,
+            subtitleText: Strings.selectUpTo10,
+          ),
+
+          Gap(10.h),
+          LifestyleInterestsGrid(),
+          Gap(10.h),
+        ],
+      ).getcm,
     );
   }
 }

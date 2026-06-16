@@ -8,8 +8,8 @@ class OnboardGetStartedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomBtnWIcon(
       text: Strings.getStarted,
+
       bgColor: c.strokePrimary,
-      textColor: c.backgroundPrimary,
       iconPath: IconsPath.arrowRightLg,
       iconPosition: IconPosition.right,
       onTap: () => Get.toNamed(RoutePaths.onboardScreen2),

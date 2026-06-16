@@ -4,10 +4,12 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/helpers/bottom_sheet_helper.dart';
 
 class SetupProfileController extends GetxController {
+  static SetupProfileController get to => Get.find<SetupProfileController>();
   // 🔹 Text Controller (only for name input field)
   final nameCtrl = TextEditingController();
 
   // 🔹 Reactive values (for popup selections)
+  final nameError = ''.obs;
   final selectedDob = ''.obs;
   final selectedState = ''.obs;
   final selectedCity = ''.obs;
@@ -36,6 +38,12 @@ class SetupProfileController extends GetxController {
     _stateWorker = bindValidation(value: selectedState, error: stateError);
 
     _cityWorker = bindValidation(value: selectedCity, error: cityError);
+
+    nameCtrl.addListener(() {
+      if (nameCtrl.text.trim().isNotEmpty && nameError.value.isNotEmpty) {
+        nameError.value = '';
+      }
+    });
   }
 
   @override
@@ -46,15 +54,24 @@ class SetupProfileController extends GetxController {
 
     nameCtrl.dispose();
     nameFocus.dispose();
+
     super.onClose();
   }
 
   bool validateSelections() {
     bool isValid = true;
 
+    nameError.value = '';
     dobError.value = '';
     stateError.value = '';
     cityError.value = '';
+
+    final nameValidation = validateName(nameCtrl.text.trim());
+
+    if (nameValidation != null) {
+      nameError.value = nameValidation;
+      isValid = false;
+    }
 
     if (selectedDob.value.trim().isEmpty) {
       dobError.value = 'Date of birth is required';

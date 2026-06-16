@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/core/utils/extension/context_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -228,4 +229,8 @@ extension CommunityItemX on CommunityItemModel {
         return Strings.join;
     }
   }
+}
+
+extension DateTimeExtensions on DateTime {
+  String get formatMMMMdyyyy => DateFormat('d MMMM yyyy').format(this);
 }

@@ -132,7 +132,7 @@ class AuthFormNameField extends StatelessWidget {
       rad: 12,
 
       focusNode: nameFocus,
-      validator: (value) => validateName(value),
+      validator: null,
     );
   }
 }

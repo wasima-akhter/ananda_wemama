@@ -29,55 +29,41 @@ class SafeAssetImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallback = SafeIconPlaceholder(
-      shape: _isCircle
-          ? PlaceholderShape.circle
-          : shape == AssetImageShape.rounded
-          ? PlaceholderShape.rounded
-          : PlaceholderShape.free,
+    final borderRadius = BorderRadius.circular(_isCircle ? 999 : radius);
+
+    final image = Image.asset(
+      assetPath,
       width: width,
       height: height,
+      fit: fit,
+      cacheWidth: _cacheWidth(),
+      cacheHeight: _cacheHeight(),
+      errorBuilder: (_, _, _) =>
+          SafeIconPlaceholder(shape: _mapShape(), width: width, height: height),
     );
 
-    Widget imageWidget;
-
-    try {
-      imageWidget = Image.asset(
-        assetPath,
-        width: width,
-        height: height,
-        fit: fit,
-        errorBuilder: (_, _, _) => fallback,
-      );
-    } catch (_) {
-      imageWidget = fallback;
-    }
-
-    final clipped = ClipRRect(
-      borderRadius: BorderRadius.circular(_isCircle ? 999 : radius),
-      child: imageWidget,
-    );
-
-    final shapedWidget = _isCircle ? ClipOval(child: clipped) : clipped;
-
-    return _AssetShimmerWrapper(
-      width: width,
-      height: height,
-      child: shapedWidget,
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: _isCircle ? ClipOval(child: image) : image,
     );
   }
-}
 
-class _AssetShimmerWrapper extends StatelessWidget {
-  final Widget child;
-  final double? width;
-  final double? height;
+  int? _cacheWidth() {
+    if (width == null) return null;
+    return (width! * 2).toInt(); // retina-safe downsampling
+  }
 
-  const _AssetShimmerWrapper({required this.child, this.width, this.height});
+  int? _cacheHeight() {
+    if (height == null) return null;
+    return (height! * 2).toInt();
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(width: width, height: height, child: child);
+  PlaceholderShape _mapShape() {
+    return shape == AssetImageShape.circle
+        ? PlaceholderShape.circle
+        : shape == AssetImageShape.rounded
+        ? PlaceholderShape.rounded
+        : PlaceholderShape.free;
   }
 }
 

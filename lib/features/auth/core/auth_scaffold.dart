@@ -32,7 +32,7 @@ class AuthScaffold extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(bottom: S.bottomInset + 10),
+                    padding: EdgeInsets.only(bottom: S.bottomInset + 30),
                     child: bottomWidget?.getcm,
                   ),
                 ],

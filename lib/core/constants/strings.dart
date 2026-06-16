@@ -581,6 +581,17 @@ class Strings {
   static const String about = "About";
   static const String aboutYou = "About you";
 
+  static const String tellUsAboutChildren = "Tell us about your\nchildren";
+  static const String sharingAboutChildren =
+      "Sharing a little about your children helps\nother mums understand your motherhood\njourney";
+
+  static const String addAProfilePhoto = "Add a profile photo";
+  static const String addingPhotohelps =
+      "Adding a photo helps other\nmums connect with you";
+
+  //
+  static const String whatMattersToYou = "What Matters to you right now?";
+  static const String selectUpTo10 = "Select up to 10 that apply";
   static const String termsAndConditions = "Terms & conditions";
   static const String search = "search";
   static const String unblock = "Unblock";

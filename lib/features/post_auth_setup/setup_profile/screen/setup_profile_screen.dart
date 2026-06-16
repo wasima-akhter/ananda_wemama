@@ -2,6 +2,7 @@ import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/feedback/error_field/error_field.dart';
 import '../../../auth/core/auth_scaffold.dart';
 import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
 import '../controller/setup_profile_controller.dart';
@@ -35,20 +36,32 @@ class SetupProfileScreen extends StatelessWidget {
 
             Gap(20.h),
 
-            AuthFormNameField(
-              nameCtrler: spc.nameCtrl,
-              nameFocus: spc.nameFocus,
-              label: "What's your name?",
-              hintColor: c.foregroundSecondary.withValues(alpha: 0.7),
-            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AuthFormNameField(
+                  nameCtrler: spc.nameCtrl,
+                  nameFocus: spc.nameFocus,
+                  label: "What's your name?",
+                  hintColor: c.foregroundSecondary.withValues(alpha: 0.7),
+                ),
 
+                Obx(() {
+                  if (spc.nameError.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return SetupFieldError(error: spc.nameError.value);
+                }),
+              ],
+            ),
             Gap(10.h),
 
-            SetupDobSection(controller: spc),
+            SetupDobSection(),
 
             Gap(16.h),
 
-            SetupLocationSection(controller: spc),
+            SetupLocationSection(),
 
             Gap(16.h),
           ],

@@ -16,14 +16,12 @@ class MumsStageScreen extends StatelessWidget {
     final mumStageFormKey = GlobalKey<FormState>();
 
     return AuthScaffold(
-      bottomWidget: Obx(
-        () => AuthButton(
-          isLoading: false,
-          onTap: () => Get.toNamed(RoutePaths.addChildren),
-          //  isLoading: msc.isLoading,
-          //  msc.onTapContinue(mumStageFormKey),
-        ).mB(10),
-      ),
+      bottomWidget: AuthButton(
+        isLoading: false,
+        onTap: () => Get.toNamed(RoutePaths.addChildren),
+        //  isLoading: msc.isLoading,
+        //  msc.onTapContinue(mumStageFormKey),
+      ).mB(10),
 
       // appBar: CommonAppBarContent(title: Strings.mumsStage),
       child: Form(

@@ -20,11 +20,17 @@ class SvgIconWNewStroke extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconColor_ = iconColor ?? c.textPrimary;
     return FutureBuilder(
-      future: svgPathWNewWidth(iconPath: iconPath, strokeWidth: strokeWidth ?? 2),
-      builder: (context, asyncSnapshot) {
-        final modifiedSvg = asyncSnapshot.data;
+      future: svgPathWNewWidth(
+        iconPath: iconPath,
+        strokeWidth: strokeWidth ?? 2,
+      ),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SizedBox(height: size ?? 16, width: size ?? 16);
+        }
+
         return SvgPicture.string(
-          modifiedSvg.toString(),
+          snapshot.data!,
           height: size ?? 16,
           width: size ?? 16,
           colorFilter: ColorFilter.mode(iconColor_, BlendMode.srcIn),

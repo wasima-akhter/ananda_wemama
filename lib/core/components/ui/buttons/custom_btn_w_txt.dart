@@ -114,6 +114,8 @@ class CustomBtnWTxt extends StatelessWidget {
 }
 
 //
+enum BtnVariant { primary, outlined, ghost, disabled }
+
 class CustomBtnWTxtNew extends StatelessWidget {
   final VoidCallback? onTap;
 
@@ -131,7 +133,8 @@ class CustomBtnWTxtNew extends StatelessWidget {
 
   final bool isLoading;
   final bool? isUppCase;
-  final bool? outlined;
+
+  final BtnVariant variant;
 
   const CustomBtnWTxtNew({
     super.key,
@@ -146,42 +149,60 @@ class CustomBtnWTxtNew extends StatelessWidget {
     this.padding,
     required this.isLoading,
     this.isUppCase,
-    this.outlined,
     this.fs,
+    this.variant = BtnVariant.primary,
   });
 
   @override
   Widget build(BuildContext context) {
     final isTallDevice = ScreenSize.isTallHeight;
 
-    final defaultStyle = TxtStyle.poppinsSemiB(
-      fs: fs ?? (isTallDevice ? 17 : 15),
-      w: 600,
-      h: 1.0,
-      ls: 0,
-      color: txtClr ?? c.backgroundSecondary,
-    );
+    final bool isOutlined = variant == BtnVariant.outlined;
+    final bool isDisabled = variant == BtnVariant.disabled;
+    final bool isGhost = variant == BtnVariant.ghost;
 
-    final bool isOutlined = outlined == true;
+    final borderColor = isOutlined ? newBorderClr : Colors.transparent;
+
+    final bgColor = switch (variant) {
+      BtnVariant.primary => c.primary,
+      BtnVariant.outlined => ctransp,
+      BtnVariant.ghost => Colors.transparent,
+      BtnVariant.disabled => c.inputBackground.withValues(alpha: 0.5),
+    };
+
+    final textColor =
+        txtClr ??
+        switch (variant) {
+          BtnVariant.primary => c.backgroundSecondary,
+          BtnVariant.outlined => c.primary,
+          BtnVariant.ghost => c.primary,
+          BtnVariant.disabled => c.foregroundSecondary,
+        };
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         width: w?.w,
         height: h?.h,
+
         padding:
             padding ??
             EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: ScreenSize.isSmallWidth ? 13.h : 12.h,
             ),
+
         decoration: BoxDecoration(
-          color: btnColor ?? (isOutlined ? c.inputBackground : c.primary),
+          color: btnColor ?? bgColor,
           borderRadius: (rad ?? 8).brdrRad,
+
+          // ✅ ALWAYS KEEP BORDER STRUCTURE CONSISTENT
           border: Border.all(
-            color: isOutlined ? c.inputBorder : Colors.transparent,
+            color: borderColor,
+            width: 1, // <- IMPORTANT FIX
           ),
         ),
+
         child: Center(
           child: isLoading
               ? const LoadingWhite()
@@ -190,7 +211,85 @@ class CustomBtnWTxtNew extends StatelessWidget {
                       ? btnTxt.toUpperCase()
                       : btnTxt.capEachWord(),
                   textAlign: TextAlign.center,
-                  style: style ?? defaultStyle,
+                  style:
+                      style ??
+                      TxtStyle.poppinsSemiB(
+                        fs: fs ?? (isTallDevice ? 17 : 15),
+                        w: 600,
+                        h: 1.0,
+                        color: textColor,
+                      ),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppCompactButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final String text;
+
+  final TextStyle? style;
+  final bool isLoading;
+  final bool isUpperCase;
+
+  final Color? bgColor;
+  final Color? textColor;
+
+  final double radius;
+  final double horizontalPadding;
+
+  const AppCompactButton({
+    super.key,
+    required this.onTap,
+    required this.text,
+    this.style,
+    this.isLoading = false,
+    this.isUpperCase = false,
+    this.bgColor,
+    this.textColor,
+    this.radius = 20,
+    this.horizontalPadding = 14,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(radius),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding.w,
+            vertical: 8.h,
+          ),
+
+          decoration: BoxDecoration(
+            color: bgColor ?? Color(0xFFF4E7E1),
+            borderRadius: BorderRadius.circular(radius),
+          ),
+
+          child: isLoading
+              ? SizedBox(
+                  height: 14,
+                  width: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: c.primary,
+                  ),
+                )
+              : Text(
+                  isUpperCase ? text.toUpperCase() : text,
+                  style:
+                      style ??
+                      TxtStyle.poppinsSemiB(
+                        fs: 12, // ✅ smaller text
+                        w: 600,
+                        h: 1,
+                        color: textColor ?? c.strokePrimary,
+                      ),
                 ),
         ),
       ),

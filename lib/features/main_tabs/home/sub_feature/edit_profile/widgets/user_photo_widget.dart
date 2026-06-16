@@ -10,12 +10,16 @@ class UserPhotoWidget extends StatelessWidget {
   final bool isFromSetup;
   final XFile? selImage;
   final String? imageUrl;
+  final double? size_;
+  final bool? hasBrdr;
 
   const UserPhotoWidget({
     super.key,
     this.selImage,
     this.imageUrl,
     this.isFromSetup = false,
+    this.size_,
+    this.hasBrdr,
   });
 
   void _openViewer(BuildContext context) {
@@ -38,7 +42,7 @@ class UserPhotoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = 72.w;
+    final size = size_ ?? 72.w;
 
     final hasImage =
         selImage != null || (imageUrl != null && imageUrl!.isNotEmpty);
@@ -70,6 +74,7 @@ class UserPhotoWidget extends StatelessWidget {
     if (imageUrl != null && imageUrl!.isNotEmpty && isFromSetup == false) {
       return NetworkImageWidget(
         imageUrl: imageUrl,
+        hasBrdr: hasBrdr,
         radius: size / 2,
         isCircle: true,
         isUser: true,
@@ -82,13 +87,13 @@ class UserPhotoWidget extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: c.inputBorder),
+        border: hasBrdr == true ? Border.all(color: c.inputBorder) : null,
         color: c.inputBackground,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Assets.images.imagePlaceholder
+      child: Assets.images.userPlaceholder
           .image(width: 22.w, height: 22.w, color: c.primary)
-          .mAll(10),
+          .mAll(size_ != null ? size_! * 0.15 : 10),
     );
   }
 }

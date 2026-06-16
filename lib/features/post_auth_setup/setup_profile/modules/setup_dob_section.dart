@@ -4,12 +4,11 @@ import '../controller/setup_profile_controller.dart';
 import 'setup_select_field_with_error.dart';
 
 class SetupDobSection extends StatelessWidget {
-  final SetupProfileController controller;
-
-  const SetupDobSection({super.key, required this.controller});
+  const SetupDobSection({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = SetupProfileController.to;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

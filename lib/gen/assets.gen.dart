@@ -44,6 +44,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/arrow_up_right.svg
   String get arrowUpRight => 'assets/icons/arrow_up_right.svg';
 
+  /// File path: assets/icons/arts_crafts.svg
+  String get artsCrafts => 'assets/icons/arts_crafts.svg';
+
+  /// File path: assets/icons/baby_care.svg
+  String get babyCare => 'assets/icons/baby_care.svg';
+
   /// File path: assets/icons/back_nav_arrow.svg
   String get backNavArrow => 'assets/icons/back_nav_arrow.svg';
 
@@ -101,6 +107,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/child.svg
   String get child => 'assets/icons/child.svg';
 
+  /// File path: assets/icons/child_development.svg
+  String get childDevelopment => 'assets/icons/child_development.svg';
+
   /// File path: assets/icons/circle_check.svg
   String get circleCheck => 'assets/icons/circle_check.svg';
 
@@ -122,6 +131,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/community.svg
   String get community => 'assets/icons/community.svg';
 
+  /// File path: assets/icons/confidence.svg
+  String get confidence => 'assets/icons/confidence.svg';
+
   /// File path: assets/icons/connect_w_mums.svg
   String get connectWMums => 'assets/icons/connect_w_mums.svg';
 
@@ -137,8 +149,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/curved_info.svg
   String get curvedInfo => 'assets/icons/curved_info.svg';
 
+  /// File path: assets/icons/dancing.svg
+  String get dancing => 'assets/icons/dancing.svg';
+
   /// File path: assets/icons/delete_new.svg
   String get deleteNew => 'assets/icons/delete_new.svg';
+
+  /// File path: assets/icons/edit.svg
+  String get edit => 'assets/icons/edit.svg';
+
+  /// File path: assets/icons/educational_play.svg
+  String get educationalPlay => 'assets/icons/educational_play.svg';
 
   /// File path: assets/icons/email.svg
   String get email => 'assets/icons/email.svg';
@@ -161,6 +182,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/freindship.svg
   String get freindship => 'assets/icons/freindship.svg';
 
+  /// File path: assets/icons/friendship.svg
+  String get friendship => 'assets/icons/friendship.svg';
+
   /// File path: assets/icons/gallery.svg.svg
   String get gallerySvg => 'assets/icons/gallery.svg.svg';
 
@@ -172,6 +196,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/hand_wave.svg
   String get handWave => 'assets/icons/hand_wave.svg';
+
+  /// File path: assets/icons/healthy_living.svg
+  String get healthyLiving => 'assets/icons/healthy_living.svg';
 
   /// File path: assets/icons/heart_black.svg
   String get heartBlack => 'assets/icons/heart_black.svg';
@@ -208,6 +235,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/leaf_in_hand.svg
   String get leafInHand => 'assets/icons/leaf_in_hand.svg';
+
+  /// File path: assets/icons/learning.svg
+  String get learning => 'assets/icons/learning.svg';
 
   /// File path: assets/icons/leave.svg
   String get leave => 'assets/icons/leave.svg';
@@ -257,17 +287,29 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mental_wellness.svg
   String get mentalWellness => 'assets/icons/mental_wellness.svg';
 
+  /// File path: assets/icons/mindfulness.svg
+  String get mindfulness => 'assets/icons/mindfulness.svg';
+
+  /// File path: assets/icons/minimalist_lifestyle.svg
+  String get minimalistLifestyle => 'assets/icons/minimalist_lifestyle.svg';
+
   /// File path: assets/icons/minus.svg
   String get minus => 'assets/icons/minus.svg';
 
   /// File path: assets/icons/more_vertical.svg
   String get moreVertical => 'assets/icons/more_vertical.svg';
 
+  /// File path: assets/icons/music.svg
+  String get music => 'assets/icons/music.svg';
+
   /// File path: assets/icons/mute_audio.svg
   String get muteAudio => 'assets/icons/mute_audio.svg';
 
   /// File path: assets/icons/muted_audio.svg
   String get mutedAudio => 'assets/icons/muted_audio.svg';
+
+  /// File path: assets/icons/networking_events.svg
+  String get networkingEvents => 'assets/icons/networking_events.svg';
 
   /// File path: assets/icons/new_mum.svg
   String get newMum => 'assets/icons/new_mum.svg';
@@ -287,8 +329,14 @@ class $AssetsIconsGen {
   /// File path: assets/icons/other.svg
   String get other => 'assets/icons/other.svg';
 
+  /// File path: assets/icons/outdoor_walks.svg
+  String get outdoorWalks => 'assets/icons/outdoor_walks.svg';
+
   /// File path: assets/icons/password.svg
   String get password => 'assets/icons/password.svg';
+
+  /// File path: assets/icons/photography.svg
+  String get photography => 'assets/icons/photography.svg';
 
   /// File path: assets/icons/pin.svg
   String get pin => 'assets/icons/pin.svg';
@@ -305,11 +353,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ques_contact.svg
   String get quesContact => 'assets/icons/ques_contact.svg';
 
+  /// File path: assets/icons/reading.svg
+  String get reading => 'assets/icons/reading.svg';
+
   /// File path: assets/icons/reminder_bell_skew.svg
   String get reminderBellSkew => 'assets/icons/reminder_bell_skew.svg';
 
   /// File path: assets/icons/reminder_bell_straignt.svg
   String get reminderBellStraignt => 'assets/icons/reminder_bell_straignt.svg';
+
+  /// File path: assets/icons/respectful_parenting.svg
+  String get respectfulParenting => 'assets/icons/respectful_parenting.svg';
 
   /// File path: assets/icons/rest_sit.svg
   String get restSit => 'assets/icons/rest_sit.svg';
@@ -347,11 +401,20 @@ class $AssetsIconsGen {
   /// File path: assets/icons/sleep_refresh.svg
   String get sleepRefresh => 'assets/icons/sleep_refresh.svg';
 
+  /// File path: assets/icons/small_business.svg
+  String get smallBusiness => 'assets/icons/small_business.svg';
+
+  /// File path: assets/icons/social_meetups.svg
+  String get socialMeetups => 'assets/icons/social_meetups.svg';
+
   /// File path: assets/icons/star_filled.svg
   String get starFilled => 'assets/icons/star_filled.svg';
 
   /// File path: assets/icons/star_new.svg
   String get starNew => 'assets/icons/star_new.svg';
+
+  /// File path: assets/icons/stay_at_home.svg
+  String get stayAtHome => 'assets/icons/stay_at_home.svg';
 
   /// File path: assets/icons/terms_conditions.svg
   String get termsConditions => 'assets/icons/terms_conditions.svg';
@@ -367,6 +430,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/toddler.svg
   String get toddler => 'assets/icons/toddler.svg';
+
+  /// File path: assets/icons/traveling_with_kids.svg
+  String get travelingWithKids => 'assets/icons/traveling_with_kids.svg';
 
   /// File path: assets/icons/ttc_magnet.svg
   String get ttcMagnet => 'assets/icons/ttc_magnet.svg';
@@ -419,6 +485,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/working_mum_life.svg
   String get workingMumLife => 'assets/icons/working_mum_life.svg';
 
+  /// File path: assets/icons/workshops.svg
+  String get workshops => 'assets/icons/workshops.svg';
+
+  /// File path: assets/icons/writing.svg
+  String get writing => 'assets/icons/writing.svg';
+
   /// List of all assets
   List<String> get values => [
     addPlus,
@@ -431,6 +503,8 @@ class $AssetsIconsGen {
     arrowForwordSm,
     arrowRightLg,
     arrowUpRight,
+    artsCrafts,
+    babyCare,
     backNavArrow,
     badgeNew,
     blockedUser,
@@ -450,6 +524,7 @@ class $AssetsIconsGen {
     checkIn,
     checkboxTick,
     child,
+    childDevelopment,
     circleCheck,
     circleCheckBold,
     closeCircleOutlined,
@@ -457,12 +532,16 @@ class $AssetsIconsGen {
     closeWhite,
     communities,
     community,
+    confidence,
     connectWMums,
     cooking,
     crown,
     currencyNSvg,
     curvedInfo,
+    dancing,
     deleteNew,
+    edit,
+    educationalPlay,
     email,
     emojiWithHeart,
     emotionalSupport,
@@ -470,10 +549,12 @@ class $AssetsIconsGen {
     exploreComm,
     fitness,
     freindship,
+    friendship,
     gallerySvg,
     google,
     handRaise,
     handWave,
+    healthyLiving,
     heartBlack,
     heartGradient,
     heartHalfFilled,
@@ -486,6 +567,7 @@ class $AssetsIconsGen {
     joinConversation,
     leaf,
     leafInHand,
+    learning,
     leave,
     like,
     likeFilled,
@@ -502,24 +584,32 @@ class $AssetsIconsGen {
     mapPin,
     match,
     mentalWellness,
+    mindfulness,
+    minimalistLifestyle,
     minus,
     moreVertical,
+    music,
     muteAudio,
     mutedAudio,
+    networkingEvents,
     newMum,
     noNet,
     noQues,
     notification,
     older,
     other,
+    outdoorWalks,
     password,
+    photography,
     pin,
     pregnancy,
     pregnant,
     profileSelected,
     quesContact,
+    reading,
     reminderBellSkew,
     reminderBellStraignt,
+    respectfulParenting,
     restSit,
     search,
     security,
@@ -532,13 +622,17 @@ class $AssetsIconsGen {
     shieldFill,
     shieldSupport,
     sleepRefresh,
+    smallBusiness,
+    socialMeetups,
     starFilled,
     starNew,
+    stayAtHome,
     termsConditions,
     tickL,
     tickL2,
     tickSm,
     toddler,
+    travelingWithKids,
     ttcMagnet,
     twoLeaf,
     unmutedAudio,
@@ -556,6 +650,8 @@ class $AssetsIconsGen {
     visibilityOn,
     warning,
     workingMumLife,
+    workshops,
+    writing,
   ];
 }
 

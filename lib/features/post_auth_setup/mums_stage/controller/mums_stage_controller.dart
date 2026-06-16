@@ -84,7 +84,7 @@ class MumsStageController extends GetxController {
 
       bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
       profileImage: photoAndBioCtrler.fileImage.value,
-      interestedFields: lifestyleCtrler.selectedInterests.value,
+      interestedFields: lifestyleCtrler.selectedItems.value.toList(),
       mumStage: selectedStage.value,
     );
 
