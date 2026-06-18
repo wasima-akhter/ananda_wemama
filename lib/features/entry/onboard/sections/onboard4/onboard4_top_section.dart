@@ -19,7 +19,7 @@ class Onboard4TopSection extends StatelessWidget {
         Text(
           "Join live sessions with trusted experts.",
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(),
+          style: TxtStyle.poppinsSemiBold12Center(),
         ),
       ],
     );

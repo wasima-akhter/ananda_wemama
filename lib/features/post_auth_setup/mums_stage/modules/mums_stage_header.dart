@@ -16,7 +16,7 @@ class MumsStageHeader extends StatelessWidget {
         Text(
           Strings.motherhoodJourneySubtitle.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(
+          style: TxtStyle.poppinsSemiBold12Center(
             fs: 12,
             color: c.foregroundSecondary.withValues(alpha: 0.8),
           ),
@@ -27,13 +27,13 @@ class MumsStageHeader extends StatelessWidget {
         Text(
           Strings.motherhoodStageQuestion.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(),
+          style: TxtStyle.poppinsSemiBold12Center(),
         ),
 
         Text(
           Strings.selectAllThatApply.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(
+          style: TxtStyle.poppinsSemiBold12Center(
             fs: 12,
             color: c.foregroundSecondary.withValues(alpha: 0.8),
           ),

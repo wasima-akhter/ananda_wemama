@@ -629,9 +629,9 @@ class TxtStyle {
     textBaseline: TextBaseline.alphabetic,
   );
 
-  static TextStyle poppinsSemiBold13Center({Color? color, double? fs}) {
+  static TextStyle poppinsSemiBold12Center({Color? color, double? fs}) {
     return poppinsSemiB(
-      fs: (fs ?? 13),
+      fs: (fs ?? 12),
       w: 600,
       h: 1.4,
       ls: 0.05, // 4% = 0.64px

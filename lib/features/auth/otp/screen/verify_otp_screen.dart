@@ -47,7 +47,7 @@ class VerifyOtpScreen extends StatelessWidget {
                 Text(
                   Strings.enterSixDigitCodeEmail.capEachWord(),
                   textAlign: TextAlign.center,
-                  style: TxtStyle.poppinsSemiBold13Center(),
+                  style: TxtStyle.poppinsSemiBold12Center(),
                 ),
 
                 Gap(itemGap * 5),

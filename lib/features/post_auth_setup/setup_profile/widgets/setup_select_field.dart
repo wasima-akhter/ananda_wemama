@@ -42,7 +42,7 @@ class SetupSelectField extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value.isNotEmpty ? value : placeholder,
-                    style: TxtStyle.poppinsSemiBold13Center(
+                    style: TxtStyle.poppinsSemiBold12Center(
                       color: c.foregroundSecondary.withValues(alpha: 0.7),
                     ),
                     overflow: TextOverflow.ellipsis,

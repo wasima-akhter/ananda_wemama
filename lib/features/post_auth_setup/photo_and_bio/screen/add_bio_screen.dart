@@ -1,7 +1,9 @@
 import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
+import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/utils/validator/validators.dart';
+import '../../../../core/components/ui/feedback/error_field/error_field.dart';
+import '../../../../core/components/ui/helpers/texts/rich_text_widget.dart';
 import '../../../auth/core/auth_button_templates.dart';
 import '../../../auth/core/auth_scaffold.dart';
 import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
@@ -26,31 +28,123 @@ class AddBioScreen extends StatelessWidget {
       child: Column(
         children: [
           BrandedHeaderSection(
-            titleText: Strings.addAProfilePhoto,
-            subtitleText: Strings.addingPhotohelps,
+            titleText: Strings.writeYourBio,
+            subtitleText: Strings.shareLittleAboutYourself,
           ),
 
           Gap(10.h),
           Form(
             key: photoAndBioFormKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // ===== Your Form Fields =====
-                CusDesTypeTextFormField(
-                  controller: pbc.bioDesCtrl,
-                  hintText: Strings.writeBioHere,
-                  hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                  style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                  rad: 12,
+                ContainerBordered(
+                  hasBrdr: true,
+                  contClr: inputBgClr,
+                  brdrClr: c.strokePrimary.withValues(alpha: 0.1),
+                  brdrW: 2,
 
-                  focusNode: pbc.bioDesFocus,
-                  validator: (value) => validateDescription(value),
+                  rad: 12,
+                  vp: 0,
+                  hp: 0,
+
+                  child: Column(
+                    children: [
+                      CusDesTypeTextFormField(
+                        controller: pbc.bioDesCtrl,
+                        hintText: Strings.shareLittleAboutYou,
+                        minHeight: 120.h,
+                        maxHeight: 120.h,
+                        hintStyle: TxtStyle.outfitSemiB(
+                          fs: 14,
+                          color: Color(0xFF856656).withValues(alpha: 0.8),
+                        ),
+                        style: TxtStyle.outfitSemiB(
+                          fs: 14,
+                          color: c.foregroundPrimary.withValues(alpha: 0.8),
+                        ),
+                        rad: 12,
+                        // isNoBrder: true,
+                        bgClr: inputBgClr,
+                        brdrClr: ctransp,
+
+                        focusNode: pbc.bioDesFocus,
+                        // validator: validateBioDescription,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: ValueListenableBuilder<TextEditingValue>(
+                          valueListenable: pbc.bioDesCtrl,
+                          builder: (_, value, _) {
+                            return Text(
+                              "${value.text.trim().length}/250",
+                              style: TxtStyle.outfitSemiB(
+                                w: 500,
+                                fs: 14,
+                                color: const Color(0xFF856656),
+                              ),
+                            );
+                          },
+                        ),
+                      ).marginOnly(bottom: 12, right: 12),
+                    ],
+                  ),
                 ),
 
-                Gap(itemGap * 2.5),
+                Obx(() {
+                  if (pbc.bioError.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
 
-                // 👇 THIS PUSHES BOTTOM SECTION DOWN
+                  return SetupFieldError(error: pbc.bioError.value);
+                }),
+
+                Gap(itemGap * 2),
+
+                //
+                ContainerBordered(
+                  brdrClr: c.primary.withValues(alpha: 0.1),
+                  vp: 8,
+                  hasBrdr: true,
+                  contClr: Color(0xFFFBEDEA),
+                  child: Row(
+                    children: [
+                      Builder(
+                        builder: (context) {
+                          final size = S.w * 0.16;
+                          return SizedBox(
+                            width: size,
+                            child: SvgIcon(
+                              iconPath: Assets.icons.ideas,
+                              height: size * 0.8,
+                            ),
+                          );
+                        },
+                      ),
+                      //
+                      AppRichText(
+                        defaultStyle: TxtStyle.outfitSemiB(
+                          fs: 12,
+                          color: c.foregroundPrimary,
+                          w: 600,
+                        ),
+                        parts: [
+                          RichTextPart(text: 'Ideas: '),
+                          RichTextPart(
+                            text:
+                                'your interest,\nyour motherhood journey, or anything\nyou would like to share.',
+                            style: TxtStyle.outfitSemiB(
+                              fs: 12,
+                              color: const Color(0xFF856656),
+                              w: 600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 Gap(itemGap * 3),
               ],
             ),

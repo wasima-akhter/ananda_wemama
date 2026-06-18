@@ -28,7 +28,7 @@ class ForgotPassBeforeVerify extends StatelessWidget {
         Text(
           Strings.sendVerificationEmail.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(),
+          style: TxtStyle.poppinsSemiBold12Center(),
         ),
         Gap(30.h),
         // SEND OTP SECTION

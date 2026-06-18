@@ -24,7 +24,7 @@ class AuthFormEmailField extends StatelessWidget {
       ),
       fillColor: inputBgClr,
       brdrClr: newBorderClr,
-      hintStyle: TxtStyle.poppinsSemiBold13Center(),
+      hintStyle: TxtStyle.poppinsSemiBold12Center(),
       style: TxtStyle.poppins(),
 
       hintText: hintText ?? Strings.email,
@@ -65,7 +65,7 @@ class AuthFormPasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CusPassTypeTextFormField(
-      hintStyle: TxtStyle.poppinsSemiBold13Center(),
+      hintStyle: TxtStyle.poppinsSemiBold12Center(),
       style: TxtStyle.poppins(),
       fillColor: inputBgClr,
       brClr: newBorderClr,
@@ -121,7 +121,7 @@ class AuthFormNameField extends StatelessWidget {
       ),
       fillColor: inputBgClr,
       brdrClr: newBorderClr,
-      hintStyle: TxtStyle.poppinsSemiBold13Center(color: hintColor),
+      hintStyle: TxtStyle.poppinsSemiBold12Center(color: hintColor),
       style: TxtStyle.poppins(),
 
       hintText: hintText ?? Strings.enterYourFirstName,

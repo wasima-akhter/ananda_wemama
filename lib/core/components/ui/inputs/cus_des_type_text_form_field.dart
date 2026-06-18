@@ -59,7 +59,10 @@ class CusDesTypeTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: (maxHeight ?? 120).h, minHeight: (minHeight ?? 80).h),
+      constraints: BoxConstraints(
+        maxHeight: (maxHeight ?? 120).h,
+        minHeight: (minHeight ?? 80).h,
+      ),
       child: Scrollbar(
         thickness: thickness?.w ?? 0,
         interactive: thickness != null,
@@ -73,6 +76,8 @@ class CusDesTypeTextFormField extends StatelessWidget {
           maxLines: null,
           minLines: minLines ?? 3,
           textInputAction: TextInputAction.newline,
+          //
+          cursorColor: c.primary,
           decoration: InputDecoration(
             filled: true,
             fillColor: bgClr ?? c.inputBackground, // background color
@@ -80,10 +85,12 @@ class CusDesTypeTextFormField extends StatelessWidget {
                 contentPadding ??
                 (isPaddingLess == true
                     ? EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h)
-                    : EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h)),
+                    : EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h)),
             hint: Text(
               hintText,
-              style: hintStyle ?? TxtStyle.outfit(fs: 13, color: c.primary.withOpacity(0.6)),
+              style:
+                  hintStyle ??
+                  TxtStyle.outfit(fs: 13, color: c.primary.withOpacity(0.6)),
             ),
             suffixIcon: suffix,
 

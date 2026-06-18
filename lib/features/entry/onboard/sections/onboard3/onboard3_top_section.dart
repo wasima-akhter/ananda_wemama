@@ -29,7 +29,7 @@ class Onboard3TopSection extends StatelessWidget {
         Text(
           Strings.motherhoodFeelsAlone,
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center().copyWith(
+          style: TxtStyle.poppinsSemiBold12Center().copyWith(
             // letterSpacing: -0.1,
           ),
         ),

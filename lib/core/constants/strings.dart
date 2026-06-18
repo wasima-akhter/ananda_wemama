@@ -589,6 +589,11 @@ class Strings {
   static const String addingPhotohelps =
       "Adding a photo helps other\nmums connect with you";
 
+  static const String shareLittleAboutYou = "Share a little about you...";
+  static const String writeYourBio = "Write your bio";
+  static const String shareLittleAboutYourself =
+      "Share a little about yourself so other\nmums can connect with you.";
+
   //
   static const String whatMattersToYou = "What Matters to you right now?";
   static const String selectUpTo10 = "Select up to 10 that apply";

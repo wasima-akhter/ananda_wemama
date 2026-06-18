@@ -22,7 +22,7 @@ class ForgotPassFinalView extends StatelessWidget {
         Text(
           Strings.passwordChangedContinueLogin.capEachWord(),
           textAlign: TextAlign.center,
-          style: TxtStyle.poppinsSemiBold13Center(),
+          style: TxtStyle.poppinsSemiBold12Center(),
         ),
         Gap(itemGap * 3),
 

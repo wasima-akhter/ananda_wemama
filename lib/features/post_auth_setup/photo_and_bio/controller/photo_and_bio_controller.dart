@@ -15,6 +15,20 @@ class PhotoAndBioController extends GetxController {
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
+  //
+  final bioText = ''.obs;
+  late Worker _bioWorker;
+  final bioError = ''.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    bioDesCtrl.addListener(() {
+      bioError.value = validateBioDescription(bioDesCtrl.text.trim()) ?? '';
+    });
+  }
+
   /// 🔹 Unfocus all fields
   void unfocusAll() {
     bioDesFocus.unfocus();
@@ -62,10 +76,22 @@ class PhotoAndBioController extends GetxController {
     isLoading_.value = false;
   }
 
+  bool validateSelections() {
+    final validation = validateBioDescription(bioDesCtrl.text.trim());
+
+    bioError.value = validation ?? '';
+
+    return validation == null;
+  }
+
   Future<void> onTapContinueBio(GlobalKey<FormState> formKey) async {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
+
+    if (!validateSelections()) {
+      return;
+    }
 
     unfocusAll();
     isLoading_.value = true;
@@ -77,8 +103,13 @@ class PhotoAndBioController extends GetxController {
 
   @override
   void onClose() {
+    _bioWorker.dispose();
+
     bioDesCtrl.dispose();
     bioDesFocus.dispose();
+
+    unfocusAll();
+
     super.onClose();
   }
 }

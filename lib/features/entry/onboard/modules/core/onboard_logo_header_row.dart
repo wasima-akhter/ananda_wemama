@@ -80,7 +80,7 @@ class BrandedHeaderSection extends StatelessWidget {
           Text(
             subtitleText.capEachWord(),
             textAlign: TextAlign.center,
-            style: TxtStyle.poppinsSemiBold13Center(color: subtitleTextColor),
+            style: TxtStyle.poppinsSemiBold12Center(color: subtitleTextColor),
           ),
       ],
     );

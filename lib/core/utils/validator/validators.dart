@@ -59,6 +59,18 @@ String? validateDescription(String? value) {
   return null;
 }
 
+String? validateBioDescription(String? value) {
+  if (value == null || value.trim().isEmpty) {
+    return 'Content is required';
+  }
+
+  if (value.length > 250) {
+    return 'Content can be upto 250 characters';
+  }
+
+  return null;
+}
+
 String? validatePhone(String? value) {
   if (value == null || value.trim().isEmpty) {
     return "Phone number is required";
