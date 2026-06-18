@@ -533,6 +533,9 @@ class Strings {
   static const String enterSixDigitCode = "Enter your 6 digit code";
   static const String welcomeBack = "Welcome Back";
   static const String welcomeFoundingMum = "Welcome, Founding Mum";
+
+  static const String abc = "🎉";
+
   static const String whatThisMeans = "What This Means";
   static const String howMumsUse = "How Most Mums Use WeMama";
   static const String ourPromise = "Our Promise To You";

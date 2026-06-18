@@ -32,6 +32,8 @@ class RoutePaths {
   static const lifeStyleAndInterests = '/lifeStyleAndInterests';
   static const mumsStage = '/mumsStage';
   static const mumsStageFinish = '/mumsStageFinish';
+  //
+  static const finishSettingProfile = '/finishSettingProfile';
   static const subChoosePlan = '/subChoosePlan';
   static const welcomeFundingMum = '/welcomeFundingMum';
   static const addChildren = '/addChildren';

@@ -96,7 +96,7 @@ class PhotoAndBioController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
-    Get.toNamed(RoutePaths.welcomeFundingMum);
+    Get.toNamed(RoutePaths.finishSettingProfile);
 
     isLoading_.value = false;
   }

@@ -7,6 +7,7 @@ import 'package:mama_app/features/more/blocked_user/screen/blocked_user_screen.d
 import 'package:mama_app/features/more/legal/privacy_policy/screen/privacy_policy_screen.dart';
 import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_and_conditions_screen.dart';
 import 'package:mama_app/features/more/support/contact_support/screen/contact_support_screen.dart';
+import 'package:mama_app/features/post_auth_setup/finish_setting_profile/screen/finish_setting_profile_screen.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_upgrade_screen.dart';
 
 import '../core/bind/all_bindings.dart';
@@ -242,6 +243,10 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.mumsStageFinish,
       page: () => const MumsStageFinishScreen(),
+    ),
+    GetPage(
+      name: RoutePaths.finishSettingProfile,
+      page: () => const FinishSettingProfileScreen(),
     ),
     GetPage(
       name: RoutePaths.subChoosePlan,
