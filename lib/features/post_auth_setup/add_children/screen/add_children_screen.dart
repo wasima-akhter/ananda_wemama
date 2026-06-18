@@ -28,10 +28,13 @@ class AddChildrenScreen extends StatelessWidget {
           const ChildCreateCard(),
           Gap(16.h),
 
-          if (controller.children.isNotEmpty) ...[
-            AddChildrenListHeader(),
-            Gap(12.h),
-          ],
+          Obx(() {
+            if (controller.children.isNotEmpty) {
+              return Column(children: [AddChildrenListHeader(), Gap(12.h)]);
+            }
+
+            return const SizedBox.shrink();
+          }),
 
           AddChildrenList(),
         ],

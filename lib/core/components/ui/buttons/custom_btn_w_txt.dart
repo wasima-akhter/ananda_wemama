@@ -164,7 +164,7 @@ class CustomBtnWTxtNew extends StatelessWidget {
     final borderColor = isOutlined ? newBorderClr : Colors.transparent;
 
     final bgColor = switch (variant) {
-      BtnVariant.primary => c.primary,
+      BtnVariant.primary => c.strokePrimary,
       BtnVariant.outlined => ctransp,
       BtnVariant.ghost => Colors.transparent,
       BtnVariant.disabled => c.inputBackground.withValues(alpha: 0.5),
@@ -174,8 +174,8 @@ class CustomBtnWTxtNew extends StatelessWidget {
         txtClr ??
         switch (variant) {
           BtnVariant.primary => c.backgroundSecondary,
-          BtnVariant.outlined => c.primary,
-          BtnVariant.ghost => c.primary,
+          BtnVariant.outlined => c.strokePrimary,
+          BtnVariant.ghost => c.strokePrimary,
           BtnVariant.disabled => c.foregroundSecondary,
         };
 
@@ -277,7 +277,7 @@ class AppCompactButton extends StatelessWidget {
                   width: 14,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: c.primary,
+                    color: c.strokePrimary,
                   ),
                 )
               : Text(

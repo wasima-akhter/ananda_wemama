@@ -17,7 +17,7 @@ class LifestyleAndInterestsScreen extends StatelessWidget {
     return AuthScaffold(
       bottomWidget: AuthButton(
         isLoading: false,
-        onTap: () => Get.toNamed(RoutePaths.photoAndBio),
+        onTap: lic.onTapContinue,
         //  isLoading: msc.isLoading,
         //  msc.onTapContinue(mumStageFormKey),
       ),

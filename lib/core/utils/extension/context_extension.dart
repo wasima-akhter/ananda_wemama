@@ -319,17 +319,20 @@ class Snack {
     Get.closeCurrentSnackbar();
     Get.showSnackbar(
       GetSnackBar(
-        borderColor: snackWarningTxtClr.withOpacity(0.5),
+        borderColor: snackWarningTxtClr.withValues(alpha: 0.5),
         boxShadows: boxShadowAllSides,
         messageText: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              child: SvgIcon(
-                iconPath: IconsPath.info,
-                height: 30, // fixed icon height
-              ),
+              width: 25.w,
+              child:
+                  // SvgIcon(
+                  //   iconPath: IconsPath.info,
+                  //   height: 30, // fixed icon height
+                  // ),
+                  Icon(Icons.warning_rounded, color: white),
             ),
             Gap(itemGap),
 
@@ -337,22 +340,19 @@ class Snack {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (title != null)
-                    Text(
-                      title,
-                      style: TxtStyle.outfit(color: snackWarningTxtClr, w: 600),
-                    ),
+                  // if (title != null)
                   Text(
-                    message,
-                    style: TxtStyle.outfit(color: snackWarningTxtClr),
+                    title ?? "Warning",
+                    style: TxtStyle.outfit(color: white, w: 600),
                   ),
+                  Text(message, style: TxtStyle.outfit(color: white)),
                 ],
               ),
             ),
           ],
         ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: snackWarningBg,
+        backgroundColor: c.strokePrimary.withValues(alpha: 1),
         margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: S.viewPaddingBottom,

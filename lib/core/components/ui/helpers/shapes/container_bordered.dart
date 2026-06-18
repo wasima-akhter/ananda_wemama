@@ -66,7 +66,7 @@ class ContainerBordered extends StatelessWidget {
                           color: brdrClr ?? c.inputBorder,
                           width: brdrW ?? 0.6,
                         ),
-                  color: contClr ?? bgClr,
+                  color: contClr ?? ctransp,
                   boxShadow: boxShadow,
                 ),
 
@@ -93,7 +93,7 @@ class ContainerBordered extends StatelessWidget {
                           color: brdrClr ?? c.inputBorder,
                           width: brdrW ?? 0.6,
                         ),
-                  color: contClr ?? bgClr,
+                  color: contClr ?? ctransp,
                   boxShadow: boxShadow,
                 ),
 

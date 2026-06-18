@@ -1,18 +1,16 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/network/helpers/network_helpers.dart';
-import '../../../../core/utils/validator/validators.dart';
 import '../../../auth/core/auth_button_templates.dart';
 import '../../../auth/core/auth_scaffold.dart';
 import '../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
 import '../../../main_tabs/home/sub_feature/edit_profile/widgets/user_photo_widget.dart';
 import '../controller/photo_and_bio_controller.dart';
 
-class PhotoAndBioScreen extends StatelessWidget {
-  const PhotoAndBioScreen({super.key});
+class AddPhotoScreen extends StatelessWidget {
+  const AddPhotoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class PhotoAndBioScreen extends StatelessWidget {
       bottomWidget: Obx(
         () => AuthButton(
           isLoading: pbc.isLoading,
-          onTap: () => pbc.onTapContinuePhotoBio(photoAndBioFormKey),
+          onTap: () => pbc.onTapContinuePhoto(photoAndBioFormKey),
         ),
       ),
       child: Column(
@@ -34,7 +32,7 @@ class PhotoAndBioScreen extends StatelessWidget {
             subtitleText: Strings.addingPhotohelps,
           ),
 
-          Gap(10.h),
+          Gap(itemGap * 4),
           Form(
             key: photoAndBioFormKey,
             child: Column(
@@ -104,23 +102,40 @@ class PhotoAndBioScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Gap(itemGap),
+                Gap(itemGap * 2),
 
-                // ===== Your Form Fields =====
-                CusDesTypeTextFormField(
-                  controller: pbc.bioDesCtrl,
-                  hintText: Strings.writeBioHere,
-                  hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                  style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-                  rad: 12,
-
-                  focusNode: pbc.bioDesFocus,
-                  validator: (value) => validateDescription(value),
+                // camera tap text
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ContainerBordered(
+                      hp: 12,
+                      rad: 12,
+                      vp: 3,
+                      contClr: inputBgClr,
+                      child: Row(
+                        children: [
+                          SvgIconColored(
+                            iconPath: Assets.icons.cameraNew,
+                            iconColor: Color(0xFFB2654C),
+                            height: 20,
+                          ),
+                          Gap(6),
+                          Text(
+                            "Tap to upload photo",
+                            style: TxtStyle.poppinsSemiB(
+                              fs: 10,
+                              w: 600,
+                              ls: 0.4,
+                              color: Color(0xFF856656),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
 
-                Gap(itemGap * 2.5),
-
-                // 👇 THIS PUSHES BOTTOM SECTION DOWN
                 Gap(itemGap * 3),
               ],
             ),

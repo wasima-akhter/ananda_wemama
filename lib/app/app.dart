@@ -18,7 +18,9 @@ class App extends StatelessWidget {
   const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
-    return hasInternet ? RoutePaths.setupProfile : RoutePaths.offlineScreen;
+    return hasInternet
+        ? RoutePaths.lifeStyleAndInterests
+        : RoutePaths.offlineScreen;
   }
 
   @override

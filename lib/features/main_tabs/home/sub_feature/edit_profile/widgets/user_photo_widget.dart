@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../../core/components/ui/dialogs/popups.dart';
-import '../../../../../../gen/assets.gen.dart';
 
 class UserPhotoWidget extends StatelessWidget {
   final bool isFromSetup;
@@ -91,8 +90,9 @@ class UserPhotoWidget extends StatelessWidget {
         color: c.inputBackground,
       ),
       clipBehavior: Clip.antiAlias,
-      child: Assets.images.userPlaceholder
-          .image(width: 22.w, height: 22.w, color: c.primary)
+      child: Icon(Icons.person, size: size / 2, color: c.strokePrimary)
+          //  Assets.images.userPlaceholder
+          // .image(width: 22.w, height: 22.w, color: c.primary)
           .mAll(size_ != null ? size_! * 0.15 : 10),
     );
   }

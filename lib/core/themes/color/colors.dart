@@ -57,19 +57,64 @@ final lightColors = ColorModel(
 
   // Cards
   cardPrimary: AppPalette.rose100,
-  cardOngoing: AppPalette.rose200,
-  cardReminder: AppPalette.cream200,
-  cardMood: AppPalette.cream100,
+  cardOngoing: AppPalette.beige200,
+  cardReminder: AppPalette.beige300,
+  cardMood: AppPalette.mauve200,
 
   // Mood card internal
-  moodGistBackground: AppPalette.cream75,
-  moodTagBackground: AppPalette.cream75,
+  moodGistBackground: AppPalette.brown700_10,
+  moodTagBackground: AppPalette.brown700_10,
 
   // Status
   warning: AppPalette.warning,
   error: AppPalette.error,
   success: AppPalette.success,
 );
+
+/*  /// BRAND COLORS
+  primary: const Color(0xFF904224),
+  secondary: const Color(0xFFC76D46),
+
+  /// NAVIGATION
+  navItemSelected: const Color(0xFF904224),
+  navItemUnselected: const Color(0xFFA6827F),
+
+  /// TEXT COLORS
+  textPrimary: const Color(0xFF904224),
+  textSecondary: const Color(0xFFC76D46),
+  textOnPrimary: const Color(0xFFFDECE9),
+
+  /// BUTTONS
+  buttonPrimary: const Color(0xFF904224),
+  buttonText: const Color(0xFFFDECE9),
+
+  /// INPUT FIELDS
+  inputBackground: const Color(0xFFFDECE4),
+  inputBorder: const Color(0xFFC76D46),
+
+  /// COMPONENTS
+  componentBorder: const Color(0xFFC76D46),
+  componentFill: const Color(0xFFC76D46),
+
+  /// BACKGROUNDS
+  scaffoldBackground: const Color(0xFFFBF2ED),
+  bottomSheetBackground: const Color(0xFFF6CBC1),
+
+  /// CARDS
+  cardPrimary: const Color(0xFFFAE0D8),
+  cardOngoing: const Color(0xFFEADBD2),
+  cardReminder: const Color(0xFFE1C6B6),
+  cardMood: const Color(0xFFDFCECE),
+
+  /// MOOD CARD INTERNAL
+  moodGistBackground: const Color(0xFFF6E6DC),
+  moodTagBackground: const Color(0xFFF6E6DC),
+
+  /// warning, error, success
+  warning: Colors.amber,
+  error: Colors.redAccent,
+  success: Colors.green,
+  */
 
 /// =======================
 /// DARK THEME COLORS
@@ -112,27 +157,22 @@ final darkColors = ColorModel(
   buttonText: AppPalette.cream100,
 
   // Input fields
-  inputBackground: AppPalette.brown925,
-  inputBorder: AppPalette.brown700,
-
+  inputBackground: AppPalette.brown925, // #512712
+  inputBorder: AppPalette.brown700, // #C76D46
   // Components
-  componentBorder: AppPalette.brown700,
-  componentFill: AppPalette.brown925,
-
+  componentBorder: AppPalette.brown700, // #C76D46
+  componentFill: AppPalette.brown925, // #512712
   // Scaffold / Bottom sheet
-  scaffoldBackground: AppPalette.brown950,
-  bottomSheetBackground: AppPalette.brown925,
-
+  scaffoldBackground: AppPalette.brown950, // #3B1D0F
+  bottomSheetBackground: AppPalette.brown925, // #512712
   // Cards
-  cardPrimary: AppPalette.brown925,
-  cardOngoing: AppPalette.brown850,
-  cardReminder: AppPalette.brown850,
-  cardMood: AppPalette.brown850,
-
+  cardPrimary: AppPalette.brown925, // #512712
+  cardOngoing: AppPalette.brown850, // #922604
+  cardReminder: AppPalette.brown850, // #922604
+  cardMood: AppPalette.brown850, // #922604
   // Mood card internal
-  moodGistBackground: AppPalette.brown850,
-  moodTagBackground: AppPalette.brown700_10,
-
+  moodGistBackground: AppPalette.brown850, // #922604
+  moodTagBackground: AppPalette.brown700_10, // #F6E6DC
   // Status
   warning: AppPalette.warning,
   error: AppPalette.error,
@@ -149,7 +189,7 @@ class AppPalette {
   static const brown950 = Color(0xFF3B1D0F);
   static const brown925 = Color(0xFF512712);
   static const brown900 = Color(0xFF904224);
-  static const brown850 = Color(0xFF922604); // 942200
+  static const brown850 = Color(0xFF922604);
   static const brown700 = Color(0xFFC76D46);
   static const brown700_10 = Color(0xFFF6E6DC);
   static const brown650 = Color(0xFFC96C4F);
@@ -168,6 +208,13 @@ class AppPalette {
   static const rose50 = Color(0xFFF9E0D6);
   static const rose100 = Color(0xFFFAE0D8);
   static const rose200 = Color(0xFFF6CBC1);
+
+  // =======================
+  // ADDITIONAL CARD COLORS
+  // =======================
+  static const beige200 = Color(0xFFEADBD2); // cardOngoing
+  static const beige300 = Color(0xFFE1C6B6); // cardReminder
+  static const mauve200 = Color(0xFFDFCECE); // cardMood
 
   // =======================
   // OVERLAYS

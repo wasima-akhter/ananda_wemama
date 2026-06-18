@@ -33,7 +33,8 @@ class PhotoAndBioController extends GetxController {
   Future<void> pickSingleImage(ImageSource source) async {
     final picker = ImagePicker();
 
-    final XFile? selectedImage = await picker.pickImage( imageQuality: 60,
+    final XFile? selectedImage = await picker.pickImage(
+      imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
@@ -48,7 +49,7 @@ class PhotoAndBioController extends GetxController {
   }
   /////
 
-  Future<void> onTapContinuePhotoBio(GlobalKey<FormState> formKey) async {
+  Future<void> onTapContinuePhoto(GlobalKey<FormState> formKey) async {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
@@ -56,7 +57,20 @@ class PhotoAndBioController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
-    Get.toNamed(RoutePaths.lifeStyleAndInterests);
+    Get.toNamed(RoutePaths.addBio);
+
+    isLoading_.value = false;
+  }
+
+  Future<void> onTapContinueBio(GlobalKey<FormState> formKey) async {
+    final isValid = validateForm(formKey);
+
+    if (!isValid || isLoading_.value) return;
+
+    unfocusAll();
+    isLoading_.value = true;
+
+    Get.toNamed(RoutePaths.welcomeFundingMum);
 
     isLoading_.value = false;
   }

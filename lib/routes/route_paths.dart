@@ -27,7 +27,8 @@ class RoutePaths {
   // 🔹 Post-Signup / Profile Setup
   // ─────────────────────────────
   static const setupProfile = '/setupProfile';
-  static const photoAndBio = '/photoAndBio';
+  static const addPhoto = '/addPhoto';
+  static const addBio = '/addBio';
   static const lifeStyleAndInterests = '/lifeStyleAndInterests';
   static const mumsStage = '/mumsStage';
   static const mumsStageFinish = '/mumsStageFinish';

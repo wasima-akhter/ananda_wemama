@@ -28,8 +28,7 @@ class AuthFormEmailField extends StatelessWidget {
       style: TxtStyle.poppins(),
 
       hintText: hintText ?? Strings.email,
-      prefix: SvgIconColored(
-        iconColor: c.strokePrimary,
+      prefix: SvgIcon(
         iconPath: IconsPath.email,
         height: 22,
       ).mOnly(left: 15, right: 6),
@@ -76,8 +75,7 @@ class AuthFormPasswordField extends StatelessWidget {
 
       hintText: hintText ?? Strings.password,
 
-      prefix: SvgIconColored(
-        iconColor: c.strokePrimary,
+      prefix: SvgIcon(
         iconPath: IconsPath.lock,
         height: 22,
       ).mOnly(left: 15, right: 6),

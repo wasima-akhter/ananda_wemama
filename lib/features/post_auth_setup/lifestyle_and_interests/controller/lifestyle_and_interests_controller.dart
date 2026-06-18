@@ -130,11 +130,14 @@ class LifestyleAndInterestsController extends GetxController {
   }
 
   void onTapContinue() {
+    debugPrint("Selected count: ${selectedItems.length}");
+
     if (selectedItems.length < 3) {
+      debugPrint("Showing warning");
       Snack.showWarning('Select at least 3 interests');
       return;
     }
 
-    Get.toNamed(RoutePaths.mumsStage);
+    Get.toNamed(RoutePaths.addPhoto);
   }
 }
