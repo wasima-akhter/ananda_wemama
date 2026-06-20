@@ -49,12 +49,13 @@ class SafeAssetImage extends StatelessWidget {
   }
 
   int? _cacheWidth() {
-    if (width == null) return null;
-    return (width! * 2).toInt(); // retina-safe downsampling
+    if (width == null || !width!.isFinite)
+      return null; // 👈 guard against Infinity/NaN
+    return (width! * 2).toInt();
   }
 
   int? _cacheHeight() {
-    if (height == null) return null;
+    if (height == null || !height!.isFinite) return null; // 👈 same guard
     return (height! * 2).toInt();
   }
 

@@ -19,21 +19,26 @@ class GentleReminderCard extends StatelessWidget {
         loading: () => TodaysReminderShimmer(),
 
         data: () => ContainerBordered(
-          contClr: c.cardReminder,
+          // contClr: c.cardReminder,
+          contClr: Color(0xFFF8E6DC),
           rad: 20,
           hp: 16,
           vp: 12,
           alignment: Alignment.centerLeft,
+
           boxShadow: boxShadowBottom(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 Strings.todaysReminder.capEachWord(),
-                style: TxtStyle.outfitSmTitle,
+                style: TxtStyle.outfitSemiB(fs: 14, w: 500),
               ),
               Gap(4),
-              Text(msg.capEachWord(), style: TxtStyle.outfitSmSecNor),
+              Text(
+                msg.capEachWord(),
+                style: TxtStyle.outfitSemiB(fs: 13, color: c.strokePrimary),
+              ),
             ],
           ),
         ),

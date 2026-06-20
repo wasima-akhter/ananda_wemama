@@ -8,11 +8,19 @@ class LifestyleInterestsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppGridView(
-      items: LifestyleAndInterestsController.to.lifestyleInterests,
-      itemBuilder: (_, item, _) {
-        return LifestyleInterestTile(item: item);
-      },
-    );
+    final lic = LifestyleAndInterestsController.to;
+
+    return Obx(() {
+      final items = lic.showAllInterests.value
+          ? lic.lifestyleInterests
+          : lic.lifestyleInterests.sublist(0, 12);
+
+      return AppGridView(
+        items: items,
+        itemBuilder: (_, item, _) {
+          return LifestyleInterestTile(item: item);
+        },
+      );
+    });
   }
 }

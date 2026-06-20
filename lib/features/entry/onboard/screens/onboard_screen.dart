@@ -37,21 +37,21 @@ class OnboardScreen extends StatelessWidget {
 
               return Column(
                 children: [
-                  Expanded(
-                    flex: ScreenSize.isTallHeight ? 15 : 16,
+                  Container(
+                    // flex: ScreenSize.isTallHeight ? 15 : 16,
                     child: OnboardTopSection(cfg: cfg),
                   ),
 
-                  Expanded(
-                    flex: getImageFlex(),
+                  Container(
+                    // flex: getImageFlex(),
                     child: Container(
                       // color: Colors.amber,
                       child: OnboardImageSection(),
                     ),
                   ),
 
-                  Expanded(
-                    flex: 6,
+                  Container(
+                    // flex: 6,
                     child: Container(
                       // color: Colors.green,
                       child: OnboardBottomSection(cfg: cfg),

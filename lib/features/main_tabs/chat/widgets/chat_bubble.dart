@@ -55,7 +55,7 @@ class ChatBubbleCont extends StatelessWidget {
           rad: 14,
           vp: 8,
           hp: 10,
-          contClr: _isMe ? c.bottomSheetBackground : c.cardPrimary,
+          contClr: _isMe ? c.secondary : ctransp,
           alignment: null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,8 +69,9 @@ class ChatBubbleCont extends StatelessWidget {
                       child: Text(
                         message.msg,
                         style: TxtStyle.outfit(
+                          fs: 12,
                           w: _isMe ? 500 : 400,
-                          color: c.secondary,
+                          color: _isMe ? white : c.foregroundPrimary,
                         ),
                       ),
                     ),
@@ -302,7 +303,7 @@ class ChatBubbleCont extends StatelessWidget {
         maxLines: 2,
         softWrap: true,
         overflow: TextOverflow.visible,
-        style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.secondary),
+        style: TxtStyle.outfitSemiB(fs: 10, w: 500, color: c.strokePrimary),
       ),
     );
   }

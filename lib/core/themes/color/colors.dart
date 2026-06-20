@@ -32,7 +32,7 @@ final lightColors = ColorModel(
 
   // Navigation
   navItemSelected: AppPalette.brown900,
-  navItemUnselected: AppPalette.brown650,
+  navItemUnselected: AppPalette.brown_,
 
   // Text
   textPrimary: AppPalette.brown900,
@@ -145,7 +145,7 @@ final darkColors = ColorModel(
 
   // Navigation
   navItemSelected: AppPalette.brown900,
-  navItemUnselected: AppPalette.brown650,
+  navItemUnselected: AppPalette.brown_,
 
   // Text
   textPrimary: AppPalette.cream100,
@@ -193,6 +193,7 @@ class AppPalette {
   static const brown700 = Color(0xFFC76D46);
   static const brown700_10 = Color(0xFFF6E6DC);
   static const brown650 = Color(0xFFC96C4F);
+  static const brown_ = Color(0xFFA6827F);
 
   // =======================
   // LIGHT SURFACES

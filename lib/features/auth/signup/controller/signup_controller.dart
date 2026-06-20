@@ -22,9 +22,6 @@ class SignupController extends GetxController {
   // 🔹 UI State
   // ─────────────────────────────
 
-  final agreedToTerms = false.obs;
-  void toggleAgreement() => agreedToTerms.toggle();
-
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
@@ -81,11 +78,6 @@ class SignupController extends GetxController {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
-
-    if (!agreedToTerms.value) {
-      Snack.showWarning("Please agree to the Terms of Service to continue.");
-      return;
-    }
 
     unfocusAll();
     isLoading_.value = true;

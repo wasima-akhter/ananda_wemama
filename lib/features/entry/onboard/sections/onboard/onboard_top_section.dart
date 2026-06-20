@@ -13,33 +13,34 @@ class OnboardTopSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: Container(
-            // color: Colors.blue,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Expanded(
-                //   // flex: 9,
-                //   child: Column(children: [OnboardLogoSection()]),
-                // ),
-                Column(
-                  children: [
-                    Gap(MediaQuery.of(context).padding.top + 5.h),
-                    OnboardLogoSection(),
-                  ],
-                ), // const Spacer(),
-                // Expanded(
-                //   // flex: 3,
-                //   child: Column(children: [OnboardWomenOnlyBadge()]),
-                // ),
-                Container(
-                  // color: Colors.green,
-                  child: OnboardWomenOnlyBadge(),
-                ),
-                OnboardHeadlineSection(),
-              ],
-            ),
+        Container(
+          // color: Colors.blue,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // Expanded(
+              //   // flex: 9,
+              //   child: Column(children: [OnboardLogoSection()]),
+              // ),
+              Column(
+                children: [
+                  Gap(MediaQuery.of(context).padding.top + 5.h),
+                  OnboardLogoSection(),
+                ],
+              ), // const Spacer(),
+              // Expanded(
+              //   // flex: 3,
+              //   child: Column(children: [OnboardWomenOnlyBadge()]),
+              // ),
+              Gap(ScreenSize.isSmallWidth ? 0 : 12.h),
+              Container(
+                // color: Colors.green,
+                child: OnboardWomenOnlyBadge(),
+              ),
+              Gap(ScreenSize.isSmallWidth ? 0 : 12.h),
+
+              OnboardHeadlineSection(),
+            ],
           ),
         ),
         // Expanded(

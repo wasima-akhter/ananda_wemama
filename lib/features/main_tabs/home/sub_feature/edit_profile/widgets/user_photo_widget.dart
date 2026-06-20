@@ -41,7 +41,7 @@ class UserPhotoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = size_ ?? 72.w;
+    final size = size_ ?? (ScreenSize.isSmallWidth ? 80 : 72).w;
 
     final hasImage =
         selImage != null || (imageUrl != null && imageUrl!.isNotEmpty);
@@ -72,6 +72,7 @@ class UserPhotoWidget extends StatelessWidget {
     // / 2️⃣ Network image
     if (imageUrl != null && imageUrl!.isNotEmpty && isFromSetup == false) {
       return NetworkImageWidget(
+        hasShadow: true,
         imageUrl: imageUrl,
         hasBrdr: hasBrdr,
         radius: size / 2,

@@ -34,7 +34,7 @@ class PopupInputTile extends StatelessWidget {
       child: Container(
         height: height,
         padding:
-            padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 18.h),
+            padding ?? EdgeInsets.symmetric(horizontal: 14.w, vertical: 15.h),
         decoration: BoxDecoration(
           color: bgClr ?? c.cardPrimary,
           borderRadius: (rad ?? 30).brdrRad,
@@ -48,16 +48,12 @@ class PopupInputTile extends StatelessWidget {
             Expanded(
               child: Text(
                 hasValue ? value! : hintText,
-                style: TxtStyle.outfitSemiB(
-                  fs: 14,
-                  w: hasValue ? 400 : 500,
-                  color: c.primary,
-                ),
+                style: TxtStyle.outfitSemiB(fs: 14, w: hasValue ? 400 : 500),
               ),
             ),
 
             // 👇 Arrow suffix
-            SvgIcon(iconPath: IconsPath.arrowForwardSmall, height: 20),
+            SvgIcon(iconPath: IconsPath.arrowForwardSmall, height: 14),
           ],
         ),
       ),

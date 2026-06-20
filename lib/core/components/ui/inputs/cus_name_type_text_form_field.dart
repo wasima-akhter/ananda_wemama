@@ -106,7 +106,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
                   ]
                 : [],
             keyboardType: keyboardType ?? TextInputType.text,
-            style: style ?? TxtStyle.outfit(fs: 14, color: c.primary),
+            style: style ?? TxtStyle.outfit(fs: 14),
             readOnly: readOnly ?? false,
             autofillHints: keyboardType == TextInputType.emailAddress
                 ? [AutofillHints.email]
@@ -128,12 +128,7 @@ class CusNameTypeTextFormField extends StatelessWidget {
                   Text(
                     hintText,
                     style:
-                        hintStyle ??
-                        TxtStyle.outfit(
-                          fs: 13,
-                          color: c.primary,
-                          w: hintW ?? 500,
-                        ),
+                        hintStyle ?? TxtStyle.outfit(fs: 13, w: hintW ?? 500),
                   ),
 
               suffixIcon: suffix,

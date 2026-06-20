@@ -22,8 +22,8 @@ class EditProfileForm extends StatelessWidget {
           CusNameTypeTextFormField(
             controller: epc.nameCtrl,
             hintText: Strings.name,
-            hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-            style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
+            hintStyle: TxtStyle.outfitSemiB(fs: 13),
+            style: TxtStyle.outfitSemiB(fs: 13, w: 400),
             brdrClr: c.inputBorder,
             fillColor: c.cardPrimary,
             focusNode: epc.nameFocus,
@@ -85,8 +85,8 @@ class EditProfileForm extends StatelessWidget {
           CusDesTypeTextFormField(
             controller: epc.bioCtrl,
             hintText: Strings.writeBioHere,
-            hintStyle: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
-            style: TxtStyle.outfitSemiB(fs: 14, w: 400, color: c.primary),
+            hintStyle: TxtStyle.outfitSemiB(fs: 13),
+            style: TxtStyle.outfitSemiB(fs: 13, w: 400),
             rad: 12,
             focusNode: epc.bioFocus,
             bgClr: c.cardPrimary,

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -29,7 +30,10 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
 
       if (isLoading.value) {
         return LargePopupDialog(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [const ProfileShimmer()]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [const ProfileShimmer()],
+          ),
         );
       }
 
@@ -37,7 +41,9 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
         return LargePopupDialog(
           child: SizedBox(
             height: 200,
-            child: Center(child: Text("Failed to load user", style: TxtStyle.outfitSmNor)),
+            child: Center(
+              child: Text("Failed to load user", style: TxtStyle.outfitSmNor),
+            ),
           ),
         );
       }
@@ -49,6 +55,7 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              if (kDebugMode) Text(user.value?.email ?? ''),
               UserDetailComponent(
                 user: userData,
                 isLoading: isLoading,

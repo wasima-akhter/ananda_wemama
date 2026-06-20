@@ -27,7 +27,7 @@ class ProfileTile extends StatelessWidget {
         hp: 12,
         vp: 12,
         hasBrdr: true,
-        brdrClr: c.secondary.withOpacity(0.3),
+        brdrClr: newBorderClr2_30,
 
         contClr: tileClr ?? ctransp,
 
@@ -49,7 +49,7 @@ class ProfileTile extends StatelessWidget {
                       height: iconH ?? 20,
                       //  (iconPath.contains("notification") ? 20.0 : 16.0),
                       iconPath: iconPath,
-                      iconColor: iconColor ?? c.primary,
+                      iconColor: iconColor ?? c.strokePrimary,
                     ),
                   ),
                 ),
@@ -61,7 +61,7 @@ class ProfileTile extends StatelessWidget {
             SvgIconColored(
               iconColor: iconColor ?? c.primary,
               iconPath: IconsPath.arrowForwardSmall,
-              height: 24,
+              height: 12,
             ),
           ],
         ),

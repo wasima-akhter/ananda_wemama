@@ -27,7 +27,7 @@ class CommonAppBarContent extends StatelessWidget
   });
   @override
   Widget build(BuildContext context) {
-    final finalBg = isBgTransp == true ? ctransp : bgClr;
+    final finalBg = isBgTransp == true ? ctransp : bgClrNew;
 
     return AppBar(
       backgroundColor: finalBg,
@@ -41,7 +41,9 @@ class CommonAppBarContent extends StatelessWidget
           ? const SizedBox.shrink()
           : Padding(
               padding: EdgeInsets.only(left: 20.w),
-              child: BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop()),
+              child: BackArrowInCircle(
+                onTap: onTapBack ?? () => GNav.pop(),
+              ).marginAll(2),
             ),
 
       titleSpacing: titleInLeft == true ? 0 : null,
@@ -59,7 +61,7 @@ class CommonAppBarContent extends StatelessWidget
                       child: Text(
                         title.capEachWord(),
                         overflow: TextOverflow.ellipsis,
-                        style: 18.titleMclrCusFSOutfit,
+                        style: TxtStyle.outfitSemiB(fs: 18, w: 600),
                       ),
                     ),
                   ],
@@ -68,7 +70,7 @@ class CommonAppBarContent extends StatelessWidget
                   title.capEachWord(),
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: 18.titleMclrCusFSOutfit,
+                  style: TxtStyle.outfitSemiB(fs: 18, w: 600),
                 )),
 
       actions: [

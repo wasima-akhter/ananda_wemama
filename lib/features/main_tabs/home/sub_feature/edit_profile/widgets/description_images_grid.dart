@@ -35,7 +35,8 @@ class DescriptionImagesGrid extends StatelessWidget {
               ...List.generate(
                 images.length,
                 (i) => CusGestureDetector(
-                  onTap: () => showImageViewer(context: context, imageSource: images[i]),
+                  onTap: () =>
+                      showImageViewer(context: context, imageSource: images[i]),
                   child: _ImageTile(
                     path: images[i].path,
                     size: imageSize,
@@ -52,14 +53,18 @@ class DescriptionImagesGrid extends StatelessWidget {
             ],
           ),
         ),
-        Text(Strings.maximum4Photos, style: TxtStyle.outfitxSmNorSec),
+        Text(Strings.maximum4Photos, style: TxtStyle.outfit(fs: 11)),
       ],
     );
   }
 }
 
 class _ImageTile extends StatelessWidget {
-  const _ImageTile({required this.path, required this.size, required this.onRemove});
+  const _ImageTile({
+    required this.path,
+    required this.size,
+    required this.onRemove,
+  });
 
   final String path;
   final double size;
@@ -69,27 +74,39 @@ class _ImageTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SizedBox(
-          width: size,
-          height: size,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            child: Image.file(
-              File(path),
-              fit: BoxFit.cover,
-              opacity: const AlwaysStoppedAnimation(0.75),
+        Container(
+          child: Container(
+            decoration: BoxDecoration(
+              color: c.scaffoldBackground,
+              boxShadow: boxShadowBottom(),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            padding: 1.pa,
+            width: size,
+            height: size,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
+              child: Image.file(
+                File(path),
+                fit: BoxFit.cover,
+                opacity: const AlwaysStoppedAnimation(0.75),
+              ),
             ),
           ),
         ),
         Positioned(
-          top: 2,
+          top: 3,
           right: 2,
           child: CusGestureDetector(
             onTap: onRemove,
             child: CircleAvatar(
               radius: 8.r,
-              backgroundColor: black.withOpacity(0.6),
-              child: SvgIconColored(iconPath: IconsPath.closeCircle, iconColor: white, height: 20),
+              backgroundColor: ctransp,
+              child: SvgIconColored(
+                iconPath: IconsPath.closeCircle,
+                iconColor: c.scaffoldBackground,
+                height: 20,
+              ),
             ),
           ),
         ),

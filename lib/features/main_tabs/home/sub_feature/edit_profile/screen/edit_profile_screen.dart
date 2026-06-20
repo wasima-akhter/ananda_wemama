@@ -1,6 +1,7 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
+import '../../../../../../gen/assets.gen.dart';
 import '../../profile/controller/profile_controller.dart';
 import '../controller/edit_profile_controller.dart';
 import '../widgets/description_images_grid.dart';
@@ -42,23 +43,53 @@ class EditProfileScreen extends StatelessWidget {
           }),
 
           Gap(itemGap),
-
-          CustomBtnWTxt(
-            isSmall: true,
-            outlined: true,
-            txtClr: c.textPrimary,
-            style: TxtStyle.interSemiB(fs: 11, w: 700),
-            padding: const EdgeInsets.all(5),
-            w: 100,
-            btnTxt: Strings.editPhoto,
-            isLoading: false,
+          CusGestureDetector(
             onTap: () => showPickImageBottomSheet(
               isScrollControlled: true,
               onTapGallery: () => epc.pickSingleImage(ImageSource.gallery),
               onTapCamera: () => epc.pickSingleImage(ImageSource.camera),
             ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ContainerBordered(
+                  hp: 12,
+                  rad: 12,
+                  vp: 3,
+                  contClr: inputBgClr,
+                  child: Row(
+                    children: [
+                      SvgIconColored(
+                        iconPath: Assets.icons.cameraNew,
+                        iconColor: Color(0xFFB2654C),
+                        height: 20,
+                      ),
+                      Gap(6),
+                      Text(
+                        "Tap to upload photo",
+                        style: TxtStyle.poppinsSemiB(
+                          fs: 10,
+                          w: 600,
+                          ls: 0.4,
+                          color: Color(0xFF856656),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
 
+          // CustomBtnWTxt(
+          //   isSmall: true,
+          //   outlined: true,
+          //   txtClr: c.textPrimary,
+          //   style: TxtStyle.interSemiB(fs: 9, w: 700),
+          //   padding: const EdgeInsets.all(2),
+          //   w: 100,
+          //   btnTxt: Strings.editPhoto,
+          // ),
           Gap(itemGap),
 
           //

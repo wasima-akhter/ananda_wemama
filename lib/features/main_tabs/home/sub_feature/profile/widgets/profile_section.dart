@@ -23,7 +23,7 @@ class ProfileSection extends StatelessWidget {
 
       return ContainerBordered(
         hasBrdr: true,
-        brdrClr: c.secondary.withOpacity(0.3),
+        brdrClr: c.secondary.withValues(alpha: 0.3),
         contClr: c.inputBackground,
         child: Column(
           children: [

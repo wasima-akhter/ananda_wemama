@@ -4,6 +4,17 @@ import 'package:mama_app/gen/assets.gen.dart';
 import '../dialogs/popups.dart';
 import '../loaders/shimmer_widget.dart';
 
+/// Returns capitalized initials from the first two words of a name.
+/// e.g. "sarah jane connor" -> "SJ", "maria" -> "M"
+String getNameInitials(String? name) {
+  if (name == null || name.trim().isEmpty) return '';
+
+  final words = name.trim().split(RegExp(r'\s+'));
+  final firstTwo = words.take(2);
+
+  return firstTwo.map((w) => w.isNotEmpty ? w[0].toUpperCase() : '').join();
+}
+
 class NetworkImageWidget extends StatelessWidget {
   final String? imageUrl;
   final double? width;
@@ -16,6 +27,8 @@ class NetworkImageWidget extends StatelessWidget {
   final bool? hasBrdr;
   final bool? enablePreview;
   final Color? bgColor;
+  final bool? hasShadow;
+  final String? name; // 👈 new
 
   const NetworkImageWidget({
     super.key,
@@ -30,6 +43,8 @@ class NetworkImageWidget extends StatelessWidget {
     this.isUser,
     this.enablePreview,
     this.bgColor,
+    this.hasShadow,
+    this.name,
   });
 
   bool isImageUrl(String url) {
@@ -49,6 +64,12 @@ class NetworkImageWidget extends StatelessWidget {
         width: circleSize,
         height: circleSize,
         decoration: BoxDecoration(
+          boxShadow: hasShadow == true
+              ? boxShadowBottom(
+                  color: Color(0xFF904224).withValues(alpha: 0.5),
+                  blur: 4,
+                )
+              : null,
           shape: BoxShape.circle,
           border: hasBrdr == false ? null : Border.all(color: c.inputBorder),
           color: c.inputBackground,
@@ -176,10 +197,24 @@ class _FallbackWidget extends StatelessWidget {
     final double size = widget.isCircle
         ? ((widget.radius ?? 16))
         : (widget.isSmall == true ? 18 : 22);
-    final fallbackIconColor = c.primary;
+    final fallbackIconColor = c.strokePrimary;
+    final initials = getNameInitials(widget.name);
+    final hasInitials = widget.isUser == true && initials.isNotEmpty;
     return Center(
-      child: widget.isUser == true
-          ? Icon(Icons.person_2_rounded, size: size, color: fallbackIconColor)
+      child: hasInitials
+          ? Text(
+              initials,
+              style: TxtStyle.poppinsSemiBold12Center(
+                fs: size * 0.7,
+                color: fallbackIconColor,
+              ).copyWith(fontWeight: FontWeight.bold),
+            )
+          : widget.isUser == true
+          ? Icon(
+              Icons.person_2_rounded,
+              size: ScreenSize.isSmallWidth ? size * 0.8 : size,
+              color: fallbackIconColor,
+            )
           // SvgIconColored(
           //     iconPath: Assets.icons.userIconOutlined,
           //     width: size,

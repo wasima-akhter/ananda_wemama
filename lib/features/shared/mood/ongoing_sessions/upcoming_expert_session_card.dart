@@ -40,7 +40,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
     final sessionId_ = data?.id ?? '';
 
     return ContainerBordered(
-      contClr: c.cardOngoing,
+      contClr: newCardClr,
       rad: 20,
       hp: 16,
       vp: 16,
@@ -53,7 +53,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         children: [
           Text(
             Strings.upcomingExpertSession.capEachWord(),
-            style: TxtStyle.outfitSmTitle,
+            style: TxtStyle.outfitSemiB(fs: 14, w: 600),
           ),
 
           Gap(itemGap),
@@ -68,6 +68,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                 imagePath: imgUrl,
                 radius: 22,
                 isUser: true,
+                name: doctorName,
               ),
               Gap(itemGap),
               Expanded(
@@ -85,24 +86,32 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                       specialty,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.urbanistSmTitleSec,
+                      style: TxtStyle.outfitSemiB(
+                        fs: 14,
+                        w: 500,
+                        color: c.strokePrimary,
+                      ),
                     ),
                   ],
                 ),
               ),
-              Gap(itemGap),
+              Gap(itemGap * 3),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  Gap(itemGap),
                   Text(
                     time,
                     style: TxtStyle.outfitSemiB(
-                      fs: 11,
-                      w: 500,
-                      color: c.primary,
+                      fs: 10,
+                      w: 600,
+                      color: c.strokePrimary,
                     ),
                   ),
-                  Text(date, style: TxtStyle.outfit(fs: 11)),
+                  Text(
+                    date,
+                    style: TxtStyle.outfit(fs: 10, color: c.strokePrimary),
+                  ),
                 ],
               ),
             ],
@@ -110,13 +119,13 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
           Gap(itemGap),
 
-          Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle600),
+          Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle),
 
           Text(
             description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TxtStyle.outfit(fs: 13, color: c.secondary),
+            style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
           ),
           // isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
           isFromUpcomgScreen == true
@@ -207,7 +216,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
             children: [
               ContainerBordered(
                 hasBrdr: true,
-                brdrClr: c.primary,
+                brdrClr: c.strokePrimary,
+                brdrW: 1,
                 rad: 30,
                 contClr: ctransp,
                 hp: 12,
@@ -217,7 +227,14 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   children: [
                     SvgIcon(iconPath: IconsPath.share),
                     Gap(itemGap),
-                    Text(Strings.share.cap, style: TxtStyle.outfitSmTitle),
+                    Text(
+                      Strings.share.cap,
+                      style: TxtStyle.outfitSemiB(
+                        fs: 14,
+                        color: c.strokePrimary,
+                        w: 500,
+                      ),
+                    ),
                   ],
                 ),
               ),

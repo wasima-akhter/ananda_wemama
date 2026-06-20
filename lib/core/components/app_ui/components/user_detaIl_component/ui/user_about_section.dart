@@ -22,9 +22,11 @@ class UserAboutSection extends StatelessWidget {
         Obx(() {
           return Text(
             aboutText,
-            style: TxtStyle.outfitSmSecNor,
+            style: TxtStyle.outfit(fs: 13),
             maxLines: isExpanded.value ? null : 3,
-            overflow: isExpanded.value ? TextOverflow.visible : TextOverflow.ellipsis,
+            overflow: isExpanded.value
+                ? TextOverflow.visible
+                : TextOverflow.ellipsis,
           );
         }),
         if (_shouldShowButton())

@@ -3,7 +3,14 @@ import '../../../../../gen/assets.gen.dart';
 
 class OnboardHeartIcon extends StatelessWidget {
   final double? height;
-  const OnboardHeartIcon({super.key, this.height});
+  final Color? startColor;
+  final Color? endColor;
+  const OnboardHeartIcon({
+    super.key,
+    this.height,
+    this.startColor,
+    this.endColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +19,10 @@ class OnboardHeartIcon extends StatelessWidget {
       gradient: LinearGradient(
         begin: Alignment.bottomCenter,
         end: Alignment.topCenter,
-        colors: [Color(0xFFF8221E), Color(0xFFFF9191)],
+        colors: [
+          startColor ?? Color(0xFFF8221E),
+          endColor ?? Color(0xFFFF9191),
+        ],
         stops: [0.0, 0.88],
       ),
       height: height ?? (ScreenSize.isSmallWidth ? 38.h : 28.h),

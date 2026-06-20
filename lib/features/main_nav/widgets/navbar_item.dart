@@ -22,7 +22,8 @@ class NavbarItem extends StatelessWidget {
     if (count < 1000) return count.toString();
     double value = count / 1000;
     String formatted = value.toStringAsFixed(1);
-    if (formatted.endsWith('.0')) formatted = formatted.substring(0, formatted.length - 2);
+    if (formatted.endsWith('.0'))
+      formatted = formatted.substring(0, formatted.length - 2);
     return '${formatted}k';
   }
 

@@ -14,7 +14,10 @@ class LocationStatusOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: S.w * 0.07, vertical: 24.h),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: S.w * 0.07,
+        vertical: 24.h,
+      ),
       child: _OverlayCard(isActive: isActive),
     );
   }
@@ -28,7 +31,8 @@ class _OverlayCard extends StatefulWidget {
   State<_OverlayCard> createState() => _OverlayCardState();
 }
 
-class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderStateMixin {
+class _OverlayCardState extends State<_OverlayCard>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
   late final Animation<double> _scale;
   late final Animation<double> _fade;
@@ -36,7 +40,10 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 320));
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 320),
+    );
     _scale = CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack);
     _fade = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
     _ctrl.forward();
@@ -77,7 +84,9 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                         backgroundColor: accent.withOpacity(0.12),
                         radius: 20.r,
                         child: Icon(
-                          isActive ? Icons.location_on_rounded : Icons.location_off_rounded,
+                          isActive
+                              ? Icons.location_on_rounded
+                              : Icons.location_off_rounded,
                           color: accent,
                           size: 20.h,
                         ),
@@ -91,7 +100,11 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                               isActive
                                   ? Strings.locationEnabled.capEachWord()
                                   : Strings.youAreInactiveNow,
-                              style: TxtStyle.interSemiB(fs: 14, w: 700, color: c.textPrimary),
+                              style: TxtStyle.interSemiB(
+                                fs: 14,
+                                w: 700,
+                                color: c.foregroundPrimary,
+                              ),
                             ),
                             Gap(3.w),
                             Row(
@@ -103,7 +116,11 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                       ),
                       GestureDetector(
                         onTap: () => Get.back(),
-                        child: Icon(Icons.close_rounded, color: c.textSecondary, size: 20),
+                        child: Icon(
+                          Icons.close_rounded,
+                          color: c.textSecondary,
+                          size: 20,
+                        ),
                       ),
                     ],
                   ),
@@ -117,7 +134,9 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
-                        backgroundColor: c.bottomSheetBackground.withOpacity(0.5),
+                        backgroundColor: c.bottomSheetBackground.withOpacity(
+                          0.5,
+                        ),
                         radius: 9,
                         child: SvgIconColored(
                           iconPath: IconsPath.curvedInfo,
@@ -131,7 +150,9 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              isActive ? Strings.locationActiveVisible : Strings.inactiveNotVisible,
+                              isActive
+                                  ? Strings.locationActiveVisible
+                                  : Strings.inactiveNotVisible,
                               style: TxtStyle.interSemiB(
                                 fs: 12,
                                 w: 400,
@@ -164,7 +185,9 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                         ? OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               side: BorderSide(color: c.secondary),
-                              shape: RoundedRectangleBorder(borderRadius: 12.brdrRad),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: 12.brdrRad,
+                              ),
                               padding: 12.pv,
                             ),
                             onPressed: () => Get.back(),
@@ -175,11 +198,19 @@ class _OverlayCardState extends State<_OverlayCard> with SingleTickerProviderSta
                           )
                         : ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: c.secondary,
-                              shape: RoundedRectangleBorder(borderRadius: 12.brdrRad),
+                              backgroundColor: c.strokePrimary.withValues(
+                                alpha: 0.9,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: 12.brdrRad,
+                              ),
                               padding: 12.pv,
                             ),
-                            icon: Icon(Icons.location_on_rounded, color: Colors.white, size: 16.w),
+                            icon: Icon(
+                              Icons.location_on_rounded,
+                              color: Colors.white,
+                              size: 16.w,
+                            ),
                             label: Text(
                               Strings.enableLocation.capEachWord(),
                               style: TextStyle(color: Colors.white),

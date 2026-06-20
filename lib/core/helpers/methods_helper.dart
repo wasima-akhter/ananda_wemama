@@ -83,11 +83,12 @@ List<BoxShadow> get boxShadowTopOnly => [
   ),
 ];
 
-List<BoxShadow> boxShadowBottom({Color? color}) => [
+List<BoxShadow> boxShadowBottom({Color? color, double? blur}) => [
   BoxShadow(
-    color: color ?? c.secondary.withOpacity(0.25), // use your secondary color
+    color:
+        color ?? c.secondary.withValues(alpha: 0.3), // use your secondary color
     offset: const Offset(0, 3), // positive y moves shadow downward
-    blurRadius: 2, // no blur
+    blurRadius: blur ?? 2, // no blur
     spreadRadius: 0, // no extra spread
   ),
 ];

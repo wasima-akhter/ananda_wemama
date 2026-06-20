@@ -30,7 +30,7 @@ class _CommunitySpotlightDummy extends StatelessWidget {
       vp: 10,
       hp: 10,
       boxShadow: boxShadowBottom(),
-      contClr: c.cardOngoing,
+      contClr: newCardClr,
       child: Column(
         children: [
           Row(
@@ -129,7 +129,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
             vp: 10,
             hp: 10,
             boxShadow: boxShadowBottom(),
-            contClr: c.cardOngoing,
+            contClr: newCardClr,
             child: Column(
               children: [
                 Row(
@@ -256,7 +256,7 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
       hp: 10,
       vp: 10,
 
-      contClr: c.cardMood,
+      contClr: cardBgDeep,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -264,7 +264,11 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
             content.cap,
             maxLines: 3,
             overflow: TextOverflow.visible,
-            style: normRsmPriURB,
+            style: TxtStyle.urbanistSemiB(
+              fs: 12,
+              w: 600,
+              color: c.foregroundPrimary,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,7 +283,11 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
               ),
               Text(
                 "$totalComment ${Strings.comments} | $createdAt",
-                style: normRsmPriURB,
+                style: TxtStyle.urbanistSemiB(
+                  fs: 12,
+                  w: 600,
+                  color: c.foregroundPrimary,
+                ),
               ),
             ],
           ),
@@ -379,7 +387,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
       vp: 10,
       hp: 10,
       boxShadow: boxShadowBottom(),
-      contClr: c.cardOngoing.withOpacity(0.6),
+      contClr: newCardClr,
       child: Column(
         children: [
           /// TOP ROW (same structure as live)
@@ -388,7 +396,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
             children: [
               Text(
                 Strings.communitySpotlight.capEachWord(),
-                style: TxtStyle.outfitSmTitle.copyWith(color: c.primary),
+                style: TxtStyle.outfitSmTitle,
               ),
 
               Opacity(
@@ -404,7 +412,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                     child: Text(
                       Strings.joinDiscussion.capEachWord(),
                       style: 12.titleMclrCusFSURB.copyWith(
-                        color: c.primary.withOpacity(0.5),
+                        color: c.strokePrimary.withOpacity(0.5),
                       ),
                     ),
                   ),
@@ -423,7 +431,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
               Expanded(
                 child: Text(
                   "No active community discussions yet",
-                  style: normRsmSecURB.copyWith(color: c.primary),
+                  style: normRsmSecURB,
                 ),
               ),
             ],
@@ -444,7 +452,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                   height: 12,
                   width: double.infinity * 0.6,
                   decoration: BoxDecoration(
-                    color: c.primary.withOpacity(0.07),
+                    color: c.strokePrimary.withOpacity(0.07),
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -456,7 +464,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 //   height: 14,
                 //   width: double.infinity * 0.8,
                 //   decoration: BoxDecoration(
-                //     color: c.primary.withOpacity(0.08),
+                //     color:  c.strokePrimary.withOpacity(0.08),
                 //     borderRadius: BorderRadius.circular(6),
                 //   ),
                 // ),
@@ -471,7 +479,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 //       height: 12,
                 //       width: 120,
                 //       decoration: BoxDecoration(
-                //         color: c.primary.withOpacity(0.08),
+                //         color:  c.strokePrimary.withOpacity(0.08),
                 //         borderRadius: BorderRadius.circular(6),
                 //       ),
                 //     ),
@@ -479,7 +487,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 //       height: 12,
                 //       width: 80,
                 //       decoration: BoxDecoration(
-                //         color: c.primary.withOpacity(0.08),
+                //         color:  c.strokePrimary.withOpacity(0.08),
                 //         borderRadius: BorderRadius.circular(6),
                 //       ),
                 //     ),

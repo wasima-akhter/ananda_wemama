@@ -23,7 +23,7 @@ class ProfileSettingsTiles extends StatelessWidget {
 
         ProfileTile(
           title: Strings.blockedUser,
-          iconPath: IconsPath.userOutlined,
+          iconPath: IconsPath.blockedUser,
           tileClr: c.inputBackground,
           onTap: () => Get.toNamed(RoutePaths.blockedUser),
         ),
@@ -53,8 +53,10 @@ class ProfileSettingsTiles extends StatelessWidget {
           iconPath: IconsPath.logout,
           iconColor: c.error,
           tileClr: c.inputBackground,
-          onTap: () =>
-              logoutConfirmDialog(isLoading: pc.isSignOutLoading_, onConfirm: pc.onTapLogout),
+          onTap: () => logoutConfirmDialog(
+            isLoading: pc.isSignOutLoading_,
+            onConfirm: pc.onTapLogout,
+          ),
         ),
       ],
     );

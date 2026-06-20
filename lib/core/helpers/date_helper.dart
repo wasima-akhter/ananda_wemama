@@ -251,36 +251,40 @@ Theme buildDatePickerTheme({
   return Theme(
     data: Theme.of(context).copyWith(
       colorScheme: ColorScheme.light(
-        primary: primaryColor ?? c.primary, // header/date circle
-        onPrimary: c.secondary, // text on selected day
+        primary: primaryColor ?? c.strokePrimary, // header/date circle
+        onPrimary: white, // text on selected day
         surface: backgroundColor ?? c.inputBackground, // calendar background
-        onSurface: c.textPrimary, // normal day text
+        onSurface: c.foregroundPrimary, // normal day text
       ),
       textTheme: TextTheme(
-        headlineLarge: headerTextStyle, // Month header
+        headlineLarge:
+            headerTextStyle ?? TxtStyle.poppinsSemiB(), // Month header
         bodyLarge: dayTextStyle, // Day numbers
       ),
 
       primaryTextTheme: TextTheme(
-        titleMedium: TxtStyle.outfit(
-          fs: 14,
-          color: c.primary,
-        ), // typed text color
+        titleMedium: TxtStyle.poppinsSemiB(fs: 14), // typed text color
       ),
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: TxtStyle.outfit(fs: 14, color: c.primary.withOpacity(0.6)),
-        labelStyle: TxtStyle.outfit(fs: 14, color: c.primary),
+        hintStyle: TxtStyle.poppinsSemiB(
+          fs: 14,
+          color: c.foregroundPrimary.withValues(alpha: 0.6),
+        ),
+        labelStyle: TxtStyle.poppinsSemiB(fs: 14, color: c.foregroundPrimary),
         enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: c.primary),
+          borderSide: BorderSide(color: c.foregroundPrimary),
         ),
       ),
       //   Forces the typed input text color
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: c.primary,
-        selectionColor: c.primary.withOpacity(0.3),
-        selectionHandleColor: c.primary,
+        cursorColor: c.foregroundPrimary,
+        selectionColor: c.foregroundPrimary.withValues(alpha: 0.3),
+        selectionHandleColor: c.foregroundPrimary,
       ),
-      dialogBackgroundColor: backgroundColor ?? c.inputBackground,
+      dialogTheme: DialogThemeData(
+        contentTextStyle: TxtStyle.poppinsSemiB(),
+        backgroundColor: backgroundColor ?? c.inputBackground,
+      ),
     ),
     child: child,
   );

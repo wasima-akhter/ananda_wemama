@@ -243,10 +243,12 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.mumsStageFinish,
       page: () => const MumsStageFinishScreen(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.finishSettingProfile,
       page: () => const FinishSettingProfileScreen(),
+      binding: PostSignupScreensBinding(),
     ),
     GetPage(
       name: RoutePaths.subChoosePlan,

@@ -10,8 +10,10 @@ class Onboard3MapSection extends StatelessWidget {
     return SafeAssetImage(
       assetPath: ImagesPath.locationMap,
       width: double.infinity,
-      height: ScreenSize.isSmallWidth ? 220.h : null,
-      fit: BoxFit.fitWidth,
+      height: ScreenSize.isSmallWidth
+          ? 200.h
+          : 240.h, // 👈 always set, shorter on both
+      fit: BoxFit.cover, // 👈 crops vertically to fill width without distortion
     );
   }
 }

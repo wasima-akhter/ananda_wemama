@@ -36,18 +36,23 @@ class DatePickerWithPrivacy extends StatelessWidget {
             children: [
               Text(
                 Strings.dateOfBirth.cap,
-                style: TxtStyle.outfitSemiB(fs: 16, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 16),
               ),
 
               Gap(itemGap),
 
               Obx(
-                () => CalendarDatePicker(
-                  key: ValueKey(tempSelected.value),
-                  initialDate: tempSelected.value,
-                  firstDate: firstDate ?? DateTime(1900),
-                  lastDate: lastDate ?? now,
-                  onDateChanged: (date) => tempSelected.value = date,
+                () => ContainerBordered(
+                  contClr: AppColors.cardBg,
+                  vp: 0,
+
+                  child: CalendarDatePicker(
+                    key: ValueKey(tempSelected.value),
+                    initialDate: tempSelected.value,
+                    firstDate: firstDate ?? DateTime(1900),
+                    lastDate: lastDate ?? now,
+                    onDateChanged: (date) => tempSelected.value = date,
+                  ),
                 ),
               ),
 
@@ -60,22 +65,18 @@ class DatePickerWithPrivacy extends StatelessWidget {
                   child: Obx(
                     () => Row(
                       children: [
-                        CustomCheckBox(
+                        AppCheckbox(
                           value: keepPrivate.value,
                           onChanged: (_) => keepPrivate.toggle(),
-                          borderColor: c.secondary,
-                          checkColor: c.scaffoldBackground,
-                          activeColor: c.secondary,
+                          borderColor: c.foregroundPrimary,
+                          checkColor: c.foregroundPrimary,
+                          activeColor: c.foregroundPrimary,
                           size: 18,
                         ),
                         Gap(8),
                         Text(
                           Strings.keepPrivate,
-                          style: TxtStyle.outfit(
-                            fs: 13,
-                            w: 500,
-                            color: c.secondary,
-                          ),
+                          style: TxtStyle.outfit(fs: 13, w: 500),
                         ),
                       ],
                     ),
@@ -93,8 +94,8 @@ class DatePickerWithPrivacy extends StatelessWidget {
                       outlined: true,
                       btnColor: ctransp,
                       rad: 30,
-                      borderClr: c.secondary,
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      borderClr: c.strokePrimary,
+                      padding: EdgeInsets.symmetric(vertical: 9.h),
                       onTap: () => Get.back(),
                       style: TxtStyle.outfit(
                         fs: 14,
@@ -109,8 +110,8 @@ class DatePickerWithPrivacy extends StatelessWidget {
                     child: CustomBtnWTxt(
                       btnTxt: Strings.okay.cap,
                       rad: 30,
-                      btnColor: c.secondary,
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      btnColor: c.strokePrimary,
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
                       onTap: () {
                         selectedDate.value = formatDate(tempSelected.value);
                         Get.back();

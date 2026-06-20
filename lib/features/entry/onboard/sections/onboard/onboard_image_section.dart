@@ -8,7 +8,7 @@ class OnboardImageSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeAssetImage(
       assetPath: ImagesPath.onboardingImage,
-      width: double.infinity,
+
       fit: BoxFit.fitWidth,
     );
   }

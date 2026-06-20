@@ -48,12 +48,12 @@ class ChatListItem extends StatelessWidget {
                       chatModel.lastMessage,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.outfitSmSecNor,
+                      style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
                     ),
                 ],
               ),
             ),
-            Gap(itemGap),
+            Gap(itemGap * 3),
             Column(
               children: [
                 Text(chatModel.time.cap, style: TxtStyle.outfitSmSecNor500),

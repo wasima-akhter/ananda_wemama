@@ -171,7 +171,10 @@ class Snack {
                     children: [
                       Text(
                         title ?? '',
-                        style: TxtStyle.inter(color: c.primary, w: 600),
+                        style: TxtStyle.inter(
+                          color: c.foregroundPrimary,
+                          w: 600,
+                        ),
                       ),
                     ],
                   ),
@@ -434,7 +437,7 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ?? c.primary,
+    color: color ?? c.foregroundPrimary,
     height: h,
     decoration: dec,
     fontFeatures: fontFeatures,
@@ -451,7 +454,7 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ?? c.primary,
+    color: color ?? c.foregroundPrimary,
     height: h,
     decoration: dec,
   );
@@ -521,9 +524,9 @@ class TxtStyle {
   );
 
   static TextStyle get urbanistSmTitle600 =>
-      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.primary);
+      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundPrimary);
   static TextStyle get urbanistSmTitle =>
-      TxtStyle.urbanistSemiB(fs: 14, w: 500, color: c.primary);
+      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundPrimary);
   static TextStyle get urbanistSmTitleSec =>
       TxtStyle.urbanistSemiB(fs: 12, w: 500, color: c.secondary);
   static TextStyle get urbanistSmSecNor =>
@@ -541,10 +544,10 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ?? c.primary,
+    color: color ?? c.foregroundPrimary,
     height: h,
     decoration: dec,
-    decorationColor: color ?? c.primary,
+    decorationColor: color ?? c.foregroundPrimary,
   );
 
   static TextStyle outfitSemiB({
@@ -558,10 +561,10 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ?? c.primary,
+    color: color ?? c.foregroundPrimary,
     height: h,
     decoration: dec,
-    decorationColor: color ?? c.primary,
+    decorationColor: color ?? c.foregroundPrimary,
   );
 
   static TextStyle get outfitUnderLTxt => outfit(
@@ -571,10 +574,8 @@ class TxtStyle {
     dec: TextDecoration.underline,
   );
 
-  static TextStyle get outfitLarTitle =>
-      TxtStyle.outfitSemiB(fs: 18, w: 500, color: c.primary);
-  static TextStyle get outfitSmTitle =>
-      TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary);
+  static TextStyle get outfitLarTitle => TxtStyle.outfitSemiB(fs: 18, w: 500);
+  static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500);
   static TextStyle get outfitSmTitleSec =>
       TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);
@@ -586,8 +587,7 @@ class TxtStyle {
       TxtStyle.outfit(fs: 13, color: c.secondary);
   static TextStyle get outfitSmSecNor500 =>
       TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.secondary);
-  static TextStyle get outfitSmNor500 =>
-      TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary);
+  static TextStyle get outfitSmNor500 => TxtStyle.outfitSemiB(fs: 13, w: 500);
 
   ///------------------
   /// POPPINS
@@ -650,7 +650,7 @@ class TxtStyle {
   }
 
   static TextStyle poppinsSemiBold15({Color? color, double? fs}) {
-    return textThemePoppins.bodyLarge!.copyWith(
+    return GoogleFonts.poppins(
       fontSize: (fs ?? 15).sp,
       fontWeight: FontWeight.w600,
       height: 1,
@@ -675,8 +675,8 @@ class TxtStyle {
     return textThemedmSerifDisplay.bodyLarge!.copyWith(
       fontSize: fs != null
           ? fs.sp
-          : ScreenSize.isTallHeight
-          ? 30.sp
+          : ScreenSize.isSmallWidth
+          ? 26.sp
           : 28.sp,
       letterSpacing: -0.1,
       color: c.foregroundSecondary,

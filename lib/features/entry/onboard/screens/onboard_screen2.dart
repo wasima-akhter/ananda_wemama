@@ -26,9 +26,7 @@ class OnboardScreen2 extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: ScreenSize.isSmallWidth ? 8.h : 20.h,
-              ),
+              padding: EdgeInsets.only(bottom: S.bottomInset + 20),
               child: Onboard2BottomSection().getcm,
             ),
           ],

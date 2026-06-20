@@ -398,6 +398,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/shield_support.svg
   String get shieldSupport => 'assets/icons/shield_support.svg';
 
+  /// File path: assets/icons/shield_support_new.svg
+  String get shieldSupportNew => 'assets/icons/shield_support_new.svg';
+
   /// File path: assets/icons/sleep_refresh.svg
   String get sleepRefresh => 'assets/icons/sleep_refresh.svg';
 
@@ -418,6 +421,12 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/terms_conditions.svg
   String get termsConditions => 'assets/icons/terms_conditions.svg';
+
+  /// File path: assets/icons/tick_L_filled.svg
+  String get tickLFilled => 'assets/icons/tick_L_filled.svg';
+
+  /// File path: assets/icons/tick_L_outlined.svg
+  String get tickLOutlined => 'assets/icons/tick_L_outlined.svg';
 
   /// File path: assets/icons/tick_l.svg
   String get tickL => 'assets/icons/tick_l.svg';
@@ -621,6 +630,7 @@ class $AssetsIconsGen {
     shieldCheck,
     shieldFill,
     shieldSupport,
+    shieldSupportNew,
     sleepRefresh,
     smallBusiness,
     socialMeetups,
@@ -628,6 +638,8 @@ class $AssetsIconsGen {
     starNew,
     stayAtHome,
     termsConditions,
+    tickLFilled,
+    tickLOutlined,
     tickL,
     tickL2,
     tickSm,
@@ -682,6 +694,10 @@ class $AssetsImagesGen {
   AssetGenImage get careEmoji =>
       const AssetGenImage('assets/images/care_emoji.png');
 
+  /// File path: assets/images/congrates.png
+  AssetGenImage get congrates =>
+      const AssetGenImage('assets/images/congrates.png');
+
   /// File path: assets/images/done_animation.json
   String get doneAnimation => 'assets/images/done_animation.json';
 
@@ -711,10 +727,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/heart_emoji.png
   AssetGenImage get heartEmoji =>
       const AssetGenImage('assets/images/heart_emoji.png');
-
-  /// File path: assets/images/heart_gradient_image.png
-  AssetGenImage get heartGradientImage =>
-      const AssetGenImage('assets/images/heart_gradient_image.png');
 
   /// File path: assets/images/image_placeholder.png
   AssetGenImage get imagePlaceholder =>
@@ -860,6 +872,7 @@ class $AssetsImagesGen {
     calm,
     camera,
     careEmoji,
+    congrates,
     doneAnimation,
     emptyList,
     folderAttach,
@@ -868,7 +881,6 @@ class $AssetsImagesGen {
     gallery,
     hahaEmoji,
     heartEmoji,
-    heartGradientImage,
     imagePlaceholder,
     likeEmoji,
     loadingDotsDefault,

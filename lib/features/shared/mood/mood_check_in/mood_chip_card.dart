@@ -26,7 +26,7 @@ class MoodCheckInCard extends StatelessWidget {
                   '';
               return Text(
                 "${mcc.getGreetingMessage()}, ${userName.isNotEmpty ? getFirstWord(userName).cap : "Ada"}",
-                style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 15, w: 600),
               );
             }),
 
@@ -40,7 +40,8 @@ class MoodCheckInCard extends StatelessWidget {
 
         // how are you feeling card
         ContainerBordered(
-          contClr: c.cardOngoing,
+          // contClr: c.cardOngoing,
+          contClr: newCardClr,
           rad: 20,
           hp: 14,
           vp: 12,
@@ -50,7 +51,7 @@ class MoodCheckInCard extends StatelessWidget {
             children: [
               Text(
                 Strings.howAreYourFeeling.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 14),
               ),
               itemGap.verticalSpace,
 
@@ -235,10 +236,10 @@ class _CheckInStreakRow extends StatelessWidget {
           // if (messageText.isEmpty) return const SizedBox.shrink();
 
           return ContainerBordered(
-            contClr: c.cardMood,
+            contClr: c.cardMood.withValues(alpha: 0.8),
             rad: 8,
             hp: 8,
-            vp: 6,
+            vp: 5,
             alignment: Alignment.centerLeft,
             child: Text.rich(
               TextSpan(
@@ -247,8 +248,8 @@ class _CheckInStreakRow extends StatelessWidget {
                     text: streakText,
                     style: TxtStyle.outfitSemiB(
                       fs: 9,
-                      w: 500,
-                      color: c.primary,
+                      w: 600,
+                      color: c.strokePrimary,
                     ),
                   ),
                   const TextSpan(text: " "),
@@ -319,10 +320,10 @@ class MoodChip extends StatelessWidget {
       rad: 20,
       hp: hp ?? 10,
       mv: 2,
-      vp: 5,
+      vp: ScreenSize.isSmallWidth ? 6 : 5,
       hasBrdr: true,
-      brdrClr: isSelected ? c.primary : c.textPrimary,
-      brdrW: 0.3,
+      brdrClr: isSelected ? c.strokePrimary : newBorderClr2_30,
+      brdrW: 1,
       child:
           // Text(
           //   title.cap,
@@ -340,7 +341,7 @@ class MoodChip extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TxtStyle.outfitSemiB(
               fs: 11,
-              w: 500,
+              w: 600,
               color: isSelected ? Colors.white : c.secondary,
             ),
           ),

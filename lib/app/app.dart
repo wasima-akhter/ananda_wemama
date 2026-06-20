@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mama_app/core/components/ui/loaders/loading.dart';
 import 'package:mama_app/features/shared/report_sheet/controller/report_controller.dart';
 import 'package:mama_app/routes/pages.dart';
 import 'package:mama_app/routes/route_paths.dart';
@@ -18,9 +19,7 @@ class App extends StatelessWidget {
   const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
-    return hasInternet
-        ? RoutePaths.lifeStyleAndInterests
-        : RoutePaths.offlineScreen;
+    return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;
   }
 
   @override
@@ -30,7 +29,7 @@ class App extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const MaterialApp(
-            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+            home: Scaffold(body: Center(child: LoadingPrimary())),
           );
         }
 

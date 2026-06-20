@@ -9,20 +9,21 @@ class InterestBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 250),
+      switchInCurve: Curves.easeInOutCubic,
+      switchOutCurve: Curves.easeInOutCubic,
       child: isSelected
-          ? SvgIconColored(
+          ? SvgIcon(
               key: const ValueKey('selected'),
-              iconColor: c.strokePrimary,
-              iconPath: Assets.icons.verifiedTick,
-              width: 13,
-              height: 13,
+              iconPath: Assets.icons.tickLFilled,
+              width: ScreenSize.isSmallWidth ? 14 : 16,
+              height: ScreenSize.isSmallWidth ? 14 : 16,
             )
           : SvgIcon(
               key: const ValueKey('unselected'),
-              iconPath: Assets.icons.tickL,
-              width: 16,
-              height: 16,
+              iconPath: Assets.icons.tickLOutlined,
+              width: ScreenSize.isSmallWidth ? 14 : 16,
+              height: ScreenSize.isSmallWidth ? 14 : 16,
             ),
     );
   }

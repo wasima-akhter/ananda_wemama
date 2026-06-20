@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'svg_icon_colored.dart';
@@ -24,7 +25,11 @@ class SvgIcon extends StatelessWidget {
           return SizedBox(width: width, height: height);
         }
 
-        return SvgPicture.string(snapshot.data!, width: width, height: height);
+        return SvgPicture.string(
+          snapshot.data!,
+          width: width.w,
+          height: height.h,
+        );
       },
     );
   }

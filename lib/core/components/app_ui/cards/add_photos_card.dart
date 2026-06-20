@@ -17,9 +17,10 @@ class AddPhotosCard extends StatelessWidget {
         vp: 11,
         hp: 7,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SvgIconColored(iconPath: IconsPath.addPlusCircle, height: 21),
-            Gap(4),
+            // Gap(2.h),
             Text(Strings.addPhoto, style: TxtStyle.outfitxSmNor500),
           ],
         ),
@@ -73,7 +74,11 @@ class AddPhotoCard extends StatelessWidget {
                           color: Colors.black54,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.close, color: Colors.white, size: 16),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),

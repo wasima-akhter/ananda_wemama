@@ -26,9 +26,19 @@ Color get snackWarningTxtClr => c.primary;
 Color get bgClr => c.scaffoldBackground;
 Color get bgClrNew => Color(0xFFFDF8F5);
 Color get inputBgClr => Color(0xFFFEFCFA);
+Color get contBgClr => Color(0xFFFDF4F3);
 Color get newBorderClr => c.primary.withValues(alpha: 0.1);
+Color get newBorderClr2_30 => c.inputBorder.withValues(alpha: 0.3);
 //
+Color get cardBgDeep => Color(0xFFF9E1D6);
+//
+
 Color get deepPrimary => Color(0xFF512814);
+
+//
+Color get newCardClr => Color(0xFFFBEDE2);
+
+Color get newCardClr2 => Color(0xFFF8E6DC).withValues(alpha: 0.25);
 
 class AppColors {
   const AppColors._();

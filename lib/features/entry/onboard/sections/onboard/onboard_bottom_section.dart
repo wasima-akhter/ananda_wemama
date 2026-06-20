@@ -16,7 +16,11 @@ class OnboardBottomSection extends StatelessWidget {
       children: [
         // ScreenSize.isSmallWidth ? Gap(2) : const SizedBox.shrink(),
         OnboardGetStartedButton(),
+        Gap(ScreenSize.isSmallWidth ? 6.h : 12.h),
+
         OnboardLoginSection(),
+        Gap(ScreenSize.isSmallWidth ? 4.h : 12.h),
+
         OnboardPrivacyBadge(),
       ],
     ).mHV(18, 0);

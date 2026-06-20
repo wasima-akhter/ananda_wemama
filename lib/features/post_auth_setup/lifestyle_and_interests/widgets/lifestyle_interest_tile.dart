@@ -26,7 +26,7 @@ class LifestyleInterestTile extends StatelessWidget {
           brdrClr: c.foregroundSecondary.withValues(alpha: 0.1),
           brdrW: 1,
           alignment: Alignment.center,
-          contClr: const Color(0xFFFDF4F3),
+          contClr: contBgClr,
 
           child: Stack(
             clipBehavior: Clip.none,
@@ -45,8 +45,8 @@ class LifestyleInterestTile extends StatelessWidget {
 
               // BADGE
               Positioned(
-                top: -4,
-                right: -4,
+                top: ScreenSize.isSmallWidth ? -2 : -4,
+                right: ScreenSize.isSmallWidth ? -2 : -4,
                 child: InterestBadge(isSelected: isSelected),
               ),
             ],

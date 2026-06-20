@@ -11,7 +11,7 @@ class OnboardLogoSection extends StatelessWidget {
       children: [
         SafeAssetImage(
           assetPath: ImagesPath.wemamaHandsTitleLogo,
-          height: ScreenSize.isTallHeight ? 105.h : 95.h,
+          height: ScreenSize.isSmallWidth ? 90.h : 95.h,
         ),
 
         Gap(2),
@@ -20,7 +20,7 @@ class OnboardLogoSection extends StatelessWidget {
           Strings.motherhoodTogether,
           textAlign: TextAlign.center,
           style: TxtStyle.outfitSemiB(
-            fs: ScreenSize.isTallHeight ? 12 : 11,
+            fs: ScreenSize.isSmallWidth ? 10 : 11,
             w: 500,
             color: c.foregroundPrimary,
             ls: 0.56,

@@ -61,7 +61,7 @@ class CustomBtnWTxt extends StatelessWidget {
     final bool isOutlined = outlined == true;
 
     final BoxDecoration btnDecoration = BoxDecoration(
-      color: btnColor ?? (isOutlined ? c.inputBackground : c.primary),
+      color: btnColor ?? (isOutlined ? c.inputBackground : c.strokePrimary),
       border: Border.all(
         color: isOutlined ? borderClr ?? c.inputBorder : borderClr ?? ctransp,
         width:
@@ -93,7 +93,9 @@ class CustomBtnWTxt extends StatelessWidget {
               TxtStyle.inter(
                 fs: fontSize,
                 w: 600,
-                color: txtClr ?? (isOutlined ? c.textPrimary : c.textOnPrimary),
+                color:
+                    txtClr ??
+                    (isOutlined ? c.foregroundPrimary : c.textOnPrimary),
               );
 
     return Center(

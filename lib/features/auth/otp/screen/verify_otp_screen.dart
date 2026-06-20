@@ -108,6 +108,7 @@ class VerifyOtpScreen extends StatelessWidget {
                             : Strings.youHaventGotOTP,
                         style: TxtStyle.poppinsSemiB(color: c.secondary),
                       ),
+                      Gap(itemGap * 2),
                       otpc.showTimer
                           ? DefaultTextStyle(
                               style: TxtStyle.poppinsSemiB(color: c.primary),

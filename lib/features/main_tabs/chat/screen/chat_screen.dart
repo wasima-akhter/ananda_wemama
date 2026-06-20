@@ -2,7 +2,6 @@ import 'package:mama_app/core/components/ui/inputs/cus_search_bar.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';
-import '../../../../core/components/ui/scroll/cus_scrollbar_widget.dart';
 import '../../../../core/helpers/date_helper.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
 import '../controller/chat_controller.dart';
@@ -119,28 +118,23 @@ class ChatScreen extends StatelessWidget {
             return Container(
               // color: Colors.amber,
               // height: S.h * 0.7,
-              child: CusScrollbarWidget(
+              child: ListView.builder(
                 controller: cc.chatScrollCtrl,
-                child: ListView.builder(
-                  controller: cc.chatScrollCtrl,
-                  itemCount: list.length,
-                  itemBuilder: (_, index) {
-                    final e = list[index];
+                itemCount: list.length,
+                itemBuilder: (_, index) {
+                  final e = list[index];
 
-                    return ChatListItem(
-                      chatModel: FakeChatModel(
-                        isblocked: e.isBlocked ?? false,
-                        name: e.otherUser?.name ?? '',
-                        lastMessage: e.lastMessage ?? '',
-                        time: DateHelper()
-                            .formatTimeAgo(e.time.toString())
-                            .date,
-                        imageUrl: e.otherUser?.profileImage ?? '',
-                        id: e.id ?? '',
-                      ),
-                    ).get10cm.mR(10);
-                  },
-                ),
+                  return ChatListItem(
+                    chatModel: FakeChatModel(
+                      isblocked: e.isBlocked ?? false,
+                      name: e.otherUser?.name ?? '',
+                      lastMessage: e.lastMessage ?? '',
+                      time: DateHelper().formatTimeAgo(e.time.toString()).date,
+                      imageUrl: e.otherUser?.profileImage ?? '',
+                      id: e.id ?? '',
+                    ),
+                  ).get10cm.mR(10);
+                },
               ),
             );
           }),

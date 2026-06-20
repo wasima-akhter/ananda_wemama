@@ -8,61 +8,26 @@ class SvgIconCache {
   SvgIconCache._();
 
   static final Map<String, String> _svgRawCache = {};
+  static final Map<String, Future<String>> _inFlight = {};
 
-  static Future<String> loadSvg(String path) async {
-    return _svgRawCache[path] ??= await rootBundle.loadString(path);
-  }
-}
+  /// Synchronous read if already cached — avoids FutureBuilder flicker on rebuilds
+  static String? getSync(String path) => _svgRawCache[path];
 
-class SvgVariantCache {
-  SvgVariantCache._();
-
-  static final Map<String, String> _cache = {};
-
-  static String key(String path, Color? color, Gradient? gradient) {
-    return '$path|${color?.value}|${gradient?.hashCode}';
-  }
-
-  static String get(String key) => _cache[key] ?? '';
-
-  static void set(String key, String value) {
-    _cache[key] = value;
-  }
-
-  static bool contains(String key) => _cache.containsKey(key);
-}
-
-class SvgIconEngine {
-  SvgIconEngine._();
-
-  static Future<String> getSvg({
-    required String path,
-    Color? color,
-    Gradient? gradient,
-  }) async {
-    final key = SvgVariantCache.key(path, color, gradient);
-
-    if (SvgVariantCache.contains(key)) {
-      return SvgVariantCache.get(key);
+  static Future<String> loadSvg(String path) {
+    if (_svgRawCache.containsKey(path)) {
+      return Future.value(_svgRawCache[path]);
     }
+    // Avoid duplicate concurrent loads of the same asset
+    return _inFlight[path] ??= rootBundle.loadString(path).then((svg) {
+      _svgRawCache[path] = svg;
+      _inFlight.remove(path);
+      return svg;
+    });
+  }
 
-    String svg = await SvgIconCache.loadSvg(path);
-
-    // Apply color fallback if needed
-    if (color != null && gradient == null) {
-      svg = svg.replaceAll(
-        RegExp(r'fill="[^"]+"'),
-        'fill="#${color.value.toRadixString(16).substring(2)}"',
-      );
-
-      svg = svg.replaceAll(
-        RegExp(r'stroke="[^"]+"'),
-        'stroke="#${color.value.toRadixString(16).substring(2)}"',
-      );
-    }
-
-    SvgVariantCache.set(key, svg);
-    return svg;
+  /// Call this for icons you know you'll need (e.g. in app init or screen init)
+  static Future<void> preload(List<String> paths) async {
+    await Future.wait(paths.map(loadSvg));
   }
 }
 
@@ -94,48 +59,53 @@ class SvgIconColored extends StatelessWidget {
       shimmerClr: c.inputBorder.withOpacity(0.3),
     );
 
+    // 👇 Fast path — already cached, render synchronously, no FutureBuilder rebuild
+    final cached = SvgIconCache.getSync(iconPath);
+    if (cached != null) {
+      return _buildSvg(cached, size, shimmerWidget);
+    }
+
+    // Slow path — first time loading this asset
     return FutureBuilder<String>(
-      future: SvgIconEngine.getSvg(
-        path: iconPath,
-        color: iconColor,
-        gradient: gradient,
-      ),
+      future: SvgIconCache.loadSvg(iconPath),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return shimmerWidget;
-        }
-
-        final svgString = snapshot.data!;
-
-        Widget svg = SvgPicture.string(
-          svgString,
-          width: width.w,
-          height: height.h,
-          placeholderBuilder: (_) => shimmerWidget,
-          errorBuilder: (context, error, stackTrace) {
-            return Icon(
-              fallbackIcon,
-              size: width.w,
-              color: iconColor ?? c.primary,
-            );
-          },
-        );
-
-        if (gradient != null) {
-          return ShaderMask(
-            blendMode: BlendMode.srcIn,
-            shaderCallback: (rect) {
-              return gradient!.createShader(
-                Rect.fromLTWH(0, 0, size.width, size.height),
-              );
-            },
-            child: svg,
-          );
-        }
-
-        return svg;
+        if (!snapshot.hasData) return shimmerWidget;
+        return _buildSvg(snapshot.data!, size, shimmerWidget);
       },
     );
+  }
+
+  Widget _buildSvg(String svgString, Size size, Widget shimmerWidget) {
+    Widget svg = SvgPicture.string(
+      svgString,
+      width: width.w,
+      height: height.h,
+      placeholderBuilder: (_) => shimmerWidget,
+      colorFilter: gradient == null && iconColor != null
+          ? ColorFilter.mode(iconColor ?? c.strokePrimary, BlendMode.srcIn)
+          : ColorFilter.mode(c.strokePrimary, BlendMode.srcIn),
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(
+          fallbackIcon,
+          size: width.w,
+          color: iconColor ?? c.strokePrimary,
+        );
+      },
+    );
+
+    if (gradient != null) {
+      return ShaderMask(
+        blendMode: BlendMode.srcIn,
+        shaderCallback: (rect) {
+          return gradient!.createShader(
+            Rect.fromLTWH(0, 0, size.width, size.height),
+          );
+        },
+        child: svg,
+      );
+    }
+
+    return svg;
   }
 }
 

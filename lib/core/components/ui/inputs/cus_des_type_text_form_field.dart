@@ -72,7 +72,7 @@ class CusDesTypeTextFormField extends StatelessWidget {
           readOnly: readOnly ?? false,
           focusNode: focusNode,
           keyboardType: TextInputType.multiline,
-          style: style ?? TxtStyle.outfit(fs: 14, color: c.primary),
+          style: style ?? TxtStyle.outfit(fs: 14),
           maxLines: null,
           minLines: minLines ?? 3,
           textInputAction: TextInputAction.newline,
@@ -90,7 +90,10 @@ class CusDesTypeTextFormField extends StatelessWidget {
               hintText,
               style:
                   hintStyle ??
-                  TxtStyle.outfit(fs: 13, color: c.primary.withOpacity(0.6)),
+                  TxtStyle.outfit(
+                    fs: 13,
+                    color: c.foregroundPrimary.withOpacity(0.6),
+                  ),
             ),
             suffixIcon: suffix,
 
@@ -99,8 +102,8 @@ class CusDesTypeTextFormField extends StatelessWidget {
                 ? InputBorder.none
                 : OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: brdrClr ?? c.inputBorder,
-                      width: brdrClr != null ? 0.5 : 0.6,
+                      color: brdrClr ?? newBorderClr2_30,
+                      width: brdrClr != null ? 0.5 : 1.5,
                     ),
                     borderRadius: (rad ?? 30).brdrRad,
                   ),
@@ -109,13 +112,13 @@ class CusDesTypeTextFormField extends StatelessWidget {
                 (isNoBrder == true
                     ? InputBorder.none
                     : OutlineInputBorder(
-                        borderSide: BorderSide(color: c.error, width: 0.6),
+                        borderSide: BorderSide(color: c.error, width: 1.5),
                         borderRadius: (rad ?? 30).brdrRad,
                       )),
             focusedErrorBorder: isNoBrder == true
                 ? InputBorder.none
                 : OutlineInputBorder(
-                    borderSide: BorderSide(color: c.error, width: 0.6),
+                    borderSide: BorderSide(color: c.error, width: 1.5),
                     borderRadius: (rad ?? 30).brdrRad,
                   ),
 
@@ -124,7 +127,7 @@ class CusDesTypeTextFormField extends StatelessWidget {
                 : OutlineInputBorder(
                     borderSide: BorderSide(
                       color: brdrClr ?? c.inputBorder,
-                      width: brdrClr != null ? 0.8 : 0.6,
+                      width: brdrClr != null ? 0.8 : 1.5,
                     ),
                     borderRadius: (rad ?? 30).brdrRad,
                   ),

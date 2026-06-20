@@ -7,18 +7,20 @@ class ActiveTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
-      rad: 30,
-      contClr: isActive ? c.secondary : Colors.grey.shade300,
-      vp: 2.5,
-      hp: 9,
+      rad: 40,
+      contClr: isActive ? c.secondary : ctransp,
+      hasBrdr: true,
+      brdrClr: Colors.grey.shade400,
+      vp: 1,
+      hp: 10,
       child: Text(
         isActive ? Strings.active : Strings.inactive,
         style: TxtStyle.outfitSemiB(
           fs: 13,
           w: 400,
-          color: isActive ? c.scaffoldBackground : greyLoc,
+          color: isActive ? c.scaffoldBackground : Colors.grey.shade500,
         ),
-      ),
+      ).mB(1),
     );
   }
 }

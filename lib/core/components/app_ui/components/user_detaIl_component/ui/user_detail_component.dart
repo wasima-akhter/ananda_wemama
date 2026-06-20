@@ -94,13 +94,13 @@ class UserDetailComponent extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
+              style: TxtStyle.outfitSemiB(fs: 20, w: 600),
               TextSpan(
                 children: [
                   TextSpan(text: userName.capEachWord()),
                   if (userAge != '0') TextSpan(text: ', $userAge'),
                 ],
               ),
-              style: TxtStyle.outfitSemiB(fs: 20, w: 600, color: c.primary),
             ),
           ),
           Gap(3),
@@ -190,12 +190,12 @@ class UserDetailComponent extends StatelessWidget {
                   children: [
                     ContainerBordered(
                       rad: 30,
-                      hp: 12,
-                      vp: 6,
-                      contClr: c.scaffoldBackground,
+                      hp: 11,
+                      vp: 5,
+                      contClr: white,
                       child: Text(
                         (user?.children[index] ?? '').capEachWord(),
-                        style: TxtStyle.outfitxSmNorSec,
+                        style: TxtStyle.outfit(fs: 11),
                       ),
                     ),
                   ],

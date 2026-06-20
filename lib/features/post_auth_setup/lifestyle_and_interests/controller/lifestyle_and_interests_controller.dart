@@ -82,6 +82,14 @@ class LifestyleAndInterestsController extends GetxController {
     InterestItem(label: "Other", iconPath: Assets.icons.other),
   ];
 
+  // Show more state
+  final RxBool showAllInterests = false.obs;
+
+  void toggleShowAll() {
+    showAllInterests.value = true;
+  }
+  /////
+
   // Loading state
   final isLoading = false.obs;
 

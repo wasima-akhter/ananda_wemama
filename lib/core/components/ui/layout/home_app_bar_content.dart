@@ -16,7 +16,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: bgClr,
+      color: bgClrNew,
       padding: EdgeInsets.only(top: itemGap * 6, bottom: itemGap),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -91,8 +91,10 @@ Widget circledNetworkImageBgComponent({
   double? radius,
   bool? isUser,
   bool? enablePreview,
+  String? name,
 }) {
   return NetworkImageWidget(
+    name: name,
     imageUrl: imagePath,
     isCircle: true,
     radius: radius ?? 20,
