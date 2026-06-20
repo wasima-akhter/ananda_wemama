@@ -53,11 +53,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         children: [
           Text(
             Strings.upcomingExpertSession.capEachWord(),
-            style: TxtStyle.outfitSemiB(fs: 14, w: 600),
-          ),
-
-          Gap(itemGap),
-
+            style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.foregroundSecondary),
+          ), 
           CustomDivider(isFullWidth: true, h: 0.6),
           Gap(itemGap),
 
@@ -87,7 +84,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TxtStyle.outfitSemiB(
-                        fs: 14,
+                        fs: 12,
                         w: 500,
                         color: c.strokePrimary,
                       ),
@@ -104,13 +101,12 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                     time,
                     style: TxtStyle.outfitSemiB(
                       fs: 10,
-                      w: 600,
-                      color: c.strokePrimary,
+                      w: 600, color: c.foregroundSecondary
                     ),
                   ),
                   Text(
                     date,
-                    style: TxtStyle.outfit(fs: 10, color: c.strokePrimary),
+                    style: TxtStyle.outfit(fs: 10, color: c.foregroundSecondary),
                   ),
                 ],
               ),
@@ -134,83 +130,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                 //
                 // Spacer(),
                 const SizedBox(height: 12),
-          /*
-          Row(
-            children: [
-              ContainerBordered(
-                hasBrdr: true,
-                brdrClr: c.primary,
-                rad: 30,
-                contClr: ctransp,
-                hp: 12,
-                vp: 7,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgIcon(iconPath: IconsPath.share),
-                    Gap(itemGap),
-                    Text(
-                      Strings.share.cap,
-                      textAlign: TextAlign.center,
-                      style: TxtStyle.outfitSmTitle,
-                    ),
-                  ],
-                ),
-              ),
-              Gap(itemGap),
-              CusGestureDetector(
-                onTap: () {},
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  vp: 8,
-                  hp: 18,
-                  child: Row(
-                    children: [
-                      SvgIcon(iconPath: IconsPath.reminderBellSkew),
-                      Gap(itemGap),
-                      Text(
-                        Strings.remindMe.capEachWord(),
-                        textAlign: TextAlign.center,
-                        style: TxtStyle.outfitSemiB(
-                          fs: 13,
-                          w: 600,
-                          color: c.textOnPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Gap(itemGap),
-
-              if (isFromUpcomgScreen != null)
-                //
-                Expanded(
-                  child: CusGestureDetector(
-                    onTap: () => showAskYourQuesDialog(
-                      onTap: () =>
-                          onTapQues(expertId: expertId_, sessionId: sessionId_),
-                      isSendQuesLoading: isSendQuesLoading,
-                      writeQuesCtrl: writeQuesCtrl,
-                      writeQuesFocusNode: writeQuesFocusNode,
-                    ),
-                    child: ContainerBordered(
-                      contClr: c.buttonPrimary,
-                      rad: 30,
-                      vp: 8,
-                      // hp: 4,
-                      child: SvgIcon(
-                        iconPath: IconsPath.chatDotSquare,
-                        height: 21,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-
-      */
+    
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

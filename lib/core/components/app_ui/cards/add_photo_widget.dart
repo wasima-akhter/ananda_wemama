@@ -126,16 +126,16 @@ class _RectPlaceholder extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(radius.r),
         color: c.inputBackground,
-        border: Border.all(color: c.inputBorder),
+        border: Border.all(color: newBorderClr2_30),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.add_a_photo_outlined, color: c.primary, size: 20.r),
+          Icon(Icons.add_a_photo_outlined, color: c.foregroundPrimary, size: 20.r),
           Gap(4),
           Text(
             Strings.addPhoto,
-            style: TxtStyle.outfit(fs: 10, w: 400, color: c.primary),
+            style: TxtStyle.outfitSemiB(fs: 10, w: 500,),
             textAlign: TextAlign.center,
           ),
         ],

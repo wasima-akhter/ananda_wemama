@@ -55,7 +55,7 @@ class ChatBubbleCont extends StatelessWidget {
           rad: 14,
           vp: 8,
           hp: 10,
-          contClr: _isMe ? c.secondary : ctransp,
+          contClr: _isMe ? c.secondary : c.secondary.withValues( alpha: 0.2),
           alignment: null,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

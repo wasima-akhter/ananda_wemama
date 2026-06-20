@@ -66,7 +66,7 @@ class NewWavesListItem extends StatelessWidget {
                 name.capEachWord(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TxtStyle.outfitSemiB(fs: 16, w: 500, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 16, w: 500, color: c.foregroundSecondary),
               ),
             ),
             Gap(itemGap),

@@ -99,9 +99,10 @@ class NotificationItemCard extends StatelessWidget {
         hp: 8,
         vp: 8,
         hasBrdr: true,
-        brdrClr: !isSeen ? null : grey200,
+        brdrClr: !isSeen ? null : grey200, contClr: bgClrNew ,
+       
 
-        boxShadow: boxShadowAllSides,
+        // boxShadow: boxShadowAllSides,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -134,7 +135,8 @@ class NotificationItemCard extends StatelessWidget {
 
                       Text(
                         DateHelper().formatTimeAgo(createdAt).date,
-                        style: TxtStyle.inter(fs: 12, w: 400, color: c.secondary),
+                        style: TxtStyle.outfit(fs:11, w: 400,
+                         color: c.secondary),
                       ),
                     ],
                   ),

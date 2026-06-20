@@ -18,6 +18,18 @@ class ChangePasswordController extends GetxController {
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
+  //
+  var showOldPassword = false.obs;
+
+  String get oldPasswordIcon =>
+      !showOldPassword.value ? IconsPath.visibilityOff : IconsPath.visibilityOn;
+
+  bool get isOldPassHidden => !showOldPassword.value;
+
+  void toggleOldPass() {
+    showOldPassword.value = !showOldPassword.value;
+  }
+
   ///
 
   var showPassword = false.obs;

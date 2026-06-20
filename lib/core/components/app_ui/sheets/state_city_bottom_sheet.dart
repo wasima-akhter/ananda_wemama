@@ -42,7 +42,7 @@ class SelectListBottomSheet extends StatelessWidget {
             Gap(itemGap * 3),
 
             /// 🔹 Title
-            Text(title, style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary)),
+            Text(title, style: TxtStyle.outfit(fs: 18, w: 600, color: c.foregroundSecondary)),
 
             /// 🔹 Optional Search
             if (enableSearch) ...[
@@ -71,6 +71,24 @@ class SelectListBottomSheet extends StatelessWidget {
             /// 🔹 List
             Flexible(
               child: Obx(() {
+
+                if(filteredItems.isEmpty) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ContainerBordered(
+                        vp: 22, hp: 22,
+                        contClr:inputBgClr,
+                        alignment: Alignment.centerLeft,
+                        child: Text("None is available.",
+                           style: TxtStyle.outfitSemiB(
+                                  fs: 14,
+                                  color:  c.textPrimary,
+                                ),
+                        )),
+                    ],
+                  );
+                }
                 return ListView.separated(
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
@@ -100,7 +118,7 @@ class SelectListBottomSheet extends StatelessWidget {
                                 item,
                                 style: TxtStyle.outfitSemiB(
                                   fs: 14,
-                                  color: isSelected ? white : c.textPrimary,
+                                  color: isSelected ? white : c.foregroundSecondary,
                                 ),
                               ),
                             ),

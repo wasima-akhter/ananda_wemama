@@ -14,6 +14,7 @@ class PostItemWidget extends StatelessWidget {
   final Community communityData;
   final MyCommunityBtnState btnState;
   final String postId;
+  
   final String postCreatorId;
   final String userName;
   final bool showActions;
@@ -198,7 +199,7 @@ class _PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(postItem.content ?? '', style: TxtStyle.outfit(fs: 14, w: 400));
+    return Text((postItem.content ?? '').cap, style: TxtStyle.outfit(fs: 14, w: 400));
   }
 }
 
@@ -255,7 +256,7 @@ class _PostActions extends StatelessWidget {
               ],
             ),
           ),
-          Gap(itemGap),
+          Gap(itemGap *2),
           CusGestureDetector(
             onTap: () => isLocked && !canSeeLockedComment
                 ? null

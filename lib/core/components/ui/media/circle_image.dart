@@ -10,7 +10,7 @@ class CircleImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: (radius ?? 20).r,
-      backgroundImage: Assets.images.profileDemoPic1.image().image,
+      backgroundImage: Assets.images.userDemoL.image().image,
     );
   }
 }

@@ -58,50 +58,10 @@ class MumsStageController extends GetxController {
   void unfocusAll() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
+ 
 
-  // find all controller of the stages
-  final setUpCtrler = findCont<SetupProfileController>();
-  final photoAndBioCtrler = findCont<PhotoAndBioController>();
-  final lifestyleCtrler = findCont<LifestyleAndInterestsController>();
-
-  /// 🔹 Continue
-  void onTapContinue(GlobalKey<FormState> formKey) async {
-    if (!validStage() || isLoading_.value) {
-      Snack.showWarning(Strings.mustSelectOne);
-      return;
-    }
-
-    unfocusAll();
-    isLoading_.value = true;
-
-    // TODO: Save all to backend
-    // Call API here
-    final success = await PostSignupSetProfileService().uploadCompleteProfile(
-      name: setUpCtrler.nameCtrl.text.trim(),
-      dob: convertDobToTimestamp(setUpCtrler.selectedDob.value),
-      state: setUpCtrler.selectedState.value,
-      city: setUpCtrler.selectedCity.value,
-
-      bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
-      profileImage: photoAndBioCtrler.fileImage.value,
-      interestedFields: lifestyleCtrler.selectedItems.value.toList(),
-      mumStage: selectedStage.value,
-    );
-
-    if (success) {
-      Get.toNamed(RoutePaths.mumsStageFinish);
-
-      if (Get.isRegistered<ProfileController>()) {
-        await Get.find<ProfileController>().fetchMyProfile();
-      }
-    }
-
-    isLoading_.value = false;
-  }
-
-  void onTapFinish() {
-    Get.offAllNamed(RoutePaths.subChoosePlan);
-  }
+ 
+ 
 }
 
 class MumStageUIDataModel {

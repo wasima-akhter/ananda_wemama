@@ -1,4 +1,5 @@
 import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -51,26 +52,31 @@ class PostDetailsScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (replyingTo.isNotEmpty)
-              ContainerBordered(
-                hp: 10,
-                vp: 6,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "Replying to $replyingTo",
-                      style: TxtStyle.outfit(fs: 14),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ContainerBordered(
+                    hp: 10,
+                    vp: 6, contClr: c.backgroundSecondary,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "Replying to $replyingTo",
+                          style: TxtStyle.outfit(fs: 14),
+                        ),
+                        Gap(6),
+                        CusGestureDetector(
+                          onTap: () {
+                            pcc.replyingToCommentId.value = null;
+                            pcc.replyingToUserName.value = '';
+                          },
+                          child: SvgIconColored(iconPath: IconsPath.closeCircle),
+                        ),
+                      ],
                     ),
-                    Gap(6),
-                    CusGestureDetector(
-                      onTap: () {
-                        pcc.replyingToCommentId.value = null;
-                        pcc.replyingToUserName.value = '';
-                      },
-                      child: SvgIconColored(iconPath: IconsPath.closeCircle),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
 
             CusDesTypeTextFormField(
@@ -216,11 +222,45 @@ class CommentItemInPostDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          item.creator?.name ?? 'N/A',
-          style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start, 
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.creator?.name ?? 'N/A',
+                    style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+                  ),
+                  Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
+                ],
+              ),
+            ),
+
+            //
+            // time
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  DateHelper()
+                          .formatUTCtimestamp(item.createdAt.toString())
+                          .time ??
+                      'N/A',
+                  style: TxtStyle.outfitSemiB(fs: 9, color: c.textPrimary),
+                ).mT(5),
+                Text(
+                  DateHelper()
+                          .formatUTCtimestamp(item.createdAt.toString())
+                          .date ??
+                      'N/A',
+                  style: TxtStyle.outfitSemiB(fs: 9, color: c.textPrimary),
+                ),
+              ],
+            ),
+          ],
         ),
-        Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
         CusGestureDetector(
           onTap: () {
             pcc.replyingToCommentId.value = item.id;
@@ -243,23 +283,62 @@ class CommentItemInPostDetail extends StatelessWidget {
                       imageUrl: child.creator?.profileImage ?? '',
                       isCircle: true,
                       radius: 14, // 👈 smaller avatar
+                      enablePreview: true,
+                      isUser: true,
+                      name: child.creator?.name ?? '',
                     ),
                     Gap(itemGap * 0.6),
 
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text(
-                            child.creator?.name ?? 'N/A',
-                            style: TxtStyle.outfitSemiB(
-                              fs: 13,
-                              color: c.textPrimary,
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  child.creator?.name ?? 'N/A',
+                                  style: TxtStyle.outfitSemiB(
+                                    fs: 13,
+                                    color: c.textPrimary,
+                                  ),
+                                ),
+                                Text(
+                                  child.content ?? '--',
+                                  style: TxtStyle.outfit(fs: 12),
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            child.content ?? '--',
-                            style: TxtStyle.outfit(fs: 12),
+
+                          // time
+                          Column(         crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                DateHelper()
+                                        .formatUTCtimestamp(
+                                          child.createdAt.toString(),
+                                        )
+                                        .time ??
+                                    'N/A',
+                                style: TxtStyle.outfitSemiB(
+                                  fs: 9,
+                                  color: c.textPrimary,
+                                ),
+                              ).mT(5),
+                              Text(
+                                DateHelper()
+                                        .formatUTCtimestamp(
+                                          child.createdAt.toString(),
+                                        )
+                                        .date ??
+                                    'N/A',
+                                style: TxtStyle.outfitSemiB(
+                                  fs: 9,
+                                  color: c.textPrimary,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

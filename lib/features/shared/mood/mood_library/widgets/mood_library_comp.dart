@@ -46,7 +46,7 @@ class MoodTypeReadingItem extends StatelessWidget {
           AllAutoheightWebview(
             htmlContent: description,
             previewOnly: true,
-            previewMaxLines: 2,
+            previewMaxLines: 2, 
             padding: EdgeInsets.symmetric(horizontal: 4),
           ),
           16.verticalSpace,
@@ -96,7 +96,7 @@ class MoodTypeInsightDesItem extends StatelessWidget {
               child: SimpleWebViewWidget(
                 htmlContent: description,
                 backgroundColor: c.cardOngoing,
-                textColor: c.secondary,
+                textColor: c.foregroundSecondary,
               ),
             ),
             16.verticalSpace,

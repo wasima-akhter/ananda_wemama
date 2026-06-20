@@ -28,13 +28,29 @@ class ChangePasswordScreen extends StatelessWidget {
                 child: Column(
                   spacing: itemGap * 1.5,
                   children: [
-                    CusPassTypeTextFormField(
-                      controller: cpc.oldPassCtrl,
-                      focusNode: cpc.oldPassFocus,
-                      hintText: Strings.oldPassword,
-                      validator: (value) => validatePassword(value),
-                      hintW: 600,
-                    ),
+                    Obx(() {
+                      return CusPassTypeTextFormField(
+                        controller: cpc.oldPassCtrl,
+                        focusNode: cpc.oldPassFocus,
+                        hintText: Strings.oldPassword,
+                        validator: (value) => validatePassword(value),
+
+                        obscureText: cpc.isOldPassHidden,
+
+                        prefix: SvgIcon(
+                          iconPath: IconsPath.lock,
+                          height: 22,
+                        ).mOnly(left: 15, right: 6),
+                        prefixSize: 34,
+
+                        suffix: VisibilitySuffix(
+                          onTap: cpc.toggleOldPass,
+                          icon: cpc.oldPasswordIcon,
+                        ),
+
+                        hintW: 600,
+                      );
+                    }),
 
                     Obx(() {
                       return CusPassTypeTextFormField(
@@ -43,6 +59,11 @@ class ChangePasswordScreen extends StatelessWidget {
                         hintW: 600,
                         focusNode: cpc.newPassFocus,
                         obscureText: cpc.isNewPassHidden,
+                        prefix: SvgIcon(
+                          iconPath: IconsPath.lock,
+                          height: 22,
+                        ).mOnly(left: 15, right: 6),
+                        prefixSize: 34,
                         suffix: VisibilitySuffix(
                           onTap: cpc.toggleNewPass,
                           icon: cpc.newPasswordIcon,
@@ -58,9 +79,19 @@ class ChangePasswordScreen extends StatelessWidget {
                         hintText: Strings.confirmPassword,
                         hintW: 600,
                         obscureText: cpc.isConPassHidden,
-                        suffix: VisibilitySuffix(onTap: cpc.toggleConPass, icon: cpc.conPassIcon),
-                        validator: (value) =>
-                            validateConfirmPass(confirmPass: value, password: cpc.newPassCtrl.text),
+                        prefix: SvgIcon(
+                          iconPath: IconsPath.lock,
+                          height: 22,
+                        ).mOnly(left: 15, right: 6),
+                        prefixSize: 34,
+                        suffix: VisibilitySuffix(
+                          onTap: cpc.toggleConPass,
+                          icon: cpc.conPassIcon,
+                        ),
+                        validator: (value) => validateConfirmPass(
+                          confirmPass: value,
+                          password: cpc.newPassCtrl.text,
+                        ),
                       ),
                     ),
                   ],

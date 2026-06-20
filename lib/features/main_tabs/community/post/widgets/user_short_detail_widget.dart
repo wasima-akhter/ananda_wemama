@@ -16,11 +16,12 @@ class UserShortDetailWidget extends StatelessWidget {
     return Row(
       children: [
         NetworkImageWidget(
-          imageUrl: isAnonymous ? '' : creatorImg,
+          imageUrl: isAnonymous ? '' : creatorImg, 
+          name:  isAnonymous ? '' : creatorName,
           isCircle: true,
           radius: 18,
           isUser: true,
-          enablePreview: true,
+          enablePreview: true,  solidPlaceholderCircle: true,
         ),
         Gap(itemGap * 1.5),
         Column(
@@ -29,7 +30,7 @@ class UserShortDetailWidget extends StatelessWidget {
           children: [
             TextFit(
               isAnonymous ? Strings.anonymous : creatorName.capEachWord(),
-              style: TxtStyle.outfitSemiB(fs: 15, w: 500, color: c.primary),
+              style: TxtStyle.outfitSemiB(fs: 13, w: 500,  ),
             ),
             isAnonymous
                 ? const SizedBox.shrink()

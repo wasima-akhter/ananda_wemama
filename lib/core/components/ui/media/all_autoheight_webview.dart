@@ -63,7 +63,7 @@ class AllAutoheightWebview extends StatelessWidget {
           style: TextStyle(
             fontSize: fontSize ?? 14,
             height: 1.6,
-            color: c.secondary,
+            color:textColor?? c.foregroundSecondary,
           ),
         ),
       );
@@ -111,7 +111,7 @@ class AllAutoheightWebview extends StatelessWidget {
     background: ${_toCssColor(backgroundColor)} !important;
     font-family: 'Outfit', sans-serif !important;
     font-size: ${fontSize ?? 14}px !important;
-    color: ${_toCssColor(textColor ?? c.primary)} !important;
+    color: ${_toCssColor(textColor ?? c.foregroundSecondary)} !important;
     word-wrap: break-word;
      overflow: hidden !important;
   touch-action: pan-y !important;  /* pass vertical scroll to Flutter */

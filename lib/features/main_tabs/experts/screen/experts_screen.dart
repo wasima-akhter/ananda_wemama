@@ -168,7 +168,7 @@ Widget makeCardHeader(String title, {required void Function() onTap}) {
     children: [
       Text(
         title.capEachWord(),
-        style: TxtStyle.outfitSemiB(fs: 13, w: 600, color: c.primary),
+        style: TxtStyle.outfitSemiB(fs: 13, w: 600,color: c.foregroundSecondary ),
       ),
       GestureDetector(
         onTap: onTap,

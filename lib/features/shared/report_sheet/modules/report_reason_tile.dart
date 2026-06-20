@@ -26,7 +26,7 @@ class ReasonTile extends StatelessWidget {
               Expanded(
                 child: AnimatedDefaultTextStyle(
                   duration: const Duration(milliseconds: 200),
-                  style: TxtStyle.outfitSemiB(fs: 14, color: isSelected ? white : c.textPrimary),
+                  style: TxtStyle.outfitSemiB(fs: 14, color: isSelected ? white : c.foregroundPrimary),
                   child: Text(reason),
                 ),
               ),

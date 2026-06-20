@@ -87,6 +87,7 @@ class ReportBottomSheet extends GetView<ReportController> {
             Obx(
               () => CustomBtnWTxt(
                 btnTxt: Strings.submit,
+                btnColor: c.primary,
                 onTap: () =>
                     controller.report(isUserReport: isUserReport, postId: postId, userId: userId),
                 isLoading: controller.isLoading,

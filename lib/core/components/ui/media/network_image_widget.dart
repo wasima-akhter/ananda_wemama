@@ -29,6 +29,7 @@ class NetworkImageWidget extends StatelessWidget {
   final Color? bgColor;
   final bool? hasShadow;
   final String? name; // 👈 new
+  final bool? solidPlaceholderCircle;
 
   const NetworkImageWidget({
     super.key,
@@ -45,6 +46,7 @@ class NetworkImageWidget extends StatelessWidget {
     this.bgColor,
     this.hasShadow,
     this.name,
+    this.solidPlaceholderCircle,
   });
 
   bool isImageUrl(String url) {
@@ -71,7 +73,9 @@ class NetworkImageWidget extends StatelessWidget {
                 )
               : null,
           shape: BoxShape.circle,
-          border: hasBrdr == false ? null : Border.all(color: c.inputBorder),
+          border: hasBrdr == false?null : Border.all(color:
+          
+           solidPlaceholderCircle == true ? c.primary : c.inputBorder),
           color: c.inputBackground,
         ),
         clipBehavior: Clip.antiAlias,
@@ -201,7 +205,16 @@ class _FallbackWidget extends StatelessWidget {
     final initials = getNameInitials(widget.name);
     final hasInitials = widget.isUser == true && initials.isNotEmpty;
     return Center(
-      child: hasInitials
+      child: widget.solidPlaceholderCircle == true
+          ? Container(
+              width: size *2,
+              height: size *2,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: c.primary,
+              ),
+            )
+          : hasInitials
           ? Text(
               initials,
               style: TxtStyle.poppinsSemiBold12Center(
@@ -215,13 +228,6 @@ class _FallbackWidget extends StatelessWidget {
               size: ScreenSize.isSmallWidth ? size * 0.8 : size,
               color: fallbackIconColor,
             )
-          // SvgIconColored(
-          //     iconPath: Assets.icons.userIconOutlined,
-          //     width: size,
-          //     height: size,
-          //     iconColor: fallbackIconColor,
-          //     fallbackIcon: Icons.person,
-          //   )
           : Assets.images.imagePlaceholder.image(
               width: size,
               height: size,

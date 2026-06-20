@@ -55,7 +55,10 @@ class SearchingCancelButton extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 45.r,
                   backgroundColor: c.inputBackground,
-                  child: Text(Strings.cancel, style: TxtStyle.outfitSmSecNor),
+                  child: Text(
+                    Strings.cancel,
+                    style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
+                  ),
                 ),
               ),
             ],

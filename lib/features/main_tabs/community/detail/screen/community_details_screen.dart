@@ -82,7 +82,9 @@ class CommunityDetailsScreen extends StatelessWidget {
                   right: 0,
                   left: 0,
                   child: CommunityTopbarContent(
-                    suffix: (cdc.btnState.value == MyCommunityBtnState.join)
+                    suffix: (cdc.btnState.value == MyCommunityBtnState.join
+                    ||  cdc.btnState.value == MyCommunityBtnState.visit
+                    )
                         ? CusGestureDetector(
                             onTap: () {
                               if (cdc.btnState.value ==
@@ -100,21 +102,24 @@ class CommunityDetailsScreen extends StatelessWidget {
                                 //   ),
                                 // );
                               }
+                           
                               if (cdc.btnState.value ==
-                                  MyCommunityBtnState.visit) {}
-                              if (cdc.btnState.value ==
-                                  MyCommunityBtnState.join) {
+                                  MyCommunityBtnState.join ||
+                                  cdc.btnState.value ==
+                                  MyCommunityBtnState.visit) {
                                 communityGuidlineDialog(
                                   isLoading: false,
                                   onTapAction: () async {},
+                                  hasButton: false
                                 );
                               }
                             },
                             child: CusCircleIconButton(
                               radius: 15.r,
-                              child: SvgIcon(
-                                iconPath: IconsPath.info,
-                                height: 30,
+                              child: Icon(
+                                color: c.primary,
+                              Icons.info_outline_rounded,
+                                size: 22.h,
                               ),
                             ),
                           )

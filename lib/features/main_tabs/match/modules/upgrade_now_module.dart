@@ -26,7 +26,7 @@ class UpgradeNowModule extends StatelessWidget {
             children: [
               CustomBtnWTxt(
                 isSmall: true,
-                style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: bgClr),
+                style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: bgClr),
                 padding: EdgeInsets.symmetric(vertical: 4, horizontal: 14),
                 btnTxt: Strings.upgradeNow,
                 isLoading: false,
@@ -55,12 +55,12 @@ class UpgradeNowModule extends StatelessWidget {
             Gap(itemGap),
 
             ///
-            Text(title, style: TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary)),
+            Text(title, style: TxtStyle.interSemiB(fs: 13, w: 500, color: c.foregroundSecondary)),
           ],
         ),
 
         Gap(6),
-        Text(subtitle, style: TxtStyle.inter(fs: 12, color: c.secondary)),
+        Text(subtitle, style: TxtStyle.inter(fs: 11, color: c.foregroundSecondary)),
       ],
     );
   }

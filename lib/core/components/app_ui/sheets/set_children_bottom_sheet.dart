@@ -34,7 +34,7 @@ class SetChildrenBottomSheet extends StatelessWidget {
                   Gap(30.w),
                   Text(
                     Strings.setChildren,
-                    style: TxtStyle.outfit(fs: 18, w: 600, color: c.primary),
+                    style: TxtStyle.outfit(fs: 18, w: 600, color: c.foregroundSecondary),
                   ),
                   CusGestureDetector(
                     onTap: () => Get.back(),
@@ -83,7 +83,7 @@ class SetChildrenBottomSheet extends StatelessWidget {
                                     children: [
                                       Text(
                                         "Children ${index + 1}",
-                                        style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+                                        style: TxtStyle.outfitSemiB(fs: 14, color: c.foregroundSecondary),
                                       ),
                                       Gap(4),
                                       Obx(
@@ -107,7 +107,7 @@ class SetChildrenBottomSheet extends StatelessWidget {
                                               fs: 12,
                                               color: child.dob.value.isEmpty
                                                   ? c.textSecondary
-                                                  : c.textPrimary,
+                                                  : c.foregroundSecondary,
                                             ),
                                           ),
                                         ),
@@ -194,7 +194,7 @@ class SetChildrenBottomSheet extends StatelessWidget {
                           height: 18,
                         ),
                         Gap(itemGap),
-                        Text("Add Children", style: TxtStyle.outfitSemiB(fs: 14, color: c.primary)),
+                        Text("Add Children", style: TxtStyle.outfitSemiB(fs: 14, )),
                       ],
                     ),
                   ),

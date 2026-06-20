@@ -159,18 +159,13 @@ class ImagesPath {
   //
   static String get onboardScreenHeart => Assets.images.onboardScreenHeart.path;
 
-  // Profile demo pictures
-  static String get profileDemo1 => Assets.images.profileDemoPic1.path;
-  static String get profileDemo2 => Assets.images.profileDemoPic2.path;
-  static String get profileDemo3 => Assets.images.profileDemoPic3.path;
-  static String get profileDemo4 => Assets.images.profileDemoPic4.path;
+  
 
   // Avatar demo pictures
   static String get userDemoL => Assets.images.userDemoL.path;
   static String get userDemoSm => Assets.images.userDemoSm.path;
 
-  // Group / Community images
-  static String get momsGroupPhoto => Assets.images.momsGroupPhoto.path;
+ 
 
   // Health / Mood
   static String get anxious => Assets.images.anxious.path;
@@ -178,21 +173,17 @@ class ImagesPath {
   static String get stressed => Assets.images.stressed.path;
   static String get tired => Assets.images.tired.path;
 
-  // onboarding after signup
-  static String get foundingMom => Assets.images.foundingMum.path;
+ 
 
   // Location
   static String get locationMap => Assets.images.locationMap.path;
 
   // Net Images/json animation
 
-  static String get loadingJson => Assets.images.loadingGray;
-  static String get loadingDotsDefault => Assets.images.loadingDotsDefault;
-  static String get whiteLoading => Assets.images.whiteLoading;
-  static String get primaryLoading => Assets.images.primaryLoading;
+ 
 
   //
-  static String get doneJson => Assets.images.doneAnimation;
+ 
 
   static String get gallery => Assets.images.gallery.path;
   static String get camera => Assets.images.camera.path;

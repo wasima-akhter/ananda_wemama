@@ -11,7 +11,7 @@ class NoLiveSessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
-      contClr: c.cardOngoing,
+      contClr: newCardClr,
       rad: 20,
       hp: 16,
       vp: 20,
@@ -66,7 +66,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
     return SizedBox(
       // width: S.w - 40.w,
       child: ContainerBordered(
-        contClr: c.cardOngoing,
+        contClr: newCardClr,
         rad: 20,
         hp: 16,
         vp: 16,
@@ -86,6 +86,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
                       brdrClr: c.error,
                       radius: 22,
                       isUser: true,
+                      name: doctorName,
                     ),
                     Positioned(
                       bottom: -(10.h),
@@ -126,7 +127,11 @@ class LiveOngoingSessionCard extends StatelessWidget {
                         specialty,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TxtStyle.urbanistSmTitleSec,
+                        style: TxtStyle.outfitSemiB(
+                          fs: 12,
+                          w: 500,
+                          color: c.strokePrimary,
+                        ),
                       ),
                     ],
                   ),
@@ -164,7 +169,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
               description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TxtStyle.outfit(fs: 13, color: c.secondary),
+              style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
             ),
 
             /// push the button to the bottom

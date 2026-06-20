@@ -42,7 +42,7 @@ class CommunityItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFit(communityName, style: TxtStyle.outfitSmTitle),
+                  TextFit(communityName , style: TxtStyle.outfitSmTitle),
 
                   Gap(2.h),
 
@@ -62,7 +62,7 @@ class CommunityItem extends StatelessWidget {
                             Gap(4),
                             Text(
                               "${stats[index]} $text",
-                              style: TxtStyle.outfitSmSecNor,
+                              style:  TxtStyle.outfit(fs: 13, color: c.foregroundSecondary),
                             ),
                           ],
                         ),
@@ -73,12 +73,12 @@ class CommunityItem extends StatelessWidget {
               ),
             ),
 
-            Gap(12.w),
+            Gap(20.w),
 
             SmallOutlinedBtn(
               isLoading: isLoading,
               btnClr: bgClr != null ? c.secondary : null,
-              txtClr: bgClr != null ? white : null,
+              txtClr: bgClr != null ? white : c.primary,
               btnTxt: btnTxt,
               onTap: onTapItemBtn,
             ),

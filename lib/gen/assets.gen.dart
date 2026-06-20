@@ -670,9 +670,6 @@ class $AssetsIconsGen {
 class $AssetsImagesGen {
   const $AssetsImagesGen();
 
-  /// File path: assets/images/Frame.png
-  AssetGenImage get frame => const AssetGenImage('assets/images/Frame.png');
-
   /// File path: assets/images/all_set_image.png
   AssetGenImage get allSetImage =>
       const AssetGenImage('assets/images/all_set_image.png');
@@ -698,9 +695,6 @@ class $AssetsImagesGen {
   AssetGenImage get congrates =>
       const AssetGenImage('assets/images/congrates.png');
 
-  /// File path: assets/images/done_animation.json
-  String get doneAnimation => 'assets/images/done_animation.json';
-
   /// File path: assets/images/empty_list.png
   AssetGenImage get emptyList =>
       const AssetGenImage('assets/images/empty_list.png');
@@ -708,10 +702,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/folder_attach.png
   AssetGenImage get folderAttach =>
       const AssetGenImage('assets/images/folder_attach.png');
-
-  /// File path: assets/images/founding_mum.png
-  AssetGenImage get foundingMum =>
-      const AssetGenImage('assets/images/founding_mum.png');
 
   /// File path: assets/images/founding_mum_new_image.png
   AssetGenImage get foundingMumNewImage =>
@@ -736,19 +726,13 @@ class $AssetsImagesGen {
   AssetGenImage get likeEmoji =>
       const AssetGenImage('assets/images/like_emoji.png');
 
-  /// File path: assets/images/loading_dots_default.json
-  String get loadingDotsDefault => 'assets/images/loading_dots_default.json';
-
-  /// File path: assets/images/loading_gray.json
-  String get loadingGray => 'assets/images/loading_gray.json';
-
   /// File path: assets/images/location_map.png
   AssetGenImage get locationMap =>
       const AssetGenImage('assets/images/location_map.png');
 
-  /// File path: assets/images/moms_group_photo.png
-  AssetGenImage get momsGroupPhoto =>
-      const AssetGenImage('assets/images/moms_group_photo.png');
+  /// File path: assets/images/match_map.png
+  AssetGenImage get matchMap =>
+      const AssetGenImage('assets/images/match_map.png');
 
   /// File path: assets/images/no_search_img.png
   AssetGenImage get noSearchImg =>
@@ -777,29 +761,6 @@ class $AssetsImagesGen {
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
-
-  /// File path: assets/images/primary_loading.json
-  String get primaryLoading => 'assets/images/primary_loading.json';
-
-  /// File path: assets/images/profile_demo_pic_1.png
-  AssetGenImage get profileDemoPic1 =>
-      const AssetGenImage('assets/images/profile_demo_pic_1.png');
-
-  /// File path: assets/images/profile_demo_pic_2.png
-  AssetGenImage get profileDemoPic2 =>
-      const AssetGenImage('assets/images/profile_demo_pic_2.png');
-
-  /// File path: assets/images/profile_demo_pic_3.png
-  AssetGenImage get profileDemoPic3 =>
-      const AssetGenImage('assets/images/profile_demo_pic_3.png');
-
-  /// File path: assets/images/profile_demo_pic_4.png
-  AssetGenImage get profileDemoPic4 =>
-      const AssetGenImage('assets/images/profile_demo_pic_4.png');
-
-  /// File path: assets/images/refuel_splash_image.png
-  AssetGenImage get refuelSplashImage =>
-      const AssetGenImage('assets/images/refuel_splash_image.png');
 
   /// File path: assets/images/sad_emoji.png
   AssetGenImage get sadEmoji =>
@@ -856,16 +817,12 @@ class $AssetsImagesGen {
   AssetGenImage get wemamaHandsTitleLogo =>
       const AssetGenImage('assets/images/wemama_hands_title_logo.png');
 
-  /// File path: assets/images/white_loading.json
-  String get whiteLoading => 'assets/images/white_loading.json';
-
   /// File path: assets/images/wow_emoji.png
   AssetGenImage get wowEmoji =>
       const AssetGenImage('assets/images/wow_emoji.png');
 
   /// List of all assets
-  List<dynamic> get values => [
-    frame,
+  List<AssetGenImage> get values => [
     allSetImage,
     angryEmoji,
     anxious,
@@ -873,20 +830,16 @@ class $AssetsImagesGen {
     camera,
     careEmoji,
     congrates,
-    doneAnimation,
     emptyList,
     folderAttach,
-    foundingMum,
     foundingMumNewImage,
     gallery,
     hahaEmoji,
     heartEmoji,
     imagePlaceholder,
     likeEmoji,
-    loadingDotsDefault,
-    loadingGray,
     locationMap,
-    momsGroupPhoto,
+    matchMap,
     noSearchImg,
     onboardScreenHeart,
     onboarding1,
@@ -894,12 +847,6 @@ class $AssetsImagesGen {
     onboarding3,
     onboardingBg,
     onboardingImage,
-    primaryLoading,
-    profileDemoPic1,
-    profileDemoPic2,
-    profileDemoPic3,
-    profileDemoPic4,
-    refuelSplashImage,
     sadEmoji,
     sessionMockUser1,
     sessionMockUser2,
@@ -914,7 +861,6 @@ class $AssetsImagesGen {
     weMamaHandsLogo,
     weMamaLogoPng,
     wemamaHandsTitleLogo,
-    whiteLoading,
     wowEmoji,
   ];
 }

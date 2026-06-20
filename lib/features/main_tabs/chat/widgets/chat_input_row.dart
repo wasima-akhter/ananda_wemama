@@ -136,6 +136,7 @@ class ChatInputRow extends StatelessWidget {
         /// ── Input row ──
         ContainerBordered(
           vp: 0,
+          rad: 30,hp: 0 ,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

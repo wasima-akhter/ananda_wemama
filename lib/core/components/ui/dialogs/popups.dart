@@ -146,12 +146,14 @@ Future<void> showAskYourQuesDialog({
 
 Future<void> communityGuidlineDialog({
   required bool isLoading,
-  required Future<void> Function() onTapAction,
+  required Future<void> Function() onTapAction,bool? hasButton
 }) async {
   await Popups().baseAlert(
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
-    content: CommunityGuildline(isLoading: isLoading, onTapAction: onTapAction),
+    content: CommunityGuildline(isLoading: isLoading,
+     hasButton:hasButton ,
+     onTapAction: onTapAction),
   );
 }
 

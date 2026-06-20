@@ -8,7 +8,7 @@ class PastSessionsLibraryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
-      contClr: c.cardOngoing,
+      contClr:newCardClr,
       rad: 24,
       hp: 16,
       vp: 18,

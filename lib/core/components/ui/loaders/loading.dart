@@ -1,4 +1,4 @@
-import 'package:lottie/lottie.dart';
+ 
 
 import '../../../../app/helper_widgets_export.dart';
 
@@ -62,22 +62,4 @@ class LoadingPrimary extends StatelessWidget {
     // );
   }
 }
-
-class DoneAnimation extends StatelessWidget {
-  final double? size;
-  const DoneAnimation({super.key, this.size});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Lottie.asset(
-        ImagesPath.doneJson,
-
-        width: size ?? 1.sw * 0.5,
-        height: size ?? 1.sw * 0.5,
-        repeat: true,
-        animate: true,
-      ),
-    );
-  }
-}
+ 

@@ -30,8 +30,7 @@ class RoutePaths {
   static const addPhoto = '/addPhoto';
   static const addBio = '/addBio';
   static const lifeStyleAndInterests = '/lifeStyleAndInterests';
-  static const mumsStage = '/mumsStage';
-  static const mumsStageFinish = '/mumsStageFinish';
+  static const mumsStage = '/mumsStage'; 
   //
   static const finishSettingProfile = '/finishSettingProfile';
   static const subChoosePlan = '/subChoosePlan';

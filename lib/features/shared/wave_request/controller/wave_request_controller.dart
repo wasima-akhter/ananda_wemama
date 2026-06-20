@@ -238,6 +238,72 @@ class WaveRequestController extends GetxController {
 
   // ── List management ───────────────────────────────────────────────────────
   void updateWaveList(List<NewWaveListItemModel> list) {
+    /*
+
+   // fake data
+
+      newWaveList.value = <NewWaveListItemModel>[
+  NewWaveListItemModel(
+    id: 'wave_1',
+    status: 'active',
+    createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+    updatedAt: DateTime.now(),
+    v: 1,
+    participants: [
+      Participant(
+        id: 'p1',
+        name: 'Ayesha Rahman',
+        profileImage: '',
+      ),
+      Participant(
+        id: 'p2',
+        name: 'Nusrat Jahan',
+        profileImage: '',
+      ),
+    ],
+  ),
+
+  NewWaveListItemModel(
+    id: 'wave_2',
+    status: 'active',
+    createdAt: DateTime.now().subtract(const Duration(days: 1)),
+    updatedAt: DateTime.now(),
+    v: 1,
+    participants: [
+      Participant(
+        id: 'p3',
+        name: 'Sarah Ahmed',
+        profileImage: '',
+      ),
+      Participant(
+        id: 'p4',
+        name: 'Mim Akter',
+        profileImage: '',
+      ),
+      Participant(
+        id: 'p5',
+        name: 'Fatema Khatun',
+        profileImage: '',
+      ),
+    ],
+  ),
+
+  NewWaveListItemModel(
+    id: 'wave_3',
+    status: 'inactive',
+    createdAt: DateTime.now().subtract(const Duration(days: 3)),
+    updatedAt: DateTime.now().subtract(const Duration(hours: 5)),
+    v: 1,
+    participants: [
+      Participant(
+        id: 'p6',
+        name: 'Nadia Islam',
+        profileImage: '',
+      ),
+    ],
+  ),
+];
+*/
     newWaveList.assignAll(list);
   }
 

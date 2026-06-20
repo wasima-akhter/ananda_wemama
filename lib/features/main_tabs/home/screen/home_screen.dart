@@ -1,3 +1,4 @@
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
 import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
 import 'package:mama_app/features/shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
@@ -63,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 1.2,
         children: [
+     
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),

@@ -44,7 +44,7 @@ class EmptyNoSearchWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Gap(itemGap * 2),
-          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.foregroundPrimary)),
 
           Gap(itemGap * 2),
 
@@ -76,7 +76,7 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Gap(itemGap * 2),
-            Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+            Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.foregroundPrimary)),
 
             Gap(itemGap * 2),
 

@@ -1,8 +1,11 @@
+import 'package:mama_app/app/controller_export.dart';
 import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/inputs/custom_toggle_btn.dart';
+import '../../core/models/community_item_detail_model.dart';
 import '../controller/post_in_community_controller.dart';
+import '../widgets/user_short_detail_widget.dart';
 
 class PostInCommunityScreen extends StatelessWidget {
   const PostInCommunityScreen({super.key});
@@ -28,7 +31,7 @@ class PostInCommunityScreen extends StatelessWidget {
                 onTap: () async {
                   await pcc.createNewPost();
                 },
-                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 10.h),
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 8.h),
                 isSmall: true,
                 btnTxt: Strings.post.cap,
                 isLoading: pcc.isCreatePostLoading.value,
@@ -56,11 +59,7 @@ class PostInCommunityScreen extends StatelessWidget {
               children: [
                 Text(
                   "Post Anonymously",
-                  style: TxtStyle.outfitSemiB(
-                    fs: 14,
-                    w: 500,
-                    color: c.secondary,
-                  ),
+                  style: TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.primary),
                 ),
 
                 Obx(
@@ -76,7 +75,18 @@ class PostInCommunityScreen extends StatelessWidget {
           ),
 
           Gap(itemGap * 2),
-          // UserShortDetailWidget(),
+          Obx(() {
+            return UserShortDetailWidget(
+              postItem: AllPost(
+                isAnonymous: pcc.postAnonymously.value,
+                creator: Creator(
+                  name: storage.getUsername,
+                  city: storage.getUserAddressData.city,
+                  profileImage: storage.getUserImageUrl,
+                ),
+              ),
+            );
+          }),
 
           // Obx(() {
           //   return AddPhotoWidget(

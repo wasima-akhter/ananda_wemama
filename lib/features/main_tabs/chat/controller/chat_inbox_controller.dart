@@ -300,7 +300,7 @@ class ChatInboxController extends GetxController {
     final others = newFiles.where((f) => !isImageFile(f)).toList();
 
     if (!canAddImages(images.length)) {
-      Get.snackbar("Limit reached", "Max 10 images allowed");
+      Get.snackbar("Limit reached", "Max 5 images allowed");
       return;
     }
 

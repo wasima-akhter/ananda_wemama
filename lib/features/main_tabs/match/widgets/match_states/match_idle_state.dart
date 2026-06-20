@@ -1,6 +1,7 @@
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../gen/assets.gen.dart';
 import '../../controller/match_controller.dart';
 import '../../modules/upgrade_now_module.dart';
 
@@ -48,7 +49,7 @@ class MatchIdleState extends StatelessWidget {
                       style: TxtStyle.outfitSemiB(
                         fs: 13,
                         w: mc.subUpgradeNeeded.value ? 700 : 400,
-                        color: mc.subUpgradeNeeded.value ? white : c.secondary,
+                        color: mc.subUpgradeNeeded.value ? white : c.strokePrimary,
                       ),
                     ),
                   ),
@@ -59,7 +60,7 @@ class MatchIdleState extends StatelessWidget {
         ),
 
         Gap(itemGap),
-        SafeAssetImage(assetPath: ImagesPath.locationMap),
+        SafeAssetImage(assetPath: Assets.images.matchMap.path),
         Gap(itemGap),
         UpgradeNowModule(onTapUgradeNow: mc.onTapUpgradeNow),
         Gap(itemGap * 3),

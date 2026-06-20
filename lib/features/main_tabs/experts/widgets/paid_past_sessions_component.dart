@@ -12,7 +12,7 @@ class PaidPastSessionsComponent extends StatelessWidget {
     final ctrl = Get.find<ExpertsController>();
 
     return ContainerBordered(
-      contClr: c.cardReminder,
+      contClr: newCardClr,
       rad: 20,
       hp: 8,
       vp: 12,

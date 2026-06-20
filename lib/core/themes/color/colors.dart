@@ -116,6 +116,57 @@ final lightColors = ColorModel(
   success: Colors.green,
   */
 
+
+/// =======================
+/// CENTRALIZED APP PALETTE
+/// =======================
+class AppPalette {
+  // =======================
+  // BRAND
+  // =======================
+  static const brown950 = Color(0xFF3B1D0F);
+  static const brown925 = Color(0xFF512712);
+  static const brown900 = Color(0xFF904224);
+  static const brown850 = Color(0xFF922604);
+  static const brown700 = Color(0xFFC76D46);
+  static const brown700_10 = Color(0xFFF6E6DC);
+  static const brown650 = Color(0xFFC96C4F);
+  static const brown_ = Color(0xFFA6827F);
+
+  // =======================
+  // LIGHT SURFACES
+  // =======================
+  static const cream50 = Color(0xFFFBF2ED);
+  static const cream75 = Color(0xFFF9EFE6);
+  static const cream100 = Color(0xFFFDECE9);
+  static const cream200 = Color(0xFFFDECE4);
+
+  // =======================
+  // ACCENTS
+  // =======================
+  static const rose50 = Color(0xFFF9E0D6);
+  static const rose100 = Color(0xFFFAE0D8);
+  static const rose200 = Color(0xFFF6CBC1);
+
+  // =======================
+  // ADDITIONAL CARD COLORS
+  // =======================
+  static const beige200 = Color(0xFFEADBD2); // cardOngoing
+  static const beige300 = Color(0xFFE1C6B6); // cardReminder
+  static const mauve200 = Color(0xFFDFCECE); // cardMood
+
+  // =======================
+  // OVERLAYS
+  // =======================
+  static const brown900_10 = Color(0x1A904224);
+
+  // =======================
+  // STATUS
+  // =======================
+  static const success = Colors.green;
+  static const warning = Colors.amber;
+  static const error = Colors.redAccent;
+}
 /// =======================
 /// DARK THEME COLORS
 /// =======================
@@ -178,54 +229,3 @@ final darkColors = ColorModel(
   error: AppPalette.error,
   success: AppPalette.success,
 );
-
-/// =======================
-/// CENTRALIZED APP PALETTE
-/// =======================
-class AppPalette {
-  // =======================
-  // BRAND
-  // =======================
-  static const brown950 = Color(0xFF3B1D0F);
-  static const brown925 = Color(0xFF512712);
-  static const brown900 = Color(0xFF904224);
-  static const brown850 = Color(0xFF922604);
-  static const brown700 = Color(0xFFC76D46);
-  static const brown700_10 = Color(0xFFF6E6DC);
-  static const brown650 = Color(0xFFC96C4F);
-  static const brown_ = Color(0xFFA6827F);
-
-  // =======================
-  // LIGHT SURFACES
-  // =======================
-  static const cream50 = Color(0xFFFBF2ED);
-  static const cream75 = Color(0xFFF9EFE6);
-  static const cream100 = Color(0xFFFDECE9);
-  static const cream200 = Color(0xFFFDECE4);
-
-  // =======================
-  // ACCENTS
-  // =======================
-  static const rose50 = Color(0xFFF9E0D6);
-  static const rose100 = Color(0xFFFAE0D8);
-  static const rose200 = Color(0xFFF6CBC1);
-
-  // =======================
-  // ADDITIONAL CARD COLORS
-  // =======================
-  static const beige200 = Color(0xFFEADBD2); // cardOngoing
-  static const beige300 = Color(0xFFE1C6B6); // cardReminder
-  static const mauve200 = Color(0xFFDFCECE); // cardMood
-
-  // =======================
-  // OVERLAYS
-  // =======================
-  static const brown900_10 = Color(0x1A904224);
-
-  // =======================
-  // STATUS
-  // =======================
-  static const success = Colors.green;
-  static const warning = Colors.amber;
-  static const error = Colors.redAccent;
-}

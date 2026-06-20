@@ -6,7 +6,7 @@ class ChatInboxSecurityAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
-      contClr: c.inputBackground,
+      contClr: c.backgroundSecondary ,
       vp: 12,
       hp: 12,
       child: Column(

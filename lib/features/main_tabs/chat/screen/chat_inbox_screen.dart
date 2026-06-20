@@ -76,6 +76,7 @@ class ChatInboxScreen extends StatelessWidget {
 
       inputRow: cic.isBlocked
           ? ContainerBordered(
+           
               contClr: c.componentFill.withValues(alpha: 0.5),
               child: Text(
                 "You have blocked this user",
@@ -171,7 +172,7 @@ class DateDivider extends StatelessWidget {
           padding: 10.ph,
           child: Text(
             item,
-            style: TxtStyle.outfitSemiB(fs: 12, color: c.textSecondary),
+            style: TxtStyle.outfitSemiB(fs: 12, color: c.strokePrimary),
           ),
         ),
         _dateVerLine(),
@@ -180,6 +181,6 @@ class DateDivider extends StatelessWidget {
   }
 
   Widget _dateVerLine() {
-    return Flexible(child: Container(height: 0.2, color: c.secondary));
+    return Flexible(child: Container(height: 0.2, color: c.strokePrimary));
   }
 }

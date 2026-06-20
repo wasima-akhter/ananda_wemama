@@ -41,7 +41,6 @@ import '../features/main_tabs/match/screen/match_screen.dart';
 import '../features/more/notification/screen/notification_screen.dart';
 import '../features/post_auth_setup/add_children/screen/add_children_screen.dart';
 import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and_interests_screen.dart';
-import '../features/post_auth_setup/mums_stage/screen/mums_stage_finish_screen.dart';
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
 import '../features/post_auth_setup/photo_and_bio/screen/add_bio_screen.dart';
 import '../features/post_auth_setup/photo_and_bio/screen/add_photo_screen.dart';
@@ -240,11 +239,7 @@ class RoutePageList {
       page: () => const AddChildrenScreen(),
       binding: PostSignupScreensBinding(),
     ),
-    GetPage(
-      name: RoutePaths.mumsStageFinish,
-      page: () => const MumsStageFinishScreen(),
-      binding: PostSignupScreensBinding(),
-    ),
+ 
     GetPage(
       name: RoutePaths.finishSettingProfile,
       page: () => const FinishSettingProfileScreen(),

@@ -40,7 +40,7 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                 Text(
                   "${Strings.youAnd} $peerName \n${Strings.connected}",
                   textAlign: TextAlign.center,
-                  style: TxtStyle.outfitSemiB(fs: 25, w: 500, color: c.primary),
+                  style: TxtStyle.outfitSemiB(fs: 25, w: 500),
                 ),
                 Gap(itemGap * 2),
 
@@ -51,6 +51,7 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                     color: c.textOnPrimary,
                     w: 500,
                   ),
+                  btnColor: c.primary,
                   onTap: () {
                     Get.back();
                     Get.offAndToNamed(
@@ -80,7 +81,11 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   btnTxt: Strings.keepBrowsing,
                   btnColor: ctransp,
-                  style: TxtStyle.outfitSemiB(fs: 12, color: c.primary, w: 500),
+                  style: TxtStyle.outfitSemiB(
+                    fs: 12,
+                    color: c.primary.withValues(alpha: 0.7),
+                    w: 500,
+                  ),
 
                   isLoading: false,
                   rad: 12,
@@ -96,11 +101,7 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                     children: [
                       Text(
                         Strings.chatUnlock,
-                        style: TxtStyle.interSemiB(
-                          fs: 12,
-                          w: 500,
-                          color: c.primary.withOpacity(0.5),
-                        ),
+                        style: TxtStyle.interSemiB(fs: 12, w: 500),
                       ),
                       Gap(itemGap),
                       _makeChatUnlockMsges(
@@ -134,7 +135,7 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SvgIcon(iconPath: iconPath, height: 25),
+        SvgIconColored(iconPath: iconPath, iconColor: c.primary, height: 25),
 
         Gap(itemGap),
 
@@ -143,12 +144,12 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: TxtStyle.interSemiB(fs: 13, w: 500, color: c.primary),
-              ),
+              Text(title, style: TxtStyle.interSemiB(fs: 13, w: 500)),
               Gap(6),
-              Text(subtitle, style: TxtStyle.inter(fs: 12, color: c.secondary)),
+              Text(
+                subtitle.capEachWord(),
+                style: TxtStyle.inter(fs: 11, color: c.primary),
+              ).mR(6),
             ],
           ),
         ),
