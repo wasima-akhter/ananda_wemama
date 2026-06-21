@@ -12,7 +12,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fspc = Get.find<FinishSettingProfileController>();
+    final fspc = FinishSettingProfileController.to;
 
     final mumStageFormKey = GlobalKey<FormState>();
 
@@ -97,100 +97,126 @@ class FinishSettingProfileScreen extends StatelessWidget {
           Gap(ScreenSize.isSmallWidth ? 0 : 10.h),
           Form(
             key: mumStageFormKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Gap(10.h),
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      return Stack(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Container(
-                            child: SafeAssetImage(
-                              assetPath: Assets.images.allSetImage.path,
+                          SafeAssetImage(
+                            assetPath: Assets.images.allSetImage.path,
+                            fit: BoxFit.fitWidth,
+                            height: (ScreenSizeShortestLogic.s * 0.58).clamp(
+                              200.0,
+                              380.0,
                             ),
                           ),
-
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: FractionalTranslation(
-                              translation: Offset(
-                                0,
-                                ScreenSize.isSmallWidth ? 1.15 : 0.98,
-                              ), // 👈 pulls list down past image bottom — tweak 0.55 to taste
-                              child: ContainerBordered(
-                                contClr: contBgClr,
-                                hasBrdr: true,
-                                hp: 0,
-                                brdrClr: newBorderClr,
-                                brdrW: 2,
-                                vp: 0,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize
-                                      .min, // 👈 height grows with content, not fixed
-                                  children: [
-                                    ...List.generate(fspc.featureList.length, (
-                                      index,
-                                    ) {
-                                      final item = fspc.featureList[index];
-                                      return Column(
-                                        children: [
-                                          Container(
-                                            margin: ScreenSize.isSmallWidth
-                                                ? 8.pa
-                                                : 12.pa,
-                                            child: Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 40.w,
-                                                  child: SvgIcon(
-                                                    iconPath: item.leftIcon,
-                                                    height:
-                                                        ScreenSize.isSmallWidth
-                                                        ? 25
-                                                        : 28,
-                                                  ),
-                                                ),
-                                                Gap(8.w),
-                                                Expanded(
-                                                  child: Text(
-                                                    item.title.cap,
-                                                    style:
-                                                        TxtStyle.poppinsSemiBold12Center(),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          if (index !=
-                                              fspc.featureList.length - 1)
-                                            CustomDivider(
-                                              isFullWidth: true,
-                                              clr: newBorderClr,
-                                              h: 2.3,
-                                            ),
-                                        ],
-                                      );
-                                    }),
-                                  ],
-                                ),
-                              ).get10cm,
+                          Positioned(
+                            bottom: -(ScreenSizeShortestLogic.s * 0.4).clamp(
+                              40.0,
+                              130.0,
                             ),
+                            left: 16,
+                            right: 16,
+                            child: ContainerBordered(
+                              contClr: contBgClr,
+                              hasBrdr: true,
+                              brdrClr: newBorderClr,
+                              brdrW: 2,
+                              vp: 0,
+                              hp: 0,
+                              child: Content_(),
+                            ).get10cm,
                           ),
                         ],
-                      );
-                    },
+                      ),
+
+                      // 👇 pushes next content below overlap
+                      const SizedBox(height: 40),
+                    ],
                   ),
-                  Gap(itemGap * 2.5),
-                ],
-              ),
+                );
+
+                // Stack(
+                //   clipBehavior: Clip.none,
+                //   children: [
+                //     Container(
+                //       child: SafeAssetImage(
+                //         assetPath: Assets.images.allSetImage.path,
+                //       ),
+                //     ),
+
+                //     Align(
+                //       alignment: Alignment.bottomCenter,
+                //       child: FractionalTranslation(
+                //         translation: Offset(
+                //           0,
+                //           ScreenSize.isSmallWidth ? 1.15 : 0.98,
+                //         ), // 👈 pulls list down past image bottom — tweak 0.55 to taste
+                //         child: ContainerBordered(
+                //           contClr: contBgClr,
+                //           hasBrdr: true,
+                //           hp: 0,
+                //           brdrClr: newBorderClr,
+                //           brdrW: 2,
+                //           vp: 0,
+                //           child: Content_() ).get10cm,
+                //       ),
+                //     ),
+                //   ],
+                // );
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class Content_ extends StatelessWidget {
+  const Content_({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final fspc = FinishSettingProfileController.to;
+    return Column(
+      mainAxisSize: MainAxisSize.min, // 👈 height grows with content, not fixed
+      children: [
+        ...List.generate(fspc.featureList.length, (index) {
+          final item = fspc.featureList[index];
+          return Column(
+            children: [
+              Container(
+                margin: ScreenSize.isSmallWidth ? 8.pa : 12.pa,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 40.w,
+                      child: SvgIcon(
+                        iconPath: item.leftIcon,
+                        height: ScreenSize.isSmallWidth ? 25 : 28,
+                      ),
+                    ),
+                    Gap(8.w),
+                    Expanded(
+                      child: Text(
+                        item.title.cap,
+                        style: TxtStyle.poppinsSemiBold12Center(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (index != fspc.featureList.length - 1)
+                CustomDivider(isFullWidth: true, clr: newBorderClr, h: 2.3),
+            ],
+          );
+        }),
+      ],
     );
   }
 }

@@ -14,7 +14,7 @@ class LifestyleAndInterestsController extends GetxController {
 
   final List<InterestItem> lifestyleInterests = [
     InterestItem(
-      label: "Emotional \nupport",
+      label: "Emotional \nSupport",
       iconPath: Assets.icons.emotionalSupport,
     ),
     InterestItem(

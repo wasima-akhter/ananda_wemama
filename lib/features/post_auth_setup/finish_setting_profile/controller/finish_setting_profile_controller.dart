@@ -10,6 +10,8 @@ import '../../../../core/services/post_signup_set_profile/post_signup_set_profil
 import '../../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class FinishSettingProfileController extends GetxController {
+  static FinishSettingProfileController get to =>
+      Get.find<FinishSettingProfileController>();
   // Loading state
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
@@ -66,7 +68,7 @@ class FinishSettingProfileController extends GetxController {
       bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
       profileImage: photoAndBioCtrler.fileImage.value,
       interestedFields: lifestyleCtrler.selectedItems.value.toList(),
-      mumStage: mumStageCtrler.selectedStage.value,
+      mumStage: mumStageCtrler.selectedStageTitles.first ?? '',
     );
 
     if (success) {

@@ -52,7 +52,7 @@ class CustomBtnWIcon extends StatelessWidget {
             padding ??
             EdgeInsets.symmetric(
               horizontal: 16.w,
-              vertical: isTallDevice ? 14.h : 12.h,
+              vertical: isTallDevice ? 12.h : 12.h,
             ),
         decoration: BoxDecoration(color: bgColor, borderRadius: radius.brdrRad),
         child: Stack(

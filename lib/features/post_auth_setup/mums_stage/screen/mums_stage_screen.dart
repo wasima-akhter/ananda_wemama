@@ -18,7 +18,7 @@ class MumsStageScreen extends StatelessWidget {
     return AuthScaffold(
       bottomWidget: AuthButton(
         isLoading: false,
-        onTap: () => Get.toNamed(RoutePaths.addChildren),
+        onTap: msc.continueToNext,
         //  isLoading: msc.isLoading,
         //  msc.onTapContinue(mumStageFormKey),
       ).mB(10),

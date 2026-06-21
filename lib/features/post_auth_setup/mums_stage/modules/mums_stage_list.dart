@@ -13,9 +13,7 @@ class MumsStageList extends GetView<MumsStageController> {
           controller.stageList.length,
           (index) => MumsStageTile(
             item: controller.stageList[index],
-            isSelected:
-                controller.selectedStage.value ==
-                controller.stageList[index].title,
+            isSelected: controller.isSelected(controller.stageList[index].id),
           ),
         ),
       ),

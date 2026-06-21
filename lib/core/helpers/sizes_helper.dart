@@ -30,3 +30,33 @@ class ScreenSize {
       Get.width >= 390 && Get.width < 430; // Most modern phones
   static bool get isSmallWidth => Get.width < 390; // Compact phones
 }
+
+extension ScreenSizeX on ScreenSize {
+  /// 📱 Shortest side (important for orientation + small devices)
+  static double get shortestSide =>
+      Get.width < Get.height ? Get.width : Get.height;
+
+  static double get longestSide =>
+      Get.width > Get.height ? Get.width : Get.height;
+
+  /// 📱 Device type based on shortest side (more reliable than width/height separately)
+  static bool get isCompactDevice => shortestSide < 360;
+
+  static bool get isNormalPhone => shortestSide >= 360 && shortestSide < 420;
+
+  static bool get isLargePhone => shortestSide >= 420;
+
+  /// 📱 Tablet detection (VERY important for layout stability)
+  static bool get isTablet => shortestSide >= 600;
+}
+
+extension ScreenSizeShortestLogic on ScreenSize {
+  /// Use this for scaling paddings, gaps, overlaps
+  static double get s => Get.width < Get.height ? Get.width : Get.height;
+
+  /// Safe vertical spacing multiplier
+  static double v(double factor) => s * factor;
+
+  /// Safe horizontal spacing multiplier
+  static double h(double factor) => Get.width * factor;
+}

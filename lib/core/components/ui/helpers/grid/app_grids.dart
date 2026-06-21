@@ -15,8 +15,8 @@ class AppGridView<T> extends StatelessWidget {
     required this.items,
     required this.itemBuilder,
     this.crossAxisCount = 3,
-    this.spacing = 12,
-    this.childAspectRatio = 1.2,
+    this.spacing = 10,
+    this.childAspectRatio = 1.1,
     this.shrinkWrap = true,
     this.physics = const NeverScrollableScrollPhysics(),
   });

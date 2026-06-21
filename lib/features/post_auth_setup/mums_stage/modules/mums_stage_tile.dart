@@ -14,7 +14,7 @@ class MumsStageTile extends GetView<MumsStageController> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => controller.selectStage(item.title),
+      onTap: () => controller.toggleStage(item.id),
       child: ContainerBordered(
         vp: ScreenSize.isSmallWidth ? 8 : 10,
         hp: 14,
@@ -72,7 +72,7 @@ class MumsStageTile extends GetView<MumsStageController> {
             AppCheckbox(
               size: 20,
               value: isSelected,
-              onChanged: (_) => controller.selectStage(item.title),
+              onChanged: (_) => controller.toggleStage(item.id),
               borderColor: isSelected
                   ? c.scaffoldBackground
                   : c.foregroundPrimary,

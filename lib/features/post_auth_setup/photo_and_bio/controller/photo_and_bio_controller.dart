@@ -68,6 +68,12 @@ class PhotoAndBioController extends GetxController {
 
     if (!isValid || isLoading_.value) return;
 
+    /// 🔴 Image validation
+    if (fileImage.value == null) {
+      Snack.showWarning(title: "Required", "Please select a photo");
+      return;
+    }
+
     unfocusAll();
     isLoading_.value = true;
 

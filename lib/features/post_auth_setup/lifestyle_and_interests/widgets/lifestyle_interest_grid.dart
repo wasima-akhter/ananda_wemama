@@ -16,7 +16,7 @@ class LifestyleInterestsGrid extends StatelessWidget {
           : lic.lifestyleInterests.sublist(0, 12);
 
       return AppGridView(
-        items: items,
+        items: items, 
         itemBuilder: (_, item, _) {
           return LifestyleInterestTile(item: item);
         },

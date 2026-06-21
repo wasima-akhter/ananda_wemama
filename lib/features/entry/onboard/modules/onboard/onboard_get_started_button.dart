@@ -8,7 +8,7 @@ class OnboardGetStartedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomBtnWIcon(
       text: Strings.getStarted,
-
+      // padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.w),
       bgColor: c.strokePrimary,
       iconPath: IconsPath.arrowRightLg,
       iconPosition: IconPosition.right,

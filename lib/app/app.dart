@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mama_app/core/components/ui/loaders/loading.dart';
@@ -19,7 +21,7 @@ class App extends StatelessWidget {
   const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
-    return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;
+    return hasInternet ? RoutePaths.addChildren : RoutePaths.offlineScreen;
   }
 
   @override
@@ -33,49 +35,54 @@ class App extends StatelessWidget {
           );
         }
 
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          initialRoute: snapshot.data!,
-          title: appName,
-          theme: ThemeData.light(useMaterial3: true),
-          darkTheme: ThemeData.dark(useMaterial3: true),
-          themeMode: ThemeMode.light,
+        return DevicePreview(
+          enabled: false ?? kDebugMode,
+          builder: (context) {
+            return GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              initialRoute: snapshot.data!,
+              title: appName,
+              theme: ThemeData.light(useMaterial3: true),
+              darkTheme: ThemeData.dark(useMaterial3: true),
+              themeMode: ThemeMode.light,
 
-          getPages: RoutePageList.appPages,
-          unknownRoute: RoutePageList.appPages.firstWhere(
-            (page) => page.name == RoutePaths.notFound,
-          ),
-          defaultTransition: Transition.fade,
-          transitionDuration: const Duration(milliseconds: 400),
+              getPages: RoutePageList.appPages,
+              unknownRoute: RoutePageList.appPages.firstWhere(
+                (page) => page.name == RoutePaths.notFound,
+              ),
+              defaultTransition: Transition.fade,
+              transitionDuration: const Duration(milliseconds: 400),
 
-          /// ✅ GLOBAL DEPENDENCIES HERE
-          initialBinding: BindingsBuilder(() {
-            //             CommunityController (permanent)
-            // CommunitySearchController (permanent)
+              /// ✅ GLOBAL DEPENDENCIES HERE
+              initialBinding: BindingsBuilder(() {
+                //             CommunityController (permanent)
+                // CommunitySearchController (permanent)
 
-            Get.put(UserDetailController(), permanent: true);
-            Get.put(ReportController(), permanent: true);
-            Get.put(CommunityActionController(), permanent: true);
-            Get.put(CommunityController(), permanent: true);
-            Get.put(CommunitySearchController(), permanent: true);
+                Get.put(UserDetailController(), permanent: true);
+                Get.put(ReportController(), permanent: true);
+                Get.put(CommunityActionController(), permanent: true);
+                Get.put(CommunityController(), permanent: true);
+                Get.put(CommunitySearchController(), permanent: true);
 
-            // ── Register SocketService first (MatchController depends on it) ──────────
-            Get.putPermanent(SocketService());
-            final socketService = Get.find<SocketService>();
+                // ── Register SocketService first (MatchController depends on it) ──────────
+                Get.putPermanent(SocketService());
+                final socketService = Get.find<SocketService>();
 
-            // ── Connect immediately if user is already logged in (token exists) ───────
-            // On fresh login this is skipped — SigninService.connectSocket() handles it.
-            // if ((getToken ?? '').isNotEmpty) {
-            //   socketService.connectSocket();
-            // }
+                // ── Connect immediately if user is already logged in (token exists) ───────
+                // On fresh login this is skipped — SigninService.connectSocket() handles it.
+                // if ((getToken ?? '').isNotEmpty) {
+                //   socketService.connectSocket();
+                // }
 
-            // ✅ Delay until after first frame so widget tree is ready
-            if ((getToken ?? '').isNotEmpty) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                // socketService.connectSocket();
-              });
-            }
-          }),
+                // ✅ Delay until after first frame so widget tree is ready
+                if ((getToken ?? '').isNotEmpty) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    // socketService.connectSocket();
+                  });
+                }
+              }),
+            );
+          },
         );
       },
     );
