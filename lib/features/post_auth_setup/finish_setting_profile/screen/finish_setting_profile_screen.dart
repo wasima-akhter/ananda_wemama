@@ -97,6 +97,8 @@ class FinishSettingProfileScreen extends StatelessWidget {
           Gap(ScreenSize.isSmallWidth ? 0 : 10.h),
           Form(
             key: mumStageFormKey,
+
+            /*
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
@@ -117,7 +119,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
                           Positioned(
                             bottom: -(ScreenSizeShortestLogic.s * 0.4).clamp(
                               40.0,
-                              130.0,
+                              130.0, //     ScreenSize.isSmallWidth ? 130.0 : 180.0,
                             ),
                             left: 16,
                             right: 16,
@@ -168,6 +170,60 @@ class FinishSettingProfileScreen extends StatelessWidget {
                 //     ),
                 //   ],
                 // );
+              },
+            ),
+         */
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                debugPrint(
+                  ' Get.height is Get.width : ${Get.width < Get.height} ',
+                );
+                // 👇 single source of truth — everything derives from this
+                final imageHeight =
+                    (ScreenSizeShortestLogic.s *
+                            (ScreenSize.isSmallWidth ? 0.4 : 0.58))
+                        .clamp(180.0, 380.0);
+                final overlapOffset =
+                    imageHeight *
+                    (ScreenSize.isSmallWidth
+                        ? 0.8
+                        : 0.98); // card always overlaps 98% of image height
+
+                return SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          SafeAssetImage(
+                            assetPath: Assets.images.allSetImage.path,
+                            fit: BoxFit.fitWidth,
+                            height: imageHeight,
+                          ),
+                          Positioned(
+                            bottom:
+                                -overlapOffset, // 👈 always proportional to image
+                            left: 16,
+                            right: 16,
+                            child: ContainerBordered(
+                              contClr: contBgClr,
+                              hasBrdr: true,
+                              brdrClr: newBorderClr,
+                              brdrW: 2,
+                              vp: 0,
+                              hp: 0,
+                              child: Content_(),
+                            ).get10cm,
+                          ),
+                        ],
+                      ),
+
+                      // 👇 spacer must also match the overlap so nothing clips below
+                      SizedBox(height: overlapOffset + 16),
+                    ],
+                  ),
+                );
               },
             ),
           ),

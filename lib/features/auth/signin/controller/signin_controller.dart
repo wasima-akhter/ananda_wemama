@@ -143,4 +143,87 @@ class SigninController extends GetxController {
     passwordFocus.dispose();
     super.onClose();
   }
+
+  // ─────────────────────────────────────────────────────────────────
+  //                           SOCIAL LOGIN
+  // ─────────────────────────────────────────────────────────────────
+  // ADD these imports to signin_controller.dart
+  // ─────────────────────────────────────────────────────────────────
+  // import '../../../../core/services/auth/social_login_service.dart';
+
+  // ─────────────────────────────────────────────────────────────────
+  // ADD this block inside SigninController (alongside existing methods)
+  // ─────────────────────────────────────────────────────────────────
+
+  // ── Social login loading state (separate so it doesn't block the normal login button) ──
+  final _isSocialLoading = false.obs;
+  bool get isSocialLoading => _isSocialLoading.value;
+
+  // ── Google ──────────────────────────────────────────────────────
+
+  Future<void> onTapGoogleLogin() async {
+    if (_isSocialLoading.value) return;
+    _isSocialLoading.value = true;
+
+    try {
+      final idToken = await SocialLoginService().getGoogleIdToken();
+      if (idToken == null) return; // user cancelled — do nothing
+
+      await _handleSocialLogin(authToken: idToken, provider: 'google');
+    } catch (e, stack) {
+      log('Google login error: $e');
+      log('STACK: $stack');
+    } finally {
+      _isSocialLoading.value = false;
+    }
+  }
+
+  // ── Apple ───────────────────────────────────────────────────────
+
+  Future<void> onTapAppleLogin() async {
+    if (_isSocialLoading.value) return;
+    _isSocialLoading.value = true;
+
+    try {
+      final idToken = await SocialLoginService().getAppleIdToken();
+      if (idToken == null) return; // user cancelled — do nothing
+
+      await _handleSocialLogin(authToken: idToken, provider: 'apple');
+    } catch (e, stack) {
+      log('Apple login error: $e');
+      log('STACK: $stack');
+    } finally {
+      _isSocialLoading.value = false;
+    }
+  }
+
+  // ── Shared handler ───────────────────────────────────────────────
+
+  Future<void> _handleSocialLogin({
+    required String authToken,
+    required String provider,
+  }) async {
+    final result = await SocialLoginService().socialLogin(
+      authToken: authToken,
+      provider: provider,
+    );
+
+    switch (result.type) {
+      case SocialLoginResultType.success:
+        storage.setLoggedIn(true);
+        storage.setSeenOnboarding(true);
+        clearFields();
+        Get.offAllNamed(RoutePaths.mainNav);
+
+      case SocialLoginResultType.profileIncomplete:
+        Get.offAllNamed(RoutePaths.setupProfile);
+
+      case SocialLoginResultType.failed:
+        // ApiServiceHelper already shows the error toast — nothing extra needed.
+        break;
+
+      case SocialLoginResultType.cancelled:
+        break;
+    }
+  }
 }

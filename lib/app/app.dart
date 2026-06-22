@@ -12,16 +12,13 @@ import '../core/config/app_info.dart';
 import '../core/network/helpers/network_helpers.dart';
 import '../core/services/socket/socket_service.dart';
 import '../core/utils/extension/binding_extensions.dart';
-import '../features/main_tabs/community/core/controllers_shared/community_action_controller.dart';
-import '../features/main_tabs/community/feed/controller/community_controller.dart';
-import '../features/main_tabs/community/search/controller/community_search_controller.dart';
 
 class App extends StatelessWidget {
   final bool hasInternet;
   const App({super.key, required this.hasInternet});
 
   Future<String> getInitialRoute() async {
-    return hasInternet ? RoutePaths.addChildren : RoutePaths.offlineScreen;
+    return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;
   }
 
   @override
@@ -60,9 +57,9 @@ class App extends StatelessWidget {
 
                 Get.put(UserDetailController(), permanent: true);
                 Get.put(ReportController(), permanent: true);
-                Get.put(CommunityActionController(), permanent: true);
-                Get.put(CommunityController(), permanent: true);
-                Get.put(CommunitySearchController(), permanent: true);
+                // Get.put(CommunityActionController(), permanent: true);
+                // Get.put(CommunityController(), permanent: true);
+                // Get.put(CommunitySearchController(), permanent: true);
 
                 // ── Register SocketService first (MatchController depends on it) ──────────
                 Get.putPermanent(SocketService());

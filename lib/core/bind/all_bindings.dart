@@ -20,12 +20,15 @@ import '../../features/entry/splash/controller/splash_controller.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
+import '../../features/main_tabs/community/core/controllers_shared/community_action_controller.dart';
 import '../../features/main_tabs/community/create/controller/create_community_controller.dart';
 import '../../features/main_tabs/community/detail/controller/community_detail_controller.dart';
+import '../../features/main_tabs/community/feed/controller/community_controller.dart';
 import '../../features/main_tabs/community/manage/controller/manage_community_controller.dart';
 import '../../features/main_tabs/community/members/controller/member_management_controller.dart';
 import '../../features/main_tabs/community/post/controller/post_details_controller.dart';
 import '../../features/main_tabs/community/post/controller/post_in_community_controller.dart';
+import '../../features/main_tabs/community/search/controller/community_search_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/experts/controller/past_sessions_controller.dart';
 import '../../features/main_tabs/experts/controller/session_action_controller.dart';
@@ -187,6 +190,10 @@ class MainNavBinding extends Bindings {
 
     Get.putPermanent(MainNavController());
     Get.putPermanent(BookmarkController());
+
+    Get.put(CommunityActionController(), permanent: true);
+    Get.put(CommunityController(), permanent: true);
+    Get.put(CommunitySearchController(), permanent: true);
 
     // =======================
     // FEATURE SHARED CONTROLLERS

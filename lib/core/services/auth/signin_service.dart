@@ -1,9 +1,142 @@
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../socket/socket_service.dart';
 
-class SigninService extends GetxService {
+// ─────────────────────────────────────────────
+// Result type
+// ─────────────────────────────────────────────
+
+enum SocialLoginResultType { success, profileIncomplete, failed, cancelled }
+
+class SocialLoginResult {
+  final SocialLoginResultType type;
+  final String? message;
+  const SocialLoginResult({required this.type, this.message});
+}
+
+// ─────────────────────────────────────────────
+// Service
+// ─────────────────────────────────────────────
+
+class SocialLoginService {
+  final ApiServiceHelper _apiHelper = ApiServiceHelper();
+
+  // ── Google ──────────────────────────────────
+
+  /// Returns the Google ID token, or null if the user cancelled / error.
+  Future<String?> getGoogleIdToken() async {
+    try {
+      final googleSignIn = GoogleSignIn(scopes: ['email']);
+      // Force account picker every time so users can switch accounts.
+      await googleSignIn.signOut();
+
+      final account = await googleSignIn.signIn();
+      if (account == null) return null; // user cancelled
+
+      final auth = await account.authentication;
+      return auth.idToken;
+    } catch (e) {
+      log('Google Sign-In error: $e');
+      return null;
+    }
+  }
+
+  // ── Apple ───────────────────────────────────
+
+  /// Returns the Apple identity token, or null if the user cancelled / error.
+  Future<String?> getAppleIdToken() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+      return credential.identityToken;
+    } catch (e) {
+      log('Apple Sign-In error: $e');
+      return null;
+    }
+  }
+
+  // ── Backend call ─────────────────────────────
+
+  Future<SocialLoginResult> socialLogin({
+    required String authToken,
+    required String provider, // 'google' | 'apple'
+  }) async {
+    log('Social login → provider: $provider');
+
+    final response = await _apiHelper.request<SigninModelData>(
+      apiCall: () => ApiClient().post(
+        Endpoints.socialLogin.getUrl,
+        data: {"provider": provider, "authToken": authToken},
+        isLogin_: true,
+        reqName: 'social_login',
+      ),
+      reqName: 'social_login',
+      parser: (data) => SigninModelData.fromJson(data),
+    );
+
+    if (response == null) {
+      return const SocialLoginResult(type: SocialLoginResultType.failed);
+    }
+
+    final data = response.data;
+    if (data == null) {
+      return const SocialLoginResult(type: SocialLoginResultType.failed);
+    }
+
+    final statusCode = data.statusCode;
+
+    // 302 → profile not yet completed
+    if (statusCode == 302) {
+      "Please complete your profile to continue.".showToast();
+      storage.setToken(data.accessToken ?? '');
+      return SocialLoginResult(
+        type: SocialLoginResultType.profileIncomplete,
+        message: data.msg,
+      );
+    }
+
+    final accessToken = data.accessToken ?? '';
+    if (accessToken.isEmpty) {
+      return const SocialLoginResult(type: SocialLoginResultType.failed);
+    }
+
+    // ✅ Success — persist user data
+    _saveUserData(response: response);
+
+    // Reconnect socket with fresh credentials
+    try {
+      final socket = Get.find<SocketService>();
+      socket.disconnectSocket();
+      await socket.connectSocket();
+    } catch (e) {
+      log('Socket error after social login: $e');
+    }
+
+    if (Get.isRegistered<ProfileController>()) {
+      await Get.find<ProfileController>().fetchMyProfile();
+    }
+
+    return const SocialLoginResult(type: SocialLoginResultType.success);
+  }
+
+  void _saveUserData({required BaseResponse<SigninModelData> response}) {
+    if (response.data == null) return;
+    final user = response.data!.user;
+    storage.setUserInfo(email: user?.email ?? '');
+    storage.setToken(response.data?.accessToken ?? '');
+    log('Social login — saved token for: ${user?.email}');
+  }
+}
+
+class SigninService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
 
   Future<LoginResult> signIn({

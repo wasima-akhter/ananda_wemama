@@ -133,82 +133,108 @@ class FormSection extends StatelessWidget {
     );
   }
 }
+// social_section.dart — drop-in replacement
+// Requires SigninController to be in scope (Get.find / controller binding)
 
 class SocialSection extends StatelessWidget {
   const SocialSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // or,
-        Row(
-          spacing: 20.w,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
-            ),
-            Text(
-              Strings.or.capEachWord(),
-              style: TxtStyle.poppinsSemiB(w: 600, fs: 13),
-            ),
-            Expanded(
-              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
-            ),
-          ],
-        ).mHV(S.w * 0.1, 0),
+    final ctrl = SigninController.to;
 
-        Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
-        ContainerBordered(
-          contClr: inputBgClr,
-          hasBrdr: true,
-          brdrClr: newBorderClr,
-          brdrW: 1,
-          vp: 8,
-          alignment: Alignment.center,
-          child: Row(
-            spacing: 10.w,
-            mainAxisAlignment: MainAxisAlignment.center,
+    return Obx(
+      () => AbsorbPointer(
+        // Block all taps while a social login is in flight
+        absorbing: ctrl.isSocialLoading,
+        child: Opacity(
+          opacity: ctrl.isSocialLoading ? 0.6 : 1.0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SvgIcon(
-                height: ScreenSize.isSmallWidth ? 22 : 28,
-                iconPath: IconsPath.google,
-              ),
-              Text(
-                "Continue with google".capEachWord(),
+              // ── "or" divider ─────────────────────────────────────
+              Row(
+                spacing: 20.w,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: CustomDivider(
+                      clr: c.strokePrimary.withValues(alpha: 0.4),
+                    ),
+                  ),
+                  Text(
+                    Strings.or.capEachWord(),
+                    style: TxtStyle.poppinsSemiB(w: 600, fs: 13),
+                  ),
+                  Expanded(
+                    child: CustomDivider(
+                      clr: c.strokePrimary.withValues(alpha: 0.4),
+                    ),
+                  ),
+                ],
+              ).mHV(S.w * 0.1, 0),
 
-                style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
+              Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
+
+              // ── Google button ────────────────────────────────────
+              GestureDetector(
+                onTap: ctrl.onTapGoogleLogin,
+                child: ContainerBordered(
+                  contClr: inputBgClr,
+                  hasBrdr: true,
+                  brdrClr: newBorderClr,
+                  brdrW: 1,
+                  vp: 8,
+                  alignment: Alignment.center,
+                  child: Row(
+                    spacing: 10.w,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgIcon(
+                        height: ScreenSize.isSmallWidth ? 22 : 28,
+                        iconPath: IconsPath.google,
+                      ),
+                      Text(
+                        "Continue with Google".capEachWord(),
+                        style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Gap(itemGap),
+
+              // ── Apple button ─────────────────────────────────────
+              GestureDetector(
+                onTap: ctrl.onTapAppleLogin,
+                child: ContainerBordered(
+                  contClr: inputBgClr,
+                  hasBrdr: true,
+                  brdrClr: newBorderClr,
+                  brdrW: 1,
+                  vp: 8,
+                  alignment: Alignment.center,
+                  child: Row(
+                    spacing: 12.w,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgIcon(
+                        height: ScreenSize.isSmallWidth ? 24 : 30,
+                        iconPath: IconsPath.apple,
+                      ),
+                      Text(
+                        "Continue with Apple".capEachWord(),
+                        style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
         ),
-        Gap(itemGap),
-        ContainerBordered(
-          contClr: inputBgClr,
-          hasBrdr: true,
-          brdrClr: newBorderClr,
-          brdrW: 1,
-          vp: 8,
-          alignment: Alignment.center,
-          child: Row(
-            spacing: 12.w,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgIcon(
-                height: ScreenSize.isSmallWidth ? 24 : 30,
-                iconPath: IconsPath.apple,
-              ),
-              Text(
-                "Continue with Apple".capEachWord(),
-
-                style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
-              ),
-            ],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

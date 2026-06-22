@@ -1,7 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/services/auth/signup_service.dart';
-import '../../../../core/services/auth/verify_otp_service.dart';
 
 class SignupController extends GetxController {
   // ─────────────────────────────
@@ -90,19 +89,22 @@ class SignupController extends GetxController {
       );
 
       if (success) {
-        final sentOtpSuccess = await VerifyOtpService().resendOtp(
-          email: emailCtrl.text.trim(),
-        );
+        // DO NOT SEND OTP  MANUALLY.
+        // BACKEDN ALREADY IS SENDING IT.
+        //
+        // final sentOtpSuccess = await VerifyOtpService().resendOtp(
+        //   email: emailCtrl.text.trim(),
+        // );
 
-        if (sentOtpSuccess) {
-          final result = await Get.toNamed(
-            RoutePaths.verifyOtp,
-            arguments: {
-              'flow': OtpFlowType.signup,
-              'email': emailCtrl.text.trim(),
-            },
-          );
-        }
+        // if (sentOtpSuccess) {
+        final result = await Get.toNamed(
+          RoutePaths.verifyOtp,
+          arguments: {
+            'flow': OtpFlowType.signup,
+            'email': emailCtrl.text.trim(),
+          },
+        );
+        // }
       }
 
       clearAll();
