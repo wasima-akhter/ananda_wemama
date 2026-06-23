@@ -17,14 +17,16 @@ class FinishSettingProfileScreen extends StatelessWidget {
     final mumStageFormKey = GlobalKey<FormState>();
 
     return AuthScaffold(
-      bottomWidget: AuthButton(
-        isLoading: false,
-        btnText: Strings.enterWeMama,
-        onTap: () => fspc.onTapContinue(mumStageFormKey),
-        //  () => Get.toNamed(RoutePaths.welcomeFundingMum),
-        //  isLoading: msc.isLoading,
-        //  msc.onTapContinue(mumStageFormKey),
-      ).mB(10),
+      bottomWidget: Obx(() {
+        return AuthButton(
+          isLoading: fspc.isLoading,
+          btnText: Strings.enterWeMama,
+          onTap: () => fspc.onTapContinue(mumStageFormKey),
+          //  () => Get.toNamed(RoutePaths.welcomeFundingMum),
+          //  isLoading: msc.isLoading,
+          //  msc.onTapContinue(mumStageFormKey),
+        ).mB(10);
+      }),
 
       // appBar: CommonAppBarContent(title: Strings.mumsStage),
       child: Column(

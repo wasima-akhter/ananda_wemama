@@ -254,6 +254,7 @@ class Session {
     this.createdAt,
     this.updatedAt,
     this.v = 0,
+    this.deepLinkUrl,
   });
 
   final String id;
@@ -283,6 +284,9 @@ class Session {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+  // deeplinkUrl
+  final String? deepLinkUrl;
+
   final int v;
 
   factory Session.fromJson(Map<String, dynamic>? json) {
@@ -305,6 +309,8 @@ class Session {
       sid: SafeParser.str(json['sid']),
       recordingMp4Url: SafeParser.str(json['recordingMp4Url']),
       recordingHlsUrl: SafeParser.str(json['recordingHlsUrl']),
+
+      deepLinkUrl: SafeParser.str(json['deepLinkUrl']),
 
       doctorUid: json['doctorUid'],
       recordingUid: json['recordingUid'],

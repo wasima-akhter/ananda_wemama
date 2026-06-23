@@ -1,3 +1,4 @@
+import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
 import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
 import 'package:mama_app/features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
 import 'package:mama_app/features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
@@ -46,6 +47,7 @@ class FinishSettingProfileController extends GetxController {
   final photoAndBioCtrler = findCont<PhotoAndBioController>();
   final lifestyleCtrler = findCont<LifestyleAndInterestsController>();
   final mumStageCtrler = findCont<MumsStageController>();
+  final childrenCtrler = findCont<AddChildrenController>();
 
   /// 🔹 Continue
   void onTapContinue(GlobalKey<FormState> formKey) async {
@@ -57,6 +59,17 @@ class FinishSettingProfileController extends GetxController {
     unfocusAll();
     isLoading_.value = true;
 
+    final List<Map<String, String>> childrenPayload = childrenCtrler
+        .children
+        .value
+        .map((child) {
+          return {
+            'gender': mapGender(child.gender.name.toString()),
+            'dob': child.dateOfBirth.toString(),
+          };
+        })
+        .toList();
+
     // TODO: Save all to backend
     // Call API here
     final success = await PostSignupSetProfileService().uploadCompleteProfile(
@@ -64,11 +77,12 @@ class FinishSettingProfileController extends GetxController {
       dob: convertDobToTimestamp(setUpCtrler.selectedDob.value),
       state: setUpCtrler.selectedState.value,
       city: setUpCtrler.selectedCity.value,
-
       bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
       profileImage: photoAndBioCtrler.fileImage.value,
       interestedFields: lifestyleCtrler.selectedItems.value.toList(),
-      mumStage: mumStageCtrler.selectedStageTitles.first ?? '',
+      mumStages: mumStageCtrler.selectedStageTitles,
+      isDobPrivate: setUpCtrler.keepDobPrivate.value,
+      children: childrenPayload,
     );
 
     if (success) {
@@ -84,6 +98,17 @@ class FinishSettingProfileController extends GetxController {
 
   void onTapFinish() {
     Get.offAllNamed(RoutePaths.subChoosePlan);
+  }
+
+  String mapGender(String gender) {
+    switch (gender.toLowerCase()) {
+      case 'boy':
+        return 'Male';
+      case 'girl':
+        return 'Female';
+      default:
+        return gender;
+    }
   }
 }
 

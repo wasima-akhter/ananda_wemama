@@ -45,6 +45,7 @@ class ApiResponseHandler {
     if (isLogin) {
       log("🔐 LOGIN FLOW → returning response (success or error)--> $response");
       if (statusCode == 404) _handleError(response, statusCode, reqName);
+      if (statusCode == 400) _handleError(response, statusCode, reqName);
 
       return data;
     }

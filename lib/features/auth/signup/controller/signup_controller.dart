@@ -1,5 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/constants/icon_and_image_paths.dart';
+import '../../../../core/services/auth/signin_service.dart';
 import '../../../../core/services/auth/signup_service.dart';
 
 class SignupController extends GetxController {
@@ -114,6 +115,59 @@ class SignupController extends GetxController {
       log(s.toString());
     } finally {
       isLoading_.value = false;
+    }
+  }
+
+  //
+
+  //
+
+  final googleLoading = false.obs;
+  final appleLoading = false.obs;
+  Future<void> onTapGoogleSignup() async {
+    if (googleLoading.value) return;
+    googleLoading.value = true;
+
+    try {
+      final idToken = await SocialLoginService().getGoogleIdToken();
+      if (idToken == null) return;
+
+      final result = await SignupService().socialSignup(
+        authToken: idToken,
+        provider: 'google',
+      );
+
+      if (result.type == SocialLoginResultType.success) {
+        storage.setLoggedIn(true);
+        storage.setSeenOnboarding(true);
+        Get.offAllNamed(RoutePaths.setupProfile);
+        // got to set up profile
+      }
+    } finally {
+      googleLoading.value = false;
+    }
+  }
+
+  Future<void> onTapAppleSignup() async {
+    if (appleLoading.value) return;
+    appleLoading.value = true;
+
+    try {
+      final idToken = await SocialLoginService().getAppleIdToken();
+      if (idToken == null) return;
+
+      final result = await SignupService().socialSignup(
+        authToken: idToken,
+        provider: 'apple',
+      );
+
+      if (result.type == SocialLoginResultType.success) {
+        storage.setLoggedIn(true);
+        storage.setSeenOnboarding(true);
+        Get.offAllNamed(RoutePaths.setupProfile);
+      }
+    } finally {
+      appleLoading.value = false;
     }
   }
 

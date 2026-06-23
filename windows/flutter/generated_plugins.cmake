@@ -4,9 +4,12 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   agora_rtc_engine
+  app_links
   connectivity_plus
   file_saver
   file_selector_windows
+  firebase_auth
+  firebase_core
   gal
   geolocator_windows
   iris_method_channel

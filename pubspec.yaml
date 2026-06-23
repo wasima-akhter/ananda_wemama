@@ -19,7 +19,23 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # ----------------------------
+  # Firebase Core Services
+  # ----------------------------
+  # Required to initialize Firebase in the Flutter app
+  firebase_core: ^4.11.0
+
+  # Firebase Authentication (handles login, signup, session management)
+  firebase_auth: ^6.5.4
+
+
+  # ----------------------------
+  # Social Authentication
+  # ----------------------------
+  # Google Sign-In (authenticate users with Google accounts)
   google_sign_in: ^6.2.1
+
+  # Sign in with Apple (Apple ID authentication for iOS/macOS)
   sign_in_with_apple: ^6.1.0
   # -----------------------------
   # 🔊 Real-time Communication
@@ -116,6 +132,7 @@ dependencies:
   path_provider: ^2.1.2
   file_saver: ^0.4.0
   shimmer: ^3.0.0
+  app_links: ^7.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

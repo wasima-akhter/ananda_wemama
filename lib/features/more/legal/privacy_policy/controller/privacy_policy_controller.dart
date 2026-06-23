@@ -19,7 +19,7 @@ class PrivacyPolicyController extends GetxController {
   Future<void> fetchPrivacyPolicy({bool isRefresh = false}) async {
     if (termsData.value != null && !isRefresh) return;
 
-    if (!isRefresh) isLoading.value = true;
+    isLoading.value = true;
     errorMessage.value = null;
 
     final data = await _service.fetchPrivacyPolicy();

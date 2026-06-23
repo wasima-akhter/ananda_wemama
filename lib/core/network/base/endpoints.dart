@@ -2,7 +2,9 @@ class Endpoints {
   static const login = "auth/login-user";
 
   //
-  static const socialLogin = "auth/register-user-social-account";
+  static const socialRegister = "auth/register-user-social-account";
+  static const socialLogin =
+      "auth/login-user-social-account"; // {{local-url}}/auth/login-user-social-account
 
   static const register = "auth/register-user";
   static const verifyCode = "auth/verify-code";

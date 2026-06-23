@@ -39,7 +39,10 @@ class MeetingScreen extends StatelessWidget {
                   children: [
                     CustomDivider(isFullWidth: true),
                     Gap(itemGap),
-                    EmptyNoSearchWidget(title: Strings.noCommentsYet, isSmaller: true),
+                    EmptyNoSearchWidget(
+                      title: Strings.noCommentsYet,
+                      isSmaller: true,
+                    ),
                   ],
                 ),
               );
@@ -49,7 +52,7 @@ class MeetingScreen extends StatelessWidget {
               controller: cc.chatScrollCtrl,
               padding: EdgeInsets.only(top: itemGap * 1.5),
               itemCount: cc.messages.length,
-              separatorBuilder: (_, __) => Gap(14),
+              separatorBuilder: (_, _) => Gap(14),
               itemBuilder: (_, index) {
                 final msg = cc.messages[index];
                 return MeetCommentItem(message: msg);
@@ -111,7 +114,9 @@ class MeetingScreen extends StatelessWidget {
                                     .unmutedAudio // show "stop speaking" icon
                               : IconsPath.mutedAudio, // show "speak" icon
                           text: mc.isSpeaking.value ? "Speaking" : "Muted",
-                          backgroundColor: mc.isSpeaking.value ? c.primary : null,
+                          backgroundColor: mc.isSpeaking.value
+                              ? c.primary
+                              : null,
                         ),
                       ),
                     ),
@@ -156,7 +161,10 @@ class MeetingScreen extends StatelessWidget {
             return Stack(
               clipBehavior: Clip.none,
               children: cc.hearts.map((heart) {
-                return HeartAnimationWidget(key: ValueKey(heart.id), emoji: heart.emoji);
+                return HeartAnimationWidget(
+                  key: ValueKey(heart.id),
+                  emoji: heart.emoji,
+                );
               }).toList(),
             );
           }),
@@ -170,5 +178,3 @@ class MeetingScreen extends StatelessWidget {
 
 
 ////
-
-

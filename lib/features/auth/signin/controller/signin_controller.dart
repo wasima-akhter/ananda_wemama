@@ -156,14 +156,14 @@ class SigninController extends GetxController {
   // ─────────────────────────────────────────────────────────────────
 
   // ── Social login loading state (separate so it doesn't block the normal login button) ──
-  final _isSocialLoading = false.obs;
-  bool get isSocialLoading => _isSocialLoading.value;
+  final googleLoading = false.obs;
+  final appleLoading = false.obs;
 
   // ── Google ──────────────────────────────────────────────────────
 
   Future<void> onTapGoogleLogin() async {
-    if (_isSocialLoading.value) return;
-    _isSocialLoading.value = true;
+    if (googleLoading.value) return;
+    googleLoading.value = true;
 
     try {
       final idToken = await SocialLoginService().getGoogleIdToken();
@@ -174,15 +174,15 @@ class SigninController extends GetxController {
       log('Google login error: $e');
       log('STACK: $stack');
     } finally {
-      _isSocialLoading.value = false;
+      googleLoading.value = false;
     }
   }
 
   // ── Apple ───────────────────────────────────────────────────────
 
   Future<void> onTapAppleLogin() async {
-    if (_isSocialLoading.value) return;
-    _isSocialLoading.value = true;
+    if (appleLoading.value) return;
+    appleLoading.value = true;
 
     try {
       final idToken = await SocialLoginService().getAppleIdToken();
@@ -193,7 +193,7 @@ class SigninController extends GetxController {
       log('Apple login error: $e');
       log('STACK: $stack');
     } finally {
-      _isSocialLoading.value = false;
+      appleLoading.value = false;
     }
   }
 

@@ -4,6 +4,8 @@ import '../../../../../core/services/more/legal/terms_conditions/terms_condition
 import '../model/term_and_conditions_model.dart';
 
 class TermsAndConditionsController extends GetxController {
+  static TermsAndConditionsController get to =>
+      Get.find<TermsAndConditionsController>();
   final _service = TermsConditionsService();
 
   final isLoading = false.obs;

@@ -9,95 +9,17 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01;
-
     final epc = Get.find<PrivacyPolicyController>();
-    final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: bgClr,
+        backgroundColor: bgClrNew,
         appBar: CommonAppBarContent(title: Strings.privacyPolicy),
 
-        /*
-        body: Obx(() {
-          /// 🔄 LOADING
-          if (epc.isLoading.value) {
-            return Center(child: LoadingWhite());
-          }
-
-          /// ❌ ERROR
-          if (epc.errorMessage.value != null) {
-            return Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      epc.errorMessage.value!,
-                      textAlign: TextAlign.center,
-                      style: TxtStyle.inter(),
-                    ),
-                    Gap(itemGap * 2),
-                    ElevatedButton(
-                      onPressed: () => epc.fetchPrivacyPolicy(),
-                      child: Text("Retry"),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }
-
-          final data = epc.termsData.value;
-
-          /// 📭 EMPTY
-          if (data == null) {
-            return Center(child: Text("No terms available"));
-          }
-
-          /// ✅ DATA
-          return CusRefreshIndicator(
-            refreshKey: refreshKey,
-            onRefresh: () => epc.fetchPrivacyPolicy(isRefresh: true),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// 📜 TERMS CONTENT
-                  PassageComponent(
-                    title: Strings.privacyPolicy,
-                    content: SafeAutoHeightWebView(
-                      description: data.description ?? '',
-                    ),
-                  ),
-
-                  Gap(itemGap * 4),
-
-                  /// 🗓 LAST UPDATED
-                  PassageComponent(
-                    title: Strings.lastUpdatedAt,
-                    content: Text(
-                      data.updatedAt?.toString() ?? "N/A",
-                      style: TxtStyle.inter(fs: 11),
-                    ),
-                  ),
-
-                  Gap(40),
-                ],
-              ),
-            ),
-          );
-        }),
-    */
         body: Padding(
-          padding: EdgeInsets.only(bottom: 40.w),
+          padding: EdgeInsets.only(bottom: 60.h),
           child: CusRefreshIndicator(
-            refreshKey: refreshKey,
             onRefresh: () => epc.fetchPrivacyPolicy(isRefresh: true),
             child: Obx(() {
               /// 🔄 LOADING
@@ -110,6 +32,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                 );
               }
+
+              /*
 
               /// ❌ ERROR
               if (epc.errorMessage.value != null) {
@@ -162,7 +86,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   ),
                 );
               }
-
+*/
               final data = epc.termsData.value;
 
               /// 📭 EMPTY
@@ -207,7 +131,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
                             ),
 
                             Gap(itemGap * 3),
-
                             SmallNavBtn(
                               onTap: () =>
                                   epc.fetchPrivacyPolicy(isRefresh: true),

@@ -98,7 +98,13 @@ class FormSection extends StatelessWidget {
         }),
 
         Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
-        const SocialSection(),
+        SocialSection(
+          googleLoading: controller.googleLoading,
+          appleLoading: controller.appleLoading,
+          onTapApple: controller.onTapAppleLogin,
+          onTapGoogle: controller.onTapGoogleLogin,
+          type: SocialActivityType.signin,
+        ),
         Gap(itemGap * 4),
 
         //
@@ -136,49 +142,61 @@ class FormSection extends StatelessWidget {
 // social_section.dart — drop-in replacement
 // Requires SigninController to be in scope (Get.find / controller binding)
 
+enum SocialActivityType { signin, signup }
+
 class SocialSection extends StatelessWidget {
-  const SocialSection({super.key});
+  final SocialActivityType type;
+
+  final RxBool googleLoading;
+  final RxBool appleLoading;
+
+  final VoidCallback onTapGoogle;
+  final VoidCallback onTapApple;
+
+  const SocialSection({
+    super.key,
+    required this.type,
+    required this.googleLoading,
+    required this.appleLoading,
+    required this.onTapGoogle,
+    required this.onTapApple,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = SigninController.to;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // ── "or" divider ─────────────────────────────────────
+        Row(
+          spacing: 20.w,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
+            ),
+            Text(
+              Strings.or.capEachWord(),
+              style: TxtStyle.poppinsSemiB(w: 600, fs: 13),
+            ),
+            Expanded(
+              child: CustomDivider(clr: c.strokePrimary.withValues(alpha: 0.4)),
+            ),
+          ],
+        ).mHV(S.w * 0.1, 0),
 
-    return Obx(
-      () => AbsorbPointer(
-        // Block all taps while a social login is in flight
-        absorbing: ctrl.isSocialLoading,
-        child: Opacity(
-          opacity: ctrl.isSocialLoading ? 0.6 : 1.0,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // ── "or" divider ─────────────────────────────────────
-              Row(
-                spacing: 20.w,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: CustomDivider(
-                      clr: c.strokePrimary.withValues(alpha: 0.4),
-                    ),
-                  ),
-                  Text(
-                    Strings.or.capEachWord(),
-                    style: TxtStyle.poppinsSemiB(w: 600, fs: 13),
-                  ),
-                  Expanded(
-                    child: CustomDivider(
-                      clr: c.strokePrimary.withValues(alpha: 0.4),
-                    ),
-                  ),
-                ],
-              ).mHV(S.w * 0.1, 0),
+        Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
 
-              Gap(ScreenSize.isSmallWidth ? itemGap : itemGap * 2),
+        // ── Google button ────────────────────────────────────
+        Obx(() {
+          final isLoading = googleLoading.value;
 
-              // ── Google button ────────────────────────────────────
-              GestureDetector(
-                onTap: ctrl.onTapGoogleLogin,
+          return AbsorbPointer(
+            absorbing: isLoading,
+            child: Opacity(
+              opacity: isLoading ? 0.6 : 1.0,
+              child: CusGestureDetector(
+                onTap: onTapGoogle,
                 child: ContainerBordered(
                   contClr: inputBgClr,
                   hasBrdr: true,
@@ -187,27 +205,48 @@ class SocialSection extends StatelessWidget {
                   vp: 8,
                   alignment: Alignment.center,
                   child: Row(
-                    spacing: 10.w,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgIcon(
-                        height: ScreenSize.isSmallWidth ? 22 : 28,
-                        iconPath: IconsPath.google,
-                      ),
+                      if (isLoading)
+                        const SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      else
+                        SvgIcon(
+                          height: ScreenSize.isSmallWidth ? 22 : 28,
+                          iconPath: IconsPath.google,
+                        ),
+
+                      SizedBox(width: 10.w),
+
                       Text(
-                        "Continue with Google".capEachWord(),
+                        isLoading
+                            ? "Signing in..."
+                            : "Continue with Google".capEachWord(),
                         style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
                       ),
                     ],
                   ),
                 ),
               ),
+            ),
+          );
+        }),
 
-              Gap(itemGap),
+        Gap(itemGap),
 
-              // ── Apple button ─────────────────────────────────────
-              GestureDetector(
-                onTap: ctrl.onTapAppleLogin,
+        // ── Apple button ─────────────────────────────────────
+        Obx(() {
+          final isLoading = appleLoading.value;
+
+          return AbsorbPointer(
+            absorbing: isLoading,
+            child: Opacity(
+              opacity: isLoading ? 0.6 : 1.0,
+              child: CusGestureDetector(
+                onTap: onTapApple,
                 child: ContainerBordered(
                   contClr: inputBgClr,
                   hasBrdr: true,
@@ -216,25 +255,36 @@ class SocialSection extends StatelessWidget {
                   vp: 8,
                   alignment: Alignment.center,
                   child: Row(
-                    spacing: 12.w,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgIcon(
-                        height: ScreenSize.isSmallWidth ? 24 : 30,
-                        iconPath: IconsPath.apple,
-                      ),
+                      if (isLoading)
+                        const SizedBox(
+                          height: 18,
+                          width: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      else
+                        SvgIcon(
+                          height: ScreenSize.isSmallWidth ? 24 : 30,
+                          iconPath: IconsPath.apple,
+                        ),
+
+                      SizedBox(width: 12.w),
+
                       Text(
-                        "Continue with Apple".capEachWord(),
+                        isLoading
+                            ? "Signing in..."
+                            : "Continue with Apple".capEachWord(),
                         style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
                       ),
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }

@@ -101,7 +101,13 @@ class SignupFormSection extends StatelessWidget {
         }),
 
         Gap(itemGap * 2),
-        const SocialSection(),
+        SocialSection(
+          googleLoading: controller.googleLoading,
+          appleLoading: controller.appleLoading,
+          onTapApple: controller.onTapAppleSignup,
+          onTapGoogle: controller.onTapGoogleSignup,
+          type: SocialActivityType.signup,
+        ),
         Gap(itemGap * 3),
         // terms
         Column(
@@ -135,40 +141,6 @@ class SignupFormSection extends StatelessWidget {
             ),
           ],
         ),
-      ],
-    );
-  }
-}
-
-class SignupSocialSection extends StatelessWidget {
-  final double itemGap;
-
-  const SignupSocialSection({super.key, required this.itemGap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(Strings.signUpWith, style: 13.norSecclrCusFSoutfit),
-        Row(
-          children: [
-            Expanded(
-              child: ContainerBordered(
-                contClr: c.cardPrimary,
-                vp: 20,
-                child: SvgIcon(height: 35, iconPath: IconsPath.apple),
-              ),
-            ),
-            Gap(itemGap * 1.5),
-            Expanded(
-              child: ContainerBordered(
-                contClr: c.cardPrimary,
-                vp: 20,
-                child: SvgIcon(height: 35, iconPath: IconsPath.google),
-              ),
-            ),
-          ],
-        ).mHV(0, 10),
       ],
     );
   }

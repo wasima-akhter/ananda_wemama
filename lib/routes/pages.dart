@@ -239,7 +239,7 @@ class RoutePageList {
       page: () => const AddChildrenScreen(),
       binding: PostSignupScreensBinding(),
     ),
- 
+
     GetPage(
       name: RoutePaths.finishSettingProfile,
       page: () => const FinishSettingProfileScreen(),

@@ -1,8 +1,17 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services")
+}
+
+// ─── Load key.properties ───────────────────────────────────────────────────
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties().apply {
+    load(FileInputStream(keyPropertiesFile))
 }
 
 android {
@@ -20,45 +29,67 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.app.wemama"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
+    // ─── Signing Configs ────────────────────────────────────────────────────
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file(keyProperties["debugStoreFile"] as String)
+            storePassword = keyProperties["debugStorePassword"] as String
+            keyAlias = keyProperties["debugKeyAlias"] as String
+            keyPassword = keyProperties["debugKeyPassword"] as String
+        }
+        create("release") {
+            storeFile = file(keyProperties["releaseStoreFile"] as String)
+            storePassword = keyProperties["releaseStorePassword"] as String
+            keyAlias = keyProperties["releaseKeyAlias"] as String
+            keyPassword = keyProperties["releaseKeyPassword"] as String
+        }
+    }
+
+    // ─── Build Types ────────────────────────────────────────────────────────
     buildTypes {
-    getByName("release") {
-        isMinifyEnabled = true
-        isShrinkResources = true
-
-        proguardFiles(
-            getDefaultProguardFile("proguard-android-optimize.txt"),
-            "proguard-rules.pro"
-        )
-           // ✅ Add this line
-        signingConfig = signingConfigs.getByName("debug")
-    }
-}
-
-     packaging {
-    jniLibs {
-        pickFirsts.addAll(
-            listOf(
-                "lib/arm64-v8a/libaosl.so",
-                "lib/armeabi-v7a/libaosl.so",
-                "lib/x86/libaosl.so",
-                "lib/x86_64/libaosl.so"
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
-        )
+        }
     }
-}
 
+    // ─── Packaging ──────────────────────────────────────────────────────────
+    packaging {
+        jniLibs {
+            pickFirsts.addAll(
+                listOf(
+                    "lib/arm64-v8a/libaosl.so",
+                    "lib/armeabi-v7a/libaosl.so",
+                    "lib/x86/libaosl.so",
+                    "lib/x86_64/libaosl.so"
+                )
+            )
+        }
+    }
 }
 
 flutter {
     source = "../.."
+}
+
+// ─── Dependencies ───────────────────────────────────────────────────────────
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
 }

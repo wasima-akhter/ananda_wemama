@@ -46,3 +46,8 @@ app.*.map.json
 
 lib/core/config/agora_config.dart
 lib/core/config/app_info.dart
+
+
+key.properties
+app/debug.keystore
+app/release.keystore

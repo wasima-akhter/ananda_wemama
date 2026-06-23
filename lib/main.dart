@@ -4,6 +4,8 @@ import 'package:mama_app/app/helper_widgets_export.dart';
 import 'app/app.dart';
 import 'core/local/app_storage.dart';
 import 'core/network/network_manager.dart';
+import 'core/services/deep_link/app_link_service.dart';
+import 'core/services/firebase/firebase_service.dart';
 import 'core/services/location/location_service.dart';
 import 'core/themes/theme_service.dart';
 
@@ -23,8 +25,20 @@ void main() async {
     ),
   );
 
+  // ----------------------------
+  // Firebase initialization
+  // ----------------------------
+  // Firebase FIRST
+  await FirebaseInitializer.init();
+
   // Initialize LocalStorageService singleton
   await Get.putAsync<AppStorage>(() async => await AppStorage.init());
+
+  await Get.putAsync<DeepLinkService>(() async {
+    final service = DeepLinkService();
+    await service.init();
+    return service;
+  });
 
   // await Get.putAsync(() async => await SocketService().init());
 

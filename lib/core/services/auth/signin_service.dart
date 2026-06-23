@@ -1,9 +1,11 @@
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mama_app/app/controller_export.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../deep_link/app_link_service.dart';
 import '../socket/socket_service.dart';
 
 // ─────────────────────────────────────────────
@@ -76,9 +78,9 @@ class SocialLoginService {
         Endpoints.socialLogin.getUrl,
         data: {"provider": provider, "authToken": authToken},
         isLogin_: true,
-        reqName: 'social_login',
+        reqName: 'social login'.capEachWord(),
       ),
-      reqName: 'social_login',
+      reqName: 'social login'.capEachWord(),
       parser: (data) => SigninModelData.fromJson(data),
     );
 
@@ -124,6 +126,7 @@ class SocialLoginService {
       await Get.find<ProfileController>().fetchMyProfile();
     }
 
+    _handleDeepLink();
     return const SocialLoginResult(type: SocialLoginResultType.success);
   }
 
@@ -133,6 +136,17 @@ class SocialLoginService {
     storage.setUserInfo(email: user?.email ?? '');
     storage.setToken(response.data?.accessToken ?? '');
     log('Social login — saved token for: ${user?.email}');
+  }
+
+  void _handleDeepLink() {
+    final deepLinkService = Get.find<DeepLinkService>();
+
+    // final pendingLiveId = deepLinkService.consumePendingLive();
+
+    // if (pendingLiveId != null) {
+    //   Get.offAllNamed(RoutePaths.mainNav);
+    //   return;
+    // }
   }
 }
 

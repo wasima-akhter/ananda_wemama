@@ -1,6 +1,10 @@
+import 'package:mama_app/app/controller_export.dart';
+
 import '../../../../app/service_export.dart';
+import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/auth/signup/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import 'signin_service.dart';
 
 class SignupService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
@@ -51,28 +55,36 @@ class SignupService extends GetxService {
     return response.success;
   }
 
-  void _saveUserDataAfterSignUp({
-    required BaseResponse<SignUpModelData> response,
-  }) {
-    // as success,
-    // save the access token in app storage
-    // save the user info in appstorage
-    if (response.data != null) {
-      final fetchedEmail = response.data?.email;
+  Future<SocialLoginResult> socialSignup({
+    required String authToken,
+    required String provider,
+  }) async {
+    final response = await _apiHelper.request<SigninModelData>(
+      apiCall: () => ApiClient().post(
+        Endpoints.socialRegister.getUrl,
+        data: {"provider": provider, "authToken": authToken},
+        isLogin_: true,
+        reqName: 'social signup'.capEachWord(),
+      ),
+      parser: (data) => SigninModelData.fromJson(data),
+    );
 
-      storage.setUserInfo(email: fetchedEmail);
-
-      // set user role
-      // UserRole
-
-      // token
-      storage.setToken(response.data!.accessToken ?? '');
-
-      // ✅ Now call ProfileController to refresh the profile
-      if (Get.isRegistered<ProfileController>()) {
-        final profileController = Get.find<ProfileController>();
-        profileController.fetchMyProfile(); // fetch latest profile data
-      }
+    if (response == null || response.data == null) {
+      return const SocialLoginResult(type: SocialLoginResultType.failed);
     }
+
+    final data = response.data!;
+    final accessToken = data.accessToken ?? '';
+
+    if (accessToken.isEmpty) {
+      return const SocialLoginResult(type: SocialLoginResultType.failed);
+    }
+
+    // save token and email if success
+
+    storage.setToken(accessToken);
+    storage.setUserInfo(email: data.user?.email ?? '');
+
+    return const SocialLoginResult(type: SocialLoginResultType.success);
   }
 }

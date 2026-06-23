@@ -331,6 +331,8 @@ class ApiClient {
     });
   }
 
+  /*
+// string, string type fields
   // with any file comppression:
   Future<dynamic> postWithFile(
     String url, {
@@ -356,6 +358,73 @@ class ApiClient {
       }
 
       fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
+      extraFields?.forEach((entry) => data.fields.add(entry));
+
+      final isValid = await validateFileSize(data);
+      if (!isValid) {
+        return ApiResponseHandler.handle(
+          Response(
+            requestOptions: RequestOptions(path: url),
+            statusCode: 400,
+            data: {"message": "File size must be less than 3 MB"},
+          ),
+          reqName,
+        );
+      }
+
+      final options = Options(
+        method: 'POST',
+        headers: {"Authorization": "Bearer $getToken"},
+      );
+
+      try {
+        final response = await _dio.request(url, data: data, options: options);
+        return ApiResponseHandler.handle(response, reqName);
+      } catch (e) {
+        log("POST request error: $e");
+        return null;
+      }
+    });
+  }
+*/
+
+  Future<dynamic> postWithFile(
+    String url, {
+    String? reqName,
+    MapEntry<String, XFile>? file,
+    List<MapEntry<String, XFile>>? files,
+    Map<String, dynamic>? fields,
+    List<MapEntry<String, String>>? extraFields,
+    Map<String, dynamic>? headers,
+  }) {
+    return _safeRequest(() async {
+      log("🌐 POST with file URL: $url");
+
+      final data = dio.FormData();
+
+      // single file
+      if (file != null) {
+        final multipart = await MultipartHelper.anyFile(file.value);
+        data.files.add(MapEntry(file.key, multipart));
+      }
+
+      // multiple files
+      for (final f in files ?? []) {
+        final multipart = await MultipartHelper.anyFile(f.value);
+        data.files.add(MapEntry(f.key, multipart));
+      }
+
+      // ✅ dynamic fields support
+      // fields?.forEach((key, value) {
+      //   if (value == null) return;
+      //   data.fields.add(MapEntry(key, value));
+      // });
+      fields?.forEach((key, value) {
+        if (value == null) return;
+        data.fields.add(MapEntry(key, value.toString()));
+      });
+
+      // extra fields (still string-based)
       extraFields?.forEach((entry) => data.fields.add(entry));
 
       final isValid = await validateFileSize(data);
