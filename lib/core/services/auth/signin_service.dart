@@ -5,7 +5,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../deep_link/app_link_service.dart';
 import '../socket/socket_service.dart';
 
 // ─────────────────────────────────────────────
@@ -126,7 +125,6 @@ class SocialLoginService {
       await Get.find<ProfileController>().fetchMyProfile();
     }
 
-    _handleDeepLink();
     return const SocialLoginResult(type: SocialLoginResultType.success);
   }
 
@@ -136,17 +134,6 @@ class SocialLoginService {
     storage.setUserInfo(email: user?.email ?? '');
     storage.setToken(response.data?.accessToken ?? '');
     log('Social login — saved token for: ${user?.email}');
-  }
-
-  void _handleDeepLink() {
-    final deepLinkService = Get.find<DeepLinkService>();
-
-    // final pendingLiveId = deepLinkService.consumePendingLive();
-
-    // if (pendingLiveId != null) {
-    //   Get.offAllNamed(RoutePaths.mainNav);
-    //   return;
-    // }
   }
 }
 
@@ -164,9 +151,9 @@ class SigninService {
         Endpoints.login.getUrl,
         data: {"email": email, "password": password},
         isLogin_: true,
-        reqName: "login",
+        // reqName: "login",
       ),
-      reqName: "login",
+      // reqName: "login",
       parser: (data) {
         log("before parse data : $data");
         log("after parse data : ${SigninModelData.fromJson(data)}");

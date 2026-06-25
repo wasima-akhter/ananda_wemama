@@ -579,8 +579,9 @@ class Strings {
   static const String block = "Block";
   static const String security = "Security";
   static const String securityAlert = "Security Alert";
-  static const String securityAlertMsg =
-      "For your safety, never share your bank details. You can block or report Sarah by tapping the menu above.";
+  static const String securityAlertMsgPart1 =
+      "For your safety, never share your bank details. You can block or report";
+  static const String securityAlertMsgPart2 = "by tapping the menu above.";
   static const String about = "About";
   static const String aboutYou = "About you";
 

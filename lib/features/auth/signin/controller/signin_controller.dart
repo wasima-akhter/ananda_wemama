@@ -6,6 +6,7 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
 import '../../../../core/services/auth/signin_service.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
+import '../../../../core/services/deep_link/app_link_service.dart';
 
 class SigninController extends GetxController {
   static SigninController get to => Get.find<SigninController>();
@@ -29,6 +30,18 @@ class SigninController extends GetxController {
   //
   final rememberMe = false.obs;
 
+  // =========== Auth Progress ===========
+  final authInProgress = false.obs;
+
+  bool get isAnyAuthLoading => authInProgress.value;
+  void _startAuth() {
+    authInProgress.value = true;
+  }
+
+  void _stopAuth() {
+    authInProgress.value = false;
+  }
+
   /// ================= LOADING STATE =================
   final _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
@@ -46,6 +59,9 @@ class SigninController extends GetxController {
     if (_isLoading.value) return;
 
     unfocusAll();
+
+    //
+    _startAuth();
     _isLoading.value = true;
 
     try {
@@ -87,7 +103,7 @@ class SigninController extends GetxController {
           storage.setLoggedIn(true);
           storage.setSeenOnboarding(true);
 
-          _handleLoginSuccess();
+          await _handleLoginSuccess();
           return;
 
         // ❌ FAILED
@@ -99,12 +115,27 @@ class SigninController extends GetxController {
       log('STACK: $stack');
     } finally {
       _isLoading.value = false;
+      _stopAuth();
     }
   }
 
-  void _handleLoginSuccess() {
+  Future<void> _handleLoginSuccess() async {
     clearFields();
-    Get.offAllNamed(RoutePaths.mainNav);
+    //
+    // deeplink part --
+
+    final deepLinkService = Get.find<DeepLinkService>();
+
+    if (deepLinkService.pendingLiveId != null) {
+      await deepLinkService.handlePostLoginRedirect();
+    } else {
+      Get.offAllNamed(RoutePaths.mainNav);
+    }
+
+    //
+
+    // clearFields();
+    // Get.offAllNamed(RoutePaths.mainNav);
   }
 
   /// ================= HELPERS =================
@@ -163,6 +194,8 @@ class SigninController extends GetxController {
 
   Future<void> onTapGoogleLogin() async {
     if (googleLoading.value) return;
+
+    _startAuth();
     googleLoading.value = true;
 
     try {
@@ -175,6 +208,7 @@ class SigninController extends GetxController {
       log('STACK: $stack');
     } finally {
       googleLoading.value = false;
+      _stopAuth();
     }
   }
 
@@ -182,6 +216,8 @@ class SigninController extends GetxController {
 
   Future<void> onTapAppleLogin() async {
     if (appleLoading.value) return;
+
+    _startAuth();
     appleLoading.value = true;
 
     try {
@@ -194,6 +230,7 @@ class SigninController extends GetxController {
       log('STACK: $stack');
     } finally {
       appleLoading.value = false;
+      _stopAuth();
     }
   }
 

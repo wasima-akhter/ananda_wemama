@@ -107,6 +107,7 @@ class SignupFormSection extends StatelessWidget {
           onTapApple: controller.onTapAppleSignup,
           onTapGoogle: controller.onTapGoogleSignup,
           type: SocialActivityType.signup,
+          authInProgress: false.obs,
         ),
         Gap(itemGap * 3),
         // terms

@@ -76,7 +76,7 @@ class AllAutoheightWebview extends StatelessWidget {
           maxLines: previewMaxLines,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
-            fontSize: fontSize ?? 14,
+            fontSize: (fontSize ?? 13).sp,
             height: 1.6,
             color: textColor ?? c.foregroundSecondary,
           ),
@@ -125,7 +125,7 @@ class AllAutoheightWebview extends StatelessWidget {
     padding: $_paddingCss !important;
     background: ${_toCssColor(backgroundColor)} !important;
     font-family: 'Outfit', sans-serif !important;
-    font-size: ${fontSize ?? 14}px !important;
+    font-size: ${(fontSize ?? 13).sp}px !important;
     color: ${_toCssColor(textColor ?? c.foregroundSecondary)} !important;
     word-wrap: break-word;
      overflow: hidden !important;
@@ -286,7 +286,7 @@ html, body {
   padding: $_paddingCss;
   background: ${_toCssColor(backgroundColor)};
   font-family: 'Outfit', sans-serif;
-  font-size: ${fontSize ?? 14}px;
+  font-size: ${(fontSize ?? 13).sp}px;
   color: ${_toCssColor(textColor ?? c.primary)};
 
   height: 100%;

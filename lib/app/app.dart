@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,34 +46,33 @@ class App extends StatelessWidget {
               themeMode: ThemeMode.light,
 
               getPages: RoutePageList.appPages,
-              unknownRoute: RoutePageList.appPages.firstWhere(
-                (page) => page.name == RoutePaths.notFound,
+
+              // ✅ Safe unknownRoute: silently pops or falls back to signin
+              // instead of showing a broken /notFound screen
+              unknownRoute: GetPage(
+                name: '/notFound',
+                page: () => const _SafeUnknownRouteScreen(),
               ),
+
               defaultTransition: Transition.fade,
               transitionDuration: const Duration(milliseconds: 400),
 
+              // ✅ Log every navigation for debugging
+              routingCallback: (routing) {
+                if (routing != null) {
+                  log(
+                    '🧭 [ROUTING] current=${routing.current} | prev=${routing.previous} | isBack=${routing.isBack}',
+                  );
+                }
+              },
+
               /// ✅ GLOBAL DEPENDENCIES HERE
               initialBinding: BindingsBuilder(() {
-                //             CommunityController (permanent)
-                // CommunitySearchController (permanent)
-
                 Get.put(UserDetailController(), permanent: true);
                 Get.put(ReportController(), permanent: true);
-                // Get.put(CommunityActionController(), permanent: true);
-                // Get.put(CommunityController(), permanent: true);
-                // Get.put(CommunitySearchController(), permanent: true);
 
-                // ── Register SocketService first (MatchController depends on it) ──────────
                 Get.putPermanent(SocketService());
-                final socketService = Get.find<SocketService>();
 
-                // ── Connect immediately if user is already logged in (token exists) ───────
-                // On fresh login this is skipped — SigninService.connectSocket() handles it.
-                // if ((getToken ?? '').isNotEmpty) {
-                //   socketService.connectSocket();
-                // }
-
-                // ✅ Delay until after first frame so widget tree is ready
                 if ((getToken ?? '').isNotEmpty) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     // socketService.connectSocket();
@@ -82,6 +83,53 @@ class App extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Safe fallback screen — never shows UI, immediately pops or redirects
+// Handles the case where Android fires the deep link intent directly at Flutter
+// navigator (wemama://session/xxx) which is not a registered GetX route
+// ─────────────────────────────────────────────────────────────────────────────
+class _SafeUnknownRouteScreen extends StatefulWidget {
+  const _SafeUnknownRouteScreen();
+
+  @override
+  State<_SafeUnknownRouteScreen> createState() =>
+      _SafeUnknownRouteScreenState();
+}
+
+class _SafeUnknownRouteScreenState extends State<_SafeUnknownRouteScreen> {
+  @override
+  void initState() {
+    super.initState();
+    log('⚠️ [UNKNOWN ROUTE] /notFound triggered — auto-recovering...');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final canPop = Get.key.currentState?.canPop() ?? false;
+      log(
+        '⚠️ [UNKNOWN ROUTE] canPop=$canPop | currentRoute=${Get.currentRoute}',
+      );
+
+      if (canPop) {
+        // Something valid is under this — just pop back to it
+        log('⚠️ [UNKNOWN ROUTE] Popping back to previous route.');
+        Get.back();
+      } else {
+        // Nothing under it — send to signin as safe default
+        log('⚠️ [UNKNOWN ROUTE] No previous route. Redirecting to signin.');
+        Get.offAllNamed(RoutePaths.signin);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Renders nothing — user never sees this screen
+    return const Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SizedBox.shrink(),
     );
   }
 }

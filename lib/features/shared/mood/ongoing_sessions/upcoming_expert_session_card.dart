@@ -3,6 +3,7 @@ import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/date_helper.dart';
+import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
@@ -53,8 +54,12 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         children: [
           Text(
             Strings.upcomingExpertSession.capEachWord(),
-            style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.foregroundSecondary),
-          ), 
+            style: TxtStyle.outfitSemiB(
+              fs: 14,
+              w: 600,
+              color: c.foregroundSecondary,
+            ),
+          ),
           CustomDivider(isFullWidth: true, h: 0.6),
           Gap(itemGap),
 
@@ -101,12 +106,16 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                     time,
                     style: TxtStyle.outfitSemiB(
                       fs: 10,
-                      w: 600, color: c.foregroundSecondary
+                      w: 600,
+                      color: c.foregroundSecondary,
                     ),
                   ),
                   Text(
                     date,
-                    style: TxtStyle.outfit(fs: 10, color: c.foregroundSecondary),
+                    style: TxtStyle.outfit(
+                      fs: 10,
+                      color: c.foregroundSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -130,32 +139,36 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                 //
                 // Spacer(),
                 const SizedBox(height: 12),
-    
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ContainerBordered(
-                hasBrdr: true,
-                brdrClr: c.strokePrimary,
-                brdrW: 1,
-                rad: 30,
-                contClr: ctransp,
-                hp: 12,
-                vp: 7,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgIcon(iconPath: IconsPath.share),
-                    Gap(itemGap),
-                    Text(
-                      Strings.share.cap,
-                      style: TxtStyle.outfitSemiB(
-                        fs: 14,
-                        color: c.strokePrimary,
-                        w: 500,
+              CusGestureDetector(
+                // <-- wrap existing ContainerBordered
+                onTap: () => ShareService.shareSession(data!),
+                child: ContainerBordered(
+                  hasBrdr: true,
+                  brdrClr: c.strokePrimary,
+                  brdrW: 1,
+                  rad: 30,
+                  contClr: ctransp,
+                  hp: 12,
+                  vp: 7,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgIcon(iconPath: IconsPath.share),
+                      Gap(itemGap),
+                      Text(
+                        Strings.share.cap,
+                        style: TxtStyle.outfitSemiB(
+                          fs: 14,
+                          color: c.strokePrimary,
+                          w: 500,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 

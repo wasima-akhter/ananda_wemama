@@ -180,12 +180,21 @@ class ChatScreen extends StatelessWidget {
             final e = list[index - 1];
 
             log(' is blocked in chatscreen: ${e.isBlocked}');
+
+            final timeAgo = DateHelper().formatTimeAgo(e.time?.toString());
+
+            final bool isNewMatch = timeAgo.date == 'N/A';
             return ChatListItem(
               chatModel: FakeChatModel(
                 name: e.otherUser?.name ?? '',
                 isblocked: e.isBlocked ?? false,
-                lastMessage: e.lastMessage ?? '',
-                time: DateHelper().formatTimeAgo(e.time.toString()).date,
+                lastMessage: isNewMatch
+                    ? 'You can message each other now'
+                    : (e.lastMessage ?? ''),
+                time: isNewMatch ? '' : timeAgo.date,
+                isNewMatch: isNewMatch,
+                // if N/A, then
+                // show the last Message: --> "you can message each other now" and the color woul dbe grey.
                 imageUrl: e.otherUser?.profileImage ?? '',
                 id: e.id ?? '',
               ),

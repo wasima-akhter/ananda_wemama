@@ -1,5 +1,3 @@
-import 'package:mama_app/app/controller_export.dart';
-
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/auth/signup/model/signin_model.dart';
@@ -64,7 +62,7 @@ class SignupService extends GetxService {
         Endpoints.socialRegister.getUrl,
         data: {"provider": provider, "authToken": authToken},
         isLogin_: true,
-        reqName: 'social signup'.capEachWord(),
+        // reqName: 'social signup'.capEachWord(),
       ),
       parser: (data) => SigninModelData.fromJson(data),
     );

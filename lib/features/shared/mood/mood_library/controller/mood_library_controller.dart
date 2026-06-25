@@ -78,8 +78,9 @@ class MoodLibraryController extends GetxController {
   void setMood(MoodType mood, {bool syncBack = false}) {
     selectedMood.value = mood;
     if (syncBack) {
-      moodCheckInC.selectMood(mood);
+      moodCheckInC.selectMood(mood, fromHome: false);
     }
+    getAllMoodContent();
   }
 
   String getSelMoodId() {

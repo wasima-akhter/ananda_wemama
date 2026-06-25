@@ -72,28 +72,39 @@ class FormSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(
-              () => AppCheckbox(
-                value: controller.rememberMe.value,
-                onChanged: (val) => controller.rememberMe.value = val,
-                label: 'Remember me',
+              () => IgnorePointer(
+                ignoring: controller.isAnyAuthLoading,
+                child: AppCheckbox(
+                  value: controller.rememberMe.value,
+                  onChanged: (val) => controller.rememberMe.value = val,
+                  label: 'Remember me',
+                ),
               ),
             ),
 
-            CusGestureDetector(
-              onTap: controller.goToForgotPassword,
-              child: Text(
-                "${Strings.forgotPassword}?",
-                style: TxtStyle.outfitSemiB(color: c.secondary, fs: 11),
+            Obx(
+              () => IgnorePointer(
+                ignoring: controller.isAnyAuthLoading,
+                child: CusGestureDetector(
+                  onTap: controller.goToForgotPassword,
+                  child: Text(
+                    "${Strings.forgotPassword}?",
+                    style: TxtStyle.outfitSemiB(color: c.secondary, fs: 11),
+                  ),
+                ),
               ),
             ),
           ],
         ),
         Gap(itemGap * 2),
         Obx(() {
-          return AuthButton(
-            isLoading: controller.isLoading,
-            btnText: Strings.signIn,
-            onTap: () => controller.onTapLogin(formKey),
+          return AbsorbPointer(
+            absorbing: controller.isAnyAuthLoading,
+            child: AuthButton(
+              isLoading: controller.isLoading,
+              btnText: Strings.signIn,
+              onTap: () => controller.onTapLogin(formKey),
+            ),
           );
         }),
 
@@ -104,6 +115,7 @@ class FormSection extends StatelessWidget {
           onTapApple: controller.onTapAppleLogin,
           onTapGoogle: controller.onTapGoogleLogin,
           type: SocialActivityType.signin,
+          authInProgress: controller.authInProgress,
         ),
         Gap(itemGap * 4),
 
@@ -152,7 +164,7 @@ class SocialSection extends StatelessWidget {
 
   final VoidCallback onTapGoogle;
   final VoidCallback onTapApple;
-
+  final RxBool authInProgress;
   const SocialSection({
     super.key,
     required this.type,
@@ -160,6 +172,7 @@ class SocialSection extends StatelessWidget {
     required this.appleLoading,
     required this.onTapGoogle,
     required this.onTapApple,
+    required this.authInProgress,
   });
 
   @override
@@ -190,9 +203,9 @@ class SocialSection extends StatelessWidget {
         // ── Google button ────────────────────────────────────
         Obx(() {
           final isLoading = googleLoading.value;
-
+          final disabled = authInProgress.value && !googleLoading.value;
           return AbsorbPointer(
-            absorbing: isLoading,
+            absorbing: disabled,
             child: Opacity(
               opacity: isLoading ? 0.6 : 1.0,
               child: CusGestureDetector(
@@ -240,9 +253,9 @@ class SocialSection extends StatelessWidget {
         // ── Apple button ─────────────────────────────────────
         Obx(() {
           final isLoading = appleLoading.value;
-
+          final disabled = authInProgress.value && !googleLoading.value;
           return AbsorbPointer(
-            absorbing: isLoading,
+            absorbing: disabled,
             child: Opacity(
               opacity: isLoading ? 0.6 : 1.0,
               child: CusGestureDetector(

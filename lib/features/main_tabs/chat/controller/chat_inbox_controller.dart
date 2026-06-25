@@ -21,6 +21,8 @@ import '../../../../core/models/ui/common_data_models.dart';
 import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../more/blocked_user/service/blocked_user_service.dart';
+import '../../../shared/wave_request/service/wave_user_profile_info_service.dart';
+import '../../home/sub_feature/profile/model/profile_model.dart';
 import '../model/chat_inbox_msg_item_model.dart';
 import '../service/chat_inbox_service.dart';
 
@@ -56,11 +58,22 @@ class ChatInboxController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
     log("chatId: $chatId");
     log("isBlocked: $isBlocked");
-
     isBlockedRx.value = args.isBlocked;
-    emitGetMessages(); // ← just emit, don't clear or set loading again
+    emitGetMessages();
+
+    // Auto-send hello after messages load
+    if (args.autoHello) {
+      ever(isLoading_, (bool loading) {
+        if (!loading && messages.isEmpty) {
+          // Only send hello if conversation is fresh (no prior messages)
+          msgInputController.text = "Hello 👋";
+          onTapSendMsg();
+        }
+      });
+    }
   }
 
   @override
@@ -579,4 +592,42 @@ class ChatInboxController extends GetxController {
   // }
 
   ///
+  // get wave user details
+  ///
+  RxBool isSeeMore = false.obs;
+
+  void toggleSeeMore() {
+    isSeeMore.value = !isSeeMore.value;
+  }
+
+  //   // API loading state
+  var isgetUserProfileLoading_ = false.obs;
+  bool get isgetUserProfileLoading => isgetUserProfileLoading_.value;
+
+  /// Fetch the latest profile from API
+  ///
+  final chatUserProfileData = Rxn<ProfileDataModel>();
+
+  ///
+  Future<void> getUserProfile({required String userId}) async {
+    if (isgetUserProfileLoading_.value) return; // Prevent duplicate calls
+    isgetUserProfileLoading_.value = true;
+
+    try {
+      final data = await WaveUserProfileInfoService().fetchUserProfile(
+        userId: userId,
+      );
+
+      if (data != null) {
+        chatUserProfileData.value = data;
+        log("data fetching profile: ${(data)}");
+      }
+    } catch (e) {
+      log("Error fetching profile: $e");
+    } finally {
+      isgetUserProfileLoading_.value = false;
+    }
+  }
+
+  /////
 }

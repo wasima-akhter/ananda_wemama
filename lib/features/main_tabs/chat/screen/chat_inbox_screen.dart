@@ -1,3 +1,4 @@
+import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
 
@@ -26,28 +27,43 @@ class ChatInboxScreen extends StatelessWidget {
         title: '',
         expandTitle: true,
         titleWidget: Obx(() {
-          final user = cic.realChatInboxMsgItem.value.receiver;
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              NetworkImageWidget(
-                imageUrl: user?.profileImage ?? '',
-                isCircle: true,
-                isUser: true,
-                radius: 16,
-                enablePreview: true,
-              ),
-              Gap(itemGap),
-              Flexible(
-                child: Text(
-                  user?.name ?? Strings.chat,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: 18.titleMclrCusFSOutfit,
+          final peerUser = cic.realChatInboxMsgItem.value.receiver;
+          final peerUserId = peerUser?.id ?? '';
+          return CusGestureDetector(
+            onTap: () {
+              if (peerUserId.isNotEmpty) {
+                chatUserDetailsDialog(
+                  isLoading: cic.isgetUserProfileLoading_,
+                  isSeeMore: cic.isSeeMore,
+                  onTapSeeMoreTxt: cic.toggleSeeMore,
+                  user: cic.chatUserProfileData,
+                );
+
+                cic.getUserProfile(userId: peerUserId);
+              }
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NetworkImageWidget(
+                  imageUrl: peerUser?.profileImage ?? '',
+                  isCircle: true,
+                  isUser: true,
+                  radius: 16,
+                  // enablePreview: true,
                 ),
-              ),
-            ],
-          ).mL(6);
+                Gap(itemGap),
+                Flexible(
+                  child: Text(
+                    peerUser?.name ?? Strings.chat,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: 18.titleMclrCusFSOutfit,
+                  ),
+                ),
+              ],
+            ).mL(6),
+          );
         }),
         suffix: Obx(() {
           final user = cic.realChatInboxMsgItem.value.receiver;
@@ -76,7 +92,6 @@ class ChatInboxScreen extends StatelessWidget {
 
       inputRow: cic.isBlocked
           ? ContainerBordered(
-           
               contClr: c.componentFill.withValues(alpha: 0.5),
               child: Text(
                 "You have blocked this user",
@@ -95,7 +110,11 @@ class ChatInboxScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ChatInboxSecurityAlert(),
+              Obx(
+                () => ChatInboxSecurityAlert(
+                  name: cic.realChatInboxMsgItem.value.receiver?.name ?? '',
+                ),
+              ),
               Gap(itemGap * 2),
 
               Obx(() {

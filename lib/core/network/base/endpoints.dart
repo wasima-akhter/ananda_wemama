@@ -111,4 +111,10 @@ class Endpoints {
   }
 
   static String createReview = "review/create-new-review";
+
+  //
+
+  // session details by session Id
+  static String getSessionDetailById({required String id}) =>
+      "expert/get-session-detail/$id";
 }

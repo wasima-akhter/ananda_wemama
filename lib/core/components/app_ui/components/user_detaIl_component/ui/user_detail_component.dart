@@ -8,7 +8,6 @@ class UserDetailComponent extends StatelessWidget {
 
   final RxBool isLoading;
   final VoidCallback onTapSeeMore;
-  final Future<void> Function(bool isAccepted) onTapAction;
   final RxBool isSeeMore;
   final bool? isFromProfile;
   const UserDetailComponent({
@@ -16,7 +15,6 @@ class UserDetailComponent extends StatelessWidget {
     this.user,
     required this.isLoading,
     required this.onTapSeeMore,
-    required this.onTapAction,
     required this.isSeeMore,
     this.isFromProfile,
   });
@@ -103,8 +101,11 @@ class UserDetailComponent extends StatelessWidget {
               ),
             ),
           ),
-          Gap(3),
-          SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
+
+          if (userAge != '0') ...[
+            Gap(3),
+            SvgIcon(iconPath: IconsPath.verifiedTick).mB(12),
+          ],
         ],
       ),
     );
@@ -128,7 +129,7 @@ class UserDetailComponent extends StatelessWidget {
               Expanded(
                 child: Text(
                   index == 1
-                      ? "Stage: ${e.text.capEachWord()}"
+                      ? "${listOfInfo.length == 1 ? "Stage" : "Stages"}: ${e.text.capEachWord()}"
                       : e.text.capEachWord(),
                   style: TxtStyle.outfitSmNor,
                 ),

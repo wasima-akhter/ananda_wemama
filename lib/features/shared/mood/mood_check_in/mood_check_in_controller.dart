@@ -15,14 +15,14 @@ class MoodCheckInController extends GetxController {
 
   final selectedMood = Rxn<MoodType>();
 
-  void selectMood(MoodType type) {
+  void selectMood(MoodType type, {required bool fromHome}) {
     if (selectedMood.value == type) {
       selectedMood.value = null;
     } else {
       selectedMood.value = type;
 
       // 🔥 fire API but DO NOT await UI
-      uploadTheCheckTrigger();
+      if (fromHome) uploadTheCheckTrigger();
     }
   }
 

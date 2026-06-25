@@ -46,6 +46,7 @@ class ApiResponseHandler {
       log("🔐 LOGIN FLOW → returning response (success or error)--> $response");
       if (statusCode == 404) _handleError(response, statusCode, reqName);
       if (statusCode == 400) _handleError(response, statusCode, reqName);
+      if (statusCode == 500) _handleError(response, statusCode, reqName);
 
       return data;
     }
@@ -85,6 +86,12 @@ class ApiResponseHandler {
 
     if (statusCode == 413) {
       throw FetchDataException("File too large");
+    }
+    if (statusCode == 500) {
+      "Something went wrong. Please try again in a moment.".showToast();
+      throw FetchDataException(
+        "Something went wrong. Please try again in a moment.",
+      );
     }
 
     throw FetchDataException(message);

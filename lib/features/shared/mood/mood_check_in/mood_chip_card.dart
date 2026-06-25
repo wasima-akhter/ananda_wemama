@@ -125,7 +125,8 @@ class _SelectMoodANdIllustration extends StatelessWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () => mcc.selectMood(dataModel.moodType),
+                  onTap: () =>
+                      mcc.selectMood(dataModel.moodType, fromHome: true),
                   child: Obx(() {
                     final isSelected =
                         mcc.selectedMood.value == dataModel.moodType;

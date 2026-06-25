@@ -77,7 +77,7 @@ class ProfileController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 1500));
 
       isSignOutLoading_.value = false;
-      GNav.pushNamedReplace(RoutePaths.signin);
+      Get.offAllNamed(RoutePaths.signin);
     } catch (e) {
       log("Logout error: $e");
       isSignOutLoading_.value = false;

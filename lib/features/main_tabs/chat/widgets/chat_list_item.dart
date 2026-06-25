@@ -48,7 +48,12 @@ class ChatListItem extends StatelessWidget {
                       chatModel.lastMessage,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
+                      style: TxtStyle.outfit(
+                        fs: chatModel.isNewMatch ? 12 : 13,
+                        color: chatModel.isNewMatch
+                            ? Colors.grey.shade600
+                            : c.strokePrimary,
+                      ),
                     ),
                 ],
               ),
@@ -56,7 +61,8 @@ class ChatListItem extends StatelessWidget {
             Gap(itemGap * 3),
             Column(
               children: [
-                Text(chatModel.time.cap, style: TxtStyle.outfitSmSecNor500),
+                if (chatModel.time.isNotEmpty)
+                  Text(chatModel.time.cap, style: TxtStyle.outfitSmSecNor500),
                 if (chatModel.isblocked)
                   Text(Strings.blocked.cap, style: TxtStyle.outfitSmSecNor500),
               ],

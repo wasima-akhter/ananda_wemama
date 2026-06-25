@@ -52,16 +52,20 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                     w: 500,
                   ),
                   btnColor: c.primary,
-                  onTap: () {
+                  onTap: () async {
                     Get.back();
-                    Get.offAndToNamed(
-                      RoutePaths.chatInbox,
 
-                      arguments: ChatInboxArgPassModel(
-                        chatId: conversationId,
-                        isBlocked: false,
-                      ),
-                    );
+                    // 4. Navigate to chat inbox after a brief moment
+                    Future.delayed(const Duration(milliseconds: 500), () {
+                      Get.offAndToNamed(
+                        RoutePaths.chatInbox,
+                        arguments: ChatInboxArgPassModel(
+                          chatId: conversationId,
+                          isBlocked: false,
+                          autoHello: true, // ← triggers auto hello
+                        ),
+                      );
+                    });
 
                     // update chatList
                     if (Get.isRegistered<ChatController>()) {
@@ -76,7 +80,12 @@ class NewWavesReqConnectedPopup extends StatelessWidget {
                 CustomBtnWTxt(
                   outlined: true,
                   borderClr: c.secondary,
-                  onTap: () => Get.back(),
+                  onTap: () {
+                    if (Get.isRegistered<ChatController>()) {
+                      ChatController.to.getChatList();
+                    }
+                    Get.back();
+                  },
 
                   padding: EdgeInsets.symmetric(vertical: 12.h),
                   btnTxt: Strings.keepBrowsing,

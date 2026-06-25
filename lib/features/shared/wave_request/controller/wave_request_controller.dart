@@ -203,11 +203,16 @@ class WaveRequestController extends GetxController {
     if (isAccepted) {
       acceptUserWave(conversationId);
       // ✅ Result handled reactively in ever(isSuccessAccept)
+      // also go the chat inbox and send hello message.
+
+      //
     } else {
       rejectUserWave(conversationId);
       // ✅ Result handled reactively in ever(isSuccessReject)
     }
   }
+
+  // ── Accept success handler ────────────────────────────────────────────────
 
   // ── Accept success handler ────────────────────────────────────────────────
   void _onAcceptSuccess() {
@@ -217,7 +222,7 @@ class WaveRequestController extends GetxController {
     // 2. Show accepted dialog
     showReqAcceptedDialog();
 
-    // 3. After delay → show both connected dialog
+    // 3. After delay → show both connected dialog, then navigate to chat inbox
     Future.delayed(const Duration(seconds: 3), () {
       Get.back(); // close accepted dialog
 
@@ -227,6 +232,8 @@ class WaveRequestController extends GetxController {
         peerName: peerName.value,
         conversationId: _pendingConversationId,
       );
+
+      // here the hello msg send
     });
   }
 
@@ -315,9 +322,7 @@ class WaveRequestController extends GetxController {
   final socket = Get.find<SocketService>();
 
   void getConversationRequestList(String receiverId) {
-    socket.emit(SocketEvents.getConversationRequests, {
-      
-    });
+    socket.emit(SocketEvents.getConversationRequests, {});
   }
 
   void acceptUserWave(String conversationId) {

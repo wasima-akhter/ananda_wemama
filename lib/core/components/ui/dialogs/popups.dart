@@ -3,6 +3,7 @@ import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup
 import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../features/main_tabs/chat/widgets/chat_user_details_popup.dart';
 import '../../../../features/main_tabs/community/shared_ui/community_guildline.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
@@ -146,14 +147,17 @@ Future<void> showAskYourQuesDialog({
 
 Future<void> communityGuidlineDialog({
   required bool isLoading,
-  required Future<void> Function() onTapAction,bool? hasButton
+  required Future<void> Function() onTapAction,
+  bool? hasButton,
 }) async {
   await Popups().baseAlert(
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
-    content: CommunityGuildline(isLoading: isLoading,
-     hasButton:hasButton ,
-     onTapAction: onTapAction),
+    content: CommunityGuildline(
+      isLoading: isLoading,
+      hasButton: hasButton,
+      onTapAction: onTapAction,
+    ),
   );
 }
 
@@ -170,6 +174,24 @@ Future<void> newWavesUserDetailsDialog({
     content: NewWavesUserDetailsPopup(
       isLoading: isLoading,
       onTapAction: onTapAction,
+      isSeeMore: isSeeMore,
+      onTapSeeMore: onTapSeeMoreTxt,
+      user: user,
+    ),
+  );
+}
+
+/// 🔹 newWavesUserDetailsDialog Popup
+Future<void> chatUserDetailsDialog({
+  required RxBool isLoading,
+  required RxBool isSeeMore,
+  required void Function() onTapSeeMoreTxt,
+  required Rxn<ProfileDataModel> user,
+}) async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    content: ChatUserDetailsPopup(
+      isLoading: isLoading,
       isSeeMore: isSeeMore,
       onTapSeeMore: onTapSeeMoreTxt,
       user: user,

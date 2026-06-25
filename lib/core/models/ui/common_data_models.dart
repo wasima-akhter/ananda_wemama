@@ -57,8 +57,13 @@ class CommonTitleIconpathModel {
 class ChatInboxArgPassModel {
   final String chatId;
   final bool isBlocked;
+  final bool autoHello; // ← add this
 
-  ChatInboxArgPassModel({required this.chatId, required this.isBlocked});
+  ChatInboxArgPassModel({
+    required this.chatId,
+    required this.isBlocked,
+    this.autoHello = false,
+  });
 }
 
 class MoodInsightArgs {

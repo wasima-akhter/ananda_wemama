@@ -60,7 +60,6 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
                 user: userData,
                 isLoading: isLoading,
                 onTapSeeMore: onTapSeeMore,
-                onTapAction: onTapAction,
                 isSeeMore: isSeeMore,
               ),
               _getDeclineAcceptBtnRow(),

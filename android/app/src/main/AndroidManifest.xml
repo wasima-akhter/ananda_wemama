@@ -103,18 +103,28 @@
 
 <!--  For Deep Links -->
 
-    <intent-filter android:autoVerify="true">
 
-        <action android:name="android.intent.action.VIEW"/>
 
-        <category android:name="android.intent.category.DEFAULT"/>
 
-        <category android:name="android.intent.category.BROWSABLE"/>
+    <!--  2 -->
+     <!-- Custom scheme: wemama://session/abc123 -->
+<!-- Custom scheme: wemama://session/abc123 -->
+<intent-filter>
+    <action android:name="android.intent.action.VIEW"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="android.intent.category.BROWSABLE"/>
+    <data android:scheme="wemama"/>
+</intent-filter>
 
-        <data
-            android:scheme="https"
-            android:host="wemama.app"/>
-    </intent-filter>
+<!-- HTTPS App Links: https://wemama.app/session/abc123 -->
+<intent-filter android:autoVerify="true">
+    <action android:name="android.intent.action.VIEW"/>
+    <category android:name="android.intent.category.DEFAULT"/>
+    <category android:name="android.intent.category.BROWSABLE"/>
+    <!-- <data android:scheme="https" android:host="wemama.app" android:pathPrefix="/session"/> -->
+    <data android:scheme="https" android:host="k85v0kkf-8005.inc1.devtunnels.ms" android:pathPrefix="/session"/>
+</intent-filter>
+
             <!--  -->
         </activity>
         <!-- Don't delete the meta-data below.

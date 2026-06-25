@@ -2,6 +2,7 @@ import 'package:mama_app/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 import '../../../video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 
@@ -185,13 +186,20 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     rad: 30,
                     contClr: ctransp,
                     vp: 7,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgIcon(iconPath: IconsPath.share),
-                        Gap(itemGap),
-                        Text(Strings.share.cap, style: TxtStyle.outfitSmTitle),
-                      ],
+                    child: CusGestureDetector(
+                      // <-- add this
+                      onTap: () => ShareService.shareSession(data!),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgIcon(iconPath: IconsPath.share),
+                          Gap(itemGap),
+                          Text(
+                            Strings.share.cap,
+                            style: TxtStyle.outfitSmTitle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

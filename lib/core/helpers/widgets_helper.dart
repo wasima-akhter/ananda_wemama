@@ -267,11 +267,24 @@ FakeUserDetailsModel? mapToUserModel(ProfileDataModel? data) {
   if (data == null) return null;
 
   log("Mapping data.profileImage: ${data.profileImage} ");
+  log("Mapping data.dobObject?.isPublic: ${data.dobObject?.isPublic} ");
+
+  log("----dobObject isPublic: ${data.dobObject?.isPublic}");
+  log("----dobObject date: ${data.dobObject?.date}");
+  log("----dob flat: ${data.dob}");
+  log("----data hashCode: ${data.hashCode}"); // ← is this the same object?
+
+  final age = (data.dobObject?.isPublic ?? false) ? calculateAge(data.dob) : 0;
+  log(
+    "final age: $age | isPublic: ${data.dobObject?.isPublic} | dob: ${data.dob}",
+  );
+
+  //
 
   return FakeUserDetailsModel(
     imageUrl: data.profileImage ?? '',
     name: data.name ?? '',
-    age: calculateAge(data.dob),
+    age: age,
     aboutMe: data.bio ?? '',
     galleryImages: data.images,
     children: data.children.map((e) => getChildAge(e.dob.toString())).toList(),
@@ -300,11 +313,10 @@ List<UiInfoItem> buildInfoList(ProfileDataModel data) {
     list.add(
       UiInfoItem(
         iconPath: IconsPath.heartHalfFilled,
-        text: data.interesteds.join(', '),
+        text: data.interesteds.map((e) => e.replaceAll('\n', ' ')).join(', '),
       ),
     );
   }
-
   return list;
 }
 

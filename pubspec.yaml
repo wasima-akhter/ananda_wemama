@@ -19,96 +19,105 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+
+
   # ----------------------------
   # Firebase Core Services
   # ----------------------------
   # Required to initialize Firebase in the Flutter app
   firebase_core: ^4.11.0
-
-  # Firebase Authentication (handles login, signup, session management)
   firebase_auth: ^6.5.4
-
 
   # ----------------------------
   # Social Authentication
   # ----------------------------
-  # Google Sign-In (authenticate users with Google accounts)
+  # Google Sign-In (Google account authentication)
   google_sign_in: ^6.2.1
 
-  # Sign in with Apple (Apple ID authentication for iOS/macOS)
+  # Apple Sign-In (Apple ID authentication for iOS/macOS)
   sign_in_with_apple: ^6.1.0
+
+
   # -----------------------------
-  # 🔊 Real-time Communication
+  # 🔊 Real-time Communication (Chat & Calling)
   # -----------------------------
   agora_rtc_engine: ^6.5.3      # Audio & Video Calling (Agora RTC)
-  agora_rtm: ^2.2.5             # Real-time Messaging (Live chat/comments)
+  agora_rtm: ^2.2.5             # Real-time Messaging (chat, presence, events)
 
 
   # -----------------------------
-  # 🌍 Location & Maps
+  # 🌍 Location & Maps Services
   # -----------------------------
-  geolocator: ^14.0.2           # Get device GPS location
-  geocoding: ^4.0.0             # Convert lat/lng <-> address
+  geolocator: ^14.0.2           # Device GPS location
+  geocoding: ^4.0.0             # Convert coordinates <-> address
+
 
   # -----------------------------
   # 🔐 Permissions & Device Access
   # -----------------------------
-  permission_handler: ^12.0.1   # Runtime permissions (camera, mic, location)
-  image_picker: ^1.2.1         # Pick image from gallery/camera
-  device_info_plus: ^10.0.0
+  permission_handler: ^12.0.1   # Runtime permissions (camera, mic, location, etc.)
+  image_picker: ^1.2.1          # Pick images from gallery or camera
+  device_info_plus: ^10.0.0     # Device metadata information
+
 
   # -----------------------------
-  # 🌐 Network & Connectivity
+  # 🌐 Networking & Connectivity
   # -----------------------------
-  dio: ^5.9.1                   # HTTP client for API calls
-  connectivity_plus: ^7.0.0     # Internet connection status
+  dio: ^5.9.1                   # HTTP client for APIs
+  connectivity_plus: ^7.0.0     # Internet connectivity status
+
 
   # -----------------------------
-  # 🗄 Storage & Local Data
+  # 🗄 Local Storage
   # -----------------------------
-  shared_preferences: ^2.5.4    # Simple local key-value storage
-  get_storage: ^2.1.1           # Lightweight local storage (GetX)
+  shared_preferences: ^2.5.4    # Simple key-value storage
+  get_storage: ^2.1.1           # Lightweight storage for GetX
+
 
   # -----------------------------
-  # 🏗 State Management
+  # 🏗 State Management & Architecture
   # -----------------------------
-  get: ^4.7.3                   # GetX (State, Routing, Dependency Injection)
+  get: ^4.7.3                   # GetX (state management, routing, DI)
+
 
   # -----------------------------
-  # 🎨 UI & Styling
+  # 🎨 UI / UX & Styling
   # -----------------------------
-  flutter_svg: ^2.2.3           # SVG support
-  google_fonts: ^7.1.0          # Google Fonts integration
+  flutter_svg: ^2.2.3           # SVG rendering
+  google_fonts: ^7.1.0          # Google Fonts support
   flutter_screenutil: ^5.9.3    # Responsive UI scaling
-  gap: ^3.0.1                   # SizedBox alternative (spacing)
-  page_transition: ^2.2.1       # Custom route transitions
-  shimmer_animation: ^2.2.2+1   # Shimmer loading effect
+  gap: ^3.0.1                   # Spacing widget (SizedBox alternative)
+  page_transition: ^2.2.1       # Custom page transitions
+  shimmer_animation: ^2.2.2+1   # Loading shimmer effect
+  shimmer: ^3.0.0               # Shimmer placeholder effects
   lottie: ^3.3.2                # Lottie animations
   fluttertoast: ^9.0.0          # Toast messages
   flutter_html: ^3.0.0          # Render HTML content
-  pinput: ^6.0.1                # OTP / PIN input field
+  pinput: ^6.0.1                # OTP / PIN input fields
+  device_preview: ^1.2.0        # Device preview for UI testing
 
-    # device preview
-  device_preview: ^1.2.0
 
   # -----------------------------
   # 📊 Charts & Data Visualization
   # -----------------------------
-  fl_chart: ^1.1.1              # Custom charts
+  fl_chart: ^1.1.1              # Lightweight charting
   syncfusion_flutter_charts: ^32.2.4  # Advanced enterprise charts
 
+
   # -----------------------------
-  # 🔽 Dropdowns & Selection
+  # 🔽 Dropdowns & Selection Widgets
   # -----------------------------
   dropdown_button2: ^2.3.9
   animated_custom_dropdown: ^3.1.1
   flexible_dropdown: ^1.0.8
 
+
   # -----------------------------
   # 🌐 Web & External Links
   # -----------------------------
   url_launcher: ^6.3.2          # Open external URLs
-  webview_flutter: ^4.13.1      # In-app webview
+  webview_flutter: ^4.13.1      # Embedded webview
+
 
   # -----------------------------
   # ⏳ Utilities
@@ -116,23 +125,43 @@ dependencies:
   intl: ^0.20.2                 # Date & number formatting
   easy_countdown_timer: ^0.0.5  # Countdown timer
 
+
   # -----------------------------
-  # 🛠 Code Generation
+  # 🛠 Code Generation & Dev Tools
   # -----------------------------
   flutter_gen: ^5.12.0          # Asset & font code generation
-  file_picker: ^10.3.10
-  share_plus: ^12.0.1
-  #  file_picker: ^10.3.3
-  wakelock_plus: ^1.5.2
 
-  socket_io_client: ^3.1.4
-  flutter_image_compress: ^2.4.0
-  gal: ^2.3.2
-  open_file: ^3.3.2
-  path_provider: ^2.1.2
-  file_saver: ^0.4.0
-  shimmer: ^3.0.0
-  app_links: ^7.0.0
+
+  # -----------------------------
+  # 📁 File Handling & Storage
+  # -----------------------------
+  file_picker: ^10.3.10         # Pick files from device
+  flutter_image_compress: ^2.4.0 # Image compression
+  path_provider: ^2.1.2         # Device file system paths
+  open_file: ^3.3.2             # Open files with native apps
+  file_saver: ^0.4.0            # Save files locally
+  gal: ^2.3.2                   # Gallery access & media handling
+
+
+  # -----------------------------
+  # 📤 Sharing & Communication
+  # -----------------------------
+  share_plus: ^12.0.1           # Share content to other apps
+
+
+  # -----------------------------
+  # 🔄 Realtime & Networking Extras
+  # -----------------------------
+  socket_io_client: ^3.1.4      # Socket.IO client for realtime apps
+  app_links: ^7.0.0             # Deep links & app linking
+
+
+  # -----------------------------
+  # ⚡ Device Power & Background Control
+  # -----------------------------
+  wakelock_plus: ^1.5.2         # Prevent screen sleep
+  firebase_messaging: ^16.4.1
+  flutter_local_notifications: ^22.0.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0

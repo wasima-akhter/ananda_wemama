@@ -34,7 +34,7 @@ class ProfileSection extends StatelessWidget {
             UserDetailComponent(
               isLoading: udc.isLoading_,
               onTapSeeMore: udc.toggleSeeMore,
-              onTapAction: (_) async {},
+
               isSeeMore: udc.isSeeMore,
               isFromProfile: true,
               user: userData,

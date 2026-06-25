@@ -34,12 +34,17 @@ void main() async {
   // Initialize LocalStorageService singleton
   await Get.putAsync<AppStorage>(() async => await AppStorage.init());
 
-  await Get.putAsync<DeepLinkService>(() async {
-    final service = DeepLinkService();
-    await service.init();
-    return service;
-  });
+  // await Get.putAsync<DeepLinkService>(() async {
+  //   final service = DeepLinkService();
+  //   await service.init();
+  //   return service;
+  // });
 
+  final deepLinkService = DeepLinkService();
+  await deepLinkService.captureInitialLink(); // store only, NO stream started
+  Get.put(deepLinkService, permanent: true);
+
+  //
   // await Get.putAsync(() async => await SocketService().init());
 
   // ✅ Initialize services AFTER AppStorage

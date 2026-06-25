@@ -64,7 +64,15 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>We need your location even when the app is in background to provide real-time updates.</string>
 
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>wemama</string>
+			</array>
+		</dict>
+	</array>
 
 </dict>
 </plist>

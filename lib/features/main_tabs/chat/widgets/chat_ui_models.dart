@@ -7,6 +7,7 @@ class FakeChatModel {
   final String lastMessage;
   final String time;
   final String imageUrl;
+  final bool isNewMatch;
 
   FakeChatModel({
     required this.name,
@@ -15,6 +16,7 @@ class FakeChatModel {
     required this.imageUrl,
     required this.id,
     required this.isblocked,
+    this.isNewMatch = false,
   });
 }
 
