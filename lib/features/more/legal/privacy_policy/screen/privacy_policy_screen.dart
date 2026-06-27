@@ -1,6 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/media/html_viewer_auto_height.dart';
-import '../../../../../core/helpers/date_helper.dart';
+import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
 import '../../../../../core/helpers/string_helper.dart';
 import '../controller/privacy_policy_controller.dart';
 
@@ -144,12 +143,13 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 );
               }
 
+              /*
               /// ✅ DATA
               return SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 12,
+                  // vertical: 12,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,11 +182,16 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         );
                       },
                     ),
-
-                    const Gap(40),
                   ],
                 ),
               );
+*/
+
+              return HybridWebViewWidget(
+                htmlContent: data.description ?? '',
+                // maxHeight: S.h * 0.6,
+                textColor: c.foregroundSecondary,
+              ).getcm;
             }),
           ),
         ),

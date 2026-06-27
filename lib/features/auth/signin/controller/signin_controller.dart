@@ -7,6 +7,7 @@ import '../../../../core/config/app_info.dart';
 import '../../../../core/services/auth/signin_service.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
 import '../../../../core/services/deep_link/app_link_service.dart';
+import '../../../../core/services/push_notification/push_notification_service.dart';
 
 class SigninController extends GetxController {
   static SigninController get to => Get.find<SigninController>();
@@ -122,6 +123,16 @@ class SigninController extends GetxController {
   Future<void> _handleLoginSuccess() async {
     clearFields();
     //
+
+    // Upload FCM token now that Bearer token is available
+    if (Get.isRegistered<PushNotificationService>()) {
+      debugPrint('🔧 [LoginController] triggering FCM token upload...');
+      await PushNotificationService.to.uploadTokenAfterLogin();
+    } else {
+      debugPrint(
+        '⚠️ [LoginController] PushNotificationService not registered — skipping FCM upload',
+      );
+    }
     // deeplink part --
 
     final deepLinkService = Get.find<DeepLinkService>();

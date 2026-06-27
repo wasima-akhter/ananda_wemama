@@ -12,6 +12,7 @@ class ApiServiceHelper {
     String? reqName,
     bool? isLogin_,
     bool? showErrorToast,
+    bool? showRawResponse,
   }) async {
     // try {
     //   final res = await apiCall();
@@ -50,7 +51,9 @@ class ApiServiceHelper {
     try {
       final res = await apiCall();
 
-      log("res:---> $res");
+      if (showRawResponse == null) {
+        log("res:---> $res");
+      }
 
       if (res == null && showErrorToast == null) {
         Strings.somethingWentWrong.showToast();

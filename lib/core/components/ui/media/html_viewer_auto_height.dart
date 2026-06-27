@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mama_app/app/helper_widgets_export.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../utils/extension/context_extension.dart';
 
 class SafeAutoHeightWebView extends StatelessWidget {
   final String description;
@@ -20,7 +18,7 @@ class SafeAutoHeightWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Strip ALL inline styles, classes, and MS Word junk — keep only structure
-    String _sanitize(String html) {
+    String sanitize(String html) {
       return html
           .replaceAll(RegExp(r'style="[^"]*"'), '') // remove inline styles
           .replaceAll(RegExp(r"style='[^']*'"), '') // single-quote styles
@@ -41,8 +39,8 @@ class SafeAutoHeightWebView extends StatelessWidget {
           .replaceAll(RegExp(r'\s{2,}'), ' '); // collapse whitespace
     }
 
-    String _toPlainText(String html) {
-      return _sanitize(html)
+    String toPlainText(String html) {
+      return sanitize(html)
           .replaceAll(RegExp(r'<[^>]*>'), ' ')
           .replaceAll(RegExp(r'&amp;'), '&')
           .replaceAll(RegExp(r'&lt;'), '<')
@@ -53,7 +51,7 @@ class SafeAutoHeightWebView extends StatelessWidget {
 
     if (previewOnly) {
       return Text(
-        _toPlainText(description),
+        toPlainText(description),
         maxLines: previewMaxLines,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
@@ -67,17 +65,20 @@ class SafeAutoHeightWebView extends StatelessWidget {
 
     final outfitFamily = GoogleFonts.outfit().fontFamily;
 
-    final sanitized = _sanitize(
-      description.trim().isNotEmpty ? description : "<p>No description available.</p>",
+    final sanitized = sanitize(
+      description.trim().isNotEmpty
+          ? description
+          : "<p>No description available.</p>",
     );
     return // Display HTML using flutter_html
     Html(
       // data: description.trim().isNotEmpty ? description : "<p>No description available.</p>",
       data: sanitized,
-      onLinkTap: (url, _, __) async {
+      onLinkTap: (url, _, _) async {
         if (url != null) {
           final uri = Uri.tryParse(url);
-          if (uri != null) await launchUrl(uri, mode: LaunchMode.externalApplication);
+          if (uri != null)
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
       },
 
@@ -85,32 +86,32 @@ class SafeAutoHeightWebView extends StatelessWidget {
         // ✅ Force app theme — no white bg, no Word fonts
         "*": Style(
           fontFamily: outfitFamily,
-          color: c.secondary,
+          color: c.foregroundPrimary,
           backgroundColor: Colors.transparent,
           margin: Margins.zero,
           padding: HtmlPaddings.zero,
         ),
         "body": Style(
-          fontSize: FontSize(14),
+          fontSize: FontSize(14.sp),
           lineHeight: LineHeight(1.6),
 
-          backgroundColor: c.cardOngoing,
+          backgroundColor: Colors.transparent,
           margin: Margins.zero,
           padding: HtmlPaddings.all(8),
         ),
-        "p": Style(margin: Margins.only(bottom: 10), fontSize: FontSize(14)),
+        "p": Style(margin: Margins.only(bottom: 10), fontSize: FontSize(14.sp)),
         "h1": Style(
-          fontSize: FontSize(20),
+          fontSize: FontSize(20.sp),
           fontWeight: FontWeight.w700,
           margin: Margins.only(bottom: 8),
         ),
         "h2": Style(
-          fontSize: FontSize(18),
+          fontSize: FontSize(18.sp),
           fontWeight: FontWeight.w700,
           margin: Margins.only(bottom: 8),
         ),
         "h3": Style(
-          fontSize: FontSize(16),
+          fontSize: FontSize(16.sp),
           fontWeight: FontWeight.w600,
           margin: Margins.only(bottom: 6),
         ),
@@ -118,7 +119,7 @@ class SafeAutoHeightWebView extends StatelessWidget {
         "em": Style(fontStyle: FontStyle.italic),
         "ul": Style(margin: Margins.only(left: 12, bottom: 8)),
         "ol": Style(margin: Margins.only(left: 12, bottom: 8)),
-        "li": Style(fontSize: FontSize(14), margin: Margins.only(bottom: 6)),
+        "li": Style(fontSize: FontSize(14.sp), margin: Margins.only(bottom: 6)),
         "a": Style(color: c.primary, textDecorationColor: c.primary),
         "img": Style(width: Width(100, Unit.percent), height: Height.auto()),
         "span": Style(backgroundColor: Colors.transparent),

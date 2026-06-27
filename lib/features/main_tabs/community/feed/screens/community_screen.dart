@@ -38,6 +38,7 @@ class _CommunityScreenState extends State<CommunityScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint('🔍 [Lifecycle] state changed → $state');
     if (state == AppLifecycleState.resumed && mounted) {
       _refreshCurrentTab();
     }

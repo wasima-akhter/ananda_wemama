@@ -33,6 +33,7 @@ class _CommunitySearchScreenState extends State<CommunitySearchScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint('🔍 [Lifecycle] state changed → $state');
     if (state == AppLifecycleState.resumed && mounted) {
       _refreshData();
     }

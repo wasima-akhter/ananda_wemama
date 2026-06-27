@@ -14,6 +14,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
   final FocusNode writeQuesFocusNode;
   final Session? data;
   final bool? isFromUpcomgScreen;
+  final bool hasTypetitle;
   const UpcomingExpertSessionCard({
     super.key,
     required this.onTapQues,
@@ -22,6 +23,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
     this.data,
     this.isFromUpcomgScreen,
     required this.isSendQuesLoading,
+    this.hasTypetitle = false,
   });
 
   @override
@@ -52,17 +54,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
             ? MainAxisAlignment.spaceBetween
             : MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            Strings.upcomingExpertSession.capEachWord(),
-            style: TxtStyle.outfitSemiB(
-              fs: 14,
-              w: 600,
-              color: c.foregroundSecondary,
-            ),
-          ),
-          CustomDivider(isFullWidth: true, h: 0.6),
-          Gap(itemGap),
-
+          if (hasTypetitle == true) _makeSessionTypeTitle(),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -228,6 +220,24 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _makeSessionTypeTitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          Strings.upcomingExpertSession.capEachWord(),
+          style: TxtStyle.outfitSemiB(
+            fs: 14,
+            w: 600,
+            color: c.foregroundSecondary,
+          ),
+        ),
+        CustomDivider(isFullWidth: true, h: 0.6),
+        Gap(itemGap),
+      ],
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/config/app_info.dart';
+import 'package:flutter/material.dart';
 
 import '../../../app/service_export.dart';
 
@@ -7,16 +7,65 @@ class FirebaseTokenService extends GetxService {
 
   final RxBool isLoading = false.obs;
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
-  Future<bool?> updateToken({required String firebaseToken}) async {
-    final response = await _apiHelper.request<bool?>(
-      apiCall: () => ApiClient().post(
-        '$baseUrl/api/mobile/firebase-token-update'
-        '?firebase_token=$firebaseToken&device_id=&device_name=',
-        reqName: 'firebase-token-update',
-      ),
-      parser: (data) => data['hash'] != null,
-    );
+  // firebase_token_service.dart
 
-    return response?.data;
+  Future<bool> updateToken({required String firebaseToken}) async {
+    debugPrint('🔧 [FirebaseTokenService] uploading token: $firebaseToken');
+    isLoading.value = true;
+
+    try {
+      final response = await _apiHelper.request(
+        apiCall: () => ApiClient().post(
+          Endpoints.uploadFcmToken.getUrl,
+          reqName: 'firebase-token-update',
+          data: {"fcmToken": firebaseToken},
+        ),
+        parser: (data) => data,
+      );
+
+      final success = response != null;
+      debugPrint(
+        success
+            ? '✅ [FirebaseTokenService] token uploaded successfully'
+            : '⚠️ [FirebaseTokenService] upload returned null response',
+      );
+      return success;
+    } catch (e, st) {
+      debugPrint('❌ [FirebaseTokenService] token upload FAILED: $e');
+      debugPrint('$st');
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
   }
 }
+
+/*
+Cold start
+  └─ PushNotificationService.init()          ← phase 1, no auth
+       ├─ local plugin ✅
+       ├─ Android channel ✅
+       ├─ FCM listeners ✅
+       ├─ topic subscription ✅
+       └─ terminated launch check ✅
+
+User logs in
+  └─ _onLoginSuccess()
+       └─ uploadTokenAfterLogin()             ← phase 2, Bearer token ready
+            ├─ getToken() from FCM
+            ├─ POST /fcmToken with Bearer ✅
+            └─ onTokenRefresh listener started
+
+App resumes (already logged in)
+  └─ AppLifecycleListener.onResume
+       └─ retryFailedSteps()                 ← no-op if already uploaded
+
+Network restored
+  └─ NetworkManager stream
+       └─ retryFailedSteps()                 ← retries if previous upload failed
+
+FCM rotates token
+  └─ onTokenRefresh
+       └─ _tokenUploaded = false → re-upload ✅
+
+*/

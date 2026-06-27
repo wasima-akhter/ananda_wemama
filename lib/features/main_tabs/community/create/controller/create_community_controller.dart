@@ -78,7 +78,7 @@ class CreateCommunityController extends GetxController {
       if (response == true) {
         log('onTapCreate success : $response');
 
-        "Community is created successfully".showToast();
+        "Created successfully. Awaiting Admin approval.".showToast();
       } else {
         log('onTapCreate failed : $response');
       }

@@ -12,15 +12,59 @@ import 'package:mama_app/routes/route_paths.dart';
 import '../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../core/config/app_info.dart';
 import '../core/network/helpers/network_helpers.dart';
+import '../core/services/push_notification/push_notification_service.dart';
 import '../core/services/socket/socket_service.dart';
 import '../core/utils/extension/binding_extensions.dart';
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   final bool hasInternet;
   const App({super.key, required this.hasInternet});
 
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  late final AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _lifecycleListener = AppLifecycleListener(
+      // app.dart — in your existing AppLifecycleListener.onResume
+      onResume: () {
+        debugPrint('📱 [App] app resumed');
+        if (Get.isRegistered<PushNotificationService>()) {
+          final push = Get.find<PushNotificationService>();
+          final loggedIn = storage.getLoggedIn; // check auth state
+
+          if (loggedIn) {
+            debugPrint(
+              '🔄 [App] user logged in — retrying failed push steps...',
+            );
+            push.retryFailedSteps(); // retries token upload if it previously failed
+          } else {
+            debugPrint(
+              'ℹ️ [App] user not logged in — skipping FCM token retry',
+            );
+          }
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+    super.dispose();
+  }
+
+  //
   Future<String> getInitialRoute() async {
-    return hasInternet ? RoutePaths.splashScreen : RoutePaths.offlineScreen;
+    return widget.hasInternet
+        ? RoutePaths.splashScreen
+        : RoutePaths.offlineScreen;
   }
 
   @override

@@ -1,8 +1,6 @@
-import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../shared/mood/mood_library/widgets/mood_library_chip_card.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
@@ -36,6 +34,98 @@ class ExpertsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: itemGap,
         children: [
+          /// 🔴 ONGOING + 🟡 UPCOMING (combined reactive block)
+          Obx(() {
+            final isOngoingLoading = sc.isOngoingLoading.value;
+            final isUpcomingLoading = sc.isUpcomingLoading.value;
+
+            final ongoingList = exc.limitList(sc.ongoingList);
+            final upcomingList = exc.limitList(sc.upcomingList);
+
+            final ongoingEmpty = !isOngoingLoading && ongoingList.isEmpty;
+            final upcomingEmpty = !isUpcomingLoading && upcomingList.isEmpty;
+
+            // Still loading at least one — show both shimmer placeholders
+            if (isOngoingLoading || isUpcomingLoading) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: itemGap,
+                children: [
+                  if (isOngoingLoading)
+                    CardHorizontalList(
+                      height: Responsive.ongoingSessionCardHeight,
+                      title: Strings.ongoingExpertSession,
+                      exc: exc,
+                      onViewAll: () {},
+                      itemCount: 5,
+                      itemBuilder: (_) => const LiveOngoingSessionCardShimmer(),
+                    ),
+                  if (isUpcomingLoading)
+                    CardHorizontalList(
+                      height: Responsive.upcomingSessionCardHeight,
+                      title: Strings.upcomingExpertSession,
+                      exc: exc,
+                      onViewAll: () {},
+                      itemCount: 5,
+                      itemBuilder: (_) => const LiveOngoingSessionCardShimmer(),
+                    ),
+                ],
+              );
+            }
+
+            // Both empty → single empty state card
+            if (ongoingEmpty && upcomingEmpty) {
+              return _NoSessionsCard();
+            }
+
+            // At least one has data — show only the non-empty sections
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: itemGap,
+              children: [
+                if (!ongoingEmpty)
+                  CardHorizontalList(
+                    aspectRatio: 1.8,
+                    height: Responsive.ongoingSessionCardHeight,
+                    title: Strings.ongoingExpertSession,
+                    exc: exc,
+                    onViewAll: () => exc.onTapViewAll(true),
+                    itemCount: ongoingList.length,
+                    itemBuilder: (index) =>
+                        LiveOngoingSessionCard(data: ongoingList[index]),
+                  ),
+
+                if (!upcomingEmpty)
+                  CardHorizontalList(
+                    aspectRatio: 1.45,
+                    height: Responsive.ongoingSessionCardHeight,
+                    title: Strings.upcomingExpertSession,
+                    exc: exc,
+                    onViewAll: () => exc.onTapViewAll(false),
+                    itemCount: upcomingList.length,
+                    itemBuilder: (index) {
+                      final item = upcomingList[index];
+                      return UpcomingExpertSessionCard(
+                        data: item,
+                        onTapQues: ({required expertId, required sessionId}) =>
+                            act.uploadSessionQues(
+                              expertId: expertId,
+                              sessionId: sessionId,
+                              question: exc.writeQuesCtrl.text.trim(),
+                            ),
+                        writeQuesCtrl: exc.writeQuesCtrl,
+                        writeQuesFocusNode: exc.writeQuesFocusNode,
+                        isSendQuesLoading: act.isSendQuesLoading,
+                      );
+                    },
+                  ),
+              ],
+            );
+          }),
+
+          /*
           /// 🔴 ONGOING sessions
           Obx(() {
             final isLoading = sc.isOngoingLoading.value;
@@ -138,6 +228,8 @@ class ExpertsScreen extends StatelessWidget {
             );
           }),
 
+
+*/
           Gap(itemGap * 0.5),
 
           PastSessionsLibraryCard(
@@ -168,7 +260,11 @@ Widget makeCardHeader(String title, {required void Function() onTap}) {
     children: [
       Text(
         title.capEachWord(),
-        style: TxtStyle.outfitSemiB(fs: 13, w: 600,color: c.foregroundSecondary ),
+        style: TxtStyle.outfitSemiB(
+          fs: 13,
+          w: 600,
+          color: c.foregroundSecondary,
+        ),
       ),
       GestureDetector(
         onTap: onTap,
@@ -179,4 +275,46 @@ Widget makeCardHeader(String title, {required void Function() onTap}) {
       ),
     ],
   );
+}
+
+class _NoSessionsCard extends StatelessWidget {
+  const _NoSessionsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      vp: 28,
+      hp: 20,
+      contClr: newCardClr,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.event_busy_rounded,
+            size: 40,
+            color: c.foregroundSecondary,
+          ),
+          Gap(12),
+          Text(
+            "No Sessions Available",
+            style: TxtStyle.outfitSemiB(
+              fs: 15,
+              w: 600,
+              color: c.foregroundPrimary,
+            ),
+          ),
+          Gap(6),
+          Text(
+            "You have no ongoing or upcoming sessions at the moment.",
+            textAlign: TextAlign.center,
+            style: TxtStyle.outfitSemiB(
+              fs: 13,
+              w: 400,
+              color: c.foregroundSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

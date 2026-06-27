@@ -118,7 +118,7 @@ class AllAutoheightWebview extends StatelessWidget {
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
   html, body {
       margin: 0 !important;
@@ -449,6 +449,7 @@ class _HybridWebViewWidgetState extends State<HybridWebViewWidget> {
 
 <style>
 
+/* Force everything to wrap, never overflow horizontally */
 html, body {
   margin: 0;
   padding: $_paddingCss;
@@ -456,25 +457,53 @@ html, body {
   font-family: 'Outfit', sans-serif;
   font-size: ${widget.fontSize ?? 14}px;
   color: ${_toCssColor(widget.textColor ?? c.foregroundSecondary)};
+  overflow-x: hidden;          /* 👈 kill horizontal scroll at root */
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: normal;
+  padding-right: ${widget.padding.right + 12}px;
 }
 
 * {
   max-width: 100%;
   box-sizing: border-box;
+  word-break: break-word;      /* 👈 also on every element */
 }
 
-img, iframe, table, video {
+img, iframe, video {
   max-width: 100% !important;
   height: auto !important;
+  display: block;
 }
 
-a {
-  color: blue;
-  text-decoration: underline;
+/* Tables: most common cause of horizontal overflow */
+table {
+  width: 100% !important;
+  max-width: 100% !important;
+  table-layout: fixed !important;   /* 👈 columns respect width, don't expand */
+  border-collapse: collapse;
+}
+
+td, th {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal !important;   /* 👈 override any inline nowrap */
+}
+
+/* Code blocks: wrap instead of scroll */
+pre {
+  white-space: pre-wrap !important; /* 👈 wrap but preserve indentation */
+  word-break: break-all;
+}
+
+code {
+  word-break: break-all;
 }
 
 #content {
+  overflow-x: hidden;               /* 👈 belt-and-suspenders on the content div */
   overflow-y: auto;
+  width: 100%;
 }
 
 

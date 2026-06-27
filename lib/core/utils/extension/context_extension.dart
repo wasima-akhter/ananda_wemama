@@ -172,7 +172,7 @@ class Snack {
                       Text(
                         title ?? '',
                         style: TxtStyle.inter(
-                          color:c.foregroundSecondary,
+                          color: c.foregroundSecondary,
                           w: 600,
                         ),
                       ),
@@ -437,7 +437,7 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h,
     decoration: dec,
     fontFeatures: fontFeatures,
@@ -454,7 +454,7 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h,
     decoration: dec,
   );
@@ -524,7 +524,7 @@ class TxtStyle {
   );
 
   static TextStyle get urbanistSmTitle600 =>
-      TxtStyle.urbanistSemiB(fs: 14, w: 600, color:c.foregroundSecondary);
+      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitle =>
       TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitleSec =>
@@ -544,10 +544,10 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h,
     decoration: dec,
-    decorationColor: color ??c.foregroundSecondary,
+    decorationColor: color ?? c.foregroundSecondary,
   );
 
   static TextStyle outfitSemiB({
@@ -561,10 +561,10 @@ class TxtStyle {
     fontSize: fs.sp,
     fontWeight: getFontWeight(w),
     letterSpacing: ls,
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h,
     decoration: dec,
-    decorationColor: color ??c.foregroundSecondary,
+    decorationColor: color ?? c.foregroundSecondary,
   );
 
   static TextStyle get outfitUnderLTxt => outfit(
@@ -603,10 +603,10 @@ class TxtStyle {
     fontSize: (fs ?? 13).sp,
     fontWeight: getFontWeight(w ?? 500),
     letterSpacing: ls,
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h,
     decoration: dec,
-    decorationColor: color ??c.foregroundSecondary,
+    decorationColor: color ?? c.foregroundSecondary,
     textBaseline: TextBaseline.alphabetic,
   );
 
@@ -622,10 +622,10 @@ class TxtStyle {
     fontWeight: getFontWeight(w ?? 500),
     letterSpacing: ls ?? 0.05,
 
-    color: color ??c.foregroundSecondary,
+    color: color ?? c.foregroundSecondary,
     height: h ?? 1.4,
     decoration: dec,
-    decorationColor: color ??c.foregroundSecondary,
+    decorationColor: color ?? c.foregroundSecondary,
     textBaseline: TextBaseline.alphabetic,
   );
 

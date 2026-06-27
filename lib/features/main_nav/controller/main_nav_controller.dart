@@ -59,12 +59,9 @@ class MainNavController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _prefetchChatList();
     });
-  }
 
-  @override
-  void onClose() {
-    LocationStatusObserver.instance.stopListening();
-    super.onClose();
+    //
+    debugPrint('🔧 [MainNavController] onInit');
   }
 
   // ─────────────────────────────
@@ -255,3 +252,21 @@ runLocationPermissionFlow()
   └─ permanently denied              → _showPermanentlyDeniedDialog() → app settings
 ///
  */
+
+
+/*
+
+1. FOREGROUND (app open, user using it)
+   → Show local notification banner (already doing this ✅)
+   → On tap → route to relevant screen
+   → Optionally: refresh the current screen's data silently without routing
+
+2. BACKGROUND (app open but minimized)
+   → System shows the notification (FCM/local) ✅
+   → On tap → app comes to foreground → route to relevant screen
+
+3. TERMINATED (app fully closed)
+   → System shows the notification ✅
+   → On tap → app cold launches → route to relevant screen AFTER login check
+
+   */

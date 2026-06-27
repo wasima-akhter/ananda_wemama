@@ -1,5 +1,6 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
+import '../../../../core/services/push_notification/utils/notification_permission_dialog.dart';
 import '../../../shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../experts/controller/session_action_controller.dart';
 import '../../experts/controller/session_controller.dart';
@@ -32,6 +33,18 @@ class HomeController extends GetxController {
     getCommunitySpotLight();
     getGentleRemindData();
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    _maybeAskNotificationPermission();
+  }
+
+  Future<void> _maybeAskNotificationPermission() async {
+    // Small delay so the screen finishes painting before a dialog appears
+    await Future.delayed(const Duration(seconds: 2));
+    await NotificationPermissionHelper.askWithRationale();
   }
 
   final sessionCtrl = Get.find<SessionController>();

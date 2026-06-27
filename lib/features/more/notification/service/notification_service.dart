@@ -18,23 +18,28 @@ class NotificationService extends GetxService {
 
     final response = await _apiHelper.request<List<NotificationItemModel>>(
       apiCall: apiCall,
+      showRawResponse: false,
       parser: (data) {
-        log("parserdata: ${data}");
+        // log("parserdata: $data");
 
         if (data == null) return [];
 
-        return (data is List) ? data.map((e) => NotificationItemModel.fromJson(e)).toList() : [];
+        return (data is List)
+            ? data.map((e) => NotificationItemModel.fromJson(e)).toList()
+            : [];
       },
     );
 
-    log("response data: ${response?.data}");
+    // log("response data: ${response?.data}");
     return response?.data ?? [];
   }
 
   Future<bool> updateIsSeen({required String notificationId}) async {
     apiCall() {
       return ApiClient().patch(
-        Endpoints.notificationIsSeenUpdate(notificationId: notificationId).getUrl,
+        Endpoints.notificationIsSeenUpdate(
+          notificationId: notificationId,
+        ).getUrl,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }

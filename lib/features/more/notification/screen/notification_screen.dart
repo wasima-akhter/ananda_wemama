@@ -8,18 +8,49 @@ import '../controller/notification_controller.dart';
 import '../model/notifications_model.dart';
 import '../router/notification_router.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final nc = Get.find<NotificationController>();
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
 
+class _NotificationScreenState extends State<NotificationScreen>
+    with WidgetsBindingObserver {
+  //
+
+  final nc = Get.find<NotificationController>();
+  // ───────────────────────── LIFECYCLE ─────────────────────────
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    nc.getNotifications();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    debugPrint('🔍 [Lifecycle] state changed → $state');
+    if (state == AppLifecycleState.resumed && mounted) {
+      nc.getNotifications();
+    }
+  }
+
+  //
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Scaffold(
         appBar: CommonAppBarContent(title: Strings.notification),
-        backgroundColor: bgClr,
+        backgroundColor: bgClrNew,
         resizeToAvoidBottomInset: true,
         body: Obx(() {
           final state = getUIStateList(
@@ -40,7 +71,11 @@ class NotificationScreen extends StatelessWidget {
             // 🔹 Empty
             // ─────────────────────────────
             empty: () => Column(
-              children: [EmptyNoSearchWidgetScrollable(title: Strings.noNotificationFound)],
+              children: [
+                EmptyNoSearchWidgetScrollable(
+                  title: Strings.noNotificationFound,
+                ),
+              ],
             ),
 
             // ─────────────────────────────
@@ -58,7 +93,9 @@ class NotificationScreen extends StatelessWidget {
                           return;
                         }
 
-                        showLoading(isupdateIsSeenLoading: nc.isupdateIsSeenLoading_);
+                        showLoading(
+                          isupdateIsSeenLoading: nc.isupdateIsSeenLoading_,
+                        );
 
                         await nc.updateIsSeen(notificationId: notificationId);
 
@@ -83,7 +120,11 @@ class NotificationScreen extends StatelessWidget {
 class NotificationItemCard extends StatelessWidget {
   final NotificationItemModel n;
   final void Function(String notificationId) onTapNItem;
-  const NotificationItemCard({super.key, required this.n, required this.onTapNItem});
+  const NotificationItemCard({
+    super.key,
+    required this.n,
+    required this.onTapNItem,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +140,8 @@ class NotificationItemCard extends StatelessWidget {
         hp: 8,
         vp: 8,
         hasBrdr: true,
-        brdrClr: !isSeen ? null : grey200, contClr: bgClrNew ,
-       
+        brdrClr: !isSeen ? null : grey200,
+        contClr: bgClrNew,
 
         // boxShadow: boxShadowAllSides,
         child: Row(
@@ -135,8 +176,11 @@ class NotificationItemCard extends StatelessWidget {
 
                       Text(
                         DateHelper().formatTimeAgo(createdAt).date,
-                        style: TxtStyle.outfit(fs:11, w: 400,
-                         color: c.secondary),
+                        style: TxtStyle.outfit(
+                          fs: 11,
+                          w: 400,
+                          color: c.secondary,
+                        ),
                       ),
                     ],
                   ),
