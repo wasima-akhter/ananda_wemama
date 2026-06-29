@@ -89,7 +89,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                       n: n,
                       onTapNItem: (notificationId) async {
                         if (n.isSeen == true) {
-                          await NotificationRouter.route(n);
+                          NotificationRouter.routeFromModel(n);
                           return;
                         }
 
@@ -103,7 +103,7 @@ class _NotificationScreenState extends State<NotificationScreen>
 
                         await Future.delayed(const Duration(milliseconds: 300));
 
-                        await NotificationRouter.route(n);
+                        NotificationRouter.routeFromModel(n);
                       },
                     );
                   }),

@@ -51,7 +51,8 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
               Builder(
                 builder: (context) {
                   final double avatarRadius = 22;
-                  final double crownSize = 35;
+                  final double crownSize =
+                      (ScreenSize.isSmallWidth ? 40 : 30).r;
 
                   return CusGestureDetector(
                     onTap: () {
@@ -84,8 +85,14 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
 
                           // Crown
                           Positioned(
-                            top: -(crownSize * 0.5),
-                            right: -(crownSize * 0.5),
+                            // top: -(crownSize * 0.5),
+                            // right: -(crownSize * 0.5),
+                            top:
+                                -(crownSize *
+                                    (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
+                            right:
+                                -(crownSize *
+                                    (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
                             child: Transform.rotate(
                               angle: 0.3,
                               child: SvgIcon(

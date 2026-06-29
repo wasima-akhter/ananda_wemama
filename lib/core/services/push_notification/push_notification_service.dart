@@ -392,6 +392,8 @@ class PushNotificationService extends GetxService {
 
     lastPayload = payload.toJsonString();
 
+    //
+
     showLocalNotification(
       id: _safeId(message.messageId),
       title: title,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/local/app_storage.dart';
+import '../../../../features/more/notification/router/notification_router.dart';
 import '../../../../routes/route_paths.dart';
 import '../notification_payload.dart';
 import '../push_notification_service.dart';
@@ -22,110 +23,93 @@ class PushNotificationController extends GetxController {
   // ── Stream listener ───────────────────────────────────────────────────────
 
   // push_notification_controller.dart
+  // push_notification_controller.dart
+
+  // REMOVE: _route(), _handleOther() — all routing logic deleted from here
 
   void _listenToTaps() {
+    debugPrint(
+      '🎧 [NotificationController] Listening for notification taps...',
+    );
+
     PushNotificationService.notificationTapStream.stream.listen(
       (jsonString) {
-        debugPrint(
-          '🔔 [NotificationController] tap event received: $jsonString',
-        );
-        final payload = NotificationPayload.fromJsonString(jsonString);
+        debugPrint('👆 [NotificationController] Tap received');
+        debugPrint('📦 Raw payload: $jsonString');
 
-        // ✅ One frame delay — ensures deep link service has already
-        // processed (and ignored) the SELECT_NOTIFICATION intent
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          debugPrint('🔔 [NotificationController] routing after frame settle');
-          _route(payload);
-        });
+        try {
+          final payload = NotificationPayload.fromJsonString(jsonString);
+
+          debugPrint('✅ Payload parsed');
+          debugPrint('➡️ type: ${payload.type}');
+          debugPrint('➡️ referenceId: ${payload.referenceId}');
+          debugPrint('➡️ referenceModel: ${payload.referenceModel}');
+          debugPrint('➡️ metadata: ${payload.metadata}');
+
+          _guardAndRoute(payload);
+        } catch (e, s) {
+          debugPrint('❌ Failed to parse payload');
+          debugPrint(e.toString());
+          debugPrint(s.toString());
+        }
       },
       onError: (e) {
-        debugPrint('❌ [NotificationController] stream error: $e');
+        debugPrint('❌ notificationTapStream ERROR: $e');
+      },
+      onDone: () {
+        debugPrint('⚠️ notificationTapStream CLOSED');
       },
     );
-    debugPrint('✅ [NotificationController] tap listener active');
   }
+
   // ── Cold start (app was terminated, user tapped notification) ─────────────
   // lastPayload is written before this controller exists, so consume it once.
 
   void _consumeColdStartPayload() {
+    debugPrint('🚀 Checking cold start payload');
+
     final raw = PushNotificationService.lastPayload;
+
+    debugPrint('📦 Cold payload: $raw');
+
     if (raw == null || raw.isEmpty) {
-      debugPrint('ℹ️ [NotificationController] no cold-start payload');
+      debugPrint('ℹ️ No cold start payload');
       return;
     }
 
-    debugPrint('📩 [NotificationController] cold-start payload: $raw');
-    PushNotificationService.lastPayload = null; // consume — don't route twice
+    PushNotificationService.lastPayload = null;
 
     final payload = NotificationPayload.fromJsonString(raw);
 
-    // Delay one frame — routes/bindings may not be ready at onInit time
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint(
-        '📩 [NotificationController] routing cold-start payload after frame',
-      );
-      _route(payload);
+      debugPrint('🚀 Routing cold start notification');
+      _guardAndRoute(payload);
     });
   }
 
-  // ── Central router ────────────────────────────────────────────────────────
+  /// Login guard lives here — routing logic lives in NotificationRouter
+  void _guardAndRoute(NotificationPayload payload) {
+    debugPrint('🛡️ _guardAndRoute called');
 
-  void _route(NotificationPayload payload) {
-    debugPrint(
-      '🧭 [NotificationController] routing → '
-      'type: ${payload.type} | '
-      'referenceId: ${payload.referenceId} | '
-      'metadata: ${payload.metadata}',
-    );
-
-    // Guard: some routes require login
     final loggedIn = AppStorage.to.getLoggedIn;
+
+    debugPrint('👤 Logged in: $loggedIn');
+    debugPrint('📦 Payload type: ${payload.type}');
+    debugPrint('📦 Payload: ${payload.toJsonString()}');
+
     if (!loggedIn) {
-      debugPrint(
-        '⚠️ [NotificationController] user not logged in — '
-        'storing payload and redirecting to signin',
-      );
-      // Store so SplashController or signin success can re-trigger
+      debugPrint('🔒 User not logged in');
       PushNotificationService.lastPayload = payload.toJsonString();
       Get.offAllNamed(RoutePaths.signin);
       return;
     }
 
-    switch (payload.type) {
-      case 'OTHER':
-        _handleOther(payload);
-        break;
-
-      // ── Add as backend ENUM_NOTIFICATION_TYPE grows ──────────────────────
-      // case 'ORDER':
-      //   Get.toNamed(RoutePaths.orderDetail, arguments: payload.referenceId);
-      //   break;
-      // case 'MESSAGE':
-      //   Get.toNamed(RoutePaths.chat, arguments: payload.referenceId);
-      //   break;
-
-      default:
-        debugPrint(
-          '⚠️ [NotificationController] unhandled type: ${payload.type}',
-        );
-    }
+    debugPrint('➡️ Calling NotificationRouter');
+    NotificationRouter.routeFromPayload(payload);
+    debugPrint('✅ NotificationRouter finished');
   }
 
-  void _handleOther(NotificationPayload payload) {
-    final userId = payload.metadata['userId']?.toString();
-    debugPrint('🧭 [NotificationController] OTHER → userId: $userId');
-    debugPrint(
-      '🧭 [NotificationController] current route: ${Get.currentRoute}',
-    );
-    debugPrint('🧭 [NotificationController] routing to: ${RoutePaths.profile}');
-
-    if (userId != null && userId.isNotEmpty) {
-      Get.toNamed(RoutePaths.profile, arguments: {'userId': userId});
-      debugPrint('🧭 [NotificationController] Get.toNamed called');
-    } else {
-      debugPrint('⚠️ [NotificationController] OTHER — no userId in metadata');
-    }
-  }
+  // ── Central router ────────────────────────────────────────────────────────
 
   // Add this temporary test method to NotificationController
   // Call it from a debug button anywhere in your UI

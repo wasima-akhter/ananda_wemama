@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class NotificationItemModel {
   NotificationItemModel({
     this.id,
@@ -12,6 +14,7 @@ class NotificationItemModel {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.metadata, // ✅ added
   });
 
   final String? id;
@@ -26,6 +29,7 @@ class NotificationItemModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? v;
+  final NotificationMetadata? metadata; // ✅ added
 
   factory NotificationItemModel.fromJson(Map<String, dynamic> json) {
     return NotificationItemModel(
@@ -41,10 +45,38 @@ class NotificationItemModel {
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
       v: json["__v"],
+      metadata:
+          json["metadata"] !=
+              null // ✅ added
+          ? NotificationMetadata.fromJson(json["metadata"])
+          : null,
     );
   }
 
-  // ✅ Added copyWith
+  /// ✅ Parse from FCM push notification data map (all values are strings)
+  factory NotificationItemModel.fromPushData(Map<String, dynamic> data) {
+    return NotificationItemModel(
+      id: data["_id"] ?? data["id"],
+      toId: data["toId"],
+      toModel: data["toModel"],
+      title: data["title"],
+      description: data["description"],
+      type: data["type"],
+      referenceId: data["referenceId"],
+      referenceModel: data["referenceModel"],
+      isSeen: data["isSeen"] == "true",
+      metadata: data["metadata"] != null
+          ? NotificationMetadata.fromJson(
+              data["metadata"] is String
+                  ? jsonDecode(
+                      data["metadata"],
+                    ) // FCM sends nested as JSON string
+                  : data["metadata"],
+            )
+          : null,
+    );
+  }
+
   NotificationItemModel copyWith({
     String? id,
     String? toId,
@@ -58,6 +90,7 @@ class NotificationItemModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? v,
+    NotificationMetadata? metadata,
   }) {
     return NotificationItemModel(
       id: id ?? this.id,
@@ -72,10 +105,27 @@ class NotificationItemModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       v: v ?? this.v,
+      metadata: metadata ?? this.metadata,
     );
   }
 }
 
+/// ✅ Covers all metadata shapes across notification types
+class NotificationMetadata {
+  final String? postId; // likePost, commentPost
+  final bool? isBlocked; // sentMessage
+
+  NotificationMetadata({this.postId, this.isBlocked});
+
+  factory NotificationMetadata.fromJson(Map<String, dynamic> json) {
+    return NotificationMetadata(
+      postId: json["postId"],
+      isBlocked: json["isBlocked"] is bool
+          ? json["isBlocked"]
+          : json["isBlocked"] == "true", // FCM sends strings
+    );
+  }
+}
 // export const ENUM_NOTIFICATION_TYPE = {
 //     LIKE_POST : "LIKE_POST",
 //     COMMENT_POST : "COMMENT_POST",

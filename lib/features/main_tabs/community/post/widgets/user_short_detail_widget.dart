@@ -15,14 +15,17 @@ class UserShortDetailWidget extends StatelessWidget {
     final creatorAddress = creator?.city ?? '';
     return Row(
       children: [
-        NetworkImageWidget(
-          imageUrl: isAnonymous ? '' : creatorImg, 
-          name:  isAnonymous ? '' : creatorName,
-          isCircle: true,
-          radius: 18,
-          isUser: true,
-          enablePreview: true,  solidPlaceholderCircle: true,
-        ),
+        isAnonymous
+            ? CircleAvatar(radius: 18.r, backgroundColor: c.primary)
+            : NetworkImageWidget(
+                imageUrl: creatorImg,
+                name: creatorName,
+                isCircle: true,
+                radius: 18,
+                isUser: true,
+                enablePreview: true,
+                solidPlaceholderCircle: true,
+              ),
         Gap(itemGap * 1.5),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,16 +33,18 @@ class UserShortDetailWidget extends StatelessWidget {
           children: [
             TextFit(
               isAnonymous ? Strings.anonymous : creatorName.capEachWord(),
-              style: TxtStyle.outfitSemiB(fs: 13, w: 500,  ),
+              style: TxtStyle.outfitSemiB(fs: 13, w: 500),
             ),
             isAnonymous
                 ? const SizedBox.shrink()
-                : Row(
+                : creatorAddress.isNotEmpty
+                ? Row(
                     children: [
                       SvgIcon(iconPath: IconsPath.locationBold, height: 16),
                       TextFit(creatorAddress, style: TxtStyle.outfitxSmNor500),
                     ],
-                  ),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ],
