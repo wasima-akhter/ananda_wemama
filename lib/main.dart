@@ -10,6 +10,7 @@ import 'core/network/network_manager.dart';
 import 'core/services/deep_link/app_link_service.dart';
 import 'core/services/firebase/firebase_service.dart';
 import 'core/services/location/location_service.dart';
+import 'core/services/push_notification/controller/notification_count_controller.dart';
 import 'core/services/push_notification/controller/push_notification_controller.dart';
 import 'core/services/push_notification/firebase_token_service.dart';
 import 'core/services/push_notification/push_notification_service.dart';
@@ -79,6 +80,16 @@ void main() async {
       () async => PushNotificationService().init(),
       permanent: true,
     );
+    debugPrint('✅ [main] PushNotificationService ready');
+  } catch (e, st) {
+    // Non-fatal: app can still run without push notifications
+    debugPrint('❌ [main] PushNotificationService init FAILED: $e');
+    debugPrint('$st');
+  }
+  // ── 7.2 PushNotificationService ───────────────────────────────────────────────
+  debugPrint('🔧 [main] initializing NotificationCount Controller...');
+  try {
+    Get.put(NotificationCountController(), permanent: true);
     debugPrint('✅ [main] PushNotificationService ready');
   } catch (e, st) {
     // Non-fatal: app can still run without push notifications

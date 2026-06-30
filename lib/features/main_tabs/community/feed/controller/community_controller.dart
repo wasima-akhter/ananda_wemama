@@ -2,16 +2,44 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
+import '../../../../../core/utils/paginator/paginator.dart';
 import '../../core/models/community_item_model.dart';
 import '../../core/services/community_service.dart';
 
 class CommunityController extends GetxController {
   static CommunityController get to => Get.find<CommunityController>();
+
+  final service = CommunityService();
+
+  // ── Paginators ──────────────────────────────────────────────────────────
+
+  late final Paginator<CommunityItemModel> joinedPaginator;
+  late final Paginator<CommunityItemModel> managedPaginator;
+
+  // Convenience getters — keep old call sites working with minimal change
+  RxList<CommunityItemModel> get joinedCommunityList => joinedPaginator.items;
+  RxList<CommunityItemModel> get managedCommunityList => managedPaginator.items;
+
+  RxBool get isJoinedCommunityLoading_ => joinedPaginator.isLoading;
+  RxBool get isManagedCommunityLoading_ => managedPaginator.isLoading;
+
+  bool get isJoinedCommunityLoading => joinedPaginator.isLoading.value;
+  bool get isMyCommunityLoading => managedPaginator.isLoading.value;
+
   @override
   void onInit() {
     super.onInit();
 
-    // ✅ Skip API calls if not logged in — will be triggered after login
+    joinedPaginator = Paginator<CommunityItemModel>(
+      fetchPage: (page, limit) =>
+          service.fetchJoinedCommunityListPaged(page: page, limit: limit),
+    );
+
+    managedPaginator = Paginator<CommunityItemModel>(
+      fetchPage: (page, limit) =>
+          service.fetchManagedCommunityListPaged(page: page, limit: limit),
+    );
+
     if ((getToken ?? '').isEmpty) {
       log("CommunityController: no token, skipping initial fetch");
       return;
@@ -21,9 +49,8 @@ class CommunityController extends GetxController {
     getManagedCommunityList();
   }
 
-  final showSearchedTag = false.obs; // ← to control showing searched tag
-  final searchedTxt = ''.obs; //
-
+  final showSearchedTag = false.obs;
+  final searchedTxt = ''.obs;
   final selTab = CommunityTab.myCommunities.obs;
 
   void changeTab(CommunityTab tab) {
@@ -34,6 +61,9 @@ class CommunityController extends GetxController {
   void onClose() {
     myCommunityScrlCtrl.dispose();
     manageCommunityScrlCtrl.dispose();
+
+    joinedPaginator.dispose();
+    managedPaginator.dispose();
 
     unFocusAll();
     super.onClose();
@@ -48,58 +78,17 @@ class CommunityController extends GetxController {
   final ScrollController myCommunityScrlCtrl = ScrollController();
   final ScrollController manageCommunityScrlCtrl = ScrollController();
 
-  //
-  final service = CommunityService();
+  // ── Managed communities ────────────────────────────────────────────────
 
-  // API loading state
-  var isManagedCommunityLoading_ = false.obs;
-  bool get isMyCommunityLoading => isManagedCommunityLoading_.value;
+  Future<void> getManagedCommunityList() => managedPaginator.loadInitial();
+  Future<void> loadMoreManagedCommunity() => managedPaginator.loadMore();
 
-  final managedCommunityList = <CommunityItemModel>[].obs;
+  // ── Joined ("My") communities ─────────────────────────────────────────
 
-  /// Fetch the latest  data from API
-  Future<void> getManagedCommunityList() async {
-    if (isManagedCommunityLoading_.value) return; // Prevent duplicate calls
-    isManagedCommunityLoading_.value = true;
+  Future<void> getMyCommunityList() => joinedPaginator.loadInitial();
+  Future<void> loadMoreMyCommunity() => joinedPaginator.loadMore();
 
-    try {
-      final data = await service.fetchManagedCommunityList();
-
-      log('getMyCommunityList   : $data');
-      managedCommunityList.value = data;
-    } catch (e) {
-      log("Error my community: $e");
-    } finally {
-      isManagedCommunityLoading_.value = false;
-
-      unFocusAll();
-    }
-  }
-
-  // API loading state
-  var isJoinedCommunityLoading_ = false.obs;
-  bool get isJoinedCommunityLoading => isJoinedCommunityLoading_.value;
-
-  final joinedCommunityList = <CommunityItemModel>[].obs;
-
-  /// Fetch the latest  data from API
-  Future<void> getMyCommunityList() async {
-    if (isJoinedCommunityLoading_.value) return; // Prevent duplicate calls
-    isJoinedCommunityLoading_.value = true;
-
-    try {
-      final data = await service.fetchJoinedCommunityList();
-
-      log('get Joined CommunityList   : $data');
-      joinedCommunityList.value = data;
-    } catch (e) {
-      log("Error Joined community: $e");
-    } finally {
-      isJoinedCommunityLoading_.value = false;
-
-      unFocusAll();
-    }
-  }
+  // ── Actions ───────────────────────────────────────────────────────────
 
   void onTapItemBtn({
     required MyCommunityBtnState btnState,
@@ -138,14 +127,12 @@ class CommunityController extends GetxController {
     }
   }
 
-  // ← tapping the item row (not the button) = just viewing
   void onTapItem({
     required MyCommunityBtnState btnState,
     required String communityItemId,
   }) {
     Get.toNamed(
       RoutePaths.communityDetail,
-
       arguments: {'btnState': btnState, "communityItemId": communityItemId},
     );
   }

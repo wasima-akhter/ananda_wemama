@@ -5,13 +5,42 @@ import '../../shared_ui/community_item.dart';
 import '../controller/community_search_controller.dart';
 import 'community_list_view_scrollbar.dart';
 
-class SuggestedCommunitySection extends StatelessWidget {
-  final CommunitySearchController csc;
+class SuggestedCommunitySection extends StatefulWidget {
+  const SuggestedCommunitySection({super.key});
 
-  const SuggestedCommunitySection({super.key, required this.csc});
+  @override
+  State<SuggestedCommunitySection> createState() =>
+      _SuggestedCommunitySectionState();
+}
+
+class _SuggestedCommunitySectionState extends State<SuggestedCommunitySection> {
+  final csc = CommunitySearchController.to;
+
+  @override
+  void initState() {
+    super.initState();
+    csc.suggCommunityScrlCtrl.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final ctrl = csc.suggCommunityScrlCtrl;
+
+    if (!csc.suggestedPaginator.hasMore.value) return;
+
+    if (ctrl.position.pixels >= ctrl.position.maxScrollExtent - 200) {
+      csc.loadMoreSuggested();
+    }
+  }
+
+  @override
+  void dispose() {
+    csc.suggCommunityScrlCtrl.removeListener(_onScroll);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final csc = CommunitySearchController.to;
     return Obx(() {
       final isLoading = csc.isSuggestedCommunityLoading_.value;
 

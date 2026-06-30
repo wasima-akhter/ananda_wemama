@@ -4,12 +4,14 @@ import '../../shared_ui/community_item.dart';
 
 class CommunityListViewSimple extends StatefulWidget {
   final int itemCount;
+  final ScrollController scrollController;
   final CommunityItem Function(int index) itemBuilder;
 
   const CommunityListViewSimple({
     super.key,
     required this.itemCount,
     required this.itemBuilder,
+    required this.scrollController,
   });
 
   @override
@@ -18,18 +20,10 @@ class CommunityListViewSimple extends StatefulWidget {
 }
 
 class _CommunityListViewSimpleState extends State<CommunityListViewSimple> {
-  final ScrollController _ctrl = ScrollController();
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return CustomScrollViewWidget(
-      controller: _ctrl,
+      controller: widget.scrollController,
       slivers: [
         SliverPadding(
           padding: EdgeInsets.only(bottom: itemGap * 2),

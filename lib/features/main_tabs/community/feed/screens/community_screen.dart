@@ -21,19 +21,41 @@ class _CommunityScreenState extends State<CommunityScreen>
     with WidgetsBindingObserver {
   final CommunityController cc = Get.find<CommunityController>();
 
-  // ───────────────────────── LIFECYCLE ─────────────────────────
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refreshCurrentTab();
+
+    // ✅ Wire existing scroll controllers to pagination
+    cc.myCommunityScrlCtrl.addListener(_onMyCommunityScroll);
+    cc.manageCommunityScrlCtrl.addListener(_onManagedCommunityScroll);
   }
 
   @override
   void dispose() {
+    cc.myCommunityScrlCtrl.removeListener(_onMyCommunityScroll);
+    cc.manageCommunityScrlCtrl.removeListener(_onManagedCommunityScroll);
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _onMyCommunityScroll() {
+    final ctrl = cc.myCommunityScrlCtrl;
+    if (!cc.joinedPaginator.hasMore.value)
+      return; // ✅ skip listener work entirely
+    if (ctrl.position.pixels >= ctrl.position.maxScrollExtent - 200) {
+      cc.loadMoreMyCommunity();
+    }
+  }
+
+  void _onManagedCommunityScroll() {
+    final ctrl = cc.manageCommunityScrlCtrl;
+    if (!cc.managedPaginator.hasMore.value)
+      return; // ✅ skip listener work entirely
+    if (ctrl.position.pixels >= ctrl.position.maxScrollExtent - 200) {
+      cc.loadMoreManagedCommunity();
+    }
   }
 
   @override
@@ -44,19 +66,14 @@ class _CommunityScreenState extends State<CommunityScreen>
     }
   }
 
-  // ───────────────────────── DATA ─────────────────────────
-
   Future<void> _refreshCurrentTab() async {
     final isMyTab = cc.selTab.value == CommunityTab.myCommunities;
 
     await cc.getManagedCommunityList();
-
     if (isMyTab) {
       await cc.getMyCommunityList();
     }
   }
-
-  // ───────────────────────── UI ─────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +90,9 @@ class _CommunityScreenState extends State<CommunityScreen>
     );
   }
 
-  // ───────────────────────── TAB BAR ─────────────────────────
-
   Widget _buildTabBar() {
     return Obx(() {
       final selTab = cc.selTab.value;
-
       return Row(
         children: [
           CommunityTabItem(
@@ -96,8 +110,6 @@ class _CommunityScreenState extends State<CommunityScreen>
       ).getcm;
     });
   }
-
-  // ───────────────────────── TAB CONTENT ─────────────────────────
 
   Widget _buildTabContent() {
     return Obx(() {
@@ -117,19 +129,32 @@ class _CommunityScreenState extends State<CommunityScreen>
   Widget _myCommunities() {
     return Obx(() {
       return UIStateHandler(
-        onRefresh: () => cc.getMyCommunityList(),
+        onRefresh: () => cc.joinedPaginator.refresh(),
         state: getUIStateList(
-          isLoading: cc.isJoinedCommunityLoading_.value,
-          list: cc.joinedCommunityList,
+          isLoading: cc.joinedPaginator.isLoading.value,
+          list: cc.joinedPaginator.items,
         ),
         loading: () => const CommunityShimmerList(),
         empty: () => const EmptyNoSearchWidgetScrollable(
           title: "No Communities yet",
         ).getcm,
-        data: () => CommunityListViewSimple(
-          key: const ValueKey(CommunityTab.myCommunities),
-          itemCount: cc.joinedCommunityList.length,
-          itemBuilder: (i) => _buildJoinedItem(i),
+        data: () => Column(
+          children: [
+            Expanded(
+              child: CommunityListViewSimple(
+                key: const ValueKey(CommunityTab.myCommunities),
+                scrollController: cc.myCommunityScrlCtrl, // ✅ wire scroll
+                itemCount: cc.joinedPaginator.items.length,
+                itemBuilder: (i) => _buildJoinedItem(i),
+              ),
+            ),
+            // ✅ trailing loader for load-more
+            if (cc.joinedPaginator.isLoadingMore.value)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          ],
         ),
       );
     });
@@ -158,19 +183,31 @@ class _CommunityScreenState extends State<CommunityScreen>
   Widget _managedCommunities() {
     return Obx(() {
       return UIStateHandler(
-        onRefresh: () => cc.getManagedCommunityList(),
+        onRefresh: () => cc.managedPaginator.refresh(),
         state: getUIStateList(
-          isLoading: cc.isManagedCommunityLoading_.value,
-          list: cc.managedCommunityList,
+          isLoading: cc.managedPaginator.isLoading.value,
+          list: cc.managedPaginator.items,
         ),
         loading: () => const CommunityShimmerList(),
         empty: () => const EmptyNoSearchWidgetScrollable(
           title: "No Communities yet",
         ).getcm,
-        data: () => CommunityListViewSimple(
-          key: const ValueKey(CommunityTab.manage),
-          itemCount: cc.managedCommunityList.length,
-          itemBuilder: (i) => _buildManagedItem(i),
+        data: () => Column(
+          children: [
+            Expanded(
+              child: CommunityListViewSimple(
+                key: const ValueKey(CommunityTab.manage),
+                scrollController: cc.manageCommunityScrlCtrl, // ✅ wire scroll
+                itemCount: cc.managedPaginator.items.length,
+                itemBuilder: (i) => _buildManagedItem(i),
+              ),
+            ),
+            if (cc.managedPaginator.isLoadingMore.value)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 12),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+          ],
         ),
       );
     });
@@ -193,8 +230,6 @@ class _CommunityScreenState extends State<CommunityScreen>
       ),
     );
   }
-
-  // ───────────────────────── APP BAR ─────────────────────────
 
   PreferredSizeWidget _buildAppBar() {
     return CommonAppBarContent(

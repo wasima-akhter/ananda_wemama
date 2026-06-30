@@ -2,6 +2,7 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
 import '../../../../core/services/deep_link/app_link_service.dart';
+import '../../../../core/services/push_notification/push_notification_service.dart';
 /*
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
@@ -240,6 +241,10 @@ class SplashController extends GetxController {
     );
     _navigateNormally(seenOnboarding, loggedIn);
 
+    if (loggedIn) {
+      await _maybeUploadFcmToken(); // ✅ added — already-logged-in path
+    }
+
     // ✅ markAppReady() called ONCE — after navigation is fully done
     log("✅ [SPLASH] STEP 6 → Navigation done. Calling markAppReady().");
     deepLinkService.markAppReady();
@@ -269,5 +274,17 @@ class SplashController extends GetxController {
     log(
       "🧭 [SPLASH] _navigateNormally() → Current route after nav: ${Get.currentRoute}",
     );
+  }
+
+  //
+  Future<void> _maybeUploadFcmToken() async {
+    if (Get.isRegistered<PushNotificationService>()) {
+      log("🔧 [SPLASH] Uploading FCM token for already-logged-in user...");
+      await PushNotificationService.to.uploadTokenAfterLogin();
+    } else {
+      log(
+        "⚠️ [SPLASH] PushNotificationService not registered — skipping FCM upload",
+      );
+    }
   }
 }

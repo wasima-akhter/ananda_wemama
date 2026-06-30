@@ -1,0 +1,11 @@
+Warning: Building for device with codesigning disabled. You will have to manually codesign before deploying to device.
+Building com.app.wemama for device (ios-release)...
+To ensure your app continues to launch on upcoming iOS versions, UIScene lifecycle support will soon be required. Please see https://flutter.dev/to/uiscene-migration for the migration guide.
+
+Running Xcode build...                                          
+Xcode build done.                                           12.5s
+Failed to build iOS app
+Parse Issue (Xcode): Module 'FirebaseMessaging' not found
+/Users/wasima_akhter/.pub-cache/hosted/pub.dev/firebase_messaging-16.4.1/ios/firebase_messaging/Sources/firebase_messaging/include/FLTFirebaseMessagingPlugin.h:11:8
+
+Encountered error while building for device.

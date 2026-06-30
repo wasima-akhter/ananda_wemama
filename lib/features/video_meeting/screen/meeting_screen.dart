@@ -1,11 +1,10 @@
-import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
-import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
-import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
-import 'package:mama_app/features/video_meeting/controller/meeting_controller.dart';
-
 import '../../../app/helper_widgets_export.dart';
+import '../../../core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import '../../../core/components/ui/dialogs/popups.dart';
+import '../../../core/components/ui/helpers/shapes/custom_divider.dart';
+import '../../../core/components/ui/loaders/empty_widget.dart';
+import '../controller/live_chat_controller.dart';
+import '../controller/meeting_controller.dart';
 import '../modules/meet_bottom_action.dart';
 import '../modules/meet_comment_item.dart';
 import '../modules/meet_msg_input_row.dart';
@@ -175,6 +174,5 @@ class MeetingScreen extends StatelessWidget {
 }
 
 // extract top section as its own widget
-
 
 ////

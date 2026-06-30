@@ -5,9 +5,11 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
+import '../../local/app_storage.dart';
 import '../firebase/firebase_service.dart';
 import 'firebase_token_service.dart';
 import 'notification_payload.dart';
@@ -60,21 +62,6 @@ class PushNotificationService extends GetxService {
   }
 
   // ── Setup steps ───────────────────────────────────────────────────────────────
-
-  Future<void> _initLocalPlugin() async {
-    debugPrint('🔧 [PushNotificationService] initializing local plugin...');
-    const settings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      iOS: DarwinInitializationSettings(),
-    );
-    await _localNotifications.initialize(
-      settings: settings,
-      onDidReceiveNotificationResponse: _onLocalNotificationTap,
-      onDidReceiveBackgroundNotificationResponse:
-          onBackgroundLocalNotificationTap,
-    );
-    debugPrint('✅ [PushNotificationService] local plugin initialized');
-  }
 
   Future<void> _requestPermissions() async {
     debugPrint('🔧 [PushNotificationService] requesting permissions...');
@@ -158,24 +145,46 @@ class PushNotificationService extends GetxService {
     return granted;
   }
 
-  /// Public so the background isolate top-level function can call it on a
-  /// fresh, un-registered instance without touching GetX.
-  Future<void> createAndroidChannelOnly() async {
-    if (_channelInitialized) {
-      debugPrint(
-        'ℹ️ [PushNotificationService] Android channel already created, skipping',
-      );
-      return;
-    }
+  bool _pluginInitialized = false; // add this field
 
-    debugPrint('🔧 [PushNotificationService] creating Android channel...');
-
-    // Re-initialize the local plugin with no callbacks (safe in isolate)
+  Future<void> _initLocalPlugin() async {
+    debugPrint('🔧 initializing local plugin...');
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
     );
-    await _localNotifications.initialize(settings: settings);
+    await _localNotifications.initialize(
+      settings: settings,
+      onDidReceiveNotificationResponse: _onLocalNotificationTap,
+      onDidReceiveBackgroundNotificationResponse:
+          onBackgroundLocalNotificationTap,
+    );
+    _pluginInitialized =
+        true; // ✅ mark so createAndroidChannelOnly skips re-init
+    debugPrint('✅ local plugin initialized WITH callbacks');
+  }
+
+  /// Public so the background isolate top-level function can call it on a
+  /// fresh, un-registered instance without touching GetX.
+  Future<void> createAndroidChannelOnly() async {
+    if (_channelInitialized) {
+      debugPrint('ℹ️ Android channel already created, skipping');
+      return;
+    }
+
+    debugPrint('🔧 creating Android channel...');
+
+    // ✅ Only re-run full initialize() if we're in a fresh, unregistered
+    // instance (background isolate). Detect via a simple flag instead of
+    // always calling initialize() here.
+    if (!_pluginInitialized) {
+      const settings = InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        iOS: DarwinInitializationSettings(),
+      );
+      await _localNotifications.initialize(settings: settings);
+      _pluginInitialized = true;
+    }
 
     const channel = AndroidNotificationChannel(
       'high_importance_channel',
@@ -191,7 +200,7 @@ class PushNotificationService extends GetxService {
         ?.createNotificationChannel(channel);
 
     _channelInitialized = true;
-    debugPrint('✅ [PushNotificationService] Android channel created');
+    debugPrint('✅ Android channel created');
   }
 
   // Private — full init path only (also sets iOS foreground options)
@@ -240,7 +249,8 @@ class PushNotificationService extends GetxService {
       final payload = details!.notificationResponse?.payload;
       if (payload != null) {
         lastPayload = payload;
-        notificationTapStream.add('notification_tap');
+        notificationTapStream.add(payload); // ✅ was: 'notification_tap'
+
         debugPrint(
           '📩 [PushNotificationService] launched from terminated state — payload: $payload',
         );
@@ -375,6 +385,13 @@ class PushNotificationService extends GetxService {
     final payload = NotificationPayload.fromMap(message.data);
     debugPrint('🔔 [PushNotificationService] parsed payload: $payload');
 
+    //
+    // ✅ Update counts — GetX available here
+    AppStorage.to.setNotificationCounts(
+      unread: payload.unreadCount,
+      newCount: payload.newCount,
+    );
+
     // Use description as body (matches backend field name)
     final title = payload.title.isNotEmpty
         ? payload.title
@@ -466,6 +483,11 @@ class PushNotificationService extends GetxService {
     final payload = NotificationPayload.fromMap(message.data);
     debugPrint('📲 [PushNotificationService] parsed tap payload: $payload');
 
+    // ✅ GetX still alive — service wasn't killed, just backgrounded
+    AppStorage.to.setNotificationCounts(
+      unread: payload.unreadCount,
+      newCount: payload.newCount,
+    );
     lastPayload = payload.toJsonString();
     notificationTapStream.add(payload.toJsonString());
   }
@@ -503,6 +525,33 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
   final payload = NotificationPayload.fromMap(message.data);
   debugPrint('📦 [BGIsolate] parsed payload: $payload');
 
+  // ✅ GetX is NOT available in this isolate — use bare GetStorage directly,
+  //    writing to the SAME keys AppStorage uses, so they sync on next app open.
+  // ✅ GetX isn't initialized in this isolate, so Get.find<AppStorage>()
+  //    would throw. Instead, create a standalone AppStorage instance —
+  //    it points to the same on-disk GetStorage container, so writes
+  //    here are visible to AppStorage.to once the main isolate resumes.
+  final appStorage = await AppStorage.init();
+  appStorage.setNotificationCounts(
+    unread: payload.unreadCount,
+    newCount: payload.newCount,
+  );
+  debugPrint(
+    '💾 [BGIsolate] persisted counts via AppStorage — unread: ${payload.unreadCount}, new: ${payload.newCount}',
+  );
+
+  // ✅ Sync OS app badge directly — no GetX needed for this either
+  try {
+    if (payload.unreadCount > 0) {
+      await FlutterAppBadger.updateBadgeCount(payload.unreadCount);
+    } else {
+      await FlutterAppBadger.removeBadge();
+    }
+    debugPrint('📱 [BGIsolate] app badge synced → ${payload.unreadCount}');
+  } catch (e) {
+    debugPrint('⚠️ [BGIsolate] badge sync failed: $e');
+  }
+
   service.showLocalNotification(
     id: message.messageId.hashCode.abs() % 100000,
     title: payload.title,
@@ -520,5 +569,5 @@ void onBackgroundLocalNotificationTap(NotificationResponse response) {
     '👆 [BGIsolate] background local notification tapped — payload: ${response.payload}',
   );
   PushNotificationService.lastPayload = response.payload;
-  PushNotificationService.notificationTapStream.add('notification_tap');
+  PushNotificationService.notificationTapStream.add(response.payload!);
 }

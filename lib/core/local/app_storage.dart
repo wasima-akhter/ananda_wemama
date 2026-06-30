@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -25,6 +27,9 @@ class AppStorage extends GetxService {
 
   static const _userTypeKey = 'userType';
 
+  static const _notifUnreadCountKey = 'notifUnreadCount';
+  static const _notifNewCountKey = 'notifNewCount';
+
   // Theme key
   static const _themeKey = 'theme'; // 'light' or 'dark'
 
@@ -32,6 +37,10 @@ class AppStorage extends GetxService {
   RxBool isLoggedIn = false.obs;
   RxBool rememberMe = true.obs;
   RxBool seenOnboarding = false.obs;
+
+  // ✅ NEW — notification counts
+  RxInt unreadNotifCount = 0.obs;
+  RxInt newNotifCount = 0.obs;
 
   late final GetStorage _storage;
 
@@ -52,6 +61,11 @@ class AppStorage extends GetxService {
     service.rememberMe.value = service._storage.read(_rememberMeKey) ?? true;
     service.seenOnboarding.value =
         service._storage.read(_seenOnboardingKey) ?? false;
+
+    // ✅ NEW — restore notification counts
+    service.unreadNotifCount.value =
+        service._storage.read(_notifUnreadCountKey) ?? 0;
+    service.newNotifCount.value = service._storage.read(_notifNewCountKey) ?? 0;
 
     return service;
   }
@@ -214,6 +228,47 @@ class AppStorage extends GetxService {
     return false; // default to light if not set
   }
 
+  //
+  // ---------------------------  NOTIFICATION COUNTS  ---------------------------
+
+  /// Call from any FCM handler (foreground / background tap / cold start)
+  // ---------------------------  NOTIFICATION COUNTS  ---------------------------
+
+  void setNotificationCounts({required int unread, required int newCount}) {
+    _storage.write(_notifUnreadCountKey, unread);
+    _storage.write(_notifNewCountKey, newCount);
+    unreadNotifCount.value = unread;
+    newNotifCount.value = newCount;
+    _syncAppBadge(unread);
+  }
+
+  void clearNewNotifCount() {
+    _storage.write(_notifNewCountKey, 0);
+    newNotifCount.value = 0;
+  }
+
+  void setUnreadNotifCount(int unread) {
+    _storage.write(_notifUnreadCountKey, unread);
+    unreadNotifCount.value = unread;
+    _syncAppBadge(unread);
+  }
+
+  int get getUnreadNotifCount => _storage.read(_notifUnreadCountKey) ?? 0;
+  int get getNewNotifCount => _storage.read(_notifNewCountKey) ?? 0;
+
+  void _syncAppBadge(int unread) {
+    try {
+      if (unread > 0) {
+        FlutterAppBadger.updateBadgeCount(unread);
+      } else {
+        FlutterAppBadger.removeBadge();
+      }
+    } catch (e) {
+      // FlutterAppBadger can throw on unsupported platforms/launchers — ignore safely
+      debugPrint('⚠️ [AppStorage] badge sync failed: $e');
+    }
+  }
+
   // ---------------------------  CLEAR / LOGOUT  ---------------------------
   void logout() {
     _storage.erase();
@@ -226,6 +281,10 @@ class AppStorage extends GetxService {
 
     // IMPORTANT: onboarding should stay TRUE after first time
     seenOnboarding.value = true;
+
+    // ✅ NEW — reset notification counts on logout
+    unreadNotifCount.value = 0;
+    newNotifCount.value = 0;
   }
 }
 

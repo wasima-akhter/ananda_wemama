@@ -6,17 +6,6 @@ import '../../core/services/community_detail_service.dart';
 import '../../feed/controller/community_controller.dart';
 import '../../search/controller/community_search_controller.dart';
 
-// class _PostFlags {
-//   final RxBool isLiked;
-//   final RxBool isPinned;
-//   final RxBool isCommentLocked;
-
-//   _PostFlags({required bool isLiked, required bool isPinned, required bool isCommentLocked})
-//     : isLiked = isLiked.obs,
-//       isPinned = isPinned.obs,
-//       isCommentLocked = isCommentLocked.obs;
-// }
-
 class _PostFlags {
   final RxBool isLiked;
   final RxBool isPinned;
@@ -44,6 +33,7 @@ class _PostFlags {
 }
 
 class CommunityDetailController extends GetxController {
+  static CommunityDetailController get to => Get.find();
   final MyCommunityBtnState initialBtnState;
   final String communityItemId;
 

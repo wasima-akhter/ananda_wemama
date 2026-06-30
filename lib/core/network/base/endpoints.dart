@@ -78,12 +78,20 @@ class Endpoints {
   // Community
   static String createCommunity = "community/create-community";
   static String updateCommunity = "community/edit-community";
-  static String getMyCommunity = "community/get-my-community";
-  static String getJoinedCommunity =
-      "community/get-joined-community?searchText=";
-  static String getSuggestedCommunity = "community/get-community-suggestion";
-  static String getSearchedCommunity({required String searchTxt}) =>
-      "community/search-community?searchText=$searchTxt";
+  static String getMyCommunity({required int page, required int limit}) =>
+      "community/get-my-community?page=$page&limit=$limit";
+  static String getJoinedCommunity({required int page, required int limit}) =>
+      "community/get-joined-community?page=$page&limit=$limit";
+  static String getSuggestedCommunity({
+    required int page,
+    required int limit,
+  }) => "community/get-community-suggestion?page=$page&limit=$limit";
+  static String getSearchedCommunity({
+    required String searchTxt,
+    required int page,
+    required int limit,
+  }) =>
+      "community/search-community?searchText=$searchTxt&page=$page&limit=$limit";
 
   static String getCommunityDetail({required String id}) =>
       "community/get-community-detail/$id";

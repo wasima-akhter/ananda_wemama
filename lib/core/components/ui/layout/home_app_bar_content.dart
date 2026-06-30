@@ -1,5 +1,7 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../../../local/app_storage.dart';
+import '../../../services/push_notification/controller/notification_count_controller.dart';
 
 class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
   final Widget? suffix;
@@ -28,6 +30,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
             children: [
               CusGestureDetector(
                 onTap: () {
+                  AppStorage.to.clearNewNotifCount(); // ✅ clear bell dot
                   GNav.pushNamed(RoutePaths.notification);
                 },
                 child: Container(
@@ -36,13 +39,60 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                     border: Border.all(color: c.secondary),
                     color: c.inputBackground,
                   ),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundColor: c.inputBackground,
-                    child: SvgIcon(
-                      iconPath: IconsPath.notification,
-                      height: 22,
-                    ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CircleAvatar(
+                        radius: 22,
+                        backgroundColor: c.inputBackground,
+                        child: SvgIcon(
+                          iconPath: IconsPath.notification,
+                          height: 22,
+                        ),
+                      ),
+
+                      // ✅ NEW — bell badge
+                      Obx(() {
+                        final count =
+                            NotificationCountController.to.newCount.value;
+                        if (count == 0) return const SizedBox.shrink();
+
+                        return Positioned(
+                          top: -2,
+                          right: -2,
+                          child: Container(
+                            padding: const EdgeInsets.all(3),
+                            constraints: const BoxConstraints(
+                              minWidth: 16,
+                              minHeight: 16,
+                            ),
+                            decoration: BoxDecoration(
+                              color: c.error,
+                              shape: count > 9
+                                  ? BoxShape.rectangle
+                                  : BoxShape.circle,
+                              borderRadius: count > 9
+                                  ? BorderRadius.circular(8)
+                                  : null,
+                              border: Border.all(
+                                color: c.inputBackground,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Text(
+                              count > 99 ? '99+' : '$count',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                height: 1,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
                   ),
                 ),
               ),

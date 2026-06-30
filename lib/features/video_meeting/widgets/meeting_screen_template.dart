@@ -1,6 +1,5 @@
 import '../../../app/helper_widgets_export.dart';
 
-/*
 class MeetingScreenTemplate extends StatefulWidget {
   final Widget commentList;
   final Widget topContent;
@@ -23,107 +22,8 @@ class MeetingScreenTemplate extends StatefulWidget {
   State<MeetingScreenTemplate> createState() => _MeetingScreenTemplateState();
 }
 
-class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with WidgetsBindingObserver {
-  bool _keyboardOpen = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this); // 👈 observe keyboard changes
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    // 👈 fires reliably whenever keyboard opens or closes
-    final keyboardOpen = WidgetsBinding.instance.window.viewInsets.bottom > 0;
-    // final keyboardOpen = WidgetsBinding.instance. > 0;
-    if (_keyboardOpen != keyboardOpen) {
-      setState(() => _keyboardOpen = keyboardOpen);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: Column(
-          children: [
-            Container(color: widget.backgroundColor ?? c.cardPrimary, child: widget.topContent),
-            Expanded(
-              child: Stack(
-                children: [
-                  // comment list takes full space
-                  Positioned.fill(
-                    child: Container(
-                      padding: _keyboardOpen
-                          ? EdgeInsets.only(bottom: S.h * 0.08)
-                          : EdgeInsets.only(bottom: S.h * 0.18),
-                      color: bgClr,
-                      child: widget.commentList,
-                    ),
-                  ),
-
-                  // input + bottom actions float at bottom
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      color: bgClr,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          widget.inputRow,
-                          if (!_keyboardOpen && widget.bottomActions != null)
-                            widget.bottomActions!.mT(5.h),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  //
-}
-*/
-
-class MeetingScreenTemplate extends StatefulWidget {
-  final Widget commentList;
-  final Widget topContent;
-  final Widget inputRow;
-  final Widget? bottomActions;
-  final Color? backgroundColor;
-  final FocusNode inputFocus;
-
-  const MeetingScreenTemplate({
-    super.key,
-    required this.commentList,
-    required this.topContent,
-    required this.inputRow,
-    required this.inputFocus,
-    this.bottomActions,
-    this.backgroundColor,
-  });
-
-  @override
-  State<MeetingScreenTemplate> createState() => _MeetingScreenTemplateState();
-}
-
-class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with WidgetsBindingObserver {
+class _MeetingScreenTemplateState extends State<MeetingScreenTemplate>
+    with WidgetsBindingObserver {
   bool _keyboardOpen = false;
 
   @override
@@ -155,7 +55,10 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
         body: Column(
           children: [
             // ── Top content (fixed) ──────────────────────────────
-            Container(color: widget.backgroundColor ?? c.cardPrimary, child: widget.topContent),
+            Container(
+              color: widget.backgroundColor ?? c.cardPrimary,
+              child: widget.topContent,
+            ),
 
             // ── Comment list (fills remaining space) ─────────────
             Expanded(
@@ -169,7 +72,8 @@ class _MeetingScreenTemplateState extends State<MeetingScreenTemplate> with Widg
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   widget.inputRow,
-                  if (!_keyboardOpen && widget.bottomActions != null) widget.bottomActions!.mT(5.h),
+                  if (!_keyboardOpen && widget.bottomActions != null)
+                    widget.bottomActions!.mT(5.h),
                 ],
               ),
             ),

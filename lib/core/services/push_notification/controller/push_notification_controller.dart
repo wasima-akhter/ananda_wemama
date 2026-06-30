@@ -81,6 +81,15 @@ class PushNotificationController extends GetxController {
 
     final payload = NotificationPayload.fromJsonString(raw);
 
+    //
+
+    // ✅ AppStorage is alive now — reconfirm counts (also covers the case
+    //    where the isolate wrote them but the controller init raced it)
+    AppStorage.to.setNotificationCounts(
+      unread: payload.unreadCount,
+      newCount: payload.newCount,
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('🚀 Routing cold start notification');
       _guardAndRoute(payload);

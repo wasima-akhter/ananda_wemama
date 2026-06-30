@@ -2,6 +2,7 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
+import '../../../../../core/utils/paginator/paginator.dart';
 import '../../core/controllers_shared/community_action_controller.dart';
 import '../../core/models/community_item_model.dart';
 import '../../core/services/community_service.dart';
@@ -9,21 +10,104 @@ import '../../feed/controller/community_controller.dart';
 
 class CommunitySearchController extends GetxController
     with WidgetsBindingObserver {
+  static CommunitySearchController get to => Get.find();
+  // ─────────────────────────────────────────────
+  // Paginators
+  // ─────────────────────────────────────────────
+
+  late final Paginator<CommunityItemModel> suggestedPaginator;
+  late final Paginator<CommunityItemModel> searchedPaginator;
+
+  RxList<CommunityItemModel> get suggestedCommunityList =>
+      suggestedPaginator.items;
+
+  RxList<CommunityItemModel> get searchedCommunityList =>
+      searchedPaginator.items;
+
+  RxBool get isSuggestedCommunityLoading_ => suggestedPaginator.isLoading;
+  RxBool get isSearchedCommunityLoading_ => searchedPaginator.isLoading;
+
+  bool get isSuggestedCommunityLoading => suggestedPaginator.isLoading.value;
+
+  bool get isSearchedCommunityLoading => searchedPaginator.isLoading.value;
+
+  // ─────────────────────────────────────────────
+  // UI / state
+  // ─────────────────────────────────────────────
+
   final isKeyboardOpen = false.obs;
+
+  final searchController = TextEditingController();
+  final searchFocus = FocusNode();
+
+  final showSearchedTag = false.obs;
+  final searchedTxt = ''.obs;
+
+  final selTab = CommunityTab.myCommunities.obs;
+
+  void changeTab(CommunityTab tab) => selTab.value = tab;
+
+  final ScrollController suggCommunityScrlCtrl = ScrollController();
+  final ScrollController searchedCommCtrl = ScrollController();
+
+  final actionCtrl = Get.find<CommunityActionController>();
+
+  // ─────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────
 
   @override
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
 
-    // ✅ Skip API calls if not logged in — will be triggered after login
     if ((getToken ?? '').isEmpty) {
-      log("CommunityController: no token, skipping initial fetch");
+      log("CommunitySearchController: no token, skipping fetch");
       return;
     }
 
-    getSuggestedCommunityList();
+    suggestedPaginator = Paginator<CommunityItemModel>(
+      // limit: 1,
+      fetchPage: (page, limit) =>
+          service.fetchSuggestedCommunityListPaged(page: page, limit: limit),
+    );
+
+    searchedPaginator = Paginator<CommunityItemModel>(
+      fetchPage: (page, limit) => service.fetchSearchedCommunityListPaged(
+        searchTxt: searchController.text.trim(),
+        page: page,
+        limit: limit,
+      ),
+    );
+
+    // getSuggestedCommunityList();
   }
+
+  // ─────────────────────────────────────────────
+  // Fetch APIs (Paginator-based)
+  // ─────────────────────────────────────────────
+
+  Future<void> getSuggestedCommunityList() => suggestedPaginator.loadInitial();
+
+  Future<void> loadMoreSuggested() => suggestedPaginator.loadMore();
+
+  Future<void> getSearchedCommunityList() async {
+    searchedTxt.value = searchController.text.trim();
+
+    if (searchedTxt.value.isEmpty) {
+      showSearchedTag.value = false;
+      return;
+    }
+    _resetSearchedPaginator();
+    await searchedPaginator.loadInitial();
+    showSearchedTag.value = true;
+  }
+
+  void _resetSearchedPaginator() {
+    searchedPaginator.items.clear();
+  }
+
+  Future<void> loadMoreSearched() => searchedPaginator.loadMore();
 
   @override
   void didChangeMetrics() {
@@ -31,33 +115,28 @@ class CommunitySearchController extends GetxController
     isKeyboardOpen.value = bottomInset > 0;
   }
 
-  final searchController = TextEditingController();
-  final searchFocus = FocusNode();
-
-  final showSearchedTag = false.obs; // ← to control showing searched tag
-  final searchedTxt = ''.obs; //
-
-  final selTab = CommunityTab.myCommunities.obs;
-
-  void changeTab(CommunityTab tab) {
-    selTab.value = tab;
-  }
-
   @override
   void onClose() {
     searchController.dispose();
     searchFocus.dispose();
-    suggCommunityScrlCtrl.dispose(); // ← add
-    searchedCommCtrl.dispose(); // ← add
+
+    suggCommunityScrlCtrl.dispose();
+    searchedCommCtrl.dispose();
+
+    suggestedPaginator.dispose();
+    searchedPaginator.dispose();
 
     WidgetsBinding.instance.removeObserver(this);
+
     unFocusAll();
     super.onClose();
   }
 
-  void clearAll() {
-    searchController.clear();
-  }
+  // ─────────────────────────────────────────────
+  // Helpers
+  // ─────────────────────────────────────────────
+
+  void clearAll() => searchController.clear();
 
   void unFocusAll() {
     searchFocus.unfocus();
@@ -74,68 +153,8 @@ class CommunitySearchController extends GetxController
     unFocusAll();
   }
 
-  final ScrollController suggCommunityScrlCtrl = ScrollController();
-  final ScrollController searchedCommCtrl = ScrollController();
-
   //
   final service = CommunityService();
-
-  // API loading state
-  var isSuggestedCommunityLoading_ = false.obs;
-  bool get isSuggestedCommunityLoading => isSuggestedCommunityLoading_.value;
-
-  final suggestedCommunityList = <CommunityItemModel>[].obs;
-
-  /// Fetch the latest  data from API
-  Future<void> getSuggestedCommunityList() async {
-    if (isSuggestedCommunityLoading_.value) return; // Prevent duplicate calls
-    isSuggestedCommunityLoading_.value = true;
-
-    try {
-      final data = await service.fetchSuggestedCommunityList();
-
-      log('get suggested CommunityList   : $data');
-      suggestedCommunityList.value = data;
-    } catch (e) {
-      log("Error suggested community: $e");
-    } finally {
-      isSuggestedCommunityLoading_.value = false;
-
-      unFocusAll();
-    }
-  }
-
-  // API loading state
-  var isSearchedCommunityLoading_ = false.obs;
-  bool get isSearchedCommunityLoading => isSearchedCommunityLoading_.value;
-
-  final searchedCommunityList = <CommunityItemModel>[].obs;
-
-  /// Fetch the latest  data from API
-  Future<void> getSearchedCommunityList() async {
-    if (isSearchedCommunityLoading_.value) return; // Prevent duplicate calls
-
-    if (searchController.text.isEmpty) return;
-    isSearchedCommunityLoading_.value = true;
-
-    try {
-      final data = await service.fetchSearchedCommunityList(
-        searchTxt: searchController.text.trim(),
-      );
-
-      log('get searched CommunityList   : $data');
-      searchedCommunityList.value = data;
-    } catch (e) {
-      log("Error searched community: $e");
-    } finally {
-      isSearchedCommunityLoading_.value = false;
-
-      unFocusAll();
-    }
-  }
-
-  //--------------------->
-  final actionCtrl = Get.find<CommunityActionController>();
 
   void onTapItemBtn({
     required MyCommunityBtnState btnState,

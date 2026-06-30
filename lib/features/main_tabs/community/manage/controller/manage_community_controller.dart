@@ -77,7 +77,7 @@ class ManageCommunityController extends GetxController {
       if (response == true) {
         log('onTapEdit success : $response');
 
-        await Get.find<CommunityDetailController>().getCommunityDetail(
+        await CommunityDetailController.to.getCommunityDetail(
           communityIdForRefresh: communityId.value,
         );
       } else {

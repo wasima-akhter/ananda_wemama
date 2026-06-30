@@ -18,7 +18,7 @@ class PostDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pcc = Get.find<PostDetailsController>();
-    final cc = Get.find<CommunityDetailController>();
+    final cc = CommunityDetailController.to;
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     // ← scroll to bottom + open keyboard after first frame
@@ -57,7 +57,8 @@ class PostDetailsScreen extends StatelessWidget {
                 children: [
                   ContainerBordered(
                     hp: 10,
-                    vp: 6, contClr: c.backgroundSecondary,
+                    vp: 6,
+                    contClr: c.backgroundSecondary,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -71,7 +72,9 @@ class PostDetailsScreen extends StatelessWidget {
                             pcc.replyingToCommentId.value = null;
                             pcc.replyingToUserName.value = '';
                           },
-                          child: SvgIconColored(iconPath: IconsPath.closeCircle),
+                          child: SvgIconColored(
+                            iconPath: IconsPath.closeCircle,
+                          ),
                         ),
                       ],
                     ),
@@ -127,7 +130,7 @@ class PostDetailsScreen extends StatelessWidget {
               return PostItemWidget(
                 communityData: communityData,
                 postItem: postItem,
-                cc: cc,
+
                 btnState: cc.btnState.value,
                 postId: postItem.id.toString(),
                 userName: postItem.creator?.name ?? '',
@@ -223,7 +226,7 @@ class CommentItemInPostDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
@@ -312,7 +315,8 @@ class CommentItemInPostDetail extends StatelessWidget {
                           ),
 
                           // time
-                          Column(         crossAxisAlignment: CrossAxisAlignment.end,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
                                 DateHelper()

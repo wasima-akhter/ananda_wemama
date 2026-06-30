@@ -17,6 +17,6 @@ class CommunityShimmerList extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ).getcm;
   }
 }

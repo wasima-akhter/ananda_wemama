@@ -14,11 +14,10 @@ class PostItemWidget extends StatelessWidget {
   final Community communityData;
   final MyCommunityBtnState btnState;
   final String postId;
-  
+
   final String postCreatorId;
   final String userName;
   final bool showActions;
-  final CommunityDetailController cc;
   final AllPost postItem;
 
   const PostItemWidget({
@@ -26,7 +25,7 @@ class PostItemWidget extends StatelessWidget {
     required this.btnState,
     required this.postId,
     this.showActions = true,
-    required this.cc,
+
     required this.postItem,
     required this.userName,
     required this.postCreatorId,
@@ -35,6 +34,7 @@ class PostItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cc = CommunityDetailController.to;
     return Obx(() {
       final isDeleted = cc.deleteLockFlag(postId).value;
       final isDeleting = cc.flagsOf(postId)?.isdeleteLoading.value ?? false;
@@ -59,7 +59,6 @@ class PostItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _PostHeader(
-              cc: cc,
               postId: postId,
               btnState: btnState,
               postCreatorId: postCreatorId,
@@ -72,7 +71,6 @@ class PostItemWidget extends StatelessWidget {
             if (showActions) ...[
               Gap(itemGap * 2),
               _PostActions(
-                cc: cc,
                 communityData: communityData,
                 postItem: postItem,
                 postId: postId,
@@ -89,14 +87,12 @@ class PostItemWidget extends StatelessWidget {
 
 // ─────────────────────────────
 class _PostHeader extends StatelessWidget {
-  final CommunityDetailController cc;
   final String postId;
   final String postCreatorId;
   final MyCommunityBtnState btnState;
   final AllPost postItem;
 
   const _PostHeader({
-    required this.cc,
     required this.postId,
     required this.btnState,
     required this.postItem,
@@ -105,6 +101,7 @@ class _PostHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cc = CommunityDetailController.to;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -199,13 +196,15 @@ class _PostContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text((postItem.content ?? '').cap, style: TxtStyle.outfit(fs: 14, w: 400));
+    return Text(
+      (postItem.content ?? '').cap,
+      style: TxtStyle.outfit(fs: 14, w: 400),
+    );
   }
 }
 
 // ─────────────────────────────
 class _PostActions extends StatelessWidget {
-  final CommunityDetailController cc;
   final Community communityData;
   final AllPost postItem;
   final String postId;
@@ -213,7 +212,6 @@ class _PostActions extends StatelessWidget {
   final MyCommunityBtnState btnState;
 
   const _PostActions({
-    required this.cc,
     required this.postId,
     required this.btnState,
     required this.userName,
@@ -223,6 +221,7 @@ class _PostActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cc = CommunityDetailController.to;
     return Obx(() {
       // ✅ _ensureFlags guarantees a valid RxBool — Obx always has a subscription
       final isLiked = cc.likeFlag(postId).value;
@@ -256,7 +255,7 @@ class _PostActions extends StatelessWidget {
               ],
             ),
           ),
-          Gap(itemGap *2),
+          Gap(itemGap * 2),
           CusGestureDetector(
             onTap: () => isLocked && !canSeeLockedComment
                 ? null

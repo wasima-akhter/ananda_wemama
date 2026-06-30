@@ -15,7 +15,7 @@ class CommunityDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cdc = Get.find<CommunityDetailController>();
+    final cdc = CommunityDetailController.to;
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(
@@ -68,10 +68,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  data: () => CommunityDetailTopContent(
-                    itemDetail: itemDetail,
-                    cdc: cdc,
-                  ),
+                  data: () => CommunityDetailTopContent(itemDetail: itemDetail),
                 ),
 
                 // your real header
@@ -82,9 +79,9 @@ class CommunityDetailsScreen extends StatelessWidget {
                   right: 0,
                   left: 0,
                   child: CommunityTopbarContent(
-                    suffix: (cdc.btnState.value == MyCommunityBtnState.join
-                    ||  cdc.btnState.value == MyCommunityBtnState.visit
-                    )
+                    suffix:
+                        (cdc.btnState.value == MyCommunityBtnState.join ||
+                            cdc.btnState.value == MyCommunityBtnState.visit)
                         ? CusGestureDetector(
                             onTap: () {
                               if (cdc.btnState.value ==
@@ -102,15 +99,15 @@ class CommunityDetailsScreen extends StatelessWidget {
                                 //   ),
                                 // );
                               }
-                           
+
                               if (cdc.btnState.value ==
-                                  MyCommunityBtnState.join ||
+                                      MyCommunityBtnState.join ||
                                   cdc.btnState.value ==
-                                  MyCommunityBtnState.visit) {
+                                      MyCommunityBtnState.visit) {
                                 communityGuidlineDialog(
                                   isLoading: false,
                                   onTapAction: () async {},
-                                  hasButton: false
+                                  hasButton: false,
                                 );
                               }
                             },
@@ -118,7 +115,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                               radius: 15.r,
                               child: Icon(
                                 color: c.primary,
-                              Icons.info_outline_rounded,
+                                Icons.info_outline_rounded,
                                 size: 22.h,
                               ),
                             ),
@@ -164,7 +161,7 @@ class CommunityDetailsScreen extends StatelessWidget {
                       PostItemWidget(
                         communityData: communityData,
                         postItem: itemPosts[index],
-                        cc: cdc,
+
                         btnState: cdc.btnState.value,
                         postId: itemPosts[index].id.toString(),
                         userName: itemPosts[index].creator?.name ?? '',
@@ -185,16 +182,11 @@ class CommunityDetailsScreen extends StatelessWidget {
 class CommunityDetailTopContent extends StatelessWidget {
   final CommunityItemDetailModel itemDetail;
 
-  final CommunityDetailController cdc;
-
-  const CommunityDetailTopContent({
-    super.key,
-    required this.itemDetail,
-    required this.cdc,
-  });
+  const CommunityDetailTopContent({super.key, required this.itemDetail});
 
   @override
   Widget build(BuildContext context) {
+    final cdc = CommunityDetailController.to;
     final community = itemDetail.community;
     final communityName = community?.name ?? '';
     final membersNum = (community?.totalMember ?? 0).toString();

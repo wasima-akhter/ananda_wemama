@@ -102,7 +102,7 @@ class ChatScreen extends StatelessWidget {
         Expanded(
           child: Obx(() {
             if (cc.isSearchLoading_.value) {
-              return Column(children: [LoadingPrimary()]);
+              return Column(children: [LoadingPrimary()]).get10cm;
             }
 
             if (list.isEmpty) {
@@ -111,7 +111,9 @@ class ChatScreen extends StatelessWidget {
                   await cc.getChatList();
                   cc.showSearchedTag.value = false;
                 },
-                child: const EmptyWidgetScrollable(title: "No chats found"),
+                child: const EmptyWidgetScrollable(
+                  title: "No chats found",
+                ).get10cm,
               );
             }
 
@@ -160,7 +162,7 @@ class ChatScreen extends StatelessWidget {
           onRefresh: cc.getChatList,
           child: const EmptyWidgetScrollable(
             title: "No Conversations yet..!",
-          ).mL(10),
+          ).get10cm,
         );
       }
       for (var e in list) {

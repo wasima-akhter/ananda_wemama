@@ -6,13 +6,43 @@ import '../controller/community_search_controller.dart';
 import 'community_list_view_scrollbar.dart';
 import 'community_search_chip.dart';
 
-class CommunitySearchResultSection extends StatelessWidget {
-  final CommunitySearchController csc;
+class CommunitySearchResultSection extends StatefulWidget {
+  const CommunitySearchResultSection({super.key});
 
-  const CommunitySearchResultSection({super.key, required this.csc});
+  @override
+  State<CommunitySearchResultSection> createState() =>
+      _CommunitySearchResultSectionState();
+}
+
+class _CommunitySearchResultSectionState
+    extends State<CommunitySearchResultSection> {
+  final csc = CommunitySearchController.to;
+
+  @override
+  void initState() {
+    super.initState();
+    csc.searchedCommCtrl.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final ctrl = csc.searchedCommCtrl;
+
+    if (!csc.searchedPaginator.hasMore.value) return;
+
+    if (ctrl.position.pixels >= ctrl.position.maxScrollExtent - 200) {
+      csc.loadMoreSearched(); // ✅ correct
+    }
+  }
+
+  @override
+  void dispose() {
+    csc.searchedCommCtrl.removeListener(_onScroll);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final csc = CommunitySearchController.to;
     return Column(
       key: const ValueKey("search"),
       crossAxisAlignment: CrossAxisAlignment.start,

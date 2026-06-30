@@ -10,7 +10,7 @@ class CommentsBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<CommentController>();
-    final cc = Get.find<CommunityDetailController>();
+    final cc = CommunityDetailController.to;
 
     return SafeArea(
       top: false,

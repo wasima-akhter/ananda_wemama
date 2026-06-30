@@ -4,6 +4,7 @@ import '../../../app/helper_widgets_export.dart';
 import '../controller/live_chat_controller.dart';
 import '../controller/meeting_controller.dart';
 import '../model/chat_message_live_model.dart';
+import '../screen/video_overlay.dart';
 
 class TopContent extends StatelessWidget {
   final MeetingController mc;
@@ -156,18 +157,38 @@ class TopContent extends StatelessWidget {
 
                   // ✅ No SizedBox wrapper — StackFit.expand handles sizing
 
-                  return AgoraVideoView(
-                    controller: VideoViewController.remote(
-                      rtcEngine: mc.agoraEngine!,
-                      canvas: VideoCanvas(uid: mc.hostUid.value!),
+                  return CusGestureDetector(
+                    onTap: () => Get.to(
+                      () => FullscreenVideoPage(mc: mc),
+                      fullscreenDialog: true,
+                      transition: Transition
+                          .fadeIn, // smooth, no jarring slide during rotation
+                    ),
+                    child: AgoraVideoView(
+                      controller: VideoViewController.remote(
+                        rtcEngine: mc.agoraEngine!,
+                        canvas: VideoCanvas(uid: mc.hostUid.value!),
 
-                      connection: RtcConnection(
-                        channelId: mc.channelName.value,
+                        connection: RtcConnection(
+                          channelId: mc.channelName.value,
+                        ),
                       ),
                     ),
                   );
                 }),
 
+                //
+                Positioned(
+                  right: 12,
+                  bottom: 12,
+                  child: GestureDetector(
+                    onTap: () => Get.to(
+                      () => FullscreenVideoPage(mc: mc),
+                      transition: Transition.fadeIn,
+                    ),
+                    child: _buildFloatingIcon(text: "", icon: Icons.fullscreen),
+                  ),
+                ),
                 // Overlays stay exactly the same
                 Positioned(
                   right: 12,

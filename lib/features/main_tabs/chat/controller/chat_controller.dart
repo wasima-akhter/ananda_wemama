@@ -9,7 +9,6 @@ import '../../../main_nav/controller/main_nav_controller.dart';
 import '../model/chat_list_item_model.dart';
 import '../service/chat_service.dart';
 
-
 class ChatController extends GetxController {
   static ChatController get to => Get.find<ChatController>();
   final searchController = TextEditingController();
@@ -251,6 +250,7 @@ class ChatController extends GetxController {
 
     if (searchController.text.trim().isEmpty) {
       Strings.writeSomething.showToast();
+      showSearchedTag.value = false;
       return;
     }
 

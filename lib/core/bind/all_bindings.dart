@@ -58,6 +58,7 @@ import '../../features/station_location/controller/station_location_controller.d
 import '../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 import '../../features/video_meeting/controller/meeting_comment_controller.dart';
 import '../../features/video_meeting/controller/meeting_controller.dart';
+import '../../routes/route_paths.dart';
 import '../enums/app_enums.dart';
 import '../enums/ui_enums.dart';
 import '../network/helpers/location/location_manager_global/app_location_manager.dart';
@@ -285,13 +286,38 @@ class MemberManagementBinding extends Bindings {
 }
 
 // CommunityDetailBinding:
+// class CommunityDetailBinding extends Bindings {
+//   @override
+//   void dependencies() {
+//     final args = Get.arguments as Map<String, dynamic>?;
+
+//     final btnState = args?['btnState'] as MyCommunityBtnState;
+//     final communityItemId = args?['communityItemId'] as String;
+
+//     if (Get.isRegistered<CommunityDetailController>()) {
+//       Get.delete<CommunityDetailController>(force: true);
+//     }
+
+//     Get.put(CommunityDetailController(btnState, communityItemId));
+//   }
+// }
+
 class CommunityDetailBinding extends Bindings {
   @override
   void dependencies() {
     final args = Get.arguments as Map<String, dynamic>?;
 
-    final btnState = args?['btnState'] as MyCommunityBtnState;
-    final communityItemId = args?['communityItemId'] as String;
+    final btnState =
+        args?['btnState'] as MyCommunityBtnState? ??
+        MyCommunityBtnState.join; // pick a sane fallback
+    final communityItemId = args?['communityItemId'] as String?;
+
+    if (communityItemId == null || communityItemId.isEmpty) {
+      log("❌ [CommunityDetailBinding] Missing communityItemId — args: $args");
+      // Either redirect to a fallback screen or show an error state
+      Get.offAllNamed(RoutePaths.mainNav);
+      return;
+    }
 
     if (Get.isRegistered<CommunityDetailController>()) {
       Get.delete<CommunityDetailController>(force: true);
@@ -300,13 +326,6 @@ class CommunityDetailBinding extends Bindings {
     Get.put(CommunityDetailController(btnState, communityItemId));
   }
 }
-
-// class CommunitySearchBinding extends Bindings {
-//   @override
-//   void dependencies() {
-//     Get.lazyPutFenix(() => CommunitySearchController());
-//   }
-// }
 
 class PostInCommunityBinding extends Bindings {
   @override
