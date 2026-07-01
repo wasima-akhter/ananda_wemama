@@ -17,14 +17,18 @@ class NewWaveListItemModel {
 
   factory NewWaveListItemModel.fromJson(Map<String, dynamic> json) {
     return NewWaveListItemModel(
-      id: json["_id"],
-      participants: json["participants"] == null
-          ? []
-          : List<Participant>.from(json["participants"]!.map((x) => Participant.fromJson(x))),
-      status: json["status"],
-      createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-      updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-      v: json["__v"],
+      id: json["_id"] as String?,
+      participants: (json["participants"] as List<dynamic>? ?? [])
+          .map((e) => Participant.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      status: json["status"] as String?,
+      createdAt: json["createdAt"] != null
+          ? DateTime.tryParse(json["createdAt"].toString())
+          : null,
+      updatedAt: json["updatedAt"] != null
+          ? DateTime.tryParse(json["updatedAt"].toString())
+          : null,
+      v: json["__v"] as int?,
     );
   }
 }
@@ -37,6 +41,10 @@ class Participant {
   final String? profileImage;
 
   factory Participant.fromJson(Map<String, dynamic> json) {
-    return Participant(id: json["_id"], name: json["name"], profileImage: json["profileImage"]);
+    return Participant(
+      id: json["_id"],
+      name: json["name"],
+      profileImage: json["profileImage"],
+    );
   }
 }

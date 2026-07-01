@@ -26,7 +26,8 @@ class SocketResponse {
   List<dynamic>? get dataAsList => data is List ? data as List<dynamic> : null;
 
   @override
-  String toString() => 'SocketResponse(status: $statusCode, success: $success, message: $message)';
+  String toString() =>
+      'SocketResponse(status: $statusCode, success: $success, message: $message)';
 }
 
 /// Mirrors ApiResponseHandler — but for socket event payloads.
@@ -49,6 +50,9 @@ class SocketResponseHandler {
 
     if (response.isSuccess) {
       _log(eventName, '✅ success → ${response.message}');
+
+      log('📥 Socket Response: $response');
+
       return response;
     }
 
@@ -69,7 +73,12 @@ class SocketResponseHandler {
     final message = _extractMessage(raw);
     final data = raw['data'];
 
-    return SocketResponse(statusCode: statusCode, success: success, message: message, data: data);
+    return SocketResponse(
+      statusCode: statusCode,
+      success: success,
+      message: message,
+      data: data,
+    );
   }
 
   /// Message extraction — mirrors ApiResponseHandler priority order.
@@ -106,7 +115,9 @@ class SocketResponseHandler {
   // ═══════════════════════════════════════════════════════════════════════════
 
   static void _showErrorSnackbar(String message, {String? eventName}) {
-    final title = eventName != null && eventName.isNotEmpty ? '[$eventName] Error ❌' : 'Error ❌';
+    final title = eventName != null && eventName.isNotEmpty
+        ? '[$eventName] Error ❌'
+        : 'Error ❌';
 
     Get.snackbar(
       title,

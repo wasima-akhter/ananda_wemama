@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
 import 'package:mama_app/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
@@ -13,14 +14,57 @@ import '../widgets/chat_input_row.dart';
 import '../widgets/chat_screen_template.dart';
 import '../widgets/chat_ui_models.dart';
 
-class ChatInboxScreen extends StatelessWidget {
+class ChatInboxScreen extends StatefulWidget {
   const ChatInboxScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final cic = Get.find<ChatInboxController>();
-    final chatRefreshKey = GlobalKey<RefreshIndicatorState>();
+  State<ChatInboxScreen> createState() => _ChatInboxScreenState();
+}
 
+class _ChatInboxScreenState extends State<ChatInboxScreen> {
+  final cic = Get.find<ChatInboxController>();
+  final chatRefreshKey = GlobalKey<RefreshIndicatorState>();
+
+  bool _isUserTouching = false;
+  bool _isFetchingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // cic.scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    // cic.scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  double _lastPixels = 0;
+  void _handlePagination(ScrollMetrics pos) async {
+    if (!_isUserTouching) return;
+    if (_isFetchingMore) return;
+    if (cic.isLoading) return;
+    if (!cic.messagesPaginator.hasMore.value) return;
+
+    // ✅ TOP detection (chat older messages)
+
+    // must be near top
+    final atTop = pos.pixels <= 80;
+    if (!atTop) return;
+
+    _isFetchingMore = true;
+
+    try {
+      debugPrint('cic.loadMoreMessages() called  ');
+      await cic.loadMoreMessages();
+    } finally {
+      _isFetchingMore = false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ChatScreenTemplate(
       appBar: CommonAppBarContent(
         titleInLeft: true,
@@ -101,76 +145,146 @@ class ChatInboxScreen extends StatelessWidget {
           : ChatInputRow(cic: cic).get10cm,
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
-        onRefresh: () async => cic.emitGetMessages(),
-        child: SingleChildScrollView(
-          controller: cic.scrollController,
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Obx(
-                () => ChatInboxSecurityAlert(
-                  name: cic.realChatInboxMsgItem.value.receiver?.name ?? '',
+        // ✅ Full reload from page 1 via REST now, not a socket emit
+        onRefresh: () async {
+          // await cic.getMessages();
+          cic.scrollToLast();
+        },
+        child: NotificationListener<ScrollNotification>(
+          // onNotification: (notification) {
+          //   // ✅ user starts scrolling
+          //   if (notification is UserScrollNotification) {
+          //     if (notification.direction != ScrollDirection.idle) {
+          //       _isUserTouching = true;
+          //       cic.autoScrolling.value = false;
+          //     }
+          //   }
+
+          //   // ✅ user stops scrolling
+          //   if (notification is ScrollEndNotification) {
+          //     _isUserTouching = false;
+          //   }
+
+          //   // ✅ ONLY react to real user scroll
+          //   if (notification is ScrollUpdateNotification) {
+          //     if (_isUserTouching) {
+          //       _handlePagination(notification.metrics);
+          //     }
+          //   }
+
+          //   return false;
+          // },
+          onNotification: (notification) {
+            if (notification is ScrollUpdateNotification) {
+              final current = notification.metrics.pixels;
+
+              // detect direction
+              final isScrollingUp = current < _lastPixels;
+
+              _lastPixels = current;
+
+              if (_isUserTouching && isScrollingUp) {
+                _handlePagination(notification.metrics);
+              }
+            }
+
+            if (notification is UserScrollNotification) {
+              if (notification.direction != ScrollDirection.idle) {
+                _isUserTouching = true;
+                cic.autoScrolling.value = false;
+              }
+            }
+
+            if (notification is ScrollEndNotification) {
+              _isUserTouching = false;
+            }
+
+            return false;
+          },
+
+          child: SingleChildScrollView(
+            controller: cic.scrollController,
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(
+                  () => ChatInboxSecurityAlert(
+                    name: cic.realChatInboxMsgItem.value.receiver?.name ?? '',
+                  ),
                 ),
-              ),
-              Gap(itemGap * 2),
+                Gap(itemGap * 2),
 
-              Obx(() {
-                // 1. Loading state — data hasn't arrived from socket yet
-                if (cic.isLoading_.value) {
-                  return SizedBox(
-                    height: S.h * 0.5,
-                    child: const Center(child: LoadingPrimary()),
-                  );
-                }
+                Obx(() {
+                  // 1. Initial loading state — first page hasn't arrived yet
+                  if (cic.isLoading_.value && cic.messages.isEmpty) {
+                    return SizedBox(
+                      height: S.h * 0.5,
+                      child: const Center(child: LoadingPrimary()),
+                    );
+                  }
 
-                // 2. Empty state — data arrived but no messages
-                if (cic.messages.isEmpty) {
-                  return SizedBox(
-                    height: S.h * 0.4,
-                    child: const EmptyWidget(title: "No messages yet!"),
-                  );
-                }
+                  // 2. Empty state — data arrived but no messages
+                  if (cic.messages.isEmpty) {
+                    return SizedBox(
+                      height: S.h * 0.4,
+                      child: const EmptyWidget(title: "No messages yet!"),
+                    );
+                  }
 
-                // 3. Message list — use cic.messages (RxList), not realChatInboxMsgItem
-                final grouped = cic.groupMessagesByDate();
+                  // 3. Message list
+                  final grouped = cic.groupMessagesByDate();
 
-                return Column(
-                  children: [
-                    const SocketStatusBanner(),
+                  return Column(
+                    children: [
+                      const SocketStatusBanner(),
 
-                    ...grouped.map((item) {
-                      if (item is String) {
-                        return DateDivider(item: item);
-                      }
-
-                      final msg = item as Message;
-
-                      return ChatBubbleCont(
-                        cic: cic,
-                        message: FakeMsgItemData(
-                          msg: msg.text ?? '',
-                          time: DateHelper()
-                              .formatUTCtimestamp(
-                                msg.createdAt?.toString() ?? '',
-                              )
-                              .time,
-                          isSentByMe: msg.sender == currentProfileId(),
-
-                          /// NEW
-                          attachments: msg.attachments ?? [],
+                      // Small spinner while an older page loads in
+                      if (cic.isLoading_.value)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: LoadingPrimary(),
+                            ),
+                          ),
                         ),
-                      );
-                    }),
-                  ],
-                );
-              }),
 
-              Gap(itemGap * 2),
-            ],
-          ).getcm,
+                      ...grouped.map((item) {
+                        if (item is String) {
+                          return DateDivider(item: item);
+                        }
+
+                        final msg = item as Message;
+
+                        return ChatBubbleCont(
+                          cic: cic,
+                          message: FakeMsgItemData(
+                            msg: msg.text ?? '',
+                            time: DateHelper()
+                                .formatUTCtimestamp(
+                                  msg.createdAt?.toString() ?? '',
+                                )
+                                .time,
+                            isSentByMe: msg.sender == currentProfileId(),
+
+                            /// NEW
+                            attachments: msg.attachments ?? [],
+                          ),
+                        );
+                      }),
+                    ],
+                  );
+                }),
+
+                Gap(itemGap * 2),
+              ],
+            ).getcm,
+          ),
         ),
       ),
     );

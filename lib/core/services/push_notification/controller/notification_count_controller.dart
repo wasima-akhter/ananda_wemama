@@ -1,9 +1,10 @@
 // notification_count_controller.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+
+import '../../../network/helpers/network_helpers.dart';
 
 class NotificationCountController extends GetxController {
   static NotificationCountController get to => Get.find();
@@ -14,19 +15,23 @@ class NotificationCountController extends GetxController {
   // 📱 OS app icon badge — total unread
   final RxInt unreadCount = 0.obs;
 
-  final _storage = GetStorage();
-  static const _keyUnread = 'notif_unread_count';
-  static const _keyNew = 'notif_new_count';
-
   @override
   void onInit() {
     super.onInit();
     _restore();
   }
 
+  // in NotificationCountController
+  void refreshFromStorage() {
+    debugPrint(
+      '🔄 [NotificationCountController] refreshing from storage on resume',
+    );
+    _restore();
+  }
+
   void _restore() {
-    unreadCount.value = _storage.read<int>(_keyUnread) ?? 0;
-    newCount.value = _storage.read<int>(_keyNew) ?? 0;
+    unreadCount.value = storage.getUnreadNotifCount;
+    newCount.value = storage.getNewNotifCount;
     _syncBadge();
     debugPrint(
       '🔢 [NotificationCountController] restored — unread: ${unreadCount.value}, new: ${newCount.value}',
@@ -79,36 +84,24 @@ class NotificationCountController extends GetxController {
   }
 
   void _persist() {
-    _storage.write(_keyUnread, unreadCount.value);
-    _storage.write(_keyNew, newCount.value);
+    storage.setNotificationCounts(
+      unread: unreadCount.value,
+      newCount: newCount.value,
+    );
   }
 
   void _syncBadge() {
     try {
       if (unreadCount.value > 0) {
-        FlutterAppBadger.updateBadgeCount(unreadCount.value);
+        FlutterNewBadger.setBadge(unreadCount.value);
       } else {
-        FlutterAppBadger.removeBadge();
+        FlutterNewBadger.removeBadge();
       }
       debugPrint(
         '📱 [NotificationCountController] app badge synced → ${unreadCount.value}',
       );
     } catch (e) {
       debugPrint('⚠️ [NotificationCountController] badge sync failed: $e');
-    }
-  }
-
-  /// For the background isolate — static version since GetX isn't available there
-  static Future<void> syncBadgeFromStorage(int unreadCount) async {
-    try {
-      if (unreadCount > 0) {
-        await FlutterAppBadger.updateBadgeCount(unreadCount);
-      } else {
-        await FlutterAppBadger.removeBadge();
-      }
-      debugPrint('📱 [BGIsolate] app badge synced → $unreadCount');
-    } catch (e) {
-      debugPrint('⚠️ [BGIsolate] badge sync failed: $e');
     }
   }
 }

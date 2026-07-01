@@ -305,8 +305,13 @@ List<UiInfoItem> buildInfoList(ProfileDataModel data) {
     );
   }
 
-  if (data.mumStage != null) {
-    list.add(UiInfoItem(iconPath: IconsPath.chartFilled, text: data.mumStage!));
+  if (data.mumStages.isNotEmpty) {
+    list.add(
+      UiInfoItem(
+        iconPath: IconsPath.chartFilled,
+        text: data.mumStages.join(', '),
+      ),
+    );
   }
 
   if (data.interesteds.isNotEmpty) {

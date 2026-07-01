@@ -45,10 +45,13 @@ class NewWavesListItem extends StatelessWidget {
         // 🔥 open popup FIRST
         newWavesUserDetailsDialog(
           isLoading: wrc.isgetUserProfileLoading_,
-          onTapAction: (isAccepted) => wrc.onTapAction(isAccepted, conversationId: model.id ?? ''),
+          onTapAction: (isAccepted) =>
+              wrc.onTapAction(isAccepted, conversationId: model.id ?? ''),
           isSeeMore: udc.isSeeMore,
           onTapSeeMoreTxt: udc.toggleSeeMore,
           user: wrc.waveUserProfileData, // ✅ Rxn
+          isAcceptLoading: wrc.isAcceptLoading,
+          isRejectLoading: wrc.isRejectLoading,
         );
 
         // 🔥 THEN fetch
@@ -66,7 +69,11 @@ class NewWavesListItem extends StatelessWidget {
                 name.capEachWord(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TxtStyle.outfitSemiB(fs: 16, w: 500, color: c.foregroundSecondary),
+                style: TxtStyle.outfitSemiB(
+                  fs: 16,
+                  w: 500,
+                  color: c.foregroundSecondary,
+                ),
               ),
             ),
             Gap(itemGap),

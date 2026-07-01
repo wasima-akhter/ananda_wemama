@@ -113,12 +113,39 @@ class Receiver {
 */
 
 import '../../../../core/helpers/parser_helper.dart';
+import '../../../../core/network/models/base_response_model.dart';
+
+class ChatMessagesPage {
+  final List<Message> messages;
+  final PaginationMeta? meta;
+  final ChatInboxMessageItemModel
+  item; // full parsed payload (receiver, conversation, etc.)
+
+  ChatMessagesPage({
+    required this.messages,
+    required this.meta,
+    required this.item,
+  });
+}
+
+class ChatConversationModel {
+  final bool? isBlocked;
+  ChatConversationModel({this.isBlocked});
+  factory ChatConversationModel.fromJson(Map<String, dynamic> json) =>
+      ChatConversationModel(isBlocked: json['isBlocked']);
+}
 
 class ChatInboxMessageItemModel {
-  const ChatInboxMessageItemModel({this.receiver, this.messages = const []});
+  const ChatInboxMessageItemModel({
+    this.receiver,
+    this.messages = const [],
+    this.conversation,
+  });
 
   final Receiver? receiver;
   final List<Message> messages;
+  // inside ChatInboxMessageItemModel:
+  final ChatConversationModel? conversation;
 
   factory ChatInboxMessageItemModel.fromJson(Map<String, dynamic>? json) {
     if (json == null) return const ChatInboxMessageItemModel();
@@ -126,6 +153,11 @@ class ChatInboxMessageItemModel {
     return ChatInboxMessageItemModel(
       receiver: SafeParser.object(json['receiver'], Receiver.fromJson),
       messages: SafeParser.list<Message>(json['messages'], Message.fromJson),
+
+      // fromJson:
+      conversation: json['conversation'] != null
+          ? ChatConversationModel.fromJson(json['conversation'])
+          : null,
     );
   }
 }

@@ -68,12 +68,29 @@ class Endpoints {
     return "profile/get-friend-profile?profileId=$userId";
   }
 
+  static String acceptWaveRequest({required String conversationId}) {
+    return "chat/accept-conversation-request?conversationId=$conversationId";
+  }
+
+  static String rejectWaveRequest({required String conversationId}) {
+    return "chat/reject-conversation-request?conversationId=$conversationId";
+  }
+
   /// Dynamic endpoint for nearest suppliers and price stats
   static String joinLiveSessionInfo({required String channelName}) {
     return "agora/join-live?channelName=$channelName";
   }
 
   static String uploadSessionQuesUrl = "expert/add-new-question";
+
+  // import 'package:flutter/material.dart';
+
+  static String getAllMessages({
+    required String conversationId,
+    required int page,
+    required int limit,
+  }) =>
+      "chat/get-all-messages?conversationId=$conversationId&page=$page&limit=$limit";
 
   // Community
   static String createCommunity = "community/create-community";

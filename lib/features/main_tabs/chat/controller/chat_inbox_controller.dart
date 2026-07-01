@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -20,6 +21,7 @@ import '../../../../core/helpers/image_helper.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../../../../core/services/socket/socket_events.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../../core/utils/paginator/paginator.dart';
 import '../../../more/blocked_user/service/blocked_user_service.dart';
 import '../../../shared/wave_request/service/wave_user_profile_info_service.dart';
 import '../../home/sub_feature/profile/model/profile_model.dart';
@@ -44,15 +46,26 @@ class ChatInboxController extends GetxController {
 
   // ── State ────────────────────────────────────────────────────────────────
 
-  final isLoading_ = true.obs; // ← start true
-  bool get isLoading => isLoading_.value;
-
   final isSending_ = false.obs; // ← separate sending state
   bool get isSending => isSending_.value;
 
-  final messages = <Message>[].obs;
+  // ── Messages via REST pagination ────────────────────────────────────────
+
+  late final Paginator<Message> messagesPaginator;
+  RxList<Message> get messages => messagesPaginator.items;
+
+  bool get isLoading => messagesPaginator.isLoading.value;
+  RxBool get isLoading_ => messagesPaginator.isLoading;
+
   final realChatInboxMsgItem = ChatInboxMessageItemModel().obs;
 
+  //
+  StreamSubscription? _socketConnectedSub;
+  StreamSubscription? _socketDisconnectedSub;
+  Timer? _reconnectTimer;
+  int _reconnectAttempt = 0;
+  static const _maxReconnectDelay = Duration(seconds: 30);
+  Worker? _tabWorker;
   // ── Init / Close ─────────────────────────────────────────────────────────
 
   @override
@@ -62,13 +75,54 @@ class ChatInboxController extends GetxController {
     log("chatId: $chatId");
     log("isBlocked: $isBlocked");
     isBlockedRx.value = args.isBlocked;
-    emitGetMessages();
+    // emitGetMessages();
 
     // Auto-send hello after messages load
+
+    messagesPaginator = Paginator<Message>(
+      fetchPage: (page, limit) async {
+        final result = await ChatInboxService().fetchMessagesPaged(
+          conversationId: chatId,
+          page: page,
+          limit: limit,
+        );
+
+        // side effects: keep receiver / block status in sync
+        realChatInboxMsgItem.value = result.item;
+        final blocked = result.item.conversation?.isBlocked;
+        if (blocked != null) isBlockedRx.value = blocked;
+
+        return PaginatedResult<Message>(
+          data: result.messages,
+          meta: result.meta,
+        );
+      },
+    );
+
+    await getMessages();
+    debugPrint('getMessages -->scrollToLast called ');
+    scrollToLast();
+
+    //
+
+    _socketConnectedSub = socket.onConnected.listen((_) {
+      log("🔌 ChatInbox socket connected");
+
+      _reconnectAttempt = 0;
+      _reconnectTimer?.cancel();
+
+      // optional: refresh messages when reconnect happens
+      getMessages();
+    });
+
+    _socketDisconnectedSub = socket.onDisconnected.listen((_) {
+      log("🔌 ChatInbox socket disconnected");
+      _scheduleReconnect();
+    });
+
     if (args.autoHello) {
-      ever(isLoading_, (bool loading) {
+      ever(messagesPaginator.isLoading, (bool loading) {
         if (!loading && messages.isEmpty) {
-          // Only send hello if conversation is fresh (no prior messages)
           msgInputController.text = "Hello 👋";
           onTapSendMsg();
         }
@@ -76,33 +130,75 @@ class ChatInboxController extends GetxController {
     }
   }
 
+  final socket = Get.find<SocketService>();
+  void _scheduleReconnect({bool immediate = false}) {
+    if (socket.isConnected) return;
+
+    _reconnectTimer?.cancel();
+
+    final delay = immediate
+        ? Duration.zero
+        : Duration(
+            seconds: (2 << _reconnectAttempt).clamp(
+              1,
+              _maxReconnectDelay.inSeconds,
+            ),
+          );
+
+    _reconnectTimer = Timer(delay, () async {
+      if (socket.isConnected) return;
+
+      log("🔁 ChatInbox reconnect attempt ${_reconnectAttempt + 1}");
+      _reconnectAttempt++;
+
+      try {
+        socket.disconnectSocket();
+        await socket.connectSocket();
+      } catch (e) {
+        log("❌ reconnect failed: $e");
+      }
+
+      if (!socket.isConnected) {
+        _scheduleReconnect();
+      }
+    });
+  }
+
+  Future<void> getMessages() => messagesPaginator.loadInitial();
+  Future<void> loadMoreMessages() => messagesPaginator.loadMore();
+
   @override
   void onClose() {
     msgInputController.dispose();
     msgInputFocus.dispose();
     scrollController.dispose();
+    messagesPaginator.dispose();
+
+    _socketConnectedSub?.cancel();
+    _socketDisconnectedSub?.cancel();
+    _reconnectTimer?.cancel();
+    _tabWorker?.dispose();
     super.onClose();
   }
-
   // ── Socket callbacks ─────────────────────────────────────────────────────
 
   // Called by SocketService when full message list arrives
   void updateChatInboxMsgItem(ChatInboxMessageItemModel item) {
-    // ✅ Ignore if this response is for a different conversation
-    if (item.messages.isNotEmpty == true) {
-      final incomingChatId = item.messages.first.conversationId ?? '';
-      if (incomingChatId.isNotEmpty && incomingChatId != chatId) {
-        log(
-          "⚠️ Ignoring messages for different chat: $incomingChatId (mine: $chatId)",
-        );
-        return;
-      }
-    }
+    // // ✅ Ignore if this response is for a different conversation
+    // if (item.messages.isNotEmpty == true) {
+    //   final incomingChatId = item.messages.first.conversationId ?? '';
+    //   if (incomingChatId.isNotEmpty && incomingChatId != chatId) {
+    //     log(
+    //       "⚠️ Ignoring messages for different chat: $incomingChatId (mine: $chatId)",
+    //     );
+    //     return;
+    //   }
+    // }
 
-    realChatInboxMsgItem.value = item;
-    messages.assignAll(item.messages ?? []);
-    isLoading_.value = false;
-    scrollToBottom();
+    // realChatInboxMsgItem.value = item;
+    // messages.assignAll(item.messages ?? []);
+    // isLoading_.value = false;
+    // scrollToNewest();
   }
 
   // Called by SocketService on each new incoming message
@@ -120,7 +216,6 @@ class ChatInboxController extends GetxController {
     );
     if (!alreadyExists) {
       messages.add(msg);
-      scrollToBottom();
     }
   }
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -151,17 +246,36 @@ class ChatInboxController extends GetxController {
     return [];
   }
 
-  void _emitSendMessage(
+  //
+  final sendFailed_ = false.obs;
+  Future<bool> _emitSendMessage(
     String message,
     String receiverId, {
     required List<Map<String, dynamic>> attachments,
-  }) {
-    Get.find<SocketService>().emit(SocketEvents.sendMessage, {
-      "senderId": currentProfileId(),
-      "receiverId": receiverId,
-      "text": message,
-      "attachments": attachments,
-    });
+  }) async {
+    if (!socket.isConnected) {
+      log("❌ Send failed: socket not connected");
+
+      _scheduleReconnect(immediate: true);
+
+      sendFailed_.value = true;
+      return false;
+    }
+
+    try {
+      socket.emit(SocketEvents.sendMessage, {
+        "senderId": currentProfileId(),
+        "receiverId": receiverId,
+        "text": message,
+        "attachments": attachments,
+      });
+
+      return true;
+    } catch (e) {
+      log("❌ Send error: $e");
+      sendFailed_.value = true;
+      return false;
+    }
   }
 
   void clearAll() {
@@ -174,12 +288,49 @@ class ChatInboxController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  void scrollToBottom() {
+  void scrollToNewest() {
+    debugPrint('scrollToNewest called ');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
-        scrollController.jumpTo(scrollController.position.maxScrollExtent);
+        scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       }
     });
+  }
+
+  final autoScrolling = false.obs;
+
+  Future<void> scrollToLast() async {
+    debugPrint('scrollToLast called ');
+    // autoScrolling.value = true;
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (scrollController.hasClients) {
+    //     scrollController.animateTo(
+    //       scrollController.position.maxScrollExtent,
+    //       duration: const Duration(milliseconds: 300),
+    //       curve: Curves.easeInOut,
+    //     );
+    //   }
+    // });
+
+    // autoScrolling.value = false;
+    autoScrolling.value = true;
+
+    await Future.delayed(const Duration(milliseconds: 50));
+
+    if (!scrollController.hasClients) return;
+
+    await scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+    );
+
+    autoScrolling.value = false;
   }
 
   List<dynamic> groupMessagesByDate() {
@@ -333,46 +484,6 @@ class ChatInboxController extends GetxController {
     pickedFiles.remove(file);
   }
 
-  // old
-
-  /*
-  // ── Send message ─────────────────────────────────────────────────────────
-
-  void onTapSendMsg() {
-    final text = msgInputController.text.trim();
-    if (text.isEmpty) {
-      "Type something...".showToast();
-      return;
-    }
-
-    if (isBlocked) {
-      "Can't send message right now. Unblock the user first.".showToast();
-    }
-
-    final receiverId = realChatInboxMsgItem.value.receiver?.id ?? '';
-
-    // Optimistic add — user sees message instantly
-    final newMsg = Message(
-      conversationId: chatId,
-      createdAt: DateTime.now(),
-      receiver: receiverId,
-      seen: false,
-      sender: currentProfileId(),
-      text: text,
-    );
-
-    messages.add(newMsg);
-    scrollToBottom();
-
-    // Emit to socketio
-    _emitSendMessage(text, receiverId);
-
-    // ← NO getChatInboxMsgList() here — that caused the empty flicker
-    clearAll();
-  }
-
-
-*/
   // new
   //// ── Send message ──────────────────────────────────────────────────────────
 
@@ -404,7 +515,7 @@ class ChatInboxController extends GetxController {
     }
   }
 
-  void _sendTextMessage(String text, String receiverId) {
+  Future<void> _sendTextMessage(String text, String receiverId) async {
     messages.add(
       Message(
         conversationId: chatId,
@@ -415,8 +526,24 @@ class ChatInboxController extends GetxController {
         text: text,
       ),
     );
-    scrollToBottom();
-    _emitSendMessage(text, receiverId, attachments: []);
+    scrollToLast();
+
+    final ok = await _emitSendMessage(text, receiverId, attachments: []);
+
+    if (!ok) {
+      messages.removeWhere(
+        (m) =>
+            m.text == text &&
+            m.sender == currentProfileId() &&
+            (DateTime.now()
+                    .difference(m.createdAt ?? DateTime.now())
+                    .inSeconds <
+                5),
+      );
+
+      "Message failed to send. Please check your connection.".showToast();
+      return;
+    }
 
     // ✅ Update chat list immediately (optimistic)
     if (Get.isRegistered<ChatController>()) {
@@ -528,10 +655,29 @@ class ChatInboxController extends GetxController {
       /// 5️⃣ ADD LOCALLY
       messages.add(localMessage);
 
-      scrollToBottom();
+      scrollToLast();
 
       /// 6️⃣ SOCKET EMIT
-      _emitSendMessage(text, receiverId, attachments: attachments);
+      final ok = await _emitSendMessage(
+        text,
+        receiverId,
+        attachments: attachments,
+      );
+
+      if (!ok) {
+        messages.removeWhere(
+          (m) =>
+              m.text == text &&
+              m.sender == currentProfileId() &&
+              (DateTime.now()
+                      .difference(m.createdAt ?? DateTime.now())
+                      .inSeconds <
+                  5),
+        );
+
+        "Message failed to send. Please check your connection.".showToast();
+        return;
+      }
 
       /// 7️⃣ UPDATE CHAT LIST
       if (Get.isRegistered<ChatController>()) {
@@ -554,42 +700,6 @@ class ChatInboxController extends GetxController {
     }
     //
   }
-  // Future<void> sendFileMessage(String receiverId, String text) async {
-  //   if (isSending_.value) return;
-  //   isSending_.value = true;
-
-  //   /// 1️⃣ TAKE SNAPSHOT (DO NOT MUTATE ORIGINAL YET)
-  //   final files = List<XFile>.from(pickedFiles);
-
-  //   try {
-  //     /// 2️⃣ UPLOAD FIRST
-  //     final result = await ChatInboxService().sendChatFile(chatFiles: files);
-
-  //     if (result == null) {
-  //       "Failed to send file. Please try again.".showToast();
-  //       return;
-  //     }
-
-  //     /// 3️⃣ BUILD SOCKET PAYLOAD
-  //     final attachments = normalizeAttachments(result);
-
-  //     /// 4️⃣ EMIT MESSAGE
-  //     _emitSendMessage(text, receiverId, attachments: attachments);
-
-  //     /// 5️⃣ ONLY NOW CLEAR STATE (SUCCESS PATH)
-  //     clearAttachments();
-  //     unFocusAll();
-  //   } catch (e) {
-  //     log("_sendFileMessage error: $e");
-
-  //     "Something went wrong while sending the file.".showToast();
-
-  //     /// ❗ IMPORTANT: DO NOT CLEAR ON ERROR
-  //     /// user should retry without re-picking files
-  //   } finally {
-  //     isSending_.value = false;
-  //   }
-  // }
 
   ///
   // get wave user details
@@ -614,9 +724,7 @@ class ChatInboxController extends GetxController {
     isgetUserProfileLoading_.value = true;
 
     try {
-      final data = await WaveUserProfileInfoService().fetchUserProfile(
-        userId: userId,
-      );
+      final data = await WaveService().fetchUserProfile(userId: userId);
 
       if (data != null) {
         chatUserProfileData.value = data;

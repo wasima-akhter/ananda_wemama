@@ -6,11 +6,8 @@ import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
 import '../../../features/main_tabs/chat/model/chat_inbox_msg_item_model.dart';
 import '../../../features/main_tabs/chat/model/chat_list_item_model.dart';
 import '../../../features/main_tabs/match/controller/match_controller.dart';
-import '../../../features/more/notification/controller/notification_controller.dart';
-import '../../../features/more/notification/model/notifications_model.dart';
 import '../../../features/shared/wave_request/controller/wave_request_controller.dart';
 import '../../../features/shared/wave_request/model/new_wave_req_list_item_model.dart';
-import '../../helpers/widgets_helper.dart';
 import 'socket_events.dart';
 import 'socket_response_handler .dart';
 
@@ -113,16 +110,31 @@ class SocketListenerRegistry {
         eventName: SocketEvents.conversationRequests,
       );
       if (!res.isSuccess) return;
+      try {
+        log("A");
 
-      final list = (res.dataAsList ?? [])
-          .map((e) => NewWaveListItemModel.fromJson(e))
-          .toList();
+        final list = (res.dataAsList ?? [])
+            .map((e) => NewWaveListItemModel.fromJson(e))
+            .toList();
 
-      debugPrint("list of wave list : ${list.length}");
-      debugPrint("list of wave res.dataAsList  : ${res.dataAsList?.length}");
+        log("B");
 
-      if (Get.isRegistered<WaveRequestController>()) {
-        Get.find<WaveRequestController>().updateWaveList(list);
+        log("first = ${res.dataAsList?.first}");
+
+        log("C");
+
+        for (final item in list) {
+          log("id = ${item.id}");
+        }
+
+        log("D");
+
+        if (Get.isRegistered<WaveRequestController>()) {
+          Get.find<WaveRequestController>().updateWaveList(list);
+        }
+      } catch (e, s) {
+        debugPrint(e.toString());
+        debugPrint(s.toString());
       }
     });
 
@@ -244,43 +256,43 @@ class SocketListenerRegistry {
     //     snackPosition: SnackPosition.TOP,
     //   );
     // });
-    _off(SocketEvents.newNotification);
-    _on(SocketEvents.newNotification, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.newNotification,
-      );
-      if (!res.isSuccess) return;
+    // _off(SocketEvents.newNotification);
+    // _on(SocketEvents.newNotification, (data) {
+    //   final res = SocketResponseHandler.handle(
+    //     data,
+    //     eventName: SocketEvents.newNotification,
+    //   );
+    //   if (!res.isSuccess) return;
 
-      final notificationData = res.dataAsMap;
-      if (notificationData == null) return;
+    //   final notificationData = res.dataAsMap;
+    //   if (notificationData == null) return;
 
-      // ─────────────────────────────
-      // 🔹 Push to notification list
-      // ─────────────────────────────
-      if (Get.isRegistered<NotificationController>()) {
-        // ✅ NotificationItemModel.fromJson expects:
-        // _id, toId, toModel, title, description, type,
-        // referenceId, referenceModel, isSeen, createdAt, updatedAt, __v
-        final notification = NotificationItemModel.fromJson(notificationData);
-        Get.find<NotificationController>().addNotification(notification);
-      }
+    //   // ─────────────────────────────
+    //   // 🔹 Push to notification list
+    //   // ─────────────────────────────
+    //   if (Get.isRegistered<NotificationController>()) {
+    //     // ✅ NotificationItemModel.fromJson expects:
+    //     // _id, toId, toModel, title, description, type,
+    //     // referenceId, referenceModel, isSeen, createdAt, updatedAt, __v
+    //     final notification = NotificationItemModel.fromJson(notificationData);
+    //     Get.find<NotificationController>().addNotification(notification);
+    //   }
 
-      // ─────────────────────────────
-      // 🔹 Suppress snackbar for SENT_WAVE
-      // ─────────────────────────────
-      final type = notificationData['type'] as String? ?? '';
-      if (type == 'SENT_WAVE') return;
+    //   // ─────────────────────────────
+    //   // 🔹 Suppress snackbar for SENT_WAVE
+    //   // ─────────────────────────────
+    //   final type = notificationData['type'] as String? ?? '';
+    //   if (type == 'SENT_WAVE') return;
 
-      Get.snackbar(
-        notificationData['title'] ?? 'Notification',
-        notificationData['description'] ?? '',
-        backgroundColor: newBorderClr,
-        titleText: buildTitle(notificationData['title']),
-        messageText: buildMessage(notificationData['description']),
-        snackPosition: SnackPosition.TOP,
-      );
-    });
+    //   Get.snackbar(
+    //     notificationData['title'] ?? 'Notification',
+    //     notificationData['description'] ?? '',
+    //     backgroundColor: newBorderClr,
+    //     titleText: buildTitle(notificationData['title']),
+    //     messageText: buildMessage(notificationData['description']),
+    //     snackPosition: SnackPosition.TOP,
+    //   );
+    // });
   }
 
   void _registerChatEvents() {
@@ -303,19 +315,19 @@ class SocketListenerRegistry {
       }
     });
     // ── chat_inbox_msg_list (list) ──────────────────────────────────────────
-    _on(SocketEvents.messages, (data) {
-      final res = SocketResponseHandler.handle(
-        data,
-        eventName: SocketEvents.messages,
-      );
-      if (!res.isSuccess) return;
+    // _on(SocketEvents.messages, (data) {
+    //   final res = SocketResponseHandler.handle(
+    //     data,
+    //     eventName: SocketEvents.messages,
+    //   );
+    //   if (!res.isSuccess) return;
 
-      final itemData = ChatInboxMessageItemModel.fromJson(res.dataAsMap ?? {});
+    //   final itemData = ChatInboxMessageItemModel.fromJson(res.dataAsMap ?? {});
 
-      if (Get.isRegistered<ChatInboxController>()) {
-        Get.find<ChatInboxController>().updateChatInboxMsgItem(itemData);
-      }
-    });
+    //   if (Get.isRegistered<ChatInboxController>()) {
+    //     Get.find<ChatInboxController>().updateChatInboxMsgItem(itemData);
+    //   }
+    // });
 
     //
     // ── chat_new_message listen ──────────────────────────────────────────

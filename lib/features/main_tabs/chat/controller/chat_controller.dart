@@ -16,7 +16,16 @@ class ChatController extends GetxController {
 
   final chatScrollCtrl = ScrollController();
   Worker? _tabWorker;
-  /*
+
+  bool _isFetchingChatList = false;
+
+  // ── Reconnect management ─────────────────────────────────────────────────
+  StreamSubscription? _socketConnectedSub;
+  StreamSubscription? _socketDisconnectedSub;
+  Timer? _reconnectTimer;
+  int _reconnectAttempt = 0;
+  static const _maxReconnectDelay = Duration(seconds: 30);
+
   @override
   void onInit() {
     super.onInit();
@@ -24,29 +33,49 @@ class ChatController extends GetxController {
     final nav = Get.find<MainNavController>();
 
     _tabWorker = ever(nav.currentIndex, (index) {
-      // chat tab index
       if (index == 1) {
         log("🔄 Chat tab opened");
-
-        // getChatList(forceRefresh: true);
+        if (realChatList.isEmpty) {
+          getChatList(forceRefresh: true);
+        }
+        // ✅ Also use tab focus as a nudge to reconnect if we're dead
+        if (!socket.isConnected) {
+          _scheduleReconnect(immediate: true);
+        }
       }
     });
 
-    // ✅ Auto-retry when socket reconnects
+    // ✅ On connect: refresh data + reset backoff
+    _socketConnectedSub = socket.onConnected.listen((_) {
+      log("🔌 Socket connected — fetching chat list");
+      _reconnectAttempt = 0;
+      _reconnectTimer?.cancel();
+      getChatList(forceRefresh: true);
+    });
 
-    if (Get.isRegistered<SocketStatusController>()) {
-      ever(Get.find<SocketStatusController>().status, (status) {
-        if (status == SocketStatus.connected) {
-          log("🔌 Socket reconnected — refreshing chat list");
-          getChatList(forceRefresh: true);
-        }
-      });
+    // ✅ On disconnect: actively try to reconnect instead of just waiting
+    _socketDisconnectedSub = socket.onDisconnected.listen((_) {
+      log("🔌 Socket disconnected — scheduling reconnect");
+      _scheduleReconnect();
+    });
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    if (socket.isConnected && realChatList.isEmpty) {
+      getChatList(forceRefresh: true);
+    } else if (!socket.isConnected) {
+      _scheduleReconnect(immediate: true);
     }
   }
 
   @override
   void onClose() {
     _tabWorker?.dispose();
+    _socketConnectedSub?.cancel();
+    _socketDisconnectedSub?.cancel();
+    _reconnectTimer?.cancel();
 
     searchController.dispose();
     searchFocus.dispose();
@@ -54,46 +83,41 @@ class ChatController extends GetxController {
     super.onClose();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  /// Attempts to reconnect with exponential backoff (capped).
+  /// `immediate: true` skips the delay for the first attempt (e.g. app
+  /// coming to foreground / tab tapped).
+  void _scheduleReconnect({bool immediate = false}) {
+    if (socket.isConnected) return;
 
-    // Force refresh every time screen opens
-    getChatList(forceRefresh: true);
-  }
-*/
-  bool _isFetchingChatList = false; // ✅ prevents overlapping calls
-  @override
-  void onInit() {
-    super.onInit();
+    _reconnectTimer?.cancel();
 
-    final nav = Get.find<MainNavController>();
+    final delay = immediate
+        ? Duration.zero
+        : Duration(
+            seconds: (2 << _reconnectAttempt).clamp(
+              1,
+              _maxReconnectDelay.inSeconds,
+            ),
+          );
 
-    _tabWorker = ever(nav.currentIndex, (index) {
-      if (index == 1) {
-        log("🔄 Chat tab opened");
-        // ✅ Only fetch if list is empty — don't re-fetch on every tab switch
-        if (realChatList.isEmpty) {
-          getChatList(forceRefresh: true);
-        }
+    _reconnectTimer = Timer(delay, () async {
+      if (socket.isConnected) return; // already recovered
+
+      log("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
+      _reconnectAttempt++;
+
+      try {
+        socket.disconnectSocket(); // clean slate before retry
+        await socket.connectSocket();
+      } catch (e) {
+        log("❌ Reconnect attempt failed: $e");
+      }
+
+      // If still not connected after this attempt, queue the next one
+      if (!socket.isConnected) {
+        _scheduleReconnect();
       }
     });
-
-    // ✅ Re-fetch on socket connect/reconnect
-    _socketConnectedSub = socket.onConnected.listen((_) {
-      log("🔌 Socket connected — fetching chat list");
-      getChatList(forceRefresh: true);
-    });
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    // ✅ Only if socket already connected AND list is empty
-    // _socketConnectedSub handles it if socket connects later
-    if (socket.isConnected && realChatList.isEmpty) {
-      getChatList(forceRefresh: true);
-    }
   }
 
   void clearAll() => searchController.clear();
@@ -107,20 +131,17 @@ class ChatController extends GetxController {
     searchedChatList.clear();
     isLoading_.value = false;
   }
+
   // ── State ────────────────────────────────────────────────────────────────
 
-  final isLoading_ = true.obs; // ← start true, data hasn't arrived yet
+  final isLoading_ = true.obs;
   bool get isLoading => isLoading_.value;
 
   final realChatList = <ChatListItemModel>[].obs;
 
-  // ── Called by SocketService when data arrives ────────────────────────────
   Completer<void>? _chatListCompleter;
 
-  // ── Called by SocketService when data arrives ────────────────────────────
-
   void updateChatList(List<ChatListItemModel> list) {
-    // Deduplicate by id — last occurrence wins (most recent data)
     final seen = <String>{};
     final deduped = list.reversed
         .where((e) => seen.add(e.id))
@@ -130,7 +151,7 @@ class ChatController extends GetxController {
 
     realChatList.assignAll(deduped);
     isLoading_.value = false;
-    _isFetchingChatList = false; // ✅ unlock early on success
+    _isFetchingChatList = false;
 
     if (!(_chatListCompleter?.isCompleted ?? true)) {
       _chatListCompleter?.complete();
@@ -138,46 +159,19 @@ class ChatController extends GetxController {
   }
 
   // ── Emit ─────────────────────────────────────────────────────────────────
-  /*
-  Future<void> getChatList({bool forceRefresh = true}) async {
-    if (forceRefresh) {
-      realChatList.clear();
-    }
-
-    isLoading_.value = true;
-
-    _chatListCompleter = Completer<void>();
-
-    try {
-      socket.emit(SocketEvents.getChatList, {});
-
-      await _chatListCompleter!.future.timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          log("⚠️ getChatList timeout — no socket response");
-        },
-      );
-    } catch (e, stack) {
-      log("❌ Error fetching chat list: $e");
-      log("STACK: $stack");
-    } finally {
-      isLoading_.value = false;
-    }
-  }
-*/
-  StreamSubscription? _socketConnectedSub;
 
   Future<void> getChatList({bool forceRefresh = true}) async {
-    // ✅ Guard against overlapping calls
     if (_isFetchingChatList) {
       log("⏭️ getChatList already in progress — skipping");
       return;
     }
     if (forceRefresh) realChatList.clear();
 
-    // ✅ If not connected, wait up to 10s for connection instead of emitting into void
+    // ✅ Not connected? Kick off reconnect (not just wait) then give it a window.
     if (!socket.isConnected) {
-      log("⏳ getChatList — waiting for socket to connect...");
+      log("⏳ getChatList — socket down, triggering reconnect + waiting...");
+      _scheduleReconnect(immediate: true);
+
       try {
         await socket.onConnected.first.timeout(
           const Duration(seconds: 10),
@@ -185,16 +179,18 @@ class ChatController extends GetxController {
         );
       } catch (e) {
         log("🚫 getChatList aborted — socket not available: $e");
-
+        // ✅ Don't just give up silently — backoff loop from
+        // _scheduleReconnect keeps trying in the background, and will
+        // call getChatList again via the onConnected listener once it
+        // succeeds. So no further action needed here.
         return;
       } finally {
-        _isFetchingChatList = false; // 🔓 unlock
         isLoading_.value = false;
       }
     }
 
     isLoading_.value = true;
-    _isFetchingChatList = true; // 🔒 lock
+    _isFetchingChatList = true;
     _chatListCompleter = Completer<void>();
 
     try {
@@ -208,9 +204,14 @@ class ChatController extends GetxController {
       log("❌ getChatList error: $e");
     } finally {
       isLoading_.value = false;
+      _isFetchingChatList = false; // ✅ was missing here — this was also a
+      // latent bug: on timeout/error the lock
+      // only got released in updateChatList's
+      // success path, so a timed-out call
+      // would permanently block all future
+      // getChatList() calls until success.
     }
   }
-  //
 
   void updateLastMessage({
     required String chatId,
@@ -225,28 +226,23 @@ class ChatController extends GetxController {
       time: time,
     );
 
-    // Move this chat to the top
     final updated = realChatList.removeAt(index);
     realChatList.insert(0, updated);
     realChatList.refresh();
   }
-  // ── Emit ─────────────────────────────────────────────────────────────────
 
   final socket = Get.find<SocketService>();
 
-  /// --------------  Search Chat List -----//
   final showSearchedTag = false.obs;
   final searchedTxt = ''.obs;
-
-  final isSearchLoading_ = false.obs; // ← start true, data hasn't arrived yet
+  final isSearchLoading_ = false.obs;
 
   final service = ChatService();
   final searchedChatList = <ChatListItemModel>[].obs;
 
-  /// Fetch the latest  data from API
   Future<void> getSearchedChatList() async {
     log('hit search');
-    if (isSearchLoading_.value) return; // Prevent duplicate calls
+    if (isSearchLoading_.value) return;
 
     if (searchController.text.trim().isEmpty) {
       Strings.writeSomething.showToast();
@@ -277,13 +273,11 @@ class ChatController extends GetxController {
 
   void onTapHandWave() => Get.toNamed(RoutePaths.waveRequest);
 
-  // -------------update
   void updateChatBlockStatus({
     required String chatId,
     required bool isBlocked,
   }) {
     final index = realChatList.indexWhere((e) => e.id == chatId);
-
     if (index == -1) return;
 
     realChatList[index] = realChatList[index].copyWith(isBlocked: isBlocked);
@@ -294,10 +288,7 @@ class ChatController extends GetxController {
       searchedChatList[searchIndex] = searchedChatList[searchIndex].copyWith(
         isBlocked: isBlocked,
       );
-
       searchedChatList.refresh();
     }
   }
-
-  //
 }

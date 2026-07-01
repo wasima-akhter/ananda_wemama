@@ -86,14 +86,14 @@ void main() async {
     debugPrint('❌ [main] PushNotificationService init FAILED: $e');
     debugPrint('$st');
   }
-  // ── 7.2 PushNotificationService ───────────────────────────────────────────────
+  // ── 7.2  NotificationCount Controller ───────────────────────────────────────────────
   debugPrint('🔧 [main] initializing NotificationCount Controller...');
   try {
     Get.put(NotificationCountController(), permanent: true);
-    debugPrint('✅ [main] PushNotificationService ready');
+    debugPrint('✅ [main] NotificationCount Controller ready');
   } catch (e, st) {
     // Non-fatal: app can still run without push notifications
-    debugPrint('❌ [main] PushNotificationService init FAILED: $e');
+    debugPrint('❌ [main] NotificationCount Controller init FAILED: $e');
     debugPrint('$st');
   }
 

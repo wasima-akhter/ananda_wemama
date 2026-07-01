@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -259,12 +259,12 @@ class AppStorage extends GetxService {
   void _syncAppBadge(int unread) {
     try {
       if (unread > 0) {
-        FlutterAppBadger.updateBadgeCount(unread);
+        FlutterNewBadger.setBadge(unread);
       } else {
-        FlutterAppBadger.removeBadge();
+        FlutterNewBadger.removeBadge();
       }
     } catch (e) {
-      // FlutterAppBadger can throw on unsupported platforms/launchers — ignore safely
+      // FlutterNewBadger can throw on unsupported platforms/launchers — ignore safely
       debugPrint('⚠️ [AppStorage] badge sync failed: $e');
     }
   }

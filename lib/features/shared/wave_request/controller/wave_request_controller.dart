@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -9,9 +11,34 @@ import '../model/new_wave_req_list_item_model.dart';
 import '../service/wave_user_profile_info_service.dart';
 
 class WaveRequestController extends GetxController {
+  // ── Reconnect management ─────────────────────────────────────────────────
+  StreamSubscription? _socketConnectedSub;
+  StreamSubscription? _socketDisconnectedSub;
+  Timer? _reconnectTimer;
+  int _reconnectAttempt = 0;
+  static const _maxReconnectDelay = Duration(seconds: 30);
+
   @override
   void onInit() {
     getNewWavesList();
+
+    // ✅ On connect: refresh list + reset backoff
+    _socketConnectedSub = socket.onConnected.listen((_) {
+      log("🔌 Socket connected — refreshing wave requests");
+      _reconnectAttempt = 0;
+      _reconnectTimer?.cancel();
+      getNewWavesList(forceRefresh: true);
+    });
+
+    // ✅ On disconnect: actively try to reconnect instead of just waiting
+    _socketDisconnectedSub = socket.onDisconnected.listen((_) {
+      log("🔌 Socket disconnected — scheduling reconnect");
+      _scheduleReconnect();
+    });
+
+    if (!socket.isConnected) {
+      _scheduleReconnect(immediate: true);
+    }
 
     // ── React to socket success flags ─────────────────────────────────────────
     ever(isSuccessAccept, (bool success) {
@@ -27,6 +54,49 @@ class WaveRequestController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _socketConnectedSub?.cancel();
+    _socketDisconnectedSub?.cancel();
+    _reconnectTimer?.cancel();
+    super.onClose();
+  }
+
+  /// Attempts to reconnect with exponential backoff (capped).
+  /// `immediate: true` skips the delay for the first attempt.
+  void _scheduleReconnect({bool immediate = false}) {
+    if (socket.isConnected) return;
+
+    _reconnectTimer?.cancel();
+
+    final delay = immediate
+        ? Duration.zero
+        : Duration(
+            seconds: (2 << _reconnectAttempt).clamp(
+              1,
+              _maxReconnectDelay.inSeconds,
+            ),
+          );
+
+    _reconnectTimer = Timer(delay, () async {
+      if (socket.isConnected) return; // already recovered
+
+      log("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
+      _reconnectAttempt++;
+
+      try {
+        socket.disconnectSocket();
+        await socket.connectSocket();
+      } catch (e) {
+        log("❌ Reconnect attempt failed: $e");
+      }
+
+      if (!socket.isConnected) {
+        _scheduleReconnect();
+      }
+    });
   }
 
   // ── State ─────────────────────────────────────────────────────────────────
@@ -55,27 +125,17 @@ class WaveRequestController extends GetxController {
 
     if (isAccepted) {
       acceptUserWave(conversationId);
-      // ✅ Result handled reactively in ever(isSuccessAccept)
-      // also go the chat inbox and send hello message.
-
-      //
     } else {
       rejectUserWave(conversationId);
-      // ✅ Result handled reactively in ever(isSuccessReject)
     }
   }
 
   // ── Accept success handler ────────────────────────────────────────────────
-
-  // ── Accept success handler ────────────────────────────────────────────────
   void _onAcceptSuccess() {
-    // 1. Remove from local list
     _removeFromList(_pendingConversationId);
 
-    // 2. Show accepted dialog
     showReqAcceptedDialog();
 
-    // 3. After delay → show both connected dialog, then navigate to chat inbox
     Future.delayed(const Duration(seconds: 3), () {
       Get.back(); // close accepted dialog
 
@@ -85,85 +145,16 @@ class WaveRequestController extends GetxController {
         peerName: peerName.value,
         conversationId: _pendingConversationId,
       );
-
-      // here the hello msg send
     });
   }
 
   // ── Reject success handler ────────────────────────────────────────────────
   void _onRejectSuccess() {
-    // Remove from local list silently
     _removeFromList(_pendingConversationId);
   }
 
   // ── List management ───────────────────────────────────────────────────────
   void updateWaveList(List<NewWaveListItemModel> list) {
-    /*
-
-   // fake data
-
-      newWaveList.value = <NewWaveListItemModel>[
-  NewWaveListItemModel(
-    id: 'wave_1',
-    status: 'active',
-    createdAt: DateTime.now().subtract(const Duration(hours: 2)),
-    updatedAt: DateTime.now(),
-    v: 1,
-    participants: [
-      Participant(
-        id: 'p1',
-        name: 'Ayesha Rahman',
-        profileImage: '',
-      ),
-      Participant(
-        id: 'p2',
-        name: 'Nusrat Jahan',
-        profileImage: '',
-      ),
-    ],
-  ),
-
-  NewWaveListItemModel(
-    id: 'wave_2',
-    status: 'active',
-    createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    updatedAt: DateTime.now(),
-    v: 1,
-    participants: [
-      Participant(
-        id: 'p3',
-        name: 'Sarah Ahmed',
-        profileImage: '',
-      ),
-      Participant(
-        id: 'p4',
-        name: 'Mim Akter',
-        profileImage: '',
-      ),
-      Participant(
-        id: 'p5',
-        name: 'Fatema Khatun',
-        profileImage: '',
-      ),
-    ],
-  ),
-
-  NewWaveListItemModel(
-    id: 'wave_3',
-    status: 'inactive',
-    createdAt: DateTime.now().subtract(const Duration(days: 3)),
-    updatedAt: DateTime.now().subtract(const Duration(hours: 5)),
-    v: 1,
-    participants: [
-      Participant(
-        id: 'p6',
-        name: 'Nadia Islam',
-        profileImage: '',
-      ),
-    ],
-  ),
-];
-*/
     newWaveList.assignAll(list);
   }
 
@@ -178,21 +169,91 @@ class WaveRequestController extends GetxController {
     socket.emit(SocketEvents.getConversationRequests, {});
   }
 
-  void acceptUserWave(String conversationId) {
-    socket.emit(SocketEvents.acceptConversationRequest, {
-      "conversationId": conversationId,
-    });
+  /// socket-->
+  // void acceptUserWave(String conversationId) {
+  //   socket.emit(SocketEvents.acceptConversationRequest, {
+  //     "conversationId": conversationId,
+  //   });
+  // }
+
+  // void rejectUserWave(String conversationId) {
+  //   socket.emit(SocketEvents.rejectConversationRequest, {
+  //     "conversationId": conversationId,
+  //   });
+  // }
+
+  final isAcceptLoading = false.obs;
+  final isRejectLoading = false.obs;
+
+  final service = WaveService();
+  Future<void> acceptUserWave(String conversationId) async {
+    if (isAcceptLoading.value) return;
+
+    isAcceptLoading.value = true;
+
+    try {
+      final success = await service.acceptWaveRequest(
+        conversationId: conversationId,
+      );
+
+      if (!success) {
+        Snack.showError("Couldn't accept the request. Please try again.");
+        return;
+      }
+
+      newWaveList.removeWhere((e) => e.id == conversationId);
+      newWaveList.refresh();
+
+      Get.back();
+
+      Snack.showSuccess("Wave request accepted.");
+    } finally {
+      isAcceptLoading.value = false;
+    }
   }
 
-  void rejectUserWave(String conversationId) {
-    socket.emit(SocketEvents.rejectConversationRequest, {
-      "conversationId": conversationId,
-    });
+  Future<void> rejectUserWave(String conversationId) async {
+    if (isRejectLoading.value) return;
+
+    isRejectLoading.value = true;
+
+    try {
+      final success = await service.rejectWaveRequest(
+        conversationId: conversationId,
+      );
+
+      if (!success) {
+        Snack.showError("Couldn't decline the request. Please try again.");
+        return;
+      }
+
+      newWaveList.removeWhere((e) => e.id == conversationId);
+      newWaveList.refresh();
+
+      Get.back();
+
+      Snack.showSuccess("Wave request declined.");
+    } finally {
+      isRejectLoading.value = false;
+    }
   }
+
+  //
 
   // ── Fetch list ────────────────────────────────────────────────────────────
-  Future<void> getNewWavesList() async {
+  Future<void> getNewWavesList({bool forceRefresh = false}) async {
     if (isLoading_.value) return;
+
+    // ✅ Not connected? Kick off reconnect and let the onConnected
+    // listener retry this call once the socket recovers — mirrors
+    // ChatController.getChatList's approach instead of emitting into a
+    // dead socket.
+    if (!socket.isConnected) {
+      log("⏳ getNewWavesList — socket down, scheduling reconnect");
+      _scheduleReconnect(immediate: true);
+      return;
+    }
+
     isLoading_.value = true;
     try {
       getConversationRequestList(currentProfileId());
@@ -205,24 +266,18 @@ class WaveRequestController extends GetxController {
 
   void unFocusAll() => FocusManager.instance.primaryFocus?.unfocus();
 
-  //   // API loading state
+  // API loading state
   var isgetUserProfileLoading_ = false.obs;
   bool get isgetUserProfileLoading => isgetUserProfileLoading_.value;
-  //// get wave user details
-  ///
-  /// Fetch the latest profile from API
-  ///
+
   final waveUserProfileData = Rxn<ProfileDataModel>();
 
-  ///
   Future<void> getUserProfile({required String userId}) async {
     if (isgetUserProfileLoading_.value) return; // Prevent duplicate calls
     isgetUserProfileLoading_.value = true;
 
     try {
-      final data = await WaveUserProfileInfoService().fetchUserProfile(
-        userId: userId,
-      );
+      final data = await WaveService().fetchUserProfile(userId: userId);
 
       if (data != null) {
         waveUserProfileData.value = data;
@@ -234,8 +289,6 @@ class WaveRequestController extends GetxController {
       isgetUserProfileLoading_.value = false;
     }
   }
-
-  ///
 }
 
 class FakeNewWavesModel {

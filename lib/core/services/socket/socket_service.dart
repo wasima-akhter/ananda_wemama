@@ -76,6 +76,9 @@ class SocketService extends GetxService {
         if (!(_connectCompleter?.isCompleted ?? true)) {
           _connectCompleter?.complete();
         }
+
+        // ✅ broadcast on every connect (including reconnects)
+        _onConnectedController.add(null);
       });
 
       _socket!.onConnectError((err) {
@@ -83,6 +86,19 @@ class SocketService extends GetxService {
         if (!(_connectCompleter?.isCompleted ?? true)) {
           _connectCompleter?.completeError(err);
         }
+      });
+
+      // ✅ NEW — fires whenever the transport drops, for any reason:
+      // network loss, server restart, app backgrounded, etc.
+      _socket!.onDisconnect((reason) {
+        log("🔌 Socket Disconnected: $reason");
+
+        if (_intentionalDisconnect) {
+          _intentionalDisconnect = false; // reset for next time
+          return; // don't tell listeners to reconnect — this was on purpose
+        }
+
+        _onDisconnectedController.add(null);
       });
 
       _registerListeners(); // registers fresh on the new socket instance
@@ -193,6 +209,7 @@ class SocketService extends GetxService {
   void onClose() {
     _retryTimer?.cancel();
     _onConnectedController.close(); // ✅ missing
+    _onDisconnectedController.close(); // ✅ NEW
     _socket?.clearListeners();
     _socket?.disconnect();
     _socket?.destroy();
@@ -200,7 +217,10 @@ class SocketService extends GetxService {
     super.onClose();
   }
 
+  bool _intentionalDisconnect = false;
+
   void disconnectSocket() {
+    _intentionalDisconnect = true;
     _retryTimer?.cancel();
     _retryTimer = null;
     _retryCount = 0; // ✅ reset so retry logic starts clean for new user
@@ -231,6 +251,10 @@ class SocketService extends GetxService {
   // ✅ Add this — single source of truth for socket readiness
   final _onConnectedController = StreamController<void>.broadcast();
   Stream<void> get onConnected => _onConnectedController.stream;
+
+  // ✅ NEW — single source of truth for disconnects
+  final _onDisconnectedController = StreamController<void>.broadcast();
+  Stream<void> get onDisconnected => _onDisconnectedController.stream;
 
   /// Called once inside _registerListeners() — hooks into socket lifecycle.
   // At the top of _registerRetryListeners()

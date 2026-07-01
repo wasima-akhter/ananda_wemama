@@ -1,9 +1,48 @@
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../app/service_export.dart';
+import '../model/chat_inbox_msg_item_model.dart';
 
 class ChatInboxService extends GetxService {
   final ApiServiceHelper _apiHelper = ApiServiceHelper();
+
+  Future<ChatMessagesPage> fetchMessagesPaged({
+    required String conversationId,
+    required int page,
+    required int limit,
+  }) async {
+    apiCall() {
+      return ApiClient().get(
+        Endpoints.getAllMessages(
+          conversationId: conversationId,
+          page: page,
+          limit: limit,
+        ).getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
+
+    final response = await _apiHelper.request<ChatInboxMessageItemModel>(
+      showErrorToast: false,
+      apiCall: apiCall,
+      parser: (data) {
+        if (data is Map<String, dynamic>) {
+          return ChatInboxMessageItemModel.fromJson(data);
+        }
+        return ChatInboxMessageItemModel();
+      },
+    );
+
+    final item = response?.data ?? ChatInboxMessageItemModel();
+
+    return ChatMessagesPage(
+      messages: item.messages ?? [],
+      meta: response?.meta,
+      item: item,
+    );
+  }
+
+  //
 
   Future<dynamic> sendChatFile({
     required List<XFile> chatFiles,

@@ -176,7 +176,7 @@ class ProfileDataModel {
     this.city,
     this.bio,
     this.interesteds = const [],
-    this.mumStage,
+
     this.mumStages = const [], // ← new: list format
     this.subscription,
     this.matchCount,
@@ -213,7 +213,6 @@ class ProfileDataModel {
   final List<String> interesteds;
 
   // mumStage — both formats
-  final String? mumStage; // single string (old format)
   final List<String> mumStages; // ← new: list format
 
   final ProfileSubscriptionModel? subscription;
@@ -293,7 +292,6 @@ class ProfileDataModel {
           ? []
           : List<String>.from(json["interesteds"].map((x) => x.toString())),
 
-      mumStage: mumStageSingle,
       mumStages: mumStageList,
 
       subscription: json["subscription"] == null

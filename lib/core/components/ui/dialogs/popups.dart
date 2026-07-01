@@ -168,6 +168,8 @@ Future<void> newWavesUserDetailsDialog({
   required RxBool isSeeMore,
   required void Function() onTapSeeMoreTxt,
   required Rxn<ProfileDataModel> user,
+  required RxBool isAcceptLoading,
+  required RxBool isRejectLoading,
 }) async {
   await Popups().baseAlert(
     context: Get.context!,
@@ -177,6 +179,8 @@ Future<void> newWavesUserDetailsDialog({
       isSeeMore: isSeeMore,
       onTapSeeMore: onTapSeeMoreTxt,
       user: user,
+      isAcceptLoading: isAcceptLoading,
+      isRejectLoading: isRejectLoading,
     ),
   );
 }

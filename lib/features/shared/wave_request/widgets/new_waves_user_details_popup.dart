@@ -13,6 +13,8 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
   final VoidCallback onTapSeeMore;
   final Future<void> Function(bool isAccepted) onTapAction;
   final RxBool isSeeMore;
+  final RxBool isAcceptLoading;
+  final RxBool isRejectLoading;
 
   const NewWavesUserDetailsPopup({
     super.key,
@@ -21,6 +23,8 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
     required this.isSeeMore,
     required this.onTapSeeMore,
     required this.onTapAction,
+    required this.isAcceptLoading,
+    required this.isRejectLoading,
   });
 
   @override
@@ -82,8 +86,7 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
             txtClr: c.textSecondary,
             rad: 12,
             btnTxt: Strings.decline,
-            isLoading: isLoading.value,
-
+            isLoading: isRejectLoading.value,
             onTap: () => onTapAction(false),
           ),
         ),
@@ -95,8 +98,7 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
             txtClr: white,
             btnTxt: Strings.accept,
             rad: 12,
-            isLoading: isLoading.value,
-
+            isLoading: isAcceptLoading.value,
             onTap: () => onTapAction(true),
           ),
         ),

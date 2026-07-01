@@ -120,6 +120,7 @@ class UserDetailComponent extends StatelessWidget {
           final e = entry.value;
 
           return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SvgIconColored(
                 iconPath: e.iconPath,

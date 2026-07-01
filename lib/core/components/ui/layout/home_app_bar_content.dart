@@ -1,6 +1,5 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../../../local/app_storage.dart';
 import '../../../services/push_notification/controller/notification_count_controller.dart';
 
 class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
@@ -30,7 +29,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
             children: [
               CusGestureDetector(
                 onTap: () {
-                  AppStorage.to.clearNewNotifCount(); // ✅ clear bell dot
+                  NotificationCountController.to.onNotificationScreenOpened();
                   GNav.pushNamed(RoutePaths.notification);
                 },
                 child: Container(
@@ -58,8 +57,8 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                         if (count == 0) return const SizedBox.shrink();
 
                         return Positioned(
-                          top: -2,
-                          right: -2,
+                          top: -8,
+                          right: -4,
                           child: Container(
                             padding: const EdgeInsets.all(3),
                             constraints: const BoxConstraints(
@@ -82,11 +81,10 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                             child: Text(
                               count > 99 ? '99+' : '$count',
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
+                              style: TxtStyle.poppinsSemiB(
                                 color: Colors.white,
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                height: 1,
+                                fs: 11,
+                                w: 600,
                               ),
                             ),
                           ),

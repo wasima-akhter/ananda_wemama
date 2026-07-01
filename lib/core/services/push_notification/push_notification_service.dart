@@ -5,12 +5,13 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
 
 import '../../local/app_storage.dart';
 import '../firebase/firebase_service.dart';
+import 'controller/notification_count_controller.dart';
 import 'firebase_token_service.dart';
 import 'notification_payload.dart';
 
@@ -387,11 +388,11 @@ class PushNotificationService extends GetxService {
 
     //
     // ✅ Update counts — GetX available here
-    AppStorage.to.setNotificationCounts(
+    // ✅ Update counts — single source of truth
+    NotificationCountController.to.onPushReceived(
       unread: payload.unreadCount,
-      newCount: payload.newCount,
+      newN: payload.newCount,
     );
-
     // Use description as body (matches backend field name)
     final title = payload.title.isNotEmpty
         ? payload.title
@@ -470,6 +471,15 @@ class PushNotificationService extends GetxService {
     final payload = NotificationPayload.fromJsonString(response.payload!);
     debugPrint('👆 [PushNotificationService] parsed tap payload: $payload');
 
+    //
+    // ✅ update counts from the tapped payload — covers the BGIsolate-shown
+    // notification tap case, where GetX is alive now but wasn't when the
+    // notification was originally created
+    NotificationCountController.to.onPushReceived(
+      unread: payload.unreadCount,
+      newN: payload.newCount,
+    );
+
     lastPayload = response.payload;
     notificationTapStream.add(payload.toJsonString());
   }
@@ -483,10 +493,10 @@ class PushNotificationService extends GetxService {
     final payload = NotificationPayload.fromMap(message.data);
     debugPrint('📲 [PushNotificationService] parsed tap payload: $payload');
 
-    // ✅ GetX still alive — service wasn't killed, just backgrounded
-    AppStorage.to.setNotificationCounts(
+    // ✅ GetX still alive — update via controller (single source of truth)
+    NotificationCountController.to.onPushReceived(
       unread: payload.unreadCount,
-      newCount: payload.newCount,
+      newN: payload.newCount,
     );
     lastPayload = payload.toJsonString();
     notificationTapStream.add(payload.toJsonString());
@@ -532,10 +542,12 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
   //    it points to the same on-disk GetStorage container, so writes
   //    here are visible to AppStorage.to once the main isolate resumes.
   final appStorage = await AppStorage.init();
+
   appStorage.setNotificationCounts(
     unread: payload.unreadCount,
     newCount: payload.newCount,
   );
+
   debugPrint(
     '💾 [BGIsolate] persisted counts via AppStorage — unread: ${payload.unreadCount}, new: ${payload.newCount}',
   );
@@ -543,9 +555,9 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
   // ✅ Sync OS app badge directly — no GetX needed for this either
   try {
     if (payload.unreadCount > 0) {
-      await FlutterAppBadger.updateBadgeCount(payload.unreadCount);
+      await FlutterNewBadger.setBadge(payload.unreadCount);
     } else {
-      await FlutterAppBadger.removeBadge();
+      await FlutterNewBadger.removeBadge();
     }
     debugPrint('📱 [BGIsolate] app badge synced → ${payload.unreadCount}');
   } catch (e) {

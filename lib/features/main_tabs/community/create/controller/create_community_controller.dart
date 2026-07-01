@@ -67,6 +67,11 @@ class CreateCommunityController extends GetxController {
       return;
     }
 
+    if (fileImage.value == null) {
+      "Community image is required".showToast();
+      return;
+    }
+
     isLoading_.value = true;
 
     try {
