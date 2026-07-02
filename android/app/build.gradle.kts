@@ -41,11 +41,12 @@ android {
     // ─── Signing Configs ────────────────────────────────────────────────────
     signingConfigs {
         getByName("debug") {
-            storeFile = file(keyProperties["debugStoreFile"] as String)
-            storePassword = keyProperties["debugStorePassword"] as String
-            keyAlias = keyProperties["debugKeyAlias"] as String
-            keyPassword = keyProperties["debugKeyPassword"] as String
+            storeFile = file(keyProperties.getProperty("debugStoreFile"))
+            storePassword = keyProperties.getProperty("debugStorePassword")
+            keyAlias = keyProperties.getProperty("debugKeyAlias")
+            keyPassword = keyProperties.getProperty("debugKeyPassword")
         }
+
         create("release") {
             storeFile = file(keyProperties["releaseStoreFile"] as String)
             storePassword = keyProperties["releaseStorePassword"] as String
@@ -56,8 +57,8 @@ android {
 
     // ─── Build Types ────────────────────────────────────────────────────────
     buildTypes {
-        getByName("debug") {
-            signingConfig = signingConfigs.getByName("debug")
+         getByName("debug") {
+        signingConfig = signingConfigs.getByName("debug")
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")

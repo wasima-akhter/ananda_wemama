@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "57411207953-0skp7s1746nunjg77qi8cp8maf8c92cn.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.app.wemama",
-            "certificate_hash": "584bfe3e4dc28426c6ff144b706897c3ba2b7d24"
-          }
-        },
-        {
           "client_id": "57411207953-4nqiqlf8ovr0dce0j8pdkgmqlurnbgo9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -30,11 +22,27 @@
           }
         },
         {
+          "client_id": "57411207953-jgk95equht0o0499kh8bhonte5nmn0m5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.wemama",
+            "certificate_hash": "150c3f6fbf15cd1807f98e89b4054001aa32a344"
+          }
+        },
+        {
           "client_id": "57411207953-pat426bi1qcdv4j41gpkm55gh6oc546o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app.wemama",
             "certificate_hash": "a3aff1091d30dcba213a1c69ff544109140262c7"
+          }
+        },
+        {
+          "client_id": "57411207953-uqcqqoi5qe3npuo06jk7h9upls6mjl1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.wemama",
+            "certificate_hash": "ca62335f753cf616d20d5dfa45bc506c5198b166"
           }
         },
         {
@@ -53,6 +61,13 @@
             {
               "client_id": "57411207953-delubctkc6n8gg7o4epnngoucdjhor3n.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "57411207953-ci5dvlm3p1ms9380l8rkkbtdi4b5fpc7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.wemama"
+              }
             }
           ]
         }

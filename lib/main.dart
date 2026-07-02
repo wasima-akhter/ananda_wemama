@@ -29,6 +29,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
+     
     ),
   );
   debugPrint('✅ [main] orientation + status bar configured');
