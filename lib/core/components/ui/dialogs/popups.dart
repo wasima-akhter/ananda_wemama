@@ -15,6 +15,7 @@ import '../../app_ui/popup_widgets/image_viewer.dart';
 import '../../app_ui/popup_widgets/loading_popup.dart';
 import '../../app_ui/popup_widgets/lock_comment_popup.dart';
 import '../../app_ui/popup_widgets/logout_confirm_dialog.dart';
+import '../../app_ui/popup_widgets/reset_pass_confirm_dialog.dart';
 import '../../app_ui/popup_widgets/wave_sent_popup.dart';
 
 class Popups {
@@ -289,7 +290,7 @@ Future<void> awaitingVerification({required VoidCallback onBackToLogin}) async {
   );
 }
 
-/// 🔹 Awaiting Verification Popup
+/// 🔹  logoutConfirmDialog Popup
 Future<void> logoutConfirmDialog({
   required RxBool isLoading,
   required Future<void> Function() onConfirm,
@@ -298,6 +299,17 @@ Future<void> logoutConfirmDialog({
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     content: LogoutConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
+  );
+}
+
+/// 🔹 Reset Password Confirmation Popup
+Future<void> resetPasswordConfirmDialog({
+  required Future<void> Function() onConfirm,
+}) async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+    content: ResetPasswordConfirmDialog(),
   );
 }
 

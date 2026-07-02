@@ -11,6 +11,7 @@ class ForgotPassFinalView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Gap(S.h * 0.2),
         // Main title
         Text(
           Strings.gladToSeeUAgain.capEachWord(),
@@ -28,7 +29,7 @@ class ForgotPassFinalView extends StatelessWidget {
 
         AuthButton(isLoading: isLoading, onTap: onTap),
 
-        Gap(itemGap * 1.5),
+        Gap(itemGap * 1.5 + Get.mediaQuery.viewPadding.bottom),
       ],
     );
   }

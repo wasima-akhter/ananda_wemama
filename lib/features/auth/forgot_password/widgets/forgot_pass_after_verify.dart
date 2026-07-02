@@ -63,9 +63,11 @@ class ForgotPassAfterVerify extends StatelessWidget {
               ),
               Gap(itemGap * 2),
 
-              AuthButton(
-                isLoading: fpc.isResetPassLoading,
-                onTap: () => fpc.onTapResetPass(formKey: resetPassFormKey),
+              Obx(
+                () => AuthButton(
+                  isLoading: fpc.isResetPassLoading,
+                  onTap: () => fpc.onTapResetPass(formKey: resetPassFormKey),
+                ),
               ),
 
               Gap(itemGap * 1.5),

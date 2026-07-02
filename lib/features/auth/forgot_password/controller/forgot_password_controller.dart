@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/services/auth/forgot_password_service.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/enums/ui_enums.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
@@ -96,6 +97,9 @@ class ForgotPasswordController extends GetxController {
     _isResetPassLoading.value = false;
 
     if (success) {
+      // show a pop
+      resetPasswordConfirmDialog(onConfirm: onTapContinueToLogin);
+
       step.value = ForgotPasswordStep.completed;
     }
   }

@@ -1,5 +1,6 @@
 class Endpoints {
   static const login = "auth/login-user";
+  static const logout = "auth/log-out-user";
 
   //
   static const uploadFcmToken = "auth/save-fcm-token";

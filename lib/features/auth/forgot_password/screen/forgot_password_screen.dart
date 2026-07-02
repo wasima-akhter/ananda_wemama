@@ -1,6 +1,5 @@
 import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_after_verify.dart';
 import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_before_verify.dart';
-import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_final_view.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../core/auth_scaffold.dart';
@@ -63,12 +62,12 @@ class ForgotPasswordScreen extends StatelessWidget {
                       resetPassFormKey: resetPassFormKey,
                     ),
 
-                  if (isFinalContinueVisible)
-                    // last continue button
-                    ForgotPassFinalView(
-                      isLoading: false,
-                      onTap: fpc.onTapContinueToLogin,
-                    ),
+                  // if (isFinalContinueVisible)
+                  //   // last continue button
+                  //   ForgotPassFinalView(
+                  //     isLoading: false,
+                  //     onTap: fpc.onTapContinueToLogin,
+                  //   ),
 
                   //
                   Gap(60.h),

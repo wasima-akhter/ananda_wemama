@@ -110,6 +110,9 @@ class NotificationRouter {
         Get.offAllNamed(RoutePaths.mainNav);
         MainNavController.to.goToTab(1);
 
+      case NotificationTypes.sentWave:
+        Get.toNamed(RoutePaths.waveRequest);
+
       // ─── Unhandled ────────────────────────────────────────────────
       default:
         debugPrint('⚠️ [NotificationRouter] unhandled type: ${d.type}');
