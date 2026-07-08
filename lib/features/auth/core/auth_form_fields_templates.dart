@@ -100,6 +100,7 @@ class AuthFormNameField extends StatelessWidget {
   final String? hintText;
   final String? label;
   final Color? hintColor;
+  final double? rad;
   const AuthFormNameField({
     super.key,
     required this.nameCtrler,
@@ -107,6 +108,7 @@ class AuthFormNameField extends StatelessWidget {
     this.hintText,
     this.label,
     this.hintColor,
+    this.rad,
   });
 
   @override
@@ -127,7 +129,7 @@ class AuthFormNameField extends StatelessWidget {
       hintText: hintText ?? Strings.enterYourFirstName,
       brdrW: 1,
 
-      rad: 12,
+      rad: rad ?? 12,
 
       focusNode: nameFocus,
       validator: null,

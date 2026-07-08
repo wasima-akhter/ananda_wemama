@@ -4,6 +4,7 @@ import 'package:mama_app/core/components/app_ui/snacks/founding_mum_badge_snack.
 import 'package:mama_app/core/enums/app_enums.dart';
 
 import '../../themes/color/color_model.dart';
+import '../../themes/color/colors.dart';
 import '../../themes/theme_service.dart';
 
 /// --------------------
@@ -589,6 +590,16 @@ class TxtStyle {
       TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor500 => TxtStyle.outfitSemiB(fs: 13, w: 500);
 
+  static TextStyle outfitSemiBold12Center({Color? color, double? fs, int? w}) {
+    return outfitSemiB(
+      fs: (fs ?? 12),
+      w: w ?? 600,
+      h: 1.4,
+      ls: 0.05, // 4% = 0.64px
+      color: color ?? AppPalette.brown925,
+    );
+  }
+
   ///------------------
   /// POPPINS
   ///------------------
@@ -629,10 +640,10 @@ class TxtStyle {
     textBaseline: TextBaseline.alphabetic,
   );
 
-  static TextStyle poppinsSemiBold12Center({Color? color, double? fs}) {
+  static TextStyle poppinsSemiBold12Center({Color? color, double? fs, int? w}) {
     return poppinsSemiB(
       fs: (fs ?? 12),
-      w: 600,
+      w: w ?? 600,
       h: 1.4,
       ls: 0.05, // 4% = 0.64px
       color: color,
@@ -671,14 +682,18 @@ class TxtStyle {
     );
   }
 
-  static TextStyle dmSerifDisplayRegular({Color? color, double? fs}) {
+  static TextStyle dmSerifDisplayRegular({
+    Color? color,
+    double? fs,
+    double? ls,
+  }) {
     return textThemedmSerifDisplay.bodyLarge!.copyWith(
       fontSize: fs != null
           ? fs.sp
           : ScreenSize.isSmallWidth
           ? 26.sp
           : 28.sp,
-      letterSpacing: -0.1,
+      letterSpacing: ls ?? -0.1,
       color: c.foregroundSecondary,
       fontWeight: FontWeight.w400,
       height: ScreenSize.isTallHeight ? 1.4 : 1.2,

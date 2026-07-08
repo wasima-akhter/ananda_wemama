@@ -46,6 +46,7 @@ import '../../features/post_auth_setup/finish_setting_profile/controller/finish_
 import '../../features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
 import '../../features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
 import '../../features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
+import '../../features/post_auth_setup/promo_code/controller/promo_code_controller.dart';
 import '../../features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
 import '../../features/post_auth_setup/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
@@ -134,6 +135,7 @@ class PostSignupScreensBinding extends Bindings {
     Get.lazyPut<FinishSettingProfileController>(
       () => FinishSettingProfileController(),
     );
+    Get.lazyPut<PromoCodeController>(() => PromoCodeController());
     Get.lazyPut<WelcomeFundingMumController>(
       () => WelcomeFundingMumController(),
     );

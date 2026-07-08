@@ -8,6 +8,7 @@ import 'package:mama_app/features/more/legal/privacy_policy/screen/privacy_polic
 import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_and_conditions_screen.dart';
 import 'package:mama_app/features/more/support/contact_support/screen/contact_support_screen.dart';
 import 'package:mama_app/features/post_auth_setup/finish_setting_profile/screen/finish_setting_profile_screen.dart';
+import 'package:mama_app/features/post_auth_setup/promo_code/screen/promo_code_screen.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_upgrade_screen.dart';
 
 import '../core/bind/all_bindings.dart';
@@ -243,6 +244,11 @@ class RoutePageList {
     GetPage(
       name: RoutePaths.finishSettingProfile,
       page: () => const FinishSettingProfileScreen(),
+      binding: PostSignupScreensBinding(),
+    ),
+    GetPage(
+      name: RoutePaths.promoCodeScreen,
+      page: () => const PromoCodeScreen(),
       binding: PostSignupScreensBinding(),
     ),
     GetPage(

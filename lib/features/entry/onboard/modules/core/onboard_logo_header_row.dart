@@ -3,7 +3,8 @@ import '../onboard/onboard_logo_section.dart';
 
 class OnboardLogoHeaderRow extends StatelessWidget {
   final void Function()? onTap;
-  const OnboardLogoHeaderRow({super.key, this.onTap});
+  final double? height;
+  const OnboardLogoHeaderRow({super.key, this.onTap, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class OnboardLogoHeaderRow extends StatelessWidget {
         ),
 
         // Center logo
-        const Expanded(flex: 5, child: OnboardLogoSection()),
+        Expanded(flex: 5, child: OnboardLogoSection(height: height)),
 
         // Right spacer (for balance)
         const Expanded(child: SizedBox(width: 48)),

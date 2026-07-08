@@ -1,0 +1,252 @@
+import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:mama_app/features/auth/core/auth_button_templates.dart';
+import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
+import 'package:mama_app/features/auth/core/auth_scaffold.dart';
+import 'package:mama_app/features/entry/onboard/modules/core/onboard_logo_header_row.dart';
+import 'package:mama_app/gen/assets.gen.dart';
+
+import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/helpers/string_helper.dart';
+import '../../../../core/themes/color/colors.dart';
+import '../controller/promo_code_controller.dart';
+
+class PromoCodeScreen extends StatelessWidget {
+  const PromoCodeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = PromoCodeController.to;
+
+    final mumStageFormKey = GlobalKey<FormState>();
+
+    return AuthScaffold(
+      bottomWidget: Obx(() {
+        return AuthButton(
+          isLoading: controller.isLoading,
+          onTap: () => controller.onTapContinue(),
+        ).mB(10);
+      }),
+
+      // appBar: CommonAppBarContent(title: Strings.mumsStage),
+      child: Column(
+        children: [
+          OnboardLogoHeaderRow(
+            height: (ScreenSize.isSmallWidth ? 60.h : 65.h),
+          ).getcm,
+          Gap(10.h),
+          SafeAssetImage(
+            assetPath: Assets.images.promoCodeImage.path,
+            radius: 0,
+            fit: BoxFit.fitWidth,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Gap(itemGap * 2),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Did Some one invite you to\nWeMama?",
+                              textAlign: TextAlign.center,
+                              style: TxtStyle.dmSerifDisplayRegular(
+                                fs: 23,
+                                ls: 0.1,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        //
+                      ],
+                    ),
+
+                    Gap(itemGap),
+                    Text(
+                      "Have an invite code? Enter it below to get",
+                      textAlign: TextAlign.center,
+                      style: TxtStyle.outfitSemiBold12Center(),
+                    ),
+                    Text.rich(
+                      textAlign: TextAlign.center,
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "50%",
+
+                            style: TxtStyle.outfitSemiBold12Center(
+                              fs: 13,
+                              color: appRed,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " off",
+
+                            style: TxtStyle.outfitSemiBold12Center(
+                              color: appRed,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " your first month of WeMama Premium.",
+
+                            style: TxtStyle.outfitSemiBold12Center(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ).getcm,
+
+          Gap(itemGap),
+
+          //
+          ContainerBordered(
+            contClr: Color(0xFFFDF4ED),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 60.w,
+                  child: SvgIcon(
+                    iconPath: Assets.icons.discountTag,
+                    height: 32,
+                  ),
+                ),
+                Gap(itemGap),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Enter your invite code",
+                      style: TxtStyle.outfitSemiBold12Center(),
+                    ),
+                    Text(
+                      "50% OFF",
+                      style: TxtStyle.outfitSemiB(
+                        color: appRed,
+                        fs: 23,
+                        w: 700,
+                        // h: 1.1,
+                      ),
+                    ),
+                    Text(
+                      "your first month of WeMama Premium",
+                      style: TxtStyle.outfitSemiBold12Center(),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ).getcm,
+          Gap(itemGap),
+          Form(
+            key: mumStageFormKey,
+
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Referral code optional",
+                  style: TxtStyle.outfitSemiB(
+                    fs: 11,
+                    w: 600,
+                    color: c.foregroundSecondary,
+                  ),
+                ),
+                Gap(itemGap),
+                AuthFormNameField(
+                  rad: 8,
+                  nameCtrler: controller.referralCodeCtrl,
+                  nameFocus: controller.referralCodeFocusNode,
+                  hintText: "Enter Referral Code",
+                  hintColor: Colors.grey.shade400,
+                ),
+              ],
+            ),
+          ).getcm,
+          Gap(itemGap),
+
+          ContainerBordered(
+            rad: 8,
+            hasBrdr: true,
+            brdrClr: Colors.grey.shade400,
+            contClr: Color(0xFFFDF4ED),
+            vp: 6,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgIcon(iconPath: Assets.icons.copyText, height: 18),
+                Gap(5),
+                Text(
+                  "Paste From Clipboard",
+                  style: TxtStyle.outfitSemiB(
+                    color: appRed,
+                    w: 600,
+                    ls: 1.2,
+                    fs: 12,
+                  ),
+                ),
+              ],
+            ),
+          ).getcm,
+
+          Gap(itemGap * 1.5),
+          Column(
+            children: [
+              Text(
+                "I don't have a code",
+                style: TxtStyle.outfitSemiB(
+                  color: appRed,
+                  w: 600,
+                  ls: 1.2,
+                  fs: 12,
+                  h: 1,
+                ),
+              ),
+
+              Container(
+                color: appRed,
+                height: 1,
+                width: findTextWidth(
+                  text: "I don't have a code",
+                  style: TxtStyle.outfitSemiB(
+                    color: appRed,
+                    w: 600,
+                    ls: 1.2,
+                    fs: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Gap(itemGap),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgIcon(iconPath: Assets.icons.lockPrivacy, height: 18),
+              Gap(5),
+              Text(
+                "Your Information is safe with us",
+                style: TxtStyle.outfitSemiB(
+                  w: 600,
+                  fs: 11,
+                  color: AppPalette.brown925,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

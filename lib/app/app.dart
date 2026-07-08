@@ -67,7 +67,7 @@ class _AppState extends State<App> {
   //
   Future<String> getInitialRoute() async {
     return widget.hasInternet
-        ? RoutePaths.splashScreen
+        ? RoutePaths.finishSettingProfile
         : RoutePaths.offlineScreen;
   }
 

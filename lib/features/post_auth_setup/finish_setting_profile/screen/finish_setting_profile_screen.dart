@@ -21,7 +21,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
         return AuthButton(
           isLoading: fspc.isLoading,
           btnText: Strings.enterWeMama,
-          onTap: () => fspc.onTapContinue(mumStageFormKey),
+          onTap: () => fspc.onTapContinue(),
           //  () => Get.toNamed(RoutePaths.welcomeFundingMum),
           //  isLoading: msc.isLoading,
           //  msc.onTapContinue(mumStageFormKey),

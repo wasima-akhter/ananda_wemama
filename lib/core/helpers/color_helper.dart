@@ -36,6 +36,8 @@ Color get cardBgDeep => Color(0xFFF9E1D6);
 Color get deepPrimary => Color(0xFF512814);
 
 //
+Color get appRed => Color(0xFFD40D0C);
+
 Color get newCardClr => Color(0xFFFBEDE2);
 
 Color get newCardClr2 => Color(0xFFF8E6DC).withValues(alpha: 0.25);

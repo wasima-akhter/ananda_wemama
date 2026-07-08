@@ -1,14 +1,6 @@
-import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
-import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
-import 'package:mama_app/features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
-import 'package:mama_app/features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
-import 'package:mama_app/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/helpers/date_helper.dart';
-import '../../../../core/services/post_signup_set_profile/post_signup_set_profile_service.dart';
-import '../../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class FinishSettingProfileController extends GetxController {
   static FinishSettingProfileController get to =>
@@ -41,74 +33,11 @@ class FinishSettingProfileController extends GetxController {
   void unfocusAll() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
+  // Get.toNamed(RoutePaths.welcomeFundingMum);
 
-  // find all controller of the stages
-  final setUpCtrler = findCont<SetupProfileController>();
-  final photoAndBioCtrler = findCont<PhotoAndBioController>();
-  final lifestyleCtrler = findCont<LifestyleAndInterestsController>();
-  final mumStageCtrler = findCont<MumsStageController>();
-  final childrenCtrler = findCont<AddChildrenController>();
-
-  /// 🔹 Continue
-  void onTapContinue(GlobalKey<FormState> formKey) async {
-    if (isLoading_.value) {
-      // Snack.showWarning(Strings.mustSelectOne);
-      return;
-    }
-
-    unfocusAll();
-    isLoading_.value = true;
-
-    final List<Map<String, String>> childrenPayload = childrenCtrler
-        .children
-        .value
-        .map((child) {
-          return {
-            'gender': mapGender(child.gender.name.toString()),
-            'dob': child.dateOfBirth.toString(),
-          };
-        })
-        .toList();
-
-    // TODO: Save all to backend
-    // Call API here
-    final success = await PostSignupSetProfileService().uploadCompleteProfile(
-      name: setUpCtrler.nameCtrl.text.trim(),
-      dob: convertDobToTimestamp(setUpCtrler.selectedDob.value),
-      state: setUpCtrler.selectedState.value,
-      city: setUpCtrler.selectedCity.value,
-      bioDes: photoAndBioCtrler.bioDesCtrl.text.trim(),
-      profileImage: photoAndBioCtrler.fileImage.value,
-      interestedFields: lifestyleCtrler.selectedItems.value.toList(),
-      mumStages: mumStageCtrler.selectedStageTitles,
-      isDobPrivate: setUpCtrler.keepDobPrivate.value,
-      children: childrenPayload,
-    );
-
-    if (success) {
-      Get.toNamed(RoutePaths.welcomeFundingMum);
-
-      if (Get.isRegistered<ProfileController>()) {
-        await Get.find<ProfileController>().fetchMyProfile();
-      }
-    }
-
-    isLoading_.value = false;
-  }
-
-  void onTapFinish() {
-    Get.offAllNamed(RoutePaths.subChoosePlan);
-  }
-
-  String mapGender(String gender) {
-    switch (gender.toLowerCase()) {
-      case 'boy':
-        return 'Male';
-      case 'girl':
-        return 'Female';
-      default:
-        return gender;
-    }
+  void onTapContinue() {
+    // Get.toNamed(RoutePaths.welcomeFundingMum);
+    Get.offAllNamed(RoutePaths.promoCodeScreen);
   }
 }
 

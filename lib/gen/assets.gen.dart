@@ -140,6 +140,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/cooking.svg
   String get cooking => 'assets/icons/cooking.svg';
 
+  /// File path: assets/icons/copy_text.svg
+  String get copyText => 'assets/icons/copy_text.svg';
+
   /// File path: assets/icons/crown.svg
   String get crown => 'assets/icons/crown.svg';
 
@@ -154,6 +157,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/delete_new.svg
   String get deleteNew => 'assets/icons/delete_new.svg';
+
+  /// File path: assets/icons/discount_tag.svg
+  String get discountTag => 'assets/icons/discount_tag.svg';
 
   /// File path: assets/icons/edit.svg
   String get edit => 'assets/icons/edit.svg';
@@ -544,11 +550,13 @@ class $AssetsIconsGen {
     confidence,
     connectWMums,
     cooking,
+    copyText,
     crown,
     currencyNSvg,
     curvedInfo,
     dancing,
     deleteNew,
+    discountTag,
     edit,
     educationalPlay,
     email,
@@ -762,6 +770,10 @@ class $AssetsImagesGen {
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
 
+  /// File path: assets/images/promo_code_image.png
+  AssetGenImage get promoCodeImage =>
+      const AssetGenImage('assets/images/promo_code_image.png');
+
   /// File path: assets/images/sad_emoji.png
   AssetGenImage get sadEmoji =>
       const AssetGenImage('assets/images/sad_emoji.png');
@@ -847,6 +859,7 @@ class $AssetsImagesGen {
     onboarding3,
     onboardingBg,
     onboardingImage,
+    promoCodeImage,
     sadEmoji,
     sessionMockUser1,
     sessionMockUser2,

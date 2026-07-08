@@ -2,7 +2,8 @@ import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 
 class OnboardLogoSection extends StatelessWidget {
-  const OnboardLogoSection({super.key});
+  final double? height;
+  const OnboardLogoSection({super.key, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +12,7 @@ class OnboardLogoSection extends StatelessWidget {
       children: [
         SafeAssetImage(
           assetPath: ImagesPath.wemamaHandsTitleLogo,
-          height: ScreenSize.isSmallWidth ? 90.h : 95.h,
+          height: height ?? (ScreenSize.isSmallWidth ? 90.h : 95.h),
         ),
 
         Gap(2),

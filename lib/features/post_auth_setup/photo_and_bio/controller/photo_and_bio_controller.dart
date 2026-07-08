@@ -1,6 +1,13 @@
 import 'package:image_picker/image_picker.dart';
+import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
+import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
+import 'package:mama_app/features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
+import 'package:mama_app/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/helpers/date_helper.dart';
+import '../../../../core/services/post_signup_set_profile/post_signup_set_profile_service.dart';
+import '../../../main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 class PhotoAndBioController extends GetxController {
   // 🔹 Text Controller (only for name input field)
@@ -100,11 +107,74 @@ class PhotoAndBioController extends GetxController {
     }
 
     unfocusAll();
+
+    await onTapFinishCompleteProfile(formKey);
+  }
+
+  //
+
+  // find all controller of the stages
+  final setUpCtrler = findCont<SetupProfileController>();
+  final lifestyleCtrler = findCont<LifestyleAndInterestsController>();
+  final mumStageCtrler = findCont<MumsStageController>();
+  final childrenCtrler = findCont<AddChildrenController>();
+
+  /// 🔹 Continue
+  Future<void> onTapFinishCompleteProfile(GlobalKey<FormState> formKey) async {
+    if (isLoading_.value) {
+      // Snack.showWarning(Strings.mustSelectOne);
+      return;
+    }
+
+    unfocusAll();
     isLoading_.value = true;
 
-    Get.toNamed(RoutePaths.finishSettingProfile);
+    final List<Map<String, String>> childrenPayload = childrenCtrler
+        .children
+        .value
+        .map((child) {
+          return {
+            'gender': mapGender(child.gender.name.toString()),
+            'dob': child.dateOfBirth.toString(),
+          };
+        })
+        .toList();
+
+    // TODO: Save all to backend
+    // Call API here
+    final success = await PostSignupSetProfileService().uploadCompleteProfile(
+      name: setUpCtrler.nameCtrl.text.trim(),
+      dob: convertDobToTimestamp(setUpCtrler.selectedDob.value),
+      state: setUpCtrler.selectedState.value,
+      city: setUpCtrler.selectedCity.value,
+      bioDes: bioDesCtrl.text.trim(),
+      profileImage: fileImage.value,
+      interestedFields: lifestyleCtrler.selectedItems.value.toList(),
+      mumStages: mumStageCtrler.selectedStageTitles,
+      isDobPrivate: setUpCtrler.keepDobPrivate.value,
+      children: childrenPayload,
+    );
+
+    if (success) {
+      Get.toNamed(RoutePaths.finishSettingProfile);
+
+      if (Get.isRegistered<ProfileController>()) {
+        await Get.find<ProfileController>().fetchMyProfile();
+      }
+    }
 
     isLoading_.value = false;
+  }
+
+  String mapGender(String gender) {
+    switch (gender.toLowerCase()) {
+      case 'boy':
+        return 'Male';
+      case 'girl':
+        return 'Female';
+      default:
+        return gender;
+    }
   }
 
   @override
