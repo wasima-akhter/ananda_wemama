@@ -59,95 +59,6 @@ class SessionController extends GetxController {
       searchTxt: searchTxt,
       hasMore: hasMoreOngoing,
     );
-/*
-fake data
-   ongoingList = <Session>[
-  Session(
-    id: 's1',
-    status: 'ongoing',
-    title: 'Mental Health Awareness Session',
-    description: 'Live discussion on mental wellness and stress management.',
-    time: '10:00 AM',
-    date: DateTime.now(),
-    channelName: 'channel_001',
-
-    expert: Expert(
-      id: 'e1',
-      name: 'Dr. Sarah Johnson',
-      email: 'sarah@example.com',
-      image: '',
-      profession: Profession(
-        title: 'Psychologist',
-        experience: 8,
-        designation: ['Clinical Psychologist', 'Therapist'],
-      ),
-    ),
-
-    doctorUid: 'doc_101',
-    recordingUid: 'rec_101',
-    resourceId: 'res_001',
-    sid: 'sid_001',
-
-    recordingMp4Url: '',
-    recordingHlsUrl: '',
-
-    duration: 3600,
-    startedAt: DateTime.now().subtract(const Duration(minutes: 10)),
-
-    finishedAt: null,
-    isApproved: true,
-
-    recordingFiles: [],
-
-    createdAt: DateTime.now().subtract(const Duration(days: 1)),
-    updatedAt: DateTime.now(),
-    v: 1,
-  ),
-
-  Session(
-    id: 's2',
-    status: 'ongoing',
-    title: 'Nutrition & Healthy Living',
-    description: 'Expert talk about daily nutrition habits.',
-    time: '2:00 PM',
-    date: DateTime.now(),
-    channelName: 'channel_002',
-
-    expert: Expert(
-      id: 'e2',
-      name: 'Dr. Emily Carter',
-      email: 'emily@example.com',
-      image: '',
-      profession: Profession(
-        title: 'Nutritionist',
-        experience: 5,
-        designation: ['Diet Specialist'],
-      ),
-    ),
-
-    doctorUid: 'doc_202',
-    recordingUid: 'rec_202',
-    resourceId: 'res_002',
-    sid: 'sid_002',
-
-    recordingMp4Url: '',
-    recordingHlsUrl: '',
-
-    duration: 5400,
-    startedAt: DateTime.now().subtract(const Duration(minutes: 30)),
-
-    finishedAt: null,
-    isApproved: false,
-
-    recordingFiles: [],
-
-    createdAt: DateTime.now().subtract(const Duration(days: 2)),
-    updatedAt: DateTime.now(),
-    v: 1,
-  ),
-].obs;
-  */
-  
   }
 
   Future<void> getUpcomingSessions({
@@ -199,6 +110,9 @@ fake data
       );
 
       final newItems = data?.sessions ?? [];
+
+      log("ongoing --> ${newItems.length}");
+      log("ongoing --> ${data?.sessions.length}");
 
       if (!fetchNext) {
         targetList.value = newItems;

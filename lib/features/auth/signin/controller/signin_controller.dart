@@ -245,6 +245,16 @@ class SigninController extends GetxController {
     }
   }
 
+  /*
+  At the end, you should have these values
+Item	Example
+Bundle ID	com.company.myapp
+Services ID	com.company.myapp.service
+Team ID	ABCD123456
+Key ID	XYZ9876543
+Private Key	AuthKey_XXXXXX.p8
+*/
+
   // ── Shared handler ───────────────────────────────────────────────
 
   Future<void> _handleSocialLogin({

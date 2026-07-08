@@ -1,7 +1,2 @@
-//
-//  Profile
-//  Runner
-//
-//  Created by bughunter(Jubayed) on 6/7/26.
-//
-
+#include "Generated.xcconfig"
+#include? "../Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"

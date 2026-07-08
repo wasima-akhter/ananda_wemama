@@ -26,7 +26,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             final beforeVerification = fpc.isEnterEmail;
             final afterVerification = fpc.isResetPassword;
 
-            final isFinalContinueVisible = fpc.isCompleted;
+            // final isFinalContinueVisible = fpc.isCompleted;
 
             return Align(
               // alignment: Alignment.center,

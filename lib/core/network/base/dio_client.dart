@@ -1,10 +1,13 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:mama_app/app/helper_widgets_export.dart' hide FormData;
 import 'package:mama_app/core/config/app_info.dart';
 import 'package:mama_app/core/network/helpers/network_helpers.dart';
+
+import '../../services/auth/signout_service.dart';
+import 'api_error_parser.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
@@ -75,8 +78,21 @@ class DioClient {
           return handler.next(response);
         },
 
-        onError: (e, handler) {
-          return handler.next(e);
+        onError: (DioException e, handler) async {
+          final statusCode = e.response?.statusCode;
+          final data = e.response?.data;
+
+          if (statusCode == 401) {
+            final message = ApiErrorParser.extractMessage(data).toLowerCase();
+
+            if (message.contains("access token expired") ||
+                message.contains("token expired")) {
+              await SignoutService().signOut();
+              Get.offAllNamed(RoutePaths.signin);
+            }
+          }
+
+          handler.next(e);
         },
       ),
     );

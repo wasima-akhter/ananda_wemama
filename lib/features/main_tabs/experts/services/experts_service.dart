@@ -26,15 +26,16 @@ class ExpertsService extends GetxService {
     final response = await _apiHelper.request<ExpertSessionsListModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        log("return response data: $data");
 
-        final responseData = ExpertSessionsListModel.fromJson(data);
+        final parsedData = ExpertSessionsListModel.fromList(data);
 
-        return responseData;
+        log("parserdata: $parsedData");
+
+        return parsedData;
       },
     );
 
-    log("response data: ${response?.data}");
     return response?.data;
   }
 

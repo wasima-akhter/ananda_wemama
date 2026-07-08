@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:mama_app/app/helper_widgets_export.dart' hide Response;
 
 import '../../exceptions/exceptions.dart';
+import '../../services/auth/signout_service.dart';
 import 'api_error_parser.dart';
 
 // Handles server responses
@@ -244,6 +245,34 @@ class ApiResponseHandler {
   // ────────────────────────────────────────────────────────────────
   // throwing flow (non-login)
   // ────────────────────────────────────────────────────────────────
+  static bool _isTokenExpired(int statusCode, dynamic data) {
+    if (statusCode != 401) return false;
+
+    final message = ApiErrorParser.extractMessage(data).toLowerCase();
+
+    return message.contains("access token expired") ||
+        message.contains("token expired") ||
+        message.contains("jwt expired") ||
+        message.contains("expired");
+  }
+
+  static bool _loggingOut = false;
+
+  static Future<void> _logoutUser() async {
+    if (_loggingOut) return;
+
+    _loggingOut = true;
+
+    try {
+      // Clear local data
+      await SignoutService().signOut();
+
+      // Navigate to login
+      Get.offAllNamed(RoutePaths.signin);
+    } finally {
+      _loggingOut = false;
+    }
+  }
 
   static Never _handleError({
     required dynamic data,
@@ -255,6 +284,10 @@ class ApiResponseHandler {
     final rawMessage = ApiErrorParser.extractMessage(data);
     final friendly = _friendlyMessage(statusCode, rawMessage);
 
+    if (_isTokenExpired(statusCode, data)) {
+      _logoutUser();
+      throw UnauthorisedException("Session expired. Please login again.");
+    }
     if (statusCode == 401) {
       throw UnauthorisedException(friendly);
     }

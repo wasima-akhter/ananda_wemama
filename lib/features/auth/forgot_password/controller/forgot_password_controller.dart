@@ -14,7 +14,7 @@ class ForgotPasswordController extends GetxController {
 
   bool get isEnterEmail => step.value == ForgotPasswordStep.enterEmail;
   bool get isResetPassword => step.value == ForgotPasswordStep.resetPassword;
-  bool get isCompleted => step.value == ForgotPasswordStep.completed;
+  // bool get isCompleted => step.value == ForgotPasswordStep.completed;
 
   /// ================= FORM CONTROLLERS =================
   final emailCtrl = TextEditingController();
@@ -100,7 +100,7 @@ class ForgotPasswordController extends GetxController {
       // show a pop
       resetPasswordConfirmDialog(onConfirm: onTapContinueToLogin);
 
-      step.value = ForgotPasswordStep.completed;
+      // step.value = ForgotPasswordStep.completed;
     }
   }
 

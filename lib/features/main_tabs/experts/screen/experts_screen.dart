@@ -39,11 +39,22 @@ class ExpertsScreen extends StatelessWidget {
             final isOngoingLoading = sc.isOngoingLoading.value;
             final isUpcomingLoading = sc.isUpcomingLoading.value;
 
-            final ongoingList = exc.limitList(sc.ongoingList);
-            final upcomingList = exc.limitList(sc.upcomingList);
+            final ongoingList = exc.limitList(sc.ongoingList.value);
+            final upcomingList = exc.limitList(sc.upcomingList.value);
 
             final ongoingEmpty = !isOngoingLoading && ongoingList.isEmpty;
             final upcomingEmpty = !isUpcomingLoading && upcomingList.isEmpty;
+
+            log(
+              "ongoingEmpty && upcomingEmpty : $ongoingEmpty , $upcomingEmpty",
+            );
+
+            log(
+              "ongoingEmpty ongoingList && upcomingEmpty upcomingList : ${ongoingList.length} , ${upcomingList.length}",
+            );
+            log(
+              "ongoingEmpty ongoingList_api && upcomingEmpty upcomingList_api : ${sc.ongoingList.value.length} , ${sc.upcomingList.value.length}",
+            );
 
             // Still loading at least one — show both shimmer placeholders
             if (isOngoingLoading || isUpcomingLoading) {

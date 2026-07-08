@@ -22,6 +22,7 @@ class AppScreenTemplate extends StatelessWidget {
   final ScrollController? scrollController;
   final bool? fabSpacerOnFixed;
   final Widget? bottomNavigationBar;
+  final bool enableRefresh;
 
   const AppScreenTemplate({
     super.key,
@@ -46,6 +47,7 @@ class AppScreenTemplate extends StatelessWidget {
     this.scrollController,
     this.fabSpacerOnFixed,
     this.bottomNavigationBar,
+    this.enableRefresh = true,
   });
 
   @override
@@ -97,76 +99,81 @@ class AppScreenTemplate extends StatelessWidget {
                 },
               );
             }
+            final scrollView = CustomScrollView(
+              controller: scrollController,
+              slivers: [
+                SliverPadding(
+                  padding: padding ?? EdgeInsets.zero,
+                  sliver: SliverToBoxAdapter(child: child),
+                ),
+                if (bottomWidget != null)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (getcmLess == true)
+                          bottomWidget!.get10cm
+                        else
+                          bottomWidget!.getcm,
+                        Builder(
+                          builder: (context) {
+                            final kb = MediaQuery.of(context).viewInsets.bottom;
+                            return Gap(kb > 0 ? 0 : itemGap * 3);
+                          },
+                        ),
+                        if (floatingActionButton != null)
+                          ValueListenableBuilder<double>(
+                            valueListenable: fabHeight,
+                            builder: (_, height, _) {
+                              final kb = MediaQuery.of(
+                                context,
+                              ).viewInsets.bottom;
+                              final totalGap = kb > 0
+                                  ? height + kb
+                                  : height + 30.h;
+                              return Gap(totalGap);
+                            },
+                          ),
+                      ],
+                    ),
+                  )
+                else
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Gap(itemGap * 3),
+                        if (floatingActionButton != null)
+                          ValueListenableBuilder<double>(
+                            valueListenable: fabHeight,
+                            builder: (_, height, _) {
+                              final kb = MediaQuery.of(
+                                context,
+                              ).viewInsets.bottom;
+                              final totalGap = kb > 0
+                                  ? height + kb
+                                  : height + 30.h;
+                              return Gap(totalGap);
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+              ],
+            );
+
+            if (!enableRefresh) {
+              return scrollView;
+            }
 
             return CusRefreshIndicator(
               refreshKey: refreshKey,
               onRefresh: () async {
-                if (onRefresh != null) await onRefresh?.call();
+                if (onRefresh != null) {
+                  await onRefresh!();
+                }
               },
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverPadding(
-                    padding: padding ?? EdgeInsets.zero,
-                    sliver: SliverToBoxAdapter(child: child),
-                  ),
-                  if (bottomWidget != null)
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (getcmLess == true)
-                            bottomWidget!.get10cm
-                          else
-                            bottomWidget!.getcm,
-                          Builder(
-                            builder: (context) {
-                              final kb = MediaQuery.of(
-                                context,
-                              ).viewInsets.bottom;
-                              return Gap(kb > 0 ? 0 : itemGap * 3);
-                            },
-                          ),
-                          if (floatingActionButton != null)
-                            ValueListenableBuilder<double>(
-                              valueListenable: fabHeight,
-                              builder: (_, height, _) {
-                                final kb = MediaQuery.of(
-                                  context,
-                                ).viewInsets.bottom;
-                                final totalGap = kb > 0
-                                    ? height + kb
-                                    : height + 30.h;
-                                return Gap(totalGap);
-                              },
-                            ),
-                        ],
-                      ),
-                    )
-                  else
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          Gap(itemGap * 3),
-                          if (floatingActionButton != null)
-                            ValueListenableBuilder<double>(
-                              valueListenable: fabHeight,
-                              builder: (_, height, _) {
-                                final kb = MediaQuery.of(
-                                  context,
-                                ).viewInsets.bottom;
-                                final totalGap = kb > 0
-                                    ? height + kb
-                                    : height + 30.h;
-                                return Gap(totalGap);
-                              },
-                            ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
+              child: scrollView,
             );
           },
         ),

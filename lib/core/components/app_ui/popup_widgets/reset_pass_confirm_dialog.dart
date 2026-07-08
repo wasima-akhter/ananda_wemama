@@ -1,3 +1,5 @@
+import 'package:mama_app/gen/assets.gen.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 
 class ResetPasswordConfirmDialog extends StatelessWidget {
@@ -17,29 +19,42 @@ class ResetPasswordConfirmDialog extends StatelessWidget {
           child: BounceSingleChildScrollView(
             child: Column(
               children: [
-                Text(
-                  "adasd",
-                  textAlign: TextAlign.center,
-                  style: TxtStyle.outfitSemiB(fs: 25, w: 500),
+                SvgIconColored(
+                  iconPath: Assets.icons.tickL2,
+                  height: S.w * 0.13,
+                  iconColor: c.primary,
                 ),
-                Gap(itemGap * 2),
+                Gap(itemGap * 3.5),
+                Text(
+                  "Your Password Has been Changed Successfully".capEachWord(),
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.outfit(fs: 16, w: 500),
+                ),
+                Gap(itemGap),
+                Text(
+                  "Continue to login".capEachWord(),
+                  textAlign: TextAlign.center,
+                  style: TxtStyle.outfit(fs: 12, color: c.secondary),
+                ),
+                Gap(itemGap * 2.5),
 
                 CustomBtnWTxt(
-                  outlined: true,
-                  borderClr: c.secondary,
-                  onTap: () {},
+                  onTap: () {
+                    Get.offAllNamed(RoutePaths.signin);
+                  },
+                  btnColor: c.primary,
+                  isSmall: true,
 
                   padding: EdgeInsets.symmetric(vertical: 12.h),
-                  btnTxt: Strings.keepBrowsing,
-                  btnColor: ctransp,
-                  style: TxtStyle.outfitSemiB(
-                    fs: 12,
-                    color: c.primary.withValues(alpha: 0.7),
-                    w: 500,
-                  ),
+                  btnTxt: Strings.continueTxt,
 
+                  // style: TxtStyle.outfitSemiB(
+                  //   fs: 12,
+                  //   color: c.primary.withValues(alpha: 0.7),
+                  //   w: 500,
+                  // ),
                   isLoading: false,
-                  rad: 12,
+                  rad: 30,
                 ),
               ],
             ).getcm,

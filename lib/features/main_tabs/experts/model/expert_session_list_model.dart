@@ -178,20 +178,33 @@ class RecordingFile {
 
 import '../../../../core/helpers/parser_helper.dart';
 
+// class ExpertSessionsListModel {
+//   const ExpertSessionsListModel({this.meta, this.sessions = const []});
+
+//   final Meta? meta;
+//   final List<Session> sessions;
+
+//   factory ExpertSessionsListModel.fromJson(Map<String, dynamic>? json) {
+//     if (json == null) {
+//       return const ExpertSessionsListModel();
+//     }
+
+//     return ExpertSessionsListModel(
+//       meta: SafeParser.object(json['meta'], Meta.fromJson),
+//       sessions: SafeParser.list<Session>(json['data'], Session.fromJson),
+//     );
+//   }
+// }
+
 class ExpertSessionsListModel {
   const ExpertSessionsListModel({this.meta, this.sessions = const []});
 
   final Meta? meta;
   final List<Session> sessions;
 
-  factory ExpertSessionsListModel.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return const ExpertSessionsListModel();
-    }
-
+  factory ExpertSessionsListModel.fromList(List<dynamic>? json) {
     return ExpertSessionsListModel(
-      meta: SafeParser.object(json['meta'], Meta.fromJson),
-      sessions: SafeParser.list<Session>(json['sessions'], Session.fromJson),
+      sessions: SafeParser.list(json, Session.fromJson),
     );
   }
 }

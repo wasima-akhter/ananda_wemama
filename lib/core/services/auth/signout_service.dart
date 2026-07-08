@@ -42,6 +42,7 @@ class SignoutService {
 
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().clearData();
+        Get.delete<ChatController>(force: true);
     }
 
     if (Get.isRegistered<NotificationController>()) {
@@ -78,7 +79,7 @@ class SignoutService {
     // NOTE: GetX generics must be written per-type — this replaces the old
     // `tag: controller.toString()` loop, which never matched anything
     // because these controllers are registered by type, not by tag.
-    Get.delete<ChatController>(force: true);
+
     Get.delete<ChatInboxController>(force: true);
     Get.delete<NotificationController>(force: true);
     Get.delete<ProfileController>(force: true);

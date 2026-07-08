@@ -236,7 +236,9 @@ class SocialSection extends StatelessWidget {
 
                       Text(
                         isLoading
-                            ? "Signing in..."
+                            ? type == SocialActivityType.signup
+                                  ? "Signing up..."
+                                  : "Signing in..."
                             : "Continue with Google".capEachWord(),
                         style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
                       ),
@@ -286,7 +288,9 @@ class SocialSection extends StatelessWidget {
 
                       Text(
                         isLoading
-                            ? "Signing in..."
+                            ? type == SocialActivityType.signup
+                                  ? "Signing up..."
+                                  : "Signing in..."
                             : "Continue with Apple".capEachWord(),
                         style: TxtStyle.poppinsSemiB(w: 600, fs: 12),
                       ),

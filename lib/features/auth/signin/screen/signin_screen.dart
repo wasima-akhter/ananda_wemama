@@ -16,6 +16,7 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScreenTemplate(
+      enableRefresh: false,
       appBar: getOnboardAppBar(),
       child: Column(
         children: [
