@@ -1,3 +1,4 @@
+import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -18,7 +19,9 @@ class SubscriptionUpgradeScreen extends StatelessWidget {
         title: Strings.subscriptionUpgrade,
         onTapBack: () async {
           Get.back(result: true);
-          MatchController.to.resetState();
+          if (Get.isRegistered<MatchController>()) {
+            MatchController.to.resetState();
+          }
         },
       ),
       floatingActionButton: Column(
@@ -28,12 +31,10 @@ class SubscriptionUpgradeScreen extends StatelessWidget {
             () => Container(
               padding: 20.pa,
               color: c.buttonText,
-              child: filledBtnWTxt(
-                btnTxt: Strings.continueTxt,
-                isLoading: scpc.isLoading,
+              child: AuthButton(
+                btnText: Strings.continueTxt,
+                isLoading: scpc.isLoading.value,
                 onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
-
-                //  await scpc.onTapSignup(chooseSubPlanFormKey),
               ),
             ),
           ),

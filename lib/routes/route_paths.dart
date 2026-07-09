@@ -93,6 +93,10 @@ class RoutePaths {
   static const waveRequest = '/waveRequest';
   static const subscriptionUpgrade = '/subscriptionUpgrade';
   static const subscriptionInfo = '/subscriptionInfo';
+  static const subscriptionSuccess = '/subscriptionSuccess';
+  static const subscriptionPending = '/subscriptionPending';
+  static const subscriptionConfirmScreen = '/subscriptionConfirmScreen';
+  static const billingHistory = '/billingHistory';
 
   // ─────────────────────────────
   // 🔹 Profile / User

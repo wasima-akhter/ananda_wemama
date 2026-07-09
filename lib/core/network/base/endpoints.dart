@@ -40,6 +40,9 @@ class Endpoints {
 
   static String get reportUser => "report/new-report";
 
+  //
+  static String get getSubscriptionPrice => "payment/handle-discount";
+
   static String notificationIsSeenUpdate({required String notificationId}) {
     return "notification/mark-notification-seen/$notificationId";
   }

@@ -2,8 +2,7 @@ name: mama_app
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -14,12 +13,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-
-
 
   # ----------------------------
   # Firebase Core Services
@@ -37,72 +33,63 @@ dependencies:
   # Apple Sign-In (Apple ID authentication for iOS/macOS)
   sign_in_with_apple: ^6.1.0
 
-
   # -----------------------------
   # 🔊 Real-time Communication (Chat & Calling)
   # -----------------------------
-  agora_rtc_engine: ^6.5.3      # Audio & Video Calling (Agora RTC)
-  agora_rtm: ^2.2.5             # Real-time Messaging (chat, presence, events)
-
+  agora_rtc_engine: ^6.5.3 # Audio & Video Calling (Agora RTC)
+  agora_rtm: ^2.2.5 # Real-time Messaging (chat, presence, events)
 
   # -----------------------------
   # 🌍 Location & Maps Services
   # -----------------------------
-  geolocator: ^14.0.2           # Device GPS location
-  geocoding: ^4.0.0             # Convert coordinates <-> address
-
+  geolocator: ^14.0.2 # Device GPS location
+  geocoding: ^4.0.0 # Convert coordinates <-> address
 
   # -----------------------------
   # 🔐 Permissions & Device Access
   # -----------------------------
-  permission_handler: ^12.0.1   # Runtime permissions (camera, mic, location, etc.)
-  image_picker: ^1.2.1          # Pick images from gallery or camera
-  device_info_plus: ^10.0.0     # Device metadata information
-
+  permission_handler: ^12.0.1 # Runtime permissions (camera, mic, location, etc.)
+  image_picker: ^1.2.1 # Pick images from gallery or camera
+  device_info_plus: ^10.0.0 # Device metadata information
 
   # -----------------------------
   # 🌐 Networking & Connectivity
   # -----------------------------
-  dio: ^5.9.1                   # HTTP client for APIs
-  connectivity_plus: ^7.0.0     # Internet connectivity status
-
+  dio: ^5.9.1 # HTTP client for APIs
+  connectivity_plus: ^7.0.0 # Internet connectivity status
 
   # -----------------------------
   # 🗄 Local Storage
   # -----------------------------
-  shared_preferences: ^2.5.4    # Simple key-value storage
-  get_storage: ^2.1.1           # Lightweight storage for GetX
-
+  shared_preferences: ^2.5.4 # Simple key-value storage
+  get_storage: ^2.1.1 # Lightweight storage for GetX
 
   # -----------------------------
   # 🏗 State Management & Architecture
   # -----------------------------
-  get: ^4.7.3                   # GetX (state management, routing, DI)
-
+  get: ^4.7.3 # GetX (state management, routing, DI)
 
   # -----------------------------
   # 🎨 UI / UX & Styling
   # -----------------------------
-  flutter_svg: ^2.2.3           # SVG rendering
-  google_fonts: ^7.1.0          # Google Fonts support
-  flutter_screenutil: ^5.9.3    # Responsive UI scaling
-  gap: ^3.0.1                   # Spacing widget (SizedBox alternative)
-  page_transition: ^2.2.1       # Custom page transitions
-  shimmer_animation: ^2.2.2+1   # Loading shimmer effect
-  shimmer: ^3.0.0               # Shimmer placeholder effects
-  lottie: ^3.3.2                # Lottie animations
-  fluttertoast: ^9.0.0          # Toast messages
-  flutter_html: ^3.0.0          # Render HTML content
-  pinput: ^6.0.1                # OTP / PIN input fields
-  device_preview: ^1.2.0        # Device preview for UI testing
-
+  flutter_svg: ^2.2.3 # SVG rendering
+  google_fonts: ^7.1.0 # Google Fonts support
+  flutter_screenutil: ^5.9.3 # Responsive UI scaling
+  gap: ^3.0.1 # Spacing widget (SizedBox alternative)
+  page_transition: ^2.2.1 # Custom page transitions
+  shimmer_animation: ^2.2.2+1 # Loading shimmer effect
+  shimmer: ^3.0.0 # Shimmer placeholder effects
+  lottie: ^3.3.2 # Lottie animations
+  fluttertoast: ^9.0.0 # Toast messages
+  flutter_html: ^3.0.0 # Render HTML content
+  pinput: ^6.0.1 # OTP / PIN input fields
+  device_preview: ^1.2.0 # Device preview for UI testing
 
   # -----------------------------
   # 📊 Charts & Data Visualization
   # -----------------------------
-  fl_chart: ^1.1.1              # Lightweight charting
-  syncfusion_flutter_charts: ^32.2.4  # Advanced enterprise charts
-
+  fl_chart: ^1.1.1 # Lightweight charting
+  syncfusion_flutter_charts: ^32.2.4 # Advanced enterprise charts
 
   # -----------------------------
   # 🔽 Dropdowns & Selection Widgets
@@ -111,55 +98,50 @@ dependencies:
   animated_custom_dropdown: ^3.1.1
   flexible_dropdown: ^1.0.8
 
-
   # -----------------------------
   # 🌐 Web & External Links
   # -----------------------------
-  url_launcher: ^6.3.2          # Open external URLs
-  webview_flutter: ^4.13.1      # Embedded webview
-
+  url_launcher: ^6.3.2 # Open external URLs
+  webview_flutter: ^4.13.1 # Embedded webview
 
   # -----------------------------
   # ⏳ Utilities
   # -----------------------------
-  intl: ^0.20.2                 # Date & number formatting
-  easy_countdown_timer: ^0.0.5  # Countdown timer
-
+  intl: ^0.20.2 # Date & number formatting
+  easy_countdown_timer: ^0.0.5 # Countdown timer
 
   # -----------------------------
   # 🛠 Code Generation & Dev Tools
   # -----------------------------
-  flutter_gen: ^5.12.0          # Asset & font code generation
-
+  flutter_gen: ^5.12.0 # Asset & font code generation
 
   # -----------------------------
   # 📁 File Handling & Storage
   # -----------------------------
-  file_picker: ^10.3.10         # Pick files from device
+  file_picker: ^10.3.10 # Pick files from device
   flutter_image_compress: ^2.4.0 # Image compression
-  path_provider: ^2.1.2         # Device file system paths
-  open_file: ^3.3.2             # Open files with native apps
-  file_saver: ^0.4.0            # Save files locally
-  gal: ^2.3.2                   # Gallery access & media handling
-
+  path_provider: ^2.1.2 # Device file system paths
+  open_file: ^3.3.2 # Open files with native apps
+  file_saver: ^0.4.0 # Save files locally
+  gal: ^2.3.2 # Gallery access & media handling
 
   # -----------------------------
   # 📤 Sharing & Communication
   # -----------------------------
-  share_plus: ^12.0.1           # Share content to other apps
-
+  share_plus: ^12.0.1 # Share content to other apps
 
   # -----------------------------
   # 🔄 Realtime & Networking Extras
   # -----------------------------
-  socket_io_client: ^3.1.4      # Socket.IO client for realtime apps
-  app_links: ^7.0.0             # Deep links & app linking
+  socket_io_client: ^3.1.4 # Socket.IO client for realtime apps
+  app_links: ^7.0.0 # Deep links & app linking
 
+  purchases_flutter: ^10.4.1
 
   # -----------------------------
   # ⚡ Device Power & Background Control
   # -----------------------------
-  wakelock_plus: ^1.5.2         # Prevent screen sleep
+  wakelock_plus: ^1.5.2 # Prevent screen sleep
   firebase_messaging: ^16.4.1
   flutter_local_notifications: ^22.0.1
   flutter_new_badger: ^1.1.1
@@ -171,16 +153,12 @@ dev_dependencies:
   build_runner:
   flutter_gen_runner:
 
-
-
-
 include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:
     prefer_relative_imports: true
     avoid_unused_imports: true
-
 
 flutter_gen:
   output: lib/gen/
@@ -192,13 +170,11 @@ flutter_gen:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
