@@ -4,8 +4,6 @@ import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_
 import '../push_notification/push_notification_service.dart';
 
 class VerifyOtpService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> verify({required String email, required String otp}) async {
     //
 
@@ -17,24 +15,21 @@ class VerifyOtpService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<VerifyOtpDataModel>(
+    final response = await ApiExecutor().execute<VerifyOtpDataModel>(
       apiCall: apiCall,
       parser: (data) => VerifyOtpDataModel.fromJson(data),
     );
 
-    if (response == null) return false;
-
     // You can access user like:
-    if (response.success) {
+    if (response.isSuccess) {
       _saveUserDataAfterVerify(response: response);
       log("response.data?.user.email : ${response.data?.user?.email}");
     }
-
-    return response.success;
+    return response.isSuccess;
   }
 
   void _saveUserDataAfterVerify({
-    required BaseResponse<VerifyOtpDataModel> response,
+    required Result<VerifyOtpDataModel> response,
   }) {
     if (response.data != null) {
       final token = response.data?.accessToken ?? '';
@@ -75,15 +70,10 @@ class VerifyOtpService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<void>(apiCall: () => apiCall());
+    final response = await ApiExecutor().execute<void>(
+      apiCall: () => apiCall(),
+    );
 
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("Resend otp is success!");
-    }
-
-    return response.success;
+    return response.isSuccess;
   }
 }

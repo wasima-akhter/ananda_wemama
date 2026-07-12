@@ -2,8 +2,6 @@ import '../../../../app/service_export.dart';
 import '../../../features/auth/forgot_password/model/forgot_password_model.dart';
 
 class ForgotPasswordService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   ///============================= SEND OTP ===================================///
   ///
   ///
@@ -18,16 +16,9 @@ class ForgotPasswordService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<void>(apiCall: () => apiCall());
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("Send otp is success!");
-    }
-
-    return response.success;
+    return response.isSuccess;
   }
 
   ///
@@ -45,22 +36,19 @@ class ForgotPasswordService extends GetxService {
       return ApiClient().patch(
         Endpoints.resetPassword.getUrl,
         headers: HeaderHelpers.getAuthHeader(),
-        data: {"email": email, "newPassword": newPassword, "confirmPassword": confirmPassword},
+        data: {
+          "email": email,
+          "newPassword": newPassword,
+          "confirmPassword": confirmPassword,
+        },
       );
     }
 
-    final response = await _apiHelper.request<ForgotPassDataModel>(
+    final response = await ApiExecutor().execute<ForgotPassDataModel>(
       apiCall: apiCall,
       parser: (data) => ForgotPassDataModel.fromJson(data),
     );
 
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("response.data?.user?.role : ${response.data?.user?.role}");
-    }
-
-    return response.success;
+    return response.isSuccess;
   }
 }

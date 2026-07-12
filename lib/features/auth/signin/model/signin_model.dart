@@ -40,10 +40,10 @@ class SigninUser {
       SigninUser(email: json['email'] ?? '');
 }
 
-enum LoginResultType { success, emailNotVerified, profileIncomplete, failed }
+enum LoginApiResultType { success, emailNotVerified, profileIncomplete, failed }
 
 class LoginResult {
-  final LoginResultType type;
+  final LoginApiResultType type;
   final String? message;
 
   LoginResult({required this.type, this.message});

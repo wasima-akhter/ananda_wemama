@@ -2,8 +2,6 @@ import '../../../app/service_export.dart';
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
 
 class SessionService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   //
 
   Future<Session?> getSessionById({required String sessionId}) async {
@@ -15,7 +13,7 @@ class SessionService {
       );
     }
 
-    final response = await _apiHelper.request<Session?>(
+    final response = await ApiExecutor().execute<Session?>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");

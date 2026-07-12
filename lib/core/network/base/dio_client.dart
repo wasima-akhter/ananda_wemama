@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mama_app/app/helper_widgets_export.dart' hide FormData;
@@ -8,7 +6,9 @@ import 'package:mama_app/core/network/helpers/network_helpers.dart';
 
 import '../../services/auth/signout_service.dart';
 import 'api_error_parser.dart';
+import 'api_logger.dart';
 
+/*
 class DioClient {
   static final DioClient _instance = DioClient._internal();
   factory DioClient() => _instance;
@@ -98,98 +98,150 @@ class DioClient {
     );
   }
 }
+*/
+class DioClient {
+  static final DioClient _instance = DioClient._internal();
 
-enum ResultType { success, emailNotVerified, profileIncomplete, failed }
+  factory DioClient() => _instance;
 
-class Result<T> {
-  final ResultType type;
-  final T? data;
-  final String? message;
+  late Dio dio;
 
-  Result({required this.type, this.data, this.message});
+  DioClient._internal() {
+    dio = Dio(
+      BaseOptions(
+        baseUrl: baseUrl,
+
+        connectTimeout: const Duration(seconds: 30),
+        receiveTimeout: const Duration(seconds: 120),
+        sendTimeout: const Duration(seconds: 60),
+
+        headers: {"Accept": "application/json"},
+
+        // keep old behavior
+        validateStatus: (_) => true,
+      ),
+    );
+
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (kDebugMode) {
+            log("➡️ ${options.method} ${options.path}");
+
+            log("Headers: ${options.headers}");
+
+            log("Data: ${options.data}");
+
+            if (options.data is FormData) {
+              final form = options.data as FormData;
+
+              for (final field in form.fields) {
+                log("FIELD ${field.key}: ${field.value}");
+              }
+
+              for (final file in form.files) {
+                log("FILE ${file.key}: ${file.value.filename}");
+              }
+            }
+          }
+
+          final token = storage.getToken;
+
+          if (token.isNotEmpty) {
+            options.headers["Authorization"] = "Bearer $token";
+          }
+
+          handler.next(options);
+        },
+
+        onError: (DioException e, handler) async {
+          final status = e.response?.statusCode;
+
+          final data = e.response?.data;
+
+          if (status == 401) {
+            final message = ApiErrorParser.extractMessage(data).toLowerCase();
+
+            if (message.contains("token expired") ||
+                message.contains("access token expired") ||
+                message.contains("jwt expired")) {
+              await SignoutService().signOut();
+
+              Get.offAllNamed(RoutePaths.signin);
+            }
+          }
+
+          handler.next(e);
+        },
+
+        onResponse: (response, handler) {
+          if (kDebugMode) {
+            ApiLogger.response(
+              url: response.requestOptions.uri.toString(),
+              method: response.requestOptions.method,
+              statusCode: response.statusCode ?? 0,
+              body: response.data,
+            );
+          }
+
+          handler.next(response);
+        },
+      ),
+    );
+  }
 }
 
-// class DioClient {
-//   static final DioClient _instance = DioClient._internal();
-//   factory DioClient() => _instance;
+enum ApiResultType { success, emailNotVerified, profileIncomplete, failed }
 
-//   late Dio dio;
-//   DioClient._internal() {
-//     dio = Dio(
-//       BaseOptions(
-//         baseUrl: baseUrl,
-//         connectTimeout: const Duration(seconds: 30),
-//         receiveTimeout: const Duration(seconds: 120),
-//         sendTimeout: const Duration(seconds: 60),
-//         headers: {"Accept": "application/json"},
+class Result<T> {
+  final ApiResultType type;
 
-//         // ✅ CRITICAL FIX: never throw on 4xx
-//         // validateStatus: (status) {
-//         //   return status != null && status < 500;
-//         // },
+  final T? data;
 
-//         // ✅ IMPORTANT FIX
-//         validateStatus: (status) => true,
-//       ),
-//     );
+  final String? message;
 
-//     dio.interceptors.add(
-//       InterceptorsWrapper(
-//         onRequest: (options, handler) {
-//           if (kDebugMode) {
-//             log("➡️ REQUEST[${options.method}] => ${options.path}");
-//             log("Headers: ${options.headers}");
-//             log("Data: ${options.data}");
+  final int? statusCode;
 
-//             if (options.data != null && options.data is FormData) {
-//               final formData = options.data as FormData;
+  final PaginationMeta? meta;
 
-//               log("Fields:");
-//               for (final field in formData.fields) {
-//                 log("${field.key}: ${field.value}");
-//               }
+  final dynamic raw;
 
-//               if (formData.files.isNotEmpty) {
-//                 log("Files:");
-//                 for (final file in formData.files) {
-//                   log(
-//                     "${file.key}: filename=${file.value.filename}, contentType=${file.value.contentType}",
-//                   );
-//                 }
-//               }
-//             } else if (options.data != null) {
-//               log("Data: ${jsonEncode(options.data)}");
-//             }
-//           }
+  bool get isSuccess => type == ApiResultType.success;
 
-//           final token = storage.getToken;
-//           if (token.isNotEmpty) {
-//             options.headers["Authorization"] = "Bearer $token";
-//           }
+  bool get isFailure => !isSuccess;
 
-//           return handler.next(options);
-//         },
+  Result({
+    required this.type,
+    this.data,
+    this.message,
+    this.statusCode,
+    this.meta,
+    this.raw,
+  });
+}
 
-//         onResponse: (response, handler) {
-//           if (kDebugMode) {
-//             log("✅ RESPONSE[${response.statusCode}] => ${response.data}");
-//           }
-//           return handler.next(response);
-//         },
+class PaginationMeta {
+  final int page;
+  final int limit;
+  final int total;
+  final int totalPage;
+  final bool hasNextPage;
 
-//         onError: (DioException e, handler) {
-//           if (kDebugMode) {
-//             log("❌ ERROR[${e.response?.statusCode}] => ${e.message}");
+  PaginationMeta({
+    required this.page,
+    required this.limit,
+    required this.total,
+    required this.totalPage,
+    required this.hasNextPage,
+  });
 
-//             // 🔥 IMPORTANT: log full backend payload
-//             if (e.response?.data != null) {
-//               log("🔥 ERROR BODY => ${e.response?.data}");
-//             }
-//           }
-
-//           return handler.next(e);
-//         },
-//       ),
-//     );
-//   }
-// }
+  factory PaginationMeta.fromJson(Map<String, dynamic> json) {
+    return PaginationMeta(
+      page: int.tryParse(json['page'].toString()) ?? 1,
+      limit: int.tryParse(json['limit'].toString()) ?? 10,
+      total: int.tryParse(json['total'].toString()) ?? 0,
+      totalPage: int.tryParse(json['totalPage'].toString()) ?? 1,
+      hasNextPage: json['hasNextPage'] ?? false,
+    );
+  }
+}

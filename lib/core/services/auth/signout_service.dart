@@ -12,8 +12,6 @@ import '../../local/app_storage.dart';
 import '../socket/socket_service.dart';
 
 class SignoutService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> signoutFromBackend() async {
     //
 
@@ -24,11 +22,9 @@ class SignoutService {
       );
     }
 
-    final response = await _apiHelper.request(apiCall: apiCall);
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-
-    return response.success;
+    return response.isSuccess;
   }
 
   Future<void> signOut() async {
@@ -42,7 +38,7 @@ class SignoutService {
 
     if (Get.isRegistered<ChatController>()) {
       Get.find<ChatController>().clearData();
-        Get.delete<ChatController>(force: true);
+      Get.delete<ChatController>(force: true);
     }
 
     if (Get.isRegistered<NotificationController>()) {

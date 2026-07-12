@@ -1,9 +1,8 @@
 import '../../../../app/service_export.dart';
+import '../../../../core/network/base/api_executor.dart';
 import '../model/expert_session_list_model.dart';
 
 class ExpertsService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   /// Fetch inventory details from API
 
   Future<ExpertSessionsListModel?> fetchExpertSessionList({
@@ -11,32 +10,18 @@ class ExpertsService extends GetxService {
     required String page,
     required String searchTxt,
   }) async {
-    apiCall() {
-      return ApiClient().get(
+    final result = await ApiExecutor().execute<ExpertSessionsListModel>(
+      apiCall: () => ApiClient().get(
         Endpoints.getExpertSessionList(
           page: page,
           sessionStatus: sessionStatus,
           searchTxt: searchTxt,
         ).getUrl,
-        reqName: Strings.experts,
-        headers: HeaderHelpers.jsonHeader(),
-      );
-    }
-
-    final response = await _apiHelper.request<ExpertSessionsListModel?>(
-      apiCall: apiCall,
-      parser: (data) {
-        log("return response data: $data");
-
-        final parsedData = ExpertSessionsListModel.fromList(data);
-
-        log("parserdata: $parsedData");
-
-        return parsedData;
-      },
+      ),
+      parser: (data) => ExpertSessionsListModel.fromList(data),
     );
 
-    return response?.data;
+    return result.data;
   }
 
   //----------------------------
@@ -46,23 +31,14 @@ class ExpertsService extends GetxService {
     required String sessionId,
     required String question,
   }) async {
-    apiCall() {
-      return ApiClient().post(
+    final result = await ApiExecutor().execute(
+      apiCall: () => ApiClient().post(
         Endpoints.uploadSessionQuesUrl.getUrl,
         headers: HeaderHelpers.getAuthHeader(),
         data: {"expert": expertId, "session": sessionId, "question": question},
-      );
-    }
+      ),
+    );
 
-    final response = await _apiHelper.request<void>(apiCall: () => apiCall());
-
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("Send question is success!");
-    }
-
-    return true;
+    return result.type == ApiResultType.success;
   }
 }

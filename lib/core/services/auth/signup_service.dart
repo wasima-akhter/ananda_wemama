@@ -5,8 +5,6 @@ import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_
 import 'signin_service.dart';
 
 class SignupService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> signUp({
     required String email,
     required String password,
@@ -32,15 +30,11 @@ class SignupService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<SignUpModelData>(
+    final response = await ApiExecutor().execute<SignUpModelData>(
       apiCall: apiCall,
       parser: (data) => SignUpModelData.fromJson(data),
-    );
-
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
+    ); // You can access user like:
+    if (response.isSuccess) {
       // _saveUserDataAfterSignUp(response: response);
       log("response.data?.user.name : ${response.data?.email}");
 
@@ -50,14 +44,15 @@ class SignupService extends GetxService {
       }
     }
 
-    return response.success;
+    return response.isSuccess;
   }
 
+  /*
   Future<SocialLoginResult> socialSignup({
     required String authToken,
     required String provider,
   }) async {
-    final response = await _apiHelper.request<SigninModelData>(
+    final response = await ApiExecutor().execute<SigninModelData>(
       apiCall: () => ApiClient().post(
         Endpoints.socialRegister.getUrl,
         data: {"provider": provider, "authToken": authToken},
@@ -68,14 +63,14 @@ class SignupService extends GetxService {
     );
 
     if (response == null || response.data == null) {
-      return const SocialLoginResult(type: SocialLoginResultType.failed);
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
     }
 
     final data = response.data!;
     final accessToken = data.accessToken ?? '';
 
     if (accessToken.isEmpty) {
-      return const SocialLoginResult(type: SocialLoginResultType.failed);
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
     }
 
     // save token and email if success
@@ -83,6 +78,82 @@ class SignupService extends GetxService {
     storage.setToken(accessToken);
     storage.setUserInfo(email: data.user?.email ?? '');
 
-    return const SocialLoginResult(type: SocialLoginResultType.success);
+    return const SocialLoginResult(type: SocialLoginApiResultType.success);
   }
+*/
+  Future<SocialLoginResult> socialSignup({
+    required String authToken,
+    required String provider,
+  }) async {
+    log("Social signup → provider: $provider");
+
+    final response = await ApiClient().post(
+      Endpoints.socialRegister.getUrl,
+      data: {"provider": provider, "authToken": authToken},
+    );
+
+    if (response == null) {
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
+    }
+
+    final body = response.data;
+
+    if (body is! Map<String, dynamic>) {
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
+    }
+
+    final data = SigninModelData.fromJson(body["data"] ?? {});
+
+    log("Social signup statusCode: ${data.statusCode}");
+
+    // ==========================
+    // EMAIL NOT VERIFIED
+    // ==========================
+
+    if (data.statusCode == 403 || data.isEmailVerified == false) {
+      return SocialLoginResult(
+        type: SocialLoginApiResultType.failed,
+        message: data.msg,
+      );
+    }
+
+    // ==========================
+    // PROFILE INCOMPLETE
+    // ==========================
+
+    if (data.statusCode == 302 || data.isProfileCompleted == false) {
+      if (data.accessToken != null && data.accessToken!.isNotEmpty) {
+        storage.setToken(data.accessToken!);
+      }
+
+      return SocialLoginResult(
+        type: SocialLoginApiResultType.profileIncomplete,
+        message: data.msg,
+      );
+    }
+
+    // ==========================
+    // TOKEN VALIDATION
+    // ==========================
+
+    final accessToken = data.accessToken ?? '';
+
+    if (accessToken.isEmpty) {
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
+    }
+
+    // ==========================
+    // SAVE LOGIN DATA
+    // ==========================
+
+    storage.setToken(accessToken);
+
+    storage.setUserInfo(email: data.user?.email ?? '');
+
+    log("Social signup success: ${data.user?.email}");
+
+    return const SocialLoginResult(type: SocialLoginApiResultType.success);
+  }
+
+  //
 }

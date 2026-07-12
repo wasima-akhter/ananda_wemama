@@ -7,8 +7,6 @@ import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_mo
 import '../../../helpers/image_helper.dart';
 
 class UpdateProfileService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   //
 
   Future<ProfileDataModel?> updateProfileWithChildren({
@@ -51,10 +49,9 @@ class UpdateProfileService extends GetxService {
     final sanitizedDesc = descriptionImages.map(sanitizeXFile).toList();
 
     try {
-      final response = await _apiHelper.request<ProfileDataModel>(
+      final response = await ApiExecutor().execute<ProfileDataModel>(
         apiCall: () => ApiClient().patchWithFile(
           Endpoints.updateProfile.getUrl,
-          reqName: Strings.updateProfile,
           file: sanitizedProfile != null
               ? MapEntry('profile-image', sanitizedProfile)
               : null,
@@ -66,7 +63,7 @@ class UpdateProfileService extends GetxService {
         parser: (data) => ProfileDataModel.fromJson(data),
       );
 
-      return (response == null || !response.success) ? null : response.data;
+      return response.type == ApiResultType.failed ? null : response.data;
     } finally {
       // ✅ Clean up sanitized temp copies
       for (final f in [...sanitizedDesc, ?sanitizedProfile]) {

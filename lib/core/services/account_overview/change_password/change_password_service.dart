@@ -1,8 +1,6 @@
 import '../../../../../app/service_export.dart';
 
 class ChangePasswordService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> changePassword({
     required String oldPassword,
     required String newPassword,
@@ -26,15 +24,8 @@ class ChangePasswordService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request(apiCall: apiCall);
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("response.success : ${response.success}");
-    }
-
-    return response.success;
+    return response.isSuccess;
   }
 }

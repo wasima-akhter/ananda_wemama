@@ -4,65 +4,62 @@ import 'package:mama_app/features/more/blocked_user/model/blocked_user_model.dar
 import '../../../../app/service_export.dart';
 
 class BlockedUserService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   /// Fetch inventory details from API
 
   Future<List<BlockedUserDataModel>> fetchBlockedUsers() async {
     apiCall() {
       return ApiClient().get(
         Endpoints.blockedUsers.getUrl,
-        reqName: Strings.blockedUser,
+        // reqName: Strings.blockedUser,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<BlockedUserDataModel>>(
+    final response = await ApiExecutor().execute<List<BlockedUserDataModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
 
         if (data == null) return [];
 
-        return (data is List) ? data.map((e) => BlockedUserDataModel.fromJson(e)).toList() : [];
+        return (data is List)
+            ? data.map((e) => BlockedUserDataModel.fromJson(e)).toList()
+            : [];
       },
     );
 
-    log("response data: ${response?.data}");
-    return response?.data ?? [];
+    log("response data: ${response.data}");
+    return response.data ?? [];
   }
 
   Future<bool> unblockUser({required String userId}) async {
     apiCall() {
       return ApiClient().post(
-        Endpoints.unblockUser(blockeRUserId: currentProfileId(), blockedUserId: userId).getUrl,
-        reqName: Strings.unblock,
+        Endpoints.unblockUser(
+          blockeRUserId: currentProfileId(),
+          blockedUserId: userId,
+        ).getUrl,
+        // reqName: Strings.unblock,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request(apiCall: apiCall);
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-
-    log("response data: ${response?.success}");
-    return response?.success ?? false;
+    return response.isSuccess;
   }
 
   Future<bool> blockUser({required String userId}) async {
     apiCall() {
       return ApiClient().post(
         Endpoints.blockUser(userId: userId).getUrl,
-        reqName: Strings.unblock,
+        // reqName: Strings.unblock,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request(apiCall: apiCall);
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-
-    log("response data: ${response?.success}");
-    return response?.success ?? false;
+    return response.isSuccess;
   }
 }

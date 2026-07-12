@@ -1,8 +1,6 @@
 import '../../../../app/service_export.dart';
 
 class LocationService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   // Update user location in backend
   Future<bool> updateLocation({
     required String address,
@@ -19,29 +17,29 @@ class LocationService extends GetxService {
     apiCall() {
       return ApiClient().post(
         Endpoints.addLocation.getUrl, // or POST depending on your API
-        reqName: 'Update Location',
+        // reqName: 'Update Location',
         data: data,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
     try {
-      final response = await _apiHelper.request(
+      final response = await ApiExecutor().execute(
         apiCall: apiCall,
         parser: (data) => data,
       );
 
-      if (response?.success == true) {
+      if (response.isSuccess == true) {
         //
 
         log("✅ Location updated successfully in backend");
       } else {
         log(
-          "❌ Failed to update location: ${response?.message ?? 'Unknown error'}",
+          "❌ Failed to update location: ${response.message ?? 'Unknown error'}",
         );
       }
 
-      return response?.success ?? false;
+      return response.isSuccess;
     } catch (e) {
       log("Error updating location: $e");
       return false;
@@ -51,11 +49,11 @@ class LocationService extends GetxService {
   // Get user location from backend
   // Future<Map<String, dynamic>?> getUserLocation() async {
   //   apiCall() {
-  //     return ApiClient().get(Endpoints.getUserLocation.getUrl, reqName: 'Get Location');
+  //     return ApiClient().get(Endpoints.getUserLocation.getUrl, // reqName: 'Get Location');
   //   }
 
   //   try {
-  //     final response = await _apiHelper.request(apiCall: apiCall, parser: (data) => data);
+  //     final response = await ApiExecutor().execute(apiCall: apiCall, parser: (data) => data);
 
   //     return response?.data;
   //   } catch (e) {

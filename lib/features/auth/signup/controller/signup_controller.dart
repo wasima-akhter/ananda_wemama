@@ -137,7 +137,7 @@ class SignupController extends GetxController {
         provider: 'google',
       );
 
-      if (result.type == SocialLoginResultType.success) {
+      if (result.type == SocialLoginApiResultType.success) {
         storage.setLoggedIn(true);
         storage.setSeenOnboarding(true);
         Get.offAllNamed(RoutePaths.setupProfile);
@@ -161,7 +161,7 @@ class SignupController extends GetxController {
         provider: 'apple',
       );
 
-      if (result.type == SocialLoginResultType.success) {
+      if (result.type == SocialLoginApiResultType.success) {
         storage.setLoggedIn(true);
         storage.setSeenOnboarding(true);
         Get.offAllNamed(RoutePaths.setupProfile);

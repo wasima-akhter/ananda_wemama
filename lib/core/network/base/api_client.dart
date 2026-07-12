@@ -1,19 +1,171 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/app/controller_export.dart' hide Response;
 
 import '../../helpers/image_helper.dart';
-import '../../local/app_storage.dart';
-import '../helpers/header_helpers.dart';
-import '../helpers/network_guard.dart';
-import 'api_response_handler.dart';
 import 'dio_client.dart';
 
+class ApiClient {
+  final Dio _dio = DioClient().dio;
+
+  Future<Response?> get(
+    String url, {
+    Map<String, dynamic>? query,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.get(
+        url,
+        queryParameters: query,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> post(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.post(
+        url,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> patch(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.patch(
+        url,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> put(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.put(
+        url,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> delete(
+    String url, {
+    dynamic data,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      return await _dio.delete(
+        url,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> patchWithFile(
+    String url, {
+    MapEntry<String, XFile>? file,
+    List<MapEntry<String, XFile>>? files,
+    Map<String, String>? fields,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      final form = FormData();
+
+      if (file != null) {
+        form.files.add(
+          MapEntry(file.key, await MultipartHelper.anyFile(file.value)),
+        );
+      }
+
+      for (final f in files ?? []) {
+        form.files.add(MapEntry(f.key, await MultipartHelper.anyFile(f.value)));
+      }
+
+      fields?.forEach((k, v) {
+        form.fields.add(MapEntry(k, v));
+      });
+
+      return await _dio.patch(
+        url,
+        data: form,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> postWithFile(
+    String url, {
+    MapEntry<String, XFile>? file,
+    List<MapEntry<String, XFile>>? files,
+    Map<String, dynamic>? fields,
+    List<MapEntry<String, String>>? extraFields,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      final form = FormData();
+
+      // Single file
+      if (file != null) {
+        form.files.add(
+          MapEntry(file.key, await MultipartHelper.anyFile(file.value)),
+        );
+      }
+
+      // Multiple files
+      for (final f in files ?? []) {
+        form.files.add(MapEntry(f.key, await MultipartHelper.anyFile(f.value)));
+      }
+
+      // Normal fields
+      fields?.forEach((key, value) {
+        if (value == null) return;
+        form.fields.add(MapEntry(key, value.toString()));
+      });
+
+      // Duplicate fields
+      if (extraFields != null) {
+        form.fields.addAll(extraFields);
+      }
+
+      return await _dio.post(
+        url,
+        data: form,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+}
+/*
 class ApiClient {
   final Dio _dio = DioClient().dio;
 
@@ -23,6 +175,7 @@ class ApiClient {
     String? reqName,
     Map<String, dynamic>? query,
     Map<String, String>? headers,
+    bool showResponse = false,
   }) {
     return _safeRequest(() async {
       log("🌐 GET URL: $url");
@@ -32,6 +185,14 @@ class ApiClient {
         queryParameters: query,
         options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
       );
+      if (showResponse) {
+        ApiLogger.response(
+          url: url,
+          method: "GET",
+          statusCode: response.statusCode ?? 0,
+          body: response.data,
+        );
+      }
 
       // 🔥 Final parsed response returned by ApiResponseHandler
       return ApiResponseHandler.handle(response, reqName);
@@ -45,6 +206,7 @@ class ApiClient {
     dynamic data,
     Map<String, String>? headers,
     bool? isLogin_,
+    bool showResponse = false,
   }) {
     return _safeRequest(() async {
       log("🌐 POST URL: $url");
@@ -55,10 +217,14 @@ class ApiClient {
         options: Options(headers: headers ?? HeaderHelpers.jsonHeader()),
       );
 
-      log("response:---> ${response.data}");
-      log(
-        "response after handle:---> ${ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_)}",
-      );
+      if (showResponse) {
+        ApiLogger.response(
+          url: url,
+          method: "POST",
+          statusCode: response.statusCode ?? 0,
+          body: response.data,
+        );
+      }
 
       // 🔥 Final parsed response returned by ApiResponseHandler
       return ApiResponseHandler.handle(response, reqName, isLogin_: isLogin_);
@@ -95,95 +261,6 @@ class ApiClient {
     });
   }
 
-  // generic
-
-  Future<dynamic> patchWithFile2(
-    String url, {
-    String? reqName,
-    MapEntry<String, XFile>? file,
-    List<MapEntry<String, XFile>>? files,
-    Map<String, String>? fields,
-  }) async {
-    return _safeRequest(() async {
-      log("🌐 PATCHWith file URL: $url");
-      final token = AppStorage.to.getToken;
-      if (token.isEmpty) {
-        log("❌ patchWithFile aborted: no token");
-        return null;
-      }
-
-      try {
-        final uri = Uri.parse(url);
-        final request = http.MultipartRequest('PATCH', uri);
-
-        // ✅ Auth header
-        request.headers['Authorization'] = 'Bearer $token';
-        request.headers['Accept'] = 'application/json';
-
-        // ✅ Fields
-        if (fields != null) {
-          request.fields.addAll(fields);
-        }
-
-        // ✅ Single file (profile-image)
-        if (file != null) {
-          final bytes = await File(file.value.path).readAsBytes();
-          request.files.add(
-            http.MultipartFile.fromBytes(
-              file.key,
-              bytes,
-              filename: file.value.name,
-              contentType: imageMediaType(file.value.path), // 👈 add this
-            ),
-          );
-        }
-
-        // ✅ Multiple files (description-image)
-        for (final f in files ?? []) {
-          final bytes = await File(f.value.path).readAsBytes();
-          request.files.add(
-            http.MultipartFile.fromBytes(
-              f.key,
-              bytes,
-              filename: f.value.name,
-              contentType: imageMediaType(f.value.path), // 👈 add this
-            ),
-          );
-        }
-        // ✅ Log request
-        log("➡️ REQUEST[PATCH] => $url");
-        log("Headers: ${request.headers}");
-        log("Fields: ${request.fields}");
-        log(
-          "Files: ${request.files.map((f) => '${f.field}: ${f.filename}').toList()}",
-        );
-
-        final streamedResponse = await request.send();
-        final response = await http.Response.fromStream(streamedResponse);
-
-        log("✅ RESPONSE[${response.statusCode}] => ${response.body}");
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          final decoded = jsonDecode(response.body);
-          return ApiResponseHandler.handle(
-            Response(
-              requestOptions: RequestOptions(path: url),
-              statusCode: response.statusCode,
-              data: decoded,
-            ),
-            reqName,
-          );
-        } else {
-          log("❌ ERROR[${response.statusCode}] => ${response.body}");
-          return null;
-        }
-      } catch (e) {
-        log("PATCH request error: $e");
-        return null;
-      }
-    });
-  }
-
   Future<dynamic> patchWithFile(
     String url, {
     String? reqName,
@@ -192,6 +269,7 @@ class ApiClient {
     Map<String, String>? fields,
     Map<String, dynamic>? headers, // 👇 add this
     bool disableCompression = false,
+    bool showResponse = false,
   }) {
     return _safeRequest(() async {
       log("🌐 PATCHWith file URL: $url");
@@ -285,8 +363,14 @@ class ApiClient {
       try {
         final response = await _dio.request(url, data: data, options: options);
 
-        log("✅ RESPONSE STATUS: ${response.statusCode}");
-        log("RESPONSE DATA: ${response.data}");
+        if (showResponse) {
+          ApiLogger.response(
+            url: url,
+            method: "PATCH",
+            statusCode: response.statusCode ?? 0,
+            body: response.data,
+          );
+        }
 
         return ApiResponseHandler.handle(response, reqName);
       } on DioException catch (e, stackTrace) {
@@ -330,63 +414,6 @@ class ApiClient {
       }
     });
   }
-
-  /*
-// string, string type fields
-  // with any file comppression:
-  Future<dynamic> postWithFile(
-    String url, {
-    String? reqName,
-    MapEntry<String, XFile>? file,
-    List<MapEntry<String, XFile>>? files,
-    Map<String, String>? fields,
-    List<MapEntry<String, String>>? extraFields,
-    Map<String, dynamic>? headers,
-  }) {
-    return _safeRequest(() async {
-      log("🌐 POST with file URL: $url");
-      final data = dio.FormData();
-
-      if (file != null) {
-        final multipart = await MultipartHelper.anyFile(file.value);
-        data.files.add(MapEntry(file.key, multipart));
-      }
-
-      for (final f in files ?? []) {
-        final multipart = await MultipartHelper.anyFile(f.value);
-        data.files.add(MapEntry(f.key, multipart));
-      }
-
-      fields?.forEach((key, value) => data.fields.add(MapEntry(key, value)));
-      extraFields?.forEach((entry) => data.fields.add(entry));
-
-      final isValid = await validateFileSize(data);
-      if (!isValid) {
-        return ApiResponseHandler.handle(
-          Response(
-            requestOptions: RequestOptions(path: url),
-            statusCode: 400,
-            data: {"message": "File size must be less than 3 MB"},
-          ),
-          reqName,
-        );
-      }
-
-      final options = Options(
-        method: 'POST',
-        headers: {"Authorization": "Bearer $getToken"},
-      );
-
-      try {
-        final response = await _dio.request(url, data: data, options: options);
-        return ApiResponseHandler.handle(response, reqName);
-      } catch (e) {
-        log("POST request error: $e");
-        return null;
-      }
-    });
-  }
-*/
 
   Future<dynamic> postWithFile(
     String url, {
@@ -500,3 +527,40 @@ class ApiClient {
     return await request();
   }
 }
+*/
+
+/* Curr:
+Service
+  ↓
+ApiServiceHelper
+  ↓
+ApiClient
+  ↓
+ApiResponseHandler
+  ↓
+ApiErrorParser
+  ↓
+Dio interceptor
+  ↓
+Toast / Logout / Exception
+
+*/
+
+// recommended:
+/*
+Service
+   |
+   | returns Result<T>
+   |
+ApiRepository
+   |
+   | parses model
+   |
+ApiClient
+   |
+   | only Dio calls
+   |
+DioClient
+   |
+   | only networking/auth interceptor
+   */

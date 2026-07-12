@@ -76,7 +76,7 @@ class SigninController extends GetxController {
       log("result type of login from controller : ${result.type}");
       switch (result.type) {
         // ❌ EMAIL NOT VERIFIED
-        case LoginResultType.emailNotVerified:
+        case LoginApiResultType.emailNotVerified:
           // Get.toNamed(
           //   RoutePaths.verifyOtp,
           //   arguments: {'flow': OtpFlowType.signup, 'email': email},
@@ -95,12 +95,12 @@ class SigninController extends GetxController {
           return;
 
         // ❌ PROFILE NOT COMPLETED
-        case LoginResultType.profileIncomplete:
+        case LoginApiResultType.profileIncomplete:
           Get.offAllNamed(RoutePaths.setupProfile);
           return;
 
         // ✅ SUCCESS
-        case LoginResultType.success:
+        case LoginApiResultType.success:
           storage.setLoggedIn(true);
           storage.setSeenOnboarding(true);
 
@@ -108,7 +108,7 @@ class SigninController extends GetxController {
           return;
 
         // ❌ FAILED
-        case LoginResultType.failed:
+        case LoginApiResultType.failed:
           return;
       }
     } catch (e, stack) {
@@ -267,20 +267,20 @@ Private Key	AuthKey_XXXXXX.p8
     );
 
     switch (result.type) {
-      case SocialLoginResultType.success:
+      case SocialLoginApiResultType.success:
         storage.setLoggedIn(true);
         storage.setSeenOnboarding(true);
         clearFields();
         Get.offAllNamed(RoutePaths.mainNav);
 
-      case SocialLoginResultType.profileIncomplete:
+      case SocialLoginApiResultType.profileIncomplete:
         Get.offAllNamed(RoutePaths.setupProfile);
 
-      case SocialLoginResultType.failed:
+      case SocialLoginApiResultType.failed:
         // ApiServiceHelper already shows the error toast — nothing extra needed.
         break;
 
-      case SocialLoginResultType.cancelled:
+      case SocialLoginApiResultType.cancelled:
         break;
     }
   }

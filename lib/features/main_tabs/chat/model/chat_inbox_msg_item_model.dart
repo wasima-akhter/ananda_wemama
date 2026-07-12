@@ -113,7 +113,7 @@ class Receiver {
 */
 
 import '../../../../core/helpers/parser_helper.dart';
-import '../../../../core/network/models/base_response_model.dart';
+import '../../../../core/network/base/dio_client.dart';
 
 class ChatMessagesPage {
   final List<Message> messages;

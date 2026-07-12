@@ -2,8 +2,6 @@ import '../../../../app/service_export.dart';
 import '../model/notifications_model.dart';
 
 class NotificationService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   /// Fetch inventory details from API
 
   Future<List<NotificationItemModel>> fetchNotifications() async {
@@ -11,14 +9,13 @@ class NotificationService extends GetxService {
       return ApiClient().get(
         // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
         Endpoints.notifications.getUrl,
-        reqName: Strings.notification,
+        // reqName: Strings.notification,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<NotificationItemModel>>(
+    final response = await ApiExecutor().execute<List<NotificationItemModel>>(
       apiCall: apiCall,
-      showRawResponse: false,
       parser: (data) {
         // log("parserdata: $data");
 
@@ -31,7 +28,7 @@ class NotificationService extends GetxService {
     );
 
     // log("response data: ${response?.data}");
-    return response?.data ?? [];
+    return response.data ?? [];
   }
 
   Future<bool> updateIsSeen({required String notificationId}) async {
@@ -44,9 +41,8 @@ class NotificationService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request(apiCall: apiCall);
+    final response = await ApiExecutor().execute(apiCall: apiCall);
 
-    if (response == null) return false;
-    return response.success;
+    return response.isSuccess;
   }
 }

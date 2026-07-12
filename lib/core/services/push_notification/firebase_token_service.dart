@@ -6,7 +6,7 @@ class FirebaseTokenService extends GetxService {
   static FirebaseTokenService get to => Get.find();
 
   final RxBool isLoading = false.obs;
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
+
   // firebase_token_service.dart
 
   Future<bool> updateToken({required String firebaseToken}) async {
@@ -14,10 +14,10 @@ class FirebaseTokenService extends GetxService {
     isLoading.value = true;
 
     try {
-      final response = await _apiHelper.request(
+      final response = await ApiExecutor().execute(
         apiCall: () => ApiClient().post(
           Endpoints.uploadFcmToken.getUrl,
-          reqName: 'firebase-token-update',
+          // reqName: 'firebase-token-update',
           data: {"fcmToken": firebaseToken},
         ),
         parser: (data) => data,

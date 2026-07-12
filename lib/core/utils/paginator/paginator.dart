@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../network/base/dio_client.dart';
 import '../../network/models/base_response_model.dart';
 
 // core/utils/paginator.dart

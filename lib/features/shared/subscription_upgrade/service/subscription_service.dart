@@ -4,7 +4,7 @@ import '../../../../app/service_export.dart';
 import '../model/subscription_price_model.dart';
 
 class SubscriptionService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
+
 
   Future<SubscriptionPriceModel?> getDiscountedPrice() async {
     apiCall() {
@@ -14,7 +14,7 @@ class SubscriptionService {
       );
     }
 
-    final response = await _apiHelper.request<SubscriptionPriceModel?>(
+    final response = await ApiExecutor().execute<SubscriptionPriceModel?>(
       apiCall: apiCall,
       parser: (p0) {
         return SubscriptionPriceModel.fromJson(p0);

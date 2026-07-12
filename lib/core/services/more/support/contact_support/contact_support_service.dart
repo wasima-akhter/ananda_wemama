@@ -2,8 +2,6 @@ import '../../../../../../app/service_export.dart';
 import '../../../../../features/more/support/contact_support/model/contact_support_model.dart';
 
 class ContactSupportService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> sendSupportMsg({
     required String name,
 
@@ -20,18 +18,11 @@ class ContactSupportService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<ContactAndSupportDataModel>(
+    final response = await ApiExecutor().execute<ContactAndSupportDataModel>(
       apiCall: apiCall,
       parser: (data) => ContactAndSupportDataModel.fromJson(data),
     );
 
-    if (response == null) return false;
-
-    // You can access user like:
-    if (response.success) {
-      log("response.data?.createdAt : ${response.data?.createdAt}");
-    }
-
-    return response.success;
+    return response.type == ApiResultType.success;
   }
 }

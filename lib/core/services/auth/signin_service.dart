@@ -1,20 +1,21 @@
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mama_app/app/controller_export.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import '../socket/socket_service.dart';
+import 'handler/auth_response_handler.dart';
+import 'session_manager/auth_session_manager.dart';
 
 // ─────────────────────────────────────────────
 // Result type
 // ─────────────────────────────────────────────
 
-enum SocialLoginResultType { success, profileIncomplete, failed, cancelled }
+enum SocialLoginApiResultType { success, profileIncomplete, failed, cancelled }
 
 class SocialLoginResult {
-  final SocialLoginResultType type;
+  final SocialLoginApiResultType type;
   final String? message;
   const SocialLoginResult({required this.type, this.message});
 }
@@ -24,8 +25,6 @@ class SocialLoginResult {
 // ─────────────────────────────────────────────
 
 class SocialLoginService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   // ── Google ──────────────────────────────────
 
   /// Returns the Google ID token, or null if the user cancelled / error.
@@ -65,57 +64,49 @@ class SocialLoginService {
   }
 
   // ── Backend call ─────────────────────────────
-
+  /*
   Future<SocialLoginResult> socialLogin({
     required String authToken,
-    required String provider, // 'google' | 'apple'
+    required String provider,
   }) async {
     log('Social login → provider: $provider');
 
-    final response = await _apiHelper.request<SigninModelData>(
-      apiCall: () => ApiClient().post(
-        Endpoints.socialLogin.getUrl,
-        data: {"provider": provider, "authToken": authToken},
-        isLogin_: true,
-        reqName: 'social login'.capEachWord(),
-      ),
-      reqName: 'social login'.capEachWord(),
-      parser: (data) => SigninModelData.fromJson(data),
+    final response = await ApiClient().post(
+      Endpoints.socialLogin.getUrl,
+      data: {"provider": provider, "authToken": authToken},
     );
 
     if (response == null) {
-      return const SocialLoginResult(type: SocialLoginResultType.failed);
+      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
     }
 
-    final data = response.data;
-    if (data == null) {
-      return const SocialLoginResult(type: SocialLoginResultType.failed);
-    }
+    final auth = AuthResponseHandler.check(response);
 
-    final statusCode = data.statusCode;
+    if (auth.type == AuthStatusType.profileIncomplete) {
+      storage.setToken(auth.token ?? '');
 
-    // 302 → profile not yet completed
-    if (statusCode == 302) {
-      "Please complete your profile to continue.".showToast();
-      storage.setToken(data.accessToken ?? '');
       return SocialLoginResult(
-        type: SocialLoginResultType.profileIncomplete,
-        message: data.msg,
+        type: SocialLoginApiResultType.profileIncomplete,
+        message: auth.message,
       );
     }
 
-    final accessToken = data.accessToken ?? '';
-    if (accessToken.isEmpty) {
-      return const SocialLoginResult(type: SocialLoginResultType.failed);
+    if (auth.type != AuthStatusType.success) {
+      return SocialLoginResult(
+        type: SocialLoginApiResultType.failed,
+        message: auth.message,
+      );
     }
 
-    // ✅ Success — persist user data
-    _saveUserData(response: response);
+    final model = SigninModelData.fromJson(auth.data);
 
-    // Reconnect socket with fresh credentials
+    _saveUserData(model);
+
     try {
       final socket = Get.find<SocketService>();
+
       socket.disconnectSocket();
+
       await socket.connectSocket();
     } catch (e) {
       log('Socket error after social login: $e');
@@ -125,111 +116,184 @@ class SocialLoginService {
       await Get.find<ProfileController>().fetchMyProfile();
     }
 
-    return const SocialLoginResult(type: SocialLoginResultType.success);
+    return const SocialLoginResult(type: SocialLoginApiResultType.success);
+  }
+*/
+
+  Future<SocialLoginResult> socialLogin({
+    required String authToken,
+    required String provider,
+  }) async {
+    final result = await ApiExecutor().execute<SigninModelData>(
+      apiCall: () => ApiClient().post(
+        Endpoints.socialLogin.getUrl,
+        data: {"provider": provider, "authToken": authToken},
+      ),
+      customHandler: (body) => AuthResponseHandler.parse(body),
+    );
+
+    switch (result.type) {
+      case ApiResultType.profileIncomplete:
+        storage.setToken(result.data?.accessToken ?? "");
+
+        return SocialLoginResult(
+          type: SocialLoginApiResultType.profileIncomplete,
+          message: result.message,
+        );
+
+      case ApiResultType.success:
+        await AuthSessionService().initialize(result.data!);
+
+        return const SocialLoginResult(type: SocialLoginApiResultType.success);
+
+      default:
+        return SocialLoginResult(
+          type: SocialLoginApiResultType.failed,
+          message: result.message,
+        );
+    }
   }
 
-  void _saveUserData({required BaseResponse<SigninModelData> response}) {
-    if (response.data == null) return;
-    final user = response.data!.user;
+  void _saveUserData(SigninModelData model) {
+    final user = model.user;
+
     storage.setUserInfo(email: user?.email ?? '');
-    storage.setToken(response.data?.accessToken ?? '');
-    log('Social login — saved token for: ${user?.email}');
+
+    storage.setToken(model.accessToken ?? '');
+
+    log("Logged in as: ${user?.email}");
   }
 }
 
 class SigninService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
+  Future<LoginResult> signIn({
+    required String email,
+    required String password,
+  }) async {
+    final result = await ApiExecutor().execute<SigninModelData>(
+      apiCall: () => ApiClient().post(
+        Endpoints.login.getUrl,
+        data: {"email": email, "password": password},
+      ),
+      customHandler: (body) => AuthResponseHandler.parse(body),
+    );
 
+    switch (result.type) {
+      case ApiResultType.emailNotVerified:
+        return LoginResult(
+          type: LoginApiResultType.emailNotVerified,
+          message: result.message,
+        );
+
+      case ApiResultType.profileIncomplete:
+        storage.setToken(result.data?.accessToken ?? "");
+
+        return LoginResult(
+          type: LoginApiResultType.profileIncomplete,
+          message: result.message,
+        );
+
+      case ApiResultType.success:
+        await AuthSessionService().initialize(result.data!);
+
+        return LoginResult(type: LoginApiResultType.success);
+
+      case ApiResultType.failed:
+        return LoginResult(
+          type: LoginApiResultType.failed,
+          message: result.message,
+        );
+    }
+  }
+
+  /*
   Future<LoginResult> signIn({
     required String email,
     required String password,
   }) async {
     log("Login started..");
 
-    final response = await _apiHelper.request<SigninModelData>(
-      apiCall: () => ApiClient().post(
-        Endpoints.login.getUrl,
-        data: {"email": email, "password": password},
-        isLogin_: true,
-        // reqName: "login",
-      ),
-      // reqName: "login",
-      parser: (data) {
-        log("before parse data : $data");
-        log("after parse data : ${SigninModelData.fromJson(data)}");
-        return SigninModelData.fromJson(data);
-      },
+    final response = await ApiClient().post(
+      Endpoints.login.getUrl,
+      data: {"email": email, "password": password},
     );
-
-    log("RESPONSE sign in: $response");
 
     if (response == null) {
-      return LoginResult(type: LoginResultType.failed);
-    }
-
-    final data = response.data;
-
-    if (data == null) {
-      return LoginResult(type: LoginResultType.failed);
-    }
-
-    // 🔥 IMPORTANT: backend sends status inside data
-    final isEmailVerified = data.isEmailVerified;
-    final isProfileCompleted = data.isProfileCompleted;
-    final accessToken = data.accessToken ?? '';
-    final statusCode = data.statusCode;
-    log(
-      "--> isEmailVerified: $isEmailVerified, isProfileCompleted: $isProfileCompleted, ",
-    );
-
-    // // Check profileIncomplete first — backend sends ONLY the relevant flag
-    // if (data.isProfileCompleted == false) {
-    //   return LoginResult(
-    //     type: LoginResultType.profileIncomplete,
-    //     message: data.msg,
-    //   );
-    // }
-
-    // if (data.isEmailVerified == false) {
-    //   return LoginResult(
-    //     type: LoginResultType.emailNotVerified,
-    //     message: data.msg,
-    //   );
-    // }
-
-    // 403 → email not verified
-    if (statusCode == 403) {
-      "Your email is not verified yet. Please verify your email.".showToast();
       return LoginResult(
-        type: LoginResultType.emailNotVerified,
-        message: data.msg,
+        type: LoginApiResultType.failed,
+        message: "Unable to connect to server",
       );
     }
 
-    // 302 → profile incomplete
-    if (statusCode == 302) {
-      "Your profile is not completed yet. Please complete your profile."
-          .showToast();
+    final body = response.data;
 
-      // ✅ Save token so profile completion screen can make authenticated requests
-      storage.setToken(response.data?.accessToken ?? '');
+    if (body is! Map<String, dynamic>) {
       return LoginResult(
-        type: LoginResultType.profileIncomplete,
-        message: data.msg,
+        type: LoginApiResultType.failed,
+        message: "Invalid server response",
       );
     }
 
-    log("access token when setup-->: ${response.data!.accessToken}");
-    if (accessToken.isEmpty) {
-      return LoginResult(type: LoginResultType.failed);
+    final model = SigninModelData.fromJson(body["data"] ?? {});
+
+    log("Login statusCode: ${model.statusCode}");
+
+    log("isEmailVerified: ${model.isEmailVerified}");
+
+    log("isProfileCompleted: ${model.isProfileCompleted}");
+
+    // ==========================
+    // EMAIL NOT VERIFIED
+    // ==========================
+
+    if (model.statusCode == 403 || model.isEmailVerified == false) {
+      return LoginResult(
+        type: LoginApiResultType.emailNotVerified,
+        message: model.msg,
+      );
     }
 
-    // ✅ SUCCESS FLOW
-    _saveUserDataAfterLogin(response: response);
+    // ==========================
+    // PROFILE INCOMPLETE
+    // ==========================
 
+    if (model.statusCode == 302 || model.isProfileCompleted == false) {
+      storage.setToken(model.accessToken ?? '');
+
+      return LoginResult(
+        type: LoginApiResultType.profileIncomplete,
+        message: model.msg,
+      );
+    }
+
+    // ==========================
+    // SUCCESS VALIDATION
+    // ==========================
+
+    if (model.accessToken == null || model.accessToken!.isEmpty) {
+      return LoginResult(
+        type: LoginApiResultType.failed,
+        message: "Access token missing",
+      );
+    }
+
+    // ==========================
+    // SAVE USER + START SESSION
+    // ==========================
+
+    _saveUserDataAfterLogin(model: model);
+
+    await _completeLoginSession();
+
+    return LoginResult(type: LoginApiResultType.success);
+  }
+*/
+  Future<void> _completeLoginSession() async {
     try {
       final socket = Get.find<SocketService>();
+
       socket.disconnectSocket();
+
       await socket.connectSocket();
     } catch (e) {
       log("Socket error: $e");
@@ -238,37 +302,17 @@ class SigninService {
     if (Get.isRegistered<ProfileController>()) {
       await Get.find<ProfileController>().fetchMyProfile();
     }
-
-    return LoginResult(type: LoginResultType.success);
   }
 
-  /// Connects the socket using the token that was just saved by
-  /// _saveUserDataAfterLogin. Called only on successful login.
-  void _connectSocketAfterLogin() {
-    // SocketService is registered as permanent in InitialBinding —
-    // Get.find() is always safe here.
-    try {
-      Get.find<SocketService>().connectSocket();
-    } catch (e) {
-      // SocketService not registered yet — should not happen if InitialBinding
-      // is set up correctly, but log it rather than crashing.
-      log("⚠️ SocketService not found during login: $e");
-    }
-  }
-
-  void _saveUserDataAfterLogin({
-    required BaseResponse<SigninModelData> response,
-  }) {
-    if (response.data == null) return;
-
-    final user = response.data!.user;
+  void _saveUserDataAfterLogin({required SigninModelData model}) {
+    final user = model.user;
     storage.setUserInfo(email: user?.email ?? '');
-    storage.setToken(response.data?.accessToken ?? '');
+    storage.setToken(model.accessToken ?? '');
 
-    log("access token when setup: ${response.data!.accessToken}");
+    log("access token when setup: ${model.accessToken}");
 
     log("Logged in as: ${user?.email}");
-    log("Access token: ${response.data!.accessToken}");
+    log("Access token: ${model.accessToken}");
   }
 }
 

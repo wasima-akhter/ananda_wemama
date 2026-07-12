@@ -2,20 +2,22 @@ import '../../../../app/service_export.dart';
 import '../model/chat_list_item_model.dart';
 
 class ChatService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-  Future<List<ChatListItemModel>> fetchSearchedChatList({required String searchTxt}) async {
+
+  Future<List<ChatListItemModel>> fetchSearchedChatList({
+    required String searchTxt,
+  }) async {
     apiCall() {
       return ApiClient().get(
         Endpoints.getSearchedChatList(searchTxt: searchTxt).getUrl,
-        reqName: Strings.search,
+        // reqName: Strings.search,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<ChatListItemModel>>(
+    final response = await ApiExecutor().execute<List<ChatListItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: ${data}");
+        log("parserdata: $data");
         if (data is List) {
           return data.map((e) => ChatListItemModel.fromJson(e)).toList();
         }

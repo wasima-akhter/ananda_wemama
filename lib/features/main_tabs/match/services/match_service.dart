@@ -3,8 +3,6 @@ import 'package:mama_app/features/main_tabs/match/model/match_model.dart';
 import '../../../../app/service_export.dart';
 
 class MatchService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   /// Fetch inventory details from API
 
   Future<List<MatchResponseModel>> fetchMatches({
@@ -15,12 +13,12 @@ class MatchService extends GetxService {
       return ApiClient().get(
         // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
         Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
-        reqName: Strings.match,
+        // reqName: Strings.match,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<MatchResponseModel>>(
+    final response = await ApiExecutor().execute<List<MatchResponseModel>>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");

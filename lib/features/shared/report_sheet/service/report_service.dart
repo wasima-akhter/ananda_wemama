@@ -4,8 +4,6 @@ import 'package:mama_app/app/helper_widgets_export.dart';
 import '../../../../app/service_export.dart';
 
 class ReportService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<ReportInfoModel?> reportUserOrContent({
     XFile? reportImage,
     required String id_,
@@ -13,10 +11,10 @@ class ReportService extends GetxService {
     required bool isUserReport,
     required String note,
   }) async {
-    final response = await _apiHelper.request<ReportInfoModel>(
+    final response = await ApiExecutor().execute<ReportInfoModel>(
       apiCall: () => ApiClient().postWithFile(
         Endpoints.reportUser.getUrl,
-        reqName: Strings.reportUser,
+        // reqName: Strings.reportUser,
         file: reportImage != null
             ? MapEntry('report-image', reportImage)
             : null,
@@ -30,7 +28,7 @@ class ReportService extends GetxService {
       parser: (data) => ReportInfoModel.fromJson(data),
     );
 
-    return (response == null || !response.success) ? null : response.data;
+    return (!response.isSuccess) ? null : response.data;
   }
 
   //

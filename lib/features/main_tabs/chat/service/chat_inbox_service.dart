@@ -4,8 +4,6 @@ import '../../../../app/service_export.dart';
 import '../model/chat_inbox_msg_item_model.dart';
 
 class ChatInboxService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<ChatMessagesPage> fetchMessagesPaged({
     required String conversationId,
     required int page,
@@ -22,9 +20,9 @@ class ChatInboxService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<ChatInboxMessageItemModel>(
-      showErrorToast: false,
+    final response = await ApiExecutor().execute<ChatInboxMessageItemModel>(
       apiCall: apiCall,
+
       parser: (data) {
         if (data is Map<String, dynamic>) {
           return ChatInboxMessageItemModel.fromJson(data);
@@ -33,11 +31,11 @@ class ChatInboxService extends GetxService {
       },
     );
 
-    final item = response?.data ?? ChatInboxMessageItemModel();
+    final item = response.data ?? ChatInboxMessageItemModel();
 
     return ChatMessagesPage(
-      messages: item.messages ?? [],
-      meta: response?.meta,
+      messages: item.messages,
+      meta: response.meta,
       item: item,
     );
   }
@@ -67,10 +65,10 @@ Length(bytes): ${await file.length()}
     /// LOG FIELDS
     log("📝 Fields: $fields");
 
-    final response = await _apiHelper.request<dynamic>(
+    final response = await ApiExecutor().execute<dynamic>(
       apiCall: () => ApiClient().postWithFile(
         Endpoints.sendChatFile.getUrl,
-        reqName: Strings.uploadChatFile,
+        // reqName: Strings.uploadChatFile,
         files: chatFiles.map((f) {
           log("✅ Sending File => field: chat-files | file: ${f.name}");
 
@@ -82,10 +80,10 @@ Length(bytes): ${await file.length()}
       parser: (data) => data,
     );
 
-    log("📥 Upload Response: ${response?.data}");
-    log("📥 Upload Success: ${response?.success}");
+    log("📥 Upload Response: ${response.data}");
+    log("📥 Upload Success: ${response.isSuccess}");
 
-    return (response == null || !response.success) ? null : response.data;
+    return (!response.isSuccess) ? null : response.data;
   }
 }
 

@@ -1,23 +1,19 @@
-import 'package:mama_app/core/utils/extension/context_extension.dart';
-
 import '../../../../app/service_export.dart';
 import '../model/community_spotlight_model.dart';
 
 class HomeService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   /// Fetch inventory details from API
 
   Future<CommunitySpotlightModel?> fetchCommunitySpotLight() async {
     apiCall() {
       return ApiClient().get(
         Endpoints.communitySpotlight.getUrl,
-        reqName: Strings.communitySpotlight,
+        // reqName: Strings.communitySpotlight,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<CommunitySpotlightModel?>(
+    final response = await ApiExecutor().execute<CommunitySpotlightModel?>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -39,12 +35,12 @@ class HomeService extends GetxService {
     apiCall() {
       return ApiClient().get(
         Endpoints.gentleReminder.getUrl,
-        reqName: Strings.gentleReminder.capEachWord(),
+        // reqName: Strings.gentleReminder.capEachWord(),
         // headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<GentleRemindData?>(
+    final response = await ApiExecutor().execute<GentleRemindData?>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -65,12 +61,12 @@ class HomeService extends GetxService {
     apiCall() {
       return ApiClient().post(
         Endpoints.addTodayMood.getUrl,
-        reqName: "add mood today".capEachWord(),
+        // reqName: "add mood today".capEachWord(),
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<CheckInResponse?>(
+    final response = await ApiExecutor().execute<CheckInResponse?>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");

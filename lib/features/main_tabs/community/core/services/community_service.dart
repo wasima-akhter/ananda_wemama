@@ -5,16 +5,14 @@ import '../../../../../core/utils/paginator/paginator.dart';
 import '../models/community_item_model.dart';
 
 class CommunityService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<bool> createCommunity({
     required XFile? communityImg,
     required String communityName,
   }) async {
-    final response = await _apiHelper.request(
+    final response = await ApiExecutor().execute(
       apiCall: () => ApiClient().postWithFile(
         Endpoints.createCommunity.getUrl,
-        reqName: Strings.createCommunity,
+        // reqName: Strings.createCommunity,
         file: communityImg != null
             ? MapEntry('community-image', communityImg)
             : null,
@@ -22,7 +20,7 @@ class CommunityService extends GetxService {
       ),
     );
 
-    return response != null && response.success;
+    return response.isSuccess;
   }
 
   Future<bool> updateCommunity({
@@ -30,10 +28,10 @@ class CommunityService extends GetxService {
     required String? communityName,
     required String communityId,
   }) async {
-    final response = await _apiHelper.request(
+    final response = await ApiExecutor().execute(
       apiCall: () => ApiClient().patchWithFile(
         Endpoints.updateCommunity.getUrl,
-        reqName: Strings.updateCommunity,
+        // reqName: Strings.updateCommunity,
         file: communityImg != null
             ? MapEntry('community-image', communityImg)
             : null,
@@ -41,7 +39,7 @@ class CommunityService extends GetxService {
       ),
     );
 
-    return response != null && response.success;
+    return response.isSuccess;
   }
 
   Future<PaginatedResult<CommunityItemModel>> fetchManagedCommunityListPaged({
@@ -52,13 +50,12 @@ class CommunityService extends GetxService {
       return ApiClient().get(
         Endpoints.getMyCommunity(limit: limit, page: page).getUrl,
 
-        reqName: Strings.myCommunity,
+        // reqName: Strings.myCommunity,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<CommunityItemModel>>(
-      showErrorToast: false,
+    final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -70,11 +67,11 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
+    log("response data: ${response.data}");
 
     return PaginatedResult(
-      data: response?.data ?? [],
-      meta: response?.meta, // ✅ comes straight from BaseResponse
+      data: response.data ?? [],
+      meta: response.meta, // ✅ comes straight from BaseResponse
     );
   }
 
@@ -89,8 +86,7 @@ class CommunityService extends GetxService {
       );
     }
 
-    final response = await _apiHelper.request<List<CommunityItemModel>>(
-      showErrorToast: false,
+    final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
         if (data is List) {
@@ -101,8 +97,8 @@ class CommunityService extends GetxService {
     );
 
     return PaginatedResult(
-      data: response?.data ?? [],
-      meta: response?.meta, // ✅ comes straight from BaseResponse
+      data: response.data ?? [],
+      meta: response.meta, // ✅ comes straight from BaseResponse
     );
   }
 
@@ -113,13 +109,12 @@ class CommunityService extends GetxService {
     apiCall() {
       return ApiClient().get(
         Endpoints.getSuggestedCommunity(limit: limit, page: page).getUrl,
-        reqName: Strings.suggestions,
+        // reqName: Strings.suggestions,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<CommunityItemModel>>(
-      showErrorToast: false,
+    final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -131,10 +126,10 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
+    log("response data: ${response.data}");
     return PaginatedResult(
-      data: response?.data ?? [],
-      meta: response?.meta, // ✅ comes straight from BaseResponse
+      data: response.data ?? [],
+      meta: response.meta, // ✅ comes straight from BaseResponse
     );
   }
 
@@ -150,12 +145,12 @@ class CommunityService extends GetxService {
           limit: limit,
           page: page,
         ).getUrl,
-        reqName: Strings.search,
+        // reqName: Strings.search,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await _apiHelper.request<List<CommunityItemModel>>(
+    final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
         log("parserdata: $data");
@@ -167,10 +162,10 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
+    log("response data: ${response.data}");
     return PaginatedResult(
-      data: response?.data ?? [],
-      meta: response?.meta, // ✅ comes straight from BaseResponse
+      data: response.data ?? [],
+      meta: response.meta, // ✅ comes straight from BaseResponse
     );
   }
 }

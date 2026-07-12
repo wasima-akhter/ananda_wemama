@@ -2,19 +2,19 @@ import '../../../../../../app/service_export.dart';
 import '../../../../../features/more/legal/terms_and_conditions/model/term_and_conditions_model.dart';
 
 class TermsConditionsService extends GetxService {
-  final ApiServiceHelper _apiHelper = ApiServiceHelper();
-
   Future<TermsAndConditionsDataModel?> fetchTermsAndConditions() async {
     apiCall() {
-      return ApiClient().get(Endpoints.termsAndConditions.getUrl, reqName: Strings.termsCondition);
+      return ApiClient().get(
+        Endpoints.termsAndConditions.getUrl, // reqName: Strings.termsCondition
+      );
     }
 
-    final response = await _apiHelper.request<TermsAndConditionsDataModel>(
+    final response = await ApiExecutor().execute<TermsAndConditionsDataModel>(
       apiCall: apiCall,
       parser: (data) => TermsAndConditionsDataModel.fromJson(data),
     );
 
-    if (response == null || !response.success) return null;
+    if (!response.isSuccess) return null;
 
     return response.data; // 👈 return actual data
   }
