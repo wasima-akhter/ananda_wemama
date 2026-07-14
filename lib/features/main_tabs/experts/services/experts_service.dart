@@ -1,5 +1,4 @@
 import '../../../../app/service_export.dart';
-import '../../../../core/network/base/api_executor.dart';
 import '../model/expert_session_list_model.dart';
 
 class ExpertsService extends GetxService {
@@ -24,6 +23,23 @@ class ExpertsService extends GetxService {
     return result.data;
   }
 
+  Future<Result<ExpertSessionsListModel>> fetchPastLibrarySessionList({
+    required String sessionStatus,
+    required String page,
+    required String searchTxt,
+  }) {
+    return ApiExecutor().execute<ExpertSessionsListModel>(
+      apiCall: () => ApiClient().get(
+        Endpoints.getPastLibrarySessionList(
+          page: page,
+          sessionStatus: sessionStatus,
+          searchTxt: searchTxt,
+        ).getUrl,
+      ),
+      parser: (data) => ExpertSessionsListModel.fromList(data),
+    );
+  }
+
   //----------------------------
 
   Future<bool> uploadUpcomingSessionQues({
@@ -40,5 +56,29 @@ class ExpertsService extends GetxService {
     );
 
     return result.type == ApiResultType.success;
+  }
+
+  //
+  Future<bool> setReminder({required String sessionId}) async {
+    final response = await ApiExecutor().execute(
+      apiCall: () => ApiClient().post(
+        Endpoints.setSessionReminder(sessionId: sessionId).getUrl,
+        data: {},
+      ),
+      parser: (data) => data,
+    );
+
+    return response.isSuccess;
+  }
+
+  Future<bool> removeReminder({required String sessionId}) async {
+    final response = await ApiExecutor().execute(
+      apiCall: () => ApiClient().delete(
+        Endpoints.removeSessionReminder(sessionId: sessionId).getUrl,
+      ),
+      parser: (data) => data,
+    );
+
+    return response.isSuccess;
   }
 }

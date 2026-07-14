@@ -36,6 +36,44 @@ class SessionActionController extends GetxController {
     }
   }
 
+  final service = ExpertsService();
+
+  final RxBool isLoading = false.obs;
+
+  final RxMap<String, bool> reminderStatus = <String, bool>{}.obs;
+
+  bool isReminderSet(String sessionId) {
+    return reminderStatus[sessionId] ?? false;
+  }
+
+  Future<void> toggleReminder({required String sessionId}) async {
+    if (isLoading.value) return;
+
+    isLoading.value = true;
+
+    try {
+      final alreadySet = isReminderSet(sessionId);
+
+      bool success;
+
+      if (alreadySet) {
+        success = await service.removeReminder(sessionId: sessionId);
+      } else {
+        success = await service.setReminder(sessionId: sessionId);
+      }
+
+      if (success) {
+        reminderStatus[sessionId] = !alreadySet;
+
+        reminderStatus.refresh();
+      }
+    } catch (e) {
+      log("Reminder error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   void disposeInputs() {
     // writeQuesCtrl.dispose();
     // writeQuesFocusNode.dispose();

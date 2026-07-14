@@ -99,6 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   final actionCtrl = hc.actionCtrl;
 
                   return UpcomingExpertSessionCard(
+                    isRemindMeLoading: actionCtrl.isLoading,
+                    isReminderActive: actionCtrl.isReminderSet(firstSession.id),
+                    onTapRemindMe: () {
+                      actionCtrl.toggleReminder(sessionId: firstSession.id);
+                    },
                     hasTypetitle: true,
                     data: firstSession,
                     writeQuesCtrl: hc.writeQuesCtrl,

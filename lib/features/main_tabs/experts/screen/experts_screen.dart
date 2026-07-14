@@ -27,6 +27,7 @@ class ExpertsScreen extends StatelessWidget {
       onRefresh: () async {
         sc.getOngoingSessions();
         sc.getUpcomingSessions();
+        exc.getPastSessions();
       },
 
       child: Column(
@@ -119,6 +120,11 @@ class ExpertsScreen extends StatelessWidget {
                     itemBuilder: (index) {
                       final item = upcomingList[index];
                       return UpcomingExpertSessionCard(
+                        isRemindMeLoading: act.isLoading,
+                        isReminderActive: act.isReminderSet(item.id),
+                        onTapRemindMe: () {
+                          act.toggleReminder(sessionId: item.id);
+                        },
                         data: item,
                         onTapQues: ({required expertId, required sessionId}) =>
                             act.uploadSessionQues(
@@ -135,112 +141,6 @@ class ExpertsScreen extends StatelessWidget {
               ],
             );
           }),
-
-          /*
-          /// 🔴 ONGOING sessions
-          Obx(() {
-            final isLoading = sc.isOngoingLoading.value;
-            final displayList = exc.limitList(sc.ongoingList);
-            final state = getUIStateList(
-              isLoading: isLoading,
-              list: displayList,
-            );
-
-            return UIStateHandler(
-              state: state,
-
-              loading: () => CardHorizontalList(
-                height: Responsive.ongoingSessionCardHeight,
-                title: Strings.ongoingExpertSession,
-                exc: exc,
-                onViewAll: () {},
-                itemCount: 5,
-                itemBuilder: (_) => const LiveOngoingSessionCardShimmer(),
-              ),
-
-              empty: () => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  makeCardHeader(Strings.ongoingExpertSession, onTap: () {}),
-                  Gap(itemGap),
-                  const EmptyNoSearchWidget(title: Strings.noSessionsFound),
-                ],
-              ),
-
-              data: () => CardHorizontalList(
-                aspectRatio: 1.8,
-                height: Responsive.ongoingSessionCardHeight,
-                title: Strings.ongoingExpertSession,
-                exc: exc,
-                onViewAll: () => exc.onTapViewAll(true),
-                itemCount: displayList.length,
-                itemBuilder: (index) =>
-                    LiveOngoingSessionCard(data: displayList[index]),
-              ),
-            );
-          }),
-
-          Gap(itemGap * 0.5),
-
-          /// 🟡 UPCOMING sessions
-          Obx(() {
-            final isLoading = sc.isUpcomingLoading.value;
-            final displayList = exc.limitList(sc.upcomingList);
-            final state = getUIStateList(
-              isLoading: isLoading,
-              list: displayList,
-            );
-
-            return UIStateHandler(
-              state: state,
-
-              loading: () => CardHorizontalList(
-                height: Responsive.upcomingSessionCardHeight,
-                title: Strings.upcomingExpertSession,
-                exc: exc,
-                itemCount: 5,
-                onViewAll: () {},
-                itemBuilder: (_) => const LiveOngoingSessionCardShimmer(),
-              ),
-
-              empty: () => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  makeCardHeader(Strings.upcomingExpertSession, onTap: () {}),
-                  Gap(itemGap),
-                  const EmptyNoSearchWidget(title: "No upcoming sessions"),
-                ],
-              ),
-
-              data: () => CardHorizontalList(
-                aspectRatio: 1.45,
-
-                height: Responsive.upcomingSessionCardHeight,
-                title: Strings.upcomingExpertSession,
-                exc: exc,
-                onViewAll: () => exc.onTapViewAll(false),
-                itemCount: displayList.length,
-                itemBuilder: (index) {
-                  final item = displayList[index];
-                  return UpcomingExpertSessionCard(
-                    data: item,
-                    onTapQues: ({required expertId, required sessionId}) =>
-                        act.uploadSessionQues(
-                          expertId: expertId,
-                          sessionId: sessionId,
-                          question: exc.writeQuesCtrl.text.trim(),
-                        ),
-                    writeQuesCtrl: exc.writeQuesCtrl,
-                    writeQuesFocusNode: exc.writeQuesFocusNode,
-                    isSendQuesLoading: act.isSendQuesLoading,
-                  );
-                },
-              ),
-            );
-          }),
-
-
-*/
           Gap(itemGap * 0.5),
 
           PastSessionsLibraryCard(

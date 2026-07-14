@@ -4,6 +4,7 @@ import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/config/app_info.dart';
 
 enum PurchaseResult { success, userCancelled, error, pending }
 
@@ -27,7 +28,8 @@ class PurchaseService {
       LogLevel.debug,
     ); // switch to LogLevel.info in prod
     PurchasesConfiguration configuration = PurchasesConfiguration(
-      "YOUR_REVENUECAT_API_KEY_IOS_OR_ANDROID",
+      // "YOUR_REVENUECAT_API_KEY_IOS_OR_ANDROID",
+      revenueCatPublicKeyGoogolePlay,
     );
     await Purchases.configure(configuration);
 

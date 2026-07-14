@@ -1,7 +1,9 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/enums/ui_enums.dart';
+import '../../../../core/network/base/dio_client.dart';
 import '../../../shared/mood/mood_check_in/mood_row_model.dart';
 import '../model/expert_session_list_model.dart';
+import '../services/experts_service.dart';
 import 'session_action_controller.dart';
 import 'session_controller.dart';
 
@@ -16,13 +18,6 @@ class ExpertsController extends GetxController {
     MoodRowModel(name: Strings.tired, moodType: MoodType.tired),
     MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 8),
     MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 8),
-  ];
-
-  final pastSessionList = [
-    ...List.generate(
-      9,
-      (_) => MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
-    ),
   ];
 
   //
@@ -73,6 +68,8 @@ class ExpertsController extends GetxController {
     super.onInit();
     _sessionCtrl = Get.find<SessionController>();
     _actionCtrl = Get.find<SessionActionController>();
+
+    getPastSessions();
   }
 
   @override
@@ -157,5 +154,31 @@ class ExpertsController extends GetxController {
     Get.toNamed(
       isOngoing ? RoutePaths.ongoingSessions : RoutePaths.upcomingSessions,
     );
+  }
+
+  final _service = ExpertsService();
+
+  final RxBool isPastSessionLoading = false.obs;
+
+  final RxList<Session> pastSessionList = <Session>[].obs;
+
+  Future<void> getPastSessions() async {
+    isPastSessionLoading.value = true;
+
+    final result = await _service.fetchPastLibrarySessionList(
+      sessionStatus: "Completed",
+      page: "1",
+      searchTxt: "",
+    );
+
+    if (result.type == ApiResultType.success) {
+      pastSessionList.assignAll(result.data?.sessions ?? []);
+    }
+
+    isPastSessionLoading.value = false;
+  }
+
+  List<Session> get limitedPastSessions {
+    return pastSessionList.take(5).toList();
   }
 }

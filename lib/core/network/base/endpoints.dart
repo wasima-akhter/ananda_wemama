@@ -68,6 +68,14 @@ class Endpoints {
     return "expert/get-all-session-app?sessionStatus=$sessionStatus&page=$page&searchText=$searchTxt";
   }
 
+  static String getPastLibrarySessionList({
+    required String sessionStatus,
+    required String page,
+    required String searchTxt,
+  }) {
+    return "expert/get-all-session-app?status=$sessionStatus&page=$page&searchText=$searchTxt";
+  }
+
   static String getUserProfile({required String userId}) {
     return "profile/get-friend-profile?profileId=$userId";
   }
@@ -149,4 +157,11 @@ class Endpoints {
   // session details by session Id
   static String getSessionDetailById({required String id}) =>
       "expert/get-session-detail/$id";
+
+  // remind me
+
+  static String setSessionReminder({required String sessionId}) =>
+      "expert/set-session-reminder/$sessionId";
+  static String removeSessionReminder({required String sessionId}) =>
+      "expert/remove-session-remider/$sessionId";
 }

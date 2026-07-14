@@ -20,26 +20,63 @@ class PaidPastSessionsComponent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.libraryOfPastSessions.capEachWord(), style: TxtStyle.outfitSmTitle),
+          Text(
+            Strings.libraryOfPastSessions.capEachWord(),
+            style: TxtStyle.outfitSmTitle,
+          ),
           Gap(4),
           CustomDivider(isFullWidth: true),
           Gap(itemGap * 2),
 
           /// horizontal session list
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            child: Row(
-              children: [
-                ...List.generate(ctrl.pastSessionList.length, (index) {
-                  final item = ctrl.pastSessionList[index];
+          /// horizontal session list
+          Obx(() {
+            if (ctrl.isPastSessionLoading.value) {
+              return SizedBox(
+                height: 180.h,
+                child: Center(child: LoadingPrimary()),
+              );
+            }
 
-                  return SessionComponent();
-                }),
-              ],
-            ),
-          ),
+            final sessions = ctrl.limitedPastSessions;
 
+            if (sessions.isEmpty) {
+              return SizedBox(
+                height: 100.h,
+                child: Center(
+                  child: Text(
+                    "No past sessions available",
+                    style: TxtStyle.outfitSmTitle,
+                  ),
+                ),
+              );
+            }
+
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              child: Row(
+                children: [
+                  ...List.generate(sessions.length, (index) {
+                    final item = sessions[index];
+
+                    return Padding(
+                      padding: EdgeInsets.only(right: itemGap),
+                      child: SizedBox(
+                        width: 160,
+                        child: SessionComponent(
+                          session: item,
+                          isFromExpertScreen: true,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            );
+          }),
           Gap(itemGap * 3),
 
           /// watch all button
@@ -53,7 +90,10 @@ class PaidPastSessionsComponent extends StatelessWidget {
                   isLoading: false,
 
                   rad: 30,
-                  padding: EdgeInsets.symmetric(horizontal: 50.w, vertical: 8.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 50.w,
+                    vertical: 8.h,
+                  ),
                   onTap: () {
                     Get.toNamed(RoutePaths.pastSessions);
                   },

@@ -1,0 +1,282 @@
+For all three platforms (**Apple App Store, Google Play, RevenueCat**), use the same subscription concept:
+
+* **Subscription type:** Premium Monthly
+* **Billing period:** 1 month
+* **Auto-renewal:** Disabled (non-renewing behavior)
+* **First month discount:** 50%
+* **Regular monthly price:** ₦5,000
+* **First month promotional price:** ₦2,500
+
+Below are the exact details to configure.
+
+---
+
+## 1. Apple App Store Connect
+
+### Subscription Group
+
+**Reference Name**
+
+```
+Premium Access
+```
+
+### Subscription Product
+
+**Reference Name**
+
+```
+Premium Monthly
+```
+
+**Product ID**
+
+```
+com.yourapp.premium.monthly
+```
+
+**Subscription Duration**
+
+```
+1 Month
+```
+
+**Price**
+
+```
+₦5,000
+```
+
+**Subscription Name (localization display name)**
+
+```
+Premium Monthly
+```
+
+**Description**
+
+```
+Unlock all premium features with monthly access.
+```
+
+### Introductory Offer
+
+**Offer Type**
+
+```
+Introductory Price
+```
+
+**Duration**
+
+```
+1 Month
+```
+
+**Price**
+
+```
+₦2,500
+```
+
+**Discount**
+
+```
+50%
+```
+
+### Renewal
+
+Apple subscriptions are technically auto-renewable subscriptions. If you do not want auto-renewal:
+
+After purchase, your app should direct users to manage/cancel their subscription. Apple does not provide a "monthly subscription that expires automatically" product type for this use case.
+
+---
+
+## 2. Google Play Console
+
+### Subscription
+
+**Product ID**
+
+```
+premium_monthly
+```
+
+### Subscription Name
+
+```
+Premium Monthly
+```
+
+### Description
+
+```
+Unlock all premium features with monthly access.
+```
+
+---
+
+### Base Plan
+
+**Base Plan ID**
+
+```
+monthly
+```
+
+**Billing Period**
+
+```
+Monthly (P1M)
+```
+
+**Renewal Type**
+
+```
+Auto-renewing
+```
+
+**Price**
+
+```
+NGN 5,000
+```
+
+---
+
+### Offer
+
+**Offer ID**
+
+```
+first_month_discount
+```
+
+**Offer Type**
+
+```
+Introductory Offer
+```
+
+**Eligibility**
+
+```
+New subscribers only
+```
+
+**Pricing Phase 1**
+
+```
+Duration: 1 month
+Price: NGN 2,500
+```
+
+**Pricing Phase 2**
+
+```
+Duration: Until cancelled
+Price: NGN 5,000
+```
+
+---
+
+## 3. RevenueCat
+
+### Product
+
+Import the same store products:
+
+**iOS Product**
+
+```
+com.yourapp.premium.monthly
+```
+
+**Android Product**
+
+```
+premium_monthly
+```
+
+---
+
+### Entitlement
+
+**Identifier**
+
+```
+premium
+```
+
+**Display Name**
+
+```
+Premium Access
+```
+
+Attach:
+
+```
+com.yourapp.premium.monthly
+premium_monthly
+```
+
+---
+
+### Offering
+
+**Offering Identifier**
+
+```
+default
+```
+
+Set as:
+
+```
+Current Offering: Yes
+```
+
+---
+
+### Package
+
+**Package Identifier**
+
+```
+monthly
+```
+
+**Package Type**
+
+```
+Monthly
+```
+
+Attach:
+
+```
+Premium Monthly Product
+```
+
+---
+
+## Final Configuration Summary
+
+| Item               | Value                         |
+| ------------------ | ----------------------------- |
+| Product            | Premium Monthly               |
+| Period             | 1 Month                       |
+| Normal Price       | ₦5,000                        |
+| First Month Price  | ₦2,500                        |
+| Discount           | 50%                           |
+| Subscription Group | Premium Access                |
+| Entitlement        | premium                       |
+| Offering           | default                       |
+| Package            | monthly                       |
+| iOS Product ID     | com.yourapp.premium.monthly   |
+| Android Product ID | premium_monthly               |
+| Renewal            | Platform-managed subscription |
+
+One important implementation note: Apple and Google subscriptions are designed as **auto-renewing** products. You can make your app experience behave like "one month access only" by guiding users to cancel/manage after purchase, but the store product itself remains an auto-renewable subscription.

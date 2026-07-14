@@ -10,11 +10,14 @@ class UpcomingExpertSessionCard extends StatelessWidget {
   final void Function({required String expertId, required String sessionId})
   onTapQues;
   final RxBool isSendQuesLoading;
+  final RxBool isRemindMeLoading;
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
   final Session? data;
   final bool? isFromUpcomgScreen;
   final bool hasTypetitle;
+  final void Function()? onTapRemindMe;
+  final bool isReminderActive;
   const UpcomingExpertSessionCard({
     super.key,
     required this.onTapQues,
@@ -24,6 +27,9 @@ class UpcomingExpertSessionCard extends StatelessWidget {
     this.isFromUpcomgScreen,
     required this.isSendQuesLoading,
     this.hasTypetitle = false,
+    this.onTapRemindMe,
+    required this.isReminderActive,
+    required this.isRemindMeLoading,
   });
 
   @override
@@ -167,29 +173,50 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               Gap(itemGap),
 
               Flexible(
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  vp: 8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgIcon(iconPath: IconsPath.reminderBellSkew),
-                      Gap(itemGap),
-                      Flexible(
-                        child: Text(
-                          Strings.remindMe.capEachWord(),
-                          overflow: TextOverflow.ellipsis,
-                          style: TxtStyle.outfitSemiB(
-                            fs: 13,
-                            w: 600,
-                            color: c.textOnPrimary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: CusGestureDetector(
+                  onTap: onTapRemindMe,
+
+                  child: Obx(() {
+                    final active = isReminderActive;
+
+                    return isRemindMeLoading.value
+                        ? LoadingPrimary()
+                        : ContainerBordered(
+                            contClr: active ? c.strokePrimary : c.buttonPrimary,
+
+                            rad: 30,
+                            vp: 8,
+
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+
+                              children: [
+                                SvgIcon(
+                                  iconPath: active
+                                      ? IconsPath.reminderBellStraignt
+                                      : IconsPath.reminderBellSkew,
+                                ),
+
+                                Gap(itemGap),
+
+                                Text(
+                                  active
+                                      ? "Remove"
+                                      : Strings.remindMe.capEachWord(),
+
+                                  overflow: TextOverflow.ellipsis,
+
+                                  style: TxtStyle.outfitSemiB(
+                                    fs: 13,
+                                    w: 600,
+                                    color: active ? bgClr : c.textOnPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                  }),
                 ),
               ),
 
@@ -208,7 +235,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   child: ContainerBordered(
                     contClr: c.buttonPrimary,
                     rad: 30,
-                    vp: 8,
+                    vp: 6,
                     child: SvgIcon(
                       iconPath: IconsPath.chatDotSquare,
                       height: 21,
