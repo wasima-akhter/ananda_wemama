@@ -41,7 +41,8 @@ mixin RtmMessageMixin on GetxController {
 
             case 'RAISE_HAND':
               final uid = payload['sender']?.toString() ?? '';
-              if (uid.isNotEmpty && !_self.raisedHands.any((h) => h.uid == uid)) {
+              if (uid.isNotEmpty &&
+                  !_self.raisedHands.any((h) => h.uid == uid)) {
                 _self.raisedHands.add(
                   RaiseHandModel(
                     uid: uid,
@@ -55,7 +56,7 @@ mixin RtmMessageMixin on GetxController {
             case 'HAND_LOWER':
               final target = payload['target']?.toString() ?? '';
               _self.raisedHands.removeWhere((h) {
-                log('raisedHands target id: ${target} ');
+                log('raisedHands target id: $target ');
                 log('raisedHands target id: ${h.uid} ');
                 return h.uid == target;
               });
@@ -108,7 +109,8 @@ mixin RtmMessageMixin on GetxController {
 
               case 'RAISE_HAND':
                 final uid = payload['sender']?.toString() ?? '';
-                if (uid.isNotEmpty && !_self.raisedHands.any((h) => h.uid == uid)) {
+                if (uid.isNotEmpty &&
+                    !_self.raisedHands.any((h) => h.uid == uid)) {
                   _self.raisedHands.add(
                     RaiseHandModel(
                       uid: uid,
@@ -160,7 +162,8 @@ mixin RtmMessageMixin on GetxController {
               case 'CHAT':
                 displayText = payload['message'] ?? rawText;
                 senderName = payload['senderName'] ?? '';
-                senderAvatar = payload['senderAvatar'] ?? payload['avatar'] ?? '';
+                senderAvatar =
+                    payload['senderAvatar'] ?? payload['avatar'] ?? '';
                 break;
 
               default:
@@ -179,10 +182,14 @@ mixin RtmMessageMixin on GetxController {
       final isMe = event.publisher == _self.mc.uid.value.toString();
 
       if (senderName.isEmpty) {
-        senderName = isMe ? (_self.mc.sessionInfo.value.userName ?? 'You') : 'User';
+        senderName = isMe
+            ? (_self.mc.sessionInfo.value.userName ?? 'You')
+            : 'User';
       }
       if (senderAvatar.isEmpty) {
-        senderAvatar = isMe ? (_self.mc.sessionInfo.value.userAvatar ?? '') : '';
+        senderAvatar = isMe
+            ? (_self.mc.sessionInfo.value.userAvatar ?? '')
+            : '';
       }
 
       messages.add(

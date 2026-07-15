@@ -1,4 +1,5 @@
 import '../../../../app/service_export.dart';
+import '../../../../core/utils/extension/context_extension.dart';
 import '../model/expert_session_list_model.dart';
 
 class ExpertsService extends GetxService {
@@ -68,6 +69,10 @@ class ExpertsService extends GetxService {
       parser: (data) => data,
     );
 
+    if (response.isSuccess) {
+      Snack.showSuccess("${response.message}");
+    }
+
     return response.isSuccess;
   }
 
@@ -79,6 +84,9 @@ class ExpertsService extends GetxService {
       parser: (data) => data,
     );
 
+    if (response.isSuccess) {
+      Snack.showSuccess("${response.message}");
+    }
     return response.isSuccess;
   }
 }

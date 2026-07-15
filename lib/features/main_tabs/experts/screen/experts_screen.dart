@@ -120,8 +120,8 @@ class ExpertsScreen extends StatelessWidget {
                     itemBuilder: (index) {
                       final item = upcomingList[index];
                       return UpcomingExpertSessionCard(
-                        isRemindMeLoading: act.isLoading,
-                        isReminderActive: act.isReminderSet(item.id),
+                        isRemindMeLoading: () => act.isReminderLoading(item.id),
+                        isReminderActive: () => act.isReminderSet(item.id),
                         onTapRemindMe: () {
                           act.toggleReminder(sessionId: item.id);
                         },

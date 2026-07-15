@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/core/helpers/permission_helper.dart';
@@ -10,6 +12,14 @@ import '../meeting_controller.dart';
 
 mixin AgoraEngineMixin on GetxController {
   MeetingController get _self => this as MeetingController;
+
+  //
+  // 👇 NEW: grace period handling for host disconnect vs real end
+  Timer? _hostOfflineGraceTimer;
+  bool _isEndedPopupShowing = false;
+  bool _hasEndedDueToTimeout = false;
+  BuildContext? _endedPopupContext;
+  static const _hostOfflineGraceDuration = Duration(seconds: 8);
 
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
@@ -175,37 +185,7 @@ mixin AgoraEngineMixin on GetxController {
             }
           },
 
-          // onUserJoined: (connection, uid, elapsed) async {
-          //   try {
-          //     log('🎥 Host joined: uid=$uid');
-
-          //     // ✅ If this is the host
-          //     if (hostUid.value == null) {
-          //       // fallback (if backend didn't provide)
-          //       hostUid.value = uid;
-          //       log('🎯 Assigned HOST uid=$uid');
-          //     }
-
-          //     // ✅ Always keep list (optional)
-          //     if (!_self.remoteUids.contains(uid)) {
-          //       _self.remoteUids.add(uid);
-          //     }
-
-          //     _self.hasLiveStarted.value = true;
-          //     _self.hasLiveEnded.value = false;
-
-          //     await _self.agoraEngine?.muteRemoteAudioStream(
-          //       uid: uid,
-          //       mute: false,
-          //     );
-
-          //     if (uid == hostUid.value) {
-          //       _self.startSessionTimer(); // ✅ only for host
-          //     }
-          //   } catch (e) {
-          //     log('❌ onUserJoined handler error: $e');
-          //   }
-          // },
+          /*
           onUserJoined: (connection, uid, elapsed) async {
             try {
               log('🎥 Host joined: uid=$uid');
@@ -233,7 +213,8 @@ mixin AgoraEngineMixin on GetxController {
               log('❌ onUserJoined handler error: $e');
             }
           },
-          // Host left → ended
+         */
+          /*
           onUserOffline: (connection, uid, reason) async {
             try {
               log('⚠️ Host left: uid=$uid, reason=$reason');
@@ -254,7 +235,112 @@ mixin AgoraEngineMixin on GetxController {
               log('❌ onUserOffline handler error: $e');
             }
           },
+*/
+          onUserJoined: (connection, uid, elapsed) async {
+            try {
+              log('🎥 Host joined: uid=$uid');
 
+              // Cancel any pending grace timer (host reconnected in time)
+              if (_hostOfflineGraceTimer != null) {
+                log(
+                  '🟢 Host rejoined before grace period expired — cancelling end flow',
+                );
+                _hostOfflineGraceTimer?.cancel();
+                _hostOfflineGraceTimer = null;
+              }
+
+              // 👇 NEW: also recover if the session was already marked
+              // "ended" (grace period had fully expired and popup shown),
+              // but the host has now genuinely rejoined the same live.
+              if (_hasEndedDueToTimeout || _isEndedPopupShowing) {
+                log(
+                  '🟢 Host rejoined AFTER grace period expired — reopening session, dismissing end popup',
+                );
+                // 👇 close THIS specific dialog via its own captured context
+                if (_endedPopupContext != null &&
+                    _endedPopupContext!.mounted &&
+                    Navigator.of(_endedPopupContext!).canPop()) {
+                  Navigator.of(_endedPopupContext!).pop();
+                }
+                _endedPopupContext = null;
+                // if (_isEndedPopupShowing && (Get.isDialogOpen ?? false)) {
+                //   Get.back();
+                // }
+                _isEndedPopupShowing = false;
+                _hasEndedDueToTimeout = false;
+                _self.isSessionExiting = false;
+                _self.hasLiveEnded.value = false;
+              }
+
+              if (hostUid.value == null) {
+                hostUid.value = uid;
+                log('🎯 Assigned HOST uid=$uid');
+              }
+
+              if (!_self.remoteUids.contains(uid)) {
+                _self.remoteUids.add(uid);
+              }
+
+              _self.hasLiveStarted.value = true;
+              _self.hasLiveEnded.value = false;
+
+              await _self.agoraEngine?.setEnableSpeakerphone(true);
+
+              if (uid == hostUid.value) {
+                _self.startSessionTimer();
+              }
+            } catch (e) {
+              log('❌ onUserJoined handler error: $e');
+            }
+          },
+
+          onUserOffline: (connection, uid, reason) async {
+            try {
+              log('⚠️ Host left: uid=$uid, reason=$reason');
+              _self.remoteUids.remove(uid);
+
+              if (uid == hostUid.value) {
+                log(
+                  '🟡 Host disconnected — waiting ${_hostOfflineGraceDuration.inSeconds}s to confirm real end',
+                );
+
+                _hostOfflineGraceTimer?.cancel();
+                _hostOfflineGraceTimer = Timer(
+                  _hostOfflineGraceDuration,
+                  () async {
+                    log('🔴 Host did not rejoin — ending session');
+
+                    _self.isSessionExiting = true;
+                    _self.exitReason = LiveExitReason.ended;
+
+                    hostUid.value = null;
+                    _self.hasLiveEnded.value = true;
+                    _self.stopSessionTimer();
+
+                    await Future.delayed(const Duration(milliseconds: 300));
+
+                    _isEndedPopupShowing = true;
+                    _hasEndedDueToTimeout =
+                        true; // 👈 NEW: mark confirmed-ended
+
+                    // 👇 capture this dialog's own context as it's built
+                    showLiveExitPopup(
+                      LiveExitReason.ended,
+                      onDialogShown: (dialogContext) {
+                        _endedPopupContext = dialogContext;
+                      },
+                    );
+
+                    _hostOfflineGraceTimer = null;
+                  },
+                );
+              }
+            } catch (e) {
+              log('❌ onUserOffline handler error: $e');
+            }
+          },
+
+          //
           onUserMuteAudio: (connection, remoteUid, muted) {
             if (remoteUid == hostUid.value) {
               _self.isHostAudioOn.value = !muted;
@@ -398,5 +484,17 @@ mixin AgoraEngineMixin on GetxController {
       LiveExitReason.connectionLost,
       onRejoin: () => hostMeeting(), // re-runs the full join flow
     );
+  }
+
+  //
+
+  /// Call from the controller's onClose() to cancel any pending
+  /// "host ended" grace timer, so it doesn't fire after disposal.
+  void disposeAgoraEngineMixin() {
+    _hostOfflineGraceTimer?.cancel();
+    _hostOfflineGraceTimer = null;
+    _isEndedPopupShowing = false;
+    _hasEndedDueToTimeout = false;
+    _endedPopupContext = null;
   }
 }

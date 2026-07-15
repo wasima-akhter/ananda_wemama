@@ -163,5 +163,5 @@ class Endpoints {
   static String setSessionReminder({required String sessionId}) =>
       "expert/set-session-reminder/$sessionId";
   static String removeSessionReminder({required String sessionId}) =>
-      "expert/remove-session-remider/$sessionId";
+      "expert/remove-session-reminder/$sessionId";
 }

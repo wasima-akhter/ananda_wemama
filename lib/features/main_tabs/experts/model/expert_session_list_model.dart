@@ -37,6 +37,7 @@ class Session {
     this.updatedAt,
     this.v = 0,
     this.deepLinkUrl,
+    this.reminderEnabled = false,
   });
 
   final String id;
@@ -62,6 +63,8 @@ class Session {
   final bool isApproved;
 
   final List<RecordingFile> recordingFiles;
+
+  final bool reminderEnabled;
 
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -106,6 +109,7 @@ class Session {
       updatedAt: SafeParser.date(json['updatedAt']),
 
       isApproved: SafeParser.boolVal(json['isApproved']),
+      reminderEnabled: SafeParser.boolVal(json['reminderEnabled']),
 
       v: SafeParser.intVal(json['__v']),
 

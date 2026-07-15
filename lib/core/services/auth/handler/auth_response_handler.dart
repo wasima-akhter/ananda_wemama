@@ -2,12 +2,20 @@ import 'package:dio/dio.dart';
 
 import '../../../../features/auth/signin/model/signin_model.dart';
 import '../../../network/base/dio_client.dart';
+import '../../../utils/extension/context_extension.dart';
 
 class AuthResponseHandler {
-  static Result<SigninModelData> parse(Map<String, dynamic> body) {
+  static Result<SigninModelData> parse(
+    Map<String, dynamic> body, {
+    bool showSuccessMessage = false,
+    bool showErrorMessage = true,
+  }) {
     final model = SigninModelData.fromJson(body["data"] ?? {});
 
     if (model.statusCode == 403 || model.isEmailVerified == false) {
+      if (showErrorMessage && (model.msg?.isNotEmpty ?? false)) {
+        Snack.showError(model.msg!);
+      }
       return Result(
         type: ApiResultType.emailNotVerified,
         data: model,
@@ -16,6 +24,11 @@ class AuthResponseHandler {
     }
 
     if (model.statusCode == 302 || model.isProfileCompleted == false) {
+      // Not an error, but not a full success either — usually worth
+      // surfacing so the user understands why they're being redirected.
+      if (showErrorMessage && (model.msg?.isNotEmpty ?? false)) {
+        Snack.showError(model.msg!);
+      }
       return Result(
         type: ApiResultType.profileIncomplete,
         data: model,
@@ -24,36 +37,55 @@ class AuthResponseHandler {
     }
 
     if ((model.accessToken ?? "").isEmpty) {
-      return Result(
-        type: ApiResultType.failed,
-        message: "Access token missing",
-      );
+      const msg = "Access token missing";
+      if (showErrorMessage) Snack.showError(msg);
+      return Result(type: ApiResultType.failed, message: msg);
+    }
+
+    if (showSuccessMessage && (model.msg?.isNotEmpty ?? false)) {
+      Snack.showSuccess(model.msg!);
     }
 
     return Result(type: ApiResultType.success, data: model, message: model.msg);
   }
 
-  static LoginStatus check(Response response) {
+  static LoginStatus check(
+    Response response, {
+    bool showSuccessMessage = false,
+    bool showErrorMessage = true,
+  }) {
     final statusCode = response.statusCode ?? 0;
-
     final body = response.data;
+    final message = body["message"]?.toString();
 
     if (statusCode == 403) {
-      return LoginStatus.emailNotVerified(body["message"]);
+      if (showErrorMessage && (message?.isNotEmpty ?? false)) {
+        Snack.showError(message!);
+      }
+      return LoginStatus.emailNotVerified(message);
     }
 
     if (statusCode == 302) {
+      if (showErrorMessage && (message?.isNotEmpty ?? false)) {
+        Snack.showError(message!);
+      }
       return LoginStatus.profileIncomplete(
         accessToken: body["data"]?["accessToken"],
-        message: body["message"],
+        message: message,
       );
     }
 
     if (statusCode >= 200 && statusCode < 300) {
+      if (showSuccessMessage && (message?.isNotEmpty ?? false)) {
+        Snack.showSuccess(message!);
+      }
       return LoginStatus.success(body["data"]);
     }
 
-    return LoginStatus.failed(body["message"]);
+    if (showErrorMessage && (message?.isNotEmpty ?? false)) {
+      Snack.showError(message!);
+    }
+    return LoginStatus.failed(message);
   }
 }
 

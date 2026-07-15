@@ -8,6 +8,7 @@ import '../../../../features/main_tabs/community/shared_ui/community_guildline.d
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
+import '../../../../features/video_meeting/controller/fullscreen_video_controller.dart';
 import '../../app_ui/popup_widgets/awaiting_verification_popup.dart';
 import '../../app_ui/popup_widgets/daily_limit_popup.dart';
 import '../../app_ui/popup_widgets/delete_confirm_dialog.dart';
@@ -246,18 +247,34 @@ Future<void> showLiveExitPopup(
   LiveExitReason reason, {
   VoidCallback? onRejoin,
   Function(bool)? onTapCancel,
-}) {
+  void Function(BuildContext dialogContext)? onDialogShown, // 👈 NEW, optional
+}) async {
+  // 👇 NEW: if fullscreen video page is currently active, exit it first
+  // so the popup never renders in landscape/fullscreen mode.
+  if (Get.isRegistered<FullscreenVideoController>()) {
+    log('🔵 Fullscreen active — exiting before showing popup');
+    if (Get.key.currentState?.canPop() ?? false) {
+      Get.back(); // pops FullscreenVideoPage, triggers its dispose()
+    }
+    // give orientation + navigation time to settle before showing dialog
+    await Future.delayed(const Duration(milliseconds: 350));
+  }
   final isBlocking =
       reason == LiveExitReason.kicked ||
       reason == LiveExitReason.connectionLost;
   return showDialog(
     context: Get.context!,
     barrierDismissible: !isBlocking,
-    builder: (_) => LiveSessionExitPopup(
-      reason: reason,
-      onRejoin: onRejoin,
-      onTapCancel: onTapCancel,
-    ),
+    builder: (dialogContext) {
+      onDialogShown?.call(
+        dialogContext,
+      ); // 👈 hand back this dialog's own context
+      return LiveSessionExitPopup(
+        reason: reason,
+        onRejoin: onRejoin,
+        onTapCancel: onTapCancel,
+      );
+    },
   );
 }
 

@@ -18,21 +18,31 @@ class FullscreenVideoPage extends StatefulWidget {
 class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
   final fsc = Get.put(FullscreenVideoController());
 
+  // FullscreenVideoPage
   @override
   void initState() {
     super.initState();
     fsc.enterFullscreen();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.mc.isFullscreen.value = true;
+      widget.mc.videoViewGeneration.value++; // 👈 force a genuinely new key
+    });
   }
 
   @override
   void dispose() {
     fsc.exitFullscreen();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.mc.isFullscreen.value = false;
+      widget.mc.videoViewGeneration.value++; // 👈 bump again on exit
+    });
     Get.delete<FullscreenVideoController>();
     super.dispose();
   }
 
   Future<bool> _onWillPop() async {
     await fsc.exitFullscreen();
+    await Future.delayed(const Duration(milliseconds: 150));
     return true;
   }
 
@@ -40,8 +50,10 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
   Widget build(BuildContext context) {
     final mc = widget.mc;
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) => _onWillPop(),
+
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
@@ -81,6 +93,10 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
                   child: GestureDetector(
                     onTap: () async {
                       await fsc.exitFullscreen();
+                      await Future.delayed(
+                        const Duration(milliseconds: 150),
+                      ); // 👈 let Agora detach cleanly
+
                       Get.back();
                     },
                     child: Container(
@@ -105,7 +121,6 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
     );
   }
 }
-
 
 /*
 

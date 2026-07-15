@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../model/expert_session_list_model.dart';
 import '../services/experts_service.dart';
 
 class SessionActionController extends GetxController {
@@ -38,50 +39,55 @@ class SessionActionController extends GetxController {
 
   final service = ExpertsService();
 
-  final RxBool isLoading = false.obs;
-
   final RxMap<String, bool> reminderStatus = <String, bool>{}.obs;
+  final RxMap<String, bool> reminderLoading =
+      <String, bool>{}.obs; // 👈 per-session, replaces isLoading
 
-  bool isReminderSet(String sessionId) {
-    return reminderStatus[sessionId] ?? false;
+  bool isReminderSet(String sessionId) => reminderStatus[sessionId] ?? false;
+  bool isReminderLoading(String sessionId) =>
+      reminderLoading[sessionId] ?? false;
+
+  /// Call this once, right after fetching the session list, to seed
+  /// initial reminder state from whatever the backend returns.
+  void seedReminderState(List<Session> sessions) {
+    for (final s in sessions) {
+      // adjust field name to match whatever your Session model / API
+      // response actually calls this — e.g. s.hasReminder, s.isReminderSet
+      reminderStatus[s.id] = s.reminderEnabled;
+    }
   }
 
   Future<void> toggleReminder({required String sessionId}) async {
-    if (isLoading.value) return;
+    if (isReminderLoading(sessionId)) return; // per-session guard now
 
-    isLoading.value = true;
+    reminderLoading[sessionId] = true;
 
     try {
       final alreadySet = isReminderSet(sessionId);
 
-      bool success;
-
-      if (alreadySet) {
-        success = await service.removeReminder(sessionId: sessionId);
-      } else {
-        success = await service.setReminder(sessionId: sessionId);
-      }
+      final success = alreadySet
+          ? await service.removeReminder(sessionId: sessionId)
+          : await service.setReminder(sessionId: sessionId);
 
       if (success) {
-        reminderStatus[sessionId] = !alreadySet;
-
-        reminderStatus.refresh();
+        reminderStatus[sessionId] =
+            !alreadySet; // 👈 triggers Obx rebuild for just this card
       }
     } catch (e) {
       log("Reminder error: $e");
     } finally {
-      isLoading.value = false;
+      reminderLoading[sessionId] = false;
     }
-  }
-
-  void disposeInputs() {
-    // writeQuesCtrl.dispose();
-    // writeQuesFocusNode.dispose();
   }
 
   @override
   void onClose() {
     disposeInputs();
     super.onClose();
+  }
+
+  void disposeInputs() {
+    // writeQuesCtrl.dispose();
+    // writeQuesFocusNode.dispose();
   }
 }

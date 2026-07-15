@@ -117,8 +117,9 @@ class UpcomingSessionsScreen extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.only(bottom: itemGap),
                           child: UpcomingExpertSessionCard(
-                            isRemindMeLoading: act.isLoading,
-                            isReminderActive: act.isReminderSet(item.id),
+                            isRemindMeLoading: () =>
+                                act.isReminderLoading(item.id),
+                            isReminderActive: () => act.isReminderSet(item.id),
                             onTapRemindMe: () {
                               act.toggleReminder(sessionId: item.id);
                             },

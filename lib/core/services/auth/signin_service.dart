@@ -64,61 +64,6 @@ class SocialLoginService {
   }
 
   // ── Backend call ─────────────────────────────
-  /*
-  Future<SocialLoginResult> socialLogin({
-    required String authToken,
-    required String provider,
-  }) async {
-    log('Social login → provider: $provider');
-
-    final response = await ApiClient().post(
-      Endpoints.socialLogin.getUrl,
-      data: {"provider": provider, "authToken": authToken},
-    );
-
-    if (response == null) {
-      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
-    }
-
-    final auth = AuthResponseHandler.check(response);
-
-    if (auth.type == AuthStatusType.profileIncomplete) {
-      storage.setToken(auth.token ?? '');
-
-      return SocialLoginResult(
-        type: SocialLoginApiResultType.profileIncomplete,
-        message: auth.message,
-      );
-    }
-
-    if (auth.type != AuthStatusType.success) {
-      return SocialLoginResult(
-        type: SocialLoginApiResultType.failed,
-        message: auth.message,
-      );
-    }
-
-    final model = SigninModelData.fromJson(auth.data);
-
-    _saveUserData(model);
-
-    try {
-      final socket = Get.find<SocketService>();
-
-      socket.disconnectSocket();
-
-      await socket.connectSocket();
-    } catch (e) {
-      log('Socket error after social login: $e');
-    }
-
-    if (Get.isRegistered<ProfileController>()) {
-      await Get.find<ProfileController>().fetchMyProfile();
-    }
-
-    return const SocialLoginResult(type: SocialLoginApiResultType.success);
-  }
-*/
 
   Future<SocialLoginResult> socialLogin({
     required String authToken,
@@ -176,6 +121,8 @@ class SigninService {
         data: {"email": email, "password": password},
       ),
       customHandler: (body) => AuthResponseHandler.parse(body),
+      showErrorMessage: true,
+      showSuccessMessage: true,
     );
 
     switch (result.type) {

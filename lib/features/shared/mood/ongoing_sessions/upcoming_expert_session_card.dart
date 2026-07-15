@@ -10,14 +10,15 @@ class UpcomingExpertSessionCard extends StatelessWidget {
   final void Function({required String expertId, required String sessionId})
   onTapQues;
   final RxBool isSendQuesLoading;
-  final RxBool isRemindMeLoading;
+
   final TextEditingController writeQuesCtrl;
   final FocusNode writeQuesFocusNode;
   final Session? data;
   final bool? isFromUpcomgScreen;
   final bool hasTypetitle;
   final void Function()? onTapRemindMe;
-  final bool isReminderActive;
+  final bool Function() isReminderActive; // 👈 was: bool
+  final bool Function() isRemindMeLoading; // 👈 was: RxBool
   const UpcomingExpertSessionCard({
     super.key,
     required this.onTapQues,
@@ -177,17 +178,19 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   onTap: onTapRemindMe,
 
                   child: Obx(() {
-                    final active = isReminderActive;
+                    final active =
+                        isReminderActive(); // 👈 call it, don't just reference
+                    final loading = isRemindMeLoading();
 
-                    return isRemindMeLoading.value
-                        ? LoadingPrimary()
-                        : ContainerBordered(
-                            contClr: active ? c.strokePrimary : c.buttonPrimary,
+                    return ContainerBordered(
+                      contClr: active ? c.strokePrimary : c.buttonPrimary,
 
-                            rad: 30,
-                            vp: 8,
+                      rad: 30,
+                      vp: 8,
 
-                            child: Row(
+                      child: loading
+                          ? LoadingPrimary()
+                          : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
 
@@ -215,7 +218,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          );
+                    );
                   }),
                 ),
               ),

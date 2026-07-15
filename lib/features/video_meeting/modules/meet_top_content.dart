@@ -63,44 +63,6 @@ class TopContent extends StatelessWidget {
           ],
         ),
 
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   mainAxisSize: MainAxisSize.max,
-        //   children: [
-        //     Gap(50.w),
-        //     Column(
-        //       children: [
-        //         Container(
-        //           color: Colors.amber,
-        //           width: S.w * 0.5,
-        //           child: Text(
-        //             mc.agrModel.sessionTitle,
-        //             textAlign: TextAlign.center,
-        //             maxLines: 1,
-        //             style: TxtStyle.outfit(fs: 16, w: 600),
-        //           ),
-        //         ),
-        //         Text(
-        //           mc.agrModel.hostName,
-        //           style: TxtStyle.outfit(fs: 13, color: c.secondary),
-        //         ),
-        //       ],
-        //     ),
-        //     ContainerBordered(
-        //       rad: 8,
-        //       hp: 16,
-        //       hasBrdr: true,
-        //       brdrClr: c.primary,
-        //       vp: 6,
-        //       contClr: c.error,
-
-        //       child: Text(
-        //         "LIVE",
-        //         style: TxtStyle.inter(fs: 12, w: 600, color: white),
-        //       ),
-        //     ),
-        //   ],
-        // ).get10cm,
         Gap(itemGap * 1.5),
 
         AspectRatio(
@@ -165,6 +127,9 @@ class TopContent extends StatelessWidget {
                           .fadeIn, // smooth, no jarring slide during rotation
                     ),
                     child: AgoraVideoView(
+                      // key: ValueKey(
+                      //   'embedded_${mc.hostUid.value}_${mc.videoViewGeneration.value}',
+                      // ),
                       controller: VideoViewController.remote(
                         rtcEngine: mc.agoraEngine!,
                         canvas: VideoCanvas(uid: mc.hostUid.value!),
@@ -248,10 +213,10 @@ class TopContent extends StatelessWidget {
   Widget _buildFloatingIcon({required String text, required IconData icon}) {
     return FittedBox(
       child: ContainerBordered(
-        rad: 30,
+        rad: 4,
         hp: 6,
         vp: 3,
-        contClr: greyLoc.withOpacity(0.5),
+        contClr: greyLoc.withValues(alpha: 0.5),
         child: Row(
           children: [
             // CircleAvatar(
@@ -264,18 +229,21 @@ class TopContent extends StatelessWidget {
               size: 12.h,
               color: icon == Icons.circle ? c.secondary : white,
             ),
-            Gap(6.w),
-            FittedBox(
-              child: Text(
-                text,
-                style: TxtStyle.inter(
-                  fs: 12,
-                  w: 600,
-                  color: white,
-                  fontFeatures: [FontFeature.tabularFigures()],
+
+            if (text.isNotEmpty) ...[
+              Gap(6.w),
+              FittedBox(
+                child: Text(
+                  text,
+                  style: TxtStyle.inter(
+                    fs: 12,
+                    w: 600,
+                    color: white,
+                    fontFeatures: [FontFeature.tabularFigures()],
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ),
       ),
