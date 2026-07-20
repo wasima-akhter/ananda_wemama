@@ -4,8 +4,6 @@ import '../../../../app/service_export.dart';
 import '../model/subscription_price_model.dart';
 
 class SubscriptionService {
-
-
   Future<SubscriptionPriceModel?> getDiscountedPrice() async {
     apiCall() {
       return ApiClient().post(
@@ -20,8 +18,6 @@ class SubscriptionService {
         return SubscriptionPriceModel.fromJson(p0);
       },
     );
-
-    if (response == null) return null;
     return response.data;
   }
 
@@ -29,5 +25,11 @@ class SubscriptionService {
     return null;
   }
 
-  Future<void> confirmPurchaseWithBackend() async {}
+  // subscription_service.dart
+  Future<void> confirmPurchaseWithBackend() async {
+    await ApiClient().post(
+      Endpoints.confirmPurchase.getUrl,
+      headers: HeaderHelpers.getAuthHeader(),
+    );
+  }
 }

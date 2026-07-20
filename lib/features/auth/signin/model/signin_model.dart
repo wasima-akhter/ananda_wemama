@@ -34,10 +34,19 @@ class SigninModelData {
 class SigninUser {
   final String? email;
 
-  SigninUser({this.email});
+  final String profileId;
+  final String authId;
 
-  factory SigninUser.fromJson(Map<String, dynamic> json) =>
-      SigninUser(email: json['email'] ?? '');
+  // "profileId": "6a13c1533e170a7c137d0d3c",
+  //         "authId": "6a13c1533e170a7c137d0d3a"
+
+  SigninUser({this.email, required this.profileId, required this.authId});
+
+  factory SigninUser.fromJson(Map<String, dynamic> json) => SigninUser(
+    email: json['email'] ?? '',
+    profileId: json['profileId'] ?? '',
+    authId: json['authId'] ?? '',
+  );
 }
 
 enum LoginApiResultType { success, emailNotVerified, profileIncomplete, failed }

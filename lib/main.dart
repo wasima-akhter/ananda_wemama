@@ -15,6 +15,7 @@ import 'core/services/push_notification/controller/push_notification_controller.
 import 'core/services/push_notification/firebase_token_service.dart';
 import 'core/services/push_notification/push_notification_service.dart';
 import 'core/themes/theme_service.dart';
+import 'features/shared/subscription_upgrade/service/purchase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,6 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-     
     ),
   );
   debugPrint('✅ [main] orientation + status bar configured');
@@ -55,6 +55,20 @@ void main() async {
   debugPrint('🔧 [main] initializing AppStorage...');
   await Get.putAsync<AppStorage>(() async => AppStorage.init());
   debugPrint('✅ [main] AppStorage ready');
+
+  //
+  // ── 3.5 PurchaseService ───────────────────────────────────────────────────
+  debugPrint('🔧 [main] initializing PurchaseService...');
+  try {
+    await Get.putAsync<PurchaseService>(
+      () async => await PurchaseService().init(),
+      permanent: true,
+    );
+    debugPrint('✅ [main] PurchaseService ready');
+  } catch (e, st) {
+    debugPrint('❌ [main] PurchaseService init FAILED: $e');
+    debugPrint('$st');
+  }
 
   // ── 4. Deep link ─────────────────────────────────────────────────────────────
   debugPrint('🔧 [main] capturing initial deep link...');

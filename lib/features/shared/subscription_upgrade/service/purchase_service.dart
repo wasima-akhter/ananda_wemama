@@ -17,7 +17,8 @@ class PurchaseOutcome {
 }
 
 class PurchaseService {
-  static const String entitlementId = 'premium'; // match your RC entitlement
+  static PurchaseService get to => Get.find<PurchaseService>();
+  static const String entitlementId = SubscriptionConstants.entitlementId;
 
   final RxBool isActive = false.obs;
   final Rx<CustomerInfo?> customerInfo = Rx<CustomerInfo?>(null);
@@ -133,6 +134,34 @@ class PurchaseService {
     }
   }
 
+  //
+  Future<PurchaseOutcome> purchaseWithAndroidOffer(
+    Package package,
+    String basePlanId,
+    String offerId,
+  ) async {
+    final targetId = '$basePlanId:$offerId';
+    final option = package.storeProduct.subscriptionOptions?.firstWhereOrNull(
+      (o) => o.id == targetId,
+    );
+
+    if (option == null) {
+      return PurchaseOutcome(
+        PurchaseResult.error,
+        errorMessage: 'Offer not available',
+      );
+    }
+
+    final result = await Purchases.purchaseSubscriptionOption(option);
+    _onCustomerInfoUpdated(result.customerInfo);
+    final active =
+        result.customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+    return PurchaseOutcome(
+      active ? PurchaseResult.success : PurchaseResult.pending,
+      customerInfo: result.customerInfo,
+    );
+  }
+
   Future<PurchaseOutcome> restorePurchases() async {
     try {
       final info = await Purchases.restorePurchases();
@@ -179,6 +208,8 @@ extension PurchaseServiceInfo on PurchaseService {
 
     final entitlement = info.entitlements.all[PurchaseService.entitlementId];
     if (entitlement == null || !entitlement.isActive) return null;
+
+    log('productIdentifier: ${entitlement.productIdentifier}');
 
     return SubscriptionDisplayInfo(
       planName: entitlement

@@ -3,6 +3,7 @@ import 'package:mama_app/features/shared/subscription_info/widgets/subs_prefrenc
 import 'package:mama_app/features/shared/subscription_info/widgets/subscription_info_card.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/config/app_info.dart';
 import '../controller/subscription_info_controller.dart';
 import '../modules/preference_title.dart';
 
@@ -115,12 +116,8 @@ class SubscriptionInfoScreen extends StatelessWidget {
   }
 
   String _friendlyPlanName(String productId) {
-    // map raw product identifiers to display names
-    const map = {
-      'com.yourapp.monthly': 'Monthly Plan',
-      'com.yourapp.yearly': 'Yearly Plan',
-    };
-    return map[productId] ?? 'Premium Plan';
+    return SubscriptionConstants.productDisplayNames[productId] ??
+        'WeMama Premium';
   }
 }
 

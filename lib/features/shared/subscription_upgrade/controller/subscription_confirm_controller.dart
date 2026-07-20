@@ -1,5 +1,6 @@
 // subscription_confirm_controller.dart
 import 'package:purchases_flutter/models/promotional_offer.dart';
+import 'package:purchases_flutter/purchases_flutter.dart' hide PurchaseResult;
 
 import '../../../../app/controller_export.dart';
 import '../model/subscription_price_model.dart';
@@ -10,7 +11,7 @@ class SubscriptionConfirmController extends GetxController {
   final SubscriptionPriceModel priceModel;
   SubscriptionConfirmController(this.priceModel);
 
-  final PurchaseService _purchaseService = PurchaseService();
+  final PurchaseService _purchaseService = PurchaseService.to;
   final RxBool isProcessing = false.obs;
   final RxString errorMessage = ''.obs;
 
@@ -20,7 +21,12 @@ class SubscriptionConfirmController extends GetxController {
 
     try {
       final offerings = await _purchaseService.getOfferings();
+
       final package = offerings?.current?.monthly;
+
+      package?.storeProduct.subscriptionOptions?.forEach(
+        (o) => log('option id: ${o.id}'),
+      );
 
       if (package == null) {
         errorMessage.value = 'Subscription plan is currently unavailable.';
@@ -29,17 +35,34 @@ class SubscriptionConfirmController extends GetxController {
 
       PurchaseOutcome outcome;
 
-      final promoParams = priceModel.discount > 0
-          ? await _fetchIosPromoSignature()
-          : null;
+      // final promoParams = priceModel.discount > 0
+      //     ? await _fetchIosPromoSignature()
+      //     : null;
 
-      if (promoParams != null) {
-        outcome = await _purchaseService.purchaseWithDiscount(
-          package,
-          promoParams,
-        );
+      // if (promoParams != null) {
+      //   outcome = await _purchaseService.purchaseWithDiscount(
+      //     package,
+      //     promoParams,
+      //   );
+      // } else {
+      //   outcome = await _purchaseService.purchasePackage(package);
+      // }
+      if (GetPlatform.isIOS) {
+        final promoParams = priceModel.discount > 0
+            ? await _fetchIosPromoSignature()
+            : null;
+        outcome = promoParams != null
+            ? await _purchaseService.purchaseWithDiscount(package, promoParams)
+            : await _purchaseService.purchasePackage(package);
       } else {
-        outcome = await _purchaseService.purchasePackage(package);
+        outcome =
+            // priceModel.offerId != null
+            //     ? await _purchaseService.purchaseWithAndroidOffer(
+            //         package,
+            //         priceModel.offerId!,
+            //       )
+            //     :
+            await _purchaseService.purchasePackage(package);
       }
 
       await _handleOutcome(outcome);
@@ -81,13 +104,13 @@ class SubscriptionConfirmController extends GetxController {
     try {
       switch (outcome.result) {
         case PurchaseResult.success:
-          try {
-            await SubscriptionService().confirmPurchaseWithBackend();
-          } catch (e, s) {
-            debugPrint('Backend confirmation error: $e');
-            debugPrintStack(stackTrace: s);
-            // Webhook can still confirm later
-          }
+          // try {
+          //   await SubscriptionService().confirmPurchaseWithBackend();
+          // } catch (e, s) {
+          //   debugPrint('Backend confirmation error: $e');
+          //   debugPrintStack(stackTrace: s);
+          //   // Webhook can still confirm later
+          // }
 
           Get.offAllNamed(RoutePaths.subscriptionSuccess);
           break;

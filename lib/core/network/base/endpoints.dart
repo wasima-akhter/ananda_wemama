@@ -169,4 +169,6 @@ class Endpoints {
 
   static String applyReferralCode({required String code}) =>
       "referral/apply-referral-code?referralCode=$code";
+
+  static String confirmPurchase = "confirm-purchase";
 }

@@ -47,40 +47,6 @@ class SignupService extends GetxService {
     return response.isSuccess;
   }
 
-  /*
-  Future<SocialLoginResult> socialSignup({
-    required String authToken,
-    required String provider,
-  }) async {
-    final response = await ApiExecutor().execute<SigninModelData>(
-      apiCall: () => ApiClient().post(
-        Endpoints.socialRegister.getUrl,
-        data: {"provider": provider, "authToken": authToken},
-        isLogin_: true,
-        // reqName: 'social signup'.capEachWord(),
-      ),
-      parser: (data) => SigninModelData.fromJson(data),
-    );
-
-    if (response == null || response.data == null) {
-      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
-    }
-
-    final data = response.data!;
-    final accessToken = data.accessToken ?? '';
-
-    if (accessToken.isEmpty) {
-      return const SocialLoginResult(type: SocialLoginApiResultType.failed);
-    }
-
-    // save token and email if success
-
-    storage.setToken(accessToken);
-    storage.setUserInfo(email: data.user?.email ?? '');
-
-    return const SocialLoginResult(type: SocialLoginApiResultType.success);
-  }
-*/
   Future<SocialLoginResult> socialSignup({
     required String authToken,
     required String provider,

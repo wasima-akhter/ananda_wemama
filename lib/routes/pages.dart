@@ -9,7 +9,7 @@ import 'package:mama_app/features/more/legal/terms_and_conditions/screen/terms_a
 import 'package:mama_app/features/more/support/contact_support/screen/contact_support_screen.dart';
 import 'package:mama_app/features/post_auth_setup/finish_setting_profile/screen/finish_setting_profile_screen.dart';
 import 'package:mama_app/features/post_auth_setup/promo_code/screen/promo_code_screen.dart';
-import 'package:mama_app/features/shared/subscription_info/screen/billing_history.dart';
+import 'package:mama_app/features/shared/subscription_info/screen/billing_history_screen.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_pending.dart';
 import 'package:mama_app/features/shared/subscription_upgrade/screen/subscription_upgrade_screen.dart';
 
@@ -54,6 +54,8 @@ import '../features/shared/bookmark/screen/bookmark_screen.dart';
 import '../features/shared/mood/mood_insights/screen/mood_insights_screen.dart';
 import '../features/shared/mood/mood_library/screen/mood_library_screen.dart';
 import '../features/shared/subscription_info/screen/subscription_info_screen.dart';
+import '../features/shared/subscription_upgrade/controller/subscription_confirm_controller.dart';
+import '../features/shared/subscription_upgrade/model/subscription_price_model.dart';
 import '../features/shared/subscription_upgrade/screen/subscription_confirm_screen.dart';
 import '../features/shared/subscription_upgrade/screen/subscription_success.dart';
 import '../features/shared/wave_request/screen/wave_request_screen.dart';
@@ -394,6 +396,10 @@ class RoutePageList {
       name: RoutePaths.subscriptionConfirmScreen,
       page: () => const SubscriptionConfirmScreen(),
       // binding: SubscriptionInfoBinding(),
+      binding: BindingsBuilder(() {
+        final priceModel = Get.arguments as SubscriptionPriceModel;
+        Get.put(SubscriptionConfirmController(priceModel));
+      }),
     ),
     GetPage(
       name: RoutePaths.billingHistory,

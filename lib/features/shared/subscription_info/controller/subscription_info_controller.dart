@@ -3,7 +3,7 @@ import '../../subscription_upgrade/service/purchase_service.dart';
 
 // subscription_info_controller.dart
 class SubscriptionInfoController extends GetxController {
-  final PurchaseService _purchaseService = PurchaseService();
+  final PurchaseService _purchaseService = PurchaseService.to;
 
   final RxBool isLoading = true.obs;
   final RxBool isRestoring = false.obs;

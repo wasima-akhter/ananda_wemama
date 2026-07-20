@@ -1,6 +1,7 @@
 import '../../../../app/service_export.dart';
 import '../../../features/auth/otp/model/verify_otp_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../../../features/shared/subscription_upgrade/service/purchase_service.dart';
 import '../push_notification/push_notification_service.dart';
 
 class VerifyOtpService extends GetxService {
@@ -22,19 +23,30 @@ class VerifyOtpService extends GetxService {
 
     // You can access user like:
     if (response.isSuccess) {
-      _saveUserDataAfterVerify(response: response);
+      await _saveUserDataAfterVerify(response: response);
       log("response.data?.user.email : ${response.data?.user?.email}");
     }
     return response.isSuccess;
   }
 
-  void _saveUserDataAfterVerify({
+  Future<void> _saveUserDataAfterVerify({
     required Result<VerifyOtpDataModel> response,
-  }) {
+  }) async {
     if (response.data != null) {
       final token = response.data?.accessToken ?? '';
       storage.setToken(token);
       log("✅ Token saved: '$token'");
+
+      storage.setUserId(response.data?.user?.authId ?? ''); // NEW
+      log(
+        "Logged in as: ${response.data?.user?.email}, id: ${response.data?.user?.authId}",
+      );
+
+      // Revenue cat
+      // ADD HERE:
+      await PurchaseService.to.loginRevenueCatUser(
+        response.data?.user?.authId ?? '',
+      );
 
       // ✅ Now call ProfileController to refresh the profile
       if (Get.isRegistered<ProfileController>()) {

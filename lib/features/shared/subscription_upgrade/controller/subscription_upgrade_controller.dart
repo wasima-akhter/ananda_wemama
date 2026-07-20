@@ -1,14 +1,15 @@
 import '../../../../app/controller_export.dart';
-import '../service/subscription_service.dart';
+import '../mixin/subscription_plan_mixin.dart';
 
 // subscription_upgrade_controller.dart
-class SubscriptionUpgradeController extends GetxController {
-  final RxInt selectedPlanIndex = (-1).obs;
+class SubscriptionUpgradeController extends GetxController
+    with SubscriptionPlanFlowMixin {
   final RxBool isLoading = false.obs;
-  final SubscriptionService _subscriptionService = SubscriptionService();
+  @override
+  RxBool get flowLoading => isLoading;
 
+  final RxInt selectedPlanIndex = (-1).obs;
   bool isPlanSelected(int index) => selectedPlanIndex.value == index;
-
   void selectPlan(int index) => selectedPlanIndex.value = index;
 
   Future<void> onTapContinue(GlobalKey<FormState> formKey) async {
@@ -16,30 +17,11 @@ class SubscriptionUpgradeController extends GetxController {
       Snack.showError('Please select a plan');
       return;
     }
-
-    // Free plan — no payment needed, just activate directly
     if (selectedPlanIndex.value == 0) {
-      Get.offAllNamed(
-        RoutePaths.subscriptionInfo,
-      ); // or whatever your free-path is
+      Get.offAllNamed(RoutePaths.subscriptionInfo);
       return;
     }
-
-    isLoading.value = true;
-    try {
-      final priceModel = await _subscriptionService.getDiscountedPrice();
-
-      if (priceModel == null) {
-        Snack.showError('Unable to fetch pricing. Please try again.');
-        return;
-      }
-
-      Get.toNamed(RoutePaths.subscriptionConfirmScreen, arguments: priceModel);
-    } catch (e) {
-      Snack.showError('Something went wrong. Please try again.');
-    } finally {
-      isLoading.value = false;
-    }
+    await proceedToPaidPlan();
   }
 }
 
