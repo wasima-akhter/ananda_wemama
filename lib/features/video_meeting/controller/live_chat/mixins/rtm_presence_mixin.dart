@@ -20,7 +20,9 @@ mixin RtmPresenceMixin on GetxController {
 
         participants.assignAll(
           members.map((m) {
-            final stateMap = {for (StateItem s in (m.states ?? [])) s.key: s.value};
+            final stateMap = {
+              for (StateItem s in (m.states ?? [])) s.key: s.value,
+            };
 
             return ParticipantModel(
               uid: m.userId,
@@ -44,7 +46,9 @@ mixin RtmPresenceMixin on GetxController {
         final uid = event.publisher ?? '';
 
         if (!participants.any((j) => j.uid == uid)) {
-          final stateMap = {for (var s in (event.stateItems ?? [])) s.key: s.value};
+          final stateMap = {
+            for (var s in (event.stateItems ?? [])) s.key: s.value,
+          };
 
           participants.add(
             ParticipantModel(
@@ -105,3 +109,5 @@ mixin RtmPresenceMixin on GetxController {
     }
   }
 }
+
+//

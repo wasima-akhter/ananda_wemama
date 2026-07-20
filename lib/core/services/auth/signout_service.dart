@@ -49,9 +49,6 @@ class SignoutService {
       Get.find<WaveRequestController>().newWaveList.clear();
     }
 
-    if (Get.isRegistered<ProfileController>()) {
-      Get.find<ProfileController>().userProfileData.value = null;
-    }
     // Delete user-scoped controllers
     // final controllersToDelete = [
     //   ChatController,

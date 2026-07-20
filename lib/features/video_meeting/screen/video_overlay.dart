@@ -77,6 +77,9 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
                 }
 
                 return AgoraVideoView(
+                  key: ValueKey(
+                    'embedded_${mc.hostUid.value}_${mc.videoViewGeneration.value}',
+                  ),
                   controller: VideoViewController.remote(
                     rtcEngine: mc.agoraEngine!,
                     canvas: VideoCanvas(uid: mc.hostUid.value!),

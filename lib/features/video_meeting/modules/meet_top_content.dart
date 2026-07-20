@@ -127,9 +127,9 @@ class TopContent extends StatelessWidget {
                           .fadeIn, // smooth, no jarring slide during rotation
                     ),
                     child: AgoraVideoView(
-                      // key: ValueKey(
-                      //   'embedded_${mc.hostUid.value}_${mc.videoViewGeneration.value}',
-                      // ),
+                      key: ValueKey(
+                        'embedded_${mc.hostUid.value}_${mc.videoViewGeneration.value}',
+                      ),
                       controller: VideoViewController.remote(
                         rtcEngine: mc.agoraEngine!,
                         canvas: VideoCanvas(uid: mc.hostUid.value!),

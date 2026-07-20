@@ -164,4 +164,9 @@ class Endpoints {
       "expert/set-session-reminder/$sessionId";
   static String removeSessionReminder({required String sessionId}) =>
       "expert/remove-session-reminder/$sessionId";
+
+  // promo code:
+
+  static String applyReferralCode({required String code}) =>
+      "referral/apply-referral-code?referralCode=$code";
 }

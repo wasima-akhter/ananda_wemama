@@ -2,14 +2,28 @@ import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 
-enum LiveExitReason { voluntary, kicked, ended, connectionLost }
+enum LiveExitReason {
+  voluntary,
+  kicked,
+  ended,
+  connectionLost,
+  hostReconnecting,
+}
 
 class LiveSessionExitPopup extends StatelessWidget {
   final LiveExitReason reason;
   final VoidCallback? onRejoin; // only used for connectionLost
   final Function(bool cancelLeave)? onTapCancel; // only used for connectionLost
+  final VoidCallback?
+  onLeaveWhileWaiting; // 👈 NEW, only used for hostReconnecting
 
-  const LiveSessionExitPopup({super.key, required this.reason, this.onRejoin, this.onTapCancel});
+  const LiveSessionExitPopup({
+    super.key,
+    required this.reason,
+    this.onRejoin,
+    this.onTapCancel,
+    this.onLeaveWhileWaiting,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +34,10 @@ class LiveSessionExitPopup extends StatelessWidget {
       insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Container(
         padding: EdgeInsets.all(20.w),
-        decoration: BoxDecoration(color: c.cardPrimary, borderRadius: BorderRadius.circular(20.r)),
+        decoration: BoxDecoration(
+          color: c.cardPrimary,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +46,10 @@ class LiveSessionExitPopup extends StatelessWidget {
             Container(
               width: 48.w,
               height: 48.w,
-              decoration: BoxDecoration(color: config.iconBg, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: config.iconBg,
+                shape: BoxShape.circle,
+              ),
               child: Center(
                 child: Icon(config.icon, color: config.iconColor, size: 22.sp),
               ),
@@ -37,11 +57,17 @@ class LiveSessionExitPopup extends StatelessWidget {
 
             Gap(12.h),
 
-            Text(config.title, style: TxtStyle.outfitSemiB(fs: 15, w: 600, color: c.primary)),
+            Text(
+              config.title,
+              style: TxtStyle.outfitSemiB(fs: 15, w: 600, color: c.primary),
+            ),
 
             Gap(6.h),
 
-            Text(config.message, style: TxtStyle.urbanist(fs: 13, color: c.primary)),
+            Text(
+              config.message,
+              style: TxtStyle.urbanist(fs: 13, color: c.primary),
+            ),
 
             Gap(20.h),
 
@@ -58,7 +84,11 @@ class LiveSessionExitPopup extends StatelessWidget {
                       child: Text(
                         config.leftLabel,
                         textAlign: TextAlign.center,
-                        style: TxtStyle.interSemiB(fs: 13, w: 600, color: c.primary),
+                        style: TxtStyle.interSemiB(
+                          fs: 13,
+                          w: 600,
+                          color: c.primary,
+                        ),
                       ),
                     ),
                   ),
@@ -77,7 +107,11 @@ class LiveSessionExitPopup extends StatelessWidget {
                       child: Text(
                         config.rightLabel,
                         textAlign: TextAlign.center,
-                        style: TxtStyle.interSemiB(fs: 13, w: 600, color: white),
+                        style: TxtStyle.interSemiB(
+                          fs: 13,
+                          w: 600,
+                          color: white,
+                        ),
                       ),
                     ),
                   ),
@@ -102,7 +136,8 @@ class LiveSessionExitPopup extends StatelessWidget {
           leftLabel: 'Cancel',
           leftAction: () => onTapCancel?.call(true), // ← true = cancel leave
           rightLabel: 'Leave',
-          rightAction: () => onTapCancel?.call(false), // ← false = confirm leave
+          rightAction: () =>
+              onTapCancel?.call(false), // ← false = confirm leave
         );
 
       case LiveExitReason.kicked:
@@ -149,7 +184,8 @@ class LiveSessionExitPopup extends StatelessWidget {
           iconBg: const Color(0xFFFBEAF0),
           iconColor: const Color(0xFF993556),
           title: 'Connection lost',
-          message: 'You were disconnected unexpectedly. Check your connection and try again.',
+          message:
+              'You were disconnected unexpectedly. Check your connection and try again.',
           leftLabel: 'Rejoin',
           leftAction: () {
             Get.back();
@@ -160,6 +196,31 @@ class LiveSessionExitPopup extends StatelessWidget {
             Get.back();
             Get.offAllNamed(RoutePaths.mainNav);
             MainNavController.to.goToTab(4);
+          },
+        );
+      case LiveExitReason.hostReconnecting:
+        return _PopupConfig(
+          icon: Icons.sync_rounded,
+          iconBg: const Color(0xFFE7EFFE),
+          iconColor: c.primary,
+          title: 'Host is reconnecting…',
+          message:
+              "We've lost the host's connection for a moment. Hang tight — the session may resume shortly.",
+          leftLabel: 'Leave',
+
+          // leftAction: () {
+          //   Get.back();
+          //   Get.offAllNamed(RoutePaths.mainNav);
+          //   MainNavController.to.goToTab(4);
+          // },
+          leftAction: () {
+            Get.back();
+            onLeaveWhileWaiting
+                ?.call(); // 👈 CHANGED — actually releases engine now
+          },
+          rightLabel: 'Wait',
+          rightAction: () {
+            Get.back();
           },
         );
     }

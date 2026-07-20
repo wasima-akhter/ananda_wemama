@@ -90,6 +90,10 @@ mixin RtmMessageMixin on GetxController {
               }
               return;
 
+            case 'HOST_ENDED_LIVE':
+              await _self.mc.confirmHostEndedLive();
+              return;
+
             default:
               displayText = payload['message'] ?? decoded;
               senderName = payload['senderName'] ?? '';

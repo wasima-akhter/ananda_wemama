@@ -1,14 +1,14 @@
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../service/referral_service.dart';
 
 class PromoCodeController extends GetxController {
   static PromoCodeController get to => Get.find<PromoCodeController>();
-  // Loading state
+
   final isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;
 
-  /// 🔹 Dynamic stage list
   List<FinishSetupUIDataModel> get featureList => [
     FinishSetupUIDataModel(
       leftIcon: Assets.icons.joinConversation,
@@ -29,18 +29,38 @@ class PromoCodeController extends GetxController {
   ];
 
   final referralCodeCtrl = TextEditingController();
-
   final referralCodeFocusNode = FocusNode();
 
-  /// 🔹 Unfocus
   void unfocusAll() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
-  // Get.toNamed(RoutePaths.welcomeFundingMum);
 
-  void onTapContinue() {
-    // Get.toNamed(RoutePaths.welcomeFundingMum);
-    Get.offAllNamed(RoutePaths.subChoosePlan);
+  Future<void> onTapContinue() async {
+    final code = referralCodeCtrl.text.trim();
+
+    // Skip API if referral code is empty
+    if (code.isEmpty) {
+      Get.offAllNamed(RoutePaths.subChoosePlan);
+      return;
+    }
+
+    if (isLoading_.value) return;
+    isLoading_.value = true;
+
+    try {
+      final success = await ReferralService().applyReferralCode(
+        referralCode: code,
+      );
+
+      if (success) {
+        Get.offAllNamed(RoutePaths.subChoosePlan);
+      }
+    } catch (e) {
+      log("Apply referral code error: $e");
+    } finally {
+      isLoading_.value = false;
+      unfocusAll();
+    }
   }
 }
 

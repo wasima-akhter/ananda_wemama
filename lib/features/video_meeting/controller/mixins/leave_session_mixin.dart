@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:agora_rtm/agora_rtm.dart';
 import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../app/controller_export.dart';
+import '../live_chat_controller.dart';
 import '../meeting_controller.dart';
 
 mixin LeaveSessionMixin on GetxController {
@@ -33,6 +37,36 @@ mixin LeaveSessionMixin on GetxController {
   Future<void> leaveMeeting() async {
     log('🔵 leaveMeeting() called');
 
+    _self.isSessionExiting = true;
+
+    // 👇 only the host publishes this — rtmClient lives on LiveChatController,
+    // not on MeetingController, so we reach across via Get.find
+
+    try {
+      final chat = Get.isRegistered<LiveChatController>()
+          ? Get.find<LiveChatController>()
+          : null;
+
+      if (chat != null && chat.rtmClient != null && chat.isRtmReady.value) {
+        await chat.rtmClient!.publish(
+          _self.channelName.value,
+          jsonEncode({
+            'type': 'HOST_ENDED_LIVE',
+            'ts': DateTime.now().millisecondsSinceEpoch,
+          }),
+          channelType: RtmChannelType.message,
+        );
+        log('📡 [RTM] HOST_ENDED_LIVE published');
+      } else {
+        log(
+          '⚠️ [RTM] Chat controller not ready — skipping HOST_ENDED_LIVE publish',
+        );
+      }
+    } catch (e) {
+      log('❌ [RTM] Failed to publish HOST_ENDED_LIVE: $e');
+    }
+
+    //
     _self.stopSessionTimer();
 
     // ✅ Reset all visual state immediately so UI doesn't show stale data

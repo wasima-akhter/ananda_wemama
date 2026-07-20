@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
@@ -23,7 +24,7 @@ class PromoCodeScreen extends StatelessWidget {
       bottomWidget: Obx(() {
         return AuthButton(
           isLoading: controller.isLoading,
-          onTap: () => controller.onTapContinue(),
+          onTap: controller.onTapContinue,
         ).mB(10);
       }),
 
@@ -174,58 +175,69 @@ class PromoCodeScreen extends StatelessWidget {
           ).getcm,
           Gap(itemGap),
 
-          ContainerBordered(
-            rad: 8,
-            hasBrdr: true,
-            brdrClr: Colors.grey.shade400,
-            contClr: Color(0xFFFDF4ED),
-            vp: 6,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          GestureDetector(
+            onTap: () async {
+              final data = await Clipboard.getData(Clipboard.kTextPlain);
+
+              if (data?.text?.trim().isNotEmpty ?? false) {
+                controller.referralCodeCtrl.text = data!.text!.trim();
+                controller.unfocusAll();
+              }
+            },
+            child: ContainerBordered(
+              rad: 8,
+              hasBrdr: true,
+              brdrClr: Colors.grey.shade400,
+              contClr: const Color(0xFFFDF4ED),
+              vp: 6,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgIcon(iconPath: Assets.icons.copyText, height: 18),
+                  Gap(5),
+                  Text(
+                    "Paste From Clipboard",
+                    style: TxtStyle.outfitSemiB(
+                      color: appRed,
+                      w: 600,
+                      ls: 1.2,
+                      fs: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ).getcm,
+          ),
+          Gap(itemGap * 1.5),
+          GestureDetector(
+            onTap: controller.onTapContinue,
+            child: Column(
               children: [
-                SvgIcon(iconPath: Assets.icons.copyText, height: 18),
-                Gap(5),
                 Text(
-                  "Paste From Clipboard",
+                  "I don't have a code",
                   style: TxtStyle.outfitSemiB(
                     color: appRed,
                     w: 600,
                     ls: 1.2,
                     fs: 12,
+                    h: 1,
+                  ),
+                ),
+                Container(
+                  color: appRed,
+                  height: 1,
+                  width: findTextWidth(
+                    text: "I don't have a code",
+                    style: TxtStyle.outfitSemiB(
+                      color: appRed,
+                      w: 600,
+                      ls: 1.2,
+                      fs: 12,
+                    ),
                   ),
                 ),
               ],
             ),
-          ).getcm,
-
-          Gap(itemGap * 1.5),
-          Column(
-            children: [
-              Text(
-                "I don't have a code",
-                style: TxtStyle.outfitSemiB(
-                  color: appRed,
-                  w: 600,
-                  ls: 1.2,
-                  fs: 12,
-                  h: 1,
-                ),
-              ),
-
-              Container(
-                color: appRed,
-                height: 1,
-                width: findTextWidth(
-                  text: "I don't have a code",
-                  style: TxtStyle.outfitSemiB(
-                    color: appRed,
-                    w: 600,
-                    ls: 1.2,
-                    fs: 12,
-                  ),
-                ),
-              ),
-            ],
           ),
 
           Gap(itemGap),

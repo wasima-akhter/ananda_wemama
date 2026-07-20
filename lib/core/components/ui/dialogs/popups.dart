@@ -248,6 +248,7 @@ Future<void> showLiveExitPopup(
   VoidCallback? onRejoin,
   Function(bool)? onTapCancel,
   void Function(BuildContext dialogContext)? onDialogShown, // 👈 NEW, optional
+  VoidCallback? onLeaveWhileWaiting,
 }) async {
   // 👇 NEW: if fullscreen video page is currently active, exit it first
   // so the popup never renders in landscape/fullscreen mode.
@@ -261,7 +262,9 @@ Future<void> showLiveExitPopup(
   }
   final isBlocking =
       reason == LiveExitReason.kicked ||
-      reason == LiveExitReason.connectionLost;
+      reason == LiveExitReason.connectionLost ||
+      reason == LiveExitReason.ended ||
+      reason == LiveExitReason.hostReconnecting;
   return showDialog(
     context: Get.context!,
     barrierDismissible: !isBlocking,
@@ -273,6 +276,7 @@ Future<void> showLiveExitPopup(
         reason: reason,
         onRejoin: onRejoin,
         onTapCancel: onTapCancel,
+        onLeaveWhileWaiting: onLeaveWhileWaiting,
       );
     },
   );

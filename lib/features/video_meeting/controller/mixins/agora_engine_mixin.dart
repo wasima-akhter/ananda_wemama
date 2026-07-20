@@ -8,6 +8,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/config/agora_config.dart';
+import '../../../main_nav/controller/main_nav_controller.dart';
 import '../meeting_controller.dart';
 
 mixin AgoraEngineMixin on GetxController {
@@ -18,6 +19,9 @@ mixin AgoraEngineMixin on GetxController {
   Timer? _hostOfflineGraceTimer;
   bool _isEndedPopupShowing = false;
   bool _hasEndedDueToTimeout = false;
+  bool _hasConfirmedHostEnded =
+      false; // true only once the REAL HOST_ENDED_LIVE popup has shown
+
   BuildContext? _endedPopupContext;
   static const _hostOfflineGraceDuration = Duration(seconds: 8);
 
@@ -268,6 +272,7 @@ mixin AgoraEngineMixin on GetxController {
                 // }
                 _isEndedPopupShowing = false;
                 _hasEndedDueToTimeout = false;
+                _hasConfirmedHostEnded = false;
                 _self.isSessionExiting = false;
                 _self.hasLiveEnded.value = false;
               }
@@ -305,35 +310,40 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _hostOfflineGraceTimer?.cancel();
-                _hostOfflineGraceTimer = Timer(
-                  _hostOfflineGraceDuration,
-                  () async {
-                    log('🔴 Host did not rejoin — ending session');
+                _hostOfflineGraceTimer = Timer(_hostOfflineGraceDuration, () async {
+                  log(
+                    '🟡 Host still offline after grace period — showing reconnecting popup, keeping engine joined so it can catch the host\'s rejoin',
+                  );
 
-                    _self.isSessionExiting = true;
-                    _self.exitReason = LiveExitReason.ended;
+                  // 👇 CHANGED: no isSessionExiting, no hasLiveEnded, no hostUid=null,
+                  // no _releaseEngineOnly() here. We're only *presumed* offline — the
+                  // backend keeps the live alive up to 3 more minutes waiting for the
+                  // host, so we stay in the channel too. Only confirmHostEndedLive()
+                  // (a real HOST_ENDED_LIVE) should tear the engine down.
+                  _self.stopSessionTimer();
 
-                    hostUid.value = null;
-                    _self.hasLiveEnded.value = true;
-                    _self.stopSessionTimer();
+                  await Future.delayed(const Duration(milliseconds: 300));
 
-                    await Future.delayed(const Duration(milliseconds: 300));
+                  _isEndedPopupShowing = true;
+                  _hasEndedDueToTimeout = true;
 
-                    _isEndedPopupShowing = true;
-                    _hasEndedDueToTimeout =
-                        true; // 👈 NEW: mark confirmed-ended
+                  showLiveExitPopup(
+                    LiveExitReason.hostReconnecting, // 👈 CHANGED (was .ended)
+                    onLeaveWhileWaiting: () async {
+                      // user chose to actually leave while host is still presumed offline
+                      _self.isSessionExiting = true;
+                      _self.exitReason = LiveExitReason.voluntary;
+                      await _releaseEngineOnly(); // 👈 real teardown happens HERE instead
+                      Get.offAllNamed(RoutePaths.mainNav);
+                      MainNavController.to.goToTab(4);
+                    },
+                    onDialogShown: (dialogContext) {
+                      _endedPopupContext = dialogContext;
+                    },
+                  );
 
-                    // 👇 capture this dialog's own context as it's built
-                    showLiveExitPopup(
-                      LiveExitReason.ended,
-                      onDialogShown: (dialogContext) {
-                        _endedPopupContext = dialogContext;
-                      },
-                    );
-
-                    _hostOfflineGraceTimer = null;
-                  },
-                );
+                  _hostOfflineGraceTimer = null;
+                });
               }
             } catch (e) {
               log('❌ onUserOffline handler error: $e');
@@ -488,11 +498,88 @@ mixin AgoraEngineMixin on GetxController {
 
   //
 
+  /// Tears down the RTC engine only — does NOT touch hasLiveEnded,
+  /// isSessionExiting, or exitReason. Those are owned by whichever
+  /// caller (confirmHostEndedLive, grace timeout, etc.) already
+  /// decided the session is over; this just frees resources without
+  /// clobbering the state that decision set.
+  Future<void> _releaseEngineOnly() async {
+    _self.remoteUids.clear();
+    _self.isHostAudioOn.value = false;
+    _self.isHostVideoOn.value = false;
+    _self.isSpeaking.value = false;
+    _self.isEngineReady.value = false;
+
+    await WakelockPlus.disable();
+    log('🌙 Wakelock disabled (engine-only release)');
+
+    if (_self.agoraEngine != null) {
+      try {
+        await _self.agoraEngine!.leaveChannel();
+        log('✅ Left channel (engine-only release)');
+      } catch (e) {
+        log('❌ leaveChannel error: $e');
+      }
+      try {
+        await _self.agoraEngine!.release(sync: true);
+        log('✅ Engine released (engine-only release)');
+      } catch (e) {
+        log('❌ release error: $e');
+      }
+      _self.agoraEngine = null;
+    }
+
+    _self.isJoined.value = false;
+  }
+
+  /// Called when RTM confirms the host explicitly ended the live —
+  /// skip the grace timer and end immediately, no ambiguity.
+  Future<void> confirmHostEndedLive() async {
+    if (_hasConfirmedHostEnded) return;
+    if (_hasEndedDueToTimeout) return; // already handled
+
+    log('🔴 [RTM] Host confirmed end — skipping grace timer');
+    _hostOfflineGraceTimer?.cancel();
+    _hostOfflineGraceTimer = null;
+
+    // 👇 NEW: close the "reconnecting" popup if it's currently up, so it
+    // doesn't sit underneath the real "ended" popup.
+    if (_isEndedPopupShowing &&
+        _endedPopupContext != null &&
+        _endedPopupContext!.mounted &&
+        Navigator.of(_endedPopupContext!).canPop()) {
+      Navigator.of(_endedPopupContext!).pop();
+    }
+
+    _self.isSessionExiting = true;
+    _self.exitReason = LiveExitReason.ended;
+    hostUid.value = null;
+    _self.hasLiveEnded.value = true;
+    _self.stopSessionTimer();
+
+    // 👇 NEW: free the engine now — host is confirmed gone, no reason
+    // to keep holding the channel/wakelock while the popup is up.
+    await _releaseEngineOnly();
+
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    _isEndedPopupShowing = true;
+    _hasEndedDueToTimeout = true;
+
+    _hasConfirmedHostEnded = true; // 👈 NEW
+
+    showLiveExitPopup(
+      LiveExitReason.ended,
+      onDialogShown: (dialogContext) => _endedPopupContext = dialogContext,
+    );
+  }
+
   /// Call from the controller's onClose() to cancel any pending
-  /// "host ended" grace timer, so it doesn't fire after disposal.
+  /// "host ended" grace timer, so it doesn't fire after disUserJoinedposal.
   void disposeAgoraEngineMixin() {
     _hostOfflineGraceTimer?.cancel();
     _hostOfflineGraceTimer = null;
+    _hasConfirmedHostEnded = false;
     _isEndedPopupShowing = false;
     _hasEndedDueToTimeout = false;
     _endedPopupContext = null;

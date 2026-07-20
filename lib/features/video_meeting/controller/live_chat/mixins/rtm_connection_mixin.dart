@@ -81,7 +81,9 @@ mixin RtmConnectionMixin on GetxController {
 
       // Step 3: Login with token
       log('🔵 [RTM-3] Logging in...');
-      final (loginStatus, loginResult) = await _self.rtmClient!.login(_self.mc.rtmToken.value);
+      final (loginStatus, loginResult) = await _self.rtmClient!.login(
+        _self.mc.rtmToken.value,
+      );
 
       if (loginStatus.error) {
         log(
@@ -108,15 +110,13 @@ mixin RtmConnectionMixin on GetxController {
       }
 
       // After subscribe succeeds — set your presence state
-      await _self.rtmClient!.getPresence().setState(
-        _self.mc.channelName.value,
-        RtmChannelType.message,
-        {
-          'name': _self.mc.sessionInfo.value.userName ?? '',
-          'avatar': _self.mc.sessionInfo.value.userAvatar ?? '',
-          'isMuted': 'false',
-        },
-      );
+      await _self.rtmClient!
+          .getPresence()
+          .setState(_self.mc.channelName.value, RtmChannelType.message, {
+            'name': _self.mc.sessionInfo.value.userName ?? '',
+            'avatar': _self.mc.sessionInfo.value.userAvatar ?? '',
+            'isMuted': 'false',
+          });
 
       log('✅ [RTM] Presence state set');
       log('✅ [RTM-4] Subscribed: $subResult');
@@ -179,3 +179,5 @@ mixin RtmConnectionMixin on GetxController {
     log('✅ [RTM] Disposed cleanly');
   }
 }
+
+//

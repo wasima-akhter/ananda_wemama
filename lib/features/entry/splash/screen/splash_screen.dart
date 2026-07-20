@@ -15,6 +15,7 @@ class SplashScreen extends StatelessWidget {
 
     return SafeArea(
       top: false,
+      bottom: false,
 
       child: Scaffold(
         body: Container(
