@@ -30,7 +30,7 @@ class PurchaseService {
     ); // switch to LogLevel.info in prod
     PurchasesConfiguration configuration = PurchasesConfiguration(
       // "YOUR_REVENUECAT_API_KEY_IOS_OR_ANDROID",
-      revenueCatPublicKeyGoogolePlay,
+      revenueCatPublicKeyGoogolePlay, // use platform logic
     );
     await Purchases.configure(configuration);
 
@@ -81,16 +81,33 @@ class PurchaseService {
   }
 
   /// Standard purchase (no discount tier)
-  Future<PurchaseOutcome> purchasePackage(Package package) async {
+  // purchase_service.dart
+  Future<PurchaseOutcome> purchasePackage(
+    Package package,
+    SubscriptionOption? option,
+  ) async {
     try {
-      final result = await Purchases.purchasePackage(package);
-      _onCustomerInfoUpdated(result.customerInfo);
+      late CustomerInfo customerInfo;
+
+      if (GetPlatform.isAndroid && option != null) {
+        // Android: purchase the specific base plan + offer combo
+        final result = await Purchases.purchaseSubscriptionOption(option);
+        customerInfo = result.customerInfo;
+      } else {
+        // iOS (and Android fallback if no option resolved): plain purchase
+        // Apple promotional offers use a different signed-offer mechanism —
+        // wire that in separately later when Apple setup happens.
+        final result = await Purchases.purchasePackage(package);
+        customerInfo = result.customerInfo;
+      }
+
+      _onCustomerInfoUpdated(customerInfo);
       final active =
-          result.customerInfo.entitlements.all[entitlementId]?.isActive ??
-          false;
+          customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+
       return PurchaseOutcome(
         active ? PurchaseResult.success : PurchaseResult.pending,
-        customerInfo: result.customerInfo,
+        customerInfo: customerInfo,
       );
     } on PlatformException catch (e) {
       final code = PurchasesErrorHelper.getErrorCode(e);
@@ -181,6 +198,9 @@ class PurchaseService {
       );
     }
   }
+
+  Store? get activeStore =>
+      customerInfo.value?.entitlements.all[entitlementId]?.store;
 }
 
 class SubscriptionDisplayInfo {
@@ -191,6 +211,8 @@ class SubscriptionDisplayInfo {
   final String? managementUrl; // RC gives this directly!
   final PurchaseResult status; // active / expired / billingIssue
 
+  final Store store; // see #3
+
   SubscriptionDisplayInfo({
     required this.planName,
     required this.priceString,
@@ -198,11 +220,12 @@ class SubscriptionDisplayInfo {
     required this.willRenew,
     this.managementUrl,
     required this.status,
+    required this.store,
   });
 }
 
 extension PurchaseServiceInfo on PurchaseService {
-  SubscriptionDisplayInfo? getDisplayInfo() {
+  Future<SubscriptionDisplayInfo?> getDisplayInfo() async {
     final info = customerInfo.value;
     if (info == null) return null;
 
@@ -211,10 +234,22 @@ extension PurchaseServiceInfo on PurchaseService {
 
     log('productIdentifier: ${entitlement.productIdentifier}');
 
+    String? priceString;
+    try {
+      final offerings = await Purchases.getOfferings();
+      final pkg = offerings.current?.availablePackages.firstWhereOrNull(
+        (p) => p.storeProduct.identifier == entitlement.productIdentifier,
+      );
+      priceString = pkg?.storeProduct.priceString;
+    } catch (e) {
+      debugPrint('Could not resolve price: $e');
+    }
+
     return SubscriptionDisplayInfo(
+      store: entitlement.store,
       planName: entitlement
           .productIdentifier, // map this to a friendly name in your UI
-      priceString: '',
+      priceString: priceString ?? '',
       expiresAt: entitlement.expirationDate != null
           ? DateTime.tryParse(entitlement.expirationDate!)
           : null,

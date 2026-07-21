@@ -1,3 +1,4 @@
+import 'package:mama_app/core/services/profile/profile_info_service.dart';
 import 'package:purchases_flutter/models/promotional_offer.dart';
 
 import '../../../../app/service_export.dart';
@@ -12,13 +13,16 @@ class SubscriptionService {
       );
     }
 
-    final response = await ApiExecutor().execute<SubscriptionPriceModel?>(
-      apiCall: apiCall,
-      parser: (p0) {
-        return SubscriptionPriceModel.fromJson(p0);
-      },
+    final res = await ProfileInfoService().fetchProfile();
+
+    print(
+      "res profile info : is refferal code applied: ${res?.referral?.isRedeemed}",
     );
-    return response.data;
+
+    return SubscriptionPriceModel(
+      referralCode: res?.referral?.code ?? 'abc',
+      isRedeemed: res?.referral?.isRedeemed ?? false,
+    );
   }
 
   Future<PromotionalOffer?> getIosPromoSignature() async {

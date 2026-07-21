@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "57411207953-gpitl3q6jn1rm3rnlg2rn8g45ud89kfk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.wemama",
+            "certificate_hash": "5304349133178e2d126862d000268c99b8a65847"
+          }
+        },
+        {
           "client_id": "57411207953-jgk95equht0o0499kh8bhonte5nmn0m5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

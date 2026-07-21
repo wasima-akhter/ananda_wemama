@@ -1,7 +1,7 @@
 import '../../../../app/service_export.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 
-class ProfileInfoService extends GetxService {
+class ProfileInfoService {
   Future<ProfileDataModel?> fetchProfile() async {
     apiCall() {
       return ApiClient().get(

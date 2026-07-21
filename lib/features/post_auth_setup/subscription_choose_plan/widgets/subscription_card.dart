@@ -46,14 +46,21 @@ class SubscriptionCard extends StatelessWidget {
                   hp: 16,
                   child: Text(
                     Strings.mostPopular.toUpperCase(),
-                    style: TxtStyle.outfit(fs: 13, w: 600, color: popularTxtColor),
+                    style: TxtStyle.outfit(
+                      fs: 13,
+                      w: 600,
+                      color: popularTxtColor,
+                    ),
                   ),
                 ).mB(10),
               ],
             ),
-          if (pricingSection != null) pricingSection!,
+          ?pricingSection,
 
-          Text(title.toUpperCase(), style: TxtStyle.outfit(fs: 20, w: 700, color: txtClr)),
+          Text(
+            title.toUpperCase(),
+            style: TxtStyle.outfit(fs: 20, w: 700, color: txtClr),
+          ),
           Gap(18),
           ...children,
         ],
@@ -99,7 +106,10 @@ class PaidSubCard extends StatelessWidget {
         ],
       ),
       children: [
-        SubscriptionSectionTitle(title: Strings.connection, textColor: titleTextClr),
+        SubscriptionSectionTitle(
+          title: Strings.connection,
+          textColor: titleTextClr,
+        ),
         SubscriptionFeatureRow(
           title: Strings.unlockEverything,
           isIncluded: true,
@@ -113,7 +123,10 @@ class PaidSubCard extends StatelessWidget {
 
         Gap(10),
 
-        SubscriptionSectionTitle(title: Strings.moodSelfCare, textColor: titleTextClr),
+        SubscriptionSectionTitle(
+          title: Strings.moodSelfCare,
+          textColor: titleTextClr,
+        ),
         SubscriptionFeatureRow(
           title: Strings.fullMoodLibrary,
           isIncluded: true,
@@ -127,7 +140,10 @@ class PaidSubCard extends StatelessWidget {
 
         Gap(10),
 
-        SubscriptionSectionTitle(title: Strings.expertAccess, textColor: titleTextClr),
+        SubscriptionSectionTitle(
+          title: Strings.expertAccess,
+          textColor: titleTextClr,
+        ),
         SubscriptionFeatureRow(
           title: Strings.attendLiveExpertSessions,
           isIncluded: true,
@@ -162,7 +178,10 @@ class FreeSubCard extends StatelessWidget {
       bgColor: bgColor,
       textColor: isSelected ? c.scaffoldBackground : c.primary,
       children: [
-        SubscriptionSectionTitle(title: Strings.connection, textColor: titleTextClr),
+        SubscriptionSectionTitle(
+          title: Strings.connection,
+          textColor: titleTextClr,
+        ),
         SubscriptionFeatureRow(
           title: Strings.connectWithMums,
           isIncluded: true,
@@ -186,7 +205,10 @@ class FreeSubCard extends StatelessWidget {
 
         Gap(10),
 
-        SubscriptionSectionTitle(title: Strings.moodAndSelfCare, textColor: titleTextClr),
+        SubscriptionSectionTitle(
+          title: Strings.moodAndSelfCare,
+          textColor: titleTextClr,
+        ),
         SubscriptionFeatureRow(
           title: Strings.fullMoodLibrary,
           isIncluded: false,

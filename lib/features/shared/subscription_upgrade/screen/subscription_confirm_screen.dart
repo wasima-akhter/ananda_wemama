@@ -10,11 +10,8 @@ class SubscriptionConfirmScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priceModel = Get.arguments as SubscriptionPriceModel;
-    final ctrl = Get.put(SubscriptionConfirmController(priceModel));
-
-    final discountAmount =
-        (priceModel.originalPrice * priceModel.discount) / 100;
+    final eligibility = Get.arguments as SubscriptionPriceModel;
+    final ctrl = Get.put(SubscriptionConfirmController(eligibility));
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(
@@ -25,65 +22,54 @@ class SubscriptionConfirmScreen extends StatelessWidget {
         () => AuthButton(
           btnText: "Confirm And Pay",
           isLoading: ctrl.isProcessing.value,
-          onTap: ctrl.isProcessing.value ? null : ctrl.onConfirmPayment,
+          onTap: (ctrl.isProcessing.value || ctrl.selectedOption.value == null)
+              ? null
+              : ctrl.onConfirmPayment,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Gap(itemGap * 2),
-          _priceRow('Original Price', priceModel.originalPrice),
-          if (priceModel.discount > 0)
-            _priceRow(
-              'Discount',
-              discountAmount,
-              isDiscount: true,
-              isPercentage: true,
-              percentage: priceModel.discount,
-            ),
+      child: Obx(() {
+        if (ctrl.isLoadingOption.value) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 60),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-          const Divider(),
-          _priceRow('Total', priceModel.finalPrice, isBold: true),
-          Gap(itemGap * 3),
-          Obx(() {
-            if (ctrl.errorMessage.value.isEmpty) return const SizedBox.shrink();
-            return _ErrorRetryBanner(
-              message: ctrl.errorMessage.value,
-              onRetry: ctrl.onConfirmPayment,
-            );
-          }),
-        ],
-      ).getcm,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Gap(itemGap * 2),
+            ...ctrl.priceRows.map(_priceRow),
+            if (ctrl.priceRows.length > 1) const Divider(),
+            if (ctrl.errorMessage.value.isNotEmpty) ...[
+              Gap(itemGap * 2),
+              _ErrorRetryBanner(
+                message: ctrl.errorMessage.value,
+                onRetry: ctrl.onConfirmPayment,
+              ),
+            ],
+          ],
+        ).getcm;
+      }),
     );
   }
 
-  Widget _priceRow(
-    String label,
-    double value, {
-    bool isDiscount = false,
-    bool isBold = false,
-    bool isPercentage = false,
-    double? percentage,
-  }) {
+  Widget _priceRow(PriceRowData row) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            isPercentage
-                ? "$label (${percentage?.toStringAsFixed(0)}%) "
-                : label,
-            style: TxtStyle.outfit(fs: 14, w: isBold ? 700 : 500),
+            row.label,
+            style: TxtStyle.outfit(fs: 14, w: row.isBold ? 700 : 500),
           ),
           Text(
-            isPercentage
-                ? '-₦${value.toStringAsFixed(2)}'
-                : '${isDiscount ? '-' : ''}₦${value.abs().toStringAsFixed(2)}',
+            row.formattedPrice,
             style: TxtStyle.outfit(
-              fs: isBold ? 18 : 14,
-              w: isBold ? 700 : 500,
-              color: isDiscount ? Colors.green : null,
+              fs: row.isBold ? 18 : 14,
+              w: row.isBold ? 700 : 500,
+              color: row.isDiscount ? Colors.green : null,
             ),
           ),
         ],
@@ -100,7 +86,7 @@ class _ErrorRetryBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.red.withValues(alpha: 0.08),

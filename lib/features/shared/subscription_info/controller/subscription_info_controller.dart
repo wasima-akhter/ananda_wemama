@@ -29,7 +29,7 @@ class SubscriptionInfoController extends GetxController {
       isLoading.value = true;
 
       await _purchaseService.refreshCustomerInfo();
-      subInfo.value = _purchaseService.getDisplayInfo();
+      subInfo.value = await _purchaseService.getDisplayInfo();
     } catch (e, s) {
       debugPrint('Load subscription info error: $e');
       debugPrintStack(stackTrace: s);

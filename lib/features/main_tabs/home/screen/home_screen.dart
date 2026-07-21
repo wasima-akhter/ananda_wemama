@@ -63,6 +63,10 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 1.2,
         children: [
+          TextButton(
+            onPressed: () => Get.toNamed(RoutePaths.subChoosePlan),
+            child: Text("Sub Choose page"),
+          ),
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),
