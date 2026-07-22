@@ -119,6 +119,36 @@ class TopContent extends StatelessWidget {
 
                   // ✅ No SizedBox wrapper — StackFit.expand handles sizing
 
+                  if (mc.remoteUids.isEmpty) {
+                    return _buildPlaceholder(
+                      child: Text(
+                        "Live starting soon...",
+                        style: TxtStyle.inter(fs: 14, color: Colors.white70),
+                      ),
+                    );
+                  }
+                  if (!mc.isHostVideoOn.value) {
+                    return _buildPlaceholder(child: Text("camera off"));
+                  }
+                  if (!mc.hasReceivedFirstHostFrame.value) {
+                    return _buildPlaceholder(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const LoadingPrimary(),
+                          const Gap(10),
+                          Text(
+                            "Connecting to host's video...",
+                            style: TxtStyle.inter(
+                              fs: 14,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
                   return CusGestureDetector(
                     onTap: () => Get.to(
                       () => FullscreenVideoPage(mc: mc),

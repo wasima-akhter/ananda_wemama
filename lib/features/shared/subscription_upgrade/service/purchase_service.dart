@@ -336,22 +336,68 @@ class SubscriptionDisplayInfo {
 
 extension PurchaseServiceInfo on PurchaseService {
   Future<SubscriptionDisplayInfo?> getDisplayInfo() async {
+    log('getDisplayInfo: started');
+
     final info = customerInfo.value;
-    if (info == null) return null;
+
+    log('getDisplayInfo: customerInfo = $info');
+
+    if (info == null) {
+      log('getDisplayInfo: customerInfo is null, returning null');
+      return null;
+    }
+
+    log('getDisplayInfo: all entitlements = ${info.entitlements.all}');
 
     final entitlement = info.entitlements.all[PurchaseService.entitlementId];
-    if (entitlement == null || !entitlement.isActive) return null;
 
-    log('productIdentifier: ${entitlement.productIdentifier}');
+    log('getDisplayInfo: entitlementId = ${PurchaseService.entitlementId}');
+
+    log('getDisplayInfo: entitlement = $entitlement');
+
+    if (entitlement == null) {
+      log('getDisplayInfo: entitlement is null, returning null');
+      return null;
+    }
+
+    log('getDisplayInfo: entitlement.isActive = ${entitlement.isActive}');
+
+    if (!entitlement.isActive) {
+      log('getDisplayInfo: entitlement inactive, returning null');
+      return null;
+    }
+
+    log('getDisplayInfo: productIdentifier = ${entitlement.productIdentifier}');
 
     String? priceString;
+
     try {
+      log('getDisplayInfo: fetching offerings...');
+
       final offerings = await Purchases.getOfferings();
+
+      log('getDisplayInfo: offerings = $offerings');
+
+      log('getDisplayInfo: current offering = ${offerings.current}');
+
+      log(
+        'getDisplayInfo: available packages = ${offerings.current?.availablePackages}',
+      );
+
       final pkg = offerings.current?.availablePackages.firstWhereOrNull(
         (p) => p.storeProduct.identifier == entitlement.productIdentifier,
       );
+
+      log('getDisplayInfo: matched package = $pkg');
+
+      log('getDisplayInfo: matched storeProduct = ${pkg?.storeProduct}');
+
       priceString = pkg?.storeProduct.priceString;
-    } catch (e) {
+
+      log('getDisplayInfo: priceString = $priceString');
+    } catch (e, stack) {
+      log('getDisplayInfo: Could not resolve price: $e');
+      log('getDisplayInfo: stack = $stack');
       debugPrint('Could not resolve price: $e');
     }
 
@@ -373,17 +419,41 @@ extension PurchaseServiceInfo on PurchaseService {
 
   Future<void> openManageSubscription() async {
     final url = customerInfo.value?.managementURL;
-    if (url == null) {
-      // Fallback: platform default subscription settings
-      final fallbackUrl = GetPlatform.isIOS
-          ? 'https://apps.apple.com/account/subscriptions'
-          : 'https://play.google.com/store/account/subscriptions';
-      await launchUrl(
-        Uri.parse(fallbackUrl),
+
+    if (url != null) {
+      final launched = await launchUrl(
+        Uri.parse(url),
         mode: LaunchMode.externalApplication,
       );
+      if (!launched) {
+        throw Exception(
+          'Could not open subscription settings. Please try again.',
+        );
+      }
       return;
     }
-    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+
+    // No managementURL from RC — fall back based on the entitlement's actual store,
+    // not just device platform.
+    final store = activeStore;
+    final fallbackUrl = switch (store) {
+      Store.appStore => 'https://apps.apple.com/account/subscriptions',
+      Store.playStore => 'https://play.google.com/store/account/subscriptions',
+      _ => null, // promotional/stripe/amazon — no store deep link exists
+    };
+
+    if (fallbackUrl == null) {
+      throw Exception("This subscription isn't managed through the app store.");
+    }
+
+    final launched = await launchUrl(
+      Uri.parse(fallbackUrl),
+      mode: LaunchMode.externalApplication,
+    );
+    if (!launched) {
+      throw Exception(
+        'Could not open subscription settings. Please try again.',
+      );
+    }
   }
 }

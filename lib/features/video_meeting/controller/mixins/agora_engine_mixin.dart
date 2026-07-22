@@ -25,6 +25,8 @@ mixin AgoraEngineMixin on GetxController {
   BuildContext? _endedPopupContext;
   static const _hostOfflineGraceDuration = Duration(seconds: 8);
 
+  final RxBool hasReceivedFirstHostFrame = false.obs;
+
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
     log('🔵 [1] hostMeeting() started');
@@ -188,6 +190,19 @@ mixin AgoraEngineMixin on GetxController {
               log('❌ onJoinChannelSuccess handler error: $e');
             }
           },
+
+          onFirstRemoteVideoFrame:
+              (
+                RtcConnection connection,
+                int remoteUid,
+                int width,
+                int height,
+                int elapsed,
+              ) {
+                if (remoteUid == hostUid.value) {
+                  hasReceivedFirstHostFrame.value = true;
+                }
+              },
 
           /*
           onUserJoined: (connection, uid, elapsed) async {

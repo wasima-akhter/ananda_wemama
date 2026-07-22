@@ -34,7 +34,9 @@ class SubscriptionUpgradeScreen extends StatelessWidget {
               child: AuthButton(
                 btnText: Strings.continueTxt,
                 isLoading: scpc.isLoading.value,
-                onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
+                onTap: scpc.isLoading.value
+                    ? null
+                    : () => scpc.onTapContinue(chooseSubPlanFormKey),
               ),
             ),
           ),

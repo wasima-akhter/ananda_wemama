@@ -54,7 +54,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
-    <!-- ✅ Foreground service (needed for Agora, recording in background) -->
+    <!-- ✅ Foreground service The microphone foreground service is used during live sessions to allow participants to speak and interact with the host using Agora real-time communication. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!-- Android 14+ required for foreground service using mic -->
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>

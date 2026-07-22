@@ -4,16 +4,14 @@ import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../gen/assets.gen.dart';
-import '../controller/subscription_confirm_controller.dart';
-import '../model/subscription_price_model.dart';
+import '../controller/subscription_pending_controller.dart';
 
 class SubscriptionPending extends StatelessWidget {
   const SubscriptionPending({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final priceModel = Get.arguments as SubscriptionPriceModel;
-    final ctrl = Get.put(SubscriptionConfirmController(priceModel));
+    final ctrl = Get.put(SubscriptionPendingController());
 
     return AppScreenTemplate(
       floatingActionButton: Obx(
@@ -22,8 +20,8 @@ class SubscriptionPending extends StatelessWidget {
           color: c.buttonText,
           child: AuthButton(
             btnText: "Check Payment Status",
-            isLoading: ctrl.isProcessing.value,
-            onTap: ctrl.isProcessing.value ? null : ctrl.onConfirmPayment,
+            onTap: ctrl.isChecking.value ? null : ctrl.onCheckStatus,
+            isLoading: ctrl.isChecking.value,
           ),
         ),
       ),

@@ -24,6 +24,16 @@ class SubscriptionConfirmController extends GetxController {
     _resolveOption();
   }
 
+  /// Eligible for the referral discount/offer only if a real referral
+  /// code is present AND it hasn't already been redeemed.
+  bool get _isEligibleForOffer =>
+      (eligibility.referralCode ?? '').trim().isNotEmpty &&
+      eligibility.isRedeemed == false;
+
+  final Rx<StoreProductDiscount?> iosPromoDiscount = Rx<StoreProductDiscount?>(
+    null,
+  );
+
   Future<void> _resolveOption() async {
     isLoadingOption.value = true;
     try {
@@ -34,6 +44,11 @@ class SubscriptionConfirmController extends GetxController {
       debugPrint(
         '🔍 available packages: ${offerings?.current?.availablePackages.map((p) => p.storeProduct.identifier)}',
       );
+
+      debugPrint(
+        '🔍 oofferings?.current?.availablePackages.toString(): ${offerings?.current?.availablePackages.toString()}',
+      );
+
       Get.snackbar(
         "identifier: ${offerings?.current?.identifier}",
         "${offerings?.current?.availablePackages.toString()}",
@@ -54,9 +69,19 @@ class SubscriptionConfirmController extends GetxController {
 
       // Only Android's purchase path needs a resolved SubscriptionOption
       // (base plan + offer). iOS purchases the Package directly.
+      // Only Android's purchase path needs a resolved SubscriptionOption
+      // (base plan + offer). iOS purchases the Package directly.
       if (selectedOption.value == null && GetPlatform.isAndroid) {
         errorMessage.value = 'Plan option not available.';
         _showErrorSnackbar(errorMessage.value);
+      }
+
+      // ── NEW: iOS promotional offer lookup ──────────────────────────
+      // No hardcoded identifier — RevenueCat/Apple only require one when
+      // a single product has multiple competing promotional offers.
+      // With a single configured offer, the first discount IS the offer.
+      if (GetPlatform.isIOS && _isEligibleForOffer) {
+        iosPromoDiscount.value = _package!.storeProduct.discounts?.firstOrNull;
       }
     } catch (e) {
       errorMessage.value = 'Failed to load subscription plan.';
@@ -69,11 +94,25 @@ class SubscriptionConfirmController extends GetxController {
   List<PriceRowData> get priceRows {
     final phases = selectedOption.value?.pricingPhases ?? [];
     if (phases.isEmpty) {
+      // iOS — show original + promotional price if eligible
+      if (GetPlatform.isIOS && iosPromoDiscount.value != null) {
+        final discount = iosPromoDiscount.value!;
+        return [
+          PriceRowData('Original price', _package!.storeProduct.priceString),
+          PriceRowData(
+            'Discounted price',
+            discount.priceString,
+            isDiscount: true,
+          ),
+          PriceRowData('Total', discount.priceString, isBold: true),
+        ];
+      }
+
       final price = _package?.storeProduct.priceString;
       return price == null ? [] : [PriceRowData('Total', price, isBold: true)];
     }
 
-    final discountAvailable = phases.length > 1 && !eligibility.isRedeemed;
+    final discountAvailable = phases.length > 1 && _isEligibleForOffer;
 
     if (!discountAvailable) {
       final price = phases.length > 1 ? phases.last.price : phases.first.price;
@@ -82,7 +121,6 @@ class SubscriptionConfirmController extends GetxController {
 
     final introPrice = phases.first.price;
     final fullPrice = phases.last.price;
-
     final discountMicros = fullPrice.amountMicros - introPrice.amountMicros;
     final discountPercent = fullPrice.amountMicros > 0
         ? ((discountMicros / fullPrice.amountMicros) * 100).round()
@@ -117,6 +155,7 @@ class SubscriptionConfirmController extends GetxController {
       (selectedOption.value == null && GetPlatform.isAndroid);
 
   Future<void> onConfirmPayment() async {
+    debugPrint('🟢 onConfirmPayment TAPPED');
     if (isPurchaseBlocked) {
       _showErrorSnackbar(
         '__package == null ||  (selectedOption.value == null && GetPlatform.isAndroid), isPurchaseBlocked Subscription plan is unavailable.',
@@ -134,10 +173,33 @@ class SubscriptionConfirmController extends GetxController {
     isProcessing.value = true;
 
     try {
-      final outcome = await _purchaseService.purchasePackage(
-        _package!,
-        selectedOption.value,
-      );
+      debugPrint('🟢 calling _purchaseService.purchasePackage...');
+      // final outcome = await _purchaseService.purchasePackage(
+      //   _package!,
+      //   selectedOption.value,
+      // );
+
+      final PurchaseOutcome outcome;
+      // ── NEW: route eligible iOS users through the signed promo offer ──
+      if (GetPlatform.isIOS && iosPromoDiscount.value != null) {
+        debugPrint('🟢 purchasing with iOS promotional offer');
+        final promoOffer = await Purchases.getPromotionalOffer(
+          _package!.storeProduct,
+          iosPromoDiscount.value!,
+        );
+        outcome = await _purchaseService.purchaseWithDiscount(
+          _package!,
+          promoOffer,
+        );
+      } else {
+        debugPrint('🟢 calling _purchaseService.purchasePackage...');
+        outcome = await _purchaseService.purchasePackage(
+          _package!,
+          selectedOption.value,
+        );
+      }
+
+      debugPrint('🟢 purchasePackage returned: ${outcome.result}');
 
       if (outcome.result == PurchaseResult.error) {
         _showErrorSnackbar(
@@ -158,8 +220,8 @@ class SubscriptionConfirmController extends GetxController {
   Future<void> _handleOutcome(PurchaseOutcome outcome) async {
     switch (outcome.result) {
       case PurchaseResult.success:
-        if (eligibility.isRedeemed) {
-          // settle the referral discount backend-side now that the store purchase succeeded
+        if (_isEligibleForOffer) {
+          // await SubscriptionService().confirmPurchaseWithBackend();
         }
         Get.offAllNamed(RoutePaths.subscriptionSuccess, arguments: eligibility);
         break;

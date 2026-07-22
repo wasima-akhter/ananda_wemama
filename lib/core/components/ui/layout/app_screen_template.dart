@@ -67,7 +67,10 @@ class AppScreenTemplate extends StatelessWidget {
             ? null
             : MeasuredWidget(
                 onMeasured: (size) => fabHeight.value = size.height,
-                child: floatingActionButton!.mB(0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [floatingActionButton!.mB(0)],
+                ),
               ),
         floatingActionButtonLocation:
             floatingActionButtonLocation ??

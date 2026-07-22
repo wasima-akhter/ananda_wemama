@@ -57,9 +57,10 @@ class SubscriptionInfoController extends GetxController {
 
   Future<void> _loadProductInfo(String productIdentifier) async {
     try {
-      final offerings = await Purchases.getOfferings();
+      final offerings = await _purchaseService.getOfferings();
+      // Purchases.getOfferings();
 
-      final product = offerings.current?.availablePackages
+      final product = offerings?.current?.availablePackages
           .firstWhereOrNull(
             (package) => package.storeProduct.identifier == productIdentifier,
           )
@@ -85,6 +86,16 @@ class SubscriptionInfoController extends GetxController {
 
   /// Same destination as manage — Apple/Google don't allow programmatic cancel.
   Future<void> onCancelSubscription() async {
+    final store = _purchaseService.activeStore;
+
+    if (store != Store.appStore && store != Store.playStore) {
+      Snack.showError(
+        "This subscription isn't managed through the app store. "
+        "Contact support to cancel.",
+      );
+      return;
+    }
+
     try {
       final confirmed = await Get.dialog<bool>(
         AlertDialog(
@@ -114,7 +125,9 @@ class SubscriptionInfoController extends GetxController {
       debugPrintStack(stackTrace: s);
 
       Snack.showError(
-        'Unable to open subscription settings. Please try again.',
+        e is Exception
+            ? e.toString().replaceFirst('Exception: ', '')
+            : 'Unable to open subscription settings. Please try again.',
       );
     }
   }

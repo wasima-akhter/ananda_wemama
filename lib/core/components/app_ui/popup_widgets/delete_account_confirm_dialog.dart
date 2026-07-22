@@ -31,7 +31,7 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
           6.toHeight,
 
           Text(
-            Strings.confirmDeletePost,
+            Strings.confirmDeleteAccount,
             textAlign: TextAlign.center,
             style: TxtStyle.inter(),
           ),

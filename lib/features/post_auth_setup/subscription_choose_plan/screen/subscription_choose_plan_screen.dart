@@ -28,7 +28,9 @@ class SubscriptionChoosePlanScreen extends StatelessWidget {
                   child: filledBtnWTxt(
                     btnTxt: Strings.continueTxt,
                     isLoading: scpc.isLoading,
-                    onTap: () => scpc.onTapContinue(chooseSubPlanFormKey),
+                    onTap: scpc.isLoading
+                        ? null
+                        : () => scpc.onTapContinue(chooseSubPlanFormKey),
                   ).getcm,
                 ),
               ),

@@ -23,7 +23,7 @@ class SessionComponent extends StatelessWidget {
       hp: 8,
       vp: 12,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
             clipBehavior: Clip.none,
@@ -56,6 +56,8 @@ class SessionComponent extends StatelessWidget {
                         session.expert?.profession?.designation.join(", ") ??
                             "",
                         style: TxtStyle.outfit(fs: 12, color: c.textSecondary),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
 
                       const Gap(10),

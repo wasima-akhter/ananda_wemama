@@ -800,6 +800,8 @@ class Strings {
       "Comment has been unlocked. You can comment now.";
 
   static const String confirmDeletePost = "Do you want to delete this post?";
+  static const String confirmDeleteAccount =
+      "Do you want to delete this account permanently?";
   static const String noBookmarks = "No Bookmarks";
 
   //

@@ -67,6 +67,11 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () => Get.toNamed(RoutePaths.subChoosePlan),
             child: Text("Sub Choose page"),
           ),
+          TextButton(
+            onPressed: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+            child: Text("Sub upgrade page"),
+          ),
+
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),

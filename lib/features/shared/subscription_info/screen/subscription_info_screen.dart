@@ -3,7 +3,6 @@ import 'package:mama_app/features/shared/subscription_info/widgets/subs_prefrenc
 import 'package:mama_app/features/shared/subscription_info/widgets/subscription_info_card.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/config/app_info.dart';
 import '../controller/subscription_info_controller.dart';
 import '../modules/preference_title.dart';
 
@@ -117,11 +116,6 @@ class SubscriptionInfoScreen extends StatelessWidget {
       }),
     );
   }
-
-  String _friendlyPlanName(String productId) {
-    return SubscriptionConstants.productDisplayNames[productId] ??
-        'WeMama Premium';
-  }
 }
 
 class _NoActiveSubscriptionCard extends StatelessWidget {
@@ -170,6 +164,7 @@ class _CancellationNoticeBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final timeModel = DateHelper().formatUTCtimestamp(expiresAt.toString());
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(12),
@@ -185,7 +180,7 @@ class _CancellationNoticeBanner extends StatelessWidget {
           Expanded(
             child: Text(
               expiresAt != null
-                  ? 'Your subscription is cancelled and will end on ${DateHelper().formatUTCtimestamp(expiresAt.toString())}.'
+                  ? 'Your subscription is cancelled and will end on ${timeModel.date}, ${timeModel.time}.'
                   : 'Your subscription is cancelled and will not renew.',
               style: const TextStyle(fontSize: 12.5, color: Colors.orange),
             ),

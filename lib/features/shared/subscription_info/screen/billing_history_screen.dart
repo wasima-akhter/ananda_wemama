@@ -26,10 +26,17 @@ class BillingHistory extends StatelessWidget {
             style: TxtStyle.poppinsSemiB(),
           ),
           Gap(8),
-          Text(
-            'Purchase receipts and billing history are managed by Google Play.',
-            textAlign: TextAlign.center,
-            style: TxtStyle.poppinsSemiB(fs: 12, color: c.foregroundSecondary),
+          Obx(
+            () => Text(
+              controller.isAppStore
+                  ? 'Purchase receipts and billing history are managed by the App Store.'
+                  : 'Purchase receipts and billing history are managed by Google Play.',
+              textAlign: TextAlign.center,
+              style: TxtStyle.poppinsSemiB(
+                fs: 12,
+                color: c.foregroundSecondary,
+              ),
+            ),
           ),
           Gap(24),
           CusGestureDetector(
@@ -39,9 +46,13 @@ class BillingHistory extends StatelessWidget {
               hp: 20,
               rad: 8,
               hasBrdr: true,
-              child: Text(
-                'Open Play Store History',
-                style: TxtStyle.poppinsSemiB(color: c.strokePrimary),
+              child: Obx(
+                () => Text(
+                  controller.isAppStore
+                      ? 'Open App Store History'
+                      : 'Open Play Store History',
+                  style: TxtStyle.poppinsSemiB(color: c.strokePrimary),
+                ),
               ),
             ),
           ),

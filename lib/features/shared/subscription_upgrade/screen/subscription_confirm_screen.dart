@@ -21,8 +21,11 @@ class SubscriptionConfirmScreen extends StatelessWidget {
       bottomWidget: Obx(
         () => AuthButton(
           btnText: "Confirm And Pay",
-          isLoading: ctrl.isProcessing.value,
-          onTap: (ctrl.isProcessing.value || ctrl.isPurchaseBlocked)
+          isLoading: ctrl.isProcessing.value || ctrl.isLoadingOption.value,
+          onTap:
+              (ctrl.isProcessing.value ||
+                  ctrl.isPurchaseBlocked ||
+                  ctrl.isLoadingOption.value)
               ? null
               : ctrl.onConfirmPayment,
         ),
