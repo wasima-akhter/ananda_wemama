@@ -85,4 +85,18 @@ class SignoutService {
     // Clear storage
     AppStorage.to.logout();
   }
+
+  Future<bool> deleteAccountFromBackend({required String password}) async {
+    apiCall() {
+      return ApiClient().post(
+        Endpoints.deleteAccount.getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
+        data: {"password": password},
+      );
+    }
+
+    final response = await ApiExecutor().execute(apiCall: apiCall);
+
+    return response.isSuccess;
+  }
 }

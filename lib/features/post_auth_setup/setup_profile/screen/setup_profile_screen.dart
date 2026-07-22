@@ -19,9 +19,14 @@ class SetupProfileScreen extends StatelessWidget {
 
     return AuthScaffold(
       bottomWidget: Obx(
-        () => AuthButton(
-          isLoading: spc.isLoading,
-          onTap: () => spc.onTapContinueSetUp(formKey),
+        () => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AuthButton(
+              isLoading: spc.isLoading,
+              onTap: () => spc.onTapContinueSetUp(formKey),
+            ),
+          ],
         ),
       ),
 

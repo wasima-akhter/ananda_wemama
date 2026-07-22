@@ -1,3 +1,5 @@
+import 'package:purchases_flutter/purchases_flutter.dart' hide PurchaseResult;
+
 import '../../../../app/controller_export.dart';
 import '../../subscription_upgrade/service/purchase_service.dart';
 
@@ -7,9 +9,12 @@ class SubscriptionInfoController extends GetxController {
 
   final RxBool isLoading = true.obs;
   final RxBool isRestoring = false.obs;
+
   final Rx<SubscriptionDisplayInfo?> subInfo = Rx<SubscriptionDisplayInfo?>(
     null,
   );
+
+  final Rxn<StoreProduct> activeProduct = Rxn<StoreProduct>();
 
   final RxBool pushNotification = true.obs;
   final RxBool communityUpdates = true.obs;
@@ -18,9 +23,10 @@ class SubscriptionInfoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
     _loadSubscriptionInfo();
 
-    // keep screen live-updated if status changes while viewing (e.g. billing issue resolves)
+    // keep screen live-updated if status changes while viewing
     ever(_purchaseService.customerInfo, (_) => _loadSubscriptionInfo());
   }
 
@@ -29,7 +35,16 @@ class SubscriptionInfoController extends GetxController {
       isLoading.value = true;
 
       await _purchaseService.refreshCustomerInfo();
-      subInfo.value = await _purchaseService.getDisplayInfo();
+
+      final info = await _purchaseService.getDisplayInfo();
+
+      subInfo.value = info;
+
+      if (info != null) {
+        await _loadProductInfo(info.productIdentifier);
+      } else {
+        activeProduct.value = null;
+      }
     } catch (e, s) {
       debugPrint('Load subscription info error: $e');
       debugPrintStack(stackTrace: s);
@@ -37,6 +52,23 @@ class SubscriptionInfoController extends GetxController {
       Snack.showError('Failed to load subscription information.');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> _loadProductInfo(String productIdentifier) async {
+    try {
+      final offerings = await Purchases.getOfferings();
+
+      final product = offerings.current?.availablePackages
+          .firstWhereOrNull(
+            (package) => package.storeProduct.identifier == productIdentifier,
+          )
+          ?.storeProduct;
+
+      activeProduct.value = product;
+    } catch (e, s) {
+      debugPrint('Load RevenueCat product error: $e');
+      debugPrintStack(stackTrace: s);
     }
   }
 

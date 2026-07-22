@@ -13,9 +13,6 @@ class ProfileController extends GetxController {
 
   String get myImageUrl => userProfileData.value?.profileImage ?? '';
 
-  // Sign out loading state
-  var isSignOutLoading_ = false.obs;
-
   @override
   void onInit() async {
     super.onInit();
@@ -64,6 +61,9 @@ class ProfileController extends GetxController {
     }
   }
 
+  // Sign out loading state
+  var isSignOutLoading_ = false.obs;
+
   ///
   /// Sign out the user safely
   Future<void> onTapLogout() async {
@@ -81,6 +81,40 @@ class ProfileController extends GetxController {
     } catch (e) {
       log("Logout error: $e");
       isSignOutLoading_.value = false;
+    }
+  }
+
+  //
+  // Sign out loading state
+  var isDeleteAccountLoading_ = false.obs;
+
+  ///
+
+  /// Delete account
+  Future<void> onTapDeteteAccount(String password) async {
+    if (isDeleteAccountLoading_.value) return;
+
+    isDeleteAccountLoading_.value = true;
+
+    try {
+      final success = await SignoutService().deleteAccountFromBackend(
+        password: password,
+      );
+
+      if (!success) {
+        isDeleteAccountLoading_.value = false;
+        return;
+      }
+
+      await SignoutService().signOut();
+
+      Get.back(); // close dialog
+
+      Get.offAllNamed(RoutePaths.signin);
+    } catch (e) {
+      log("Delete account error: $e");
+    } finally {
+      isDeleteAccountLoading_.value = false;
     }
   }
 }

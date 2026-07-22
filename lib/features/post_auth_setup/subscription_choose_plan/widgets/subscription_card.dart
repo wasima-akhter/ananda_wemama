@@ -88,7 +88,7 @@ class PaidSubCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "${Strings.currency}5,000 / ${Strings.month.cap}",
+            "${Strings.currency}4,900 / ${Strings.month.cap}",
             style: TxtStyle.outfit(fs: 18, w: 700, color: rowTextClr),
           ),
           Gap(4),
@@ -96,12 +96,12 @@ class PaidSubCard extends StatelessWidget {
             Strings.cancelAnytime.capEachWord(),
             style: TxtStyle.outfit(fs: 14, color: rowTextClr),
           ),
-          Gap(4),
-          Text(
-            Strings.lessThanPerDay,
-            textAlign: TextAlign.center,
-            style: TxtStyle.outfit(fs: 14, color: rowTextClr),
-          ).mHV(10, 0),
+          // Gap(4),
+          // Text(
+          //   Strings.lessThanPerDay,
+          //   textAlign: TextAlign.center,
+          //   style: TxtStyle.outfit(fs: 14, color: rowTextClr),
+          // ).mHV(10, 0),
           Gap(itemGap),
         ],
       ),

@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Mama App</string>
+	<string>We Mama</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,18 +27,20 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wemama</string>
+				<string>com.googleusercontent.apps.57411207953-ci5dvlm3p1ms9380l8rkkbtdi4b5fpc7</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>GIDClientID</key>
+	<string>57411207953-ci5dvlm3p1ms9380l8rkkbtdi4b5fpc7.apps.googleusercontent.com</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Need camera for video call</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location even when the app is in background to provide real-time updates.</string>
+	<string>Need camera for photo</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location is used to provide nearby services even when the app is running in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We need your location to show nearby services and enable delivery.</string>
 	<key>NSMicrophoneUsageDescription</key>

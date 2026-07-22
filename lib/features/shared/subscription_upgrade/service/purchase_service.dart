@@ -30,7 +30,7 @@ class PurchaseService {
     ); // switch to LogLevel.info in prod
     PurchasesConfiguration configuration = PurchasesConfiguration(
       // "YOUR_REVENUECAT_API_KEY_IOS_OR_ANDROID",
-      revenueCatPublicKeyGoogolePlay, // use platform logic
+      revenueCatPublicKey, // use platform lonfirmgic
     );
     await Purchases.configure(configuration);
 
@@ -39,6 +39,12 @@ class PurchaseService {
     return this;
   }
 
+  void _onCustomerInfoUpdated(CustomerInfo info) {
+    customerInfo.value = info;
+    isActive.value = info.entitlements.all[entitlementId]?.isActive ?? false;
+  }
+
+  /*
   /// Call after login, so purchases attach to the right backend user
   Future<void> loginRevenueCatUser(String appUserId) async {
     try {
@@ -57,11 +63,6 @@ class PurchaseService {
     }
   }
 
-  void _onCustomerInfoUpdated(CustomerInfo info) {
-    customerInfo.value = info;
-    isActive.value = info.entitlements.all[entitlementId]?.isActive ?? false;
-  }
-
   Future<void> refreshCustomerInfo() async {
     try {
       final info = await Purchases.getCustomerInfo();
@@ -76,6 +77,49 @@ class PurchaseService {
       return await Purchases.getOfferings();
     } on PlatformException catch (e) {
       log('getOfferings error: $e');
+      return null;
+    }
+  }
+*/
+  Future<void> loginRevenueCatUser(String appUserId) async {
+    try {
+      await Purchases.logIn(appUserId);
+      await refreshCustomerInfo();
+    } catch (e) {
+      log('RC login error: $e');
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> logoutRevenueCatUser() async {
+    try {
+      await Purchases.logOut();
+    } catch (e) {
+      log('RC logout error: $e');
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<void> refreshCustomerInfo() async {
+    try {
+      final info = await Purchases.getCustomerInfo();
+      _onCustomerInfoUpdated(info);
+    } catch (e) {
+      log('getCustomerInfo error: $e');
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<Offerings?> getOfferings() async {
+    try {
+      return await Purchases.getOfferings();
+    } on PlatformException catch (e) {
+      log('getOfferings error: $e');
+      Get.snackbar(
+        'Error',
+        e.message ?? e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
       return null;
     }
   }
@@ -110,10 +154,27 @@ class PurchaseService {
         customerInfo: customerInfo,
       );
     } on PlatformException catch (e) {
+      // final code = PurchasesErrorHelper.getErrorCode(e);
+      // if (code == PurchasesErrorCode.purchaseCancelledError) {
+      //   return PurchaseOutcome(PurchaseResult.userCancelled);
+      // }
+      // return PurchaseOutcome(
+      //   PurchaseResult.error,
+      //   errorMessage: e.message ?? 'Purchase failed',
+      // );
+
       final code = PurchasesErrorHelper.getErrorCode(e);
+
       if (code == PurchasesErrorCode.purchaseCancelledError) {
         return PurchaseOutcome(PurchaseResult.userCancelled);
       }
+
+      Get.snackbar(
+        'Payment Error',
+        e.message ?? e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return PurchaseOutcome(
         PurchaseResult.error,
         errorMessage: e.message ?? 'Purchase failed',
@@ -140,10 +201,27 @@ class PurchaseService {
         customerInfo: result.customerInfo,
       );
     } on PlatformException catch (e) {
+      // final code = PurchasesErrorHelper.getErrorCode(e);
+      // if (code == PurchasesErrorCode.purchaseCancelledError) {
+      //   return PurchaseOutcome(PurchaseResult.userCancelled);
+      // }
+      // return PurchaseOutcome(
+      //   PurchaseResult.error,
+      //   errorMessage: e.message ?? 'Purchase failed',
+      // );
+
       final code = PurchasesErrorHelper.getErrorCode(e);
+
       if (code == PurchasesErrorCode.purchaseCancelledError) {
         return PurchaseOutcome(PurchaseResult.userCancelled);
       }
+
+      Get.snackbar(
+        'Payment Error',
+        e.message ?? e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return PurchaseOutcome(
         PurchaseResult.error,
         errorMessage: e.message ?? 'Purchase failed',
@@ -162,7 +240,19 @@ class PurchaseService {
       (o) => o.id == targetId,
     );
 
+    // if (option == null) {
+    //   return PurchaseOutcome(
+    //     PurchaseResult.error,
+    //     errorMessage: 'Offer not available',
+    //   );
+    // }
     if (option == null) {
+      Get.snackbar(
+        'Error',
+        'Offer not available',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return PurchaseOutcome(
         PurchaseResult.error,
         errorMessage: 'Offer not available',
@@ -184,6 +274,14 @@ class PurchaseService {
       final info = await Purchases.restorePurchases();
       _onCustomerInfoUpdated(info);
       final active = info.entitlements.all[entitlementId]?.isActive ?? false;
+
+      if (!active) {
+        Get.snackbar(
+          'Restore Error',
+          'No active subscription found for this account',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
       return PurchaseOutcome(
         active ? PurchaseResult.success : PurchaseResult.error,
         customerInfo: info,
@@ -192,6 +290,16 @@ class PurchaseService {
             : 'No active subscription found for this account',
       );
     } on PlatformException catch (e) {
+      // return PurchaseOutcome(
+      //   PurchaseResult.error,
+      //   errorMessage: e.message ?? 'Restore failed',
+      // );
+      Get.snackbar(
+        'Restore Error',
+        e.message ?? e.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
       return PurchaseOutcome(
         PurchaseResult.error,
         errorMessage: e.message ?? 'Restore failed',
@@ -204,6 +312,7 @@ class PurchaseService {
 }
 
 class SubscriptionDisplayInfo {
+  final String productIdentifier;
   final String planName;
   final String priceString;
   final DateTime? expiresAt;
@@ -221,6 +330,7 @@ class SubscriptionDisplayInfo {
     this.managementUrl,
     required this.status,
     required this.store,
+    required this.productIdentifier,
   });
 }
 
@@ -246,6 +356,7 @@ extension PurchaseServiceInfo on PurchaseService {
     }
 
     return SubscriptionDisplayInfo(
+      productIdentifier: entitlement.productIdentifier,
       store: entitlement.store,
       planName: entitlement
           .productIdentifier, // map this to a friendly name in your UI

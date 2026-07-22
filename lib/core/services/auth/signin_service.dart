@@ -117,6 +117,7 @@ class SigninService {
   }) async {
     final result = await ApiExecutor().execute<SigninModelData>(
       apiCall: () => ApiClient().post(
+        headers: HeaderHelpers.jsonHeader(),
         Endpoints.login.getUrl,
         data: {"email": email, "password": password},
       ),

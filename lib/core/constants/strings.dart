@@ -16,6 +16,7 @@ class Strings {
   static const String continueTxt = "Continue";
   static const String retry = "Retry";
   static const String delete = "Delete";
+  static const String deleteAccount = "Delete Account";
   static const String editPhoto = "Edit photo";
   static const String okay = "Okay";
   static const String error = 'Error';
@@ -175,6 +176,8 @@ class Strings {
       "Something went wrong. Please try again.";
   static const String areYouSure = "Are you sure!";
   static const String confirmToLogout = "Confirm To Logout?";
+  static const String confirmToDeleteAccount =
+      "Confirm To Delete Your Account Permanently?";
   static const String available = "Available";
   static const String seen = "Seen";
   static const String unSeen = "Unseen";

@@ -22,7 +22,7 @@ class SubscriptionConfirmScreen extends StatelessWidget {
         () => AuthButton(
           btnText: "Confirm And Pay",
           isLoading: ctrl.isProcessing.value,
-          onTap: (ctrl.isProcessing.value || ctrl.selectedOption.value == null)
+          onTap: (ctrl.isProcessing.value || ctrl.isPurchaseBlocked)
               ? null
               : ctrl.onConfirmPayment,
         ),

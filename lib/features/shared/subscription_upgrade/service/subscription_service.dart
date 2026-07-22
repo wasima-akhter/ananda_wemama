@@ -6,13 +6,6 @@ import '../model/subscription_price_model.dart';
 
 class SubscriptionService {
   Future<SubscriptionPriceModel?> getDiscountedPrice() async {
-    apiCall() {
-      return ApiClient().post(
-        Endpoints.getSubscriptionPrice.getUrl,
-        headers: HeaderHelpers.getAuthHeader(),
-      );
-    }
-
     final res = await ProfileInfoService().fetchProfile();
 
     print(

@@ -11,6 +11,7 @@ import '../../../../features/shared/wave_request/widgets/new_waves_user_details_
 import '../../../../features/video_meeting/controller/fullscreen_video_controller.dart';
 import '../../app_ui/popup_widgets/awaiting_verification_popup.dart';
 import '../../app_ui/popup_widgets/daily_limit_popup.dart';
+import '../../app_ui/popup_widgets/delete_account_confirm_dialog.dart';
 import '../../app_ui/popup_widgets/delete_confirm_dialog.dart';
 import '../../app_ui/popup_widgets/image_viewer.dart';
 import '../../app_ui/popup_widgets/loading_popup.dart';
@@ -320,6 +321,21 @@ Future<void> logoutConfirmDialog({
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     content: LogoutConfirmDialog(isLoading: isLoading, onConfirm: onConfirm),
+  );
+}
+
+/// 🔹  logoutConfirmDialog Popup
+Future<void> deleteAccountConfirmDialog({
+  required RxBool isLoading,
+  required Future<void> Function(String password) onConfirm,
+}) async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+    content: DeleteAccountConfirmDialog(
+      isLoading: isLoading,
+      onConfirm: onConfirm,
+    ),
   );
 }
 

@@ -31,22 +31,25 @@ class SubscriptionInfoScreen extends StatelessWidget {
               )
             else ...[
               CurrentSubscriptionCard(
-                planName: _friendlyPlanName(info.planName),
-                price:
-                    '', // fetch/display from offerings if you want exact price shown
+                planName: scpc.activeProduct.value?.title ?? 'WeMama Premium',
+
+                price: scpc.activeProduct.value?.priceString ?? '',
+
                 expireDate: info.expiresAt != null
                     ? DateHelper()
                           .formatUTCtimestamp(info.expiresAt.toString())
                           .date
                     : '—',
+
                 nextBillingDate: info.willRenew && info.expiresAt != null
                     ? DateHelper()
                           .formatUTCtimestamp(info.expiresAt.toString())
                           .date
                     : '',
-                willRenew: info.willRenew,
-                onManageBilling: scpc.onManageBilling,
 
+                willRenew: info.willRenew,
+
+                onManageBilling: scpc.onManageBilling,
                 onCancel: scpc.onCancelSubscription,
                 onViewReceipt: scpc.onViewReceipt,
               ),

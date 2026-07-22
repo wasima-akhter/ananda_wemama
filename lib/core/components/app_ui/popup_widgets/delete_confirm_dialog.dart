@@ -4,7 +4,11 @@ class DeleteConfirmDialog extends StatelessWidget {
   final RxBool isLoading;
   final Future<void> Function() onConfirm;
 
-  const DeleteConfirmDialog({super.key, required this.isLoading, required this.onConfirm});
+  const DeleteConfirmDialog({
+    super.key,
+    required this.isLoading,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +21,17 @@ class DeleteConfirmDialog extends StatelessWidget {
           Icon(Icons.error_outline, color: c.primary, size: 48),
           12.toHeight,
 
-          Text(Strings.areYouSure, style: TxtStyle.inter(fs: 18, w: 600, color: c.primary)),
+          Text(
+            Strings.areYouSure,
+            style: TxtStyle.inter(fs: 18, w: 600, color: c.primary),
+          ),
           6.toHeight,
 
-          Text(Strings.confirmDeletePost, textAlign: TextAlign.center, style: TxtStyle.inter()),
+          Text(
+            Strings.confirmDeletePost,
+            textAlign: TextAlign.center,
+            style: TxtStyle.inter(),
+          ),
           24.toHeight,
 
           Row(
