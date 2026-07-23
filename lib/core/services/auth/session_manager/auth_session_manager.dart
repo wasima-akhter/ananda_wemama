@@ -31,17 +31,17 @@ class AuthSessionService {
 
     storage.setUserInfo(email: model.user?.email ?? "");
 
-    storage.setUserId(model.user?.authId ?? ''); // NEW
-    log("Logged in as: ${model.user?.email}, id: ${model.user?.authId}");
+    storage.setUserId(model.user?.profileId ?? ''); // NEW
+    log("Logged in as: ${model.user?.email}, id: ${model.user?.profileId}");
 
-    final authId = model.user?.authId ?? '';
+    final profileId = model.user?.profileId ?? '';
 
     // Revenue cat
     // ADD HERE:
-    if (authId.isNotEmpty) {
-      await PurchaseService.to.loginRevenueCatUser(authId);
+    if (profileId.isNotEmpty) {
+      await PurchaseService.to.loginRevenueCatUser(profileId);
     } else {
-      log("⚠️ No authId — skipping RevenueCat login");
+      log("⚠️ No profileId — skipping RevenueCat login");
     }
 
     try {

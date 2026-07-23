@@ -341,6 +341,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/password.svg
   String get password => 'assets/icons/password.svg';
 
+  /// File path: assets/icons/pay_cancel_success.svg
+  String get payCancelSuccess => 'assets/icons/pay_cancel_success.svg';
+
+  /// File path: assets/icons/pay_sad.svg
+  String get paySad => 'assets/icons/pay_sad.svg';
+
   /// File path: assets/icons/photography.svg
   String get photography => 'assets/icons/photography.svg';
 
@@ -617,6 +623,8 @@ class $AssetsIconsGen {
     other,
     outdoorWalks,
     password,
+    payCancelSuccess,
+    paySad,
     photography,
     pin,
     pregnancy,
@@ -770,6 +778,10 @@ class $AssetsImagesGen {
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
 
+  /// File path: assets/images/pay_success.png
+  AssetGenImage get paySuccess =>
+      const AssetGenImage('assets/images/pay_success.png');
+
   /// File path: assets/images/promo_code_image.png
   AssetGenImage get promoCodeImage =>
       const AssetGenImage('assets/images/promo_code_image.png');
@@ -859,6 +871,7 @@ class $AssetsImagesGen {
     onboarding3,
     onboardingBg,
     onboardingImage,
+    paySuccess,
     promoCodeImage,
     sadEmoji,
     sessionMockUser1,

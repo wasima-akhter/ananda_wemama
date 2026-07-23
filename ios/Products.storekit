@@ -1,0 +1,103 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "A95646AA",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ],
+    "_timeRate" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "22255271",
+      "localizations" : [
+        {
+          "description" : "",
+          "displayName" : "WeMama Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "Premium Access",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "billingPlans" : [
+            {
+              "billingPlanType" : "BILLED_UPFRONT",
+              "commitmentDisplayPrice" : "2.99",
+              "displayPrice" : "2.99",
+              "internalID" : "6793389688_BILLED_UPFRONT",
+              "isEnabled" : true
+            }
+          ],
+          "codeOffers" : [
+            {
+              "billingPlanType" : "BILLED_UPFRONT",
+              "displayPrice" : "1.99",
+              "eligibility" : [
+                "new"
+              ],
+              "internalID" : "30FB30ED",
+              "isStackable" : true,
+              "numberOfPeriods" : 3,
+              "paymentMode" : "payAsYouGo",
+              "referenceName" : "50_PERCENT_REFERRAL_OFFER",
+              "subscriptionPeriod" : "P1M"
+            }
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6793389688",
+          "introductoryOffers" : [
+
+          ],
+          "localizations" : [
+            {
+              "description" : "Unlock all premium features with monthly access.",
+              "displayName" : "WeMama Premium",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.app.wemama.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "WeMama Premium v1",
+          "subscriptionGroupID" : "22255271",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 5,
+    "minor" : 0
+  }
+}

@@ -37,15 +37,15 @@ class VerifyOtpService extends GetxService {
       storage.setToken(token);
       log("✅ Token saved: '$token'");
 
-      storage.setUserId(response.data?.user?.authId ?? ''); // NEW
+      storage.setUserId(response.data?.user?.profileId ?? ''); // NEW
       log(
-        "Logged in as: ${response.data?.user?.email}, id: ${response.data?.user?.authId}",
+        "Logged in as: ${response.data?.user?.email}, id: ${response.data?.user?.profileId}",
       );
 
       // Revenue cat
       // ADD HERE:
       await PurchaseService.to.loginRevenueCatUser(
-        response.data?.user?.authId ?? '',
+        response.data?.user?.profileId ?? '',
       );
 
       // ✅ Now call ProfileController to refresh the profile

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
 import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
 import 'package:mama_app/features/shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
@@ -63,15 +64,24 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 1.2,
         children: [
-          TextButton(
-            onPressed: () => Get.toNamed(RoutePaths.subChoosePlan),
-            child: Text("Sub Choose page"),
-          ),
-          TextButton(
-            onPressed: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
-            child: Text("Sub upgrade page"),
-          ),
-
+          if (kDebugMode) ...[
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.promoCodeScreen),
+              child: Text("Sub promo page"),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.subChoosePlan),
+              child: Text("Sub Choose page"),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+              child: Text("Sub upgrade page"),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.subscriptionSuccess),
+              child: Text("Sub subscriptionSuccess page"),
+            ),
+          ],
           MoodCheckInCard(mcc: hc.mcc),
           GentleReminderCard(),
           CommunitySpotlight(),

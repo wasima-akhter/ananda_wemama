@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:mama_app/features/auth/core/auth_button_templates.dart';
@@ -9,6 +10,8 @@ import 'package:mama_app/gen/assets.gen.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/string_helper.dart';
 import '../../../../core/themes/color/colors.dart';
+import '../../../shared/subscription_upgrade/service/subscription_service.dart';
+import '../../../shared/subscription_upgrade/type/offer_type.dart';
 import '../controller/promo_code_controller.dart';
 
 class PromoCodeScreen extends StatelessWidget {
@@ -40,6 +43,50 @@ class PromoCodeScreen extends StatelessWidget {
             radius: 0,
             fit: BoxFit.fitWidth,
           ),
+
+          if (kDebugMode) ...[
+            Gap(itemGap * 2),
+
+            Text(
+              "DEBUG OFFER",
+              style: TxtStyle.outfitSemiB(fs: 12, w: 700, color: Colors.red),
+            ),
+
+            Gap(10),
+
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              alignment: WrapAlignment.center,
+              children: [
+                _debugOfferButton(
+                  title: "Normal",
+                  offer: OfferType.none,
+                  controller: controller,
+                ),
+
+                _debugOfferButton(
+                  title: "Referral",
+                  offer: OfferType.referral,
+                  controller: controller,
+                ),
+
+                _debugOfferButton(
+                  title: "Promo",
+                  offer: OfferType.promo,
+                  controller: controller,
+                ),
+
+                _debugOfferButton(
+                  title: "Funding Mum",
+                  offer: OfferType.fundingMum,
+                  controller: controller,
+                ),
+              ],
+            ),
+
+            Gap(itemGap),
+          ],
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -259,6 +306,34 @@ class PromoCodeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _debugOfferButton({
+    required String title,
+    required OfferType offer,
+    required PromoCodeController controller,
+  }) {
+    return ElevatedButton(
+      onPressed: () async {
+        controller.currentOffer.value = offer;
+        controller.appliedCode.value = title;
+
+        debugPrint("🟢 DEBUG OFFER = ${offer.name}");
+
+        final eligibility = await SubscriptionService().getDiscountedPrice();
+
+        if (eligibility == null) {
+          Get.snackbar("Error", "Couldn't load subscription.");
+          return;
+        }
+
+        Get.toNamed(
+          RoutePaths.subscriptionConfirmScreen,
+          arguments: eligibility,
+        );
+      },
+      child: Text(title),
     );
   }
 }

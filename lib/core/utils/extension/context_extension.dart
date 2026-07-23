@@ -678,7 +678,7 @@ class TxtStyle {
     return textThemedmSerifDisplay.bodyLarge!.copyWith(
       fontSize: 28.sp,
       fontWeight: FontWeight.w400,
-      color: c.foregroundSecondary,
+      color: color ?? c.foregroundSecondary,
     );
   }
 
@@ -694,7 +694,7 @@ class TxtStyle {
           ? 26.sp
           : 28.sp,
       letterSpacing: ls ?? -0.1,
-      color: c.foregroundSecondary,
+      color: color ?? c.foregroundSecondary,
       fontWeight: FontWeight.w400,
       height: ScreenSize.isTallHeight ? 1.4 : 1.2,
     );

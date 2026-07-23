@@ -24,6 +24,27 @@ class SubscriptionInfoScreen extends StatelessWidget {
 
         return Column(
           children: [
+            // CurrentSubscriptionCard(
+            //   planName: 'WeMama Premium',
+            //   price: '\$9.99/month',
+            //   expireDate: '31 Dec 2026',
+            //   nextBillingDate: '31 Dec 2026',
+            //   willRenew: true,
+            //   onManageBilling: () {
+            //     debugPrint('Manage Billing tapped');
+            //   },
+            //   onCancel: () {
+            //     debugPrint('Cancel Subscription tapped');
+            //   },
+            //   onViewReceipt: () {
+            //     debugPrint('View Receipt tapped');
+            //   },
+            // ),
+            // Gap(30),
+
+            ///
+            ///
+            ///
             if (info == null)
               _NoActiveSubscriptionCard(
                 onSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),

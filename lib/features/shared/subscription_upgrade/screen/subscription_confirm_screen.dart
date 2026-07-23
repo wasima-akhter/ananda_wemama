@@ -1,9 +1,12 @@
 // subscription_confirm_screen.dart
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/subscription_confirm_controller.dart';
 import '../model/subscription_price_model.dart';
+import '../service/purchase_service.dart';
 
 class SubscriptionConfirmScreen extends StatelessWidget {
   const SubscriptionConfirmScreen({super.key});
@@ -15,10 +18,43 @@ class SubscriptionConfirmScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(
-        title: "Confirm Subscription",
+        title: "Payment",
         onTapBack: () => Get.back(),
       ),
-      bottomWidget: Obx(
+      bottomWidget: Obx(() {
+        if (ctrl.isWaitingForRedemption.value) {
+          return Column(
+            children: [
+              const Text(
+                "Complete your redemption in the App Store, then come back here.",
+              ),
+
+              Gap(itemGap),
+
+              TextButton(
+                onPressed: () => PurchaseService.to.refreshCustomerInfo(),
+
+                child: const Text("I've redeemed it — Check now"),
+              ),
+            ],
+          );
+        }
+
+        return AuthButton(
+          btnText: ctrl.confirmButtonText,
+
+          isLoading: ctrl.isProcessing.value || ctrl.isLoadingOption.value,
+
+          onTap:
+              (ctrl.isProcessing.value ||
+                  ctrl.isPurchaseBlocked ||
+                  ctrl.isLoadingOption.value)
+              ? null
+              : ctrl.onConfirmPayment,
+        );
+      }),
+      /*
+       Obx(
         () => AuthButton(
           btnText: "Confirm And Pay",
           isLoading: ctrl.isProcessing.value || ctrl.isLoadingOption.value,
@@ -30,6 +66,7 @@ class SubscriptionConfirmScreen extends StatelessWidget {
               : ctrl.onConfirmPayment,
         ),
       ),
+     */
       child: Obx(() {
         if (ctrl.isLoadingOption.value) {
           return const Padding(
@@ -38,16 +75,80 @@ class SubscriptionConfirmScreen extends StatelessWidget {
           );
         }
 
+        final rows = ctrl.priceRows;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (kDebugMode) ...[
+              TextButton(
+                onPressed: () => Get.toNamed(RoutePaths.mainNav),
+
+                child: const Text("Home"),
+              ),
+
+              const SizedBox(height: 10),
+
+              Container(
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: .08),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+
+                child: Column(
+                  children: [
+                    Text(
+                      "Current Offer",
+                      style: TxtStyle.outfit(fs: 13, w: 600),
+                    ),
+
+                    Gap(itemGap),
+
+                    Text(
+                      ctrl.currentOffer.name,
+
+                      style: TxtStyle.outfit(
+                        fs: 18,
+                        w: 700,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Gap(itemGap),
+
+              // DEBUG TEST CODES
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 8,
+
+                children: [
+                  _debugCodeButton("ref"),
+
+                  _debugCodeButton("promo"),
+
+                  _debugCodeButton("mum"),
+                ],
+              ),
+            ],
+
             Gap(itemGap * 2),
-            ...ctrl.priceRows.map(_priceRow),
-            if (ctrl.priceRows.length > 1) const Divider(),
+
+            ...rows.map(_priceRow),
+
+            if (rows.length > 1) const Divider(),
+
             if (ctrl.errorMessage.value.isNotEmpty) ...[
               Gap(itemGap * 2),
+
               _ErrorRetryBanner(
                 message: ctrl.errorMessage.value,
+
                 onRetry: ctrl.onConfirmPayment,
               ),
             ],
@@ -77,6 +178,22 @@ class SubscriptionConfirmScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _debugCodeButton(String code) {
+    return TextButton(
+      onPressed: () async {
+        await Clipboard.setData(ClipboardData(text: code));
+
+        Get.snackbar(
+          "Copied",
+          "Code $code copied",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      },
+
+      child: Text(code),
     );
   }
 }

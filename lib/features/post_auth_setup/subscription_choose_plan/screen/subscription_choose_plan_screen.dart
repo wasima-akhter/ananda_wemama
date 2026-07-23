@@ -12,6 +12,7 @@ class SubscriptionChoosePlanScreen extends StatelessWidget {
     final chooseSubPlanFormKey = GlobalKey<FormState>();
 
     return AppScreenTemplate(
+      appBar: CommonAppBarContent(title: Strings.chooseYourPlan.capEachWord()),
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -43,12 +44,11 @@ class SubscriptionChoosePlanScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Gap(itemGap * 7),
-            Text(
-              Strings.chooseYourPlan.capEachWord(),
-              textAlign: TextAlign.center,
-              style: 22.titleMclrCusFSOutfit,
-            ),
+            // Text(
+            //   ,
+            //   textAlign: TextAlign.center,
+            //   style: 22.titleMclrCusFSOutfit,
+            // ),
             Text(
               Strings.supportConnectionGuidance.capEachWord(),
               textAlign: TextAlign.center,

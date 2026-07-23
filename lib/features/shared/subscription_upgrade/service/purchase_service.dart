@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/config/app_info.dart';
+import '../type/offer_type.dart';
 
 enum PurchaseResult { success, userCancelled, error, pending }
 
@@ -230,6 +231,8 @@ class PurchaseService {
   }
 
   //
+
+  /*
   Future<PurchaseOutcome> purchaseWithAndroidOffer(
     Package package,
     String basePlanId,
@@ -261,6 +264,51 @@ class PurchaseService {
 
     final result = await Purchases.purchaseSubscriptionOption(option);
     _onCustomerInfoUpdated(result.customerInfo);
+    final active =
+        result.customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+    return PurchaseOutcome(
+      active ? PurchaseResult.success : PurchaseResult.pending,
+      customerInfo: result.customerInfo,
+    );
+  }
+*/
+
+  Future<PurchaseOutcome> purchaseWithAndroidOffer(
+    Package package,
+    OfferType offerType,
+  ) async {
+    final options = package.storeProduct.subscriptionOptions ?? [];
+
+    SubscriptionOption? option;
+
+    switch (offerType) {
+      case OfferType.referral:
+        option = options.firstWhereOrNull(
+          (o) => o.id.contains('referral_50_1month'),
+        );
+        break;
+
+      case OfferType.fundingMum:
+        option = options.firstWhereOrNull(
+          (o) => o.id.contains('founding_mum_100'),
+        );
+        break;
+
+      default:
+        break;
+    }
+
+    if (option == null) {
+      return PurchaseOutcome(
+        PurchaseResult.error,
+        errorMessage: 'Offer not available',
+      );
+    }
+
+    final result = await Purchases.purchaseSubscriptionOption(option);
+
+    _onCustomerInfoUpdated(result.customerInfo);
+
     final active =
         result.customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
     return PurchaseOutcome(

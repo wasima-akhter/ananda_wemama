@@ -1,4 +1,5 @@
 // subscription_confirm_screen.dart
+import 'package:flutter/foundation.dart';
 import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:mama_app/features/auth/core/auth_button_templates.dart';
 
@@ -11,6 +12,7 @@ class SubscriptionSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScreenTemplate(
+      appBar: CommonAppBarContent(title: ''),
       floatingActionButton: Container(
         padding: 20.pa,
         color: c.buttonText,
@@ -22,31 +24,38 @@ class SubscriptionSuccess extends StatelessWidget {
       ),
       child: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          // crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            TextButton(
-              onPressed: () => Get.toNamed(RoutePaths.mainNav),
-              child: Text("to home"),
-            ),
-            SafeAssetImage(assetPath: Assets.images.promoCodeImage.path),
-            Gap(itemGap),
-            SvgIcon(iconPath: Assets.icons.tickL, height: 30),
+            //
+            SafeAssetImage(
+              assetPath: Assets.images.paySuccess.path,
+            ).marginAll(15),
+
             Gap(itemGap),
             Text(
               "Payment Successful",
-              style: TxtStyle.outfitSemiBold12Center(),
+              style: TxtStyle.outfitSemiB(fs: 16, color: c.primary),
             ),
             Gap(itemGap),
             Text(
-              "Welcome to WeMama Premium",
-              style: TxtStyle.outfitSemiBold12Center(fs: 22),
+              "Welcome to \nWeMama Premium",
+              textAlign: TextAlign.center,
+              style: TxtStyle.dmSerifDisplayRegular(
+                color: c.primary,
+                fs: ScreenSize.isSmallWidth ? 32 : 35,
+              ),
             ),
             Gap(itemGap),
             Text(
               "You have now access to all premium features.",
-              style: TxtStyle.outfitSemiBold12Center(fs: 22),
+              style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
             ),
             Gap(itemGap * 2),
+            if (kDebugMode)
+              TextButton(
+                onPressed: () => Get.toNamed(RoutePaths.mainNav),
+                child: Text("to home"),
+              ),
           ],
         ).getcm,
       ),

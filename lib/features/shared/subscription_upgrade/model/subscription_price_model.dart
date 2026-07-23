@@ -32,3 +32,44 @@ class SubscriptionPriceModel {
 
   bool get hasDiscount => isReferralApplied;
 }
+
+/*
+class SubscriptionPriceModel {
+  final OfferType offerType;
+
+  final bool referralAvailable;
+  final bool promoAvailable;
+  final bool fundingMumAvailable;
+
+  final bool referralRedeemed;
+  final bool promoRedeemed;
+  final bool fundingMumRedeemed;
+
+  const SubscriptionPriceModel({
+    required this.offerType,
+    this.referralAvailable = false,
+    this.promoAvailable = false,
+    this.fundingMumAvailable = false,
+    this.referralRedeemed = false,
+    this.promoRedeemed = false,
+    this.fundingMumRedeemed = false,
+  });
+
+  factory SubscriptionPriceModel.fromJson(Map<String, dynamic>? json) {
+    return SubscriptionPriceModel(
+      offerType: OfferType.values.firstWhere(
+        (e) => e.name == json?['offerType'],
+        orElse: () => OfferType.none,
+      ),
+
+      referralAvailable: json?['referralAvailable'] ?? false,
+      promoAvailable: json?['promoAvailable'] ?? false,
+      fundingMumAvailable: json?['fundingMumAvailable'] ?? false,
+
+      referralRedeemed: json?['referralRedeemed'] ?? false,
+      promoRedeemed: json?['promoRedeemed'] ?? false,
+      fundingMumRedeemed: json?['fundingMumRedeemed'] ?? false,
+    );
+  }
+}
+*/
