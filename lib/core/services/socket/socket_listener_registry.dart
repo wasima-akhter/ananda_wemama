@@ -111,23 +111,20 @@ class SocketListenerRegistry {
       );
       if (!res.isSuccess) return;
       try {
-        log("A");
+        final rawList = res.dataAsList ?? [];
 
-        final list = (res.dataAsList ?? [])
+        final list = rawList
             .map((e) => NewWaveListItemModel.fromJson(e))
             .toList();
 
-        log("B");
-
-        log("first = ${res.dataAsList?.first}");
-
-        log("C");
+        log("conversation_requests: ${list.length} item(s)");
+        if (rawList.isNotEmpty) {
+          log("first = ${rawList.first}");
+        }
 
         for (final item in list) {
           log("id = ${item.id}");
         }
-
-        log("D");
 
         if (Get.isRegistered<WaveRequestController>()) {
           Get.find<WaveRequestController>().updateWaveList(list);
@@ -137,7 +134,6 @@ class SocketListenerRegistry {
         debugPrint(s.toString());
       }
     });
-
     // ── conversation_accepted ─────────────────────────────────────────────────
     _off(SocketEvents.conversationAccepted);
     _on(SocketEvents.conversationAccepted, (data) {

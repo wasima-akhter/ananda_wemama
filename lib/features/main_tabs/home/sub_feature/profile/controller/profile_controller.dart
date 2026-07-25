@@ -4,6 +4,7 @@ import '../../../../../../../core/services/profile/profile_info_service.dart';
 import '../model/profile_model.dart';
 
 class ProfileController extends GetxController {
+  static ProfileController get to => Get.find();
   // API loading state
   var isLoading_ = false.obs;
   bool get isLoading => isLoading_.value;

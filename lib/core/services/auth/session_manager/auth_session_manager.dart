@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../features/auth/signin/model/signin_model.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../../../../features/shared/subscription_upgrade/service/purchase_service.dart';
+import '../../../../features/shared/subscription/subscription_upgrade/service/purchase_service.dart';
 import '../../../network/helpers/network_helpers.dart';
 import '../../socket/socket_service.dart';
 

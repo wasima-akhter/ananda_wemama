@@ -8,6 +8,7 @@ import 'session_action_controller.dart';
 import 'session_controller.dart';
 
 class ExpertsController extends GetxController {
+  static ExpertsController get to => Get.find();
   late final SessionController _sessionCtrl;
   late final SessionActionController _actionCtrl;
 

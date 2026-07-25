@@ -1,7 +1,7 @@
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../shared/subscription_upgrade/type/offer_type.dart';
+import '../../../shared/subscription/subscription_upgrade/type/offer_type.dart';
 import '../service/referral_service.dart';
 
 class PromoCodeController extends GetxController {

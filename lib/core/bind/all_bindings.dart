@@ -5,7 +5,7 @@ import 'package:mama_app/core/models/ui/common_data_models.dart';
 import 'package:mama_app/features/more/about/controller/about_controller.dart';
 import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
 import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
-import 'package:mama_app/features/shared/subscription_upgrade/controller/subscription_upgrade_controller.dart';
+import 'package:mama_app/features/shared/subscription/subscription_upgrade/controller/subscription_upgrade_controller.dart';
 import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
 import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
 
@@ -48,13 +48,13 @@ import '../../features/post_auth_setup/mums_stage/controller/mums_stage_controll
 import '../../features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
 import '../../features/post_auth_setup/promo_code/controller/promo_code_controller.dart';
 import '../../features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
-import '../../features/post_auth_setup/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
+import '../../features/shared/subscription/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
 import '../../features/shared/bookmark/controller/bookmark_controller.dart';
 import '../../features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
 import '../../features/shared/mood/mood_library/controller/mood_library_controller.dart';
-import '../../features/shared/subscription_info/controller/subscription_info_controller.dart';
+import '../../features/shared/subscription/subscription_info/controller/subscription_info_controller.dart';
 import '../../features/station_location/controller/station_location_controller.dart';
 import '../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 import '../../features/video_meeting/controller/meeting_comment_controller.dart';

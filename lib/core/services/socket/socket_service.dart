@@ -341,6 +341,56 @@ class SocketService extends GetxService {
       }
     });
   }
+  //
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ENSURE CONNECTED — attempt a reconnect before giving up on an emit
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  bool _isEnsuringConnection = false;
+
+  /// Returns true if already connected, or becomes connected within [timeout].
+  /// Returns false if the attempt times out — caller decides what to tell
+  /// the user in that case.
+  Future<bool> ensureConnected({
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    if (isConnected) return true;
+
+    // Avoid overlapping attempts if called again while one's in flight
+    // (e.g. user double-taps wave).
+    if (_isEnsuringConnection) {
+      return isConnected;
+    }
+    _isEnsuringConnection = true;
+
+    log("🔄 Not connected — attempting reconnect before emit...");
+
+    final completer = Completer<bool>();
+    final sub = onConnected.listen((_) {
+      if (!completer.isCompleted) completer.complete(true);
+    });
+
+    try {
+      if (_socket != null) {
+        // Existing socket, just dropped — nudge it, refreshing the token
+        // in case it changed since the last connect.
+        _socket!.io.options?['auth'] = {'token': getToken};
+        _socket!.connect();
+      } else {
+        // Never connected this session — do a full build.
+        // ignore: unawaited_futures
+        connectSocket();
+      }
+
+      return await completer.future.timeout(timeout, onTimeout: () => false);
+    } finally {
+      await sub.cancel();
+      _isEnsuringConnection = false;
+    }
+  }
+
+  //
 }
 
 /*

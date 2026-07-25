@@ -33,6 +33,19 @@ class AppStorage extends GetxService {
   // Theme key
   static const _themeKey = 'theme'; // 'light' or 'dark'
 
+  // Match search count keys
+  static const _matchSearchCountKey = 'matchSearchCount';
+  static const _matchSearchDateKey = 'matchSearchDate';
+
+  // ---------------------------  MATCH SEARCH COUNT  ---------------------------
+  void setMatchSearchCount({required int count, required String date}) {
+    _storage.write(_matchSearchCountKey, count);
+    _storage.write(_matchSearchDateKey, date);
+  }
+
+  int get getMatchSearchCount => _storage.read(_matchSearchCountKey) ?? 0;
+  String get getMatchSearchDate => _storage.read(_matchSearchDateKey) ?? '';
+
   // ---------------------------  Reactive Values  ---------------------------
   RxBool isLoggedIn = false.obs;
   RxBool rememberMe = true.obs;

@@ -1,6 +1,4 @@
 import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:mama_app/core/helpers/string_helper.dart';
-import 'package:mama_app/features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 import 'package:mama_app/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
@@ -8,6 +6,7 @@ import '../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../../../main_tabs/home/controller/home_controller.dart';
 import '../mood_library/controller/mood_library_controller.dart';
+import 'mood_greeting.dart';
 
 class MoodCheckInCard extends StatelessWidget {
   final MoodCheckInController mcc;
@@ -18,24 +17,7 @@ class MoodCheckInCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Obx(() {
-              final userName =
-                  Get.find<ProfileController>().userProfileData.value?.name ??
-                  '';
-              return Text(
-                "${mcc.getGreetingMessage()}, ${userName.isNotEmpty ? getFirstWord(userName).cap : "Ada"}",
-                style: TxtStyle.outfitSemiB(fs: 15, w: 600),
-              );
-            }),
-
-            Gap(4),
-
-            SvgIcon(iconPath: IconsPath.leaf),
-          ],
-        ).mL(4),
-
+        MoodGreeting(),
         Gap(6.h),
 
         // how are you feeling card

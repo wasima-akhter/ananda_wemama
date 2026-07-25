@@ -1,5 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../../../../features/shared/subscription/subscription_access/premium_access_service.dart';
 import '../../../services/push_notification/controller/notification_count_controller.dart';
 
 class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
@@ -99,8 +100,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
               Builder(
                 builder: (context) {
                   final double avatarRadius = 22;
-                  final double crownSize =
-                      (ScreenSize.isSmallWidth ? 40 : 30).r;
+                  final double crownSize = (ScreenSize.isSmallWidth ? 40 : 30);
 
                   return CusGestureDetector(
                     onTap: () {
@@ -131,24 +131,29 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
                             }),
                           ),
 
-                          // Crown
-                          Positioned(
-                            // top: -(crownSize * 0.5),
-                            // right: -(crownSize * 0.5),
-                            top:
-                                -(crownSize *
-                                    (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
-                            right:
-                                -(crownSize *
-                                    (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
-                            child: Transform.rotate(
-                              angle: 0.3,
-                              child: SvgIcon(
-                                iconPath: IconsPath.crown,
-                                height: crownSize,
+                          // Crown — premium subscribers only
+                          Obx(() {
+                            final isPremium =
+                                PremiumAccessService.to.isPremiumUser.value;
+
+                            if (!isPremium) return const SizedBox.shrink();
+
+                            return Positioned(
+                              top:
+                                  -(crownSize *
+                                      (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
+                              right:
+                                  -(crownSize *
+                                      (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
+                              child: Transform.rotate(
+                                angle: 0.3,
+                                child: SvgIcon(
+                                  iconPath: IconsPath.crown,
+                                  height: crownSize,
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         ],
                       ),
                     ),

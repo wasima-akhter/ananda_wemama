@@ -65,7 +65,7 @@ class PaidPastSessionsComponent extends StatelessWidget {
                     return Padding(
                       padding: EdgeInsets.only(right: itemGap),
                       child: SizedBox(
-                        width: 160,
+                        width: 150.w,
                         child: SessionComponent(
                           session: item,
                           isFromExpertScreen: true,

@@ -3,7 +3,7 @@ import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
 import '../../../../core/services/deep_link/app_link_service.dart';
 import '../../../../core/services/push_notification/push_notification_service.dart';
-import '../../../shared/subscription_upgrade/service/purchase_service.dart';
+import '../../../shared/subscription/subscription_upgrade/service/purchase_service.dart';
 
 class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();

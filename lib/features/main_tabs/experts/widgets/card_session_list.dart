@@ -91,7 +91,7 @@ class _CardHorizontalList extends State<CardHorizontalList> {
                   },
                   itemBuilder: (context, index) {
                     return Container(
-                      padding: EdgeInsets.only(right: itemGap),
+                      padding: EdgeInsets.only(right: itemGap, bottom: itemGap),
                       child: widget.itemBuilder(index),
                     );
                   },

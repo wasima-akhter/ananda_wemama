@@ -15,7 +15,8 @@ import 'core/services/push_notification/controller/push_notification_controller.
 import 'core/services/push_notification/firebase_token_service.dart';
 import 'core/services/push_notification/push_notification_service.dart';
 import 'core/themes/theme_service.dart';
-import 'features/shared/subscription_upgrade/service/purchase_service.dart';
+import 'features/shared/subscription/subscription_access/premium_access_service.dart';
+import 'features/shared/subscription/subscription_upgrade/service/purchase_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,6 +70,7 @@ void main() async {
     debugPrint('❌ [main] PurchaseService init FAILED: $e');
     debugPrint('$st');
   }
+  Get.put(PremiumAccessService(), permanent: true);
 
   // ── 4. Deep link ─────────────────────────────────────────────────────────────
   debugPrint('🔧 [main] capturing initial deep link...');

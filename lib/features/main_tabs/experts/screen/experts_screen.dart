@@ -1,13 +1,14 @@
 import 'package:mama_app/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../shared/mood/mood_library/widgets/mood_library_chip_card.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
 import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
+import '../../../shared/subscription/subscription_access/premium_gate.dart';
 import '../controller/experts_controller.dart';
 import '../controller/session_controller.dart';
 import '../widgets/card_session_list.dart';
+import '../widgets/live_session_lock_card.dart';
 import '../widgets/paid_past_sessions_component.dart';
 
 class ExpertsScreen extends StatelessWidget {
@@ -98,15 +99,21 @@ class ExpertsScreen extends StatelessWidget {
               spacing: itemGap,
               children: [
                 if (!ongoingEmpty)
-                  CardHorizontalList(
-                    aspectRatio: 1.8,
-                    height: Responsive.ongoingSessionCardHeight,
-                    title: Strings.ongoingExpertSession,
-                    exc: exc,
-                    onViewAll: () => exc.onTapViewAll(true),
-                    itemCount: ongoingList.length,
-                    itemBuilder: (index) =>
-                        LiveOngoingSessionCard(data: ongoingList[index]),
+                  PremiumGate(
+                    waitForReady: false,
+                    child: CardHorizontalList(
+                      aspectRatio: 1.8,
+                      height: Responsive.ongoingSessionCardHeight,
+                      title: Strings.ongoingExpertSession,
+                      exc: exc,
+                      onViewAll: () => exc.onTapViewAll(true),
+                      itemCount: ongoingList.length,
+                      itemBuilder: (index) =>
+                          LiveOngoingSessionCard(data: ongoingList[index]),
+                    ),
+                    lockedBuilder: (_) => LiveSessionLockedCard(
+                      onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+                    ),
                   ),
 
                 if (!upcomingEmpty)
@@ -141,23 +148,13 @@ class ExpertsScreen extends StatelessWidget {
               ],
             );
           }),
-          Gap(itemGap * 0.5),
 
-          PastSessionsLibraryCard(
-            onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
-          ),
-
-          Text(
-            " This component is for you to see the pov of paid user:"
-                .capEachWord(),
-            style: TxtStyle.outfitSmTitle,
-          ),
-
-          PaidPastSessionsComponent(),
-
-          MoodLibraryChipCard(
-            moodDataList: exc.moodDataList,
-            onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+          PremiumGate(
+            waitForReady: false,
+            child: PaidPastSessionsComponent(),
+            lockedBuilder: (_) => PastSessionsLibraryCard(
+              onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+            ),
           ),
         ],
       ).getcm,

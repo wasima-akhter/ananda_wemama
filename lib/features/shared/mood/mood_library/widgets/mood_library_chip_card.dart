@@ -1,5 +1,4 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/buttons/small_nav_btn.dart';
 import '../../mood_check_in/mood_chip_card.dart';
 import '../../mood_check_in/mood_row_model.dart';
 
@@ -7,7 +6,11 @@ class MoodLibraryChipCard extends StatelessWidget {
   final List<MoodRowModel> moodDataList;
   final VoidCallback? onTapSubscribe;
 
-  const MoodLibraryChipCard({super.key, required this.moodDataList, this.onTapSubscribe});
+  const MoodLibraryChipCard({
+    super.key,
+    required this.moodDataList,
+    this.onTapSubscribe,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +26,10 @@ class MoodLibraryChipCard extends StatelessWidget {
           /// Title Row
           Row(
             children: [
-              Text(Strings.moodChipLibrary, style: TxtStyle.outfitSemiB(fs: 14, color: c.primary)),
+              Text(
+                Strings.moodChipLibrary,
+                style: TxtStyle.outfitSemiB(fs: 14, color: c.primary),
+              ),
               const Spacer(),
               SvgIcon(iconPath: IconsPath.lock, height: 22),
             ],
@@ -45,7 +51,15 @@ class MoodLibraryChipCard extends StatelessWidget {
                   child: Column(
                     children: [
                       /// Static chip (no selection)
-                      MoodChip(title: dataModel.name, hp: dataModel.hp, isSelected: false),
+                      CusGestureDetector(
+                        onTap: () =>
+                            Get.toNamed(RoutePaths.subscriptionUpgrade),
+                        child: MoodChip(
+                          title: dataModel.name,
+                          hp: dataModel.hp,
+                          isSelected: false,
+                        ),
+                      ),
 
                       /// Mood illustration
                       MoodChipAnimation(moodType: dataModel.moodType),

@@ -10,8 +10,8 @@ import 'package:mama_app/gen/assets.gen.dart';
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/string_helper.dart';
 import '../../../../core/themes/color/colors.dart';
-import '../../../shared/subscription_upgrade/service/subscription_service.dart';
-import '../../../shared/subscription_upgrade/type/offer_type.dart';
+import '../../../shared/subscription/subscription_upgrade/service/subscription_service.dart';
+import '../../../shared/subscription/subscription_upgrade/type/offer_type.dart';
 import '../controller/promo_code_controller.dart';
 
 class PromoCodeScreen extends StatelessWidget {

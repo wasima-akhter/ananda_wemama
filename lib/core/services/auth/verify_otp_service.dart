@@ -1,7 +1,7 @@
 import '../../../../app/service_export.dart';
 import '../../../features/auth/otp/model/verify_otp_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../../../features/shared/subscription_upgrade/service/purchase_service.dart';
+import '../../../features/shared/subscription/subscription_upgrade/service/purchase_service.dart';
 import '../push_notification/push_notification_service.dart';
 
 class VerifyOtpService extends GetxService {

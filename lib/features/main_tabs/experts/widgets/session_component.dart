@@ -23,7 +23,6 @@ class SessionComponent extends StatelessWidget {
       hp: 8,
       vp: 12,
       child: Column(
-        // mainAxisSize: MainAxisSize.min,
         children: [
           Stack(
             clipBehavior: Clip.none,
@@ -64,7 +63,7 @@ class SessionComponent extends StatelessWidget {
 
                       Text(
                         session.title.capEachWord(),
-                        maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TxtStyle.outfitSemiB(
                           fs: 14,

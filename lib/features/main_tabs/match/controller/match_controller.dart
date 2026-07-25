@@ -5,8 +5,10 @@ import 'package:mama_app/core/components/ui/dialogs/popups.dart';
 import 'package:mama_app/core/services/socket/socket_events.dart';
 
 import '../../../../app/controller_export.dart';
+import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../model/match_model.dart';
 import '../services/match_service.dart';
 
@@ -21,15 +23,14 @@ class MatchController extends GetxController {
   RxBool isSeeMore = false.obs;
   RxBool subUpgradeNeeded = false.obs;
 
-  bool isPaidUser = false;
-  int freeDailyLimit = 10;
-  int searchesToday = 0;
+  final RxBool isPaidUser = false.obs;
+  Worker? _premiumWorker;
+
+  final int freeDailyLimit = 1;
+  final RxInt searchesToday = 0.obs;
+
   int _searchId = 0;
 
-  // ── Local match queue ──────────────────────────────────────────────────────
-  // fetchedMatches holds ALL results from the last API call.
-  // _currentMatchIndex tracks which one is currently displayed.
-  // Pass advances the index locally — no new API call until the list is exhausted.
   final fetchedMatches = <MatchResponseModel>[].obs;
   int _currentMatchIndex = 0;
 
@@ -39,21 +40,77 @@ class MatchController extends GetxController {
     return fetchedMatches[_currentMatchIndex];
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+  @override
+  void onInit() {
+    super.onInit();
+
+    final premium = PremiumAccessService.to;
+    isPaidUser.value = premium.isPremiumUserNow;
+    _premiumWorker = ever<bool>(premium.isPremiumUser, (isPremium) {
+      isPaidUser.value = isPremium;
+    });
+
+    _restoreSearchCount();
+
+    cancelSearch();
+    resetState();
+
+    print("storage.getMatchSearchCount : ${storage.getMatchSearchCount}");
+    print("freeDailyLimit : $freeDailyLimit");
+  }
 
   @override
   void onClose() {
     cancelSearch();
     resetState();
+    _premiumWorker?.dispose();
     super.onClose();
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // DAILY LIMIT — persisted via AppStorage
+  // ═══════════════════════════════════════════════════════════════════════
+  // TODO(backend): once a usage-tracking endpoint exists, replace this with
+  // a server-verified count — local storage can be cleared/reinstalled to
+  // dodge the limit, so this is a stopgap, not the long-term source of truth.
+
+  String get _todayKey => DateTime.now().toIso8601String().substring(0, 10);
+
+  void _restoreSearchCount() {
+    final storage = AppStorage.to;
+    final storedDate = storage.getMatchSearchDate;
+    final storedCount = storage.getMatchSearchCount;
+
+    searchesToday.value = (storedDate == _todayKey) ? storedCount : 0;
+    _persistSearchCount();
+  }
+
+  void _incrementSearchCount() {
+    // Guard against the day rolling over mid-session.
+    if (AppStorage.to.getMatchSearchDate != _todayKey) {
+      searchesToday.value = 0;
+    }
+    searchesToday.value++;
+    _persistSearchCount();
+  }
+
+  void _persistSearchCount() {
+    AppStorage.to.setMatchSearchCount(
+      count: searchesToday.value,
+      date: _todayKey,
+    );
+  }
+
+  int get remainingSearchesToday =>
+      (freeDailyLimit - searchesToday.value).clamp(0, freeDailyLimit);
+
+  // ─────────────────────────────────────────────────────────────────────────
 
   @override
   void dispose() {
     cancelSearch();
     super.dispose();
   }
-
   // ═══════════════════════════════════════════════════════════════════════════
   // ADDRESS RESOLUTION
   // ═══════════════════════════════════════════════════════════════════════════
@@ -64,7 +121,7 @@ class MatchController extends GetxController {
     final id = user.id ?? '';
     if (_addressCache.containsKey(id)) return _addressCache[id]!;
 
-    final rawAddress = user.address?.trim() ?? '';
+    final rawAddress = user.address.trim() ?? '';
     if (rawAddress.isNotEmpty) {
       _addressCache[id] = rawAddress.capEachWord();
       return _addressCache[id]!;
@@ -90,123 +147,13 @@ class MatchController extends GetxController {
 
   RxBool isSearchLoading = false.obs;
 
-  /*
-  Future<void> startSearching() async {
-    final int currentSearchId = ++_searchId;
-
-    // ─────────────────────────────────────
-    // 1. LOCATION / PERMISSION CHECK
-    // ─────────────────────────────────────
-    final homeC = Get.find<HomeController>();
-
-    final hasLocation = await homeC.runLocationPermissionFlowForSearch();
-
-    if (!hasLocation) {
-      matchState.value = MatchState.noMatch;
-      return;
-    }
-
-    // ─────────────────────────────────────
-    // 2. FREE USER LIMIT
-    // ─────────────────────────────────────
-    if (!isPaidUser && searchesToday >= freeDailyLimit) {
-      subUpgradeNeeded.value = true;
-      showDailyLimitDialog();
-      _fetchMatchesAndUpgrade();
-      return;
-    }
-
-    // ─────────────────────────────────────
-    // 3. FREE USER COUNT
-    // ─────────────────────────────────────
-    if (!isPaidUser) searchesToday++;
-
-    // ─────────────────────────────────────
-    // 4. SEARCHING STATE
-    // ─────────────────────────────────────
-    matchState.value = MatchState.searching;
-
-    await Future.delayed(const Duration(seconds: 5));
-
-    if (currentSearchId != _searchId) return;
-
-    // ─────────────────────────────────────
-    // 5. FETCH MATCHES
-    // ─────────────────────────────────────
-    if (isSearchLoading.value) return;
-
-    isSearchLoading.value = true;
-
-    try {
-      final slc = Get.find<StationLocationController>();
-
-      final data = await MatchService().fetchMatches(
-        latitude: slc.latitude.toString(),
-        longitude: slc.longitude.toString(),
-      );
-
-      if (currentSearchId != _searchId) return;
-
-      if (data.isEmpty) {
-        matchState.value = MatchState.noMatch;
-        return;
-      }
-
-      fetchedMatches.value = data;
-      _currentMatchIndex = 0;
-
-      matchState.value = MatchState.found;
-    } catch (e) {
-      log('startSearching fetch error: $e');
-
-      if (currentSearchId == _searchId) {
-        matchState.value = MatchState.noMatch;
-      }
-    } finally {
-      isSearchLoading.value = false;
-    }
-  }
-
-  //
-  Future<void> _fetchMatchesAndUpgrade() async {
-    if (isSearchLoading.value) return;
-    isSearchLoading.value = true;
-
-    try {
-      final slc = Get.find<StationLocationController>();
-      final data = await MatchService().fetchMatches(
-        latitude: slc.latitude.toString(),
-        longitude: slc.longitude.toString(),
-      );
-
-      if (data.isEmpty) {
-        matchState.value = MatchState.noMatch;
-      } else {
-        fetchedMatches.value = data;
-        _currentMatchIndex = 0;
-      }
-
-      await Future.delayed(const Duration(milliseconds: 600));
-      navToSubUpgrade();
-    } catch (e) {
-      log('_fetchMatchesAndUpgrade error: $e');
-      navToSubUpgrade();
-    } finally {
-      isSearchLoading.value = false;
-    }
-  }
-*/
-
   RxBool isLocationProcessing = false.obs;
   Future<void> enableLocationGatewayFlow() async {
     isLocationProcessing.value = true;
-
     final result = await AppLocationManager.to.enableLocationGateway();
-
     isLocationProcessing.value = false;
 
     if (result == LocationFlowResult.success) {
-      // matchState.value = MatchState.searching;
       await startSearching();
       return;
     }
@@ -234,16 +181,15 @@ class MatchController extends GetxController {
 
     try {
       // ───────── LIMIT CHECK ─────────
-      if (!isPaidUser && searchesToday >= freeDailyLimit) {
+      // FIXED: was `!isPaidUser` / bare `searchesToday` — both are Rx now.
+      if (!isPaidUser.value && searchesToday.value >= freeDailyLimit) {
         subUpgradeNeeded.value = true;
-
         await handleDailyLimitReached();
-
         return;
       }
 
       matchState.value = MatchState.searching;
-      // ───────── LOCATION ─────────
+
       final locationResult = await AppLocationManager.to.ensureFreshLocation(
         showDialogs: true,
         forceRefresh: true,
@@ -254,12 +200,12 @@ class MatchController extends GetxController {
         return;
       }
 
-      if (!isPaidUser) searchesToday++;
+      // FIXED: was `searchesToday++` on a plain int — now goes through the
+      // persisted/day-guarded increment helper.
+      if (!isPaidUser.value) _incrementSearchCount();
 
-      // optional UX delay
       await Future.delayed(const Duration(milliseconds: 300));
 
-      // ───────── API CALL ─────────
       final alm = AppLocationManager.to;
 
       final data = await MatchService().fetchMatches(
@@ -267,7 +213,6 @@ class MatchController extends GetxController {
         longitude: alm.longitude.value.toString(),
       );
 
-      // ❗ ONLY NOW check cancellation
       if (currentSearchId != _searchId) return;
 
       if (data.isEmpty) {
@@ -280,68 +225,9 @@ class MatchController extends GetxController {
       matchState.value = MatchState.found;
     } catch (e) {
       log("❌ startSearching error: $e");
-
       if (currentSearchId == _searchId) {
         matchState.value = MatchState.noMatch;
       }
-    } finally {
-      isSearchLoading.value = false;
-    }
-  }
-
-  Future<void> _fetchMatchesAndUpgrade() async {
-    // ─────────────────────────────────────
-    // 1. PREVENT DUPLICATE CALLS
-    // ─────────────────────────────────────
-    if (isSearchLoading.value) return;
-
-    isSearchLoading.value = true;
-
-    try {
-      // ─────────────────────────────────────
-      // 2. ENSURE LOCATION
-      // ─────────────────────────────────────
-      final locationResult = await AppLocationManager.to.ensureFreshLocation(
-        showDialogs: true,
-        forceRefresh: false,
-      );
-
-      if (locationResult != LocationFlowResult.success) {
-        matchState.value = MatchState.locationUnavailable;
-
-        navToSubUpgrade();
-
-        return;
-      }
-
-      // ─────────────────────────────────────
-      // 3. FETCH MATCHES
-      // ─────────────────────────────────────
-      final alm = AppLocationManager.to;
-
-      final data = await MatchService().fetchMatches(
-        latitude: alm.latitude.value.toString(),
-        longitude: alm.longitude.value.toString(),
-      );
-
-      if (data.isEmpty) {
-        matchState.value = MatchState.noMatch;
-      } else {
-        fetchedMatches.value = data;
-
-        _currentMatchIndex = 0;
-      }
-
-      // ─────────────────────────────────────
-      // 4. NAVIGATE TO SUBSCRIPTION
-      // ─────────────────────────────────────
-      await Future.delayed(const Duration(milliseconds: 600));
-
-      navToSubUpgrade();
-    } catch (e) {
-      log("❌ _fetchMatchesAndUpgrade error: $e");
-
-      navToSubUpgrade();
     } finally {
       isSearchLoading.value = false;
     }
@@ -452,6 +338,20 @@ class MatchController extends GetxController {
     await Future.delayed(const Duration(seconds: 1));
 
     if (hasWaved) {
+      // Try to (re)connect before giving up — keep the loading spinner up
+      // for this, since it's still part of "sending the wave" from the
+      // user's perspective.
+      if (!socket.isConnected) {
+        final reconnected = await socket.ensureConnected();
+        if (!reconnected) {
+          isWaveLoading.value = false;
+          Snack.showError(
+            "Unable to connect to the server. Please check your internet connection and try again.",
+          );
+          return;
+        }
+      }
+
       isWaveLoading.value = false;
 
       // Reset flag and set up completer BEFORE emitting
@@ -460,7 +360,6 @@ class MatchController extends GetxController {
 
       sendConversationRequest(receiverId);
 
-      // Wait for socket response (with timeout fallback)
       final success = await _waveCompleter!.future.timeout(
         const Duration(seconds: 8),
         onTimeout: () => false,
@@ -474,6 +373,8 @@ class MatchController extends GetxController {
         } else {
           await _showNextMatch();
         }
+      } else {
+        Snack.showError("Couldn't send your wave. Please try again.");
       }
     } else {
       isPassLoading.value = false;
@@ -481,6 +382,12 @@ class MatchController extends GetxController {
       await Future.delayed(const Duration(milliseconds: 600));
       await _showNextMatch();
     }
+  }
+
+  void sendConversationRequest(String receiverId) {
+    socket.emit(SocketEvents.sendConversationRequest, {
+      "receiverId": receiverId,
+    });
   }
 
   /// Advances to the next match in the cached list.
@@ -512,35 +419,13 @@ class MatchController extends GetxController {
     }
   }
 
-  void sendConversationRequest(String receiverId) {
-    socket.emit(SocketEvents.sendConversationRequest, {
-      "receiverId": receiverId,
-    });
-  }
-
   Future<void> onTapUpgradeNow() async {
     if (Get.isDialogOpen ?? false) Get.back();
     final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
     log("result: $result");
   }
 }
-/* socket
 
-
- final socket = Get.find<SocketService>();
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    socket.on("new_match", (data) {
-      log("🔥 New Match: $data");
-
-      Get.snackbar("Match Found 🎉", "You got a new match!");
-    });
-  }
-
-  */
 
 
 /*
