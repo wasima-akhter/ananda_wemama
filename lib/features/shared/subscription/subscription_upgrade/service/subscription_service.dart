@@ -15,7 +15,7 @@ class SubscriptionService {
     );
 
     return SubscriptionPriceModel(
-      referralCode: '' ?? code,
+      referralCode: code,
       isRedeemed: res?.referral?.isRedeemed ?? false,
     );
   }

@@ -52,8 +52,7 @@ class MoodLibraryChipCard extends StatelessWidget {
                     children: [
                       /// Static chip (no selection)
                       CusGestureDetector(
-                        onTap: () =>
-                            Get.toNamed(RoutePaths.subscriptionUpgrade),
+                        onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
                         child: MoodChip(
                           title: dataModel.name,
                           hp: dataModel.hp,

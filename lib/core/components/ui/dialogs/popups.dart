@@ -6,6 +6,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/chat/widgets/chat_user_details_popup.dart';
 import '../../../../features/main_tabs/community/shared_ui/community_guildline.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
+import '../../../../features/shared/subscription/subscription_upgrade/widgets/already_premium_popup.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_req_connected_popup.dart';
 import '../../../../features/shared/wave_request/widgets/new_waves_user_details_popup.dart';
 import '../../../../features/video_meeting/controller/fullscreen_video_controller.dart';
@@ -347,6 +348,14 @@ Future<void> resetPasswordConfirmDialog({
     context: Get.context!,
     insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
     content: ResetPasswordConfirmDialog(),
+  );
+}
+
+Future<void> showAlreadyPremiumDialog() async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    insetPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+    content: const AlreadyPremiumPopup(),
   );
 }
 

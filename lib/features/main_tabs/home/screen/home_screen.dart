@@ -70,7 +70,11 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisSize: MainAxisSize.min,
         spacing: itemGap * 1.2,
         children: [
-          if (kDebugMode) ...[
+          if (kDebugMode || !kDebugMode) ...[
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.foundingMumCodeScreen),
+              child: Text("Sub founding mum page"),
+            ),
             TextButton(
               onPressed: () => Get.toNamed(RoutePaths.promoCodeScreen),
               child: Text("Sub promo page"),
@@ -80,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text("Sub Choose page"),
             ),
             TextButton(
-              onPressed: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+              onPressed: () => Get.toNamed(RoutePaths.promoCodeScreen),
               child: Text("Sub upgrade page"),
             ),
             TextButton(
@@ -107,8 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Gap(6.h),
                 MoodLibraryChipCard(
                   moodDataList: ExpertsController.to.moodDataList,
-                  onTapSubscribe: () =>
-                      Get.toNamed(RoutePaths.subscriptionUpgrade),
+                  onTapSubscribe: () => Get.toNamed(RoutePaths.promoCodeScreen),
                 ),
               ],
             ),
@@ -216,8 +219,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: LiveOngoingSessionCard(data: firstSession),
                         ),
                         lockedBuilder: (_) => LiveSessionLockedCard(
-                          onTap: () =>
-                              Get.toNamed(RoutePaths.subscriptionUpgrade),
+                          onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
                         ),
                       ),
                     );

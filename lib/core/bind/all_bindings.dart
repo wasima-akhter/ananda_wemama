@@ -48,12 +48,12 @@ import '../../features/post_auth_setup/mums_stage/controller/mums_stage_controll
 import '../../features/post_auth_setup/photo_and_bio/controller/photo_and_bio_controller.dart';
 import '../../features/post_auth_setup/promo_code/controller/promo_code_controller.dart';
 import '../../features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
-import '../../features/shared/subscription/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/post_auth_setup/welcome_funding_mum/controller/welcome_funding_mum_controller.dart';
 import '../../features/shared/bookmark/controller/bookmark_controller.dart';
 import '../../features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
 import '../../features/shared/mood/mood_library/controller/mood_library_controller.dart';
+import '../../features/shared/subscription/subscription_choose_plan/controller/subscription_choose_plan_controller.dart';
 import '../../features/shared/subscription/subscription_info/controller/subscription_info_controller.dart';
 import '../../features/station_location/controller/station_location_controller.dart';
 import '../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
@@ -131,11 +131,12 @@ class PostSignupScreensBinding extends Bindings {
     Get.lazyPut<AddChildrenController>(() => AddChildrenController());
     Get.lazyPut<SubscriptionChoosePlanController>(
       () => SubscriptionChoosePlanController(),
+      fenix: true,
     );
     Get.lazyPut<FinishSettingProfileController>(
       () => FinishSettingProfileController(),
     );
-    Get.lazyPut<PromoCodeController>(() => PromoCodeController());
+    Get.lazyPut<PromoCodeController>(() => PromoCodeController(), fenix: true);
     Get.lazyPut<WelcomeFundingMumController>(
       () => WelcomeFundingMumController(),
     );

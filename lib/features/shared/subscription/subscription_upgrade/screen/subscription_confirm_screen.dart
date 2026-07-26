@@ -53,20 +53,7 @@ class SubscriptionConfirmScreen extends StatelessWidget {
               : ctrl.onConfirmPayment,
         );
       }),
-      /*
-       Obx(
-        () => AuthButton(
-          btnText: "Confirm And Pay",
-          isLoading: ctrl.isProcessing.value || ctrl.isLoadingOption.value,
-          onTap:
-              (ctrl.isProcessing.value ||
-                  ctrl.isPurchaseBlocked ||
-                  ctrl.isLoadingOption.value)
-              ? null
-              : ctrl.onConfirmPayment,
-        ),
-      ),
-     */
+
       child: Obx(() {
         if (ctrl.isLoadingOption.value) {
           return const Padding(
@@ -80,7 +67,7 @@ class SubscriptionConfirmScreen extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (kDebugMode) ...[
+            if (kDebugMode || !kDebugMode) ...[
               TextButton(
                 onPressed: () => Get.toNamed(RoutePaths.mainNav),
 
@@ -123,18 +110,18 @@ class SubscriptionConfirmScreen extends StatelessWidget {
               Gap(itemGap),
 
               // DEBUG TEST CODES
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 8,
+              // Wrap(
+              //   alignment: WrapAlignment.center,
+              //   spacing: 8,
 
-                children: [
-                  _debugCodeButton("ref"),
+              //   children: [
+              //     _debugCodeButton("ref"),
 
-                  _debugCodeButton("promo"),
+              //     _debugCodeButton("promo"),
 
-                  _debugCodeButton("mum"),
-                ],
-              ),
+              //     _debugCodeButton("mum"),
+              //   ],
+              // ),
             ],
 
             Gap(itemGap * 2),

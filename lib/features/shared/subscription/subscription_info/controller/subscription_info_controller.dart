@@ -1,11 +1,24 @@
+import 'package:mama_app/features/shared/subscription/subscription_upgrade/mixin/subscription_plan_mixin.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide PurchaseResult;
 
 import '../../../../../app/controller_export.dart';
+import '../../../../post_auth_setup/promo_code/controller/promo_code_controller.dart';
 import '../../subscription_upgrade/service/purchase_service.dart';
+import '../../subscription_upgrade/type/offer_type.dart';
 
 // subscription_info_controller.dart
-class SubscriptionInfoController extends GetxController {
+class SubscriptionInfoController extends GetxController
+    with SubscriptionPlanFlowMixin {
+  static SubscriptionInfoController get to => Get.find();
+
+  final promoCodeTextController = TextEditingController();
+
+  //
   final PurchaseService _purchaseService = PurchaseService.to;
+
+  //
+
+  //
 
   final RxBool isLoading = true.obs;
   final RxBool isRestoring = false.obs;
@@ -178,4 +191,48 @@ class SubscriptionInfoController extends GetxController {
     invisibleMode.value = value;
     // TODO: persist to backend
   }
+
+  //
+  final RxBool isApplyPromoLoading = false.obs;
+  @override
+  RxBool get flowLoading => isApplyPromoLoading;
+
+  Future<void> applyPromoCode() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    final code = promoCodeTextController.text.trim();
+
+    if (code.isEmpty) {
+      Snack.showError("Please enter a promo code.");
+      return;
+    }
+
+    // TODO:
+    // Replace this with your backend API.
+    //
+    // Example:
+    //
+    // final result = await SubscriptionService().checkPromoCode(code);
+    // final offer = result.offerType;
+
+    final offer = OfferType.promo; // Fake response for now.
+
+    if (offer != OfferType.promo) {
+      Snack.showWarning(title: "Invalid", "Promo code is not valid.");
+      return;
+    }
+
+    if (!Get.isRegistered<PromoCodeController>()) {
+      Get.lazyPut<PromoCodeController>(
+        () => PromoCodeController(),
+        fenix: true,
+      );
+    }
+
+    PromoCodeController.to.currentOffer.value = offer;
+    PromoCodeController.to.appliedCode.value = code;
+
+    await proceedToPaidPlan();
+  }
+
+  //
 }

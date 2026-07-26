@@ -1,6 +1,8 @@
 import 'package:mama_app/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/dialogs/popups.dart';
+import '../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../../../shared/subscription/subscription_upgrade/type/offer_type.dart';
 import '../service/referral_service.dart';
 
@@ -90,17 +92,39 @@ class PromoCodeController extends GetxController {
     return await ReferralService().applyReferralCode(referralCode: code);
   }
 
-  Future<void> onTapContinue() async {
+  Future<void> onTapContinueFoundingMumScreen() async {
     final code = referralCodeCtrl.text.trim();
 
     if (code.isEmpty) {
       currentOffer.value = OfferType.none;
 
-      Get.offAllNamed(RoutePaths.subChoosePlan);
+      Get.toNamed(RoutePaths.promoCodeScreen);
 
       return;
     }
 
+    _continueToSubPlanScreen(code);
+  }
+
+  Future<void> onTapContinuePromoScreen() async {
+    final code = referralCodeCtrl.text.trim();
+
+    if (code.isEmpty) {
+      currentOffer.value = OfferType.none;
+
+      if (PremiumAccessService.to.isPremiumUserNow) {
+        await showAlreadyPremiumDialog();
+        return;
+      }
+
+      Get.toNamed(RoutePaths.subChoosePlan);
+
+      return;
+    }
+    _continueToSubPlanScreen(code);
+  }
+
+  Future<void> _continueToSubPlanScreen(String code) async {
     if (isLoading_.value) return;
 
     isLoading_.value = true;

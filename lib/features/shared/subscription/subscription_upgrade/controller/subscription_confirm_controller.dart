@@ -1,4 +1,5 @@
 // subscription_confirm_controller.dart
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide PurchaseResult;
 import 'package:url_launcher/url_launcher.dart';
@@ -19,7 +20,16 @@ class SubscriptionConfirmController extends GetxController {
 
   late OfferEligibility offerEligibility;
 
-  OfferType get currentOffer => PromoCodeController.to.currentOffer.value;
+  OfferType get currentOffer {
+    if (!Get.isRegistered<PromoCodeController>()) {
+      Get.lazyPut<PromoCodeController>(
+        () => PromoCodeController(),
+        fenix: true,
+      );
+    }
+
+    return Get.find<PromoCodeController>().currentOffer.value;
+  }
 
   final RxBool isProcessing = false.obs;
 
@@ -103,7 +113,10 @@ class SubscriptionConfirmController extends GetxController {
 
       debugPrint('🟢 Offerings=${offerings?.current?.identifier}');
 
-      _package = offerings?.current?.monthly;
+      printOfferings(offerings);
+
+      // 1. Resolve package first
+      _package = offerings?.current?.availablePackages.firstOrNull;
 
       if (_package == null) {
         errorMessage.value = 'Subscription plan is currently unavailable.';
@@ -112,11 +125,35 @@ class SubscriptionConfirmController extends GetxController {
 
         return;
       }
-
       final options = _package!.storeProduct.subscriptionOptions ?? [];
 
-      selectedOption.value =
-          _package!.storeProduct.defaultOption ?? options.firstOrNull;
+      switch (currentOffer) {
+        case OfferType.promo:
+          selectedOption.value = options.firstWhereOrNull(
+            (o) => o.id.startsWith('promo_'),
+          );
+          if (selectedOption.value == null) {
+            debugPrint('⚠️ No promo_ option found in offerings');
+          }
+          break;
+
+        case OfferType.referral:
+          selectedOption.value = options.firstWhereOrNull(
+            (o) => o.id.startsWith('referral_'),
+          );
+          break;
+
+        case OfferType.fundingMum:
+          selectedOption.value = options.firstWhereOrNull(
+            (o) => o.id.startsWith('founding_'),
+          );
+          break;
+
+        case OfferType.none:
+          selectedOption.value =
+              _package!.storeProduct.defaultOption ?? options.firstOrNull;
+          break;
+      }
 
       debugPrint('🟢 Selected option=${selectedOption.value?.id}');
 
@@ -139,9 +176,6 @@ class SubscriptionConfirmController extends GetxController {
         debugPrint("---------------------------");
         debugPrint("Identifier : ${d.identifier}");
         debugPrint("Price      : ${d.priceString}");
-        debugPrint("Type       : ${d.type}");
-        debugPrint("Period     : ${d.subscriptionPeriod}");
-        debugPrint("Cycles     : ${d.numberOfPeriods}");
       }
 
       debugPrint("==================================");
@@ -153,10 +187,31 @@ class SubscriptionConfirmController extends GetxController {
       }
 
       if (GetPlatform.isIOS &&
-          (currentOffer == OfferType.promo ||
-              currentOffer == OfferType.fundingMum) &&
+          // (currentOffer == OfferType.promo ||
+          //     currentOffer == OfferType.fundingMum)
+          //  &&
           _isEligibleForOffer) {
-        iosPromoDiscount.value = _package!.storeProduct.discounts?.firstOrNull;
+        if (GetPlatform.isIOS && _isEligibleForOffer) {
+          switch (currentOffer) {
+            case OfferType.fundingMum:
+              iosPromoDiscount.value = _package!.storeProduct.discounts
+                  ?.firstWhereOrNull(
+                    (d) => d.identifier.startsWith('founding'),
+                  );
+              break;
+
+            case OfferType.promo:
+              iosPromoDiscount.value = _package!.storeProduct.discounts
+                  ?.firstWhereOrNull((d) => d.identifier.startsWith('promo'));
+              break;
+
+            default:
+              break;
+          }
+
+          debugPrint('🟢 iOS discount=${iosPromoDiscount.value}');
+        }
+        // iosPromoDiscount.value = _package!.storeProduct.discounts?.firstOrNull;
 
         debugPrint(
           "_package!.storeProduct.discounts: ${_package!.storeProduct.discounts.toString()}",
@@ -176,6 +231,8 @@ class SubscriptionConfirmController extends GetxController {
       isLoadingOption.value = false;
     }
   }
+
+  //
 
   Future<void> onConfirmPayment() async {
     if (_isSubmitting) {
@@ -328,11 +385,11 @@ class SubscriptionConfirmController extends GetxController {
           promoOffer,
         );
       } else {
-        debugPrint('🟡 Android promo placeholder');
+        debugPrint('🤖 Android promo offer purchase');
 
-        outcome = await _purchaseService.purchasePackage(
+        outcome = await _purchaseService.purchaseWithAndroidOffer(
           _package!,
-          selectedOption.value,
+          OfferType.promo,
         );
       }
 
@@ -377,7 +434,14 @@ class SubscriptionConfirmController extends GetxController {
           _package!.storeProduct,
           discount,
         );
+        final eligibility =
+            await Purchases.checkTrialOrIntroductoryPriceEligibility([
+              _package!.storeProduct.identifier,
+            ]);
 
+        final status = eligibility[_package!.storeProduct.identifier]?.status;
+
+        debugPrint("🍎 Apple eligibility=$status");
         outcome = await _purchaseService.purchaseWithDiscount(
           _package!,
           promoOffer,
@@ -392,10 +456,42 @@ class SubscriptionConfirmController extends GetxController {
       }
 
       await _handleOutcome(outcome);
+    } on PlatformException catch (e) {
+      debugPrint('Payment exception code=${e.code}');
+      debugPrint('Payment exception details=${e.details}');
+      debugPrint('Payment exception message=${e.message}');
+
+      final isIneligible =
+          e.code.toString() == '18' ||
+          e.message?.contains('ineligible') == true ||
+          e.details.toString().contains('INELIGIBLE_ERROR');
+
+      if (isIneligible) {
+        const msg =
+            'This promotional offer is no longer available for your Apple ID. '
+            'Please use another subscription option.';
+
+        Get.snackbar(
+          'Offer unavailable',
+          msg,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 5),
+        );
+
+        errorMessage.value = msg;
+      }
+
+      Get.snackbar(
+        'Payment Error',
+        e.message ?? 'Purchase failed',
+        snackPosition: SnackPosition.BOTTOM,
+      );
     } catch (e, stack) {
       debugPrint('❌ Funding Mum error=$e');
 
       debugPrintStack(stackTrace: stack);
+
+      _showErrorSnackbar(errorMessage.value);
 
       errorMessage.value = 'Unable to activate Funding Mum offer.';
 
@@ -406,12 +502,14 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<StoreProductDiscount?> _getFundingMumDiscount() async {
-    final discounts = _package!.storeProduct.discounts;
+    final discounts = _package?.storeProduct.discounts ?? [];
 
-    debugPrint("🍎 Available discounts=$discounts");
+    for (final d in discounts) {
+      debugPrint("Discount id=${d.identifier}, price=${d.priceString}");
+    }
 
-    return discounts?.firstWhereOrNull(
-      (discount) => discount.identifier == "founding_mum_100",
+    return discounts.firstWhereOrNull(
+      (d) => d.identifier.toLowerCase() == 'founding_mum_100',
     );
   }
 
@@ -574,19 +672,26 @@ class SubscriptionConfirmController extends GetxController {
       if (GetPlatform.isIOS && iosPromoDiscount.value != null) {
         final discount = iosPromoDiscount.value!;
 
+        final originalPrice = _package!.storeProduct.priceString;
+
+        final isFreeTrial = discount.price == 0;
+
         return [
-          PriceRowData('Original price', _package!.storeProduct.priceString),
+          PriceRowData('Subscription price', '$originalPrice/month'),
 
-          PriceRowData(
-            'Discounted price',
-            discount.priceString,
-            isDiscount: true,
-          ),
+          if (isFreeTrial) ...[
+            PriceRowData('Promotion', 'Free for 3 months', isDiscount: true),
 
-          PriceRowData('Total', discount.priceString, isBold: true),
+            PriceRowData('After free period', '$originalPrice/month'),
+          ] else ...[
+            PriceRowData('Offer price', discount.priceString, isDiscount: true),
+
+            PriceRowData('Offer duration', 'Limited promotional period'),
+
+            PriceRowData('After offer', '$originalPrice/month', isBold: true),
+          ],
         ];
       }
-
       final price = _package?.storeProduct.priceString;
 
       return price == null ? [] : [PriceRowData('Total', price, isBold: true)];
@@ -636,6 +741,57 @@ class SubscriptionConfirmController extends GetxController {
       return '$currencyCode ${amount.toStringAsFixed(2)}';
     }
   }
+}
+
+void printOfferings(Offerings? offerings) {
+  if (offerings == null) {
+    debugPrint("❌ Offerings: null");
+    return;
+  }
+
+  debugPrint("========== REVENUECAT OFFERINGS ==========");
+
+  debugPrint("Current Offering: ${offerings.current?.identifier}");
+
+  for (final entry in offerings.all.entries) {
+    final offering = entry.value;
+
+    debugPrint("------------------------------------------");
+    debugPrint("Offering ID: ${offering.identifier}");
+    debugPrint("Packages:");
+
+    for (final package in offering.availablePackages) {
+      debugPrint("  Package Identifier: ${package.identifier}");
+      debugPrint("  Package Type: ${package.packageType}");
+
+      debugPrint("  Product ID: ${package.storeProduct.identifier}");
+      debugPrint("  Product Title: ${package.storeProduct.title}");
+      debugPrint("  Price: ${package.storeProduct.priceString}");
+
+      final options = package.storeProduct.subscriptionOptions ?? [];
+
+      if (options.isNotEmpty) {
+        debugPrint("  Subscription Options:");
+
+        for (final option in options) {
+          debugPrint("    Option ID: ${option.id}");
+          debugPrint("    Pricing Phases:");
+
+          for (final phase in option.pricingPhases) {
+            debugPrint(
+              "      ${phase.price.formatted} "
+              "${phase.billingPeriod?.unit} "
+              "cycles=${phase.billingCycleCount}",
+            );
+          }
+        }
+      }
+
+      debugPrint("");
+    }
+  }
+
+  debugPrint("==========================================");
 }
 
 class PriceRowData {
@@ -1037,3 +1193,45 @@ class SubscriptionConfirmController extends GetxController {
 
 
 */
+
+/*
+UI Button
+    |
+    v
+SubscriptionConfirmController
+    |
+    |---- OfferType.none
+    |        |
+    |        --> purchasePackage()
+    |
+    |---- OfferType.referral
+    |        |
+    |        --> iOS: App Store redeem code
+    |        --> Android: purchaseWithAndroidOffer()
+    |
+    |---- OfferType.promo
+    |        |
+    |        --> iOS: purchaseWithDiscount()
+    |        --> Android: purchasePackage()
+    |
+    |---- OfferType.fundingMum
+             |
+             --> iOS: purchaseWithDiscount()
+             --> Android: purchaseWithAndroidOffer()
+
+                    |
+                    v
+
+              PurchaseService
+
+                    |
+                    v
+
+              RevenueCat SDK
+
+                    |
+                    v
+
+             Apple App Store / Google Play
+
+             */

@@ -27,7 +27,7 @@ class PromoCodeScreen extends StatelessWidget {
       bottomWidget: Obx(() {
         return AuthButton(
           isLoading: controller.isLoading,
-          onTap: controller.onTapContinue,
+          onTap: controller.onTapContinuePromoScreen,
         ).mB(10);
       }),
 
@@ -43,9 +43,14 @@ class PromoCodeScreen extends StatelessWidget {
             radius: 0,
             fit: BoxFit.fitWidth,
           ),
-
-          if (kDebugMode) ...[
+          if (kDebugMode || !kDebugMode) ...[
             Gap(itemGap * 2),
+
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.mainNav),
+
+              child: const Text("Home"),
+            ),
 
             Text(
               "DEBUG OFFER",
@@ -87,6 +92,7 @@ class PromoCodeScreen extends StatelessWidget {
 
             Gap(itemGap),
           ],
+
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -94,14 +100,13 @@ class PromoCodeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Gap(itemGap * 2),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Column(
                           children: [
                             Text(
-                              "Did Some one invite you to\nWeMama?",
+                              "Enter your referral or \npromotional code",
                               textAlign: TextAlign.center,
                               style: TxtStyle.dmSerifDisplayRegular(
                                 fs: 23,
@@ -173,17 +178,27 @@ class PromoCodeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Enter your invite code",
+                      "Use a referral or promotional code",
                       style: TxtStyle.outfitSemiBold12Center(),
                     ),
-                    Text(
-                      "50% OFF",
-                      style: TxtStyle.outfitSemiB(
-                        color: appRed,
-                        fs: 23,
-                        w: 700,
-                        // h: 1.1,
-                      ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "50% OFF",
+                          style: TxtStyle.outfitSemiB(
+                            color: appRed,
+                            fs: 23,
+                            w: 700,
+                            // h: 1.1,
+                          ),
+                        ),
+                        Text(
+                          "  *(Referral)",
+
+                          style: TxtStyle.outfitSemiBold12Center(fs: 9),
+                        ),
+                      ],
                     ),
                     Text(
                       "your first month of WeMama Premium",
@@ -202,9 +217,9 @@ class PromoCodeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Referral code optional",
+                  "Referral code or promotional code (optional)",
                   style: TxtStyle.outfitSemiB(
-                    fs: 11,
+                    fs: 12,
                     w: 600,
                     color: c.foregroundSecondary,
                   ),
@@ -214,7 +229,7 @@ class PromoCodeScreen extends StatelessWidget {
                   rad: 8,
                   nameCtrler: controller.referralCodeCtrl,
                   nameFocus: controller.referralCodeFocusNode,
-                  hintText: "Enter Referral Code",
+                  hintText: "Enter Code",
                   hintColor: Colors.grey.shade400,
                 ),
               ],
@@ -257,7 +272,7 @@ class PromoCodeScreen extends StatelessWidget {
           ),
           Gap(itemGap * 1.5),
           GestureDetector(
-            onTap: controller.onTapContinue,
+            onTap: controller.onTapContinuePromoScreen,
             child: Column(
               children: [
                 Text(
@@ -304,6 +319,8 @@ class PromoCodeScreen extends StatelessWidget {
               ),
             ],
           ),
+
+          Gap(15),
         ],
       ),
     );

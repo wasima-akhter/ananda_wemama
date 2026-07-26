@@ -34,6 +34,7 @@ class RoutePaths {
   //
   static const finishSettingProfile = '/finishSettingProfile';
   static const promoCodeScreen = '/promoCodeScreen';
+  static const foundingMumCodeScreen = '/foundingMumCodeScreen';
   static const subChoosePlan = '/subChoosePlan';
   static const welcomeFundingMum = '/welcomeFundingMum';
   static const addChildren = '/addChildren';

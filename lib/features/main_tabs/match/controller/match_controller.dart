@@ -235,7 +235,7 @@ class MatchController extends GetxController {
 
   void navToSubUpgrade() {
     if (Get.isDialogOpen ?? false) Get.back();
-    Get.toNamed(RoutePaths.subscriptionUpgrade);
+    Get.toNamed(RoutePaths.promoCodeScreen);
   }
 
   /////
@@ -254,7 +254,7 @@ class MatchController extends GetxController {
     Get.back();
 
     // Navigate
-    await Get.toNamed(RoutePaths.subscriptionUpgrade);
+    await Get.toNamed(RoutePaths.promoCodeScreen);
 
     // When user comes back
     matchState.value = MatchState.idle;
@@ -421,7 +421,7 @@ class MatchController extends GetxController {
 
   Future<void> onTapUpgradeNow() async {
     if (Get.isDialogOpen ?? false) Get.back();
-    final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
+    final result = await Get.toNamed(RoutePaths.promoCodeScreen);
     log("result: $result");
   }
 }

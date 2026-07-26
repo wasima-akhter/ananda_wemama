@@ -1,4 +1,5 @@
 import '../../../../../app/controller_export.dart';
+import '../../../../../core/components/ui/dialogs/popups.dart';
 import '../../subscription_access/premium_access_service.dart';
 import '../../subscription_upgrade/mixin/subscription_plan_mixin.dart';
 
@@ -17,10 +18,11 @@ class SubscriptionChoosePlanController extends GetxController
   void unfocusAll() => FocusManager.instance.primaryFocus?.unfocus();
 
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
+
     if (PremiumAccessService.to.isPremiumUserNow) {
-      Get.offAllNamed(RoutePaths.subscriptionSuccess); // or wherever home is
+      showAlreadyPremiumDialog();
     }
   }
 

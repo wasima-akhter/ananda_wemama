@@ -719,6 +719,10 @@ class $AssetsImagesGen {
   AssetGenImage get folderAttach =>
       const AssetGenImage('assets/images/folder_attach.png');
 
+  /// File path: assets/images/founding_mum_code_screen.png
+  AssetGenImage get foundingMumCodeScreen =>
+      const AssetGenImage('assets/images/founding_mum_code_screen.png');
+
   /// File path: assets/images/founding_mum_new_image.png
   AssetGenImage get foundingMumNewImage =>
       const AssetGenImage('assets/images/founding_mum_new_image.png');
@@ -856,6 +860,7 @@ class $AssetsImagesGen {
     congrates,
     emptyList,
     folderAttach,
+    foundingMumCodeScreen,
     foundingMumNewImage,
     gallery,
     hahaEmoji,

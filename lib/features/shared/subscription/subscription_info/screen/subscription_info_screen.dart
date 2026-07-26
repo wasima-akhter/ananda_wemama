@@ -11,7 +11,7 @@ class SubscriptionInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scpc = Get.find<SubscriptionInfoController>();
+    final scpc = SubscriptionInfoController.to;
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: Strings.subscription),
@@ -24,7 +24,9 @@ class SubscriptionInfoScreen extends StatelessWidget {
 
         return Column(
           children: [
+            // Text("For you to see if subscribed"),
             // CurrentSubscriptionCard(
+            //   promoCodeTextController: scpc.promoCodeTextController,
             //   planName: 'WeMama Premium',
             //   price: '\$9.99/month',
             //   expireDate: '31 Dec 2026',
@@ -47,10 +49,12 @@ class SubscriptionInfoScreen extends StatelessWidget {
             ///
             if (info == null)
               _NoActiveSubscriptionCard(
-                onSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+                onSubscribe: () => Get.toNamed(RoutePaths.promoCodeScreen),
               )
             else ...[
               CurrentSubscriptionCard(
+                promoCodeTextController: scpc.promoCodeTextController,
+
                 planName: scpc.activeProduct.value?.title ?? 'WeMama Premium',
 
                 price: scpc.activeProduct.value?.priceString ?? '',

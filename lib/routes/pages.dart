@@ -47,12 +47,13 @@ import '../features/post_auth_setup/lifestyle_and_interests/screen/lifestyle_and
 import '../features/post_auth_setup/mums_stage/screen/mums_stage_screen.dart';
 import '../features/post_auth_setup/photo_and_bio/screen/add_bio_screen.dart';
 import '../features/post_auth_setup/photo_and_bio/screen/add_photo_screen.dart';
+import '../features/post_auth_setup/promo_code/screen/founding_mum_code_screen.dart';
 import '../features/post_auth_setup/setup_profile/screen/setup_profile_screen.dart';
-import '../features/shared/subscription/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
 import '../features/post_auth_setup/welcome_funding_mum/screen/welcome_funding_mum_screen.dart';
 import '../features/shared/bookmark/screen/bookmark_screen.dart';
 import '../features/shared/mood/mood_insights/screen/mood_insights_screen.dart';
 import '../features/shared/mood/mood_library/screen/mood_library_screen.dart';
+import '../features/shared/subscription/subscription_choose_plan/screen/subscription_choose_plan_screen.dart';
 import '../features/shared/subscription/subscription_info/screen/subscription_info_screen.dart';
 import '../features/shared/subscription/subscription_upgrade/controller/subscription_confirm_controller.dart';
 import '../features/shared/subscription/subscription_upgrade/model/subscription_price_model.dart';
@@ -258,6 +259,11 @@ class RoutePageList {
       binding: PostSignupScreensBinding(),
     ),
     GetPage(
+      name: RoutePaths.foundingMumCodeScreen,
+      page: () => const FoundingMumCodeScreen(),
+      binding: PostSignupScreensBinding(),
+    ),
+    GetPage(
       name: RoutePaths.subChoosePlan,
       page: () => const SubscriptionChoosePlanScreen(),
       binding: PostSignupScreensBinding(),
@@ -398,7 +404,10 @@ class RoutePageList {
       // binding: SubscriptionInfoBinding(),
       binding: BindingsBuilder(() {
         final priceModel = Get.arguments as SubscriptionPriceModel;
-        Get.put(SubscriptionConfirmController(priceModel));
+        Get.lazyPut(
+          () => SubscriptionConfirmController(priceModel),
+          fenix: true,
+        );
       }),
     ),
     GetPage(

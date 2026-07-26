@@ -45,43 +45,6 @@ class PurchaseService {
     isActive.value = info.entitlements.all[entitlementId]?.isActive ?? false;
   }
 
-  /*
-  /// Call after login, so purchases attach to the right backend user
-  Future<void> loginRevenueCatUser(String appUserId) async {
-    try {
-      await Purchases.logIn(appUserId);
-      await refreshCustomerInfo();
-    } catch (e) {
-      log('RC login error: $e');
-    }
-  }
-
-  Future<void> logoutRevenueCatUser() async {
-    try {
-      await Purchases.logOut();
-    } catch (e) {
-      log('RC logout error: $e');
-    }
-  }
-
-  Future<void> refreshCustomerInfo() async {
-    try {
-      final info = await Purchases.getCustomerInfo();
-      _onCustomerInfoUpdated(info);
-    } catch (e) {
-      log('getCustomerInfo error: $e');
-    }
-  }
-
-  Future<Offerings?> getOfferings() async {
-    try {
-      return await Purchases.getOfferings();
-    } on PlatformException catch (e) {
-      log('getOfferings error: $e');
-      return null;
-    }
-  }
-*/
   Future<void> loginRevenueCatUser(String appUserId) async {
     try {
       await Purchases.logIn(appUserId);
@@ -283,18 +246,19 @@ class PurchaseService {
 
     switch (offerType) {
       case OfferType.referral:
-        option = options.firstWhereOrNull(
-          (o) => o.id.contains('referral_50_1month'),
-        );
+        option = options.firstWhereOrNull((o) => o.id.startsWith('referral_'));
         break;
 
       case OfferType.fundingMum:
-        option = options.firstWhereOrNull(
-          (o) => o.id.contains('founding_mum_100'),
-        );
+        option = options.firstWhereOrNull((o) => o.id.startsWith('founding_'));
         break;
 
-      default:
+      case OfferType.promo:
+        option = options.firstWhereOrNull((o) => o.id.startsWith('promo_'));
+        break;
+
+      case OfferType.none:
+        option = package.storeProduct.defaultOption ?? options.firstOrNull;
         break;
     }
 
@@ -305,12 +269,17 @@ class PurchaseService {
       );
     }
 
-    final result = await Purchases.purchaseSubscriptionOption(option);
+    debugPrint('🟢 Android purchasing option=${option.id}');
+
+    final result = await Purchases.purchase(
+      PurchaseParams.subscriptionOption(option),
+    );
 
     _onCustomerInfoUpdated(result.customerInfo);
 
     final active =
         result.customerInfo.entitlements.all[entitlementId]?.isActive ?? false;
+
     return PurchaseOutcome(
       active ? PurchaseResult.success : PurchaseResult.pending,
       customerInfo: result.customerInfo,
@@ -505,3 +474,26 @@ extension PurchaseServiceInfo on PurchaseService {
     }
   }
 }
+
+/*
+Product:
+premium_monthly
+
+Base plan:
+monthly-auto
+
+Offers:
+1. founding-mum-100
+   - First phase: Free
+   - Duration: 3 months
+   - Then: BDT 500/month
+
+2. referral-50-1month
+   - First phase: BDT 250
+   - Duration: 1 month
+   - Then: BDT 500/month
+
+3. Default:
+   - BDT 500/month
+
+   */

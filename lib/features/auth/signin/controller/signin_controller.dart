@@ -226,6 +226,9 @@ class SigninController extends GetxController {
   // ── Apple ───────────────────────────────────────────────────────
 
   Future<void> onTapAppleLogin() async {
+    // if (Platform.isAndroid) {
+    //   Snack.showWarning("Only for Apple users");
+    // }
     if (appleLoading.value) return;
 
     _startAuth();

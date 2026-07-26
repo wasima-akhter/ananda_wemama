@@ -37,7 +37,7 @@ class FinishSettingProfileController extends GetxController {
 
   void onTapContinue() {
     // Get.toNamed(RoutePaths.welcomeFundingMum);
-    Get.offAllNamed(RoutePaths.promoCodeScreen);
+    Get.offAllNamed(RoutePaths.foundingMumCodeScreen);
   }
 }
 
