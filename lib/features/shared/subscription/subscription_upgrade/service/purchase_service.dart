@@ -246,22 +246,27 @@ class PurchaseService {
 
     switch (offerType) {
       case OfferType.referral:
-        option = options.firstWhereOrNull((o) => o.id.startsWith('referral_'));
+        option = GetPlatform.isAndroid
+            ? options.firstWhereOrNull((o) => o.id.contains('referral'))
+            : options.firstWhereOrNull((o) => o.id.startsWith('referral_'));
         break;
 
       case OfferType.fundingMum:
-        option = options.firstWhereOrNull((o) => o.id.startsWith('founding_'));
+        option = GetPlatform.isAndroid
+            ? options.firstWhereOrNull((o) => o.id.contains('founding'))
+            : options.firstWhereOrNull((o) => o.id.startsWith('founding_'));
         break;
 
       case OfferType.promo:
-        option = options.firstWhereOrNull((o) => o.id.startsWith('promo_'));
+        option = GetPlatform.isAndroid
+            ? options.firstWhereOrNull((o) => o.id.contains('promo'))
+            : options.firstWhereOrNull((o) => o.id.startsWith('promo_'));
         break;
 
       case OfferType.none:
         option = package.storeProduct.defaultOption ?? options.firstOrNull;
         break;
     }
-
     if (option == null) {
       return PurchaseOutcome(
         PurchaseResult.error,
@@ -274,6 +279,30 @@ class PurchaseService {
     final result = await Purchases.purchase(
       PurchaseParams.subscriptionOption(option),
     );
+
+    debugPrint('🟢 Purchasing option=${option.id}');
+
+    for (final phase in option.pricingPhases) {
+      debugPrint(
+        'Phase: ${phase.price.formatted}, '
+        'Period=${phase.billingPeriod}, '
+        'Cycles=${phase.billingCycleCount}',
+      );
+    }
+
+    /*
+    Referral
+
+Purchasing option=monthly-auto:referral-50-1month
+Phase: BDT 250.00
+Phase: BDT 500.00
+
+Funding Mum
+
+Purchasing option=monthly-auto:founding-mum-100
+Phase: Free
+Phase: BDT 500.00
+*/
 
     _onCustomerInfoUpdated(result.customerInfo);
 
