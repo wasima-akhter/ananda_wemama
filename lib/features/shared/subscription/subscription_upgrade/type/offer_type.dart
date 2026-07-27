@@ -30,7 +30,7 @@ class OfferEligibility {
   ) {
     return OfferEligibility(
       referralAvailable:
-          (eligibility.referralCode ?? '').trim().isEmpty &&
+          (eligibility.referralCode ?? '').trim().isNotEmpty &&
           !eligibility.isRedeemed,
 
       // TODO replace with backend flags later

@@ -26,7 +26,7 @@ class MatchController extends GetxController {
   final RxBool isPaidUser = false.obs;
   Worker? _premiumWorker;
 
-  final int freeDailyLimit = 1;
+  final int freeDailyLimit = 3;
   final RxInt searchesToday = 0.obs;
 
   int _searchId = 0;

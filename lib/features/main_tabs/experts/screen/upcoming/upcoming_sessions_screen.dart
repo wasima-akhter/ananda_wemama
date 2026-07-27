@@ -20,7 +20,10 @@ class UpcomingSessionsScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       isScrollable: false,
-      appBar: CommonAppBarContent(title: Strings.upcomingSession),
+      appBar: CommonAppBarContent(
+        title: Strings.upcomingSession,
+        onTapBack: () => goToMainNavWithTab(4),
+      ),
 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

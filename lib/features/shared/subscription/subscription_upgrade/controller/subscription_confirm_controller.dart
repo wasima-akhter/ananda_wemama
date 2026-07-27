@@ -129,24 +129,43 @@ class SubscriptionConfirmController extends GetxController {
 
       switch (currentOffer) {
         case OfferType.promo:
-          selectedOption.value = options.firstWhereOrNull(
-            (o) => o.id.startsWith('promo_'),
-          );
+          if (GetPlatform.isAndroid) {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.contains('promo'),
+            );
+          } else {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.startsWith('promo_'),
+            );
+          }
+
           if (selectedOption.value == null) {
-            debugPrint('⚠️ No promo_ option found in offerings');
+            debugPrint('⚠️ No promo option found');
           }
           break;
 
         case OfferType.referral:
-          selectedOption.value = options.firstWhereOrNull(
-            (o) => o.id.startsWith('referral_'),
-          );
+          if (GetPlatform.isAndroid) {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.contains('referral'),
+            );
+          } else {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.startsWith('referral_'),
+            );
+          }
           break;
 
         case OfferType.fundingMum:
-          selectedOption.value = options.firstWhereOrNull(
-            (o) => o.id.startsWith('founding_'),
-          );
+          if (GetPlatform.isAndroid) {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.contains('founding'),
+            );
+          } else {
+            selectedOption.value = options.firstWhereOrNull(
+              (o) => o.id.startsWith('founding_'),
+            );
+          }
           break;
 
         case OfferType.none:
@@ -179,6 +198,19 @@ class SubscriptionConfirmController extends GetxController {
       }
 
       debugPrint("==================================");
+
+      debugPrint('OfferType = $currentOffer');
+      debugPrint('Eligible = $_isEligibleForOffer');
+      debugPrint('Selected = ${selectedOption.value?.id}');
+      debugPrint('Phases = ${selectedOption.value?.pricingPhases.length}');
+
+      for (final phase in selectedOption.value?.pricingPhases ?? []) {
+        debugPrint(
+          'Price=${phase.price.formatted}, '
+          'Cycles=${phase.billingCycleCount}, '
+          'Mode=${phase.recurrenceMode}',
+        );
+      }
 
       if (selectedOption.value == null && GetPlatform.isAndroid) {
         errorMessage.value = 'Plan option not available.';
@@ -699,6 +731,60 @@ class SubscriptionConfirmController extends GetxController {
 
     final discountAvailable = phases.length > 1 && _isEligibleForOffer;
 
+    if (GetPlatform.isAndroid &&
+        currentOffer == OfferType.fundingMum &&
+        phases.length >= 2) {
+      final trialPhase = phases.first;
+      final recurringPhase = phases.last;
+
+      final isFreeTrial = trialPhase.price.amountMicros == 0;
+
+      if (isFreeTrial) {
+        final months = trialPhase.billingPeriod?.value;
+
+        return [
+          PriceRowData(
+            'Subscription price',
+            '${recurringPhase.price.formatted}/month',
+          ),
+
+          PriceRowData('Offer', 'Free for $months months', isDiscount: true),
+
+          PriceRowData(
+            'After free period',
+            '${recurringPhase.price.formatted}/month',
+            isBold: true,
+          ),
+        ];
+      }
+    }
+    if (GetPlatform.isAndroid &&
+        currentOffer == OfferType.referral &&
+        phases.length >= 2) {
+      final offerPhase = phases.first;
+      final recurringPhase = phases.last;
+
+      final months = offerPhase.billingPeriod?.value ?? 1;
+
+      return [
+        PriceRowData(
+          'Subscription price',
+          '${recurringPhase.price.formatted}/month',
+        ),
+
+        PriceRowData(
+          'Referral offer',
+          '${offerPhase.price.formatted}/month',
+          isDiscount: true,
+        ),
+
+        PriceRowData(
+          'After offer',
+          '${recurringPhase.price.formatted}/month',
+          isBold: true,
+        ),
+      ];
+    }
     if (!discountAvailable) {
       final price = phases.length > 1 ? phases.last.price : phases.first.price;
 

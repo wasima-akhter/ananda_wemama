@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:app_links/app_links.dart';
 import 'package:get/get.dart';
 
-import '../../../features/main_nav/controller/main_nav_controller.dart';
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
 import '../../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 import '../../../routes/route_paths.dart';
@@ -300,10 +299,10 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
           log(
             '🔗 [DeepLinkService] → Upcoming → navigating to mainNav then tab 4',
           );
-          await Get.offAllNamed(RoutePaths.mainNav);
+          await Get.offAllNamed(RoutePaths.upcomingSessions);
           await Future.microtask(() => null);
-          log('🔗 [DeepLinkService] → calling MainNavController.to.goToTab(4)');
-          MainNavController.to.goToTab(4);
+          log('🔗 [DeepLinkService] → calling upcomingSessions screen');
+          // MainNavController.to.goToTab(4);
           break;
 
         default:
