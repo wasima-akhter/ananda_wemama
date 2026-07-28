@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mama_app/core/components/ui/buttons/gesture_detector_cus.dart';
-import 'package:mama_app/core/utils/extension/context_extension.dart';
+import 'package:we_mama/core/components/ui/buttons/gesture_detector_cus.dart';
+import 'package:we_mama/core/utils/extension/context_extension.dart';
 
 TextStyle get titleBPri =>
     TxtStyle.interSemiB(fs: 14, w: 600, color: c.primary);

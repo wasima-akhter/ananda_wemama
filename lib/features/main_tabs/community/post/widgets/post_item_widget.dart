@@ -1,6 +1,6 @@
 // lib/features/main_tabs/community/modules/post_item_widget.dart
 
-import 'package:mama_app/core/models/ui/common_data_models.dart';
+import 'package:we_mama/core/models/ui/common_data_models.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/dialogs/popups.dart';

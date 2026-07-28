@@ -1,4 +1,4 @@
-import 'package:mama_app/features/more/blocked_user/model/blocked_user_model.dart';
+import 'package:we_mama/features/more/blocked_user/model/blocked_user_model.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../service/blocked_user_service.dart';

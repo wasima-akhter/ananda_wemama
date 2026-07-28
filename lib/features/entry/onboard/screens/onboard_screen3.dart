@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/buttons/back_arrow_in_circle.dart';
+import 'package:we_mama/core/components/ui/buttons/back_arrow_in_circle.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/onboard_controller.dart';

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/constants/icon_and_image_paths.dart';
+import 'package:we_mama/core/constants/icon_and_image_paths.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/account_overview/change_password/change_password_service.dart';

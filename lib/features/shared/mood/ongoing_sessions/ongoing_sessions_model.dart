@@ -1,4 +1,4 @@
-import 'package:mama_app/core/enums/ui_enums.dart';
+import 'package:we_mama/core/enums/ui_enums.dart';
 
 class OngoingSessionsModel {
   final String name;

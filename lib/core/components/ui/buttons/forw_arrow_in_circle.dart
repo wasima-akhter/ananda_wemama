@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mama_app/core/constants/icon_and_image_paths.dart';
-import 'package:mama_app/core/helpers/sizes_helper.dart';
+import 'package:we_mama/core/constants/icon_and_image_paths.dart';
+import 'package:we_mama/core/helpers/sizes_helper.dart';
 
 import '../../../helpers/color_helper.dart';
 import '../../../utils/extension/context_extension.dart';

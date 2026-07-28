@@ -1,4 +1,4 @@
-import 'package:mama_app/features/main_tabs/experts/controller/session_action_controller.dart';
+import 'package:we_mama/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';

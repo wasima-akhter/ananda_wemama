@@ -35,7 +35,8 @@ class ForgotPasswordService extends GetxService {
     apiCall() {
       return ApiClient().patch(
         Endpoints.resetPassword.getUrl,
-        headers: HeaderHelpers.getAuthHeader(),
+        // headers: HeaderHelpers.getAuthHeader(),
+        headers: HeaderHelpers.jsonHeader(),
         data: {
           "email": email,
           "newPassword": newPassword,

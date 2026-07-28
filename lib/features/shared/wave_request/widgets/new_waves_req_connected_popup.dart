@@ -1,5 +1,5 @@
-import 'package:mama_app/core/models/ui/common_data_models.dart';
-import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
+import 'package:we_mama/core/models/ui/common_data_models.dart';
+import 'package:we_mama/features/main_tabs/chat/controller/chat_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 

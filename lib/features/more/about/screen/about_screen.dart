@@ -1,4 +1,4 @@
-import 'package:mama_app/features/more/about/controller/about_controller.dart';
+import 'package:we_mama/features/more/about/controller/about_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../main_tabs/home/modules/profile_tile.dart';

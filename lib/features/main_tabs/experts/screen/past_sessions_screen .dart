@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/inputs/cus_search_bar.dart';
-import 'package:mama_app/features/main_tabs/experts/widgets/session_component.dart';
+import 'package:we_mama/core/components/ui/inputs/cus_search_bar.dart';
+import 'package:we_mama/features/main_tabs/experts/widgets/session_component.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/past_sessions_controller.dart';

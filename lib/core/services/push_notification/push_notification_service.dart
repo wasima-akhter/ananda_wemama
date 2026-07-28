@@ -241,6 +241,7 @@ class PushNotificationService extends GetxService {
     debugPrint('✅ [PushNotificationService] subscribed to topic "Client"');
   }
 
+  /*
   Future<void> _handleTerminatedLaunch() async {
     debugPrint(
       '🔧 [PushNotificationService] checking terminated-launch notification...',
@@ -266,7 +267,45 @@ class PushNotificationService extends GetxService {
       );
     }
   }
+*/
+  Future<void> _handleTerminatedLaunch() async {
+    debugPrint(
+      '🔧 [PushNotificationService] checking terminated notification...',
+    );
 
+    // 1️⃣ Firebase Messaging terminated tap
+    final initialMessage = await _fcm.getInitialMessage();
+
+    if (initialMessage != null) {
+      debugPrint(
+        '📩 [PushNotificationService] Firebase terminated launch detected',
+      );
+
+      final payload = NotificationPayload.fromMap(initialMessage.data);
+
+      lastPayload = payload.toJsonString();
+
+      notificationTapStream.add(payload.toJsonString());
+
+      return;
+    }
+
+    // 2️⃣ flutter_local_notifications terminated tap
+    final details = await _localNotifications.getNotificationAppLaunchDetails();
+
+    if (details?.didNotificationLaunchApp ?? false) {
+      final payload = details!.notificationResponse?.payload;
+
+      if (payload != null && payload.isNotEmpty) {
+        lastPayload = payload;
+        notificationTapStream.add(payload);
+
+        debugPrint(
+          '📩 [PushNotificationService] local notification launch payload: $payload',
+        );
+      }
+    }
+  }
   //
 
   /// Phase 2 — call after successful login (or on app resume if already logged in).
@@ -301,7 +340,7 @@ class PushNotificationService extends GetxService {
       debugPrint(
         'ℹ️ [PushNotificationService] token already uploaded — skipping',
       );
-      return;
+      // return;
     }
 
     if (_tokenUploadAttempts >= _maxTokenUploadAttempts) {

@@ -2,7 +2,7 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 
 import 'app/app.dart';
 import 'core/local/app_storage.dart';

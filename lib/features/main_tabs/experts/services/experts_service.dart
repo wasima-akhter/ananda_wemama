@@ -55,6 +55,10 @@ class ExpertsService extends GetxService {
         data: {"expert": expertId, "session": sessionId, "question": question},
       ),
     );
+    Get.back();
+    if (result.type == ApiResultType.success) {
+      Snack.showSuccess("${result.message}");
+    }
 
     return result.type == ApiResultType.success;
   }

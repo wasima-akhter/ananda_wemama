@@ -1,4 +1,4 @@
-import 'package:mama_app/features/main_tabs/match/model/match_model.dart';
+import 'package:we_mama/features/main_tabs/match/model/match_model.dart';
 
 import '../../../../app/service_export.dart';
 

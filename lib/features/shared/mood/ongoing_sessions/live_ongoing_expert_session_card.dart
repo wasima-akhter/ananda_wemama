@@ -1,4 +1,4 @@
-import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';

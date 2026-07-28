@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
-import 'package:mama_app/features/auth/core/auth_scaffold.dart';
-import 'package:mama_app/features/entry/onboard/modules/core/onboard_logo_header_row.dart';
-import 'package:mama_app/gen/assets.gen.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/features/auth/core/auth_form_fields_templates.dart';
+import 'package:we_mama/features/auth/core/auth_scaffold.dart';
+import 'package:we_mama/features/entry/onboard/modules/core/onboard_logo_header_row.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/string_helper.dart';
@@ -36,6 +36,7 @@ class PromoCodeScreen extends StatelessWidget {
         children: [
           OnboardLogoHeaderRow(
             height: (ScreenSize.isSmallWidth ? 60.h : 65.h),
+            hasBack: true,
           ).getcm,
           Gap(10.h),
           SafeAssetImage(

@@ -1,6 +1,6 @@
-import 'package:mama_app/core/components/app_ui/popup_widgets/ask_ques_popup.dart';
-import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
-import 'package:mama_app/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
+import 'package:we_mama/core/components/app_ui/popup_widgets/ask_ques_popup.dart';
+import 'package:we_mama/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
+import 'package:we_mama/features/shared/wave_request/widgets/new_waves_req_accept_popup.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/chat/widgets/chat_user_details_popup.dart';

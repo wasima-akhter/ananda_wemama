@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/date_helper.dart';
@@ -48,6 +48,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
     final expertId_ = data?.expert?.id ?? '';
     final sessionId_ = data?.id ?? '';
+
+    final actionBtnHeight = 35.h;
 
     return ContainerBordered(
       contClr: newCardClr,
@@ -152,7 +154,8 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   rad: 30,
                   contClr: ctransp,
                   hp: 12,
-                  vp: 7,
+                  vp: 0,
+                  h: actionBtnHeight,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -183,13 +186,15 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                     final loading = isRemindMeLoading();
 
                     return ContainerBordered(
-                      contClr: active ? c.strokePrimary : c.buttonPrimary,
+                      // contClr: active ? c.strokePrimary : c.buttonPrimary,
+                      contClr: c.buttonPrimary,
 
                       rad: 30,
-                      vp: 8,
+                      vp: 0,
+                      h: actionBtnHeight,
 
                       child: loading
-                          ? LoadingPrimary()
+                          ? LoadingWhite()
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
@@ -226,24 +231,21 @@ class UpcomingExpertSessionCard extends StatelessWidget {
               Gap(itemGap),
 
               // if (isFromUpcomgScreen != null)
-              Container(
-                child: CusGestureDetector(
-                  onTap: () => showAskYourQuesDialog(
-                    onTap: () =>
-                        onTapQues(expertId: expertId_, sessionId: sessionId_),
-                    isSendQuesLoading: isSendQuesLoading,
-                    writeQuesCtrl: writeQuesCtrl,
-                    writeQuesFocusNode: writeQuesFocusNode,
-                  ),
-                  child: ContainerBordered(
-                    contClr: c.buttonPrimary,
-                    rad: 30,
-                    vp: 6,
-                    child: SvgIcon(
-                      iconPath: IconsPath.chatDotSquare,
-                      height: 21,
-                    ),
-                  ),
+              CusGestureDetector(
+                onTap: () => showAskYourQuesDialog(
+                  onTap: () =>
+                      onTapQues(expertId: expertId_, sessionId: sessionId_),
+                  isSendQuesLoading: isSendQuesLoading,
+                  writeQuesCtrl: writeQuesCtrl,
+                  writeQuesFocusNode: writeQuesFocusNode,
+                ),
+                child: ContainerBordered(
+                  contClr: c.buttonPrimary,
+                  rad: 30,
+                  vp: 0,
+                  h: actionBtnHeight,
+                  w: actionBtnHeight,
+                  child: SvgIcon(iconPath: IconsPath.chatDotSquare, height: 21),
                 ),
               ),
             ],

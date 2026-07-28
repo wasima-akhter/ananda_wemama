@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/features/main_tabs/home/dialogs/turnon_service_dialog.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/features/main_tabs/home/dialogs/turnon_service_dialog.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/dialogs/permanent_denied_dialog.dart';

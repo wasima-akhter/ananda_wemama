@@ -1,5 +1,5 @@
-import 'package:mama_app/app/helper_widgets_export.dart';
-import 'package:mama_app/gen/assets.gen.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../dialogs/popups.dart';
 import '../loaders/shimmer_widget.dart';

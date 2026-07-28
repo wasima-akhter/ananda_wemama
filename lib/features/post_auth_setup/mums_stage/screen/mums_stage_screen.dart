@@ -1,5 +1,5 @@
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/auth/core/auth_scaffold.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/features/auth/core/auth_scaffold.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/mums_stage_controller.dart';

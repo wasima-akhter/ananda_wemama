@@ -1,13 +1,13 @@
 import 'dart:developer' show log;
 
 import 'package:get/get.dart';
-import 'package:mama_app/core/models/ui/common_data_models.dart';
-import 'package:mama_app/features/more/about/controller/about_controller.dart';
-import 'package:mama_app/features/more/blocked_user/controller/blocked_user_controller.dart';
-import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
-import 'package:mama_app/features/shared/subscription/subscription_upgrade/controller/subscription_upgrade_controller.dart';
-import 'package:mama_app/features/shared/wave_request/controller/wave_request_controller.dart';
-import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
+import 'package:we_mama/core/models/ui/common_data_models.dart';
+import 'package:we_mama/features/more/about/controller/about_controller.dart';
+import 'package:we_mama/features/more/blocked_user/controller/blocked_user_controller.dart';
+import 'package:we_mama/features/post_auth_setup/add_children/controller/add_children_controller.dart';
+import 'package:we_mama/features/shared/subscription/subscription_upgrade/controller/subscription_upgrade_controller.dart';
+import 'package:we_mama/features/shared/wave_request/controller/wave_request_controller.dart';
+import 'package:we_mama/features/video_meeting/controller/live_chat_controller.dart';
 
 import '../../features/account_overview/account_settings/controller/account_settings_controller.dart';
 import '../../features/account_overview/change_password/controller/change_password_controller.dart';

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/helpers/string_helper.dart';
+import 'package:we_mama/core/helpers/string_helper.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/helpers/shapes/custom_divider.dart';

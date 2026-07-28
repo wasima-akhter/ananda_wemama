@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/core/constants/icon_and_image_paths.dart';
-import 'package:mama_app/features/auth/signin/model/signin_model.dart';
+import 'package:we_mama/core/constants/icon_and_image_paths.dart';
+import 'package:we_mama/features/auth/signin/model/signin_model.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
@@ -121,32 +121,29 @@ class SigninController extends GetxController {
   }
 
   Future<void> _handleLoginSuccess() async {
-    clearFields();
-    //
+    log("1. handleLoginSuccess");
 
-    // Upload FCM token now that Bearer token is available
+    clearFields();
+
     if (Get.isRegistered<PushNotificationService>()) {
-      debugPrint('🔧 [LoginController] triggering FCM token upload...');
+      log("2. before uploadTokenAfterLogin");
       await PushNotificationService.to.uploadTokenAfterLogin();
-    } else {
-      debugPrint(
-        '⚠️ [LoginController] PushNotificationService not registered — skipping FCM upload',
-      );
+      log("3. after uploadTokenAfterLogin");
     }
-    // deeplink part --
 
     final deepLinkService = Get.find<DeepLinkService>();
 
+    log("4. pendingLiveId=${deepLinkService.pendingLiveId}");
+
     if (deepLinkService.pendingLiveId != null) {
+      log("5. before handlePostLoginRedirect");
       await deepLinkService.handlePostLoginRedirect();
+      log("6. after handlePostLoginRedirect");
     } else {
+      log("7. navigating");
       Get.offAllNamed(RoutePaths.mainNav);
+      log("8. navigation called");
     }
-
-    //
-
-    // clearFields();
-    // Get.offAllNamed(RoutePaths.mainNav);
   }
 
   /// ================= HELPERS =================

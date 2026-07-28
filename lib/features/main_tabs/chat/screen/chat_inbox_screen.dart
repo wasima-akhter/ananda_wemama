@@ -1,7 +1,7 @@
 import 'package:flutter/rendering.dart';
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
-import 'package:mama_app/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/components/ui/loaders/empty_widget.dart';
+import 'package:we_mama/features/main_tabs/chat/widgets/chat_inbox_security_alert.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';

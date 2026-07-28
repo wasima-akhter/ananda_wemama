@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:mama_app/features/video_meeting/controller/live_chat_controller.dart';
+import 'package:we_mama/features/video_meeting/controller/live_chat_controller.dart';
 
 import '../../../../app/controller_export.dart';
 import '../meeting_controller.dart';

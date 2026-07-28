@@ -1,7 +1,7 @@
-import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:mama_app/core/helpers/date_helper.dart';
-import 'package:mama_app/core/helpers/string_helper.dart';
-import 'package:mama_app/features/main_tabs/home/controller/home_controller.dart';
+import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
+import 'package:we_mama/core/helpers/string_helper.dart';
+import 'package:we_mama/features/main_tabs/home/controller/home_controller.dart';
 
 import '../../../app/helper_widgets_export.dart';
 import '../../../core/components/ui/loaders/shimmer_widget.dart';
@@ -173,23 +173,37 @@ class _CommunitySpotlightLive extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    StackOfImages(),
-                    Gap(itemGap * 2),
-                    Expanded(
-                      child: Container(
-                        // color: Colors.amber,
-                        child: Text(
-                          "$totalMembers ${(spotlightData.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
-                          style: normRsmSecURB,
+                Gap(2),
+                if (spotlightData.totalMember != 0)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      StackOfImages(),
+                      Gap(itemGap * 2),
+
+                      Expanded(
+                        child: Container(
+                          // color: Colors.amber,
+                          child: Text(
+                            "$totalMembers ${(spotlightData.totalMember ?? 0) > 1 ? Strings.mumsAreDiscussingThis : Strings.mumIsDiscussingThis}",
+                            style: titleSmBPriURB,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  )
+                else
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Be the first mum to join this discussion!",
+                        style: titleSmBPriURB,
+                      ),
+                    ],
+                  ),
                 Gap(itemGap),
                 CommunitySpotlightInsideCard(
                   communityname: communityname,

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/experts_controller.dart';

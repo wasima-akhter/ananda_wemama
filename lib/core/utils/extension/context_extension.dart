@@ -1,8 +1,9 @@
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mama_app/app/helper_widgets_export.dart';
-import 'package:mama_app/core/components/app_ui/snacks/founding_mum_badge_snack.dart';
-import 'package:mama_app/core/enums/app_enums.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
+import 'package:we_mama/core/components/app_ui/snacks/founding_mum_badge_snack.dart';
+import 'package:we_mama/core/enums/app_enums.dart';
 
+import '../../../gen/assets.gen.dart';
 import '../../themes/color/color_model.dart';
 import '../../themes/color/colors.dart';
 import '../../themes/theme_service.dart';
@@ -142,173 +143,212 @@ class Snack {
     );
   }
 
-  static void show(
+  static void showError(
     String message, {
     String? title,
     Duration duration = const Duration(seconds: 3),
   }) {
     closeAllSnackbar();
-    Get.closeCurrentSnackbar();
+
+    final hasTitle = (title?.trim().isNotEmpty ?? false);
+
     Get.showSnackbar(
       GetSnackBar(
-        // Full custom content
-        messageText: Column(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: S.w * 0.15,
-                  child: SvgIcon(
-                    iconPath: IconsPath.leaf,
-                    height: 30, // fixed icon height
-                  ),
-                ),
-                Gap(itemGap),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title ?? '',
-                        style: TxtStyle.inter(
-                          color: c.foregroundSecondary,
-                          w: 600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            Text(message, style: TxtStyle.inter(color: c.secondary)),
-          ],
-        ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: bgClr,
+        snackStyle: SnackStyle.FLOATING,
+        backgroundColor: AppPalette.snackError,
+        borderRadius: 12.r,
+        borderColor: AppPalette.snackError.withOpacity(.08),
+        borderWidth: 1,
+        duration: duration,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: S.viewPaddingBottom,
         ),
-        borderRadius: 8.r,
-        padding: EdgeInsets.all(12.w),
-        duration: duration,
-        animationDuration: const Duration(milliseconds: 300),
+        animationDuration: const Duration(milliseconds: 250),
         isDismissible: true,
-      ),
-    );
-  }
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 24,
+            spreadRadius: -2,
+            offset: const Offset(0, 12),
+          ),
+        ],
 
-  static void showError(String message, {String? title}) {
-    Get.closeCurrentSnackbar();
-    closeAllSnackbar();
-    Get.showSnackbar(
-      GetSnackBar(
-        messageText: Row(
-          children: [
-            SizedBox(
-              width: S.w * 0.15,
-              child: SvgIconColored(
-                iconPath: IconsPath.info,
-                iconColor: snackErrTxtClr,
-                height: 30,
-              ),
-            ),
-            Gap(itemGap),
-            Expanded(
-              child: Column(
+        messageText: hasTitle
+            ? Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if ((title ?? '').isNotEmpty)
-                    Text(
-                      title ?? '',
-                      style: TxtStyle.norTxt.copyWith(
-                        color: snackErrTxtClr,
-                        fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title!,
+                          style: TxtStyle.interSemiB(
+                            fs: 14,
+                            w: 600,
+                            color: c.scaffoldBackground,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          message,
+                          style: TxtStyle.interSemiB(
+                            fs: 13,
+                            w: 500,
+                            color: c.scaffoldBackground,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 25.w,
+                    child:
+                        // SvgIcon(
+                        //   iconPath: IconsPath.info,
+                        //   height: 30, // fixed icon height
+                        // ),
+                        Icon(Icons.error_rounded, color: white),
+                  ),
+                  Expanded(
+                    child: Text(
+                      message.capEachWord(),
+                      textAlign: TextAlign.left,
+                      style: TxtStyle.interSemiB(
+                        fs: 13,
+                        w: 500,
+                        color: c.scaffoldBackground,
                       ),
                     ),
-                  if (message.isNotEmpty)
-                    Text(
-                      message,
-                      style: TxtStyle.norTxt.copyWith(color: snackErrTxtClr),
-                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
-        backgroundColor: snackErrBg,
-        borderRadius: 12.r,
-        margin: EdgeInsets.symmetric(
-          horizontal: 20.w,
-          vertical: S.viewPaddingBottom,
-        ),
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 3),
-        isDismissible: true,
-        padding: EdgeInsets.all(12.w),
-        animationDuration: const Duration(milliseconds: 300),
       ),
     );
   }
 
   /// Success snackbar with green check icon
-  static void showSuccess(String message, {String? title}) {
-    Get.closeCurrentSnackbar();
+  static void showSuccess(
+    String message, {
+    String? title,
+    Duration duration = const Duration(seconds: 3),
+  }) {
     closeAllSnackbar();
+
+    final hasTitle = (title?.trim().isNotEmpty ?? false);
+
     Get.showSnackbar(
       GetSnackBar(
-        messageText: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: S.w * 0.15,
-              child: SvgIconColored(
-                iconPath: IconsPath.smallTick,
-                iconColor: c.primary ?? snackSuccessTxtClr,
-                height: 30, // fixed icon height
-              ),
-            ),
-            Gap(itemGap),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if ((title ?? '').isNotEmpty)
-                    Text(
-                      title ?? '',
-                      style: TxtStyle.norTxt.copyWith(
-                        color: c.primary ?? snackSuccessTxtClr,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  Text(
-                    message,
-                    style: TxtStyle.norTxt.copyWith(
-                      color: c.primary ?? snackSuccessTxtClr,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: c.cardPrimary ?? snackSuccessBg,
-        // backgroundColor: c.secondary.withOpacity(0.2),
+        snackStyle: SnackStyle.FLOATING,
+
+        // backgroundColor: c.primary,
+
+        // borderColor: c.primary.withOpacity(0.08),
+        backgroundColor: AppPalette.snackSuccess,
+        borderColor: AppPalette.snackSuccess.withOpacity(.12),
+        borderWidth: 1,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 24,
+            spreadRadius: -2,
+            offset: const Offset(0, 12),
+          ),
+        ],
         margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: S.viewPaddingBottom,
         ),
-        padding: EdgeInsets.all(12.w),
-        borderRadius: 8.r,
-        duration: const Duration(seconds: 3),
-        snackStyle: SnackStyle.FLOATING,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+        borderRadius: 12.r,
+        duration: duration,
+        animationDuration: const Duration(milliseconds: 250),
         isDismissible: true,
-        animationDuration: const Duration(milliseconds: 300),
+
+        messageText: hasTitle
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+
+                children: [
+                  SvgIconColored(
+                    iconPath: IconsPath.smallTick,
+                    iconColor: white ?? snackSuccessTxtClr,
+                    height: 22,
+                  ),
+                  Gap(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title!,
+                          style: TxtStyle.interSemiB(
+                            fs: 14,
+                            w: 600,
+                            color: white ?? snackSuccessTxtClr,
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Text(
+                          message,
+                          style: TxtStyle.interSemiB(
+                            fs: 13,
+                            w: 500,
+                            color:
+                                white ??
+                                (snackSuccessTxtClr).withValues(alpha: .85),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                children: [
+                  SvgIconColored(
+                    iconPath: IconsPath.smallTick,
+                    iconColor: white ?? snackSuccessTxtClr,
+                    height: 22,
+                  ),
+                  Gap(12),
+                  Expanded(
+                    child: Text(
+                      message.capEachWord(),
+                      textAlign: TextAlign.left,
+                      style: TxtStyle.interSemiB(
+                        fs: 13,
+                        w: 500,
+                        color: white ?? snackSuccessTxtClr,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }
@@ -320,53 +360,95 @@ class Snack {
     Duration duration = const Duration(seconds: 3),
   }) {
     closeAllSnackbar();
-    Get.closeCurrentSnackbar();
+
+    final hasTitle = (title?.trim().isNotEmpty ?? false);
+
     Get.showSnackbar(
       GetSnackBar(
-        borderColor: snackWarningTxtClr.withValues(alpha: 0.5),
-        boxShadows: boxShadowAllSides,
-        messageText: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 25.w,
-              child:
-                  // SvgIcon(
-                  //   iconPath: IconsPath.info,
-                  //   height: 30, // fixed icon height
-                  // ),
-                  Icon(Icons.warning_rounded, color: white),
-            ),
-            Gap(itemGap),
+        backgroundColor: AppPalette.snackWarning,
+        borderColor: AppPalette.snackWarning.withOpacity(.15),
 
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        boxShadows: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.12),
+            blurRadius: 24,
+            spreadRadius: -2,
+            offset: const Offset(0, 12),
+          ),
+        ],
+        messageText: hasTitle
+            ? Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // if (title != null)
-                  Text(
-                    title ?? "Warning",
-                    style: TxtStyle.outfit(color: white, w: 600),
+                  SvgIconColored(
+                    iconPath: Assets.icons.infoCircleFilled,
+                    iconColor: c.scaffoldBackground,
+                    height: 22,
                   ),
-                  Text(message, style: TxtStyle.outfit(color: white)),
+                  Gap(12),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title!,
+                          style: TxtStyle.interSemiB(
+                            fs: 14,
+                            w: 600,
+                            color: white,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          message,
+                          style: TxtStyle.interSemiB(
+                            fs: 13,
+                            w: 500,
+                            color: white.withValues(alpha: .85),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgIconColored(
+                    iconPath: Assets.icons.infoCircleFilled,
+                    iconColor: c.scaffoldBackground,
+                    height: 22,
+                  ),
+                  Gap(12),
+
+                  Expanded(
+                    child: Text(
+                      message.capEachWord(),
+                      style: TxtStyle.interSemiB(fs: 13, w: 500, color: white),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
-        ),
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: c.strokePrimary.withValues(alpha: 1),
+        snackStyle: SnackStyle.FLOATING,
+
         margin: EdgeInsets.symmetric(
           horizontal: 20.w,
           vertical: S.viewPaddingBottom,
         ),
-        padding: EdgeInsets.all(12.w),
-        borderRadius: 8.r,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+        borderRadius: 12.r,
         duration: duration,
-        snackStyle: SnackStyle.FLOATING,
+        animationDuration: const Duration(milliseconds: 250),
         isDismissible: true,
-        animationDuration: const Duration(milliseconds: 300),
       ),
     );
   }
@@ -686,6 +768,7 @@ class TxtStyle {
     Color? color,
     double? fs,
     double? ls,
+    double? height,
   }) {
     return textThemedmSerifDisplay.bodyLarge!.copyWith(
       fontSize: fs != null
@@ -696,7 +779,7 @@ class TxtStyle {
       letterSpacing: ls ?? -0.1,
       color: color ?? c.foregroundSecondary,
       fontWeight: FontWeight.w400,
-      height: ScreenSize.isTallHeight ? 1.4 : 1.2,
+      height: height ?? (ScreenSize.isTallHeight ? 1.4 : 1.2),
     );
   }
 }

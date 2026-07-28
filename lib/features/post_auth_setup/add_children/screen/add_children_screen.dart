@@ -1,4 +1,4 @@
-import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
+import 'package:we_mama/features/post_auth_setup/add_children/controller/add_children_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../auth/core/auth_scaffold.dart';

@@ -120,6 +120,10 @@ class AppPalette {
   static const success = Colors.green;
   static const warning = Colors.amber;
   static const error = Colors.redAccent;
+
+  static const snackSuccess = Color(0xFF4F7A4A);
+  static const snackWarning = Color(0xFF9A6A2A);
+  static const snackError = Color(0xFFAD3A3A);
 }
 
 /// =======================

@@ -1,5 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mama_app/app/controller_export.dart';
+import 'package:we_mama/app/controller_export.dart';
 
 /// --------------------
 /// SIZEDBOX EXTENSIONS

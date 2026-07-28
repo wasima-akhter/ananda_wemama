@@ -1,4 +1,4 @@
-import 'package:mama_app/features/shared/subscription/subscription_upgrade/mixin/subscription_plan_mixin.dart';
+import 'package:we_mama/features/shared/subscription/subscription_upgrade/mixin/subscription_plan_mixin.dart';
 import 'package:purchases_flutter/purchases_flutter.dart' hide PurchaseResult;
 
 import '../../../../../app/controller_export.dart';

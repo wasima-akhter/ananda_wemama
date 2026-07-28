@@ -1,6 +1,6 @@
 import 'package:flutter_html/flutter_html.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SafeAutoHeightWebView extends StatelessWidget {

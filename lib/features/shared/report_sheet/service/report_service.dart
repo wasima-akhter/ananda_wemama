@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 
 import '../../../../app/service_export.dart';
 

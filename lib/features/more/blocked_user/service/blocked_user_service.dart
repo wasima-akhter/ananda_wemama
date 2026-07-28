@@ -1,5 +1,5 @@
-import 'package:mama_app/app/controller_export.dart';
-import 'package:mama_app/features/more/blocked_user/model/blocked_user_model.dart';
+import 'package:we_mama/app/controller_export.dart';
+import 'package:we_mama/features/more/blocked_user/model/blocked_user_model.dart';
 
 import '../../../../app/service_export.dart';
 

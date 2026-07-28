@@ -97,69 +97,9 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
               ),
 
               Gap(itemGap),
-              Builder(
-                builder: (context) {
-                  final double avatarRadius = 22;
-                  final double crownSize = (ScreenSize.isSmallWidth ? 40 : 30);
 
-                  return CusGestureDetector(
-                    onTap: () {
-                      Get.toNamed(RoutePaths.profile);
-                    },
-                    child: SizedBox(
-                      width: avatarRadius * 2,
-                      height: avatarRadius * 2,
-                      child: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          // Avatar
-                          Positioned.fill(
-                            child: Obx(() {
-                              final image =
-                                  Get.find<ProfileController>()
-                                      .userProfileData
-                                      .value
-                                      ?.profileImage ??
-                                  '';
-
-                              return circledNetworkImageBgComponent(
-                                radius: avatarRadius,
-                                imagePath: image,
-                                enablePreview: false,
-                                isUser: true,
-                              );
-                            }),
-                          ),
-
-                          // Crown — premium subscribers only
-                          Obx(() {
-                            final isPremium =
-                                PremiumAccessService.to.isPremiumUser.value;
-
-                            if (!isPremium) return const SizedBox.shrink();
-
-                            return Positioned(
-                              top:
-                                  -(crownSize *
-                                      (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
-                              right:
-                                  -(crownSize *
-                                      (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
-                              child: Transform.rotate(
-                                angle: 0.3,
-                                child: SvgIcon(
-                                  iconPath: IconsPath.crown,
-                                  height: crownSize,
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+              // Crown
+              HomeCrown(),
             ],
           ),
         ],
@@ -169,4 +109,71 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(70.h);
+}
+
+class HomeCrown extends StatelessWidget {
+  const HomeCrown({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final double avatarRadius = 22;
+        final double crownSize = (ScreenSize.isSmallWidth ? 40 : 30);
+
+        return CusGestureDetector(
+          onTap: () {
+            Get.toNamed(RoutePaths.profile);
+          },
+          child: SizedBox(
+            width: avatarRadius * 2,
+            height: avatarRadius * 2,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Avatar
+                Positioned.fill(
+                  child: Obx(() {
+                    final image =
+                        Get.find<ProfileController>()
+                            .userProfileData
+                            .value
+                            ?.profileImage ??
+                        '';
+
+                    return circledNetworkImageBgComponent(
+                      radius: avatarRadius,
+                      imagePath: image,
+                      enablePreview: false,
+                      isUser: true,
+                    );
+                  }),
+                ),
+
+                // Crown — premium subscribers only
+                Obx(() {
+                  final isPremium = PremiumAccessService.to.isPremiumUser.value;
+
+                  if (!isPremium) return const SizedBox.shrink();
+
+                  return Positioned(
+                    top: -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
+                    right:
+                        -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
+                    child: Transform.rotate(
+                      angle: 0.3,
+                      child: SvgIcon(
+                        iconPath: IconsPath.crown,
+                        height: crownSize,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

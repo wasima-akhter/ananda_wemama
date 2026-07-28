@@ -1,6 +1,6 @@
-import 'package:mama_app/core/helpers/date_helper.dart';
-import 'package:mama_app/features/shared/subscription/subscription_info/widgets/subs_prefrence_card.dart';
-import 'package:mama_app/features/shared/subscription/subscription_info/widgets/subscription_info_card.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
+import 'package:we_mama/features/shared/subscription/subscription_info/widgets/subs_prefrence_card.dart';
+import 'package:we_mama/features/shared/subscription/subscription_info/widgets/subscription_info_card.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../controller/subscription_info_controller.dart';
@@ -27,7 +27,7 @@ class SubscriptionInfoScreen extends StatelessWidget {
             // Text("For you to see if subscribed"),
             // CurrentSubscriptionCard(
             //   promoCodeTextController: scpc.promoCodeTextController,
-            //   planName: 'WeMama Premium',
+            //   planName: 'WeMama Premium ',
             //   price: '\$9.99/month',
             //   expireDate: '31 Dec 2026',
             //   nextBillingDate: '31 Dec 2026',

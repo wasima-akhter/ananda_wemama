@@ -25,7 +25,6 @@ class SessionActionController extends GetxController {
       );
 
       if (response == true) {
-        Get.back();
         // writeQuesCtrl.clear();
         FocusManager.instance.primaryFocus?.unfocus();
         return true;

@@ -1,5 +1,5 @@
-import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_after_verify.dart';
-import 'package:mama_app/features/auth/forgot_password/widgets/forgot_pass_before_verify.dart';
+import 'package:we_mama/features/auth/forgot_password/widgets/forgot_pass_after_verify.dart';
+import 'package:we_mama/features/auth/forgot_password/widgets/forgot_pass_before_verify.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../core/auth_scaffold.dart';

@@ -147,7 +147,7 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
               }
 
               return HybridWebViewWidget(
-                htmlContent: data.description ?? '',
+                htmlContent: normalizeHtml(data.description ?? ''),
                 // maxHeight: S.h * 0.6,
                 textColor: c.foregroundSecondary,
               ).getcm;
@@ -156,5 +156,9 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
         ),
       ),
     );
+  }
+
+  String normalizeHtml(String html) {
+    return html.replaceAll('&nbsp;', ' ').replaceAll('\u00A0', ' ');
   }
 }

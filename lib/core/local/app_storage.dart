@@ -231,6 +231,27 @@ class AppStorage extends GetxService {
   void setUsername(String username) => _storage.write(_userNameKey, username);
   String get getUsername => _storage.read(_userNameKey) ?? '';
 
+  // ---------------------------  location_popup_seen  ---------------------------
+
+  //
+  static const _hasLoggedInBeforeKey = "has_logged_in_before";
+
+  void setHasLoggedInBefore() {
+    final userId = getUserId;
+
+    if (userId.isEmpty) return;
+
+    _storage.write('${_hasLoggedInBeforeKey}_$userId', true);
+  }
+
+  bool get hasLoggedInBefore {
+    final userId = getUserId;
+
+    if (userId.isEmpty) return false;
+
+    return _storage.read('${_hasLoggedInBeforeKey}_$userId') ?? false;
+  }
+
   // ---------------------------  THEME  ---------------------------
   void setTheme(bool isDark) =>
       _storage.write(_themeKey, isDark ? 'dark' : 'light');
@@ -282,10 +303,29 @@ class AppStorage extends GetxService {
     }
   }
 
+  //
+
+  static const String _hasCheckedInKey = "has_checked_in";
+  void setHasCheckedIn(bool value) {
+    _storage.write(_hasCheckedInKey, value);
+  }
+
+  bool get hasCheckedIn => _storage.read(_hasCheckedInKey) ?? false;
+
+  void clearCheckInStatus() {
+    _storage.remove(_hasCheckedInKey);
+  }
+
   // ---------------------------  CLEAR / LOGOUT  ---------------------------
   void logout() {
     _storage.erase();
+
     // Restore things you DON'T want to lose
+
+    final userId = getUserId;
+    if (userId.isNotEmpty) {
+      _storage.write('${_hasLoggedInBeforeKey}_$userId', hasLoggedInBefore);
+    }
 
     _storage.write(_seenOnboardingKey, true);
 

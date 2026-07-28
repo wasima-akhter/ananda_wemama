@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mama_app/core/constants/icon_and_image_paths.dart';
+import 'package:we_mama/core/constants/icon_and_image_paths.dart';
 
 import '../../../utils/extension/context_extension.dart';
 import '../media/icons/svg_icon.dart';

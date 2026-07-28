@@ -71,6 +71,7 @@ class SocialLoginService {
   }) async {
     final result = await ApiExecutor().execute<SigninModelData>(
       apiCall: () => ApiClient().post(
+        headers: HeaderHelpers.jsonHeader(),
         Endpoints.socialLogin.getUrl,
         data: {"provider": provider, "authToken": authToken},
       ),

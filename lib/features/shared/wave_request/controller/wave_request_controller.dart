@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/features/main_tabs/chat/controller/chat_controller.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/features/main_tabs/chat/controller/chat_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/services/socket/socket_events.dart';

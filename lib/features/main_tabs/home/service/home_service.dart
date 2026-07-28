@@ -26,8 +26,8 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
-    return response?.data;
+    log("response data: ${response.data}");
+    return response.data;
   }
 
   //
@@ -53,8 +53,8 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
-    return response?.data;
+    log("response data: ${response.data}");
+    return response.data;
   }
 
   Future<CheckInResponse?> postTheCheckTrigger() async {
@@ -68,6 +68,7 @@ class HomeService extends GetxService {
 
     final response = await ApiExecutor().execute<CheckInResponse?>(
       apiCall: apiCall,
+      showSuccessMessage: true,
       parser: (data) {
         log("parserdata: $data");
 
@@ -79,8 +80,10 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
-    return response?.data;
+    log("response toString: ${response.toString()}");
+
+    log("response data: ${response.data}");
+    return response.data;
   }
 }
 

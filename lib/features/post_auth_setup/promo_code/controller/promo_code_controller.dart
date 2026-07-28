@@ -1,4 +1,4 @@
-import 'package:mama_app/gen/assets.gen.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
@@ -196,7 +196,7 @@ class PromoCodeController extends GetxController {
 
       debugPrint("🟢 OFFER SAVED=${currentOffer.value.name}");
 
-      Get.offAllNamed(RoutePaths.subChoosePlan);
+      Get.toNamed(RoutePaths.subChoosePlan);
     } catch (e, stack) {
       debugPrint("❌ Apply code error=$e");
 

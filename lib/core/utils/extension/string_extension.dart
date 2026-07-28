@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:mama_app/core/config/app_info.dart';
-import 'package:mama_app/core/utils/extension/context_extension.dart';
+import 'package:we_mama/core/config/app_info.dart';
+import 'package:we_mama/core/utils/extension/context_extension.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../features/main_tabs/community/core/models/community_item_model.dart';

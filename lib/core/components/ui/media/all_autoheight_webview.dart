@@ -1,4 +1,4 @@
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -457,17 +457,44 @@ html, body {
   font-family: 'Outfit', sans-serif;
   font-size: ${widget.fontSize ?? 14}px;
   color: ${_toCssColor(widget.textColor ?? c.foregroundSecondary)};
-  overflow-x: hidden;          /* 👈 kill horizontal scroll at root */
-  white-space: normal;
+
+  overflow-x: hidden;
+
+  word-wrap: break-word;
   overflow-wrap: break-word;
-  word-break: normal;
-  padding-right: ${widget.padding.right + 12}px;
+}
+
+#content {
+  width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#content * {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+
+body {
+  line-break: auto;
+  text-wrap: wrap;
+  text-align: left;
 }
 
 * {
   max-width: 100%;
   box-sizing: border-box;
-  word-break: break-word;      /* 👈 also on every element */
+
+  /* ❌ remove word-break: break-word */
+  word-break: normal;
+
+  /* ✅ only break long unbreakable strings */
+  overflow-wrap: break-word;
+}
+
+a {
+  overflow-wrap: anywhere;
 }
 
 img, iframe, video {
@@ -485,26 +512,33 @@ table {
 }
 
 td, th {
-  word-break: break-word;
   overflow-wrap: break-word;
-  white-space: normal !important;   /* 👈 override any inline nowrap */
+  word-break: normal;
+  white-space: normal !important;
 }
 
 /* Code blocks: wrap instead of scroll */
 pre {
-  white-space: pre-wrap !important; /* 👈 wrap but preserve indentation */
-  word-break: break-all;
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 code {
-  word-break: break-all;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
-#content {
-  overflow-x: hidden;               /* 👈 belt-and-suspenders on the content div */
-  overflow-y: auto;
-  width: 100%;
+p, li, h1, h2, h3 {
+  white-space: normal !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
+
+ul, ol {
+  padding-left: 20px;
+}
+
 
 
 /* Width */

@@ -1,6 +1,6 @@
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
+import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/features/auth/core/auth_form_fields_templates.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/signin_controller.dart';

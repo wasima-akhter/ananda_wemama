@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:gal/gal.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:mama_app/core/config/app_info.dart';
+import 'package:we_mama/core/config/app_info.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
@@ -368,7 +368,7 @@ Future<void> downloadFile(
     if (await tempFile.exists()) await tempFile.delete();
   } catch (e) {
     debugPrint("❌ Download error: $e");
-    Snack.showError("Download failed");
+    "Download failed".showToast();
   }
 }
 
@@ -399,7 +399,7 @@ Future<void> _saveToDownloads({
     Snack.showSuccess("File saved successfully");
   } catch (e) {
     debugPrint("❌ Save error: $e");
-    Snack.showError("Failed to save file");
+    "Failed to save file".showToast();
   }
 }
 

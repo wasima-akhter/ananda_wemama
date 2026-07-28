@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/core/components/ui/layout/home_app_bar_content.dart';
-import 'package:mama_app/features/main_tabs/experts/controller/experts_controller.dart';
-import 'package:mama_app/features/shared/community_spotlight/community_spotlight.dart';
-import 'package:mama_app/features/shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
+import 'package:we_mama/core/components/ui/layout/home_app_bar_content.dart';
+import 'package:we_mama/features/main_tabs/experts/controller/experts_controller.dart';
+import 'package:we_mama/features/shared/community_spotlight/community_spotlight.dart';
+import 'package:we_mama/features/shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -89,7 +89,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             TextButton(
               onPressed: () => Get.toNamed(RoutePaths.subscriptionSuccess),
-              child: Text("Sub subscriptionSuccess page"),
+              child: Text("Sub Success page"),
+            ),
+            TextButton(
+              onPressed: () => Get.toNamed(RoutePaths.onboardScreen),
+              child: Text("Sub onboardScreen page"),
             ),
           ],
 
@@ -120,73 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           GentleReminderCard(),
           CommunitySpotlight(),
           // if none, show: no live session available right now
-          /*
-          Obx(() {
-            final liveSessionData = hc.spotLightData.value?.liveSession;
-
-            final isLoading = hc.isSpotLightLoading_.value;
-            final state = getUIStateDetail(isLoading: isLoading);
-
-            if (liveSessionData == null || liveSessionData.isEmpty) {
-              return NoLiveSessionCard();
-            }
-
-            final firstSession = liveSessionData.first;
-            final status = firstSession.status;
-            final isLive = (status ?? '').toLowerCase() == "ongoing";
-
-            return SizedBox(
-              child: UIStateHandler(
-                loading: () => SizedBox(
-                  height: S.h * 0.25,
-                  child: const LiveOngoingSessionCardShimmer(),
-                ),
-                state: state,
-                data: () {
-                  if (isLive) {
-                    return SizedBox(
-                      height: S.h * 0.25,
-                      child: LiveOngoingSessionCard(data: firstSession),
-                    );
-                  }
-
-                  final actionCtrl = hc.actionCtrl;
-
-                  return UpcomingExpertSessionCard(
-                    isRemindMeLoading: () =>
-                        actionCtrl.isReminderLoading(firstSession.id),
-                    isReminderActive: () =>
-                        actionCtrl.isReminderSet(firstSession.id),
-                    onTapRemindMe: () {
-                      actionCtrl.toggleReminder(sessionId: firstSession.id);
-                    },
-                    hasTypetitle: true,
-                    data: firstSession,
-                    writeQuesCtrl: hc.writeQuesCtrl,
-                    writeQuesFocusNode: hc.writeQuesFocusNode,
-                    isSendQuesLoading: actionCtrl.isSendQuesLoading,
-
-                    onTapQues:
-                        ({
-                          required String expertId,
-                          required String sessionId,
-                        }) async {
-                          final res = await actionCtrl.uploadSessionQues(
-                            expertId: expertId,
-                            sessionId: sessionId,
-                            question: hc.writeQuesCtrl.text.trim(),
-                          );
-
-                          if (res == true) {
-                            hc.unfocusAll();
-                          }
-                        },
-                  );
-                },
-              ),
-            );
-          }),
-       */
           Obx(() {
             final liveSessionData = hc.spotLightData.value?.liveSession ?? [];
 

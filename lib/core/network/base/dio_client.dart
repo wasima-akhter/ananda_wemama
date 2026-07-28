@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/app/helper_widgets_export.dart' hide FormData;
-import 'package:mama_app/core/config/app_info.dart';
-import 'package:mama_app/core/network/helpers/network_helpers.dart';
+import 'package:we_mama/app/helper_widgets_export.dart' hide FormData;
+import 'package:we_mama/core/config/app_info.dart';
+import 'package:we_mama/core/network/helpers/network_helpers.dart';
 
 import '../../services/auth/signout_service.dart';
 import 'api_error_parser.dart';

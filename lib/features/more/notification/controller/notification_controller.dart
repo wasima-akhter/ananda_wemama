@@ -1,4 +1,4 @@
-import 'package:mama_app/app/service_export.dart';
+import 'package:we_mama/app/service_export.dart';
 
 import '../model/notifications_model.dart';
 import '../service/notification_service.dart';

@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/inputs/cus_search_bar.dart';
+import 'package:we_mama/core/components/ui/inputs/cus_search_bar.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';

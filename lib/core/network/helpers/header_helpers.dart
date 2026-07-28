@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mama_app/core/network/helpers/network_helpers.dart';
+import 'package:we_mama/core/network/helpers/network_helpers.dart';
 
 class HeaderHelpers {
   /// Returns normal JSON headers

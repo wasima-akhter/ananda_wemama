@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';

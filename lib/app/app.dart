@@ -4,10 +4,10 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mama_app/core/components/ui/loaders/loading.dart';
-import 'package:mama_app/features/shared/report_sheet/controller/report_controller.dart';
-import 'package:mama_app/routes/pages.dart';
-import 'package:mama_app/routes/route_paths.dart';
+import 'package:we_mama/core/components/ui/loaders/loading.dart';
+import 'package:we_mama/features/shared/report_sheet/controller/report_controller.dart';
+import 'package:we_mama/routes/pages.dart';
+import 'package:we_mama/routes/route_paths.dart';
 
 import '../core/components/app_ui/components/user_detaIl_component/controller/user_detail_controller.dart';
 import '../core/config/app_info.dart';

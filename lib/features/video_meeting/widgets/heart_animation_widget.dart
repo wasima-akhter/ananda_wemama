@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:mama_app/app/helper_widgets_export.dart';
-import 'package:mama_app/features/video_meeting/model/chat_message_live_model.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
+import 'package:we_mama/features/video_meeting/model/chat_message_live_model.dart';
 
 class HeartAnimationWidget extends StatefulWidget {
   final String emoji;

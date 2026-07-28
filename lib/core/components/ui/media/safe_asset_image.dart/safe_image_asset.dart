@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mama_app/core/helpers/color_helper.dart';
+import 'package:we_mama/core/helpers/color_helper.dart';
 
 import '../../../../utils/extension/context_extension.dart';
 

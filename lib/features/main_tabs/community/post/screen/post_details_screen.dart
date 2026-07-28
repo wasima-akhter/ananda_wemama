@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/helpers/shapes/custom_divider.dart';
-import 'package:mama_app/core/helpers/date_helper.dart';
+import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';

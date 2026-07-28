@@ -1,4 +1,4 @@
-import 'package:mama_app/features/shared/subscription/subscription_info/controller/subscription_info_controller.dart';
+import 'package:we_mama/features/shared/subscription/subscription_info/controller/subscription_info_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 
@@ -37,6 +37,7 @@ class CurrentSubscriptionCard extends StatelessWidget {
         color: c.buttonText,
         borderRadius: BorderRadius.circular(18),
       ),
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
       child: Column(
         children: [
           _tile(
@@ -63,8 +64,8 @@ class CurrentSubscriptionCard extends StatelessWidget {
               children: [
                 Text(
                   "Have a promo code?",
-                  style: TxtStyle.outfitSemiB(
-                    fs: 15,
+                  style: TxtStyle.poppinsSemiB(
+                    fs: 12,
                     color: const Color(0xff3D2B1F),
                   ),
                 ),
@@ -75,6 +76,10 @@ class CurrentSubscriptionCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CusNameTypeTextFormField(
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.w,
+                        ),
                         controller: promoCodeTextController,
                         hintText: "Enter promo code",
                         isDense: true,
@@ -85,6 +90,11 @@ class CurrentSubscriptionCard extends StatelessWidget {
 
                     Obx(
                       () => CustomBtnWTxt(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.w,
+                        ),
+                        isSmall: true,
                         isLoading:
                             SubscriptionInfoController.to.flowLoading.value,
                         onTap: () async {
@@ -103,27 +113,27 @@ class CurrentSubscriptionCard extends StatelessWidget {
           InkWell(
             onTap: onManageBilling,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       'Payment Method',
-                      style: TxtStyle.outfitSemiB(
-                        fs: 15,
+                      style: TxtStyle.poppinsSemiB(
+                        fs: 12,
                         color: Color(0xff3D2B1F),
                       ),
                     ),
                   ),
                   Text(
                     willRenew ? 'Manage' : 'Not Available',
-                    style: TxtStyle.outfitSemiB(
-                      fs: 15,
+                    style: TxtStyle.poppinsSemiB(
+                      fs: 12,
                       color: Color(0xff3D2B1F),
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(Icons.chevron_right, size: 20),
+                  Icon(Icons.chevron_right, size: 16.sp),
                 ],
               ),
             ),
@@ -134,25 +144,26 @@ class CurrentSubscriptionCard extends StatelessWidget {
           InkWell(
             onTap: onViewReceipt,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       'Billing History',
-                      style: TxtStyle.outfitSemiB(
-                        fs: 15,
+                      style: TxtStyle.poppinsSemiB(
+                        fs: 12,
                         color: Color(0xff3D2B1F),
                       ),
                     ),
                   ),
-                  Icon(Icons.chevron_right, size: 20),
+                  Icon(Icons.chevron_right, size: 16.sp),
                 ],
               ),
             ),
           ),
+          Gap(10),
 
-          const Divider(height: 1),
+          const Divider(height: 1).mHV(12, 0),
 
           InkWell(
             onTap: onCancel,
@@ -166,7 +177,7 @@ class CurrentSubscriptionCard extends StatelessWidget {
                 child: Text(
                   'Cancel Subscription',
 
-                  style: TxtStyle.outfitSemiB(fs: 15, color: c.error),
+                  style: TxtStyle.poppinsSemiB(fs: 12, color: c.error),
                 ),
               ),
             ),
@@ -187,23 +198,26 @@ class CurrentSubscriptionCard extends StatelessWidget {
 
   Widget _tile({required String title, required String trailing}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Text(
               title,
-              style: TxtStyle.outfitSemiB(fs: 15, color: Color(0xff3D2B1F)),
+              style: TxtStyle.poppinsSemiB(fs: 12, color: Color(0xff3D2B1F)),
             ),
           ),
-          Text(
-            trailing,
-            style: TxtStyle.outfitSemiB(
-              fs: 15,
-              w: 600,
-              color: Color(0xff3D2B1F),
+          Expanded(
+            child: Text(
+              trailing,
+              style: TxtStyle.poppinsSemiB(
+                fs: 12,
+                w: 600,
+                color: Color(0xff3D2B1F),
+              ),
+              textAlign: TextAlign.end,
             ),
-            textAlign: TextAlign.end,
           ),
         ],
       ),

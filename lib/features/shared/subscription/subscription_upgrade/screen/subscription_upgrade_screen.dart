@@ -1,9 +1,9 @@
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/main_tabs/match/controller/match_controller.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/features/main_tabs/match/controller/match_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../subscription_choose_plan/widgets/subscription_card.dart';
 import '../controller/subscription_upgrade_controller.dart';
-import '../widgets/subscription_card.dart';
 
 class SubscriptionUpgradeScreen extends StatelessWidget {
   const SubscriptionUpgradeScreen({super.key});

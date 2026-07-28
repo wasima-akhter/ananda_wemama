@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:mama_app/core/config/app_info.dart';
-import 'package:mama_app/core/services/socket/socket_listener_registry.dart';
+import 'package:we_mama/core/config/app_info.dart';
+import 'package:we_mama/core/services/socket/socket_listener_registry.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../app/service_export.dart';

@@ -1,4 +1,4 @@
-import 'package:mama_app/features/main_tabs/experts/controller/session_controller.dart';
+import 'package:we_mama/features/main_tabs/experts/controller/session_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';

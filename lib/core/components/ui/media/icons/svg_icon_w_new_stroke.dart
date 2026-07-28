@@ -1,5 +1,5 @@
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 
 class SvgIconWNewStroke extends StatelessWidget {
   final String iconPath;

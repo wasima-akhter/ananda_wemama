@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
+import 'package:we_mama/core/components/app_ui/components/user_detaIl_component/ui/user_detail_component.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dialogs/small_popup_dialog.dart';

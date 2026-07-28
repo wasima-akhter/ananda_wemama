@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/inputs/cus_des_type_text_form_field.dart';
-import 'package:mama_app/gen/assets.gen.dart';
+import 'package:we_mama/core/components/ui/inputs/cus_des_type_text_form_field.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/error_field/error_field.dart';

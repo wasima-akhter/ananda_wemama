@@ -1,6 +1,6 @@
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
-import 'package:mama_app/features/auth/core/auth_form_fields_templates.dart';
-import 'package:mama_app/features/auth/forgot_password/controller/forgot_password_controller.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/features/auth/core/auth_form_fields_templates.dart';
+import 'package:we_mama/features/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 

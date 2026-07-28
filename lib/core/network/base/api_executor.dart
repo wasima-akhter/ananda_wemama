@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../utils/extension/context_extension.dart';
@@ -67,7 +69,7 @@ class ApiExecutor {
       );
     } catch (e) {
       final msg = e.toString();
-      if (showErrorMessage) Snack.showError(msg);
+      log(msg);
       return Result(type: ApiResultType.failed, message: msg);
     }
   }

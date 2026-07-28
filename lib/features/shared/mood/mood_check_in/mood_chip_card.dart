@@ -1,5 +1,5 @@
-import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:mama_app/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
+import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:we_mama/features/shared/mood/mood_check_in/mood_check_in_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
@@ -64,40 +64,6 @@ class _SelectMoodANdIllustration extends StatelessWidget {
   const _SelectMoodANdIllustration({super.key, required this.mcc});
   @override
   Widget build(BuildContext context) {
-    /*
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-      spacing: itemGap * 0.5,
-      children: [
-        ...mcc.moodDataList.map((dataModel) {
-          return Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () => mcc.selectMood(dataModel.moodType),
-                  child: Obx(() {
-                    final isSelected =
-                        mcc.selectedMood.value == dataModel.moodType;
-
-                    return MoodChip(
-                      title: dataModel.name,
-                      hp: dataModel.hp,
-                      isSelected: isSelected,
-                    );
-                  }),
-                ),
-
-                MoodChipAnimation(moodType: dataModel.moodType),
-              ],
-            ),
-          );
-        }),
-      ],
-    );
-*/
-
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: mcc.moodDataList.map((dataModel) {
@@ -154,19 +120,20 @@ class _OpenMoodLibrary extends StatelessWidget {
             log('🧪 selectedMood: $selectedMood');
             log('🧪 items count: ${items.length}');
 
-            if (items.isEmpty) {
-              Get.toNamed(RoutePaths.moodLibrary);
+            if (items.isNotEmpty) {
+              Get.toNamed(
+                RoutePaths.moodInsight,
+                arguments: MoodInsightArgs(
+                  moodType: selectedMood,
+                  itemId: items.first.id,
+                  fromHome: true,
+                ),
+              );
               return;
             }
 
-            Get.toNamed(
-              RoutePaths.moodInsight,
-              arguments: MoodInsightArgs(
-                moodType: selectedMood,
-                itemId: items.first.id,
-                fromHome: true,
-              ),
-            );
+            // fallback only if API truly has no content
+            Get.toNamed(RoutePaths.moodLibrary);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

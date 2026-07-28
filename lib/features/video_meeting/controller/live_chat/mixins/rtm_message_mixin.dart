@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
-import 'package:mama_app/core/utils/extension/string_extension.dart';
-import 'package:mama_app/features/video_meeting/model/chat_message_live_model.dart';
+import 'package:we_mama/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
+import 'package:we_mama/core/utils/extension/string_extension.dart';
+import 'package:we_mama/features/video_meeting/model/chat_message_live_model.dart';
 
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/components/ui/dialogs/popups.dart';

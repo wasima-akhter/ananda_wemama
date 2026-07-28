@@ -1,5 +1,5 @@
-import 'package:mama_app/features/video_meeting/model/live_session_info_model.dart';
-import 'package:mama_app/features/video_meeting/services/meeting_service.dart';
+import 'package:we_mama/features/video_meeting/model/live_session_info_model.dart';
+import 'package:we_mama/features/video_meeting/services/meeting_service.dart';
 
 import '../../../../app/controller_export.dart';
 import '../meeting_controller.dart';

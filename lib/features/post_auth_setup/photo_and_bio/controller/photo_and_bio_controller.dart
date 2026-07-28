@@ -1,8 +1,8 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/features/post_auth_setup/add_children/controller/add_children_controller.dart';
-import 'package:mama_app/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
-import 'package:mama_app/features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
-import 'package:mama_app/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
+import 'package:we_mama/features/post_auth_setup/add_children/controller/add_children_controller.dart';
+import 'package:we_mama/features/post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
+import 'package:we_mama/features/post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
+import 'package:we_mama/features/post_auth_setup/setup_profile/controller/setup_profile_controller.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/helpers/date_helper.dart';
@@ -156,7 +156,7 @@ class PhotoAndBioController extends GetxController {
     );
 
     if (success) {
-      Get.toNamed(RoutePaths.finishSettingProfile);
+      Get.toNamed(RoutePaths.foundingMumCodeScreen);
 
       if (Get.isRegistered<ProfileController>()) {
         await Get.find<ProfileController>().fetchMyProfile();

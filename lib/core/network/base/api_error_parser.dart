@@ -13,6 +13,9 @@ class ApiErrorParser {
   static String extractMessage(dynamic data) {
     try {
       data = _unwrapResponse(data);
+      if (data == null) {
+        return data;
+      }
 
       if (data is String && data.trim().isNotEmpty) {
         return data;

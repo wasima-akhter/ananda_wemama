@@ -1,4 +1,4 @@
-import 'package:mama_app/features/entry/onboard/controller/onboard_controller.dart';
+import 'package:we_mama/features/entry/onboard/controller/onboard_controller.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 

@@ -1,5 +1,5 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:mama_app/app/service_export.dart';
+import 'package:we_mama/app/service_export.dart';
 
 import '../../../app/controller_export.dart';
 import 'arg_model/meeting_ctrl_ag_model.dart';

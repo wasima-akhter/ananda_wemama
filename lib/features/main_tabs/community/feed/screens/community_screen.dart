@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';

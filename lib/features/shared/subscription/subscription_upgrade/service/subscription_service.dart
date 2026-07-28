@@ -1,4 +1,4 @@
-import 'package:mama_app/core/services/profile/profile_info_service.dart';
+import 'package:we_mama/core/services/profile/profile_info_service.dart';
 
 import '../../../../../app/service_export.dart';
 import '../model/subscription_price_model.dart';

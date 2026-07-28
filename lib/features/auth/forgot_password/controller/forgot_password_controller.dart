@@ -1,12 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:mama_app/core/services/auth/forgot_password_service.dart';
+import 'package:we_mama/core/services/auth/forgot_password_service.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/enums/ui_enums.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
-import '../../signin/controller/signin_controller.dart';
 
 class ForgotPasswordController extends GetxController {
   /// ================= FLOW STATE =================
@@ -109,7 +108,7 @@ class ForgotPasswordController extends GetxController {
     await Future.delayed(const Duration(milliseconds: 50));
 
     // ✅ Delete old instance so onInit() runs fresh on next Get.find
-    Get.find<SigninController>().clearFields();
+    // Get.find<SigninController>().clearFields();
     clearAllFields();
     Get.toNamed(RoutePaths.signin);
   }

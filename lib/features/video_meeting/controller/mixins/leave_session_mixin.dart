@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:mama_app/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
-import 'package:mama_app/features/main_nav/controller/main_nav_controller.dart';
+import 'package:we_mama/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
+import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../app/controller_export.dart';

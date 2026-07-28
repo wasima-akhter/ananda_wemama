@@ -1,4 +1,4 @@
-import 'package:mama_app/core/helpers/string_helper.dart';
+import 'package:we_mama/core/helpers/string_helper.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/helpers/bottom_sheet_helper.dart';

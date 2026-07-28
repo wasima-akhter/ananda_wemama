@@ -1,5 +1,5 @@
-import 'package:mama_app/features/entry/onboard/sections/pageview_contents/pageview2.dart';
-import 'package:mama_app/features/entry/onboard/sections/pageview_contents/pageview3.dart';
+import 'package:we_mama/features/entry/onboard/sections/pageview_contents/pageview2.dart';
+import 'package:we_mama/features/entry/onboard/sections/pageview_contents/pageview3.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../auth/core/auth_scaffold.dart';

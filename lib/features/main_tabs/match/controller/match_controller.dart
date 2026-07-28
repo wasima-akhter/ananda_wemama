@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/core/services/socket/socket_events.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/services/socket/socket_events.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';

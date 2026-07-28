@@ -1,4 +1,4 @@
-import 'package:mama_app/gen/assets.gen.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 class IconsPath {
   const IconsPath._();

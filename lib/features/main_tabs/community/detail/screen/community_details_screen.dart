@@ -1,6 +1,6 @@
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
-import 'package:mama_app/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:we_mama/core/components/ui/loaders/empty_widget.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/loaders/shimmer_widget.dart';

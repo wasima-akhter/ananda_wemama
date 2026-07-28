@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/loaders/empty_widget.dart';
+import 'package:we_mama/core/components/ui/loaders/empty_widget.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../mood/mood_library/widgets/mood_library_comp.dart';

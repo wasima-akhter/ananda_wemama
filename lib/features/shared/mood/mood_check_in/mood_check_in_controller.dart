@@ -42,6 +42,10 @@ class MoodCheckInController extends GetxController {
       if (data != null) {
         checkInResponseData.value = data;
         log(' checkInResponseData : ${checkInResponseData.value?.message}');
+
+        hasCheckedIn.value = true;
+
+        storage.setHasCheckedIn(true);
       }
     } catch (e) {
       log("Error fetch checkInResponseData: $e");
@@ -61,5 +65,14 @@ class MoodCheckInController extends GetxController {
     } else {
       return "Good Evening";
     }
+  }
+
+  final hasCheckedIn = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    hasCheckedIn.value = storage.hasCheckedIn;
   }
 }

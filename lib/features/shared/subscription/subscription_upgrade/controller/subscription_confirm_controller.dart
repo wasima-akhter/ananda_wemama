@@ -712,9 +712,17 @@ class SubscriptionConfirmController extends GetxController {
           PriceRowData('Subscription price', '$originalPrice/month'),
 
           if (isFreeTrial) ...[
-            PriceRowData('Promotion', 'Free for 3 months', isDiscount: true),
+            PriceRowData(
+              'Offer Duration',
+              'Free for 3 months',
+              isDiscount: true,
+            ),
 
-            PriceRowData('After free period', '$originalPrice/month'),
+            PriceRowData(
+              'After free period',
+              '$originalPrice/month',
+              isBold: true,
+            ),
           ] else ...[
             PriceRowData('Offer price', discount.priceString, isDiscount: true),
 

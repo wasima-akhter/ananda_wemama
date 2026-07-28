@@ -1,4 +1,4 @@
-import 'package:mama_app/app/helper_widgets_export.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 
 import '../../../../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 

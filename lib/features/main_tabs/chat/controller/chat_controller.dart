@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:mama_app/core/utils/extension/string_extension.dart';
+import 'package:we_mama/core/utils/extension/string_extension.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/services/socket/socket_events.dart';

@@ -19,7 +19,7 @@ class SplashScreen extends StatelessWidget {
 
       child: Scaffold(
         body: Container(
-          padding: EdgeInsets.only(bottom: S.bottomInset),
+          padding: EdgeInsets.only(bottom: S.viewPaddingBottom),
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(ImagesPath.splashImage),

@@ -230,6 +230,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/image_placeholder_icon.svg
   String get imagePlaceholderIcon => 'assets/icons/image_placeholder_icon.svg';
 
+  /// File path: assets/icons/info-circle-filled.svg
+  String get infoCircleFilled => 'assets/icons/info-circle-filled.svg';
+
   /// File path: assets/icons/info.svg
   String get info => 'assets/icons/info.svg';
 
@@ -586,6 +589,7 @@ class $AssetsIconsGen {
     home,
     ideas,
     imagePlaceholderIcon,
+    infoCircleFilled,
     info,
     joinConversation,
     leaf,

@@ -1,6 +1,6 @@
 // subscription_confirm_screen.dart
-import 'package:mama_app/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
-import 'package:mama_app/features/auth/core/auth_button_templates.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/features/auth/core/auth_button_templates.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../gen/assets.gen.dart';

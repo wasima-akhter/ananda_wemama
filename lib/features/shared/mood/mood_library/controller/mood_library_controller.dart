@@ -33,7 +33,7 @@ class MoodLibraryController extends GetxController {
 
   final service = MoodLibraryService();
 
-  bool _isEnsuring = false;
+  final bool _isEnsuring = false;
 
   @override
   void onInit() {
@@ -51,10 +51,13 @@ class MoodLibraryController extends GetxController {
   }
 
   // Called from home before navigating — always re-fetches
-  Future<void> ensureLoaded(MoodType mood) async {
-    if (_isEnsuring) return;
-    _isEnsuring = true;
+  Future<void>? _ensureFuture;
 
+  Future<void> ensureLoaded(MoodType mood) {
+    return _ensureFuture ??= _loadMoodData(mood);
+  }
+
+  Future<void> _loadMoodData(MoodType mood) async {
     try {
       selectedMood.value = mood;
 
@@ -64,7 +67,7 @@ class MoodLibraryController extends GetxController {
 
       await getAllMoodContent();
     } finally {
-      _isEnsuring = false;
+      _ensureFuture = null;
     }
   }
 
@@ -77,10 +80,10 @@ class MoodLibraryController extends GetxController {
   // Only syncs back when user changes mood inside library UI
   void setMood(MoodType mood, {bool syncBack = false}) {
     selectedMood.value = mood;
+
     if (syncBack) {
       moodCheckInC.selectMood(mood, fromHome: false);
     }
-    getAllMoodContent();
   }
 
   String getSelMoodId() {

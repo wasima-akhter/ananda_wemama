@@ -73,9 +73,18 @@ class HomeController extends GetxController {
 
     final active = result == LocationFlowResult.success;
 
-    HomeScreen.showLocationStatusOverlay(isActive: active);
+    // HomeScreen.showLocationStatusOverlay(isActive: active);
+    checkLocationPopup(isActive: active);
   }
 
+  void checkLocationPopup({required bool isActive}) {
+    if (!storage.hasLoggedInBefore) {
+      storage.setHasLoggedInBefore();
+      return;
+    }
+
+    HomeScreen.showLocationStatusOverlay(isActive: isActive);
+  }
   // ─────────────────────────────────────────────────────────────────────────
   // 🔹 Nearby suppliers
   // ─────────────────────────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
-import 'package:mama_app/features/main_tabs/chat/screen/chat_screen.dart';
-import 'package:mama_app/features/main_tabs/experts/screen/experts_screen.dart';
-import 'package:mama_app/features/main_tabs/match/screen/match_screen.dart';
+import 'package:we_mama/features/main_tabs/chat/screen/chat_screen.dart';
+import 'package:we_mama/features/main_tabs/experts/screen/experts_screen.dart';
+import 'package:we_mama/features/main_tabs/match/screen/match_screen.dart';
 
 import '../../../app/helper_widgets_export.dart';
 import '../../../core/network/helpers/location/location_observer.dart';

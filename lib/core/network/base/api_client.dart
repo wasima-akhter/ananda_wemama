@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mama_app/core/network/helpers/header_helpers.dart';
+import 'package:we_mama/core/network/helpers/header_helpers.dart';
 
 import '../../helpers/image_helper.dart';
 import 'dio_client.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
-import 'package:mama_app/core/utils/extension/string_extension.dart';
+import 'package:we_mama/core/utils/extension/string_extension.dart';
 
 import '../../../../../app/controller_export.dart';
 import '../../live_chat_controller.dart';

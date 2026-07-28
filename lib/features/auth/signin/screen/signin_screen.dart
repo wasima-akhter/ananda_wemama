@@ -18,12 +18,13 @@ class _SigninScreenState extends State<SigninScreen> {
     return AppScreenTemplate(
       enableRefresh: false,
       appBar: getOnboardAppBar(),
+
       child: Column(
         children: [
           Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [OnboardLogoHeaderRow()],
+            children: [OnboardLogoHeaderRow(hasBack: false)],
           ),
           Gap(20.h),
           _SigninBody(formKey: formKey),

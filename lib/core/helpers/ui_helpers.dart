@@ -1,7 +1,7 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:get/get.dart';
-// import 'package:mama_app/core/common_widgets/image_error_builder.dart';
+// import 'package:we_mama/core/common_widgets/image_error_builder.dart';
 
 // import '../../app/helper_widgets_export.dart';
 // import '../common_widgets/custom_btn_w_txt.dart';

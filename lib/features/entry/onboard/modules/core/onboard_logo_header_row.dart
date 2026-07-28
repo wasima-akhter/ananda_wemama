@@ -4,7 +4,13 @@ import '../onboard/onboard_logo_section.dart';
 class OnboardLogoHeaderRow extends StatelessWidget {
   final void Function()? onTap;
   final double? height;
-  const OnboardLogoHeaderRow({super.key, this.onTap, this.height});
+  final bool hasBack;
+  const OnboardLogoHeaderRow({
+    super.key,
+    this.onTap,
+    this.height,
+    this.hasBack = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,17 +21,19 @@ class OnboardLogoHeaderRow extends StatelessWidget {
         Expanded(
           child: Align(
             alignment: Alignment.centerLeft,
-            child: CusGestureDetector(
-              onTap:
-                  onTap ??
-                  () {
-                    Get.back();
-                  },
-              child: SvgIconColored(
-                iconPath: IconsPath.arrowBackSmall,
-                height: 14,
-              ),
-            ),
+            child: hasBack
+                ? CusGestureDetector(
+                    onTap:
+                        onTap ??
+                        () {
+                          Get.back();
+                        },
+                    child: SvgIconColored(
+                      iconPath: IconsPath.arrowBackSmall,
+                      height: 14,
+                    ),
+                  )
+                : SizedBox(width: 14),
           ),
         ),
 

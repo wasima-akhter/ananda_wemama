@@ -15,7 +15,7 @@ class SignupService extends GetxService {
     apiCall() {
       return ApiClient().post(
         Endpoints.register.getUrl,
-        // headers: HeaderHelpers.getAuthHeader(),
+        headers: HeaderHelpers.jsonHeader(),
 
         //         {
         //     "email": "ananda@yopmail.com",
@@ -55,6 +55,7 @@ class SignupService extends GetxService {
 
     final response = await ApiClient().post(
       Endpoints.socialRegister.getUrl,
+      headers: HeaderHelpers.jsonHeader(),
       data: {"provider": provider, "authToken": authToken},
     );
 

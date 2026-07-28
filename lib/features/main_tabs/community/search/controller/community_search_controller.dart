@@ -1,4 +1,4 @@
-import 'package:mama_app/core/components/ui/dialogs/popups.dart';
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
 
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
