@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mama_app/app/app.dart';
+import 'package:we_mama/app/app.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -27,4 +27,3 @@ void main() {
     expect(find.text('1'), findsOneWidget);
   });
 }
- 

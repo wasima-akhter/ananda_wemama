@@ -248,8 +248,8 @@ class Strings {
   static const String overviewOfService = "Overview of Our Service";
   static const String payments = "Payments";
   static const String payment = "Payment";
-  static const String mama_appInfo =
-      "mama_app is a platform that connects customers with verified petroleum / diesel to perform services.";
+  static const String we_mamaInfo =
+      "we_mama is a platform that connects customers with verified petroleum / diesel to perform services.";
   static const String techPlatformInfo =
       "We are a technology platform, not a courier company. All deliveries are fulfilled by authentic and well vetted fuel delivery companies.";
   static const String securePayments =
