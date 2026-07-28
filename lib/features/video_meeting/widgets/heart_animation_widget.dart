@@ -52,7 +52,10 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
       duration: Duration(milliseconds: _durationMs),
     )..forward();
 
-    _y = Tween<double>(begin: 0, end: _endY).animate(CurvedAnimation(parent: _ctrl, curve: _curve));
+    _y = Tween<double>(
+      begin: 0,
+      end: _endY,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: _curve));
 
     _opacity = TweenSequence([
       TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.0), weight: 10),
@@ -85,7 +88,7 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _ctrl,
-      builder: (_, __) {
+      builder: (_, _) {
         final dx = _startX + sin(_wave.value) * _waveAmp;
 
         return Transform.translate(
@@ -98,7 +101,9 @@ class _HeartAnimationWidgetState extends State<HeartAnimationWidget>
                 scale: _scale.value,
                 child: Image.asset(
                   reactionList
-                      .firstWhere((e) => e.$2.toLowerCase() == widget.emoji.toLowerCase())
+                      .firstWhere(
+                        (e) => e.$2.toLowerCase() == widget.emoji.toLowerCase(),
+                      )
                       .$1,
                   height: 22.h,
                 ),

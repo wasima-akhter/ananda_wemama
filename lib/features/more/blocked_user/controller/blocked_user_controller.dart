@@ -5,10 +5,22 @@ import '../service/blocked_user_service.dart';
 
 class BlockedUserController extends GetxController {
   var fakeBlockedUser = [
-    FakeBlockedUserModel(id: "1", name: "Alice", imageUrl: Strings.fakeImageUrl),
+    FakeBlockedUserModel(
+      id: "1",
+      name: "Alice",
+      imageUrl: Strings.fakeImageUrl,
+    ),
     FakeBlockedUserModel(id: "2", name: "Bob", imageUrl: Strings.fakeImageUrl),
-    FakeBlockedUserModel(id: "3", name: "Charlie", imageUrl: Strings.fakeImageUrl),
-    FakeBlockedUserModel(id: "4", name: "Diana", imageUrl: Strings.fakeImageUrl),
+    FakeBlockedUserModel(
+      id: "3",
+      name: "Charlie",
+      imageUrl: Strings.fakeImageUrl,
+    ),
+    FakeBlockedUserModel(
+      id: "4",
+      name: "Diana",
+      imageUrl: Strings.fakeImageUrl,
+    ),
     FakeBlockedUserModel(id: "5", name: "Eve", imageUrl: Strings.fakeImageUrl),
   ];
 
@@ -16,11 +28,6 @@ class BlockedUserController extends GetxController {
   void onInit() {
     getBlockedUserList();
     super.onInit();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   void clearAll() {}
@@ -36,7 +43,9 @@ class BlockedUserController extends GetxController {
     isUnblockLoading.value = true;
     try {
       await BlockedUserService().unblockUser(userId: userId);
-      blockedUserList.removeWhere((e) => e.id == userId); // ✅ remove from list on success
+      blockedUserList.removeWhere(
+        (e) => e.id == userId,
+      ); // ✅ remove from list on success
     } catch (e) {
       log("Error unblocking user: $e");
     } finally {
@@ -76,5 +85,9 @@ class FakeBlockedUserModel {
   final String name;
   final String imageUrl;
 
-  FakeBlockedUserModel({required this.name, required this.imageUrl, required this.id});
+  FakeBlockedUserModel({
+    required this.name,
+    required this.imageUrl,
+    required this.id,
+  });
 }

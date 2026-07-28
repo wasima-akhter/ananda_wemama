@@ -1,12 +1,15 @@
-import 'package:we_mama/core/components/ui/dialogs/small_popup_dialog.dart';
-
 import '../../../../app/helper_widgets_export.dart';
+import '../../ui/dialogs/small_popup_dialog.dart';
 
 class BlockUserConfirmDialog extends StatelessWidget {
   final RxBool isLoading;
   final Future<void> Function() onConfirm;
 
-  const BlockUserConfirmDialog({super.key, required this.isLoading, required this.onConfirm});
+  const BlockUserConfirmDialog({
+    super.key,
+    required this.isLoading,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,10 @@ class BlockUserConfirmDialog extends StatelessWidget {
               children: [
                 Icon(Icons.block, color: Colors.redAccent, size: 24.h),
                 Gap(itemGap),
-                Text("Block User?", style: TxtStyle.inter(fs: 18, w: 600, color: c.primary)),
+                Text(
+                  "Block User?",
+                  style: TxtStyle.inter(fs: 18, w: 600, color: c.primary),
+                ),
               ],
             ),
 

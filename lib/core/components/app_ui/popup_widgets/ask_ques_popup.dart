@@ -33,7 +33,10 @@ class AskQuesPopup extends StatelessWidget {
             children: [
               Expanded(
                 child: CusNameTypeTextFormField(
-                  contentPadding: EdgeInsets.symmetric(vertical: 13, horizontal: 8),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 13,
+                    horizontal: 8,
+                  ),
                   hintStyle: TxtStyle.outfit(color: c.primary.withOpacity(0.8)),
                   brdrW: 0.6,
                   brdrClr: c.primary,
@@ -54,7 +57,10 @@ class AskQuesPopup extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 20.r,
                           backgroundColor: c.primary,
-                          child: SvgIcon(iconPath: IconsPath.sendSmallWhite, height: 22),
+                          child: SvgIcon(
+                            iconPath: IconsPath.sendSmallWhite,
+                            height: 22,
+                          ),
                         ),
                       ),
               ),

@@ -102,7 +102,7 @@
 //   Future<void> Function()? onTapAnOption,
 // }) {
 //   return showModalBottomSheet<T>(
-//     
+//
 //     isScrollControlled: isScrollControlled,
 //     backgroundColor: bgClr,
 //     builder: (context) {

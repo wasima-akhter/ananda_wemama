@@ -30,11 +30,6 @@ class ReportController extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onClose() {
     noteCtrl.dispose();
     noteFocus.dispose();
@@ -53,7 +48,8 @@ class ReportController extends GetxController {
     // Pick image from camera/gallery
 
     final picker = ImagePicker();
-    final XFile? image = await picker.pickImage( imageQuality: 60,
+    final XFile? image = await picker.pickImage(
+      imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
@@ -77,7 +73,11 @@ class ReportController extends GetxController {
   bool get isLoading => isLoading_.value;
 
   /// Fetch the latest  data from API
-  Future<void> report({required bool isUserReport, String? userId, String? postId}) async {
+  Future<void> report({
+    required bool isUserReport,
+    String? userId,
+    String? postId,
+  }) async {
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 

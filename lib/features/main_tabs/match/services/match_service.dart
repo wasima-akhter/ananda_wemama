@@ -30,7 +30,7 @@ class MatchService extends GetxService {
       },
     );
 
-    log("response data: ${response?.data}");
-    return response?.data ?? [];
+    log("response data: ${response.data}");
+    return response.data ?? [];
   }
 }

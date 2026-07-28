@@ -34,7 +34,9 @@ mixin RtmHostControlsMixin on GetxController {
     // Optimistically update local participant list
     final index = _self.participants.indexWhere((p) => p.uid == targetUid);
     if (index != -1) {
-      _self.participants[index] = _self.participants[index].copyWith(isMuted: true);
+      _self.participants[index] = _self.participants[index].copyWith(
+        isMuted: true,
+      );
     }
 
     log('✅ [RTM] Mute command sent to $targetUid');

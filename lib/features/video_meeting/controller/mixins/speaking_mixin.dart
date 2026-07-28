@@ -54,9 +54,7 @@ mixin SpeakingMixin on GetxController {
       log('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
 
       // ✅ Confirm engine state
-      log(
-        '🎙️ [SPEAK] agoraEngine is null: ${_self.agoraEngine == null}',
-      );
+      log('🎙️ [SPEAK] agoraEngine is null: ${_self.agoraEngine == null}');
       log('🎙️ [SPEAK] channel: ${_self.channelName.value}');
       log('🎙️ [SPEAK] uid: ${_self.uid.value}');
       log(
@@ -68,9 +66,7 @@ mixin SpeakingMixin on GetxController {
       // ← notify web: mic is now ON
       await _publishMuteState(isMuted: false, cc: cc);
 
-      log(
-        '🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user',
-      );
+      log('🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user');
     }
   }
 

@@ -73,7 +73,11 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 10.w),
-      decoration: BoxDeco.decRadAllBorderedAll(20, clr: c.textOnPrimary, brdrClr: c.secondary),
+      decoration: BoxDeco.decRadAllBorderedAll(
+        20,
+        clr: c.textOnPrimary,
+        brdrClr: c.secondary,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,10 +104,13 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
               // Show placeholder while reverse geocoding, real value once ready
               text: _addressLoading ? '...' : _resolvedAddress ?? '...',
             ),
-            UiInfoItem(iconPath: IconsPath.chartFilled, text: user.mumStage ?? ''),
+            UiInfoItem(
+              iconPath: IconsPath.chartFilled,
+              text: user.mumStage ?? '',
+            ),
             UiInfoItem(
               iconPath: IconsPath.heartHalfFilled,
-              text: user.interesteds?.join(', ') ?? '',
+              text: user.interesteds.join(', ') ?? '',
             ),
           ]),
 
@@ -114,7 +121,10 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
 
           // ── Children ───────────────────────────────────────────────────
           if ((user.children ?? []).isNotEmpty) ...[
-            Text(Strings.children.cap, style: TxtStyle.outfitSemiB(fs: 15, w: 500)),
+            Text(
+              Strings.children.cap,
+              style: TxtStyle.outfitSemiB(fs: 15, w: 500),
+            ),
             Gap(itemGap),
             _getChildrenRow(user),
             Gap(itemGap),
@@ -180,14 +190,17 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
     if ((user.images ?? []).isEmpty) return const SizedBox.shrink();
     return Row(
       children: List.generate(4, (index) {
-        final hasImage = index < (user.images?.length ?? 0);
+        final hasImage = index < (user.images.length ?? 0);
         return Expanded(
           child: AspectRatio(
             aspectRatio: 1,
             child: Padding(
               padding: 4.pa,
               child: hasImage
-                  ? NetworkImageWidget(radius: 8, imageUrl: user.images![index].trim())
+                  ? NetworkImageWidget(
+                      radius: 8,
+                      imageUrl: user.images[index].trim(),
+                    )
                   : const SizedBox(),
             ),
           ),
@@ -201,7 +214,7 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
       padding: EdgeInsets.zero,
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: List.generate(user.children!.length, (index) {
+        children: List.generate(user.children.length, (index) {
           return Padding(
             padding: EdgeInsets.only(right: 8.w),
             child: ContainerBordered(
@@ -211,8 +224,8 @@ class _MatchUserDetailsState extends State<MatchUserDetails> {
               contClr: c.scaffoldBackground,
               child: Text(
                 getChildAge(
-                  (user.children![index].dob ?? '').toString(),
-                  gender: user.children![index].gender,
+                  (user.children[index].dob ?? '').toString(),
+                  gender: user.children[index].gender,
                 ).capEachWord(),
                 style: TxtStyle.outfitSmSecNor,
               ),

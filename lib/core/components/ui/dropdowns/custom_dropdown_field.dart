@@ -36,7 +36,8 @@ class CustomDropdownField<T> extends StatelessWidget {
     final message = "Field Is Required";
 
     final validationFunction =
-        validator ?? (isRequired ? (val) => val == null ? message : null : null);
+        validator ??
+        (isRequired ? (val) => val == null ? message : null : null);
 
     final bool hasError = errorText != null && errorText!.isNotEmpty;
 
@@ -82,7 +83,10 @@ class CustomDropdownField<T> extends StatelessWidget {
 
           border: OutlineInputBorder(
             borderRadius: 6.brdrRad,
-            borderSide: BorderSide(color: hasError ? c.error : c.inputBorder, width: 0.7.w),
+            borderSide: BorderSide(
+              color: hasError ? c.error : c.inputBorder,
+              width: 0.7.w,
+            ),
           ),
 
           enabledBorder: OutlineInputBorder(

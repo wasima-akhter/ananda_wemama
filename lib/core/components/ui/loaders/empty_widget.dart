@@ -14,7 +14,10 @@ class EmptyWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Gap(itemGap * 2),
-          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+          Text(
+            title.capEachWord(),
+            style: TxtStyle.inter(w: 600, color: c.secondary),
+          ),
 
           Gap(itemGap * 2),
 
@@ -44,7 +47,10 @@ class EmptyNoSearchWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Gap(itemGap * 2),
-          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.foregroundPrimary)),
+          Text(
+            title.capEachWord(),
+            style: TxtStyle.inter(w: 600, color: c.foregroundPrimary),
+          ),
 
           Gap(itemGap * 2),
 
@@ -63,7 +69,11 @@ class EmptyNoSearchWidget extends StatelessWidget {
 class EmptyNoSearchWidgetScrollable extends StatelessWidget {
   final String title;
   final bool? isSmaller;
-  const EmptyNoSearchWidgetScrollable({super.key, required this.title, this.isSmaller});
+  const EmptyNoSearchWidgetScrollable({
+    super.key,
+    required this.title,
+    this.isSmaller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +86,10 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Gap(itemGap * 2),
-            Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.foregroundPrimary)),
+            Text(
+              title.capEachWord(),
+              style: TxtStyle.inter(w: 600, color: c.foregroundPrimary),
+            ),
 
             Gap(itemGap * 2),
 
@@ -108,11 +121,18 @@ class EmptySessionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Gap(itemGap),
-          Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+          Text(
+            title.capEachWord(),
+            style: TxtStyle.inter(w: 600, color: c.secondary),
+          ),
 
           Gap(itemGap),
 
-          Image.asset(ImagesPath.noSearchImg, fit: BoxFit.contain, height: S.w * 0.3),
+          Image.asset(
+            ImagesPath.noSearchImg,
+            fit: BoxFit.contain,
+            height: S.w * 0.3,
+          ),
           Gap(itemGap * 2),
         ],
       ),
@@ -138,11 +158,18 @@ class EmptyWidgetScrollable extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Gap(itemGap),
-                Text(title.capEachWord(), style: TxtStyle.inter(w: 600, color: c.secondary)),
+                Text(
+                  title.capEachWord(),
+                  style: TxtStyle.inter(w: 600, color: c.secondary),
+                ),
 
                 Gap(itemGap),
 
-                Image.asset(ImagesPath.noSearchImg, fit: BoxFit.contain, height: S.w * 0.3),
+                Image.asset(
+                  ImagesPath.noSearchImg,
+                  fit: BoxFit.contain,
+                  height: S.w * 0.3,
+                ),
                 Gap(itemGap * 2),
               ],
             ),

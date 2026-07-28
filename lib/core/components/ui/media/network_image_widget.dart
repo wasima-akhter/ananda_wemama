@@ -73,9 +73,13 @@ class NetworkImageWidget extends StatelessWidget {
                 )
               : null,
           shape: BoxShape.circle,
-          border: hasBrdr == false?null : Border.all(color:
-          
-           solidPlaceholderCircle == true ? c.primary : c.inputBorder),
+          border: hasBrdr == false
+              ? null
+              : Border.all(
+                  color: solidPlaceholderCircle == true
+                      ? c.primary
+                      : c.inputBorder,
+                ),
           color: c.inputBackground,
         ),
         clipBehavior: Clip.antiAlias,
@@ -207,8 +211,8 @@ class _FallbackWidget extends StatelessWidget {
     return Center(
       child: widget.solidPlaceholderCircle == true
           ? Container(
-              width: size *2,
-              height: size *2,
+              width: size * 2,
+              height: size * 2,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: c.primary,

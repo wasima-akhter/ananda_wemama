@@ -159,13 +159,9 @@ class ImagesPath {
   //
   static String get onboardScreenHeart => Assets.images.onboardScreenHeart.path;
 
-  
-
   // Avatar demo pictures
   static String get userDemoL => Assets.images.userDemoL.path;
   static String get userDemoSm => Assets.images.userDemoSm.path;
-
- 
 
   // Health / Mood
   static String get anxious => Assets.images.anxious.path;
@@ -173,17 +169,12 @@ class ImagesPath {
   static String get stressed => Assets.images.stressed.path;
   static String get tired => Assets.images.tired.path;
 
- 
-
   // Location
   static String get locationMap => Assets.images.locationMap.path;
 
   // Net Images/json animation
 
- 
-
   //
- 
 
   static String get gallery => Assets.images.gallery.path;
   static String get camera => Assets.images.camera.path;

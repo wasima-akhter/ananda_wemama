@@ -73,9 +73,15 @@ class IdentityDetailComponent extends StatelessWidget {
                       Gap(itemGap * 0.5),
                     ],
                   ),
-                TextFit(phone, style: TxtStyle.inter(w: 600, fs: 13, color: txtDeepGrey)),
+                TextFit(
+                  phone,
+                  style: TxtStyle.inter(w: 600, fs: 13, color: txtDeepGrey),
+                ),
                 Gap(itemGap * 0.5),
-                TextFit(email, style: TxtStyle.inter(w: 600, fs: 13, color: txtDeepGrey)),
+                TextFit(
+                  email,
+                  style: TxtStyle.inter(w: 600, fs: 13, color: txtDeepGrey),
+                ),
 
                 if (hasRatingRow == true) Gap(itemGap),
                 Row(
@@ -85,13 +91,23 @@ class IdentityDetailComponent extends StatelessWidget {
                         flex: 2,
                         child: Row(
                           children: [
-                            SvgIcon(iconPath: IconsPath.locationBold, height: 16.h, width: 16.w),
+                            SvgIcon(
+                              iconPath: IconsPath.locationBold,
+                              height: 16.h,
+                              width: 16.w,
+                            ),
                             Gap(itemGap * 0.2),
                             Container(
-                              constraints: BoxConstraints(maxWidth: 1.sw * 0.13),
+                              constraints: BoxConstraints(
+                                maxWidth: 1.sw * 0.13,
+                              ),
                               child: TextFit(
                                 address,
-                                style: TxtStyle.inter(fs: 11, color: c.primary, w: 600),
+                                style: TxtStyle.inter(
+                                  fs: 11,
+                                  color: c.primary,
+                                  w: 600,
+                                ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -103,13 +119,22 @@ class IdentityDetailComponent extends StatelessWidget {
                         flex: 3,
                         child: CusGestureDetector(
                           onTap: () {
-                            Get.toNamed(RoutePaths.reviewAndRating, arguments: supplierId ?? '');
+                            Get.toNamed(
+                              RoutePaths.reviewAndRating,
+                              arguments: supplierId ?? '',
+                            );
                           },
                           child: Row(
                             children: [
                               Text(
-                                avgRating != null && avgRating.isNotEmpty ? avgRating : "0.0",
-                                style: TxtStyle.inter(fs: 11, color: c.primary, w: 600),
+                                avgRating != null && avgRating.isNotEmpty
+                                    ? avgRating
+                                    : "0.0",
+                                style: TxtStyle.inter(
+                                  fs: 11,
+                                  color: c.primary,
+                                  w: 600,
+                                ),
                               ),
                               Gap(itemGap * 0.5),
                               SvgIcon(
@@ -122,7 +147,11 @@ class IdentityDetailComponent extends StatelessWidget {
                               Expanded(
                                 child: TextFit(
                                   "($totalRating Rating)",
-                                  style: TxtStyle.inter(fs: 11, color: c.primary, w: 600),
+                                  style: TxtStyle.inter(
+                                    fs: 11,
+                                    color: c.primary,
+                                    w: 600,
+                                  ),
                                 ),
                               ),
                             ],

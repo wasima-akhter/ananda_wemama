@@ -33,7 +33,8 @@ class LocationPermissionFlow {
     final permission = await Geolocator.checkPermission();
 
     final alreadyGranted =
-        permission == LocationPermission.always || permission == LocationPermission.whileInUse;
+        permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse;
 
     if (serviceOn && alreadyGranted) {
       // Silent happy path — location is already available
@@ -75,7 +76,8 @@ class LocationPermissionFlow {
       }
 
       final result = await Geolocator.requestPermission();
-      if (result == LocationPermission.denied || result == LocationPermission.deniedForever) {
+      if (result == LocationPermission.denied ||
+          result == LocationPermission.deniedForever) {
         onLocationUnavailable?.call();
         return;
       }
@@ -119,7 +121,10 @@ class LocationPermissionFlow {
   }
 
   static Future<void> _showPermanentlyDeniedDialog() async {
-    await showAnimatedDialog(context: Get.context!, child: PermanentDeniedDialog());
+    await showAnimatedDialog(
+      context: Get.context!,
+      child: PermanentDeniedDialog(),
+    );
   }
 
   //

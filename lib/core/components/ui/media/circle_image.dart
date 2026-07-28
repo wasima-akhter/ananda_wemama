@@ -4,7 +4,7 @@ import '../../../../gen/assets.gen.dart';
 
 class CircleImage extends StatelessWidget {
   final double? radius;
-  const CircleImage({Key? key, this.radius}) : super(key: key);
+  const CircleImage({super.key, this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,12 @@ class IconInCircleBrdr extends StatelessWidget {
   final String iconPath;
   final String goToPath;
   final double? radius;
-  const IconInCircleBrdr({super.key, required this.iconPath, required this.goToPath, this.radius});
+  const IconInCircleBrdr({
+    super.key,
+    required this.iconPath,
+    required this.goToPath,
+    this.radius,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,14 @@
-import 'package:we_mama/app/helper_widgets_export.dart';
+import '../../../../app/helper_widgets_export.dart';
 
 class LogoutConfirmDialog extends StatelessWidget {
   final RxBool isLoading;
   final Future<void> Function() onConfirm;
 
-  const LogoutConfirmDialog({super.key, required this.isLoading, required this.onConfirm});
+  const LogoutConfirmDialog({
+    super.key,
+    required this.isLoading,
+    required this.onConfirm,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +21,17 @@ class LogoutConfirmDialog extends StatelessWidget {
           Icon(Icons.error_outline, color: c.primary, size: 48),
           12.toHeight,
 
-          Text(Strings.areYouSure, style: TxtStyle.inter(fs: 18, w: 600, color: c.primary)),
+          Text(
+            Strings.areYouSure,
+            style: TxtStyle.inter(fs: 18, w: 600, color: c.primary),
+          ),
           6.toHeight,
 
-          Text(Strings.confirmToLogout, textAlign: TextAlign.center, style: TxtStyle.inter()),
+          Text(
+            Strings.confirmToLogout,
+            textAlign: TextAlign.center,
+            style: TxtStyle.inter(),
+          ),
           24.toHeight,
 
           Row(
