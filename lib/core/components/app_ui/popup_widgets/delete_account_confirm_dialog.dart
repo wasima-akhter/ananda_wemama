@@ -68,7 +68,7 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
                   btnTxt: Strings.cancel,
                   isLoading: false,
                   rad: 30,
-                  onTap: GNav.pop,
+                  onTap: () => Get.back(),
                 ),
               ),
               Gap(8),

@@ -4,6 +4,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../../../../app/service_export.dart';
 import '../../../features/auth/signin/model/signin_model.dart';
 import '../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+import '../../config/app_info.dart';
 import '../socket/socket_service.dart';
 import 'handler/auth_response_handler.dart';
 import 'session_manager/auth_session_manager.dart';
@@ -30,7 +31,11 @@ class SocialLoginService {
   /// Returns the Google ID token, or null if the user cancelled / error.
   Future<String?> getGoogleIdToken() async {
     try {
-      final googleSignIn = GoogleSignIn(scopes: ['email']);
+      final googleSignIn = GoogleSignIn(
+        scopes: ['email'],
+
+        serverClientId: googleSigninKey,
+      );
       // Force account picker every time so users can switch accounts.
       await googleSignIn.signOut();
 
@@ -91,6 +96,12 @@ class SocialLoginService {
         await AuthSessionService().initialize(result.data!);
 
         return const SocialLoginResult(type: SocialLoginApiResultType.success);
+
+      case ApiResultType.failed:
+        return SocialLoginResult(
+          type: SocialLoginApiResultType.failed,
+          message: result.message,
+        );
 
       default:
         return SocialLoginResult(

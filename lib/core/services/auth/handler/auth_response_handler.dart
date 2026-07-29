@@ -10,6 +10,16 @@ class AuthResponseHandler {
     bool showSuccessMessage = false,
     bool showErrorMessage = true,
   }) {
+    if (body["success"] == false) {
+      final message = body["message"]?.toString();
+
+      if (showErrorMessage && message != null) {
+        Snack.showError(message);
+      }
+
+      return Result(type: ApiResultType.failed, message: message);
+    }
+
     final model = SigninModelData.fromJson(body["data"] ?? {});
 
     if (model.statusCode == 403 || model.isEmailVerified == false) {
@@ -36,12 +46,6 @@ class AuthResponseHandler {
       );
     }
 
-    if ((model.accessToken ?? "").isEmpty) {
-      const msg = "Access token missing";
-      if (showErrorMessage) Snack.showError(msg);
-      return Result(type: ApiResultType.failed, message: msg);
-    }
-
     if (showSuccessMessage && (model.msg?.isNotEmpty ?? false)) {
       Snack.showSuccess(model.msg!);
     }
@@ -63,6 +67,13 @@ class AuthResponseHandler {
         Snack.showError(message!);
       }
       return LoginStatus.emailNotVerified(message);
+    }
+
+    if (statusCode == 404) {
+      if (showErrorMessage && (message?.isNotEmpty ?? false)) {
+        Snack.showError(message!);
+      }
+      return LoginStatus.failed(message);
     }
 
     if (statusCode == 302) {
