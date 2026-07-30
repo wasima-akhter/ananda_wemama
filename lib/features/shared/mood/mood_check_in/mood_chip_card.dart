@@ -25,7 +25,7 @@ class MoodCheckInCard extends StatelessWidget {
           // contClr: c.cardOngoing,
           contClr: newCardClr,
           rad: 20,
-          hp: 14,
+          hp: 10,
           vp: 12,
           boxShadow: boxShadowBottom(),
           child: Column(
@@ -33,7 +33,7 @@ class MoodCheckInCard extends StatelessWidget {
             children: [
               Text(
                 Strings.howAreYourFeeling.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 14),
+                style: TxtStyle.outfitSemiB(fs: 15),
               ),
               itemGap.verticalSpace,
 
@@ -197,7 +197,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   TextSpan(
                     text: streakText,
                     style: TxtStyle.outfitSemiB(
-                      fs: 9,
+                      fs: 11,
                       w: 600,
                       color: c.strokePrimary,
                     ),
@@ -206,7 +206,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   if (messageText.isNotEmpty)
                     TextSpan(
                       text: messageText,
-                      style: TxtStyle.outfit(fs: 9, color: c.secondary),
+                      style: TxtStyle.outfit(fs: 11, color: c.secondary),
                     ),
                 ],
               ),
@@ -268,7 +268,7 @@ class MoodChip extends StatelessWidget {
     return ContainerBordered(
       contClr: isSelected ? c.primary : c.moodTagBackground,
       rad: 20,
-      hp: hp ?? 10,
+      hp: 0,
       mv: 2,
       vp: ScreenSize.isSmallWidth ? 6 : 5,
       hasBrdr: true,
@@ -290,7 +290,7 @@ class MoodChip extends StatelessWidget {
             softWrap: false,
             textAlign: TextAlign.center,
             style: TxtStyle.outfitSemiB(
-              fs: 11,
+              fs: 12,
               w: 600,
               color: isSelected ? Colors.white : c.secondary,
             ),

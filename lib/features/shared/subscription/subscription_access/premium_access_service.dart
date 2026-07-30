@@ -8,7 +8,7 @@ class PremiumAccessService extends GetxService {
 
   final PurchaseService _purchaseService = PurchaseService.to;
 
-  static const bool _kFakePremiumEnabled = kDebugMode;
+  static final bool _kFakePremiumEnabled = kDebugMode || GetPlatform.isAndroid;
   final RxBool _fakePremiumOverride = true.obs;
 
   bool get isFakePremiumActive =>

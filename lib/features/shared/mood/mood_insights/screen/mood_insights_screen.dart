@@ -18,7 +18,74 @@ class MoodInsightsScreen extends StatelessWidget {
         title: Strings.moodInsights,
         onTapBack: mic.handleBack,
       ),
-      isScrollable: false,
+      isScrollable: true,
+
+      floatingActionButton: Obx(() {
+        if (mic.isLoading.value) {
+          return const Center(child: LoadingPrimary());
+        }
+
+        final item = mic.item.value;
+
+        if (item == null) {
+          return SizedBox.shrink();
+        }
+        return Container(
+          decoration: BoxDeco.decRadiusUp(12, clr: c.scaffoldBackground),
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+          child: Row(
+            children: [
+              Expanded(
+                child: CusGestureDetector(
+                  onTap: () => goToMainNavWithTab(4),
+                  child: ContainerBordered(
+                    contClr: c.buttonPrimary,
+                    rad: 30,
+                    hp: 40,
+                    vp: 8,
+                    child: Text(
+                      Strings.goToExpertCategory.capEachWord(),
+                      style: TxtStyle.inter(
+                        fs: 12,
+                        w: 600,
+                        color: c.textOnPrimary,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Gap(itemGap),
+              CusGestureDetector(
+                onTap: () {
+                  bc.toggleBookmark(
+                    BookmarkItem(
+                      id: item.id,
+                      title: item.title,
+                      description: item
+                          .description, // ✅ update BookmarkItem too if needed
+                      moodType: mic.passedMoodType,
+                      imageUrl: mlc.getMoodImage(mic.passedMoodType),
+                    ),
+                  );
+                },
+                child: ContainerBordered(
+                  contClr: c.primary,
+                  rad: 18,
+                  vp: 8,
+                  hp: 12,
+                  child: SvgIconColored(
+                    iconPath: bc.isBookmarked(item.id)
+                        ? IconsPath.bookmarkFilled
+                        : IconsPath.bookmarkOutlined,
+                    iconColor: white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
+
       child: Obx(() {
         if (mic.isLoading.value) {
           return const Center(child: LoadingPrimary());
@@ -84,7 +151,7 @@ class MoodInsightsScreen extends StatelessWidget {
 
             Gap(itemGap),
 
-            Flexible(
+            Container(
               child: MoodTypeInsightDesItem(
                 id: item.id,
                 title: item.title,

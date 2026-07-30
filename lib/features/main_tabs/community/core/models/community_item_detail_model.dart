@@ -29,12 +29,14 @@ class AllPost {
     this.isLiked,
     this.isAnonymous,
     this.isCommentLocked,
+    this.totalComment,
   });
 
   final String? id;
   final Creator? creator;
   final String? content;
-  final int? totalLike;
+  int? totalLike;
+  int? totalComment;
   final bool? isPinned;
   final DateTime? createdAt;
   final bool? isLiked;
@@ -49,6 +51,7 @@ class AllPost {
           : Creator.fromJson(json["creator"]),
       content: json["content"],
       totalLike: json["totalLike"],
+      totalComment: json["totalComment"],
       isPinned: json["isPinned"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
       isLiked: json["isLiked"],

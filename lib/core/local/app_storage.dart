@@ -316,6 +316,22 @@ class AppStorage extends GetxService {
     _storage.remove(_hasCheckedInKey);
   }
 
+  // --------------------------- PUSH NOTIFICATION Settings ---------------------------
+
+  static const _pushNotificationKey = 'pushNotification';
+
+  RxBool pushNotification = true.obs;
+
+  void setPushNotification(bool value) {
+    _storage.write(_pushNotificationKey, value);
+
+    pushNotification.value = value;
+  }
+
+  bool get getPushNotification => _storage.read(_pushNotificationKey) ?? true;
+
+  //
+
   // ---------------------------  CLEAR / LOGOUT  ---------------------------
   void logout() {
     _storage.erase();

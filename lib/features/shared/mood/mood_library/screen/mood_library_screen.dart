@@ -1,4 +1,5 @@
 import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
+import 'package:we_mama/features/shared/mood/mood_insights/controller/mood_insights_controller.dart';
 
 import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
@@ -80,15 +81,21 @@ class _MoodLibraryScreenState extends State<MoodLibraryScreen> {
                 return MoodTypeReadingItem(
                   title: item.title,
                   description: item.description,
-                  onTapRead: () => Get.toNamed(
-                    RoutePaths.moodInsight,
+                  onTapRead: () {
+                    if (Get.isRegistered<MoodInsightsController>()) {
+                      Get.delete<MoodInsightsController>();
+                    }
 
-                    arguments: MoodInsightArgs(
-                      moodType: currentMood,
-                      itemId: item.id,
-                      fromHome: true, // 👈 flag so back goes to moodLibrary
-                    ),
-                  ),
+                    Get.toNamed(
+                      RoutePaths.moodInsight,
+
+                      arguments: MoodInsightArgs(
+                        moodType: currentMood,
+                        itemId: item.id,
+                        fromHome: true, // 👈 flag so back goes to moodLibrary
+                      ),
+                    );
+                  },
                 );
               }).toList(),
             );

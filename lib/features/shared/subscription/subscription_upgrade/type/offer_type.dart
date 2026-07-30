@@ -5,24 +5,24 @@
 // class OfferValidationResult
 import '../model/subscription_price_model.dart';
 
-enum OfferType { none, referral, promo, fundingMum }
+enum OfferType { none, referral, promo, foundingMum }
 
 class OfferEligibility {
   final bool referralAvailable;
   final bool promoAvailable;
-  final bool fundingMumAvailable;
+  final bool foundingMumAvailable;
 
   final bool referralRedeemed;
   final bool promoRedeemed;
-  final bool fundingMumRedeemed;
+  final bool foundingMumRedeemed;
 
   const OfferEligibility({
     required this.referralAvailable,
     required this.promoAvailable,
-    required this.fundingMumAvailable,
+    required this.foundingMumAvailable,
     required this.referralRedeemed,
     required this.promoRedeemed,
-    required this.fundingMumRedeemed,
+    required this.foundingMumRedeemed,
   });
 
   factory OfferEligibility.fromSubscription(
@@ -37,7 +37,7 @@ class OfferEligibility {
       promoAvailable: true,
 
       // TODO replace with backend flags later
-      fundingMumAvailable: true,
+      foundingMumAvailable: true,
 
       referralRedeemed: eligibility.isRedeemed,
 
@@ -45,7 +45,7 @@ class OfferEligibility {
       promoRedeemed: false,
 
       // TODO replace with backend values
-      fundingMumRedeemed: false,
+      foundingMumRedeemed: false,
     );
   }
 }

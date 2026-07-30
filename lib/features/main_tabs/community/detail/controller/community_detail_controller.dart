@@ -161,26 +161,6 @@ class CommunityDetailController extends GetxController {
       if (data != null) {
         communityItemDetail.value = data;
 
-        // Update existing flags in-place so Obx widgets don't lose their subscription
-        // Change getCommunityDetail — update in-place block
-        // for (final post in data.allPost ?? []) {
-        //   final id = post.id;
-        //   if (id == null || id.isEmpty) continue; // ✅ skip truly invalid posts
-
-        //   final existing = _postFlags[id];
-        //   if (existing != null) {
-        //     existing.isLiked.value = post.isLiked ?? false;
-        //     existing.isPinned.value = post.isPinned ?? false;
-        //     existing.isCommentLocked.value = post.isCommentLocked ?? false;
-        //   } else {
-        //     _postFlags[id] = _PostFlags(
-        //       isLiked: post.isLiked ?? false,
-        //       isPinned: post.isPinned ?? false,
-        //       isCommentLocked: post.isCommentLocked ?? false,
-        //     );
-        //   }
-        // }
-
         for (AllPost post in data.allPost ?? []) {
           final id = post.id;
 
@@ -217,10 +197,26 @@ class CommunityDetailController extends GetxController {
 
     if (flags.isLikeLoading.value) return;
 
-    final oldValue = flags.isLiked.value;
+    final oldLiked = flags.isLiked.value;
 
-    // ✅ optimistic update
+    final postIndex = communityItemDetail.value.allPost?.indexWhere(
+      (post) => post.id == postId,
+    );
+
+    final oldLikeCount = (postIndex != null && postIndex != -1)
+        ? (communityItemDetail.value.allPost![postIndex].totalLike ?? 0)
+        : 0;
+
+    // ✅ Optimistic update
     flags.isLiked.toggle();
+
+    if (postIndex != null && postIndex != -1) {
+      communityItemDetail.value.allPost![postIndex].totalLike =
+          flags.isLiked.value ? oldLikeCount + 1 : oldLikeCount - 1;
+
+      communityItemDetail.refresh();
+    }
+
     flags.isLikeLoading.value = true;
 
     final success = await CommunityDetailService().postTogglelike(
@@ -230,8 +226,14 @@ class CommunityDetailController extends GetxController {
     );
 
     if (!success) {
-      // ❌ rollback
-      flags.isLiked.value = oldValue;
+      // ❌ Rollback like state
+      flags.isLiked.value = oldLiked;
+
+      if (postIndex != null && postIndex != -1) {
+        communityItemDetail.value.allPost![postIndex].totalLike = oldLikeCount;
+
+        communityItemDetail.refresh();
+      }
     }
 
     flags.isLikeLoading.value = false;

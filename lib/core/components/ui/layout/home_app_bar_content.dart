@@ -31,7 +31,7 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
               CusGestureDetector(
                 onTap: () {
                   NotificationCountController.to.onNotificationScreenOpened();
-                  GNav.pushNamed(RoutePaths.notification);
+                  Get.toNamed(RoutePaths.notification);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -59,33 +59,33 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
 
                         return Positioned(
                           top: -8,
-                          right: -4,
+                          right: -6,
                           child: Container(
-                            padding: const EdgeInsets.all(3),
-                            constraints: const BoxConstraints(
-                              minWidth: 16,
-                              minHeight: 16,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 2,
+                              horizontal: count > 9 ? 5.w : 4.w,
+                            ),
+                            constraints: BoxConstraints(
+                              minWidth: 16.w,
+                              minHeight: 16.h,
                             ),
                             decoration: BoxDecoration(
                               color: c.error,
-                              shape: count > 9
-                                  ? BoxShape.rectangle
-                                  : BoxShape.circle,
-                              borderRadius: count > 9
-                                  ? BorderRadius.circular(8)
-                                  : null,
+                              borderRadius: BorderRadius.circular(8.r),
                               border: Border.all(
                                 color: c.inputBackground,
                                 width: 1.5,
                               ),
                             ),
-                            child: Text(
-                              count > 99 ? '99+' : '$count',
-                              textAlign: TextAlign.center,
-                              style: TxtStyle.poppinsSemiB(
-                                color: Colors.white,
-                                fs: 11,
-                                w: 600,
+                            child: Center(
+                              child: Text(
+                                count > 99 ? '99+' : '$count',
+                                style: TxtStyle.poppinsSemiB(
+                                  color: Colors.white,
+                                  fs: 8,
+                                  w: 600,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),

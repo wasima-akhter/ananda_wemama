@@ -45,6 +45,8 @@ class PushNotificationService extends GetxService {
     debugPrint('🔧 [PushNotificationService] init started');
 
     await _initLocalPlugin();
+    //
+    await refreshNotificationPermissionStatus();
     await _requestPermissions();
     await _createAndroidChannel();
     _registerFcmListeners(); // registers onMessage + onMessageOpenedApp only
@@ -119,24 +121,32 @@ class PushNotificationService extends GetxService {
     bool granted = false;
 
     if (Platform.isAndroid) {
-      final granted = await _localNotifications
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.requestNotificationsPermission();
+      granted =
+          await _localNotifications
+              .resolvePlatformSpecificImplementation<
+                AndroidFlutterLocalNotificationsPlugin
+              >()
+              ?.requestNotificationsPermission() ??
+          false;
+
       debugPrint(
         '✅ [PushNotificationService] Android permission granted: $granted',
       );
     } else if (Platform.isIOS) {
-      final granted = await _localNotifications
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
+      granted =
+          await _localNotifications
+              .resolvePlatformSpecificImplementation<
+                IOSFlutterLocalNotificationsPlugin
+              >()
+              ?.requestPermissions(alert: true, badge: true, sound: true) ??
+          false;
+
       debugPrint(
         '✅ [PushNotificationService] iOS permission granted: $granted',
       );
     }
+
+    await refreshNotificationPermissionStatus();
 
     debugPrint(
       granted
@@ -549,6 +559,81 @@ class PushNotificationService extends GetxService {
       return DateTime.now().millisecondsSinceEpoch % 100000;
     }
     return messageId.hashCode.abs() % 100000;
+  }
+
+  // Access NOTIFICATION ON OFF ----------------->>>
+  final Rx<AuthorizationStatus> notificationStatus =
+      AuthorizationStatus.notDetermined.obs;
+
+  final RxBool notificationPermissionEnabled = false.obs;
+
+  /// Internal helper - keeps both values in sync.
+  void _updateNotificationState(AuthorizationStatus status) {
+    notificationStatus.value = status;
+    notificationPermissionEnabled.value =
+        status == AuthorizationStatus.authorized ||
+        status == AuthorizationStatus.provisional;
+  }
+
+  Future<void> refreshNotificationPermissionStatus() async {
+    debugPrint(
+      'Service hash: ${identityHashCode(this)} '
+      'status=${notificationStatus.value}',
+    );
+
+    final settings = await _fcm.getNotificationSettings();
+
+    _updateNotificationState(settings.authorizationStatus);
+
+    debugPrint(
+      '🔔 [PushNotificationService] notification status: '
+      '${notificationStatus.value} | enabled: ${notificationPermissionEnabled.value}',
+    );
+  }
+
+  bool get isNotificationEnabled => notificationPermissionEnabled.value;
+
+  Future<bool> isNotificationPermissionGranted() async {
+    await refreshNotificationPermissionStatus();
+    return notificationPermissionEnabled.value;
+  }
+
+  Future<bool> enableNotifications() async {
+    final granted = await requestPermissionIfNeeded();
+
+    // User may have accepted/denied the OS dialog.
+    await refreshNotificationPermissionStatus();
+
+    return granted;
+  }
+
+  Future<AuthorizationStatus> getNotificationStatus() async {
+    final settings = await _fcm.getNotificationSettings();
+
+    _updateNotificationState(settings.authorizationStatus);
+
+    debugPrint(
+      '🔔 [PushNotificationService] getNotificationStatus -> '
+      '${notificationStatus.value} | enabled: ${notificationPermissionEnabled.value}',
+    );
+
+    return notificationStatus.value;
+  }
+
+  Future<void> onNotificationPermissionEnabled() async {
+    debugPrint('🔄 [PushNotificationService] notification permission enabled');
+
+    await refreshNotificationPermissionStatus();
+
+    if (!isNotificationEnabled) {
+      debugPrint('⚠️ [PushNotificationService] permission still not enabled');
+      return;
+    }
+
+    // Upload token if user is logged in.
+    await uploadTokenAfterLogin();
+
+    debugPrint('✅ [PushNotificationService] notification setup refreshed');
   }
 }
 

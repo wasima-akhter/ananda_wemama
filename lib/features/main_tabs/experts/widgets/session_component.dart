@@ -45,7 +45,7 @@ class SessionComponent extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TxtStyle.outfit(
-                          fs: 13,
+                          fs: 14,
                           w: 600,
                           color: c.textPrimary,
                         ),

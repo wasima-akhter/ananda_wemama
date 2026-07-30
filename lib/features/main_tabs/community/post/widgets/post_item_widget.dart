@@ -235,13 +235,16 @@ class _PostActions extends StatelessWidget {
           ? true
           : false;
 
+      //
+      final post = cc.communityItemDetail.value.allPost?.firstWhere(
+        (e) => e.id == postId,
+      );
+
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           CusGestureDetector(
-            // onTap: () => cc.toggleLike(postId),
-            onTap: () =>
-                cc.toggleLikeApi(postId, userName), // pass real username
+            onTap: () => cc.toggleLikeApi(postId, userName),
             child: Row(
               children: [
                 SvgIcon(
@@ -251,7 +254,10 @@ class _PostActions extends StatelessWidget {
                   height: 22,
                 ),
                 Gap(4),
-                TextFit(Strings.like, style: TxtStyle.outfitSmNor500),
+                TextFit(
+                  "${post?.totalLike ?? 0} ${Strings.like}",
+                  style: TxtStyle.outfitSmNor500,
+                ),
               ],
             ),
           ),
@@ -270,7 +276,10 @@ class _PostActions extends StatelessWidget {
               children: [
                 SvgIcon(iconPath: IconsPath.chatCircleOutlined, height: 22),
                 Gap(4),
-                TextFit(Strings.comment, style: TxtStyle.outfitSmNor500),
+                TextFit(
+                  "${postItem.totalComment ?? 0} ${Strings.comment}",
+                  style: TxtStyle.outfitSmNor500,
+                ),
                 Gap(4),
                 isLocked
                     ? SvgIcon(iconPath: IconsPath.lock, height: 12)

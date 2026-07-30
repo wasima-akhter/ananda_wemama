@@ -607,9 +607,9 @@ class TxtStyle {
   );
 
   static TextStyle get urbanistSmTitle600 =>
-      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundSecondary);
+      TxtStyle.urbanistSemiB(fs: 15, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitle =>
-      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundSecondary);
+      TxtStyle.urbanistSemiB(fs: 15, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitleSec =>
       TxtStyle.urbanistSemiB(fs: 12, w: 500, color: c.secondary);
   static TextStyle get urbanistSmSecNor =>
@@ -658,7 +658,7 @@ class TxtStyle {
   );
 
   static TextStyle get outfitLarTitle => TxtStyle.outfitSemiB(fs: 18, w: 500);
-  static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 14, w: 500);
+  static TextStyle get outfitSmTitle => TxtStyle.outfitSemiB(fs: 15, w: 500);
   static TextStyle get outfitSmTitleSec =>
       TxtStyle.outfitSemiB(fs: 14, w: 500, color: c.secondary);
   static TextStyle get outfitSmNor => TxtStyle.outfit(fs: 13);

@@ -19,8 +19,9 @@ class SuccessScreen extends StatelessWidget {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) =>
-          didPop ? null : willPopFunction(currentBackPressTime: sc.currentBackPressTime),
+      onPopInvokedWithResult: (didPop, result) => didPop
+          ? null
+          : willPopFunction(currentBackPressTime: sc.currentBackPressTime),
       child: SafeArea(
         top: false,
 
@@ -68,12 +69,14 @@ class SuccessScreen extends StatelessWidget {
                     style: TxtStyle.interSemiB(
                       fs: 16,
                       w: 600,
-                      color: dataModel.iconClr != null ? c.textOnPrimary : c.primary,
+                      color: dataModel.iconClr != null
+                          ? c.textOnPrimary
+                          : c.primary,
                     ),
                     onTap:
                         dataModel.btnOnTap ??
                         () {
-                          // GNav.pushNamed(RoutePaths.mainNav);
+                          // Get.toNamed(RoutePaths.mainNav);
 
                           // Get.find<MainNavController>().goToTab(3);
                         },
@@ -99,5 +102,11 @@ class SuccessViewDataModel {
   final Color? iconClr;
   final void Function()? btnOnTap;
 
-  SuccessViewDataModel({this.title, this.subtitle, this.btnTxt, this.btnOnTap, this.iconClr});
+  SuccessViewDataModel({
+    this.title,
+    this.subtitle,
+    this.btnTxt,
+    this.btnOnTap,
+    this.iconClr,
+  });
 }

@@ -103,7 +103,7 @@ class ChangePasswordController extends GetxController {
     isLoading_.value = false;
 
     if (success) {
-      // GNav.pushNamedReplace(
+      // Get.toNamedReplace(
       //   RoutePaths.success,
       //   arguments: SuccessViewDataModel(
       //     title: Strings.passwordChangedSuccessfully,

@@ -28,9 +28,16 @@ class OnboardLogoHeaderRow extends StatelessWidget {
                         () {
                           Get.back();
                         },
-                    child: SvgIconColored(
-                      iconPath: IconsPath.arrowBackSmall,
-                      height: 14,
+                    child: Container(
+                      // color: Colors.amber,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 12,
+                      ),
+                      child: SvgIconColored(
+                        iconPath: IconsPath.arrowBackSmall,
+                        height: 14,
+                      ),
                     ),
                   )
                 : SizedBox(width: 14),

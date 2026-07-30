@@ -26,6 +26,31 @@ class CommunityController extends GetxController {
   bool get isJoinedCommunityLoading => joinedPaginator.isLoading.value;
   bool get isMyCommunityLoading => managedPaginator.isLoading.value;
 
+  bool _joinedLoaded = false;
+  bool _managedLoaded = false;
+
+  Future<void> refreshMyCommunityList() async {
+    _joinedLoaded = true;
+    await joinedPaginator.loadInitial();
+  }
+
+  Future<void> refreshManagedCommunityList() async {
+    _managedLoaded = true;
+    await managedPaginator.loadInitial();
+  }
+
+  Future<void> refreshCurrentTab() async {
+    if (selTab.value == CommunityTab.myCommunities) {
+      if (!_joinedLoaded) {
+        await refreshMyCommunityList();
+      }
+    } else {
+      if (!_managedLoaded) {
+        await refreshManagedCommunityList();
+      }
+    }
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -44,9 +69,6 @@ class CommunityController extends GetxController {
       log("CommunityController: no token, skipping initial fetch");
       return;
     }
-
-    getMyCommunityList();
-    getManagedCommunityList();
   }
 
   final showSearchedTag = false.obs;
@@ -55,6 +77,7 @@ class CommunityController extends GetxController {
 
   void changeTab(CommunityTab tab) {
     selTab.value = tab;
+    refreshCurrentTab();
   }
 
   @override

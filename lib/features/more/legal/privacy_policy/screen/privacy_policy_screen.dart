@@ -188,7 +188,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 */
 
               return HybridWebViewWidget(
-                htmlContent: data.description ?? '',
+                htmlContent: normalizeHtml(data.description ?? ''),
                 // maxHeight: S.h * 0.6,
                 textColor: c.foregroundSecondary,
               ).getcm;
@@ -198,6 +198,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+String normalizeHtml(String html) {
+  return html.replaceAll('&nbsp;', ' ').replaceAll('\u00A0', ' ');
 }
 
 class PassageComponent extends StatelessWidget {

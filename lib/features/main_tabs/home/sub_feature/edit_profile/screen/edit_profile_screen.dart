@@ -19,7 +19,9 @@ class EditProfileScreen extends StatelessWidget {
     return AppScreenTemplate(
       appBar: CommonAppBarContent(title: Strings.editProfile),
       bottomWidget: Obx(
-        () => filledBtnWTxt(
+        () => CustomBtnWTxt(
+          padding: EdgeInsets.symmetric(vertical: 12.w),
+          rad: 12,
           btnTxt: Strings.update,
           isLoading: epc.isLoading,
           onTap: () => epc.updateProfileDetails(formkey: formKey),

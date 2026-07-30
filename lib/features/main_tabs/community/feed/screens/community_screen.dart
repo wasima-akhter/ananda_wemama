@@ -26,6 +26,7 @@ class _CommunityScreenState extends State<CommunityScreen>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _refreshCurrentTab();
+    // cc.refreshCurrentTab();
 
     // ✅ Wire existing scroll controllers to pagination
     cc.myCommunityScrlCtrl.addListener(_onMyCommunityScroll);
@@ -63,16 +64,18 @@ class _CommunityScreenState extends State<CommunityScreen>
     debugPrint('🔍 [Lifecycle] state changed → $state');
     if (state == AppLifecycleState.resumed && mounted) {
       _refreshCurrentTab();
+
+      // cc.refreshCurrentTab();
     }
   }
 
   Future<void> _refreshCurrentTab() async {
     final isMyTab = cc.selTab.value == CommunityTab.myCommunities;
 
-    await cc.getManagedCommunityList();
     if (isMyTab) {
       await cc.getMyCommunityList();
     }
+    await cc.getManagedCommunityList();
   }
 
   @override

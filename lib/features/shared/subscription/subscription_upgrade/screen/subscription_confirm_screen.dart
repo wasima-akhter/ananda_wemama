@@ -215,7 +215,7 @@ class _PremiumInfoCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 22.w,
+            radius: 22.r,
             backgroundColor: const Color(0xffF9EFE7),
             child: Icon(
               Icons.workspace_premium_outlined,
@@ -223,59 +223,75 @@ class _PremiumInfoCard extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 16),
+          const SizedBox(width: 15),
 
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffFFF1E8),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    "Premium Membership",
-                    style: TxtStyle.outfit(fs: 13, color: c.primary, w: 600),
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                Text(
-                  "Unlimited support, expert sessions, and so much more.",
-                  style: TxtStyle.outfit(fs: 13, color: c.foregroundSecondary),
-                ),
-              ],
-            ),
-          ),
-          Gap(10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: rows.first.formattedPrice.split('/').first,
-                      style: TxtStyle.outfit(fs: 20, w: 700), // bigger number
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
                     ),
-                    if (rows.first.formattedPrice.contains('/'))
-                      TextSpan(
-                        text: '\n/${rows.first.formattedPrice.split('/').last}',
-                        style: TxtStyle.outfit(
-                          fs: 14,
-                          w: 700,
-                        ), // smaller /month
+                    decoration: BoxDecoration(
+                      color: const Color(0xffFFF1E8),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      "Premium Membership",
+                      style: TxtStyle.outfit(fs: 13, color: c.primary, w: 600),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Unlimited support, expert sessions, and so much more.",
+                          style: TxtStyle.outfit(
+                            fs: 13,
+                            color: c.foregroundSecondary,
+                          ),
+                        ),
                       ),
-                  ],
-                ),
+
+                      Gap(10),
+
+                      SizedBox(
+                        width: 100.w, // your available price area width
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: rows.first.formattedPrice
+                                      .split('/')
+                                      .first,
+                                  style: TxtStyle.outfit(fs: 18, w: 700),
+                                ),
+                                if (rows.first.formattedPrice.contains('/'))
+                                  TextSpan(
+                                    text:
+                                        '\n/${rows.first.formattedPrice.split('/').last}',
+                                    style: TxtStyle.outfit(fs: 14, w: 700),
+                                  ),
+                              ],
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),

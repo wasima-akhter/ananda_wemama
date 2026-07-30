@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:gal/gal.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:we_mama/core/config/app_info.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:we_mama/core/config/app_info.dart';
 
 import '../../app/helper_widgets_export.dart';
 import '../../features/main_nav/controller/main_nav_controller.dart';
@@ -299,7 +299,7 @@ CustomDivider get greyDividerFull =>
 String get generateChannel => DateTime.now().millisecondsSinceEpoch.toString();
 
 void goToMainNavWithTab(int tabIndex) {
-  GNav.pushNamed(RoutePaths.mainNav);
+  Get.toNamed(RoutePaths.mainNav);
 
   Get.find<MainNavController>().goToTab(tabIndex);
 }

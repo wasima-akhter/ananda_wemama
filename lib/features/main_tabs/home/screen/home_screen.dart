@@ -97,13 +97,15 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
 
-          if (kDebugMode)
+          if (kDebugMode || GetPlatform.isAndroid)
             GestureDetector(
               onTap: () => PremiumAccessService.to.debugSetFakePremium(
                 !PremiumAccessService.to.isFakePremiumActive,
               ),
               child: Obx(
-                () => Text('-->${PremiumAccessService.to.isFakePremiumActive}'),
+                () => Text(
+                  'isFakePremiumActive-->${PremiumAccessService.to.isFakePremiumActive}',
+                ),
               ), // hidden dev trigger on app version label
             ),
 

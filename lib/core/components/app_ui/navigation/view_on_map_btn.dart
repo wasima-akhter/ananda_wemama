@@ -11,7 +11,7 @@ class ViewOnMapBtn extends StatelessWidget {
       btnTxt: "view On Map",
       onTap: () {
         log("view on map");
-        // GNav.pushNamed(RoutePaths.googleMap);
+        // Get.toNamed(RoutePaths.googleMap);
       },
       isLoading: false,
     );

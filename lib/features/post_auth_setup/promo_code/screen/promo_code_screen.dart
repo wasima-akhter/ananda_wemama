@@ -84,8 +84,8 @@ class PromoCodeScreen extends StatelessWidget {
                 ),
 
                 _debugOfferButton(
-                  title: "Funding Mum",
-                  offer: OfferType.fundingMum,
+                  title: "Founding Mum",
+                  offer: OfferType.foundingMum,
                   controller: controller,
                 ),
               ],

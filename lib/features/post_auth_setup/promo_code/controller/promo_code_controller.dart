@@ -72,7 +72,7 @@ class PromoCodeController extends GetxController {
 
         return const OfferValidationResult(
           success: true,
-          type: OfferType.fundingMum,
+          type: OfferType.foundingMum,
         );
 
       default:
@@ -173,7 +173,7 @@ class PromoCodeController extends GetxController {
 
           break;
 
-        case OfferType.fundingMum:
+        case OfferType.foundingMum:
           debugPrint("🟢 Funding Mum validation placeholder");
 
           /*

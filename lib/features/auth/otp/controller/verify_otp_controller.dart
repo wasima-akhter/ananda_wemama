@@ -86,6 +86,6 @@ class VerifyOtpController extends GetxController {
 //  () {
 
 
-//                     if (roleId == 1) GNav.pushNamed(RoutePaths.signin);
-//                     if (roleId == 2) GNav.pushNamed(RoutePaths.uploadDocument);
+//                     if (roleId == 1) Get.toNamed(RoutePaths.signin);
+//                     if (roleId == 2) Get.toNamed(RoutePaths.uploadDocument);
 //                   },

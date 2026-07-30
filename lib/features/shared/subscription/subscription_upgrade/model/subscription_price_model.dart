@@ -39,20 +39,20 @@ class SubscriptionPriceModel {
 
   final bool referralAvailable;
   final bool promoAvailable;
-  final bool fundingMumAvailable;
+  final bool foundingMumAvailable;
 
   final bool referralRedeemed;
   final bool promoRedeemed;
-  final bool fundingMumRedeemed;
+  final bool foundingMumRedeemed;
 
   const SubscriptionPriceModel({
     required this.offerType,
     this.referralAvailable = false,
     this.promoAvailable = false,
-    this.fundingMumAvailable = false,
+    this.foundingMumAvailable = false,
     this.referralRedeemed = false,
     this.promoRedeemed = false,
-    this.fundingMumRedeemed = false,
+    this.foundingMumRedeemed = false,
   });
 
   factory SubscriptionPriceModel.fromJson(Map<String, dynamic>? json) {
@@ -64,11 +64,11 @@ class SubscriptionPriceModel {
 
       referralAvailable: json?['referralAvailable'] ?? false,
       promoAvailable: json?['promoAvailable'] ?? false,
-      fundingMumAvailable: json?['fundingMumAvailable'] ?? false,
+      foundingMumAvailable: json?['foundingMumAvailable'] ?? false,
 
       referralRedeemed: json?['referralRedeemed'] ?? false,
       promoRedeemed: json?['promoRedeemed'] ?? false,
-      fundingMumRedeemed: json?['fundingMumRedeemed'] ?? false,
+      foundingMumRedeemed: json?['foundingMumRedeemed'] ?? false,
     );
   }
 }

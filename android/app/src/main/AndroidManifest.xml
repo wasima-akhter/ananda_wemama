@@ -72,7 +72,7 @@
 <!--  -->
 
     <application
-        android:label="We Mama"
+        android:label="WeMama"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
 

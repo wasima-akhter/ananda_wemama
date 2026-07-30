@@ -251,7 +251,7 @@ class PurchaseService {
             : options.firstWhereOrNull((o) => o.id.startsWith('referral_'));
         break;
 
-      case OfferType.fundingMum:
+      case OfferType.foundingMum:
         option = GetPlatform.isAndroid
             ? options.firstWhereOrNull((o) => o.id.contains('founding'))
             : options.firstWhereOrNull((o) => o.id.startsWith('founding_'));

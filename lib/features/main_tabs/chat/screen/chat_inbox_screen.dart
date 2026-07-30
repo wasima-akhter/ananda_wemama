@@ -142,7 +142,7 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                 style: TxtStyle.outfit(),
               ),
             ).mHV(10, 20)
-          : ChatInputRow(cic: cic).get10cm,
+          : ChatInputRow(cic: cic).get10cm.mB(10),
       child: CusRefreshIndicator(
         refreshKey: chatRefreshKey,
         // ✅ Full reload from page 1 via REST now, not a socket emit

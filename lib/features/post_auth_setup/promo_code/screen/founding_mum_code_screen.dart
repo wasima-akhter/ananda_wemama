@@ -84,8 +84,8 @@ class FoundingMumCodeScreen extends StatelessWidget {
                 ),
 
                 _debugOfferButton(
-                  title: "Funding Mum",
-                  offer: OfferType.fundingMum,
+                  title: "Founding Mum",
+                  offer: OfferType.foundingMum,
                   controller: controller,
                 ),
               ],
@@ -106,6 +106,7 @@ class FoundingMumCodeScreen extends StatelessWidget {
                         Expanded(
                           child: Column(
                             children: [
+                              Gap(20),
                               Text(
                                 "Enter your Founding Mum code",
                                 textAlign: TextAlign.center,

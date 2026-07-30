@@ -46,7 +46,7 @@ class MoodTypeReadingItem extends StatelessWidget {
           AllAutoheightWebview(
             htmlContent: description,
             previewOnly: true,
-            previewMaxLines: 2, 
+            previewMaxLines: 2,
             padding: EdgeInsets.symmetric(horizontal: 4),
           ),
           16.verticalSpace,
@@ -92,40 +92,42 @@ class MoodTypeInsightDesItem extends StatelessWidget {
             Text(title, style: TxtStyle.outfitLarTitle),
             Gap(itemGap),
             // Full view with custom background + padding
-            Flexible(
+            Container(
               child: SimpleWebViewWidget(
+                isScrollable: false,
                 htmlContent: description,
                 backgroundColor: c.cardOngoing,
                 textColor: c.foregroundSecondary,
               ),
             ),
             16.verticalSpace,
-            Row(
-              children: [
-                Expanded(
-                  child: SmallNavBtn(
-                    text: Strings.goToExpertCategory.capEachWord(),
-                    onTap: onTapExpertBtn,
-                  ),
-                ),
-                Gap(itemGap),
-                CusGestureDetector(
-                  onTap: onTapBookmark,
-                  child: ContainerBordered(
-                    contClr: c.primary,
-                    rad: 18,
-                    vp: 8,
-                    hp: 12,
-                    child: SvgIconColored(
-                      iconPath: isBookmarked
-                          ? IconsPath.bookmarkFilled
-                          : IconsPath.bookmarkOutlined,
-                      iconColor: white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: SmallNavBtn(
+            //         text: Strings.goToExpertCategory.capEachWord(),
+            //         onTap: onTapExpertBtn,
+            //       ),
+            //     ),
+            //     Gap(itemGap),
+            //     CusGestureDetector(
+            //       onTap: onTapBookmark,
+            //       child: ContainerBordered(
+            //         contClr: c.primary,
+            //         rad: 18,
+            //         vp: 8,
+            //         hp: 12,
+            //         child: SvgIconColored(
+            //           iconPath: isBookmarked
+            //               ? IconsPath.bookmarkFilled
+            //               : IconsPath.bookmarkOutlined,
+            //           iconColor: white,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
           ],
         ),
       ),

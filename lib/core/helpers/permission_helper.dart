@@ -7,37 +7,6 @@ import '../../app/helper_widgets_export.dart';
 import '../components/ui/dialogs/popups.dart';
 import '../components/ui/dialogs/small_popup_dialog.dart';
 
-// Future<bool> requestPermissions() async {
-//   final permissions = <Permission>[
-//     Permission.camera,
-//     Permission.microphone,
-//     Permission.bluetoothConnect, // ✅ add — needed for Agora BT audio routing
-//   ];
-
-//   if (Platform.isAndroid) {
-//     final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
-
-//     if (sdk >= 33) {
-//       permissions.addAll([Permission.photos, Permission.audio]);
-//     } else {
-//       permissions.add(Permission.storage);
-//     }
-//   }
-
-//   final result = await permissions.request();
-//   final allGranted = result.values.every((status) => status.isGranted);
-
-//   if (!allGranted) {
-//     await showAnimatedDialog(
-//       context: Get.context!,
-//       barrierDismissible: true,
-//       child: const PermissionDeniedPopup(),
-//     );
-//   }
-
-//   return allGranted;
-// }
-
 Future<bool> requestPermissions() async {
   final permissions = <Permission>[
     Permission.camera,

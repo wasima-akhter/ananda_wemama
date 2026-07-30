@@ -23,7 +23,6 @@ class IdentityDetailComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double itemGap = 1.sh * 0.01; // responsive gap
     String title = '';
     String phone = '';
     String email = '';

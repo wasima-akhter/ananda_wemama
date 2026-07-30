@@ -116,13 +116,14 @@ class AppLocationManager extends GetxService {
       storage.setUserAddress('');
       storage.setUserCity('');
 
-      // Open location settings only
-      final res = await Geolocator.openLocationSettings();
+      // If backend stores user's location, clear it here
+      // await _clearBackendLocation();
 
-      if (res == true) {
-        // Update backend
-        await _updateBackend();
-        log("📍 Location disabled");
+      // Open device location settings
+      final opened = await Geolocator.openLocationSettings();
+
+      if (opened) {
+        log("📍 Location settings opened");
         return true;
       }
 
@@ -160,6 +161,15 @@ class AppLocationManager extends GetxService {
           // iOS: always go to settings, no retry delay needed
           await Geolocator.openLocationSettings();
 
+          // User returns from Settings
+          await Future.delayed(const Duration(seconds: 1));
+
+          serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+          if (!serviceEnabled) {
+            return LocationFlowResult.serviceDisabled;
+          }
+
           return LocationFlowResult.serviceDisabled;
         }
 
@@ -183,22 +193,14 @@ class AppLocationManager extends GetxService {
 
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
+      }
 
-        if (permission == LocationPermission.denied) {
-          return LocationFlowResult.permissionDenied;
-        }
+      if (permission == LocationPermission.denied) {
+        return LocationFlowResult.permissionDenied;
       }
 
       if (permission == LocationPermission.deniedForever) {
-        if (isIOS) {
-          // iOS: direct jump to settings (required behavior)
-          await Geolocator.openAppSettings();
-        } else {
-          // Android: same behavior
-          // ❗ THIS is required for "forever denied"
-          await Geolocator.openAppSettings();
-        }
-
+        await Geolocator.openAppSettings();
         return LocationFlowResult.permissionDeniedForever;
       }
 

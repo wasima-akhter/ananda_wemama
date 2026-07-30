@@ -2,7 +2,7 @@ import '../../../../../app/helper_widgets_export.dart';
 import '../../mood_check_in/mood_chip_card.dart';
 import '../../mood_check_in/mood_row_model.dart';
 
-class MoodLibraryChipCard extends StatelessWidget {
+class MoodLibraryChipCard extends StatefulWidget {
   final List<MoodRowModel> moodDataList;
   final VoidCallback? onTapSubscribe;
 
@@ -11,6 +11,13 @@ class MoodLibraryChipCard extends StatelessWidget {
     required this.moodDataList,
     this.onTapSubscribe,
   });
+
+  @override
+  State<MoodLibraryChipCard> createState() => _MoodLibraryChipCardState();
+}
+
+class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
+  MoodRowModel? selectedMood;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +30,6 @@ class MoodLibraryChipCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Title Row
           Row(
             children: [
               Text(
@@ -35,32 +41,35 @@ class MoodLibraryChipCard extends StatelessWidget {
             ],
           ),
 
-          itemGap.verticalSpace,
+          5.verticalSpace,
 
           Divider(color: c.primary.withOpacity(.4)),
 
-          itemGap.verticalSpace,
+          8.verticalSpace,
 
-          /// Mood Chips + Icons (same pattern as MoodCheckInCard)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            spacing: itemGap * 0.4,
+            spacing: itemGap * .4,
             children: [
-              ...moodDataList.map((dataModel) {
+              ...widget.moodDataList.map((dataModel) {
+                final isSelected = selectedMood?.name == dataModel.name;
+
                 return Expanded(
                   child: Column(
                     children: [
-                      /// Static chip (no selection)
                       CusGestureDetector(
-                        onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
+                        onTap: () {
+                          setState(() {
+                            selectedMood = dataModel;
+                          });
+                        },
                         child: MoodChip(
                           title: dataModel.name,
                           hp: dataModel.hp,
-                          isSelected: false,
+                          isSelected: isSelected,
                         ),
                       ),
 
-                      /// Mood illustration
                       MoodChipAnimation(moodType: dataModel.moodType),
                     ],
                   ),
@@ -71,24 +80,35 @@ class MoodLibraryChipCard extends StatelessWidget {
 
           itemGap.verticalSpace,
 
-          /// Subscribe Info Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgIcon(iconPath: IconsPath.lock, height: 16),
-              Gap(itemGap * .5),
-              Text(
-                Strings.subscribeToAccessOurLibrary,
-                style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary),
-              ),
-            ],
-          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: selectedMood == null
+                ? const SizedBox()
+                : GestureDetector(
+                    key: const ValueKey("open_library"),
+                    onTap: widget.onTapSubscribe,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Open Mood Library",
+                          style: TxtStyle.outfitSemiB(
+                            fs: 11,
+                            w: 500,
+                            color: c.primary,
+                          ),
+                        ),
 
-          itemGap.verticalSpace,
-
-          /// Subscribe Button
-          Center(
-            child: SmallNavBtn(text: Strings.subscribe, onTap: onTapSubscribe),
+                        Gap(itemGap * .5),
+                        SvgIconColored(
+                          iconPath: IconsPath.arrowRightLg,
+                          height: 16,
+                        ),
+                        Gap(itemGap * .5),
+                        SvgIcon(iconPath: IconsPath.lock, height: 16),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),

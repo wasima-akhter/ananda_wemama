@@ -1,9 +1,9 @@
 // lib/features/main_tabs/home/modules/location_status_overlay.dart
 
-import 'package:geolocator/geolocator.dart';
 import 'package:we_mama/core/components/app_ui/tags/tag_type_widgets.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import 'location_manager_global/app_location_manager.dart';
 
 class LocationStatusOverlay extends StatelessWidget {
   const LocationStatusOverlay({super.key, required this.isActive});
@@ -217,7 +217,17 @@ class _OverlayCardState extends State<_OverlayCard>
                             ),
                             onPressed: () async {
                               Get.back();
-                              await Geolocator.openLocationSettings();
+                              final result = await AppLocationManager.to
+                                  .enableLocationGateway();
+
+                              closeAllSnackbar();
+                              // Get.back();
+
+                              if (result == LocationFlowResult.success) {
+                                Snack.showSuccess("Location enabled");
+                              } else {
+                                Snack.showError("Please enable location fully");
+                              }
                             },
                           ),
                   ),

@@ -53,7 +53,7 @@ class OnboardController extends GetxController {
   //   // Small frame delay to prevent gesture/navigation crash
   //   Future.delayed(const Duration(milliseconds: 150), () {
   //     if (Get.isOverlaysOpen) Get.back(); // close dialogs if any
-  //     GNav.pushNamedReplace(RoutePaths.signin);
+  //     Get.toNamedReplace(RoutePaths.signin);
   //   });
   // }
 

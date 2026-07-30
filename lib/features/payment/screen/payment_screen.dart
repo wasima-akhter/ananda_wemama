@@ -39,10 +39,17 @@ class PaymentScreen extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                SvgIcon(iconPath: IconsPath.currency, height: 24),
+                                SvgIcon(
+                                  iconPath: IconsPath.currency,
+                                  height: 24,
+                                ),
                                 Text(
                                   Strings.paystack,
-                                  style: TxtStyle.inter(fs: 11, w: 600, color: c.primary),
+                                  style: TxtStyle.inter(
+                                    fs: 11,
+                                    w: 600,
+                                    color: c.primary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -53,15 +60,24 @@ class PaymentScreen extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(Strings.paymentViaCard, style: TxtStyle.inter(w: 600)),
+                            Text(
+                              Strings.paymentViaCard,
+                              style: TxtStyle.inter(w: 600),
+                            ),
                             Gap(itemGap * 2),
 
-                            Text(Strings.yourDetailsAreSafe, style: TxtStyle.inter(fs: 11, w: 600)),
+                            Text(
+                              Strings.yourDetailsAreSafe,
+                              style: TxtStyle.inter(fs: 11, w: 600),
+                            ),
 
                             Gap(itemGap * 4),
 
                             /// Card Number
-                            Text(Strings.cardNumber, style: TxtStyle.inter(fs: 11, w: 600)),
+                            Text(
+                              Strings.cardNumber,
+                              style: TxtStyle.inter(fs: 11, w: 600),
+                            ),
                             Gap(itemGap),
                             CusPassTypeTextFormField(
                               controller: TextEditingController(),
@@ -76,9 +92,13 @@ class PaymentScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(Strings.expire, style: TxtStyle.inter(fs: 11, w: 600)),
+                                      Text(
+                                        Strings.expire,
+                                        style: TxtStyle.inter(fs: 11, w: 600),
+                                      ),
                                       Gap(itemGap),
                                       CusPassTypeTextFormField(
                                         controller: TextEditingController(),
@@ -91,7 +111,8 @@ class PaymentScreen extends StatelessWidget {
                                 Gap(16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         Strings.cvv.capEachWord(),
@@ -114,9 +135,13 @@ class PaymentScreen extends StatelessWidget {
                             /// Button
                             CustomBtnWTxt(
                               btnColor: grey200,
-                              style: TxtStyle.interSemiB(fs: 18, w: 600, color: c.textSecondary),
+                              style: TxtStyle.interSemiB(
+                                fs: 18,
+                                w: 600,
+                                color: c.textSecondary,
+                              ),
                               onTap: () {
-                                GNav.pushNamedReplace(
+                                Get.offAllNamed(
                                   RoutePaths.success,
                                   arguments: SuccessViewDataModel(
                                     title: Strings.paymentSuccessful,
@@ -130,13 +155,13 @@ class PaymentScreen extends StatelessWidget {
                                       // Get.find<CustomerOrderDraftController>().setPaymentSuccess(
                                       //   reference: "reference_from_the_payment_interface_of_card",
                                       // );
-                                      // GNav.pushNamed(RoutePaths.createOrder);
+                                      // Get.toNamed(RoutePaths.createOrder);
                                     },
                                     iconClr: c.primary,
                                   ),
                                 );
                               },
-                              btnTxt: Strings.pay + " " + "14,990.30",
+                              btnTxt: "${Strings.pay} 14,990.30",
                               isLoading: false,
                             ),
                           ],

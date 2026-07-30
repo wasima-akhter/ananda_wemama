@@ -7,6 +7,7 @@ import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart'
 import '../../../shared/subscription/subscription_access/premium_gate.dart';
 import '../controller/experts_controller.dart';
 import '../controller/session_controller.dart';
+import '../model/expert_session_list_model.dart';
 import '../widgets/card_session_list.dart';
 import '../widgets/live_session_lock_card.dart';
 import '../widgets/paid_past_sessions_component.dart';
@@ -41,7 +42,53 @@ class ExpertsScreen extends StatelessWidget {
             final isOngoingLoading = sc.isOngoingLoading.value;
             final isUpcomingLoading = sc.isUpcomingLoading.value;
 
+            final fakeSession = Session(
+              id: "session_001",
+              expert: Expert(
+                // add your Expert fields here
+                name: "asudas dhasd ahsdiuashdhas",
+              ),
+              status: "completed",
+              title: "Career Guidance Session",
+              description:
+                  "A one-on-one consultation session with an expert advisor.",
+              time: "10:30 AM",
+              date: DateTime.now().add(const Duration(days: 2)),
+              channelName: "session_channel_001",
+
+              doctorUid: "doctor_123",
+              recordingUid: "recording_123",
+
+              resourceId: "resource_001",
+              sid: "sid_12345",
+
+              recordingMp4Url: "https://example.com/recordings/session_001.mp4",
+              recordingHlsUrl:
+                  "https://example.com/recordings/session_001.m3u8",
+
+              duration: 3600,
+              startedAt: DateTime.now().subtract(const Duration(hours: 1)),
+              finishedAt: DateTime.now(),
+
+              isApproved: true,
+
+              recordingFiles: [
+                RecordingFile(
+                  // add your RecordingFile fields here
+                ),
+              ],
+
+              createdAt: DateTime.now().subtract(const Duration(days: 5)),
+              updatedAt: DateTime.now(),
+
+              deepLinkUrl: "wemama://session/session_001",
+
+              v: 0,
+              reminderEnabled: true,
+            );
+
             final ongoingList = exc.limitList(sc.ongoingList.value);
+            //[fakeSession];
             final upcomingList = exc.limitList(sc.upcomingList.value);
 
             final ongoingEmpty = !isOngoingLoading && ongoingList.isEmpty;

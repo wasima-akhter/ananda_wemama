@@ -174,12 +174,18 @@ class SigninController extends GetxController {
     super.onInit();
   }
 
+  // @override
+  // void onClose() {
+  //   emailCtrler.dispose();
+  //   passwordCtrler.dispose();
+  //   emailFocus.dispose();
+  //   passwordFocus.dispose();
+  //   super.onClose();
+  // }
+
   @override
   void onClose() {
-    emailCtrler.dispose();
-    passwordCtrler.dispose();
-    emailFocus.dispose();
-    passwordFocus.dispose();
+    FocusManager.instance.primaryFocus?.unfocus();
     super.onClose();
   }
 

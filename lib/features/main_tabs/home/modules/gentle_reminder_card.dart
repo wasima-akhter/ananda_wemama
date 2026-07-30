@@ -22,7 +22,7 @@ class GentleReminderCard extends StatelessWidget {
           // contClr: c.cardReminder,
           contClr: Color(0xFFF8E6DC),
           rad: 20,
-          hp: 16,
+          hp: 14,
           vp: 12,
           alignment: Alignment.centerLeft,
 

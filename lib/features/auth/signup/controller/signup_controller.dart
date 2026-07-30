@@ -174,16 +174,21 @@ class SignupController extends GetxController {
   // ─────────────────────────────
   // 🔹 Lifecycle
   // ─────────────────────────────
+  // @override
+  // void onClose() {
+  //   emailCtrl.dispose();
+  //   passCtrl.dispose();
+  //   confirmPassCtrl.dispose();
+
+  //   emailFocus.dispose();
+  //   passFocus.dispose();
+  //   confirmPassFocus.dispose();
+
+  //   super.onClose();
+  // }
   @override
   void onClose() {
-    emailCtrl.dispose();
-    passCtrl.dispose();
-    confirmPassCtrl.dispose();
-
-    emailFocus.dispose();
-    passFocus.dispose();
-    confirmPassFocus.dispose();
-
+    FocusManager.instance.primaryFocus?.unfocus();
     super.onClose();
   }
 }

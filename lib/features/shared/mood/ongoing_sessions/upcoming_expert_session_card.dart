@@ -49,8 +49,6 @@ class UpcomingExpertSessionCard extends StatelessWidget {
     final expertId_ = data?.expert?.id ?? '';
     final sessionId_ = data?.id ?? '';
 
-    final actionBtnHeight = 35.h;
-
     return ContainerBordered(
       contClr: newCardClr,
       rad: 20,
@@ -106,7 +104,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   Text(
                     time,
                     style: TxtStyle.outfitSemiB(
-                      fs: 10,
+                      fs: 11,
                       w: 600,
                       color: c.foregroundSecondary,
                     ),
@@ -114,7 +112,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   Text(
                     date,
                     style: TxtStyle.outfit(
-                      fs: 10,
+                      fs: 11,
                       color: c.foregroundSecondary,
                     ),
                   ),
@@ -262,7 +260,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         Text(
           Strings.upcomingExpertSession.capEachWord(),
           style: TxtStyle.outfitSemiB(
-            fs: 14,
+            fs: 15,
             w: 600,
             color: c.foregroundSecondary,
           ),

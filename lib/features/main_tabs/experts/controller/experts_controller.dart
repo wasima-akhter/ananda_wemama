@@ -17,8 +17,8 @@ class ExpertsController extends GetxController {
   final moodDataList = [
     MoodRowModel(name: Strings.calm, moodType: MoodType.calm),
     MoodRowModel(name: Strings.tired, moodType: MoodType.tired),
-    MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 8),
-    MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 8),
+    MoodRowModel(name: Strings.anxious, moodType: MoodType.anxious, hp: 6),
+    MoodRowModel(name: Strings.stressed, moodType: MoodType.stressed, hp: 6),
   ];
 
   //

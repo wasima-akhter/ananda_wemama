@@ -1,5 +1,5 @@
-import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AllAutoheightWebview extends StatelessWidget {
@@ -223,7 +223,7 @@ $htmlContent
   }
 }
 
-class SimpleWebViewWidget extends StatelessWidget {
+class SimpleWebViewWidget extends StatefulWidget {
   final String htmlContent;
   final double? height;
   final double? fontSize;
@@ -231,7 +231,11 @@ class SimpleWebViewWidget extends StatelessWidget {
   final Color? textColor;
   final EdgeInsets padding;
 
-  SimpleWebViewWidget({
+  /// true  -> WebView scrolls internally
+  /// false -> WebView expands and parent scroll handles it
+  final bool isScrollable;
+
+  const SimpleWebViewWidget({
     super.key,
     required this.htmlContent,
     this.height,
@@ -239,133 +243,214 @@ class SimpleWebViewWidget extends StatelessWidget {
     this.backgroundColor = Colors.transparent,
     this.textColor,
     this.padding = EdgeInsets.zero,
+    this.isScrollable = true,
   });
 
-  String _toCssColor(Color color) {
-    if (color == Colors.transparent) return 'transparent';
-    return 'rgba(${color.red},${color.green},${color.blue},${color.opacity})';
-  }
+  @override
+  State<SimpleWebViewWidget> createState() => _SimpleWebViewWidgetState();
+}
 
-  String get _paddingCss =>
-      '${padding.top}px ${padding.right}px ${padding.bottom}px ${padding.left}px';
+class _SimpleWebViewWidgetState extends State<SimpleWebViewWidget> {
+  late final WebViewController controller;
 
-  String scrollbarColor =
-      '#${c.primary.withValues(alpha: 0.5).toARGB32().toRadixString(16).substring(2)}';
+  double webHeight = S.h;
+  bool isLoaded = false;
 
   @override
-  Widget build(BuildContext context) {
-    final controller = WebViewController()
+  void initState() {
+    super.initState();
+
+    controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(backgroundColor)
-      ..enableZoom(false)
+      ..setBackgroundColor(widget.backgroundColor)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onNavigationRequest: (request) async {
-            if (request.url == 'about:blank') {
-              return NavigationDecision.navigate;
-            }
-
-            final uri = Uri.tryParse(request.url);
-
-            if (uri != null) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-
-            return NavigationDecision.prevent;
+          onPageFinished: (_) async {
+            await _onPageLoaded();
           },
         ),
       )
-      ..loadHtmlString("""
+      ..loadHtmlString(_html());
+  }
+
+  Future<void> _onPageLoaded() async {
+    // allow html/images to finish layout
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
+
+    if (!widget.isScrollable) {
+      final result = await controller.runJavaScriptReturningResult("""
+        Math.max(
+          document.body.scrollHeight,
+          document.documentElement.scrollHeight
+        ).toString();
+        """);
+
+      final height = double.tryParse(result.toString().replaceAll('"', ''));
+
+      if (height != null && mounted) {
+        setState(() {
+          webHeight = height + 40;
+          isLoaded = true;
+        });
+      }
+    } else {
+      setState(() {
+        isLoaded = true;
+      });
+    }
+  }
+
+  String _html() {
+    return """
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+
 <style>
-html, body {
-  margin: 0;
-  padding: $_paddingCss;
-  background: ${_toCssColor(backgroundColor)};
-  font-family: 'Outfit', sans-serif;
-  font-size: ${(fontSize ?? 13).sp}px;
-  color: ${_toCssColor(textColor ?? c.primary)};
 
-  height: 100%;
-  overflow: hidden;
+html,
+body {
+
+ margin:0;
+
+ padding:
+ ${widget.padding.top}px
+ ${widget.padding.right}px
+ ${widget.padding.bottom}px
+ ${widget.padding.left}px;
+
+
+ background:${_color(widget.backgroundColor)};
+
+ color:${_color(widget.textColor ?? c.primary)};
+
+
+ font-family:Arial, sans-serif;
+
+ font-size:${widget.fontSize ?? 16}px;
+
+ line-height:1.6;
+
+ -webkit-font-smoothing:antialiased;
+
 }
-
-
 
 
 #content {
-  height: 100vh;
-  overflow-y: auto;
-  padding-right: 16px; /* gap between content and scrollbar */
+
+ ${widget.isScrollable ? """
+              height:100vh;
+              overflow-y:auto;
+            """ : """
+              overflow:hidden;
+            """}
+
 }
+
 
 * {
-  max-width: 100%;
-  box-sizing: border-box;
-}
 
-img, iframe, table, video {
-  max-width: 100% !important;
-  height: auto !important;
-}
+ max-width:100%;
 
-a {
-  color: blue;
-  text-decoration: underline;
+ box-sizing:border-box;
+
 }
 
 
-/* Width */
-::-webkit-scrollbar {
-  width: 6px;
+img,
+iframe,
+video,
+table {
+
+ max-width:100% !important;
+
+ height:auto !important;
+
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.08);
-  border-radius: 10px;
-}
 
-/* Thumb */
-::-webkit-scrollbar-thumb {
-  background: $scrollbarColor;
-  border-radius: 10px;
-}
-
-/* Hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #9B6DE3;
-}
 </style>
+
+
 </head>
+
+
 <body>
-  <div id="content">
-    $htmlContent
-  </div>
+
+
+<div id="content">
+
+${widget.htmlContent}
+
+</div>
 
 
 </body>
-</html>
-""");
 
-    if (height != null) {
-      return SizedBox(
-        height: height,
-        width: double.infinity,
-        child: WebViewWidget(controller: controller),
-      );
-    }
+</html>
+""";
+  }
+
+  String _color(Color color) {
+    return "rgba("
+        "${color.red},"
+        "${color.green},"
+        "${color.blue},"
+        "${color.opacity}"
+        ")";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final height = widget.isScrollable ? (widget.height ?? 300) : webHeight;
 
     return SizedBox(
       width: double.infinity,
-      child: WebViewWidget(controller: controller),
+      height: height,
+
+      child: Stack(
+        fit: StackFit.expand,
+
+        children: [
+          AnimatedOpacity(
+            opacity: isLoaded ? 1 : 0,
+            duration: const Duration(milliseconds: 250),
+
+            child: WebViewWidget(controller: controller),
+          ),
+
+          if (!isLoaded)
+            Container(
+              color: widget.backgroundColor,
+              height: 40,
+              width: 40,
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [LoadingPrimary(size: 20)],
+              ),
+            ),
+        ],
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.clearCache();
+    super.dispose();
   }
 }
 
+//
 class HybridWebViewWidget extends StatefulWidget {
   final String htmlContent;
   final double? fontSize;

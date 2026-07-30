@@ -30,7 +30,7 @@ class IconInCircleBrdr extends StatelessWidget {
   Widget build(BuildContext context) {
     return CusGestureDetector(
       onTap: () {
-        GNav.pushNamed(goToPath);
+        Get.toNamed(goToPath);
       },
       child: Container(
         decoration: BoxDecoration(

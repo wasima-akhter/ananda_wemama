@@ -20,6 +20,7 @@ class EditProfileForm extends StatelessWidget {
           Gap(itemGap * 2),
 
           CusNameTypeTextFormField(
+            rad: 12,
             controller: epc.nameCtrl,
             hintText: Strings.name,
             hintStyle: TxtStyle.outfitSemiB(fs: 13),
@@ -34,6 +35,7 @@ class EditProfileForm extends StatelessWidget {
 
           Obx(
             () => PopupInputTile(
+              rad: 12,
               hintText: Strings.dateOfBirth.cap,
               value: epc.selectedDob.value,
               brdrClr: c.inputBorder,
@@ -50,6 +52,7 @@ class EditProfileForm extends StatelessWidget {
 
           Obx(
             () => PopupInputTile(
+              rad: 12,
               hintText: Strings.state.cap,
               value: epc.selectedState.value,
               brdrClr: c.inputBorder,
@@ -62,6 +65,7 @@ class EditProfileForm extends StatelessWidget {
 
           Obx(
             () => PopupInputTile(
+              rad: 12,
               hintText: Strings.city.cap,
               value: epc.selectedCity.value,
               brdrClr: c.inputBorder,
@@ -73,6 +77,7 @@ class EditProfileForm extends StatelessWidget {
           Gap(itemGap),
 
           PopupInputTile(
+            rad: 12,
             hintText: Strings.children.cap,
             value: Strings.children.cap,
             brdrClr: c.inputBorder,

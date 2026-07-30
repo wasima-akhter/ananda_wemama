@@ -52,6 +52,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
     if (data == null) {
       return NoLiveSessionCard();
     }
+
     final doctorName = (data?.expert?.name ?? "Unknown").capEachWord();
     final specialty = (data?.expert?.profession?.title ?? "Specialist")
         .capEachWord();
@@ -168,7 +169,7 @@ class LiveOngoingSessionCard extends StatelessWidget {
             /// Description
             Text(
               description,
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
             ),
@@ -177,26 +178,31 @@ class LiveOngoingSessionCard extends StatelessWidget {
             isFromOngoingScreen == true ? Gap(itemGap) : const Spacer(),
 
             /// Buttons (always bottom)
+            /// Buttons (always bottom)
             Row(
               children: [
                 Expanded(
-                  child: ContainerBordered(
-                    hasBrdr: true,
-                    brdrClr: c.primary,
-                    rad: 30,
-                    contClr: ctransp,
-                    vp: 7,
-                    child: CusGestureDetector(
-                      // <-- add this
-                      onTap: () => ShareService.shareSession(data!),
+                  child: CusGestureDetector(
+                    onTap: () => ShareService.shareSession(data!),
+                    child: ContainerBordered(
+                      hasBrdr: true,
+                      brdrClr: c.primary,
+                      rad: 30,
+                      contClr: ctransp,
+                      vp: 0,
+                      h: actionBtnHeight,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgIcon(iconPath: IconsPath.share),
+                          SvgIcon(iconPath: IconsPath.share, height: 21),
                           Gap(itemGap),
                           Text(
                             Strings.share.cap,
-                            style: TxtStyle.outfitSmTitle,
+                            style: TxtStyle.outfitSemiB(
+                              fs: 13,
+                              w: 600,
+                              color: c.primary,
+                            ),
                           ),
                         ],
                       ),
@@ -223,7 +229,8 @@ class LiveOngoingSessionCard extends StatelessWidget {
                     child: ContainerBordered(
                       contClr: c.buttonPrimary,
                       rad: 30,
-                      vp: 8,
+                      vp: 0,
+                      h: actionBtnHeight,
                       child: Text(
                         Strings.joinLive.capEachWord(),
                         textAlign: TextAlign.center,

@@ -5,6 +5,7 @@ import '../../../../../core/enums/ui_enums.dart';
 import '../../../../../core/models/ui/common_data_models.dart';
 import '../../core/models/all_comments_of_post_model.dart';
 import '../../core/services/community_detail_service.dart';
+import '../../detail/controller/community_detail_controller.dart';
 
 class PostDetailsController extends GetxController {
   var postAnonymously = false.obs; // 👈 toggle state
@@ -162,6 +163,8 @@ class PostDetailsController extends GetxController {
               createdAt: parent.createdAt,
               replies: updatedReplies,
             );
+
+            updateParentCommentCount(increase: true);
           }
         } else {
           // ✅ ADD PARENT COMMENT
@@ -178,6 +181,8 @@ class PostDetailsController extends GetxController {
               replies: [],
             ),
           );
+
+          updateParentCommentCount(increase: true);
 
           // ✅ Refresh from server to get real IDs
           await getCommentsList();
@@ -196,5 +201,29 @@ class PostDetailsController extends GetxController {
       isAddCommentLoading.value = false;
       clearAll();
     }
+  }
+
+  void updateParentCommentCount({required bool increase}) {
+    final communityCtrl = Get.find<CommunityDetailController>();
+
+    final postId = postDetailArg.value?.postItem.id;
+
+    if (postId == null) return;
+
+    final index = communityCtrl.communityItemDetail.value.allPost?.indexWhere(
+      (e) => e.id == postId,
+    );
+
+    if (index == null || index == -1) return;
+
+    final post = communityCtrl.communityItemDetail.value.allPost![index];
+
+    post.totalComment = (post.totalComment ?? 0) + (increase ? 1 : -1);
+
+    if ((post.totalComment ?? 0) < 0) {
+      post.totalComment = 0;
+    }
+
+    communityCtrl.communityItemDetail.refresh();
   }
 }

@@ -76,6 +76,7 @@ class CurrentSubscriptionCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: CusNameTypeTextFormField(
+                        rad: 12,
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: 12.w,
                           vertical: 8.w,
@@ -90,6 +91,7 @@ class CurrentSubscriptionCard extends StatelessWidget {
 
                     Obx(
                       () => CustomBtnWTxt(
+                        rad: 12,
                         padding: EdgeInsets.symmetric(
                           horizontal: 12.w,
                           vertical: 8.w,

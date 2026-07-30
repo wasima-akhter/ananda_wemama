@@ -156,7 +156,7 @@ class SubscriptionConfirmController extends GetxController {
           }
           break;
 
-        case OfferType.fundingMum:
+        case OfferType.foundingMum:
           if (GetPlatform.isAndroid) {
             selectedOption.value = options.firstWhereOrNull(
               (o) => o.id.contains('founding'),
@@ -220,12 +220,12 @@ class SubscriptionConfirmController extends GetxController {
 
       if (GetPlatform.isIOS &&
           // (currentOffer == OfferType.promo ||
-          //     currentOffer == OfferType.fundingMum)
+          //     currentOffer == OfferType.foundingMum)
           //  &&
           _isEligibleForOffer) {
         if (GetPlatform.isIOS && _isEligibleForOffer) {
           switch (currentOffer) {
-            case OfferType.fundingMum:
+            case OfferType.foundingMum:
               iosPromoDiscount.value = _package!.storeProduct.discounts
                   ?.firstWhereOrNull(
                     (d) => d.identifier.startsWith('founding'),
@@ -306,7 +306,7 @@ class SubscriptionConfirmController extends GetxController {
 
           break;
 
-        case OfferType.fundingMum:
+        case OfferType.foundingMum:
           await purchaseFundingMum();
 
           break;
@@ -442,7 +442,7 @@ class SubscriptionConfirmController extends GetxController {
   Future<void> purchaseFundingMum() async {
     debugPrint('🟢 FLOW=Funding Mum');
 
-    if (!offerEligibility.fundingMumAvailable) {
+    if (!offerEligibility.foundingMumAvailable) {
       _showErrorSnackbar('Funding Mum offer unavailable.');
       return;
     }
@@ -483,7 +483,7 @@ class SubscriptionConfirmController extends GetxController {
 
         outcome = await _purchaseService.purchaseWithAndroidOffer(
           _package!,
-          OfferType.fundingMum,
+          OfferType.foundingMum,
         );
       }
 
@@ -612,8 +612,8 @@ class SubscriptionConfirmController extends GetxController {
       case OfferType.promo:
         return offerEligibility.promoAvailable;
 
-      case OfferType.fundingMum:
-        return offerEligibility.fundingMumAvailable;
+      case OfferType.foundingMum:
+        return offerEligibility.foundingMumAvailable;
 
       case OfferType.none:
         return false;
@@ -638,7 +638,7 @@ class SubscriptionConfirmController extends GetxController {
 
             break;
 
-          case OfferType.fundingMum:
+          case OfferType.foundingMum:
             debugPrint('🟢 Funding Mum completed');
 
             break;
@@ -685,7 +685,7 @@ class SubscriptionConfirmController extends GetxController {
       case OfferType.promo:
         return "Apply Promo Offer";
 
-      case OfferType.fundingMum:
+      case OfferType.foundingMum:
         return "Activate Funding Mum";
 
       case OfferType.none:
@@ -740,7 +740,7 @@ class SubscriptionConfirmController extends GetxController {
     final discountAvailable = phases.length > 1 && _isEligibleForOffer;
 
     if (GetPlatform.isAndroid &&
-        currentOffer == OfferType.fundingMum &&
+        currentOffer == OfferType.foundingMum &&
         phases.length >= 2) {
       final trialPhase = phases.first;
       final recurringPhase = phases.last;
@@ -1308,7 +1308,7 @@ SubscriptionConfirmController
     |        --> iOS: purchaseWithDiscount()
     |        --> Android: purchasePackage()
     |
-    |---- OfferType.fundingMum
+    |---- OfferType.foundingMum
              |
              --> iOS: purchaseWithDiscount()
              --> Android: purchaseWithAndroidOffer()

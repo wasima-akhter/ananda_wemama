@@ -8,6 +8,8 @@ double get forArrowSvgSize => 30.0;
 double get bSheetH => 1.sh * 0.65;
 double itemGap = 0.01 * 1.sh; // 1% of screen height
 
+final actionBtnHeight = 35.h;
+
 // class ScreenSize {
 //   static bool get isTallHeight => Get.height >= 800;
 //   static bool get isMediumHeight => Get.height >= 700 && Get.height < 800;

@@ -3,6 +3,7 @@ import 'package:we_mama/features/shared/subscription/subscription_info/widgets/s
 import 'package:we_mama/features/shared/subscription/subscription_info/widgets/subscription_info_card.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/services/push_notification/push_notification_service.dart';
 import '../controller/subscription_info_controller.dart';
 import '../modules/preference_title.dart';
 
@@ -79,29 +80,29 @@ class SubscriptionInfoScreen extends StatelessWidget {
               ),
               if (!info.willRenew)
                 _CancellationNoticeBanner(expiresAt: info.expiresAt),
-            ],
 
-            Gap(20),
+              Gap(20),
 
-            TextButton.icon(
-              onPressed: scpc.isRestoring.value
-                  ? null
-                  : scpc.onRestorePurchases,
-              icon: scpc.isRestoring.value
-                  ? const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Icon(Icons.restore, color: c.foregroundSecondary),
-              label: Text(
-                'Restore Purchases',
-                style: TxtStyle.poppinsSemiB(
-                  color: c.foregroundSecondary,
-                  w: 600,
+              TextButton.icon(
+                onPressed: scpc.isRestoring.value
+                    ? null
+                    : scpc.onRestorePurchases,
+                icon: scpc.isRestoring.value
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Icon(Icons.restore, color: c.foregroundSecondary),
+                label: Text(
+                  'Restore Purchases',
+                  style: TxtStyle.poppinsSemiB(
+                    color: c.foregroundSecondary,
+                    w: 600,
+                  ),
                 ),
               ),
-            ),
+            ],
 
             Gap(20),
 
@@ -111,20 +112,20 @@ class SubscriptionInfoScreen extends StatelessWidget {
                   () => PreferenceTile(
                     title: "Push Notification",
                     subtitle: "Receive alerts for matches and messages",
-                    value: scpc.pushNotification.value,
+                    value: PushNotificationService.to.isNotificationEnabled,
                     onChanged: scpc.togglePushNotification,
                   ),
                 ),
-                Gap(16),
-                Obx(
-                  () => PreferenceTile(
-                    title: "Community Updates",
-                    subtitle:
-                        "Receive alerts for community activities you follow",
-                    value: scpc.communityUpdates.value,
-                    onChanged: scpc.toggleCommunityUpdates,
-                  ),
-                ),
+                // Gap(16),
+                // Obx(
+                //   () => PreferenceTile(
+                //     title: "Community Updates",
+                //     subtitle:
+                //         "Receive alerts for community activities you follow",
+                //     value: scpc.communityUpdates.value,
+                //     onChanged: scpc.toggleCommunityUpdates,
+                //   ),
+                // ),
                 Gap(16),
                 Obx(
                   () => PreferenceTile(

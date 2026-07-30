@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../gen/assets.gen.dart';
-import '../../../main_tabs/home/modules/profile_tile.dart'; 
+import '../../../main_tabs/home/modules/profile_tile.dart';
 import '../controller/account_settings_controller.dart';
 
 class AccountSettingsScreen extends StatelessWidget {
@@ -23,7 +23,7 @@ class AccountSettingsScreen extends StatelessWidget {
                 title: Strings.changePassword,
                 iconPath: Assets.icons.password,
                 onTap: () {
-                  GNav.pushNamed(RoutePaths.changePassword);
+                  Get.toNamed(RoutePaths.changePassword);
                 },
               ),
               Gap(itemGap),
@@ -33,7 +33,7 @@ class AccountSettingsScreen extends StatelessWidget {
                 iconH: 30,
 
                 onTap: () {
-                  GNav.pushNamed(RoutePaths.bankDetails);
+                  Get.toNamed(RoutePaths.bankDetails);
                 },
               ),
               Gap(itemGap),

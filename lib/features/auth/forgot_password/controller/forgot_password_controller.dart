@@ -96,6 +96,7 @@ class ForgotPasswordController extends GetxController {
     _isResetPassLoading.value = false;
 
     if (success) {
+      clearAllFields();
       // show a pop
       resetPasswordConfirmDialog(onConfirm: onTapContinueToLogin);
 
@@ -104,13 +105,11 @@ class ForgotPasswordController extends GetxController {
   }
 
   Future<void> onTapContinueToLogin() async {
-    unfocusAll();
-    await Future.delayed(const Duration(milliseconds: 50));
+    FocusManager.instance.primaryFocus?.unfocus();
 
-    // ✅ Delete old instance so onInit() runs fresh on next Get.find
-    // Get.find<SigninController>().clearFields();
-    clearAllFields();
-    Get.toNamed(RoutePaths.signin);
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    Get.offAllNamed(RoutePaths.signin);
   }
 
   @override
@@ -145,16 +144,23 @@ class ForgotPasswordController extends GetxController {
 
   /// ================= CLEANUP =================
 
+  // @override
+  // void onClose() {
+  //   FocusManager.instance.primaryFocus?.unfocus();
+
+  //   emailFocus.dispose();
+  //   newPassFocus.dispose();
+  //   confirmPassFocus.dispose();
+
+  //   emailCtrl.dispose();
+  //   newPassCtrl.dispose();
+  //   confirmPassCtrl.dispose();
+
+  //   super.onClose();
+  // }
   @override
   void onClose() {
-    emailCtrl.dispose();
-    newPassCtrl.dispose();
-    confirmPassCtrl.dispose();
-
-    emailFocus.dispose();
-    newPassFocus.dispose();
-    confirmPassFocus.dispose();
-
+    FocusManager.instance.primaryFocus?.unfocus();
     super.onClose();
   }
 }

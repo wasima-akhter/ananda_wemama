@@ -5,14 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:gal/gal.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
 import 'package:we_mama/core/helpers/widgets_helper.dart';
 import 'package:we_mama/core/utils/extension/string_extension.dart';
 import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
 import 'package:we_mama/features/main_tabs/chat/controller/chat_controller.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/app_ui/popup_widgets/block_user_dialog.dart';
@@ -449,16 +449,31 @@ class ChatInboxController extends GetxController {
 
   //
   final pickedFiles = <XFile>[].obs;
-
   Future<void> pickMultipleFiles({ImageSource? source}) async {
-    final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    List<XFile> newFiles = [];
 
-    if (result == null) return;
+    if (source == ImageSource.camera) {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
 
-    final newFiles = result.files
-        .where((e) => e.path != null)
-        .map((e) => XFile(e.path!))
-        .toList();
+      if (image != null) {
+        newFiles.add(image);
+      }
+    } else if (source == ImageSource.gallery) {
+      final images = await ImagePicker().pickMultiImage();
+
+      newFiles.addAll(images);
+    } else {
+      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+
+      if (result == null) return;
+
+      newFiles = result.files
+          .where((e) => e.path != null)
+          .map((e) => XFile(e.path!))
+          .toList();
+    }
+
+    if (newFiles.isEmpty) return;
 
     final images = newFiles.where(isImageFile).toList();
     final others = newFiles.where((f) => !isImageFile(f)).toList();
