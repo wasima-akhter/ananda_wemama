@@ -131,7 +131,7 @@ class AppScreenTemplate extends StatelessWidget {
                             builder: (_, height, _) {
                               final kb = MediaQuery.of(
                                 context,
-                              ).viewInsets.bottom;
+                              ).viewPadding.bottom;
                               final totalGap = kb > 0
                                   ? height + kb
                                   : height + 30.h;

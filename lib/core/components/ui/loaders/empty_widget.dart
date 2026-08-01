@@ -1,4 +1,5 @@
 import 'package:we_mama/app/helper_widgets_export.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String title;
@@ -54,8 +55,8 @@ class EmptyNoSearchWidget extends StatelessWidget {
 
           Gap(itemGap * 2),
 
-          Image.asset(
-            ImagesPath.emptyList,
+          SafeAssetImage(
+            assetPath: ImagesPath.emptyList,
             fit: BoxFit.contain,
             height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
           ),
@@ -68,11 +69,17 @@ class EmptyNoSearchWidget extends StatelessWidget {
 
 class EmptyNoSearchWidgetScrollable extends StatelessWidget {
   final String title;
+  final String? subTitle;
+  final String? assetPath;
+  final String? iconPath;
   final bool? isSmaller;
   const EmptyNoSearchWidgetScrollable({
     super.key,
     required this.title,
     this.isSmaller,
+    this.assetPath,
+    this.subTitle,
+    this.iconPath,
   });
 
   @override
@@ -93,11 +100,30 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
 
             Gap(itemGap * 2),
 
-            Image.asset(
-              ImagesPath.emptyList,
+            SafeAssetImage(
+              assetPath: assetPath ?? ImagesPath.emptyList,
               fit: BoxFit.contain,
               height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
             ),
+
+            // if ((iconPath ?? '').isNotEmpty)
+            //   SvgIcon(
+            //     iconPath: iconPath!,
+            //     height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
+            //   ),
+            if ((subTitle ?? '').isNotEmpty) ...[
+              Gap(itemGap * 2),
+
+              Text(
+                subTitle!.cap,
+                textAlign: TextAlign.center,
+                style: TxtStyle.inter(
+                  fs: 12,
+                  w: 500,
+                  color: c.foregroundPrimary.withValues(alpha: 0.7),
+                ),
+              ),
+            ],
             Gap(itemGap * 5),
           ],
         ),

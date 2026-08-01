@@ -758,9 +758,25 @@ class $AssetsImagesGen {
   AssetGenImage get matchMap =>
       const AssetGenImage('assets/images/match_map.png');
 
+  /// File path: assets/images/no_chat_icon.png
+  AssetGenImage get noChatIcon =>
+      const AssetGenImage('assets/images/no_chat_icon.png');
+
+  /// File path: assets/images/no_comment_icon.png
+  AssetGenImage get noCommentIcon =>
+      const AssetGenImage('assets/images/no_comment_icon.png');
+
+  /// File path: assets/images/no_communities_icon.png
+  AssetGenImage get noCommunitiesIcon =>
+      const AssetGenImage('assets/images/no_communities_icon.png');
+
   /// File path: assets/images/no_search_img.png
   AssetGenImage get noSearchImg =>
       const AssetGenImage('assets/images/no_search_img.png');
+
+  /// File path: assets/images/no_wave_icon.png
+  AssetGenImage get noWaveIcon =>
+      const AssetGenImage('assets/images/no_wave_icon.png');
 
   /// File path: assets/images/onboard_screen_heart.png
   AssetGenImage get onboardScreenHeart =>
@@ -873,7 +889,11 @@ class $AssetsImagesGen {
     likeEmoji,
     locationMap,
     matchMap,
+    noChatIcon,
+    noCommentIcon,
+    noCommunitiesIcon,
     noSearchImg,
+    noWaveIcon,
     onboardScreenHeart,
     onboarding1,
     onboarding2,

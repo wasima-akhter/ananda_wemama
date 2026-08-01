@@ -3,6 +3,7 @@ import 'package:we_mama/core/components/ui/dialogs/popups.dart';
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
+import '../../../../../gen/assets.gen.dart';
 import '../../shared_ui/community_item.dart';
 import '../controller/community_controller.dart';
 import '../modules/community_list_view_simple.dart';
@@ -138,8 +139,13 @@ class _CommunityScreenState extends State<CommunityScreen>
           list: cc.joinedPaginator.items,
         ),
         loading: () => const CommunityShimmerList(),
-        empty: () => const EmptyNoSearchWidgetScrollable(
+        empty: () => EmptyNoSearchWidgetScrollable(
           title: "No Communities yet",
+          assetPath: Assets.images.noCommunitiesIcon.path,
+          subTitle:
+              "Discover communities that match\n"
+              "your interests and connect with\n"
+              "fellow mums.",
         ).getcm,
         data: () => Column(
           children: [
@@ -192,8 +198,13 @@ class _CommunityScreenState extends State<CommunityScreen>
           list: cc.managedPaginator.items,
         ),
         loading: () => const CommunityShimmerList(),
-        empty: () => const EmptyNoSearchWidgetScrollable(
-          title: "No Communities yet",
+        empty: () => EmptyNoSearchWidgetScrollable(
+          title: "No communities created yet",
+          assetPath: Assets.images.noCommunitiesIcon.path,
+          subTitle:
+              "Start your own community and create\n"
+              "a safe space for mums to connect\n"
+              "and support each other.",
         ).getcm,
         data: () => Column(
           children: [

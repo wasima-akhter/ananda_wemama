@@ -7,6 +7,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import '../../../../core/helpers/date_helper.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
+import '../../../../gen/assets.gen.dart';
 import '../controller/chat_inbox_controller.dart';
 import '../model/chat_inbox_msg_item_model.dart';
 import '../widgets/chat_bubble.dart';
@@ -230,7 +231,12 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                   if (cic.messages.isEmpty) {
                     return SizedBox(
                       height: S.h * 0.4,
-                      child: const EmptyWidget(title: "No messages yet!"),
+                      child: EmptyNoSearchWidgetScrollable(
+                        title: "No messages yet",
+                        assetPath: Assets.images.noCommentIcon.path,
+                        subTitle:
+                            "Be the first to say hello! \nStart the conversation and connect with other mums.",
+                      ),
                     );
                   }
 

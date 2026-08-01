@@ -1,3 +1,5 @@
+import 'package:we_mama/gen/assets.gen.dart';
+
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
@@ -108,8 +110,13 @@ class _SuggestedCommunityList extends StatelessWidget {
         isShimmer: true,
       ),
 
-      empty: () => const EmptyNoSearchWidgetScrollable(
-        title: "No Communities yet",
+      empty: () => EmptyNoSearchWidgetScrollable(
+        assetPath: Assets.images.noCommunitiesIcon.path,
+        title: "No suggested communities",
+        subTitle:
+            "New communities are joining every day.\n"
+            "Come back soon and discover your\n"
+            "perfect mum circle.",
       ).getcm,
 
       data: () => CommunityListViewScrollbar(

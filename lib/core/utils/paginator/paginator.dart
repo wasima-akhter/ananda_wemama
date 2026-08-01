@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../network/base/dio_client.dart';
-import '../../network/models/base_response_model.dart';
 
 // core/utils/paginator.dart
 
@@ -35,6 +34,7 @@ class Paginator<T> {
     try {
       final result = await fetchPage(_page, limit);
       items.assignAll(result.data);
+
       hasMore.value = result.meta?.hasNextPage ?? false; // ✅ server truth
       if (hasMore.value) _page++;
     } catch (e) {

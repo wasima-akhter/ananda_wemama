@@ -42,7 +42,10 @@ class CommunityItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFit(communityName , style: TxtStyle.outfitSmTitle),
+                  TextFit(
+                    communityName.capEachWord(),
+                    style: TxtStyle.outfitSmTitle,
+                  ),
 
                   Gap(2.h),
 
@@ -62,7 +65,10 @@ class CommunityItem extends StatelessWidget {
                             Gap(4),
                             Text(
                               "${stats[index]} $text",
-                              style:  TxtStyle.outfit(fs: 13, color: c.foregroundSecondary),
+                              style: TxtStyle.outfit(
+                                fs: 13,
+                                color: c.foregroundSecondary,
+                              ),
                             ),
                           ],
                         ),

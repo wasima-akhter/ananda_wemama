@@ -1,5 +1,6 @@
 import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
@@ -164,8 +165,11 @@ class PostDetailsScreen extends StatelessWidget {
                   itemBuilder: (_, index) => const CommentItemShimmer(),
                 ),
 
-                empty: () => const EmptyNoSearchWidgetScrollable(
+                empty: () => EmptyNoSearchWidgetScrollable(
+                  assetPath: Assets.images.noCommentIcon.path,
                   title: "No comments yet",
+                  subTitle:
+                      "Be the first to share some love \nor start the conversation!",
                 ),
 
                 data: () => ListView.separated(

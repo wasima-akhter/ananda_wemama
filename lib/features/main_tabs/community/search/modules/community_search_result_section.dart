@@ -1,3 +1,5 @@
+import 'package:we_mama/gen/assets.gen.dart';
+
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
@@ -72,8 +74,14 @@ class _CommunitySearchResultSectionState
                 isShimmer: true,
               ),
 
-              empty: () => const EmptyNoSearchWidgetScrollable(
-                title: "No Community found",
+              empty: () => EmptyNoSearchWidgetScrollable(
+                title: "No communities found",
+                assetPath: Assets.images.noCommunitiesIcon.path,
+
+                subTitle:
+                    "We couldn't find any communities\n"
+                    "matching your search. Try exploring\n"
+                    "with different keywords.",
               ).getcm,
 
               data: () => AnimatedSwitcher(
