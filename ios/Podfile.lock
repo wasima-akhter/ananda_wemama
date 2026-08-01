@@ -169,6 +169,8 @@ PODS:
     - SDWebImageWebPCoder
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_native_splash (2.4.3):
+    - Flutter
   - flutter_new_badger (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -326,6 +328,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_new_badger (from `.symlinks/plugins/flutter_new_badger/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - gal (from `.symlinks/plugins/gal/darwin`)
@@ -414,6 +417,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_new_badger:
     :path: ".symlinks/plugins/flutter_new_badger/ios"
   fluttertoast:
@@ -485,6 +490,7 @@ SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_image_compress_common: 1697a328fd72bfb335507c6bca1a65fa5ad87df1
   flutter_local_notifications: 643a3eda1ce1c0599413ca31672536d423dee214
+  flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
   flutter_new_badger: 133aaf93e9a5542bf905c8483d8b83c5ef4946ea
   fluttertoast: 2c67e14dce98bbdb200df9e1acf610d7a6264ea1
   gal: baecd024ebfd13c441269ca7404792a7152fde89

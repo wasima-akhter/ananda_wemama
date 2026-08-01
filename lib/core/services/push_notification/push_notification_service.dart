@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
+import 'package:we_mama/core/network/helpers/network_helpers.dart';
 
 import '../../local/app_storage.dart';
 import '../firebase/firebase_service.dart';
@@ -373,6 +374,10 @@ class PushNotificationService extends GetxService {
           '⚠️ [PushNotificationService] FCM token is null — will retry on next opportunity',
         );
         return; // don't increment retry — token being null is usually transient
+      }
+
+      if (storage.getToken.isEmpty) {
+        return;
       }
 
       debugPrint('🔑 [PushNotificationService] FCM token: $token');
