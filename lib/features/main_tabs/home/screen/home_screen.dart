@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'isFakePremiumActive-->${PremiumAccessService.to.isFakePremiumActive}',
                 ),
               ), // hidden dev trigger on app version label
-            ),
+          ),
 
           PremiumGate(
             child: MoodCheckInCard(mcc: hc.mcc),

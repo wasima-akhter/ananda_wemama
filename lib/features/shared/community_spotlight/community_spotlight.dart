@@ -117,6 +117,8 @@ class _CommunitySpotlightLive extends StatelessWidget {
       final commId = spotlightData?.id ?? '';
       final communityname = spotlightData?.name ?? '';
 
+      debugPrint('lastPostData: $lastPostData');
+
       return UIStateHandler(
         loading: () => const CommunitySpotlightShimmer(),
         state: state,
@@ -261,6 +263,47 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (lastPostData == null) {
+      return ContainerBordered(
+        hp: 10,
+        vp: 10,
+        contClr: cardBgDeep,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "No discussion started yet.",
+              style: TxtStyle.urbanistSemiB(
+                fs: 12,
+                w: 600,
+                color: c.foregroundPrimary,
+              ),
+            ),
+
+            Gap(6),
+
+            Text(
+              "Be the first to share a thought with this community.",
+              style: TxtStyle.urbanist(
+                fs: 11,
+                w: 400,
+                color: c.foregroundSecondary,
+              ),
+            ),
+
+            Gap(10),
+
+            Text(
+              (communityname ?? '--').capEachWord(),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: titleBPriURB,
+            ),
+          ],
+        ),
+      );
+    }
+
     final content = lastPostData?.content ?? '';
     final totalComment = (lastPostData?.totalComment ?? 0).toString();
     final createdAt = DateHelper()

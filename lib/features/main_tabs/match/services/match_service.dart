@@ -3,34 +3,47 @@ import 'package:we_mama/features/main_tabs/match/model/match_model.dart';
 import '../../../../app/service_export.dart';
 
 class MatchService extends GetxService {
-  /// Fetch inventory details from API
-
-  Future<List<MatchResponseModel>> fetchMatches({
+  Future<List<MatchResponseModel?>> fetchMatches({
     required String latitude,
     required String longitude,
   }) async {
     apiCall() {
       return ApiClient().get(
-        // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
-        Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
-        // reqName: Strings.match,
+        // Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
+        Endpoints.getMatch(long: "90.405449", lat: "23.777628").getUrl,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
 
-    final response = await ApiExecutor().execute<List<MatchResponseModel>>(
+    final response = await ApiExecutor().execute<MatchResponseModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        log("parser data: $data");
 
-        if (data is List) {
-          return data.map((e) => MatchResponseModel.fromJson(e)).toList();
+        if (data is Map<String, dynamic>) {
+          return MatchResponseModel.fromJson(data);
         }
-        return [];
+
+        return null;
       },
     );
 
     log("response data: ${response.data}");
-    return response.data ?? [];
+
+    // Backend says free limit reached
+    if (response.statusCode == 403) {
+      throw const MatchLimitExceededException();
+    }
+
+    if (response.data == null) {
+      return [];
+    }
+
+    // Wrap single match into a list so existing controller code remains unchanged.
+    return [response.data!];
   }
+}
+
+class MatchLimitExceededException implements Exception {
+  const MatchLimitExceededException();
 }

@@ -14,8 +14,8 @@ class MatchIdleState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final isPremium = mc.isPaidUser.value;
-      final limitReached = mc.subUpgradeNeeded.value;
-      final remaining = mc.remainingSearchesToday;
+      final limitReached = mc.isWaveLimitReached;
+      final remaining = mc.remainingWaves;
 
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -39,18 +39,19 @@ class MatchIdleState extends StatelessWidget {
                 if (!isPremium)
                   Text(
                     limitReached
-                        ? "You've used all ${mc.freeDailyLimit} free searches today"
-                        : "$remaining of ${mc.freeDailyLimit} free searches left today",
+                        ? "You've used all ${mc.dailyWaveLimit} free waves today."
+                        : "${mc.remainingWaves} of ${mc.dailyWaveLimit} free waves left today.",
                     textAlign: TextAlign.center,
                     style: TxtStyle.outfitSmNor500.copyWith(
                       color: limitReached ? c.error : c.textSecondary,
                     ),
                   ),
-
                 Gap(itemGap * 2),
 
                 GestureDetector(
-                  onTap: mc.startSearching, // internal limit check still fires
+                  onTap: !isPremium && limitReached
+                      ? null
+                      : mc.startSearching, // internal limit check still fires
                   child: Container(
                     decoration: 0.circleBrdr(
                       brdrW: 4,
@@ -85,8 +86,8 @@ class MatchIdleState extends StatelessWidget {
           if (!isPremium)
             UpgradeNowModule(
               onTapUgradeNow: mc.onTapUpgradeNow,
-              remainingCount: mc.remainingSearchesToday,
-              dailyLimit: mc.freeDailyLimit,
+              remainingCount: mc.remainingWaves,
+              dailyLimit: mc.dailyWaveLimit,
             ),
 
           Gap(itemGap * 3),

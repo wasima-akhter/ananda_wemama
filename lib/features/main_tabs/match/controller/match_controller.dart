@@ -7,8 +7,10 @@ import 'package:we_mama/core/services/socket/socket_events.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
+import '../../../../core/services/profile/profile_info_service.dart';
 import '../../../../core/services/socket/socket_service.dart';
 import '../../../shared/subscription/subscription_access/premium_access_service.dart';
+import '../../home/sub_feature/profile/model/profile_model.dart';
 import '../model/match_model.dart';
 import '../services/match_service.dart';
 
@@ -51,6 +53,8 @@ class MatchController extends GetxController {
     });
 
     _restoreSearchCount();
+
+    fetchWaveLimit();
 
     cancelSearch();
     resetState();
@@ -142,6 +146,31 @@ class MatchController extends GetxController {
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // Profile Info for wave limit
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  final ProfileInfoService _profileInfoService = ProfileInfoService();
+
+  final Rxn<ProfileDataModel> profile = Rxn<ProfileDataModel>();
+
+  Future<void> fetchWaveLimit() async {
+    final data = await _profileInfoService.fetchProfile();
+
+    if (data != null) {
+      profile.value = data;
+    }
+  }
+
+  int get dailyWaveLimit => profile.value?.waveLimit?.limit ?? 3;
+
+  int get remainingWaves => profile.value?.waveLimit?.remaining ?? 0;
+
+  bool get isWaveLimitReached =>
+      !isPaidUser.value &&
+      !(profile.value?.waveLimit?.isUnlimited ?? false) &&
+      remainingWaves <= 0;
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // SEARCH
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -176,17 +205,28 @@ class MatchController extends GetxController {
 
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
+
     if (isSearchLoading.value) return;
+
+    // Fetch latest wave limit before every search
+    await fetchWaveLimit();
+
+    if (isWaveLimitReached) {
+      subUpgradeNeeded.value = true;
+      await handleDailyLimitReached();
+      return;
+    }
+
     isSearchLoading.value = true;
 
     try {
       // ───────── LIMIT CHECK ─────────
       // FIXED: was `!isPaidUser` / bare `searchesToday` — both are Rx now.
-      if (!isPaidUser.value && searchesToday.value >= freeDailyLimit) {
-        subUpgradeNeeded.value = true;
-        await handleDailyLimitReached();
-        return;
-      }
+      // if (!isPaidUser.value && searchesToday.value >= freeDailyLimit) {
+      //   subUpgradeNeeded.value = true;
+      //   await handleDailyLimitReached();
+      //   return;
+      // }               // <-------   BACKEND VALIDATION OF PREMIUM USER
 
       matchState.value = MatchState.searching;
 
@@ -202,7 +242,7 @@ class MatchController extends GetxController {
 
       // FIXED: was `searchesToday++` on a plain int — now goes through the
       // persisted/day-guarded increment helper.
-      if (!isPaidUser.value) _incrementSearchCount();
+      // if (!isPaidUser.value) _incrementSearchCount();           // <-------   BACKEND VALIDATION OF PREMIUM USER
 
       await Future.delayed(const Duration(milliseconds: 300));
 
@@ -211,7 +251,7 @@ class MatchController extends GetxController {
       final data = await MatchService().fetchMatches(
         latitude: alm.latitude.value.toString(),
         longitude: alm.longitude.value.toString(),
-      );
+      ); // 403 --> status code --> means free limit for free user is finished --> idle state + navigate to promoCodeScreen
 
       if (currentSearchId != _searchId) return;
 
@@ -220,9 +260,13 @@ class MatchController extends GetxController {
         return;
       }
 
-      fetchedMatches.value = data;
+      fetchedMatches.assignAll(data.whereType<MatchResponseModel>());
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
+    } on MatchLimitExceededException {
+      // Backend final validation
+      subUpgradeNeeded.value = true;
+      await handleDailyLimitReached();
     } catch (e) {
       log("❌ startSearching error: $e");
       if (currentSearchId == _searchId) {
@@ -239,27 +283,31 @@ class MatchController extends GetxController {
   }
 
   /////
+  bool _isShowingLimitFlow = false;
+
   Future<void> handleDailyLimitReached() async {
-    // Stop any search UI immediately
-    matchState.value = MatchState.idle;
+    if (_isShowingLimitFlow) return;
 
-    // Show popup
-    showDailyLimitDialog();
+    _isShowingLimitFlow = true;
 
-    // Let user read it
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      matchState.value = MatchState.idle;
 
-    // Close popup if still open
+      showDailyLimitDialog();
 
-    Get.back();
+      await Future.delayed(const Duration(seconds: 2));
 
-    // Navigate
-    await Get.toNamed(RoutePaths.promoCodeScreen);
+      Get.back();
 
-    // When user comes back
-    matchState.value = MatchState.idle;
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await Get.toNamed(RoutePaths.promoCodeScreen);
+
+      await fetchWaveLimit();
+    } finally {
+      _isShowingLimitFlow = false;
+    }
   }
-
   // ═══════════════════════════════════════════════════════════════════════════
   // CANCEL / RESET
   // ═══════════════════════════════════════════════════════════════════════════
@@ -366,6 +414,7 @@ class MatchController extends GetxController {
       );
 
       if (success) {
+        await fetchWaveLimit();
         await showWaveSentDialog(stopSearching: stopSearching);
 
         if (stopSearching.value) {

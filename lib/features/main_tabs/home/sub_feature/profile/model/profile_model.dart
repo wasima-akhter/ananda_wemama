@@ -28,6 +28,12 @@ class ProfileDataModel {
     this.v,
     this.profileImage,
     this.referral,
+    this.waveLimit,
+    // new response fields
+    this.isDeleted,
+    this.matchLimitDate,
+    this.matchSeenUsers = const [],
+    this.totalMatching,
   });
 
   final String? id;
@@ -68,6 +74,16 @@ class ProfileDataModel {
   final DateTime? updatedAt;
 
   final int? v;
+  //new ones
+  final WaveLimitModel? waveLimit;
+
+  final bool? isDeleted;
+
+  final DateTime? matchLimitDate;
+
+  final List<MatchSeenUserModel> matchSeenUsers;
+
+  final int? totalMatching;
 
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) {
     // ── DOB: handle both formats ──────────────────────────────────────────
@@ -157,6 +173,88 @@ class ProfileDataModel {
           : null,
 
       v: json["__v"],
+      waveLimit: json["waveLimit"] == null
+          ? null
+          : WaveLimitModel.fromJson(json["waveLimit"]),
+      //
+      isDeleted: parseBool(json["isDeleted"]),
+
+      matchLimitDate: json["matchLimitDate"] != null
+          ? DateTime.tryParse(json["matchLimitDate"].toString())
+          : null,
+
+      matchSeenUsers: json["matchSeenUsers"] == null
+          ? []
+          : List<MatchSeenUserModel>.from(
+              json["matchSeenUsers"].map(
+                (x) => MatchSeenUserModel.fromJson(x as Map<String, dynamic>),
+              ),
+            ),
+
+      totalMatching: parseInt(json["totalMatching"]),
+    );
+  }
+}
+
+class MatchSeenUserModel {
+  MatchSeenUserModel({this.user, this.seenAt, this.id});
+
+  final String? user;
+  final DateTime? seenAt;
+  final String? id;
+
+  factory MatchSeenUserModel.fromJson(Map<String, dynamic> json) {
+    return MatchSeenUserModel(
+      user: json["user"]?.toString(),
+
+      seenAt: json["seenAt"] != null
+          ? DateTime.tryParse(json["seenAt"].toString())
+          : null,
+
+      id: json["_id"]?.toString(),
+    );
+  }
+}
+
+bool? parseBool(dynamic value) {
+  if (value is bool) return value;
+
+  if (value is String) {
+    return value.toLowerCase() == "true";
+  }
+
+  return null;
+}
+
+int? parseInt(dynamic value) {
+  if (value is int) return value;
+
+  if (value is String) {
+    return int.tryParse(value);
+  }
+
+  return null;
+}
+
+class WaveLimitModel {
+  final int limit;
+  final int used;
+  final int remaining;
+  final bool isUnlimited;
+
+  WaveLimitModel({
+    this.limit = 0,
+    this.used = 0,
+    this.remaining = 0,
+    this.isUnlimited = false,
+  });
+
+  factory WaveLimitModel.fromJson(Map<String, dynamic> json) {
+    return WaveLimitModel(
+      limit: json["limit"] ?? 0,
+      used: json["used"] ?? 0,
+      remaining: json["remaining"] ?? 0,
+      isUnlimited: json["isUnlimited"] ?? false,
     );
   }
 }
