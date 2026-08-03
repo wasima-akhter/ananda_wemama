@@ -1,5 +1,6 @@
 import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:we_mama/core/components/ui/inputs/cus_pass_type_text_form_field.dart';
+import 'package:we_mama/core/themes/color/colors.dart';
 import 'package:we_mama/features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
 
 import '../../../utils/validator/validators.dart';
@@ -18,35 +19,72 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileController = ProfileController.to;
+
     return Container(
-      padding: 20.pa,
-      decoration: BoxDeco.decRadiusAll(20, clr: bgClr),
+      padding: 24.pa,
+      decoration: BoxDeco.decRadiusAll(28, clr: bgClr),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.error_outline, color: c.primary, size: 48),
-          12.toHeight,
-
-          Text(
-            Strings.areYouSure,
-            style: TxtStyle.inter(fs: 18, w: 600, color: c.primary),
-          ),
-          6.toHeight,
-
-          Text(
-            Strings.confirmDeleteAccount,
-            textAlign: TextAlign.center,
-            style: TxtStyle.inter(),
+          Container(
+            height: 72,
+            width: 72,
+            decoration: BoxDecoration(
+              color: AppPalette.snackError.withValues(alpha: .12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.delete_forever_rounded,
+              color: AppPalette.snackError,
+              size: 38,
+            ),
           ),
 
           20.toHeight,
+
+          Text(
+            "Delete Account?",
+            style: TxtStyle.inter(fs: 20, w: 700, color: AppPalette.snackError),
+          ),
+
+          10.toHeight,
+
+          Text(
+            "This action permanently removes your account and all associated data. Please enter your password to continue.",
+            textAlign: TextAlign.center,
+            style: TxtStyle.inter(fs: 12, color: c.textSecondary),
+          ),
+
+          8.toHeight,
+
+          Container(
+            padding: 12.pa,
+            decoration: BoxDecoration(
+              color: c.primary.withValues(alpha: .08),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.info_outline, size: 18, color: c.primary),
+                8.toWidth,
+                Expanded(
+                  child: Text(
+                    "You won't be able to recover your account later.",
+                    style: TxtStyle.inter(fs: 12, color: c.primary, w: 500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          20.toHeight,
+
           Obx(
             () => CusPassTypeTextFormField(
               controller: profileController.passwordCtrl,
               obscureText: profileController.isPasswordHidden,
               hintText: "Enter your password",
-
-              validator: (value) => validatePassword(value),
+              validator: validatePassword,
 
               prefix: SvgIcon(
                 iconPath: IconsPath.lock,
@@ -60,7 +98,7 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
                 icon: profileController.passwordIcon,
               ),
 
-              hintW: 600,
+              hintW: 500,
             ),
           ),
 
@@ -72,30 +110,29 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
                 child: CustomBtnWTxt(
                   outlined: true,
                   txtClr: c.textPrimary,
-                  btnTxt: Strings.cancel,
+                  btnTxt: "Cancel",
                   isLoading: false,
-                  rad: 30,
-                  onTap: () => Get.back(),
+                  rad: 14,
+                  onTap: Get.back,
                 ),
               ),
-              Gap(8),
+
+              12.toWidth,
+
               Expanded(
                 child: Obx(
                   () => CustomBtnWTxt(
-                    btnColor: c.primary,
-                    borderClr: c.primary,
+                    btnColor: AppPalette.snackError,
+                    borderClr: AppPalette.snackError,
                     txtClr: white,
-                    btnTxt: Strings.confirm,
+                    btnTxt: "Delete Account",
                     isLoading: isLoading.value,
-                    rad: 30,
+                    rad: 14,
                     onTap: () async {
                       final password = profileController.passwordCtrl.text
                           .trim();
 
-                      if (password.isEmpty) {
-                        // show your snackbar/toast
-                        return;
-                      }
+                      if (password.isEmpty) return;
 
                       await onConfirm(password);
                     },
