@@ -2,17 +2,22 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../../app/controller_export.dart';
+import '../../../../../../app/helper_widgets_export.dart';
 import '../../../../../../core/helpers/bottom_sheet_helper.dart';
 import '../../../../../../core/helpers/date_helper.dart';
 import '../../../../../../core/helpers/string_helper.dart';
 import '../../../../../../core/helpers/widgets_helper.dart';
 import '../../../../../../core/services/account_overview/update_profile/update_profile_service.dart';
-import '../../../../../../core/utils/extension/string_extension.dart';
+import '../../../../../post_auth_setup/lifestyle_and_interests/controller/lifestyle_and_interests_controller.dart';
+import '../../../../../post_auth_setup/mums_stage/controller/mums_stage_controller.dart';
 import '../../profile/controller/profile_controller.dart';
 import '../../profile/model/profile_model.dart';
 import '../model/child_model.dart';
+import '../widgets/lifestyle_picker_grid.dart';
+import '../widgets/mum_stage_picker_content.dart';
 
 class EditProfileController extends GetxController {
+  static EditProfileController get to => Get.find();
   // ─────────────────────────────────────────────
   // Text Controllers & Focus Nodes
   // ─────────────────────────────────────────────
@@ -58,6 +63,10 @@ class EditProfileController extends GetxController {
   final errorMessage = RxnString();
 
   final existingImageUrls = <String>[].obs; // server images
+
+  final selectedMumStage = ''.obs;
+
+  final selectedInterests = ''.obs;
 
   // ─────────────────────────────────────────────
   // Lifecycle
@@ -105,6 +114,12 @@ class EditProfileController extends GetxController {
     selectedState.value = profileData.state ?? '';
     selectedCity.value = profileData.city ?? '';
 
+    // ✅ Populate Mum Stage
+    selectedMumStage.value = profileData.mumStages.join(', ');
+
+    // ✅ Populate Interests
+    selectedInterests.value = profileData.interesteds.join(', ');
+
     children.assignAll(
       profileData.children.map((e) {
         final child = ChildModel();
@@ -144,6 +159,70 @@ class EditProfileController extends GetxController {
 
   void openChildrenBottomSheet() => showChildrenBottomSheet();
 
+  void openMumStagePicker() {
+    if (!Get.isRegistered<MumsStageController>()) {
+      Get.lazyPut<MumsStageController>(() => MumsStageController());
+    }
+
+    final msc = Get.find<MumsStageController>();
+
+    // preselect existing values
+    msc.selectedStageIds.clear();
+
+    final selectedTitles = selectedMumStage.value
+        .split(',')
+        .map((e) => e.trim())
+        .toList();
+
+    for (final stage in msc.stageList) {
+      if (selectedTitles.contains(stage.title)) {
+        msc.selectedStageIds.add(stage.id);
+      }
+    }
+
+    showCommonPickerBottomSheet(
+      title: Strings.mumsStage,
+      child: MumsStagePickerContent(controller: msc),
+      onDone: () {
+        selectedMumStage.value = msc.selectedStageTitles.join(', ');
+        Get.back();
+      },
+    );
+  }
+
+  void openInterestsPicker() {
+    if (!Get.isRegistered<LifestyleAndInterestsController>()) {
+      Get.lazyPut<LifestyleAndInterestsController>(
+        () => LifestyleAndInterestsController(),
+      );
+    }
+
+    final lic = Get.find<LifestyleAndInterestsController>();
+
+    // preselect existing interests
+
+    lic.selectedItems.clear();
+
+    final selected = selectedInterests.value
+        .split(',')
+        .map((e) => e.trim())
+        .toList();
+
+    for (final item in lic.lifestyleInterests) {
+      if (selected.contains(item.label.replaceAll('\n', ' '))) {
+        lic.selectedItems.add(item.label);
+      }
+    }
+
+    showCommonPickerBottomSheet(
+      title: Strings.whatMattersToYou,
+      child: const LifestyleInterestsPickerGrid(),
+      onDone: () {
+        selectedInterests.value = lic.selectedItems.join(', ');
+        Get.back();
+      },
+    );
+  }
   // ─────────────────────────────────────────────
   // Children
   // ─────────────────────────────────────────────
@@ -166,7 +245,7 @@ class EditProfileController extends GetxController {
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
-    GNav.pop();
+    Get.back();
     if (selected != null) fileImage.value = selected;
   }
 
@@ -232,6 +311,10 @@ class EditProfileController extends GetxController {
       name: nameCtrl.text.trim(),
       descriptionImages: desImageFiles.value ?? [],
       dob: convertDobToTimestamp(selectedDob.value),
+
+      // NEW
+      mumStages: selectedMumStageList,
+      interestedFields: selectedInterestList,
       state: selectedState.value,
       city: selectedCity.value,
       bio: bioCtrl.text.trim(),
@@ -268,6 +351,27 @@ class EditProfileController extends GetxController {
     }
 
     isLoading_.value = false;
+  }
+
+  //
+  List<String> get selectedMumStageList {
+    if (selectedMumStage.value.trim().isEmpty) return [];
+
+    return selectedMumStage.value
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+  }
+
+  List<String> get selectedInterestList {
+    if (selectedInterests.value.trim().isEmpty) return [];
+
+    return selectedInterests.value
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
   }
 
   // ─────────────────────────────────────────────

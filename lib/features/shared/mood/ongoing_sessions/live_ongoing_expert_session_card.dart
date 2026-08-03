@@ -2,9 +2,9 @@ import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../../../core/services/deep_link/session_navigator.dart';
 import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
-import '../../../video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 
 class NoLiveSessionCard extends StatelessWidget {
   const NoLiveSessionCard({super.key});
@@ -214,17 +214,14 @@ class LiveOngoingSessionCard extends StatelessWidget {
 
                 Expanded(
                   child: CusGestureDetector(
-                    onTap: () {
-                      if (channelName.isNotEmpty) {
-                        Get.toNamed(
-                          RoutePaths.meetingScreen,
-                          arguments: MeetingCtrlAgModel(
-                            channelname: channelName,
-                            sessionTitle: sessionTitle,
-                            hostName: doctorName,
-                          ),
-                        );
-                      }
+                    onTap: () async {
+                      if (channelName.isEmpty) return;
+
+                      await SessionNavigator.openMeeting(
+                        channelName: channelName,
+                        sessionTitle: sessionTitle,
+                        hostName: doctorName,
+                      );
                     },
                     child: ContainerBordered(
                       contClr: c.buttonPrimary,

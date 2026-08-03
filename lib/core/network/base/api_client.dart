@@ -94,6 +94,7 @@ class ApiClient {
     List<MapEntry<String, XFile>>? files,
     Map<String, String>? fields,
     Map<String, dynamic>? headers,
+    List<MapEntry<String, String>>? extraFields,
   }) async {
     try {
       final form = FormData();
@@ -110,7 +111,10 @@ class ApiClient {
 
       fields?.forEach((k, v) {
         form.fields.add(MapEntry(k, v));
-      });
+      }); // Duplicate fields
+      if (extraFields != null) {
+        form.fields.addAll(extraFields);
+      }
 
       return await _dio.patch(
         url,

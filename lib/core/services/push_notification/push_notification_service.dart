@@ -4,10 +4,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
-import 'package:get/get.dart';
+import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:we_mama/core/network/helpers/network_helpers.dart';
 
 import '../../local/app_storage.dart';
@@ -498,6 +497,9 @@ class PushNotificationService extends GetxService {
           importance: Importance.high,
           priority: Priority.high,
           visibility: NotificationVisibility.public,
+
+          // Branding
+          color: c.scaffoldBackground,
         ),
         iOS: const DarwinNotificationDetails(
           presentAlert: true,

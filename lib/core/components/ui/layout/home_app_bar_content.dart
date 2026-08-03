@@ -1,6 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
-import '../../../../features/shared/subscription/subscription_access/premium_access_service.dart';
+import '../../../../features/shared/subscription/subscription_access/premium_gate.dart';
 import '../../../services/push_notification/controller/notification_count_controller.dart';
 
 class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
@@ -151,12 +151,26 @@ class HomeCrown extends StatelessWidget {
                 ),
 
                 // Crown — premium subscribers only
-                Obx(() {
-                  final isPremium = PremiumAccessService.to.isPremiumUser.value;
+                // Obx(() {
+                //   final isPremium = PremiumAccessService.to.isPremiumUser.value;
 
-                  if (!isPremium) return const SizedBox.shrink();
+                //   if (!isPremium) return const SizedBox.shrink();
 
-                  return Positioned(
+                //   return Positioned(
+                //     top: -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
+                //     right:
+                //         -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
+                //     child: Transform.rotate(
+                //       angle: 0.3,
+                //       child: SvgIcon(
+                //         iconPath: IconsPath.crown,
+                //         height: crownSize,
+                //       ),
+                //     ),
+                //   );
+                // }),
+                PremiumGate(
+                  child: Positioned(
                     top: -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.6)),
                     right:
                         -(crownSize * (ScreenSize.isSmallWidth ? 0.45 : 0.7)),
@@ -167,8 +181,8 @@ class HomeCrown extends StatelessWidget {
                         height: crownSize,
                       ),
                     ),
-                  );
-                }),
+                  ),
+                ),
               ],
             ),
           ),

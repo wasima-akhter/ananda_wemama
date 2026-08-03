@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   'isFakePremiumActive-->${PremiumAccessService.to.isFakePremiumActive}',
                 ),
               ), // hidden dev trigger on app version label
-          ),
+            ),
 
           PremiumGate(
             child: MoodCheckInCard(mcc: hc.mcc),
@@ -127,56 +127,41 @@ class _HomeScreenState extends State<HomeScreen> {
           CommunitySpotlight(),
           // if none, show: no live session available right now
           Obx(() {
-            final liveSessionData = hc.spotLightData.value?.liveSession ?? [];
+            final sessions = hc.spotLightData.value?.liveSession ?? [];
 
             final isLoading = hc.isSpotLightLoading_.value;
             final state = getUIStateDetail(isLoading: isLoading);
 
-            if (liveSessionData.isEmpty) {
-              return NoLiveSessionCard();
-            }
+            return UIStateHandler(
+              state: state,
 
-            final firstSession = liveSessionData.first;
-            final status = firstSession.status;
-            final isLive = (status ?? '').toLowerCase() == "ongoing";
+              loading: () => SizedBox(
+                height: S.h * 0.25,
+                child: const LiveOngoingSessionCardShimmer(),
+              ),
 
-            return SizedBox(
-              child: UIStateHandler(
-                loading: () => SizedBox(
-                  height: S.h * 0.25,
-                  child: const LiveOngoingSessionCardShimmer(),
-                ),
-                state: state,
-                data: () {
-                  if (isLive) {
-                    // Gate only applies here: live session + non-premium.
-                    return SizedBox(
-                      //
-                      child: PremiumGate(
-                        child: SizedBox(
-                          height: S.h * 0.25,
-                          child: LiveOngoingSessionCard(data: firstSession),
-                        ),
-                        lockedBuilder: (_) => LiveSessionLockedCard(
-                          onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
-                        ),
-                      ),
-                    );
-                  }
+              data: () {
+                // 1️⃣ Find upcoming first
+                final upcomingSession = sessions.firstWhereOrNull(
+                  (e) => (e.status ?? '').toLowerCase() == "upcoming",
+                );
 
-                  // Upcoming sessions always show, premium or not.
+                if (upcomingSession != null) {
                   final actionCtrl = hc.actionCtrl;
 
                   return UpcomingExpertSessionCard(
                     isRemindMeLoading: () =>
-                        actionCtrl.isReminderLoading(firstSession.id),
+                        actionCtrl.isReminderLoading(upcomingSession.id),
+
                     isReminderActive: () =>
-                        actionCtrl.isReminderSet(firstSession.id),
+                        actionCtrl.isReminderSet(upcomingSession.id),
+
                     onTapRemindMe: () {
-                      actionCtrl.toggleReminder(sessionId: firstSession.id);
+                      actionCtrl.toggleReminder(sessionId: upcomingSession.id);
                     },
+
                     hasTypetitle: true,
-                    data: firstSession,
+                    data: upcomingSession,
                     writeQuesCtrl: hc.writeQuesCtrl,
                     writeQuesFocusNode: hc.writeQuesFocusNode,
                     isSendQuesLoading: actionCtrl.isSendQuesLoading,
@@ -197,12 +182,107 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
                         },
                   );
-                },
-              ),
+                }
+
+                // 2️⃣ Then check live
+                final liveSession = sessions.firstWhereOrNull(
+                  (e) => (e.status ?? '').toLowerCase() == "ongoing",
+                );
+
+                if (liveSession != null) {
+                  return PremiumGate(
+                    child: SizedBox(
+                      height: S.h * 0.25,
+                      child: LiveOngoingSessionCard(data: liveSession),
+                    ),
+
+                    lockedBuilder: (_) => LiveSessionLockedCard(
+                      onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
+                    ),
+                  );
+                }
+
+                // 3️⃣ No live + no upcoming
+                return NoSessionPlaceholder();
+              },
             );
           }),
         ],
       ).getcm,
+    );
+  }
+}
+
+class NoSessionPlaceholder extends StatelessWidget {
+  const NoSessionPlaceholder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ContainerBordered(
+      hp: 10,
+      vp: 10,
+      contClr: cardBgDeep,
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 32.r,
+                width: 32.r,
+                decoration: BoxDecoration(
+                  color: c.primary.withOpacity(.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.auto_awesome_rounded,
+                  size: 17.r,
+                  color: c.primary,
+                ),
+              ),
+
+              Gap(10),
+
+              Expanded(
+                child: Text(
+                  "New sessions are coming soon ✴︎",
+                  style: TxtStyle.urbanistSemiB(
+                    w: 600,
+                    color: c.foregroundPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Gap(8),
+
+          Text(
+            "We're preparing expert guidance to support "
+            "your motherhood journey.",
+            style: TxtStyle.urbanist(
+              fs: 11,
+              w: 500,
+              color: c.foregroundSecondary,
+            ),
+          ),
+
+          Gap(10),
+
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: c.primary.withOpacity(.08),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "Stay tuned for what's next ♡",
+              style: TxtStyle.urbanistSemiB(fs: 11, w: 600, color: c.primary),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

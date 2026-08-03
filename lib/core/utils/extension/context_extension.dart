@@ -609,7 +609,7 @@ class TxtStyle {
   static TextStyle get urbanistSmTitle600 =>
       TxtStyle.urbanistSemiB(fs: 15, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitle =>
-      TxtStyle.urbanistSemiB(fs: 15, w: 600, color: c.foregroundSecondary);
+      TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.foregroundSecondary);
   static TextStyle get urbanistSmTitleSec =>
       TxtStyle.urbanistSemiB(fs: 12, w: 500, color: c.secondary);
   static TextStyle get urbanistSmSecNor =>

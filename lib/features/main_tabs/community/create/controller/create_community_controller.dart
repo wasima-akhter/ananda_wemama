@@ -59,16 +59,17 @@ class CreateCommunityController extends GetxController {
   Future<void> onTapCreate() async {
     if (isLoading_.value) return; // Prevent duplicate calls
     if (nameCtrl.text.trim().isEmpty) {
-      "Name is required".showToast();
+      Snack.showWarning("Name is required");
       return;
     }
     if (nameCtrl.text.trim().length < 3) {
-      "Name must be of at least 3 characters".showToast();
+      Snack.showWarning("Name must be of at least 3 characters");
+
       return;
     }
 
     if (fileImage.value == null) {
-      "Community image is required".showToast();
+      Snack.showWarning("Community image is required");
       return;
     }
 

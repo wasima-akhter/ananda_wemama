@@ -135,14 +135,13 @@ class _CommunitySpotlightLive extends StatelessWidget {
             child: Column(
               children: [
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FittedBox(
-                      child: Text(
-                        Strings.communitySpotlight.capEachWord(),
-                        style: TxtStyle.outfitSmTitle,
-                      ),
+                    Text(
+                      Strings.communitySpotlight.capEachWord(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TxtStyle.outfitSmTitle,
                     ),
                     Gap(itemGap),
                     Opacity(
@@ -167,6 +166,8 @@ class _CommunitySpotlightLive extends StatelessWidget {
                             hp: 12,
                             child: Text(
                               Strings.joinDiscussion.capEachWord(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: 12.titleMclrCusFSURB,
                             ),
                           ),
@@ -268,6 +269,7 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
         hp: 10,
         vp: 10,
         contClr: cardBgDeep,
+        alignment: Alignment.centerLeft,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -353,7 +353,40 @@ class PostDetailsBinding extends Bindings {
     // ✅ Get.put instead of Get.lazyPut — instantiates immediately
     // while arguments are still available in binding context
 
-    final args = Get.arguments as PostDetailArgModel;
+    final args = Get.arguments;
+
+    if (args is PostDetailArgModel) {
+      final communityId = args.communityData.id;
+
+      if (communityId != null && communityId.isNotEmpty) {
+        if (!Get.isRegistered<CommunityDetailController>()) {
+          // Direct deep-link (notification) — no CommunityDetailScreen visited yet.
+          log(
+            '[PostDetailsBinding] putting fresh CommunityDetailController for $communityId',
+          );
+          Get.put(
+            CommunityDetailController(MyCommunityBtnState.join, communityId),
+          );
+        } else {
+          // Already registered — but is it for the SAME community?
+          final existing = Get.find<CommunityDetailController>();
+          if (existing.communityItemId != communityId) {
+            log(
+              '[PostDetailsBinding] stale controller for ${existing.communityItemId}, replacing with $communityId',
+            );
+            Get.delete<CommunityDetailController>(force: true);
+            Get.put(
+              CommunityDetailController(MyCommunityBtnState.join, communityId),
+            );
+          }
+          // else: same community, already loaded via CommunityDetailsScreen — reuse as-is.
+        }
+      } else {
+        log(
+          '⚠️ [PostDetailsBinding] missing communityId in PostDetailArgModel — cannot init CommunityDetailController',
+        );
+      }
+    }
 
     if (Get.isRegistered<PostDetailsController>()) {
       Get.delete<PostDetailsController>(force: true);

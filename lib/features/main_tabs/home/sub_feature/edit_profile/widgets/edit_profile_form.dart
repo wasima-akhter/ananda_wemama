@@ -47,6 +47,28 @@ class EditProfileForm extends StatelessWidget {
               ),
             ),
           ),
+          Gap(itemGap),
+
+          PopupInputTile(
+            rad: 12,
+            hintText: Strings.mumsStage.cap,
+            value: Strings.mumsStage.cap, // epc.selectedMumStage.value,
+            brdrClr: c.inputBorder,
+            brdrW: 0.6,
+            onTap: epc.openMumStagePicker,
+          ),
+
+          Gap(itemGap),
+
+          PopupInputTile(
+            rad: 12,
+            hintText: Strings.lifestyleInterests.cap,
+            value:
+                Strings.lifestyleInterests.cap, //epc.selectedInterests.value,
+            brdrClr: c.inputBorder,
+            brdrW: 0.6,
+            onTap: epc.openInterestsPicker,
+          ),
 
           Gap(itemGap),
 
@@ -54,7 +76,7 @@ class EditProfileForm extends StatelessWidget {
             () => PopupInputTile(
               rad: 12,
               hintText: Strings.state.cap,
-              value: epc.selectedState.value,
+              value: "${Strings.state.cap}: ${epc.selectedState.value}",
               brdrClr: c.inputBorder,
               brdrW: 0.6,
               onTap: epc.openStateBottomSheet,
@@ -67,7 +89,7 @@ class EditProfileForm extends StatelessWidget {
             () => PopupInputTile(
               rad: 12,
               hintText: Strings.city.cap,
-              value: epc.selectedCity.value,
+              value: "${Strings.city.cap}: ${epc.selectedCity.value}",
               brdrClr: c.inputBorder,
               brdrW: 0.6,
               onTap: epc.openCityBottomSheet,
@@ -76,13 +98,17 @@ class EditProfileForm extends StatelessWidget {
 
           Gap(itemGap),
 
-          PopupInputTile(
-            rad: 12,
-            hintText: Strings.children.cap,
-            value: Strings.children.cap,
-            brdrClr: c.inputBorder,
-            brdrW: 0.6,
-            onTap: epc.openChildrenBottomSheet,
+          Obx(
+            () => PopupInputTile(
+              rad: 12,
+              hintText: Strings.children.cap,
+              value: epc.children.isEmpty
+                  ? Strings.children.cap
+                  : "${Strings.children.cap} (${epc.children.length})",
+              brdrClr: c.inputBorder,
+              brdrW: 0.6,
+              onTap: epc.openChildrenBottomSheet,
+            ),
           ),
 
           Gap(itemGap),

@@ -2,7 +2,6 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/models/ui/common_data_models.dart';
 import '../../../../core/services/push_notification/notification_payload.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
-import '../../../main_tabs/community/core/models/community_item_detail_model.dart';
 import '../model/notifications_model.dart';
 
 class NotificationRouter {
@@ -33,6 +32,12 @@ class NotificationRouter {
       'ref=${d.referenceId} | meta=${d.metadata}',
     );
 
+    // Guard: if the navigator isn't mounted yet (cold start), wait for it.
+    if (Get.key.currentState == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _route(d));
+      return;
+    }
+
     switch (d.type) {
       // ─── Like / Comment ───────────────────────────────────────────
       // referenceId = communityId  |  metadata["postId"] = postId
@@ -54,12 +59,11 @@ class NotificationRouter {
 
         Get.toNamed(
           RoutePaths.postDetails,
-          arguments: PostDetailArgModel(
-            communityData: Community(id: communityId),
-            postItem: AllPost(id: postId),
+          arguments: PostDetailArgModel.idsOnly(
+            communityId: communityId,
+            postId: postId,
           ),
         );
-
       // ─── Approve Community ────────────────────────────────────────
       // referenceId = communityId
       case NotificationTypes.approveCommunity:
@@ -72,7 +76,7 @@ class NotificationRouter {
           return;
         }
 
-        Get.toNamed(
+        Get.offAndToNamed(
           RoutePaths.communityDetail,
           arguments: {
             'btnState': MyCommunityBtnState.manage,
@@ -112,6 +116,10 @@ class NotificationRouter {
 
       case NotificationTypes.sentWave:
         Get.toNamed(RoutePaths.waveRequest);
+
+      case NotificationTypes.sessionReminder:
+        Get.offAllNamed(RoutePaths.mainNav);
+        MainNavController.to.goToTab(1);
 
       // ─── Unhandled ────────────────────────────────────────────────
       default:

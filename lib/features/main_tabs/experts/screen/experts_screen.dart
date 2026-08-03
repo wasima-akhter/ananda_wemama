@@ -89,7 +89,10 @@ class ExpertsScreen extends StatelessWidget {
 
             final ongoingList = exc.limitList(sc.ongoingList.value);
             //[fakeSession];
-            final upcomingList = exc.limitList(sc.upcomingList.value);
+            final upcomingList = [
+              ...exc.limitList(sc.upcomingList.value),
+              fakeSession,
+            ];
 
             final ongoingEmpty = !isOngoingLoading && ongoingList.isEmpty;
             final upcomingEmpty = !isUpcomingLoading && upcomingList.isEmpty;
@@ -166,7 +169,7 @@ class ExpertsScreen extends StatelessWidget {
                 if (!upcomingEmpty)
                   CardHorizontalList(
                     aspectRatio: 1.45,
-                    height: Responsive.ongoingSessionCardHeight,
+                    height: Responsive.ongoingSessionCardHeight + 60,
                     title: Strings.upcomingExpertSession,
                     exc: exc,
                     onViewAll: () => exc.onTapViewAll(false),

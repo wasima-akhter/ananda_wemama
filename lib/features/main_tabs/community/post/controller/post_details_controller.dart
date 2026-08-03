@@ -4,10 +4,12 @@ import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
 import '../../../../../core/models/ui/common_data_models.dart';
 import '../../core/models/all_comments_of_post_model.dart';
+import '../../core/models/community_item_detail_model.dart' hide Creator;
 import '../../core/services/community_detail_service.dart';
 import '../../detail/controller/community_detail_controller.dart';
 
 class PostDetailsController extends GetxController {
+  static PostDetailsController get to => Get.find();
   var postAnonymously = false.obs; // 👈 toggle state
 
   final commentCtrl = TextEditingController();
@@ -17,14 +19,75 @@ class PostDetailsController extends GetxController {
 
   final postDetailArg = Rxn<PostDetailArgModel>();
 
+  final isResolvingPost = false.obs;
+  final resolveFailed = false.obs;
+
   @override
   void onInit() async {
     final args = Get.arguments as PostDetailArgModel;
-    postDetailArg.value = args;
+
+    if (args.isIdOnly) {
+      await _resolveFromIds(
+        communityId: args.communityData.id ?? '',
+        postId: args.postItem.id ?? '',
+      );
+    } else {
+      postDetailArg.value =
+          args; // came fully populated from CommunityDetailsScreen
+    }
 
     log('postId_: ${postDetailArg.value?.postItem.id}');
     await getCommentsList();
     super.onInit();
+  }
+
+  Future<void> _resolveFromIds({
+    required String communityId,
+    required String postId,
+  }) async {
+    if (communityId.isEmpty || postId.isEmpty) {
+      resolveFailed.value = true;
+      return;
+    }
+
+    isResolvingPost.value = true;
+    try {
+      final community = await CommunityDetailService().fetchCommunityDetail(
+        communityItemId: communityId,
+      );
+
+      final post = community?.allPost?.firstWhereOrNull(
+        (p) => p.id == postId,
+      ); // package:collection
+
+      if (community == null || post == null) {
+        log('⚠️ post $postId not found in community $communityId');
+        resolveFailed.value = true;
+        return;
+      }
+
+      postDetailArg.value = PostDetailArgModel(
+        communityData: Community(
+          id: community.community?.id,
+          name: community.community?.name,
+        ),
+        postItem: post,
+      );
+
+      // Prime CommunityDetailController's cache too, so like/pin flags &
+      // btnState are correct if the user backs out into the full community screen.
+      if (Get.isRegistered<CommunityDetailController>()) {
+        final cc = CommunityDetailController.to;
+        if (cc.communityItemId == communityId) {
+          cc.communityItemDetail.value = community;
+        }
+      }
+    } catch (e) {
+      log('Error resolving post from ids: $e');
+      resolveFailed.value = true;
+    } finally {
+      isResolvingPost.value = false;
+    }
   }
 
   @override
@@ -204,7 +267,7 @@ class PostDetailsController extends GetxController {
   }
 
   void updateParentCommentCount({required bool increase}) {
-    final communityCtrl = Get.find<CommunityDetailController>();
+    final communityCtrl = CommunityDetailController.to;
 
     final postId = postDetailArg.value?.postItem.id;
 

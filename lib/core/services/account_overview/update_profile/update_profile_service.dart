@@ -17,6 +17,8 @@ class UpdateProfileService extends GetxService {
     required String city,
     required String bio,
     required String name,
+    required List<String> interestedFields,
+    required List<String> mumStages,
     List<Map<String, String>>? children,
   }) async {
     final fields = {
@@ -34,6 +36,14 @@ class UpdateProfileService extends GetxService {
       }
     }
 
+    // mum stages
+    if (mumStages.isNotEmpty) {
+      for (int i = 0; i < mumStages.length; i++) {
+        fields['mumStage[$i]'] = mumStages[i];
+      }
+    }
+
+    //
     log("── updateProfileWithChildren ──────────────────────");
     log("fields: $fields");
     log("profileImage: ${profileImage?.path ?? 'null'}");
@@ -59,7 +69,11 @@ class UpdateProfileService extends GetxService {
               .map((f) => MapEntry('description-image', f))
               .toList(),
           fields: fields,
+          extraFields: interestedFields
+              .map((f) => MapEntry('interesteds', f))
+              .toList(),
         ),
+
         parser: (data) => ProfileDataModel.fromJson(data),
       );
 

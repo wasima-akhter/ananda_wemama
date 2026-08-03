@@ -146,4 +146,5 @@ class NotificationTypes {
   static const acceptWave = "ACCEPT_WAVE";
   static const rejectWave = "REJECT_WAVE";
   static const other = "OTHER";
+  static const sessionReminder = "SESSION_REMINDER";
 }

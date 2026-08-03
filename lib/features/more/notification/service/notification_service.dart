@@ -1,15 +1,17 @@
 import '../../../../app/service_export.dart';
+import '../../../../core/utils/paginator/paginator.dart';
 import '../model/notifications_model.dart';
 
 class NotificationService extends GetxService {
   /// Fetch inventory details from API
 
-  Future<List<NotificationItemModel>> fetchNotifications() async {
+  Future<PaginatedResult<NotificationItemModel>> fetchNotificationsPaged({
+    required int page,
+    required int limit,
+  }) async {
     apiCall() {
       return ApiClient().get(
-        // Endpoints.getMatch(lat: latitude, long: longitude).getUrl,
-        Endpoints.notifications.getUrl,
-        // reqName: Strings.notification,
+        Endpoints.notifications(limit: limit, page: page).getUrl,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }
@@ -17,18 +19,17 @@ class NotificationService extends GetxService {
     final response = await ApiExecutor().execute<List<NotificationItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        // log("parserdata: $data");
+        if (data is List) {
+          return data.map((e) => NotificationItemModel.fromJson(e)).toList();
+        }
 
-        if (data == null) return [];
-
-        return (data is List)
-            ? data.map((e) => NotificationItemModel.fromJson(e)).toList()
-            : [];
+        return [];
       },
     );
 
-    // log("response data: ${response?.data}");
-    return response.data ?? [];
+    log("notification response data: ${response.data}");
+
+    return PaginatedResult(data: response.data ?? [], meta: response.meta);
   }
 
   Future<bool> updateIsSeen({required String notificationId}) async {

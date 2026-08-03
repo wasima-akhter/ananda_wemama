@@ -5,10 +5,10 @@ import 'package:app_links/app_links.dart';
 import 'package:get/get.dart';
 
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
-import '../../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 import '../../../routes/route_paths.dart';
 import '../../network/helpers/network_helpers.dart';
 import '../session/session_service.dart';
+import 'session_navigator.dart';
 
 class DeepLinkService extends GetxService {
   final AppLinks _appLinks = AppLinks();
@@ -279,38 +279,9 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
         Get.offAllNamed(RoutePaths.mainNav);
         return;
       }
+      await SessionNavigator.open(session);
 
       log("🔗 [DeepLinkService] → session.status = '${session.status}'");
-
-      switch (session.status) {
-        case 'Ongoing':
-          log('🔗 [DeepLinkService] → Ongoing → navigating to meetingScreen');
-          Get.offAllNamed(
-            RoutePaths.meetingScreen,
-            arguments: MeetingCtrlAgModel(
-              channelname: session.channelName,
-              sessionTitle: session.title,
-              hostName: session.expert?.name ?? '',
-            ),
-          );
-          break;
-
-        case 'Upcoming':
-          log(
-            '🔗 [DeepLinkService] → Upcoming → navigating to mainNav then tab 4',
-          );
-          await Get.offAllNamed(RoutePaths.upcomingSessions);
-          await Future.microtask(() => null);
-          log('🔗 [DeepLinkService] → calling upcomingSessions screen');
-          // MainNavController.to.goToTab(4);
-          break;
-
-        default:
-          log(
-            "🔗 [DeepLinkService] → unhandled status '${session.status}' → mainNav",
-          );
-          Get.offAllNamed(RoutePaths.mainNav);
-      }
     } catch (e, st) {
       log('❌ [DeepLinkService] navigateToSession() ERROR: $e');
       log('❌ [DeepLinkService] STACK: $st');

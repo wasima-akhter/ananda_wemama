@@ -142,89 +142,15 @@ class UpcomingExpertSessionCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CusGestureDetector(
-                // <-- wrap existing ContainerBordered
-                onTap: () => ShareService.shareSession(data!),
-                child: ContainerBordered(
-                  hasBrdr: true,
-                  brdrClr: c.strokePrimary,
-                  brdrW: 1,
-                  rad: 30,
-                  contClr: ctransp,
-                  hp: 12,
-                  vp: 0,
-                  h: actionBtnHeight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgIcon(iconPath: IconsPath.share),
-                      Gap(itemGap),
-                      Text(
-                        Strings.share.cap,
-                        style: TxtStyle.outfitSemiB(
-                          fs: 14,
-                          color: c.strokePrimary,
-                          w: 500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              DeviceSize.isTablet
+                  ? makeShareButton()
+                  : Flexible(child: makeShareButton()),
 
               Gap(itemGap),
 
-              Flexible(
-                child: CusGestureDetector(
-                  onTap: onTapRemindMe,
-
-                  child: Obx(() {
-                    final active =
-                        isReminderActive(); // 👈 call it, don't just reference
-                    final loading = isRemindMeLoading();
-
-                    return ContainerBordered(
-                      // contClr: active ? c.strokePrimary : c.buttonPrimary,
-                      contClr: c.buttonPrimary,
-
-                      rad: 30,
-                      vp: 0,
-                      h: actionBtnHeight,
-
-                      child: loading
-                          ? LoadingWhite()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-
-                              children: [
-                                SvgIcon(
-                                  iconPath: active
-                                      ? IconsPath.reminderBellStraignt
-                                      : IconsPath.reminderBellSkew,
-                                ),
-
-                                Gap(itemGap),
-
-                                Text(
-                                  active
-                                      ? "Remove"
-                                      : Strings.remindMe.capEachWord(),
-
-                                  overflow: TextOverflow.ellipsis,
-
-                                  style: TxtStyle.outfitSemiB(
-                                    fs: 13,
-                                    w: 600,
-                                    color: active ? bgClr : c.textOnPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                    );
-                  }),
-                ),
-              ),
+              DeviceSize.isTablet
+                  ? makeReminderButton()
+                  : Flexible(child: makeReminderButton()),
 
               Gap(itemGap),
 
@@ -268,6 +194,92 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         CustomDivider(isFullWidth: true, h: 0.6),
         Gap(itemGap),
       ],
+    );
+  }
+
+  Widget makeReminderButton() {
+    return CusGestureDetector(
+      onTap: onTapRemindMe,
+
+      child: Obx(() {
+        final active = isReminderActive(); // 👈 call it, don't just reference
+        final loading = isRemindMeLoading();
+
+        return ContainerBordered(
+          // contClr: active ? c.strokePrimary : c.buttonPrimary,
+          contClr: c.buttonPrimary,
+
+          rad: 30,
+          vp: 0,
+          h: actionBtnHeight,
+          alignment: Alignment.center,
+
+          child: loading
+              ? LoadingWhite()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgIcon(
+                      iconPath: active
+                          ? IconsPath.reminderBellStraignt
+                          : IconsPath.reminderBellSkew,
+                    ),
+
+                    Gap(itemGap),
+
+                    Flexible(
+                      child: Text(
+                        active ? "Remove" : Strings.remindMe.capEachWord(),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TxtStyle.outfitSemiB(
+                          fs: 13,
+                          w: 600,
+                          color: active ? bgClr : c.textOnPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+        );
+      }),
+    );
+  }
+
+  Widget makeShareButton() {
+    return CusGestureDetector(
+      // <-- wrap existing ContainerBordered
+      onTap: () => ShareService.shareSession(data!),
+      child: ContainerBordered(
+        hasBrdr: true,
+        brdrClr: c.strokePrimary,
+        brdrW: 1,
+        rad: 30,
+        contClr: ctransp,
+        hp: 12,
+        vp: 0,
+        h: actionBtnHeight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SvgIcon(iconPath: IconsPath.share),
+            Gap(itemGap),
+            Flexible(
+              child: Text(
+                Strings.share.cap,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: TxtStyle.outfitSemiB(
+                  fs: 14,
+                  color: c.strokePrimary,
+                  w: 500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

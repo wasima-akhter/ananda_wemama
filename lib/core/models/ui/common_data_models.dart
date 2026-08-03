@@ -38,8 +38,24 @@ class CreateCommunityArgModel {
 class PostDetailArgModel {
   final Community communityData;
   final AllPost postItem;
+  final bool isIdOnly; // true = only ids populated, needs hydration
 
-  PostDetailArgModel({required this.communityData, required this.postItem});
+  const PostDetailArgModel({
+    required this.communityData,
+    required this.postItem,
+    this.isIdOnly = false,
+  });
+
+  factory PostDetailArgModel.idsOnly({
+    required String communityId,
+    required String postId,
+  }) {
+    return PostDetailArgModel(
+      communityData: Community(id: communityId),
+      postItem: AllPost(id: postId),
+      isIdOnly: true,
+    );
+  }
 }
 
 class CommonTitleIconpathModel {

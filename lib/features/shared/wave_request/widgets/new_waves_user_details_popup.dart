@@ -9,6 +9,7 @@ import '../../../../core/helpers/widgets_helper.dart';
 import '../../../main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../main_tabs/home/sub_feature/profile/widgets/profile_shimmer.dart';
 import '../../subscription/subscription_access/premium_access_service.dart';
+import '../../subscription/subscription_access/premium_gate.dart';
 
 class NewWavesUserDetailsPopup extends StatelessWidget {
   final Rxn<ProfileDataModel> user;
@@ -99,7 +100,7 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
                         child: BackdropFilter(
                           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
                           child: Container(
-                            color: Colors.white.withOpacity(.15),
+                            color: Colors.white.withValues(alpha: .15),
                             height: double.infinity,
                             child: Stack(
                               children: [
@@ -177,45 +178,37 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
   }
 
   Widget _getDeclineAcceptBtnRow() {
-    return Obx(() {
-      final isPremium = PremiumAccessService.to.isPremiumUser.value;
-
-      return IgnorePointer(
-        ignoring: !isPremium,
-        child: Opacity(
-          opacity: isPremium ? 1 : .45,
-          child: Row(
-            spacing: itemGap * 2,
-            children: [
-              Expanded(
-                child: CustomBtnWTxt(
-                  isSmall: true,
-                  btnColor: ctransp,
-                  borderClr: c.primary,
-                  txtClr: c.textSecondary,
-                  rad: 12,
-                  btnTxt: Strings.decline,
-                  isLoading: isRejectLoading.value,
-                  onTap: () => onTapAction(false),
-                ),
-              ),
-              Expanded(
-                child: CustomBtnWTxt(
-                  isSmall: true,
-                  btnColor: c.primary,
-                  borderClr: c.primary,
-                  txtClr: white,
-                  btnTxt: Strings.accept,
-                  rad: 12,
-                  isLoading: isAcceptLoading.value,
-                  onTap: () => onTapAction(true),
-                ),
-              ),
-            ],
+    return PremiumLock(
+      child: Row(
+        spacing: itemGap * 2,
+        children: [
+          Expanded(
+            child: CustomBtnWTxt(
+              isSmall: true,
+              btnColor: ctransp,
+              borderClr: c.primary,
+              txtClr: c.textSecondary,
+              rad: 12,
+              btnTxt: Strings.decline,
+              isLoading: isRejectLoading.value,
+              onTap: () => onTapAction(false),
+            ),
           ),
-        ),
-      );
-    });
+          Expanded(
+            child: CustomBtnWTxt(
+              isSmall: true,
+              btnColor: c.primary,
+              borderClr: c.primary,
+              txtClr: white,
+              btnTxt: Strings.accept,
+              rad: 12,
+              isLoading: isAcceptLoading.value,
+              onTap: () => onTapAction(true),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

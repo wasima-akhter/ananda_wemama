@@ -10,16 +10,23 @@ double itemGap = 0.01 * 1.sh; // 1% of screen height
 
 final actionBtnHeight = 35.h;
 
-// class ScreenSize {
-//   static bool get isTallHeight => Get.height >= 800;
-//   static bool get isMediumHeight => Get.height >= 700 && Get.height < 800;
-//   static bool get isSmallHeight => Get.height < 700;
+class DeviceSize {
+  const DeviceSize._();
 
-// Width
-// bool get isWideWidth => Get.width >= 400;
-// bool get isMediumWidth => Get.width >= 360 && Get.width < 400;
-// bool get isSmallWidth => Get.width < 360;
-// }
+  static const double phoneMaxWidth = 600;
+  static const double tabletMaxWidth = 1024;
+
+  static double get width => ScreenUtil().screenWidth;
+
+  static bool get isPhone => width < phoneMaxWidth;
+
+  static bool get isTablet => width >= phoneMaxWidth && width < tabletMaxWidth;
+
+  static bool get isPhoneOrTablet => width < tabletMaxWidth;
+
+  static bool get isSmallPhone => width < 380;
+}
+
 class ScreenSize {
   // Height
   static bool get isTallHeight => Get.height >= 800;

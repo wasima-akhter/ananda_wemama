@@ -1,20 +1,23 @@
 import 'package:we_mama/app/helper_widgets_export.dart';
+import 'package:we_mama/core/components/ui/inputs/cus_pass_type_text_form_field.dart';
+import 'package:we_mama/features/main_tabs/home/sub_feature/profile/controller/profile_controller.dart';
+
+import '../../../utils/validator/validators.dart';
+import '../../ui/helpers/visibility_suffix.dart';
 
 class DeleteAccountConfirmDialog extends StatelessWidget {
   final RxBool isLoading;
   final Future<void> Function(String password) onConfirm;
 
-  DeleteAccountConfirmDialog({
+  const DeleteAccountConfirmDialog({
     super.key,
     required this.isLoading,
     required this.onConfirm,
   });
 
-  final TextEditingController passwordController = TextEditingController();
-  final RxBool obscure = true.obs;
-
   @override
   Widget build(BuildContext context) {
+    final profileController = ProfileController.to;
     return Container(
       padding: 20.pa,
       decoration: BoxDeco.decRadiusAll(20, clr: bgClr),
@@ -37,23 +40,27 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
           ),
 
           20.toHeight,
-
           Obx(
-            () => TextField(
-              controller: passwordController,
-              obscureText: obscure.value,
-              decoration: InputDecoration(
-                hintText: "Enter your password",
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    obscure.value ? Icons.visibility_off : Icons.visibility,
-                  ),
-                  onPressed: () => obscure.toggle(),
-                ),
+            () => CusPassTypeTextFormField(
+              controller: profileController.passwordCtrl,
+              obscureText: profileController.isPasswordHidden,
+              hintText: "Enter your password",
+
+              validator: (value) => validatePassword(value),
+
+              prefix: SvgIcon(
+                iconPath: IconsPath.lock,
+                height: 22,
+              ).mOnly(left: 15, right: 6),
+
+              prefixSize: 34,
+
+              suffix: VisibilitySuffix(
+                onTap: profileController.togglePassword,
+                icon: profileController.passwordIcon,
               ),
+
+              hintW: 600,
             ),
           ),
 
@@ -82,7 +89,8 @@ class DeleteAccountConfirmDialog extends StatelessWidget {
                     isLoading: isLoading.value,
                     rad: 30,
                     onTap: () async {
-                      final password = passwordController.text.trim();
+                      final password = profileController.passwordCtrl.text
+                          .trim();
 
                       if (password.isEmpty) {
                         // show your snackbar/toast

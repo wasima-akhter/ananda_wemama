@@ -29,11 +29,25 @@ class PremiumGate extends StatelessWidget {
   }
 }
 
-/* Use:
-PremiumGate(
-  child: AdvancedInsightsCard(),
-  lockedBuilder: (_) => UpgradeTeaserCard(
-    onTap: () => Get.toNamed(RoutePaths.subscriptionChoosePlan),
-  ),
-)
-*/
+class PremiumLock extends StatelessWidget {
+  const PremiumLock({
+    super.key,
+    required this.child,
+    this.disabledOpacity = .45,
+  });
+
+  final Widget child;
+  final double disabledOpacity;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final isPremium = PremiumAccessService.to.isPremiumUser.value;
+
+      return IgnorePointer(
+        ignoring: !isPremium,
+        child: Opacity(opacity: isPremium ? 1 : disabledOpacity, child: child),
+      );
+    });
+  }
+}

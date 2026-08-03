@@ -1,33 +1,24 @@
 import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
-import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
-import '../../../../../core/components/ui/inputs/cus_des_type_text_form_field.dart';
-import '../../../../../core/components/ui/loaders/empty_widget.dart';
-import '../../../../shared/comments/widget/comment_item_w_reply.dart';
 import '../../core/models/all_comments_of_post_model.dart';
-import '../../core/models/community_item_detail_model.dart';
-import '../../detail/controller/community_detail_controller.dart';
 import '../controller/post_details_controller.dart';
-import '../widgets/post_item_widget.dart';
+import '../widgets/post_details_comments_section.dart';
+import '../widgets/post_details_floating_comment_input.dart';
+import '../widgets/post_details_post_section.dart';
 
 class PostDetailsScreen extends StatelessWidget {
   const PostDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final pcc = Get.find<PostDetailsController>();
-    final cc = CommunityDetailController.to;
+    final pcc = PostDetailsController.to;
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
-    // ← scroll to bottom + open keyboard after first frame
-    // Replace current addPostFrameCallback with:
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      pcc.commentFocus.requestFocus(); // ← focus first, keyboard opens
+      pcc.commentFocus.requestFocus();
 
-      // Wait for keyboard to fully open, then scroll
       Future.delayed(const Duration(milliseconds: 500), () {
         if (pcc.scrollController.hasClients) {
           pcc.scrollController.animateTo(
@@ -45,166 +36,19 @@ class PostDetailsScreen extends StatelessWidget {
       isScrollable: false,
       appBar: CommonAppBarContent(title: Strings.post),
 
-      // ── Pinned input at bottom ──
-      floatingActionButton: Obx(() {
-        final replyingTo = pcc.replyingToUserName.value;
+      floatingActionButton: PostDetailsFloatingCommentInput(),
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (replyingTo.isNotEmpty)
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ContainerBordered(
-                    hp: 10,
-                    vp: 6,
-                    contClr: c.backgroundSecondary,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "Replying to $replyingTo",
-                          style: TxtStyle.outfit(fs: 14),
-                        ),
-                        Gap(6),
-                        CusGestureDetector(
-                          onTap: () {
-                            pcc.replyingToCommentId.value = null;
-                            pcc.replyingToUserName.value = '';
-                          },
-                          child: SvgIconColored(
-                            iconPath: IconsPath.closeCircle,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-            CusDesTypeTextFormField(
-              controller: pcc.commentCtrl,
-              focusNode: pcc.commentFocus,
-              hintText: replyingTo.isNotEmpty
-                  ? "Reply to $replyingTo"
-                  : Strings.writeSomething,
-              minLines: 1,
-              minHeight: 40,
-              maxHeight: 65,
-              suffix: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CusGestureDetector(
-                    onTap: () async => await pcc.onTapAddComment(),
-                    child: CircleAvatar(
-                      backgroundColor: c.primary,
-                      child: Obx(
-                        () => pcc.isAddCommentLoading.value
-                            ? LoadingWhite()
-                            : SvgIcon(
-                                iconPath: IconsPath.sendSmallWhite,
-                                height: 20,
-                              ),
-                      ),
-                    ),
-                  ).mAll(5),
-                ],
-              ),
-            ).getcm,
-          ],
-        );
-      }),
-
-      // ── Scrollable body ──
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // ── Post at top ──
-          Builder(
-            builder: (context) {
-              final communityData =
-                  pcc.postDetailArg.value?.communityData ?? Community();
-
-              final postItem = pcc.postDetailArg.value?.postItem ?? AllPost();
-              return PostItemWidget(
-                communityData: communityData,
-                postItem: postItem,
-
-                btnState: cc.btnState.value,
-                postId: postItem.id.toString(),
-                userName: postItem.creator?.name ?? '',
-                postCreatorId: communityData.id ?? '',
-                showActions: false,
-              ).mB(itemGap);
-            },
-          ),
+          PostDetailsPostSection(),
 
           Gap(itemGap * 3),
           CustomDivider(isFullWidth: true, clr: c.primary, h: 0.5),
           Gap(itemGap),
 
-          // ── Comments list (not independently scrollable) ──
-          Flexible(
-            child: Obx(() {
-              final state = pcc.commentState;
-
-              return UIStateHandler(
-                state: state,
-
-                onRefresh: () async {
-                  await pcc.getCommentsList();
-                },
-
-                loading: () => ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(bottom: itemGap),
-                  itemCount: 6,
-                  separatorBuilder: (_, _) => Gap(itemGap * 0.6),
-                  itemBuilder: (_, index) => const CommentItemShimmer(),
-                ),
-
-                empty: () => EmptyNoSearchWidgetScrollable(
-                  assetPath: Assets.images.noCommentIcon.path,
-                  title: "No comments yet",
-                  subTitle:
-                      "Be the first to share some love \nor start the conversation!",
-                ),
-
-                data: () => ListView.separated(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(bottom: itemGap * 2),
-                  itemCount: pcc.comments.length,
-                  separatorBuilder: (_, _) => Gap(itemGap * 0.6),
-                  itemBuilder: (_, index) {
-                    final item = pcc.comments[index];
-
-                    return ContainerBordered(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          NetworkImageWidget(
-                            imageUrl: item.creator?.profileImage ?? '',
-                            isCircle: true,
-                            radius: 16,
-                          ),
-                          Gap(itemGap),
-
-                          Expanded(
-                            child: CommentItemInPostDetail(
-                              item: item,
-                              pcc: pcc,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
-            }),
-          ),
+          Flexible(child: PostDetailsCommentsSection()),
         ],
       ).getcm,
     );
@@ -214,6 +58,7 @@ class PostDetailsScreen extends StatelessWidget {
 class CommentItemInPostDetail extends StatelessWidget {
   final CommentModelOfPost item;
   final PostDetailsController pcc;
+
   const CommentItemInPostDetail({
     super.key,
     required this.item,
@@ -223,139 +68,123 @@ class CommentItemInPostDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final childCommentList = item.replies ?? [];
+
     log(
       'childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0].id : ''}',
     );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.creator?.name ?? 'N/A',
-                    style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
-                  ),
-                  Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
-                ],
+        _buildMainComment(),
+        _buildReplyButton(),
+        _buildChildComments(childCommentList),
+      ],
+    );
+  }
+
+  Widget _buildMainComment() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.creator?.name ?? 'N/A',
+                style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
               ),
-            ),
-
-            //
-            // time
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  DateHelper()
-                          .formatUTCtimestamp(item.createdAt.toString())
-                          .time ??
-                      'N/A',
-                  style: TxtStyle.outfitSemiB(fs: 9, color: c.textPrimary),
-                ).mT(5),
-                Text(
-                  DateHelper()
-                          .formatUTCtimestamp(item.createdAt.toString())
-                          .date ??
-                      'N/A',
-                  style: TxtStyle.outfitSemiB(fs: 9, color: c.textPrimary),
-                ),
-              ],
-            ),
-          ],
-        ),
-        CusGestureDetector(
-          onTap: () {
-            pcc.replyingToCommentId.value = item.id;
-            pcc.replyingToUserName.value = item.creator?.name ?? '';
-
-            pcc.commentFocus.requestFocus(); // open keyboard
-          },
-          child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+              Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
+            ],
+          ),
         ),
 
-        Column(
-          children: [
-            ...childCommentList.map((child) {
-              return Padding(
-                padding: EdgeInsets.only(left: 20), // 👈 indent
-                child: Row(
+        _buildCommentTime(createdAt: item.createdAt, fontSize: 10),
+      ],
+    );
+  }
+
+  Widget _buildReplyButton() {
+    return CusGestureDetector(
+      onTap: () {
+        pcc.replyingToCommentId.value = item.id;
+        pcc.replyingToUserName.value = item.creator?.name ?? '';
+
+        pcc.commentFocus.requestFocus();
+      },
+      child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+    );
+  }
+
+  Widget _buildChildComments(List<ReplyModelOfPost> childCommentList) {
+    return Column(
+      children: [
+        ...childCommentList.map((child) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: _buildChildComment(child),
+          ).mT(6);
+        }),
+      ],
+    );
+  }
+
+  Widget _buildChildComment(ReplyModelOfPost child) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        NetworkImageWidget(
+          imageUrl: child.creator?.profileImage ?? '',
+          isCircle: true,
+          radius: 14,
+          enablePreview: true,
+          isUser: true,
+          name: child.creator?.name ?? '',
+        ),
+
+        Gap(itemGap * 0.6),
+
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    NetworkImageWidget(
-                      imageUrl: child.creator?.profileImage ?? '',
-                      isCircle: true,
-                      radius: 14, // 👈 smaller avatar
-                      enablePreview: true,
-                      isUser: true,
-                      name: child.creator?.name ?? '',
+                    Text(
+                      child.creator?.name ?? 'N/A',
+                      style: TxtStyle.outfitSemiB(fs: 13, color: c.textPrimary),
                     ),
-                    Gap(itemGap * 0.6),
-
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  child.creator?.name ?? 'N/A',
-                                  style: TxtStyle.outfitSemiB(
-                                    fs: 13,
-                                    color: c.textPrimary,
-                                  ),
-                                ),
-                                Text(
-                                  child.content ?? '--',
-                                  style: TxtStyle.outfit(fs: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // time
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                DateHelper()
-                                        .formatUTCtimestamp(
-                                          child.createdAt.toString(),
-                                        )
-                                        .time ??
-                                    'N/A',
-                                style: TxtStyle.outfitSemiB(
-                                  fs: 9,
-                                  color: c.textPrimary,
-                                ),
-                              ).mT(5),
-                              Text(
-                                DateHelper()
-                                        .formatUTCtimestamp(
-                                          child.createdAt.toString(),
-                                        )
-                                        .date ??
-                                    'N/A',
-                                style: TxtStyle.outfitSemiB(
-                                  fs: 9,
-                                  color: c.textPrimary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    Text(child.content ?? '--', style: TxtStyle.outfit(fs: 12)),
                   ],
                 ),
-              ).mT(6);
-            }),
-          ],
+              ),
+
+              _buildCommentTime(createdAt: child.createdAt, fontSize: 9),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentTime({
+    required dynamic createdAt,
+    required double fontSize,
+  }) {
+    final formatted = DateHelper().formatUTCtimestamp(createdAt.toString());
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          formatted.time ?? 'N/A',
+          style: TxtStyle.outfitSemiB(fs: fontSize, color: c.textPrimary),
+        ).mT(5),
+        Text(
+          formatted.date ?? 'N/A',
+          style: TxtStyle.outfitSemiB(fs: fontSize, color: c.textPrimary),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:pinput/pinput.dart';
 
 import '../../app/helper_widgets_export.dart';
+import '../../features/auth/core/auth_button_templates.dart';
 import '../../features/main_tabs/community/comments/widgets/comments_bottom_sheet.dart';
 import '../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../features/shared/report_sheet/screens/report_bottom_sheet.dart';
@@ -149,6 +150,58 @@ Future<dynamic> showChildrenBottomSheet({
 
     isScrollControlled: isScrollControlled,
     backgroundColor: bgClr, // needed for rounded corners
+  );
+}
+
+Future<T?> showCommonPickerBottomSheet<T>({
+  required String title,
+  required Widget child,
+  required VoidCallback onDone,
+  String doneText = "Done",
+  double? height,
+}) {
+  return Get.bottomSheet<T>(
+    ignoreSafeArea: false,
+    isDismissible: true,
+    enableDrag: true,
+    isScrollControlled: true,
+    backgroundColor: bgClr,
+
+    AnimatedPadding(
+      duration: const Duration(milliseconds: 250),
+      padding: EdgeInsets.only(bottom: S.bottomInset),
+
+      child: Container(
+        height: height ?? bSheetH * 0.9,
+        padding: EdgeInsets.all(itemGap * 1.2),
+
+        decoration: BoxDecoration(
+          color: c.cardPrimary,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+
+        child: Column(
+          children: [
+            Gap(itemGap),
+
+            Text(title.cap, style: TxtStyle.outfitSemiB(fs: 16)),
+
+            Gap(itemGap),
+
+            Expanded(child: child),
+
+            Padding(
+              padding: EdgeInsets.all(itemGap),
+              child: AuthButton(
+                isLoading: false,
+                btnText: doneText,
+                onTap: onDone,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
   );
 }
 

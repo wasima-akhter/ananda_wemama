@@ -10,12 +10,14 @@ class SetChildrenBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<EditProfileController>();
+    final controller = EditProfileController.to;
 
     return SafeArea(
       top: false,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: S.h * 0.75), // ✅ prevents overflow
+        constraints: BoxConstraints(
+          maxHeight: S.h * 0.75,
+        ), // ✅ prevents overflow
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 16),
           decoration: BoxDecoration(
@@ -34,7 +36,11 @@ class SetChildrenBottomSheet extends StatelessWidget {
                   Gap(30.w),
                   Text(
                     Strings.setChildren,
-                    style: TxtStyle.outfit(fs: 18, w: 600, color: c.foregroundSecondary),
+                    style: TxtStyle.outfit(
+                      fs: 18,
+                      w: 600,
+                      color: c.foregroundSecondary,
+                    ),
                   ),
                   CusGestureDetector(
                     onTap: () => Get.back(),
@@ -70,7 +76,10 @@ class SetChildrenBottomSheet extends StatelessWidget {
                         key: ValueKey(child),
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
                             decoration: BoxDecoration(
                               color: c.cardPrimary,
                               borderRadius: 20.brdrRad,
@@ -79,23 +88,30 @@ class SetChildrenBottomSheet extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Children ${index + 1}",
-                                        style: TxtStyle.outfitSemiB(fs: 14, color: c.foregroundSecondary),
+                                        style: TxtStyle.outfitSemiB(
+                                          fs: 14,
+                                          color: c.foregroundSecondary,
+                                        ),
                                       ),
                                       Gap(4),
                                       Obx(
                                         () => CusGestureDetector(
                                           onTap: () async {
-                                            final picked = await pickDatePickerForChildren(
-                                              child: child,
-                                            );
+                                            final picked =
+                                                await pickDatePickerForChildren(
+                                                  child: child,
+                                                );
                                             if (picked != null) {
                                               controller.updateChildDob(
                                                 index,
-                                                DateFormat("dd-MM-yyyy").format(picked),
+                                                DateFormat(
+                                                  "dd-MM-yyyy",
+                                                ).format(picked),
                                               );
                                             }
                                           },
@@ -121,24 +137,39 @@ class SetChildrenBottomSheet extends StatelessWidget {
                                   () => Row(
                                     children: [
                                       CusGestureDetector(
-                                        onTap: () => controller.updateChildGender(index, "male"),
+                                        onTap: () => controller
+                                            .updateChildGender(index, "male"),
                                         child: Row(
                                           children: [
-                                            CustomRadio(isSelected: child.gender.value == "male"),
+                                            CustomRadio(
+                                              isSelected:
+                                                  child.gender.value == "male",
+                                            ),
                                             Gap(6),
-                                            Text("Male", style: TxtStyle.outfit(fs: 13)),
+                                            Text(
+                                              "Male",
+                                              style: TxtStyle.outfit(fs: 13),
+                                            ),
                                           ],
                                         ),
                                       ),
                                       Gap(16.w),
 
                                       CusGestureDetector(
-                                        onTap: () => controller.updateChildGender(index, "female"),
+                                        onTap: () => controller
+                                            .updateChildGender(index, "female"),
                                         child: Row(
                                           children: [
-                                            CustomRadio(isSelected: child.gender.value == "female"),
+                                            CustomRadio(
+                                              isSelected:
+                                                  child.gender.value ==
+                                                  "female",
+                                            ),
                                             Gap(6),
-                                            Text("Female", style: TxtStyle.outfit(fs: 13)),
+                                            Text(
+                                              "Female",
+                                              style: TxtStyle.outfit(fs: 13),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -161,7 +192,8 @@ class SetChildrenBottomSheet extends StatelessWidget {
                                   color: Colors.white, // background circle
                                 ),
                                 child: SvgIconColored(
-                                  iconPath: IconsPath.minus, // 🔥 your minus icon
+                                  iconPath:
+                                      IconsPath.minus, // 🔥 your minus icon
                                   height: 14,
                                   iconColor: c.secondary,
                                 ),
@@ -183,8 +215,14 @@ class SetChildrenBottomSheet extends StatelessWidget {
                 child: CusGestureDetector(
                   onTap: controller.addChild,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-                    decoration: BoxDecoration(color: c.cardPrimary, borderRadius: 30.brdrRad),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      color: c.cardPrimary,
+                      borderRadius: 30.brdrRad,
+                    ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -194,7 +232,10 @@ class SetChildrenBottomSheet extends StatelessWidget {
                           height: 18,
                         ),
                         Gap(itemGap),
-                        Text("Add Children", style: TxtStyle.outfitSemiB(fs: 14, )),
+                        Text(
+                          "Add Children",
+                          style: TxtStyle.outfitSemiB(fs: 14),
+                        ),
                       ],
                     ),
                   ),

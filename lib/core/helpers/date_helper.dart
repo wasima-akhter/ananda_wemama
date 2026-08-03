@@ -211,6 +211,86 @@ class DateHelper {
 
   ///
   ///////
+  ///
+  ///
+  DateAndTimeMap formatNotificationTime(String? timestamp) {
+    if (timestamp == null || timestamp.trim().isEmpty) {
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: '',
+        dateYear: 'N/A',
+        display: 'N/A',
+      );
+    }
+
+    try {
+      DateTime? dt = DateTime.tryParse(timestamp);
+
+      if (dt == null) {
+        return DateAndTimeMap(
+          date: 'N/A',
+          time: '',
+          dateYear: 'N/A',
+          display: 'N/A',
+        );
+      }
+
+      final bool isUtc =
+          timestamp.endsWith('Z') ||
+          timestamp.contains(RegExp(r'[+-]\d\d:\d\d'));
+
+      if (isUtc) {
+        dt = dt.toLocal();
+      }
+
+      final now = DateTime.now();
+
+      final isToday =
+          now.year == dt.year && now.month == dt.month && now.day == dt.day;
+
+      if (isToday) {
+        final diff = now.difference(dt);
+
+        String short;
+
+        if (diff.inSeconds < 60) {
+          short = '${diff.inSeconds} s';
+        } else if (diff.inMinutes < 60) {
+          short = '${diff.inMinutes} m';
+        } else {
+          short = '${diff.inHours} hr';
+        }
+
+        return DateAndTimeMap(
+          date: short,
+          time: DateFormat('hh:mm a').format(dt),
+          dateYear: short,
+          fullDate: DateFormat('dd MMM yyyy').format(dt),
+          display: short,
+        );
+      }
+
+      final date = DateFormat('dd MMM yyyy').format(dt);
+      final time = DateFormat('hh:mm a').format(dt);
+
+      return DateAndTimeMap(
+        date: date,
+        time: time,
+        dateYear: DateFormat('MMM yyyy').format(dt),
+        fullDate: '$date $time',
+        display: '$date\n$time',
+      );
+    } catch (e) {
+      log('❌ formatNotificationTime failed: $e');
+
+      return DateAndTimeMap(
+        date: 'N/A',
+        time: '',
+        dateYear: 'N/A',
+        display: 'N/A',
+      );
+    }
+  }
 }
 
 class DateAndTimeMap {
@@ -218,12 +298,14 @@ class DateAndTimeMap {
   final String time;
   final String dateYear;
   final String? fullDate;
+  final String display; // 👈 combined display text
 
   DateAndTimeMap({
     required this.date,
     required this.time,
     required this.dateYear,
     this.fullDate,
+    this.display = '',
   });
 }
 

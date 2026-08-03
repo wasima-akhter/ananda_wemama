@@ -1,6 +1,7 @@
 import '../../../../../../../app/controller_export.dart';
 import '../../../../../../../core/services/auth/signout_service.dart';
 import '../../../../../../../core/services/profile/profile_info_service.dart';
+import '../../../../../../core/constants/icon_and_image_paths.dart';
 import '../model/profile_model.dart';
 
 class ProfileController extends GetxController {
@@ -86,6 +87,26 @@ class ProfileController extends GetxController {
   }
 
   //
+
+  final passwordCtrl = TextEditingController();
+
+  final showPassword = false.obs;
+
+  String get passwordIcon =>
+      !showPassword.value ? IconsPath.visibilityOff : IconsPath.visibilityOn;
+
+  bool get isPasswordHidden => !showPassword.value;
+
+  void togglePassword() {
+    showPassword.value = !showPassword.value;
+  }
+
+  @override
+  void onClose() {
+    passwordCtrl.dispose();
+    super.onClose();
+  }
+
   // Sign out loading state
   var isDeleteAccountLoading_ = false.obs;
 
