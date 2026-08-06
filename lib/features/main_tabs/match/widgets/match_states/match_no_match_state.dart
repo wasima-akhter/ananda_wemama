@@ -12,14 +12,16 @@ class MatchNoMatchState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
+      // padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 12.h),
       child: Column(
         children: [
           /// Top Image
           SafeAssetImage(
-            assetPath: Assets.images.matchMap.path, // replace with your asset
+            assetPath:
+                Assets.images.noMatchStateImage.path, // replace with your asset
             width: double.infinity,
-            height: S.h * 0.25,
+            height: S.h * 0.23,
+            fit: BoxFit.contain,
           ),
 
           Gap(18.h),
@@ -80,43 +82,51 @@ class MatchNoMatchState extends StatelessWidget {
                 hp: 8,
                 vp: 12,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 14.w,
                   children: [
-                    SizedBox(
-                      width: 60.w,
-                      child: Container(
-                        padding: 8.pa,
-                        decoration: BoxDecoration(
-                          color: c.bottomSheetBackground,
-                          shape: BoxShape.circle,
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: Container(
+                          // padding: 8.pa,
+                          decoration: BoxDecoration(
+                            color: c.bottomSheetBackground,
+                            shape: BoxShape.circle,
+                          ),
+                          child: LovePeopleIcon(size: 50.w),
                         ),
-                        child: LovePeopleIcon(size: 60.w - 10),
                       ),
                     ),
 
-                    Gap(14.w),
-
                     Expanded(
+                      flex: 3,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "Good things take time",
                             style: TxtStyle.outfitSemiB(w: 600),
                           ),
-
+                          4.verticalSpace,
                           Text(
-                            "Keep coming back and you \nmight just find your new \nbestie here.",
+                            "Keep coming back and you might just find your new bestie here.",
+                            textAlign: TextAlign.justify,
                             style: TxtStyle.outfit(fs: 12),
                           ),
                         ],
                       ),
                     ),
 
-                    SizedBox(
-                      width: 40.w,
-                      child: SafeAssetImage(
-                        assetPath: Assets.images.foundingMumNewImage.path,
-                        height: 48.h,
+                    Expanded(
+                      flex: 1,
+                      child: Center(
+                        child: SafeAssetImage(
+                          assetPath: Assets.images.noMatchLeafImage.path,
+                          height: 60.h,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ],

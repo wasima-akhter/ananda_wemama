@@ -1,5 +1,7 @@
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
+import '../../mood_insights/controller/mood_insights_controller.dart';
+import '../controller/mood_library_controller.dart';
 
 class MoodIllustrationCard extends StatelessWidget {
   final String imageUrl;
@@ -79,58 +81,85 @@ class MoodTypeInsightDesItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerBordered(
-      contClr: c.cardOngoing,
-      rad: 24,
-      hp: 0,
-      vp: 18,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: TxtStyle.outfitLarTitle),
-            Gap(itemGap),
-            // Full view with custom background + padding
-            Container(
+    return Container(
+      padding: const EdgeInsets.only(left: 12, right: 10),
+
+      // child: SingleChildScrollView(
+      //   key: ValueKey(id),
+      //   child: HtmlWidget(
+      //     key: ValueKey('$id-html'),
+      //     description,
+      //     textStyle: TxtStyle.outfitSmNor500.copyWith(
+      //       color: c.foregroundSecondary,
+      //     ),
+      //     onTapUrl: (url) async {
+      //       final uri = Uri.tryParse(url);
+      //       if (uri != null)
+      //         await launchUrl(uri, mode: LaunchMode.externalApplication);
+      //       return true;
+      //     },
+      //   ),
+      // ),
+      child: SimpleWebViewWidget(
+        title: title,
+        headerHtml: moodIllustrationHtml(
+          MoodLibraryController.to.getMoodImage(
+            MoodInsightsController.to.passedMoodType,
+          ),
+        ),
+        htmlContent: description,
+        // backgroundColor: c.cardOngoing,
+        textColor: c.foregroundSecondary,
+      ),
+
+      /*
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Text(title, style: TxtStyle.outfitLarTitle),
+          // Gap(itemGap),
+          // Full view with custom background + padding
+          Expanded(
+            child: SizedBox.expand(
               child: SimpleWebViewWidget(
-                isScrollable: false,
+                title: title,
                 htmlContent: description,
                 backgroundColor: c.cardOngoing,
                 textColor: c.foregroundSecondary,
               ),
             ),
-            16.verticalSpace,
+          ),
+          // 8.verticalSpace,
 
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: SmallNavBtn(
-            //         text: Strings.goToExpertCategory.capEachWord(),
-            //         onTap: onTapExpertBtn,
-            //       ),
-            //     ),
-            //     Gap(itemGap),
-            //     CusGestureDetector(
-            //       onTap: onTapBookmark,
-            //       child: ContainerBordered(
-            //         contClr: c.primary,
-            //         rad: 18,
-            //         vp: 8,
-            //         hp: 12,
-            //         child: SvgIconColored(
-            //           iconPath: isBookmarked
-            //               ? IconsPath.bookmarkFilled
-            //               : IconsPath.bookmarkOutlined,
-            //           iconColor: white,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-          ],
-        ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: SmallNavBtn(
+          //         text: Strings.goToExpertCategory.capEachWord(),
+          //         onTap: onTapExpertBtn,
+          //       ),
+          //     ),
+          //     Gap(itemGap),
+          //     CusGestureDetector(
+          //       onTap: onTapBookmark,
+          //       child: ContainerBordered(
+          //         contClr: c.primary,
+          //         rad: 18,
+          //         vp: 8,
+          //         hp: 12,
+          //         child: SvgIconColored(
+          //           iconPath: isBookmarked
+          //               ? IconsPath.bookmarkFilled
+          //               : IconsPath.bookmarkOutlined,
+          //           iconColor: white,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
       ),
+         */
     ).mB(itemGap);
   }
 }

@@ -83,7 +83,7 @@ class _AppState extends State<App> {
         }
 
         return DevicePreview(
-          enabled: true ?? kDebugMode,
+          enabled: false ?? kDebugMode,
           builder: (context) {
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,

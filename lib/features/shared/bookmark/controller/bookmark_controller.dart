@@ -20,6 +20,7 @@ class BookmarkItem {
 }
 
 class BookmarkController extends GetxController {
+  static BookmarkController get to => Get.find<BookmarkController>();
   final bookmarks = <BookmarkItem>[].obs;
 
   bool isBookmarked(String id) => bookmarks.any((b) => b.id == id);

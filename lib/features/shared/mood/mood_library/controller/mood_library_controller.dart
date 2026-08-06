@@ -18,6 +18,7 @@ class MoodReadingItem {
 }
 
 class MoodLibraryController extends GetxController {
+  static MoodLibraryController get to => Get.find<MoodLibraryController>();
   final moodCheckInC = findCont<MoodCheckInController>();
 
   late final Rx<MoodType> selectedMood;

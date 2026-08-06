@@ -319,17 +319,20 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (content.isNotEmpty)
+          if (content.isNotEmpty) ...[
             Text(
               content.cap,
-              maxLines: 3,
-              overflow: TextOverflow.visible,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               style: TxtStyle.urbanistSemiB(
                 fs: 12,
                 w: 600,
                 color: c.foregroundPrimary,
               ),
             ),
+            Gap(4),
+          ],
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

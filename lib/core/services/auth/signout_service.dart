@@ -88,7 +88,7 @@ class SignoutService {
 
   Future<bool> deleteAccountFromBackend({required String password}) async {
     apiCall() {
-      return ApiClient().post(
+      return ApiClient().delete(
         Endpoints.deleteAccount.getUrl,
         headers: HeaderHelpers.getAuthHeader(),
         data: {"password": password},

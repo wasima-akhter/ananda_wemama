@@ -497,9 +497,6 @@ class PushNotificationService extends GetxService {
           importance: Importance.high,
           priority: Priority.high,
           visibility: NotificationVisibility.public,
-
-          // Branding
-          color: c.scaffoldBackground,
         ),
         iOS: const DarwinNotificationDetails(
           presentAlert: true,

@@ -770,6 +770,14 @@ class $AssetsImagesGen {
   AssetGenImage get noCommunitiesIcon =>
       const AssetGenImage('assets/images/no_communities_icon.png');
 
+  /// File path: assets/images/no_match_leaf_image.png
+  AssetGenImage get noMatchLeafImage =>
+      const AssetGenImage('assets/images/no_match_leaf_image.png');
+
+  /// File path: assets/images/no_match_state_image.png
+  AssetGenImage get noMatchStateImage =>
+      const AssetGenImage('assets/images/no_match_state_image.png');
+
   /// File path: assets/images/no_search_img.png
   AssetGenImage get noSearchImg =>
       const AssetGenImage('assets/images/no_search_img.png');
@@ -892,6 +900,8 @@ class $AssetsImagesGen {
     noChatIcon,
     noCommentIcon,
     noCommunitiesIcon,
+    noMatchLeafImage,
+    noMatchStateImage,
     noSearchImg,
     noWaveIcon,
     onboardScreenHeart,

@@ -122,7 +122,7 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
                   w: 500,
                   color: c.foregroundPrimary.withValues(alpha: 0.7),
                 ),
-              ),
+              ).get10cm,
             ],
             Gap(itemGap * 5),
           ],

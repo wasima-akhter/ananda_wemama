@@ -25,7 +25,7 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
       contClr: c.cardOngoing,
       rad: 20,
       hp: 14,
-      vp: 16,
+      vp: 12,
       boxShadow: boxShadowBottom(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,11 +41,14 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
             ],
           ),
 
-          5.verticalSpace,
-
+          // 5.verticalSpace,
           Divider(color: c.primary.withOpacity(.4)),
-
-          8.verticalSpace,
+          2.verticalSpace,
+          Text(
+            Strings.howAreYourFeeling.capEachWord(),
+            style: TxtStyle.outfitSemiB(fs: 15),
+          ),
+          itemGap.verticalSpace,
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,7 +63,11 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
                       CusGestureDetector(
                         onTap: () {
                           setState(() {
-                            selectedMood = dataModel;
+                            if (selectedMood?.name == dataModel.name) {
+                              selectedMood = null; // unselect
+                            } else {
+                              selectedMood = dataModel; // select new mood
+                            }
                           });
                         },
                         child: MoodChip(
@@ -78,8 +85,6 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
             ],
           ),
 
-          itemGap.verticalSpace,
-
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 250),
             child: selectedMood == null
@@ -87,25 +92,30 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
                 : GestureDetector(
                     key: const ValueKey("open_library"),
                     onTap: widget.onTapSubscribe,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       children: [
-                        Text(
-                          "Open Mood Library",
-                          style: TxtStyle.outfitSemiB(
-                            fs: 11,
-                            w: 500,
-                            color: c.primary,
-                          ),
-                        ),
+                        itemGap.verticalSpace,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Open Mood Library",
+                              style: TxtStyle.outfitSemiB(
+                                fs: 11,
+                                w: 500,
+                                color: c.primary,
+                              ),
+                            ),
 
-                        Gap(itemGap * .5),
-                        SvgIconColored(
-                          iconPath: IconsPath.arrowRightLg,
-                          height: 16,
+                            Gap(itemGap * .5),
+                            SvgIconColored(
+                              iconPath: IconsPath.arrowRightLg,
+                              height: 16,
+                            ),
+                            Gap(itemGap * .5),
+                            SvgIcon(iconPath: IconsPath.lock, height: 16),
+                          ],
                         ),
-                        Gap(itemGap * .5),
-                        SvgIcon(iconPath: IconsPath.lock, height: 16),
                       ],
                     ),
                   ),

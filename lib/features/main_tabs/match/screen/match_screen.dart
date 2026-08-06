@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../controller/match_controller.dart';
 import '../widgets/match_states/match_found_state.dart';
@@ -17,17 +19,29 @@ class MatchScreen extends StatelessWidget {
       onRefresh: () async {},
 
       appBar: CommonAppBarContent(title: Strings.match, hasBackNavArrow: false),
-      child: Obx(() {
-        return switch (mc.matchState.value) {
-          MatchState.idle => MatchIdleState(mc: mc),
-          MatchState.searching => MatchSearchingState(mc: mc),
-          MatchState.found => MatchFoundState(mc: mc),
-          MatchState.noMatch => MatchNoMatchState(mc: mc),
-          MatchState.locationUnavailable => MatchLocationUnavailableState(
-            mc: mc,
-          ),
-        };
-      }).getcm,
+      child: Column(
+        children: [
+          if (kDebugMode) ...[
+            // TextButton(
+            //   onPressed: () => mc.matchState.value = MatchState.noMatch,
+            //   child: Text("No match state"),
+            // ),
+          ],
+
+          //
+          Obx(() {
+            return switch (mc.matchState.value) {
+              MatchState.idle => MatchIdleState(mc: mc),
+              MatchState.searching => MatchSearchingState(mc: mc),
+              MatchState.found => MatchFoundState(mc: mc),
+              MatchState.noMatch => MatchNoMatchState(mc: mc),
+              MatchState.locationUnavailable => MatchLocationUnavailableState(
+                mc: mc,
+              ),
+            };
+          }).getcm,
+        ],
+      ),
     );
   }
 }

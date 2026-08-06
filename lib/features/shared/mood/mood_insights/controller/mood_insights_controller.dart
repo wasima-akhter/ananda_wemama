@@ -13,6 +13,7 @@ class MoodInsightsController extends GetxController {
     this.fromHome = false,
   });
 
+  static MoodInsightsController get to => Get.find<MoodInsightsController>();
   final Rxn<MoodReadingItem> item = Rxn<MoodReadingItem>();
   final RxBool isLoading = false.obs;
 

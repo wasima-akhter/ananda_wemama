@@ -4,6 +4,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../core/helpers/date_helper.dart';
 import '../../../../core/services/socket/socket_status_banner.dart';
+import '../../../../gen/assets.gen.dart';
 import '../controller/chat_controller.dart';
 import '../widgets/chat_list_item.dart';
 import '../widgets/chat_ui_models.dart';
@@ -104,15 +105,18 @@ class ChatScreen extends StatelessWidget {
             if (cc.isSearchLoading_.value) {
               return Column(children: [LoadingPrimary()]).get10cm;
             }
-
             if (list.isEmpty) {
               return CusRefreshIndicator(
                 onRefresh: () async {
                   await cc.getChatList();
                   cc.showSearchedTag.value = false;
                 },
-                child: const EmptyWidgetScrollable(
-                  title: "No chats found",
+                child: EmptyNoSearchWidgetScrollable(
+                  assetPath: Assets.images.noChatIcon.path,
+                  title: "No conversations found",
+                  subTitle:
+                      "We couldn't find anyone matching your search.\n"
+                      "Try searching with a different name.",
                 ).get10cm,
               );
             }
@@ -160,8 +164,13 @@ class ChatScreen extends StatelessWidget {
         return CusRefreshIndicator(
           key: refreshKey,
           onRefresh: cc.getChatList,
-          child: const EmptyWidgetScrollable(
-            title: "No Conversations yet..!",
+          child: EmptyNoSearchWidgetScrollable(
+            assetPath: Assets.images.noCommentIcon.path,
+            title: "No conversations yet",
+            subTitle:
+                "Start by finding a match and sending a wave 👋\n"
+                "When your wave is accepted, you can start chatting.\n\n"
+                "You can also accept incoming wave requests to begin a conversation.",
           ).get10cm,
         );
       }

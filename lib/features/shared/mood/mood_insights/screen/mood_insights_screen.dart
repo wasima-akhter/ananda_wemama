@@ -1,9 +1,9 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../bookmark/controller/bookmark_controller.dart';
-import '../../mood_library/controller/mood_library_controller.dart';
-import '../../mood_library/widgets/mood_library_comp.dart';
 import '../controller/mood_insights_controller.dart';
-
+import '../widgets/mood_insights_content.dart';
+import '../widgets/mood_insights_empty_view.dart';
+import '../widgets/mood_insights_floating_bar.dart';
+/*
 class MoodInsightsScreen extends StatelessWidget {
   const MoodInsightsScreen({super.key});
 
@@ -18,7 +18,7 @@ class MoodInsightsScreen extends StatelessWidget {
         title: Strings.moodInsights,
         onTapBack: mic.handleBack,
       ),
-      isScrollable: true,
+      isScrollable: false,
 
       floatingActionButton: Obx(() {
         if (mic.isLoading.value) {
@@ -151,7 +151,7 @@ class MoodInsightsScreen extends StatelessWidget {
 
             Gap(itemGap),
 
-            Container(
+            Expanded(
               child: MoodTypeInsightDesItem(
                 id: item.id,
                 title: item.title,
@@ -172,8 +172,41 @@ class MoodInsightsScreen extends StatelessWidget {
                 onTapExpertBtn: () => goToMainNavWithTab(4),
               ),
             ),
+            Gap(S.viewPaddingBottom + 50),
           ],
         ).get10cm;
+      }),
+    );
+  }
+}
+*/
+
+class MoodInsightsScreen extends StatelessWidget {
+  const MoodInsightsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final mic = MoodInsightsController.to;
+
+    return AppScreenTemplate(
+      appBar: CommonAppBarContent(
+        title: Strings.moodInsights,
+        onTapBack: mic.handleBack,
+      ),
+      isScrollable: false,
+
+      floatingActionButton: const MoodInsightsFloatingBar(),
+
+      child: Obx(() {
+        if (mic.isLoading.value) {
+          return const Center(child: LoadingPrimary());
+        }
+
+        if (mic.item.value == null) {
+          return const MoodInsightsEmptyView();
+        }
+
+        return const MoodInsightsContent();
       }),
     );
   }

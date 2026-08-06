@@ -8,8 +8,20 @@ class PremiumAccessService extends GetxService {
 
   final PurchaseService _purchaseService = PurchaseService.to;
 
-  static final bool _kFakePremiumEnabled = kDebugMode || GetPlatform.isAndroid;
-  final RxBool _fakePremiumOverride = true.obs;
+  // Fake-premium is a QA/dev aid only. It is intentionally scoped to
+  // Android — debug AND release — so testers can flip between free/premium
+  // UX without a real subscription. iOS NEVER gets this override, in any
+  // build type: premium status there must always come from the real store
+  // entitlement so it can't silently drift from what the App Store says.
+
+  static final bool _kFakePremiumEnabled =
+      GetPlatform.isAndroid; // static final bool _kFakePremiumEnabled = false;
+
+  //<--- to enable the real one for android. ios is already real enabled
+
+  // Defaults to "use real access" — NOT forced-premium. Devs must
+  // explicitly opt into the fake state via debugSetFakePremium().
+  final RxBool _fakePremiumOverride = false.obs;
 
   bool get isFakePremiumActive =>
       _kFakePremiumEnabled && _fakePremiumOverride.value;
@@ -46,8 +58,12 @@ class PremiumAccessService extends GetxService {
   }
 
   void _recompute() {
-    isPremiumUser.value =
-        isFakePremiumActive || _purchaseService.isActive.value;
+    // iOS: real entitlement only, always — never fake, never backend.
+    // Android: real entitlement by default, fake toggle can override it
+    // for QA purposes.
+    isPremiumUser.value = GetPlatform.isIOS
+        ? _purchaseService.isActive.value
+        : (isFakePremiumActive || _purchaseService.isActive.value);
   }
 
   @override
