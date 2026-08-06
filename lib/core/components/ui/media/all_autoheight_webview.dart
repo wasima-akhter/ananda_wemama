@@ -821,30 +821,32 @@ a {
       key: ValueKey(_relaidOut),
       controller: _controller,
     );
+    Widget buildWebView() {
+      return Stack(
+        children: [
+          Positioned.fill(child: webView),
+
+          if (_isLoading)
+            Positioned.fill(
+              child: ColoredBox(
+                color: widget.backgroundColor,
+
+                child: const Center(child: LoadingPrimary()),
+              ),
+            ),
+        ],
+      );
+    }
 
     if (widget.height != null) {
       return SizedBox(
         height: widget.height,
         width: double.infinity,
-        child: webView,
+        child: buildWebView(),
       );
     }
 
-    // return SizedBox.expand(child: webView);
-    return Stack(
-      children: [
-        Positioned.fill(child: webView),
-
-        if (_isLoading)
-          Positioned.fill(
-            child: Container(
-              color: widget.backgroundColor,
-
-              child: const Center(child: LoadingPrimary()),
-            ),
-          ),
-      ],
-    );
+    return SizedBox.expand(child: buildWebView());
   }
 }
 
