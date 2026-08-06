@@ -663,11 +663,11 @@ class _SimpleWebViewWidgetState extends State<SimpleWebViewWidget> {
     //   if (mounted) setState(() => _relaidOut = true);
     // });
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        if (mounted) await _controller.reload();
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     if (mounted) await _controller.reload();
+    //   });
+    // });
   }
 
   String _toCssColor(Color color) {
