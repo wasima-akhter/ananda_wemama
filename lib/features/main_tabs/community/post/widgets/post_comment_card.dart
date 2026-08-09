@@ -23,8 +23,7 @@ class PostCommentCard extends StatelessWidget {
             name: item.creator?.name,
           ),
 
-          Gap(itemGap),
-
+          // Gap(itemGap),
           Expanded(
             child: CommentItemInPostDetail(item: item, pcc: pcc),
           ),

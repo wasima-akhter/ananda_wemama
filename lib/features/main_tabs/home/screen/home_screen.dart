@@ -97,7 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
 
-          if (kDebugMode || GetPlatform.isAndroid)
+          if ((kDebugMode && GetPlatform.isAndroid) ||
+              (!kDebugMode && GetPlatform.isAndroid))
             GestureDetector(
               onTap: () => PremiumAccessService.to.debugSetFakePremium(
                 !PremiumAccessService.to.isFakePremiumActive,
@@ -106,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 () => Text(
                   'isFakePremiumActive-->${PremiumAccessService.to.isFakePremiumActive}',
                 ),
-              ), // hidden dev trigger on app version label
+              ),
+              // hidden dev trigger on app version label
             ),
 
           PremiumGate(

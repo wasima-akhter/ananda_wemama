@@ -33,7 +33,7 @@ class PostDetailsScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async => log("refreshed"),
-      isScrollable: false,
+      // isScrollable: false,
       appBar: CommonAppBarContent(title: Strings.post),
 
       floatingActionButton: PostDetailsFloatingCommentInput(),
@@ -44,7 +44,7 @@ class PostDetailsScreen extends StatelessWidget {
         children: [
           PostDetailsPostSection(),
 
-          Gap(itemGap * 3),
+          // Gap(itemGap * 3),
           CustomDivider(isFullWidth: true, clr: c.primary, h: 0.5),
           Gap(itemGap),
 
@@ -77,6 +77,7 @@ class CommentItemInPostDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildMainComment(),
+        Gap(2),
         _buildReplyButton(),
         _buildChildComments(childCommentList),
       ],
@@ -91,29 +92,68 @@ class CommentItemInPostDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                item.creator?.name ?? 'N/A',
-                style: TxtStyle.outfitSemiB(fs: 14, color: c.textPrimary),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    children: [
+                      // NetworkImageWidget(
+                      //   imageUrl: item.creator?.profileImage ?? '',
+                      //   isCircle: true,
+                      //   radius: 16,
+                      //   isUser: true,
+                      //   name: item.creator?.name,
+                      // ),
+                      Gap(8),
+                      Text(
+                        (item.creator?.name?.capEachWord() ?? 'Unknown')
+                            .capEachWord(),
+                        style: TxtStyle.outfitSemiB(
+                          fs: 14,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  _buildCommentTime(createdAt: item.createdAt, fontSize: 9),
+                ],
               ),
-              Text(item.content ?? '--', style: TxtStyle.outfit(fs: 13)),
+              Row(
+                children: [
+                  // Gap(35.r),
+                  Gap(8),
+                  Expanded(
+                    child: Text(
+                      item.content ?? '--',
+                      style: TxtStyle.outfit(fs: 13),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
-
-        _buildCommentTime(createdAt: item.createdAt, fontSize: 10),
       ],
     );
   }
 
   Widget _buildReplyButton() {
-    return CusGestureDetector(
-      onTap: () {
-        pcc.replyingToCommentId.value = item.id;
-        pcc.replyingToUserName.value = item.creator?.name ?? '';
+    return Row(
+      children: [
+        // Gap(35.r),
+        Gap(8),
+        CusGestureDetector(
+          onTap: () {
+            pcc.replyingToCommentId.value = item.id;
+            pcc.replyingToUserName.value = item.creator?.name ?? '';
 
-        pcc.commentFocus.requestFocus();
-      },
-      child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+            pcc.commentFocus.requestFocus();
+          },
+          child: Text(Strings.reply, style: TxtStyle.outfitSmSecNor500),
+        ),
+      ],
     );
   }
 
@@ -146,22 +186,25 @@ class CommentItemInPostDetail extends StatelessWidget {
         Gap(itemGap * 0.6),
 
         Expanded(
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      child.creator?.name ?? 'N/A',
+              // Row 1: Name + Time
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      (child.creator?.name?.capEachWord() ??
+                          'Unknown'.capEachWord()),
                       style: TxtStyle.outfitSemiB(fs: 13, color: c.textPrimary),
                     ),
-                    Text(child.content ?? '--', style: TxtStyle.outfit(fs: 12)),
-                  ],
-                ),
+                  ),
+                  _buildCommentTime(createdAt: child.createdAt, fontSize: 9),
+                ],
               ),
 
-              _buildCommentTime(createdAt: child.createdAt, fontSize: 9),
+              // Row 2: Content
+              Text(child.content ?? '--', style: TxtStyle.outfit(fs: 12)),
             ],
           ),
         ),

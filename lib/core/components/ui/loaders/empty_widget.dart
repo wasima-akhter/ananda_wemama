@@ -73,6 +73,8 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
   final String? assetPath;
   final String? iconPath;
   final bool? isSmaller;
+  final bool isScrollable;
+
   const EmptyNoSearchWidgetScrollable({
     super.key,
     required this.title,
@@ -80,55 +82,57 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
     this.assetPath,
     this.subTitle,
     this.iconPath,
+    this.isScrollable = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: ContainerBordered(
-        contClr: c.bottomSheetBackground.withOpacity(0.2),
-        vp: 20.h,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
+    final child = ContainerBordered(
+      contClr: c.bottomSheetBackground.withOpacity(0.2),
+      vp: 20.h,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Gap(itemGap * 2),
+          Text(
+            title.capEachWord(),
+            style: TxtStyle.inter(w: 600, color: c.foregroundPrimary),
+          ),
+
+          Gap(itemGap * 2),
+
+          SafeAssetImage(
+            assetPath: assetPath ?? ImagesPath.emptyList,
+            fit: BoxFit.contain,
+            height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
+          ),
+
+          if ((subTitle ?? '').isNotEmpty) ...[
             Gap(itemGap * 2),
             Text(
-              title.capEachWord(),
-              style: TxtStyle.inter(w: 600, color: c.foregroundPrimary),
-            ),
-
-            Gap(itemGap * 2),
-
-            SafeAssetImage(
-              assetPath: assetPath ?? ImagesPath.emptyList,
-              fit: BoxFit.contain,
-              height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
-            ),
-
-            // if ((iconPath ?? '').isNotEmpty)
-            //   SvgIcon(
-            //     iconPath: iconPath!,
-            //     height: isSmaller == true ? S.w * 0.2 : S.w * 0.25,
-            //   ),
-            if ((subTitle ?? '').isNotEmpty) ...[
-              Gap(itemGap * 2),
-
-              Text(
-                subTitle!.cap,
-                textAlign: TextAlign.center,
-                style: TxtStyle.inter(
-                  fs: 12,
-                  w: 500,
-                  color: c.foregroundPrimary.withValues(alpha: 0.7),
-                ),
-              ).get10cm,
-            ],
-            Gap(itemGap * 5),
+              subTitle!.cap,
+              textAlign: TextAlign.center,
+              style: TxtStyle.inter(
+                fs: 12,
+                w: 500,
+                color: c.foregroundPrimary.withValues(alpha: 0.7),
+              ),
+            ).get10cm,
           ],
-        ),
-      ).mT(12),
-    );
+
+          Gap(itemGap * 5),
+        ],
+      ),
+    ).mT(12);
+
+    if (isScrollable) {
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: child,
+      );
+    }
+
+    return child;
   }
 }
 

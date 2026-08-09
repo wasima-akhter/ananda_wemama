@@ -21,6 +21,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
         },
 
         loading: () => ListView.separated(
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: itemGap),
           itemCount: 6,
@@ -29,6 +30,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
         ),
 
         empty: () => EmptyNoSearchWidgetScrollable(
+          isScrollable: false,
           assetPath: Assets.images.noCommentIcon.path,
           title: "No comments yet",
           subTitle:
@@ -36,6 +38,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
         ),
 
         data: () => ListView.separated(
+          physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: itemGap * 2),
           itemCount: pcc.comments.length,

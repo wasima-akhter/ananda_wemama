@@ -18,6 +18,8 @@ class PostDetailsFloatingCommentInput extends StatelessWidget {
             ContainerBordered(
               hp: 10,
               vp: 6,
+              mh: 20,
+              mv: 4,
               contClr: c.backgroundSecondary,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
