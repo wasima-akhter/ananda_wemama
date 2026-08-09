@@ -4,6 +4,7 @@ import 'package:we_mama/features/shared/wave_request/widgets/new_waves_req_accep
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/chat/widgets/chat_user_details_popup.dart';
+import '../../../../features/main_tabs/community/post/widgets/user_profile_details_popup.dart';
 import '../../../../features/main_tabs/community/shared_ui/community_guildline.dart';
 import '../../../../features/main_tabs/home/sub_feature/profile/model/profile_model.dart';
 import '../../../../features/shared/subscription/subscription_upgrade/widgets/already_premium_popup.dart';
@@ -186,6 +187,14 @@ Future<void> newWavesUserDetailsDialog({
       isAcceptLoading: isAcceptLoading,
       isRejectLoading: isRejectLoading,
     ),
+  );
+}
+
+/// 🔹 newWavesUserDetailsDialog Popup
+Future<void> showProfileDetailsPopup({required String userId}) async {
+  await Popups().baseAlert(
+    context: Get.context!,
+    content: ProfileDetailsPopup(userId: userId),
   );
 }
 

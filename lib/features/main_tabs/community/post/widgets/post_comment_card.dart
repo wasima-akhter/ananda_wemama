@@ -21,6 +21,7 @@ class PostCommentCard extends StatelessWidget {
             radius: 16,
             isUser: true,
             name: item.creator?.name,
+            enablePreview: true,
           ),
 
           // Gap(itemGap),

@@ -104,6 +104,7 @@ class AppScreenTemplate extends StatelessWidget {
             }
             final scrollView = CustomScrollView(
               controller: scrollController,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               slivers: [
                 SliverPadding(
                   padding: padding ?? EdgeInsets.zero,

@@ -9,8 +9,8 @@ class MatchService extends GetxService {
   }) async {
     apiCall() {
       return ApiClient().get(
-        // Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
-        Endpoints.getMatch(long: "90.405449", lat: "23.777628").getUrl,
+        Endpoints.getMatch(long: longitude, lat: latitude).getUrl,
+        // Endpoints.getMatch(long: "90.405449", lat: "23.777628").getUrl,
         headers: HeaderHelpers.getAuthHeader(),
       );
     }

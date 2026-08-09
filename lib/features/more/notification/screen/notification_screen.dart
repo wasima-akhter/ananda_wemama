@@ -4,6 +4,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';
+import '../../../../core/themes/color/colors.dart';
 import '../controller/notification_controller.dart';
 import '../helper/notification_ui_helper.dart';
 import '../model/notifications_model.dart';
@@ -181,7 +182,7 @@ class NotificationItemCard extends StatelessWidget {
         hp: 8,
         vp: 8,
         hasBrdr: true,
-        brdrClr: !isSeen ? null : grey200,
+        brdrClr: !isSeen ? c.bottomSheetBackground : grey200,
         contClr: bgClrNew,
 
         // boxShadow: boxShadowAllSides,
@@ -200,11 +201,11 @@ class NotificationItemCard extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 16.r,
-                        backgroundColor: notificationUi.color.withOpacity(.15),
+                        backgroundColor: notificationUi.color.withOpacity(.1),
                         child: Icon(
                           notificationUi.icon,
-                          size: 18.r,
-                          color: notificationUi.color,
+                          size: 16.r,
+                          color: notificationUi.color.withOpacity(.8),
                         ),
                       ),
 
@@ -215,7 +216,11 @@ class NotificationItemCard extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             (n.title ?? Strings.notification).cap,
-                            style: TxtStyle.inter(fs: 13, w: 600),
+                            style: TxtStyle.outfit(
+                              fs: 14,
+                              color: AppPalette.textPrimary,
+                              w: 600,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -227,15 +232,6 @@ class NotificationItemCard extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              notificationTime.date,
-                              style: TxtStyle.outfit(
-                                fs: 9,
-                                w: 400,
-                                color: c.secondary,
-                              ),
-                            ),
-
                             if (notificationTime.time.isNotEmpty &&
                                 notificationTime.date !=
                                     notificationTime.display)
@@ -244,9 +240,17 @@ class NotificationItemCard extends StatelessWidget {
                                 style: TxtStyle.outfit(
                                   fs: 9,
                                   w: 400,
-                                  color: c.secondary,
+                                  color: AppPalette.textTertiary,
                                 ),
                               ),
+                            Text(
+                              notificationTime.date,
+                              style: TxtStyle.outfit(
+                                fs: 9,
+                                w: 400,
+                                color: AppPalette.textTertiary,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -256,7 +260,11 @@ class NotificationItemCard extends StatelessWidget {
                     Gap(itemGap * 0.5),
                     Text(
                       n.description ?? '',
-                      style: TxtStyle.inter(fs: 12, w: 400, color: greyLoc),
+                      style: TxtStyle.outfit(
+                        fs: 12,
+                        w: 400,
+                        color: AppPalette.textSecondary,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

@@ -87,6 +87,11 @@ class AppPalette {
   static const brown650 = Color(0xFFC96C4F);
   static const brown_ = Color(0xFFA6827F);
 
+  // ======================= // TEXT // ======================= static
+  static const textPrimary = brown950;
+  static const textSecondary = Color(0xFF795548);
+  static const textTertiary = Color(0xFFA6827F);
+
   // =======================
   // LIGHT SURFACES
   // =======================

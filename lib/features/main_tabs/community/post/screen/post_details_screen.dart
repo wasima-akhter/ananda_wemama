@@ -1,3 +1,4 @@
+import 'package:we_mama/core/components/ui/dialogs/popups.dart';
 import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
 
@@ -106,12 +107,23 @@ class CommentItemInPostDetail extends StatelessWidget {
                       //   name: item.creator?.name,
                       // ),
                       Gap(8),
-                      Text(
-                        (item.creator?.name?.capEachWord() ?? 'Unknown')
-                            .capEachWord(),
-                        style: TxtStyle.outfitSemiB(
-                          fs: 14,
-                          color: c.textPrimary,
+                      CusGestureDetector(
+                        onTap: () {
+                          showProfileDetailsPopup(
+                            userId: '' ?? item.creator?.name ?? '',
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(right: 5),
+
+                          child: Text(
+                            (item.creator?.name?.capEachWord() ?? 'Unknown')
+                                .capEachWord(),
+                            style: TxtStyle.outfitSemiB(
+                              fs: 14,
+                              color: c.textPrimary,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -191,12 +203,25 @@ class CommentItemInPostDetail extends StatelessWidget {
             children: [
               // Row 1: Name + Time
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Text(
-                      (child.creator?.name?.capEachWord() ??
-                          'Unknown'.capEachWord()),
-                      style: TxtStyle.outfitSemiB(fs: 13, color: c.textPrimary),
+                  CusGestureDetector(
+                    onTap: () {
+                      showProfileDetailsPopup(
+                        userId: '' ?? item.creator?.name ?? '',
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(right: 5),
+
+                      child: Text(
+                        (child.creator?.name?.capEachWord() ??
+                            'Unknown'.capEachWord()),
+                        style: TxtStyle.outfitSemiB(
+                          fs: 13,
+                          color: c.textPrimary,
+                        ),
+                      ),
                     ),
                   ),
                   _buildCommentTime(createdAt: child.createdAt, fontSize: 9),

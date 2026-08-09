@@ -19,7 +19,7 @@ class NewWavesListItem extends StatelessWidget {
 
     // 🔥 IMPORTANT: get OTHER user (not me)
     final otherUser = model.participants?.firstWhere(
-      (p) => p.id != myId,
+      (p) => p.id != myId(),
       orElse: () => model.participants!.first,
     );
 

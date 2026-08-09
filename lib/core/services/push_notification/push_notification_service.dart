@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:we_mama/app/helper_widgets_export.dart';
@@ -12,6 +13,7 @@ import 'package:we_mama/core/network/helpers/network_helpers.dart';
 import '../../local/app_storage.dart';
 import '../firebase/firebase_service.dart';
 import 'controller/notification_count_controller.dart';
+import 'controller/push_notification_controller.dart';
 import 'firebase_token_service.dart';
 import 'notification_payload.dart';
 
@@ -433,6 +435,12 @@ class PushNotificationService extends GetxService {
 
     if (message.data.isEmpty) {
       debugPrint('ℹ️ [PushNotificationService] no data payload — ignoring');
+      if (kDebugMode) {
+        PushNotificationController.to.sendTestNotification(
+          'FOREGROUND : ${message.toString()}',
+        );
+      }
+
       return;
     }
 

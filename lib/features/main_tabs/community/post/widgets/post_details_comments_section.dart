@@ -21,6 +21,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
         },
 
         loading: () => ListView.separated(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: itemGap),
@@ -38,6 +39,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
         ),
 
         data: () => ListView.separated(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           padding: EdgeInsets.only(bottom: itemGap * 2),
