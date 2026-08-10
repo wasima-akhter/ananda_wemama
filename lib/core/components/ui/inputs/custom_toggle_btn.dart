@@ -70,8 +70,8 @@ class CustomToggleButton extends StatelessWidget {
               duration: duration,
               alignment: value ? Alignment.centerRight : Alignment.centerLeft,
               child: Container(
-                width: 30 + 8,
-                height: height ?? 28 - 1,
+                width: (30 + 8),
+                height: (height ?? 28 - 1).h,
 
                 decoration: BoxDecoration(
                   color: thumbColor,
@@ -85,7 +85,11 @@ class CustomToggleButton extends StatelessWidget {
                   child: Text(
                     value ? Strings.on : Strings.off,
 
-                    style: TxtStyle.inter(w: 500, fs: 11, color: value ? white : c.secondary),
+                    style: TxtStyle.inter(
+                      w: 500,
+                      fs: ScreenSizeX.isTablet ? 6 : 11,
+                      color: value ? white : c.secondary,
+                    ),
                   ),
                 ),
               ),

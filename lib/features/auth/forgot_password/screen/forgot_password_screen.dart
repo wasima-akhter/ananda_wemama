@@ -42,9 +42,15 @@ class ForgotPasswordScreen extends StatelessWidget {
                       onTap: () {
                         Get.back();
                       },
-                      child: SvgIconColored(
-                        iconPath: IconsPath.arrowBackSmall,
-                        height: 14,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 2.w,
+                        ),
+                        child: SvgIconColored(
+                          iconPath: IconsPath.arrowBackSmall,
+                          height: 14,
+                        ),
                       ),
                     ),
                   ),

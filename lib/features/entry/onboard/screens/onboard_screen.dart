@@ -13,14 +13,6 @@ class OnboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     findCont<OnboardController>();
 
-    int getImageFlex() {
-      if (ScreenSize.isTallHeight) {
-        if (ScreenSize.isSmallWidth) return 12;
-        if (ScreenSize.isMediumWidth || ScreenSize.isLargeWidth) return 9;
-      }
-      return 13;
-    }
-
     return SafeArea(
       top: false,
       bottom: false,
@@ -37,26 +29,12 @@ class OnboardScreen extends StatelessWidget {
 
               return Column(
                 children: [
-                  Container(
-                    // flex: ScreenSize.isTallHeight ? 15 : 16,
-                    child: OnboardTopSection(cfg: cfg),
-                  ),
+                  OnboardTopSection(cfg: cfg),
 
-                  Container(
-                    // flex: getImageFlex(),
-                    child: Container(
-                      // color: Colors.amber,
-                      child: OnboardImageSection(),
-                    ),
-                  ),
+                  Expanded(child: OnboardImageSection()),
 
-                  Container(
-                    // flex: 6,
-                    child: Container(
-                      // color: Colors.green,
-                      child: OnboardBottomSection(cfg: cfg),
-                    ),
-                  ),
+                  OnboardBottomSection(cfg: cfg),
+                  Gap(S.viewPaddingBottom),
                 ],
               );
             },

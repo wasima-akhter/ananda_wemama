@@ -665,7 +665,8 @@ class TxtStyle {
   static TextStyle get outfitxSmNor => TxtStyle.outfit(fs: 11);
   static TextStyle get outfitxSmNorSec =>
       TxtStyle.outfit(fs: 11, color: c.secondary);
-  static TextStyle get outfitxSmNor500 => TxtStyle.outfitSemiB(fs: 10, w: 500);
+  static TextStyle get outfitxSmNor500 =>
+      TxtStyle.outfitSemiB(fs: ScreenSizeX.isTablet ? 5 : 10, w: 500);
   static TextStyle get outfitSmSecNor =>
       TxtStyle.outfit(fs: 13, color: c.secondary);
   static TextStyle get outfitSmSecNor500 =>
@@ -724,7 +725,7 @@ class TxtStyle {
 
   static TextStyle poppinsSemiBold12Center({Color? color, double? fs, int? w}) {
     return poppinsSemiB(
-      fs: (fs ?? 12),
+      fs: (fs ?? (ScreenSizeX.isTablet ? 10 : 12)),
       w: w ?? 600,
       h: 1.4,
       ls: 0.05, // 4% = 0.64px
@@ -773,6 +774,8 @@ class TxtStyle {
     return textThemedmSerifDisplay.bodyLarge!.copyWith(
       fontSize: fs != null
           ? fs.sp
+          : ScreenSizeX.isTablet
+          ? 20.sp
           : ScreenSize.isSmallWidth
           ? 26.sp
           : 28.sp,

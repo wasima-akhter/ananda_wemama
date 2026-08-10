@@ -114,7 +114,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
       final hc = Get.find<HomeController>();
       final spotlightData = hc.spotLightData.value?.communitySpotlight;
       final isEmpty =
-          spotlightData == null || (spotlightData.id ?? '').trim().isNotEmpty;
+          spotlightData == null || (spotlightData.id ?? '').trim().isEmpty;
       final isLoading = hc.isSpotLightLoading_.value;
       final state = getUIStateDetail(isLoading: isLoading);
       final totalMembers = (spotlightData?.totalMember ?? 0).toString();
@@ -479,10 +479,11 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                   contClr: Colors.transparent,
                   rad: 18,
                   vp: 4,
-                  hp: 9,
+                  hp: ScreenSizeX.isTablet ? 4 : 9,
                   child: Text(
                     "Explore Communities",
-                    style: 12.titleMclrCusFSURB.copyWith(color: c.primary),
+                    style: (ScreenSizeX.isTablet ? 10 : 12).titleMclrCusFSURB
+                        .copyWith(color: c.primary),
                   ),
                 ),
               ),
@@ -495,10 +496,10 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
           SafeAssetImage(
             radius: 14,
             assetPath: Assets.images.spotlightPlaceholder.path,
-            height: 140.h,
+            height: 170.h,
             width: double.infinity,
             fit: BoxFit.cover,
-            // alignment: Alignment.topCenter,
+            alignment: Alignment.topCenter,
           ),
 
           const Gap(14),

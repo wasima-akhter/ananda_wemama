@@ -28,7 +28,6 @@ class MoodInsightsFloatingBar extends StatelessWidget {
                 child: ContainerBordered(
                   contClr: c.buttonPrimary,
                   rad: 30,
-                  hp: 40,
                   vp: 8,
 
                   child: Text(

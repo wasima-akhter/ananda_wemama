@@ -23,7 +23,14 @@ class OnboardFeatureCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          SvgIcon(iconPath: icon, height: ScreenSize.isSmallWidth ? 38 : 54),
+          SvgIcon(
+            iconPath: icon,
+            height: ScreenSizeX.isTablet
+                ? 40
+                : ScreenSize.isSmallWidth
+                ? 38
+                : 54,
+          ),
 
           Gap(14),
 
@@ -34,7 +41,11 @@ class OnboardFeatureCard extends StatelessWidget {
                 Text(
                   title,
                   style: TxtStyle.poppinsSemiBold15(
-                    fs: ScreenSize.isSmallWidth ? 12 : 13,
+                    fs: ScreenSizeX.isTablet
+                        ? 11
+                        : ScreenSize.isSmallWidth
+                        ? 12
+                        : 13,
                   ).copyWith(fontWeight: FontWeight.w700),
                 ),
 
@@ -43,7 +54,11 @@ class OnboardFeatureCard extends StatelessWidget {
                 Text(
                   subtitle,
                   style: TxtStyle.poppinsMedium13(
-                    fs: ScreenSize.isSmallWidth ? 11 : 12,
+                    fs: ScreenSizeX.isTablet
+                        ? 10
+                        : ScreenSize.isSmallWidth
+                        ? 11
+                        : 12,
                   ),
                 ),
               ],

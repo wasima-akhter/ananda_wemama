@@ -25,7 +25,13 @@ class OnboardHeartIcon extends StatelessWidget {
         ],
         stops: [0.0, 0.88],
       ),
-      height: height ?? (ScreenSize.isSmallWidth ? 38.h : 28.h),
+      height:
+          height ??
+          (ScreenSizeX.isTablet
+              ? 20.h
+              : ScreenSize.isSmallWidth
+              ? 38.h
+              : 28.h),
     );
   }
 }

@@ -59,9 +59,14 @@ class PostDetailsFloatingCommentInput extends StatelessWidget {
                     child: Obx(
                       () => pcc.isAddCommentLoading.value
                           ? LoadingWhite()
-                          : SvgIcon(
-                              iconPath: IconsPath.sendSmallWhite,
-                              height: 20,
+                          : Container(
+                              padding: EdgeInsets.all(
+                                ScreenSizeX.isTablet ? 10 : 0,
+                              ),
+                              child: SvgIcon(
+                                iconPath: IconsPath.sendSmallWhite,
+                                height: 20,
+                              ),
                             ),
                     ),
                   ),

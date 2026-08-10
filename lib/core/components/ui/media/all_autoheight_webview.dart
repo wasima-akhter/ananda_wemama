@@ -791,7 +791,7 @@ a {
 
 .title {
   font-family: 'Outfit', sans-serif;
-  font-size: 22px;
+  font-size: ${ScreenSizeX.isTablet ? 20.sp : 16.sp} ;
   font-weight: 600;
   margin: 0 0 16px 0;
   color: ${_toCssColor(widget.textColor ?? c.primary)};

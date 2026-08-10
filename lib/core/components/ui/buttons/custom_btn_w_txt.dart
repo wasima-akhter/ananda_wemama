@@ -80,7 +80,9 @@ class CustomBtnWTxt extends StatelessWidget {
   }
 
   Widget _buildInnerContent(BuildContext context, bool isOutlined) {
-    final double fontSize = isOutlined ? 13 : (fs ?? 14);
+    final double fontSize = isOutlined
+        ? 13
+        : (fs ?? (ScreenSizeX.isTablet ? 12 : 14));
 
     final textStyle = isSmall == true
         ? style ??
@@ -216,7 +218,13 @@ class CustomBtnWTxtNew extends StatelessWidget {
                   style:
                       style ??
                       TxtStyle.poppinsSemiB(
-                        fs: fs ?? (isTallDevice ? 17 : 15),
+                        fs:
+                            fs ??
+                            (ScreenSizeX.isTablet
+                                ? 12
+                                : isTallDevice
+                                ? 17
+                                : 15),
                         w: 600,
                         h: 1.0,
                         color: textColor,

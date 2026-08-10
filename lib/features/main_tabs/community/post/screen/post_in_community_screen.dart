@@ -31,7 +31,10 @@ class PostInCommunityScreen extends StatelessWidget {
                 onTap: () async {
                   await pcc.createNewPost();
                 },
-                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 8.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 22.w,
+                  vertical: ScreenSizeX.isTablet ? 2 : 8.h,
+                ),
                 isSmall: true,
                 btnTxt: Strings.post.cap,
                 isLoading: pcc.isCreatePostLoading.value,

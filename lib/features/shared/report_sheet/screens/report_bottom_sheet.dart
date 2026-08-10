@@ -8,7 +8,12 @@ class ReportBottomSheet extends GetView<ReportController> {
   final bool isUserReport;
   final String? userId;
   final String? postId;
-  const ReportBottomSheet({super.key, required this.isUserReport, this.userId, this.postId});
+  const ReportBottomSheet({
+    super.key,
+    required this.isUserReport,
+    this.userId,
+    this.postId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,11 @@ class ReportBottomSheet extends GetView<ReportController> {
               spacing: itemGap,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(Strings.reportUser.capEachWord(), style: TxtStyle.outfitLarTitle),
+                Text(
+                  (isUserReport ? Strings.reportUser : "Report Content")
+                      .capEachWord(),
+                  style: TxtStyle.outfitLarTitle,
+                ),
                 CusCircleIconButton(
                   radius: 15,
                   onTap: () => Get.back(),
@@ -38,7 +47,10 @@ class ReportBottomSheet extends GetView<ReportController> {
               ],
             ),
 
-            Text(Strings.whyReUReporting, style: TxtStyle.outfitxSmNor).mR(S.w * 0.12),
+            Text(
+              Strings.whyReUReporting,
+              style: TxtStyle.outfitxSmNor,
+            ).mR(ScreenSizeX.isTablet ? 0 : S.w * 0.12),
 
             Gap(itemGap * 2),
 
@@ -76,9 +88,11 @@ class ReportBottomSheet extends GetView<ReportController> {
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 itemCount: controller.reportReasons.length,
-                separatorBuilder: (_, __) => Gap(itemGap * 0.9),
-                itemBuilder: (_, index) =>
-                    ReasonTile(reason: controller.reportReasons[index], controller: controller),
+                separatorBuilder: (_, _) => Gap(itemGap * 0.9),
+                itemBuilder: (_, index) => ReasonTile(
+                  reason: controller.reportReasons[index],
+                  controller: controller,
+                ),
               ),
             ),
 
@@ -88,8 +102,11 @@ class ReportBottomSheet extends GetView<ReportController> {
               () => CustomBtnWTxt(
                 btnTxt: Strings.submit,
                 btnColor: c.primary,
-                onTap: () =>
-                    controller.report(isUserReport: isUserReport, postId: postId, userId: userId),
+                onTap: () => controller.report(
+                  isUserReport: isUserReport,
+                  postId: postId,
+                  userId: userId,
+                ),
                 isLoading: controller.isLoading,
                 isSmall: true,
               ),

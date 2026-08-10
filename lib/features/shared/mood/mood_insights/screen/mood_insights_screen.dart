@@ -195,7 +195,10 @@ class MoodInsightsScreen extends StatelessWidget {
       ),
       isScrollable: false,
 
-      floatingActionButton: const MoodInsightsFloatingBar(),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [const MoodInsightsFloatingBar()],
+      ),
 
       child: Obx(() {
         if (mic.isLoading.value) {

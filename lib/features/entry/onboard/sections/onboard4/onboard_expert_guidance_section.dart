@@ -44,7 +44,11 @@ class OnboardExpertGuidanceSection extends StatelessWidget {
           child: Text(
             "Upcoming Sessions",
             style: TxtStyle.poppinsSemiBold15().copyWith(
-              fontSize: ScreenSize.isSmallWidth ? 14.sp : 16.sp,
+              fontSize: ScreenSizeX.isTablet
+                  ? 12.sp
+                  : ScreenSize.isSmallWidth
+                  ? 14.sp
+                  : 16.sp,
             ),
           ),
         ),

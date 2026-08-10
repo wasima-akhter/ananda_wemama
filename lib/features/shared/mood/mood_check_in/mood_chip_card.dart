@@ -267,7 +267,7 @@ class MoodChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerBordered(
       contClr: isSelected ? c.primary : c.moodTagBackground,
-      rad: 20,
+      rad: 30,
       hp: 0,
       mv: 2,
       vp: ScreenSize.isSmallWidth ? 6 : 5,

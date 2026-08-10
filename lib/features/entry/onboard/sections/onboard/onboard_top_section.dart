@@ -24,7 +24,7 @@ class OnboardTopSection extends StatelessWidget {
               // ),
               Column(
                 children: [
-                  Gap(MediaQuery.of(context).padding.top + 5.h),
+                  Gap(MediaQuery.of(context).padding.top),
                   OnboardLogoSection(),
                 ],
               ), // const Spacer(),

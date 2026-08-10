@@ -18,7 +18,13 @@ class Pageview3 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Gap(ScreenSize.isSmallWidth ? 10.h : 20.h),
+              Gap(
+                ScreenSizeX.isTablet
+                    ? 5.h
+                    : ScreenSize.isSmallWidth
+                    ? 10.h
+                    : 20.h,
+              ),
               const Onboard4TopSection(),
               Gap(ScreenSize.isSmallWidth ? 15.h : 18.h),
               const OnboardExpertGuidanceSection(),

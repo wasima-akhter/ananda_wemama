@@ -12,7 +12,11 @@ class OnboardExpertSessionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ScreenSize.isSmallWidth ? 115.h : 110.h, // adjust as needed
+      height: ScreenSizeX.isTablet
+          ? 120.h
+          : ScreenSize.isSmallWidth
+          ? 115.h
+          : 110.h, // adjust as needed
       padding: EdgeInsets.all(7.w),
       decoration: BoxDecoration(
         color: const Color(0xFFF8F4F1),
@@ -42,12 +46,16 @@ class OnboardExpertSessionCard extends StatelessWidget {
             flex: 8,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   session.title,
                   style: TxtStyle.poppinsSemiBold15().copyWith(
-                    fontSize: ScreenSize.isSmallWidth ? 12.sp : 13.sp,
+                    fontSize: ScreenSizeX.isTablet
+                        ? 9.sp
+                        : ScreenSize.isSmallWidth
+                        ? 12.sp
+                        : 13.sp,
                     height: 1.3,
                   ),
                   maxLines: 2,
@@ -58,12 +66,16 @@ class OnboardExpertSessionCard extends StatelessWidget {
                   children: [
                     Text(
                       session.doctor,
-                      style: TxtStyle.poppinsMedium13(fs: 11),
+                      style: TxtStyle.poppinsMedium13(
+                        fs: ScreenSizeX.isTablet ? 8 : 11,
+                      ),
                     ),
 
                     Text(
                       session.specialty,
-                      style: TxtStyle.poppinsMedium13(fs: 11),
+                      style: TxtStyle.poppinsMedium13(
+                        fs: ScreenSizeX.isTablet ? 8 : 11,
+                      ),
                     ),
                   ],
                 ),
@@ -79,7 +91,7 @@ class OnboardExpertSessionCard extends StatelessWidget {
                       "${session.date} - ${session.time}",
                       style: TxtStyle.poppinsMedium13(
                         color: c.foregroundPrimary,
-                        fs: 11,
+                        fs: ScreenSizeX.isTablet ? 8 : 11,
                       ),
                     ),
                   ],

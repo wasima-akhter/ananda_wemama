@@ -227,7 +227,7 @@ class ChatInputRow extends StatelessWidget {
                   onTap: isLoading ? null : cic.onTapSendMsg,
                   child: ContainerBordered(
                     rad: 30,
-                    hp: 22,
+                    hp: ScreenSizeX.isTablet ? 6 : 22,
                     vp: 10,
                     contClr: isLoading
                         ? c.secondary.withOpacity(0.5)

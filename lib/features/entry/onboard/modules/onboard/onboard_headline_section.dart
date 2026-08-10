@@ -19,7 +19,11 @@ class OnboardHeadlineSection extends StatelessWidget {
             Strings.motherhoodSupportLine,
             textAlign: TextAlign.center,
             style: GoogleFonts.dmSerifDisplay(
-              fontSize: ScreenSize.isTallHeight ? 35.sp : 32.sp,
+              fontSize: ScreenSizeX.isTablet
+                  ? 22.sp
+                  : ScreenSize.isTallHeight
+                  ? 35.sp
+                  : 32.sp,
               letterSpacing: -0.1,
               color: c.foregroundSecondary,
               fontWeight: FontWeight.w400,
@@ -46,7 +50,11 @@ class OnboardHeadlineSection extends StatelessWidget {
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontWeight: FontWeight.w500,
-              fontSize: ScreenSize.isTallHeight ? 13.5.sp : 12.5.sp,
+              fontSize: ScreenSizeX.isTablet
+                  ? 12.sp
+                  : ScreenSize.isTallHeight
+                  ? 13.5.sp
+                  : 12.5.sp,
               height: 1.3,
               letterSpacing: 0.64,
               color: c.foregroundSecondary,

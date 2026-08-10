@@ -185,7 +185,7 @@ extension MarginExtensions on Widget {
   );
 
   Widget get getBtmSheetM => Container(
-    margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 10.h),
+    margin: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.h),
     child: this,
   );
 }

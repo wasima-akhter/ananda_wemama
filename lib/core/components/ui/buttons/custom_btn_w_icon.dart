@@ -39,7 +39,11 @@ class CustomBtnWIcon extends StatelessWidget {
     final isTallDevice = ScreenSize.isTallHeight;
 
     TextStyle style_ = GoogleFonts.poppins(
-      fontSize: isTallDevice ? 17.sp : 15.sp,
+      fontSize: ScreenSizeX.isTablet
+          ? 13.sp
+          : isTallDevice
+          ? 17.sp
+          : 15.sp,
       fontWeight: FontWeight.w600,
       height: 1.0,
       letterSpacing: 0,
