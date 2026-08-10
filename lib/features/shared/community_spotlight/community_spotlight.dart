@@ -114,7 +114,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
       final hc = Get.find<HomeController>();
       final spotlightData = hc.spotLightData.value?.communitySpotlight;
       final isEmpty =
-          spotlightData == null || (spotlightData.id ?? '').trim().isEmpty;
+          spotlightData == null || (spotlightData.id ?? '').trim().isNotEmpty;
       final isLoading = hc.isSpotLightLoading_.value;
       final state = getUIStateDetail(isLoading: isLoading);
       final totalMembers = (spotlightData?.totalMember ?? 0).toString();
@@ -492,14 +492,13 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
           const Gap(12),
 
           /// HERO IMAGE
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: SafeAssetImage(
-              assetPath: Assets.images.spotlightPlaceholder.path,
-              height: 130.h,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+          SafeAssetImage(
+            radius: 14,
+            assetPath: Assets.images.spotlightPlaceholder.path,
+            height: 140.h,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            // alignment: Alignment.topCenter,
           ),
 
           const Gap(14),

@@ -79,12 +79,11 @@ dependencies:
   gap: ^3.0.1 # Spacing widget (SizedBox alternative)
   page_transition: ^2.2.1 # Custom page transitions
   shimmer_animation: ^2.2.2+1 # Loading shimmer effect
-  shimmer: ^3.0.0 # Shimmer placeholder effects
+
   lottie: ^3.3.2 # Lottie animations
   fluttertoast: ^9.0.0 # Toast messages
   flutter_html: ^3.0.0 # Render HTML content
   pinput: ^6.0.1 # OTP / PIN input fields
-  device_preview: ^1.2.0 # Device preview for UI testing
 
   #
   video_player: ^2.9.2
@@ -93,14 +92,10 @@ dependencies:
   # -----------------------------
   # 📊 Charts & Data Visualization
   # -----------------------------
-  fl_chart: ^1.1.1 # Lightweight charting
-  syncfusion_flutter_charts: ^32.2.4 # Advanced enterprise charts
-
   # -----------------------------
   # 🔽 Dropdowns & Selection Widgets
   # -----------------------------
   dropdown_button2: ^2.3.9
-  animated_custom_dropdown: ^3.1.1
   flexible_dropdown: ^1.0.8
 
   # -----------------------------
@@ -160,6 +155,7 @@ dev_dependencies:
   flutter_gen_runner:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.7
+  device_preview: ^1.2.0 # Device preview for UI testing
 
 flutter_native_splash:
   color: "#ffffff"

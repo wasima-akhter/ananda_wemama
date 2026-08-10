@@ -14,6 +14,7 @@ class SafeAssetImage extends StatelessWidget {
 
   final AssetImageShape shape;
   final BoxFit fit;
+  final Alignment alignment;
 
   const SafeAssetImage({
     super.key,
@@ -23,6 +24,7 @@ class SafeAssetImage extends StatelessWidget {
     this.radius = 12,
     this.shape = AssetImageShape.rounded,
     this.fit = BoxFit.cover,
+    this.alignment = Alignment.center,
   });
 
   bool get _isCircle => shape == AssetImageShape.circle;
@@ -36,6 +38,7 @@ class SafeAssetImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
+      alignment: alignment,
       cacheWidth: _cacheWidth(),
       cacheHeight: _cacheHeight(),
       errorBuilder: (_, _, _) =>
