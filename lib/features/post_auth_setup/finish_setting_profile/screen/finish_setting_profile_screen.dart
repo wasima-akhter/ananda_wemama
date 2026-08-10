@@ -70,7 +70,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
                                   style: TxtStyle.dmSerifDisplayRegular(),
                                 ),
                                 SafeAssetImage(
-                                  assetPath: Assets.images.congrates.path,
+                                  assetPath: Assets.images.congratesWebp.path,
                                   height: 40.h,
                                 ),
                               ],
@@ -199,7 +199,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
                         clipBehavior: Clip.none,
                         children: [
                           SafeAssetImage(
-                            assetPath: Assets.images.allSetImage.path,
+                            assetPath: Assets.images.allSetImageWebp.path,
                             fit: BoxFit.fitWidth,
                             height: imageHeight,
                           ),

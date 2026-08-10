@@ -8,7 +8,7 @@ class PastSessionsLibraryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ContainerBordered(
-      contClr:newCardClr,
+      contClr: newCardClr,
       rad: 24,
       hp: 16,
       vp: 18,
@@ -17,7 +17,7 @@ class PastSessionsLibraryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text("Library of Past Sessions", style: TxtStyle.outfitSmTitle),
+              Text("Past Sessions Library", style: TxtStyle.outfitSmTitle),
               const Spacer(),
               SvgIcon(iconPath: IconsPath.lock, height: 22),
             ],
@@ -32,10 +32,13 @@ class PastSessionsLibraryCard extends StatelessWidget {
             vp: 12,
             child: Row(
               children: [
-                SvgIcon(iconPath: IconsPath.lock, height: 22),
+                Icon(Icons.lock_clock_rounded, color: c.primary, size: 22.w),
                 10.horizontalSpace,
                 Expanded(
-                  child: Text("Subscribe To Watch All Past Sessions", style: TxtStyle.outfitSmNor),
+                  child: Text(
+                    "Unlock the full library of past sessions and revisit the conversations, guidance, and moments that matter to you.",
+                    style: TxtStyle.outfitSmNor,
+                  ),
                 ),
               ],
             ),
@@ -44,7 +47,7 @@ class PastSessionsLibraryCard extends StatelessWidget {
           16.verticalSpace,
 
           Center(
-            child: SmallNavBtn(text: "Subscribe", onTap: onTapSubscribe),
+            child: SmallNavBtn(text: "Unlock Library", onTap: onTapSubscribe),
           ),
         ],
       ),

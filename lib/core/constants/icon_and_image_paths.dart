@@ -143,52 +143,112 @@ class IconsPath {
 
 class ImagesPath {
   const ImagesPath._();
-
   // Splash / Onboarding
-  static String get splashImageWLogo => Assets.images.splashWholeScreen.path;
-  static String get weMamaLogoPng => Assets.images.weMamaLogoPng.path;
-  static String get weMamaHandsLogoPng => Assets.images.weMamaHandsLogo.path;
+  static String get splashImageWLogo =>
+      Assets.images.splashWholeScreenWebp.path;
+
+  static String get weMamaLogo => Assets.images.weMamaLogoPngWebp.path;
+
+  static String get weMamaHandsLogo => Assets.images.weMamaHandsLogoWebp.path;
+
   static String get wemamaHandsTitleLogo =>
-      Assets.images.wemamaHandsTitleLogo.path;
-  static String get splashImage => Assets.images.splashImage.path;
-  static String get onboardingBgImage => Assets.images.onboardingBg.path;
-  static String get onboardingImage => Assets.images.onboardingImage.path;
-  static String get onboarding1 => Assets.images.onboarding1.path;
-  static String get onboarding2 => Assets.images.onboarding2.path;
-  static String get onboarding3 => Assets.images.onboarding3.path;
-  //
-  static String get onboardScreenHeart => Assets.images.onboardScreenHeart.path;
+      Assets.images.wemamaHandsTitleLogoWebp.path;
+
+  static String get splashImage => Assets.images.splashImageWebp.path;
+
+  static String get onboardingBgImage => Assets.images.onboardingBgWebp.path;
+
+  static String get onboardingImage => Assets.images.onboardingImageWebp.path;
+
+  static String get onboarding1 => Assets.images.onboarding1Webp.path;
+
+  static String get onboarding2 => Assets.images.onboarding2Webp.path;
+
+  static String get onboarding3 => Assets.images.onboarding3Webp.path;
+
+  static String get onboardScreenHeart =>
+      Assets.images.onboardScreenHeartWebp.path;
 
   // Avatar demo pictures
-  static String get userDemoL => Assets.images.userDemoL.path;
-  static String get userDemoSm => Assets.images.userDemoSm.path;
+  static String get userDemoL => Assets.images.userDemoLWebp.path;
+
+  static String get userDemoSm => Assets.images.userDemoSmWebp.path;
+
+  static String get userPlaceholder => Assets.images.userPlaceholderWebp.path;
 
   // Health / Mood
-  static String get anxious => Assets.images.anxious.path;
-  static String get calm => Assets.images.calm.path;
-  static String get stressed => Assets.images.stressed.path;
-  static String get tired => Assets.images.tired.path;
+  static String get anxious => Assets.images.anxiousWebp.path;
+
+  static String get calm => Assets.images.calmWebp.path;
+
+  static String get stressed => Assets.images.stressedWebp.path;
+
+  static String get tired => Assets.images.tiredWebp.path;
 
   // Location
-  static String get locationMap => Assets.images.locationMap.path;
+  static String get locationMap => Assets.images.locationMapWebp.path;
 
-  // Net Images/json animation
+  static String get matchMap => Assets.images.matchMapWebp.path;
 
-  //
+  // Gallery / Attachments
+  static String get gallery => Assets.images.galleryWebp.path;
 
-  static String get gallery => Assets.images.gallery.path;
-  static String get camera => Assets.images.camera.path;
-  static String get folderAttach => Assets.images.folderAttach.path;
+  static String get camera => Assets.images.cameraWebp.path;
 
-  static String get noSearchImg => Assets.images.noSearchImg.path;
-  static String get emptyList => Assets.images.emptyList.path;
-  static String get likeEmoji => Assets.images.likeEmoji.path;
-  static String get heartEmoji => Assets.images.heartEmoji.path;
-  static String get careEmoji => Assets.images.careEmoji.path;
-  static String get hahaEmoji => Assets.images.hahaEmoji.path;
-  static String get wowEmoji => Assets.images.wowEmoji.path;
-  static String get sadEmoji => Assets.images.sadEmoji.path;
-  static String get angryEmoji => Assets.images.angryEmoji.path;
+  static String get folderAttach => Assets.images.folderAttachWebp.path;
+
+  // Empty / No-state images
+  static String get noSearchImg => Assets.images.noSearchImgWebp.path;
+
+  static String get emptyList => Assets.images.emptyListWebp.path;
+
+  static String get noChatIcon => Assets.images.noChatIconWebp.path;
+
+  static String get noCommentIcon => Assets.images.noCommentIconWebp.path;
+
+  static String get noCommunitiesIcon =>
+      Assets.images.noCommunitiesIconWebp.path;
+
+  static String get noMatchLeafImage => Assets.images.noMatchLeafImageWebp.path;
+
+  static String get noMatchStateImage =>
+      Assets.images.noMatchStateImageWebp.path;
+
+  static String get noWaveIcon => Assets.images.noWaveIconWebp.path;
+
+  // Reaction emojis
+  static String get likeEmoji => Assets.images.likeEmojiWebp.path;
+
+  static String get heartEmoji => Assets.images.heartEmojiWebp.path;
+
+  static String get careEmoji => Assets.images.careEmojiWebp.path;
+
+  static String get hahaEmoji => Assets.images.hahaEmojiWebp.path;
+
+  static String get wowEmoji => Assets.images.wowEmojiWebp.path;
+
+  static String get sadEmoji => Assets.images.sadEmojiWebp.path;
+
+  static String get angryEmoji => Assets.images.angryEmojiWebp.path;
+
+  // Payment / Promo
+  static String get paySuccess => Assets.images.paySuccessWebp.path;
+
+  static String get promoCodeImage => Assets.images.promoCodeImageWebp.path;
+
+  // Founding Mum
+  static String get foundingMumCodeScreen =>
+      Assets.images.foundingMumCodeScreenWebp.path;
+
+  static String get foundingMumNewImage =>
+      Assets.images.foundingMumNewImageWebp.path;
+
+  // Session mock users
+  static String get sessionMockUser1 => Assets.images.sessionMockUser1Webp.path;
+
+  static String get sessionMockUser2 => Assets.images.sessionMockUser2Webp.path;
+
+  static String get sessionMockUser3 => Assets.images.sessionMockUser3Webp.path;
 
   //New
 }

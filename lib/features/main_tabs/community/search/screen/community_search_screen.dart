@@ -92,8 +92,8 @@ class _CommunitySearchScreenState extends State<CommunitySearchScreen>
       appBar: _buildAppBar(),
       child: Obx(() {
         return csc.showSearchedTag.value
-            ? CommunitySearchResultSection( )
-            : SuggestedCommunitySection( );
+            ? CommunitySearchResultSection()
+            : SuggestedCommunitySection();
       }),
     );
   }
@@ -116,7 +116,7 @@ class _CommunitySearchScreenState extends State<CommunitySearchScreen>
           csc.clearAll();
           csc.unFocusAll();
         },
-      ).mHV(0, 4),
+      ),
     );
   }
 }

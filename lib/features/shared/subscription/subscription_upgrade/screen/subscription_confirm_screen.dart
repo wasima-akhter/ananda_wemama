@@ -206,7 +206,7 @@ class _PremiumInfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -376,7 +376,7 @@ class _ConfirmedPaymentSummary extends StatelessWidget {
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.03),
+            color: Colors.black.withValues(alpha: .03),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -436,7 +436,7 @@ class _BottomIllustration extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SafeAssetImage(
-            assetPath: Assets.images.promoCodeImage.path,
+            assetPath: Assets.images.promoCodeImageWebp.path,
             height: 120,
           ),
 

@@ -18,7 +18,7 @@ class AlreadyPremiumPopup extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SafeAssetImage(
-              assetPath: Assets.images.paySuccess.path,
+              assetPath: Assets.images.paySuccessWebp.path,
             ).marginAll(10),
 
             Gap(itemGap),

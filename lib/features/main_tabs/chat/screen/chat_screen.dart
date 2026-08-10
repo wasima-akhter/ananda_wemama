@@ -112,7 +112,7 @@ class ChatScreen extends StatelessWidget {
                   cc.showSearchedTag.value = false;
                 },
                 child: EmptyNoSearchWidgetScrollable(
-                  assetPath: Assets.images.noChatIcon.path,
+                  assetPath: Assets.images.noChatIconWebp.path,
                   title: "No conversations found",
                   subTitle:
                       "We couldn't find anyone matching your search.\n"
@@ -165,7 +165,7 @@ class ChatScreen extends StatelessWidget {
           key: refreshKey,
           onRefresh: cc.getChatList,
           child: EmptyNoSearchWidgetScrollable(
-            assetPath: Assets.images.noCommentIcon.path,
+            assetPath: Assets.images.noCommentIconWebp.path,
             title: "No conversations yet",
             subTitle:
                 "Start by finding a match and sending a wave 👋\n"

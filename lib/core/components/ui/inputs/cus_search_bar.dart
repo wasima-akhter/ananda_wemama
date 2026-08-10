@@ -29,12 +29,12 @@ class CusSearchBar extends StatelessWidget {
       builder: (context, _) {
         return CusNameTypeTextFormField(
           rad: rad ?? 30,
-          h: 42.h,
+          h: 36.h,
           isNoBrder: false,
           brdrClr: c.inputBorder,
           fillColor: fillColor ?? c.inputBackground,
           focusNode: focusNode,
-          contentPadding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 8.w),
+          contentPadding: EdgeInsets.symmetric(horizontal: 8.w),
           prefix: SvgIcon(iconPath: IconsPath.search, height: 20).mL(12),
           prefixSize: 22,
           suffix: controller.text.isEmpty

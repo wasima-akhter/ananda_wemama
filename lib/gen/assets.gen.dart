@@ -691,242 +691,504 @@ class $AssetsImagesGen {
   const $AssetsImagesGen();
 
   /// File path: assets/images/all_set_image.png
-  AssetGenImage get allSetImage =>
+  AssetGenImage get allSetImagePng =>
       const AssetGenImage('assets/images/all_set_image.png');
 
+  /// File path: assets/images/all_set_image.webp
+  AssetGenImage get allSetImageWebp =>
+      const AssetGenImage('assets/images/all_set_image.webp');
+
   /// File path: assets/images/angry_emoji.png
-  AssetGenImage get angryEmoji =>
+  AssetGenImage get angryEmojiPng =>
       const AssetGenImage('assets/images/angry_emoji.png');
 
+  /// File path: assets/images/angry_emoji.webp
+  AssetGenImage get angryEmojiWebp =>
+      const AssetGenImage('assets/images/angry_emoji.webp');
+
   /// File path: assets/images/anxious.png
-  AssetGenImage get anxious => const AssetGenImage('assets/images/anxious.png');
+  AssetGenImage get anxiousPng =>
+      const AssetGenImage('assets/images/anxious.png');
+
+  /// File path: assets/images/anxious.webp
+  AssetGenImage get anxiousWebp =>
+      const AssetGenImage('assets/images/anxious.webp');
 
   /// File path: assets/images/calm.png
-  AssetGenImage get calm => const AssetGenImage('assets/images/calm.png');
+  AssetGenImage get calmPng => const AssetGenImage('assets/images/calm.png');
+
+  /// File path: assets/images/calm.webp
+  AssetGenImage get calmWebp => const AssetGenImage('assets/images/calm.webp');
 
   /// File path: assets/images/camera.png
-  AssetGenImage get camera => const AssetGenImage('assets/images/camera.png');
+  AssetGenImage get cameraPng =>
+      const AssetGenImage('assets/images/camera.png');
+
+  /// File path: assets/images/camera.webp
+  AssetGenImage get cameraWebp =>
+      const AssetGenImage('assets/images/camera.webp');
 
   /// File path: assets/images/care_emoji.png
-  AssetGenImage get careEmoji =>
+  AssetGenImage get careEmojiPng =>
       const AssetGenImage('assets/images/care_emoji.png');
 
+  /// File path: assets/images/care_emoji.webp
+  AssetGenImage get careEmojiWebp =>
+      const AssetGenImage('assets/images/care_emoji.webp');
+
   /// File path: assets/images/congrates.png
-  AssetGenImage get congrates =>
+  AssetGenImage get congratesPng =>
       const AssetGenImage('assets/images/congrates.png');
 
+  /// File path: assets/images/congrates.webp
+  AssetGenImage get congratesWebp =>
+      const AssetGenImage('assets/images/congrates.webp');
+
   /// File path: assets/images/empty_list.png
-  AssetGenImage get emptyList =>
+  AssetGenImage get emptyListPng =>
       const AssetGenImage('assets/images/empty_list.png');
 
+  /// File path: assets/images/empty_list.webp
+  AssetGenImage get emptyListWebp =>
+      const AssetGenImage('assets/images/empty_list.webp');
+
   /// File path: assets/images/folder_attach.png
-  AssetGenImage get folderAttach =>
+  AssetGenImage get folderAttachPng =>
       const AssetGenImage('assets/images/folder_attach.png');
 
+  /// File path: assets/images/folder_attach.webp
+  AssetGenImage get folderAttachWebp =>
+      const AssetGenImage('assets/images/folder_attach.webp');
+
   /// File path: assets/images/founding_mum_code_screen.png
-  AssetGenImage get foundingMumCodeScreen =>
+  AssetGenImage get foundingMumCodeScreenPng =>
       const AssetGenImage('assets/images/founding_mum_code_screen.png');
 
+  /// File path: assets/images/founding_mum_code_screen.webp
+  AssetGenImage get foundingMumCodeScreenWebp =>
+      const AssetGenImage('assets/images/founding_mum_code_screen.webp');
+
   /// File path: assets/images/founding_mum_new_image.png
-  AssetGenImage get foundingMumNewImage =>
+  AssetGenImage get foundingMumNewImagePng =>
       const AssetGenImage('assets/images/founding_mum_new_image.png');
 
+  /// File path: assets/images/founding_mum_new_image.webp
+  AssetGenImage get foundingMumNewImageWebp =>
+      const AssetGenImage('assets/images/founding_mum_new_image.webp');
+
   /// File path: assets/images/gallery.png
-  AssetGenImage get gallery => const AssetGenImage('assets/images/gallery.png');
+  AssetGenImage get galleryPng =>
+      const AssetGenImage('assets/images/gallery.png');
+
+  /// File path: assets/images/gallery.webp
+  AssetGenImage get galleryWebp =>
+      const AssetGenImage('assets/images/gallery.webp');
 
   /// File path: assets/images/haha_emoji.png
-  AssetGenImage get hahaEmoji =>
+  AssetGenImage get hahaEmojiPng =>
       const AssetGenImage('assets/images/haha_emoji.png');
 
+  /// File path: assets/images/haha_emoji.webp
+  AssetGenImage get hahaEmojiWebp =>
+      const AssetGenImage('assets/images/haha_emoji.webp');
+
   /// File path: assets/images/heart_emoji.png
-  AssetGenImage get heartEmoji =>
+  AssetGenImage get heartEmojiPng =>
       const AssetGenImage('assets/images/heart_emoji.png');
 
+  /// File path: assets/images/heart_emoji.webp
+  AssetGenImage get heartEmojiWebp =>
+      const AssetGenImage('assets/images/heart_emoji.webp');
+
   /// File path: assets/images/image_placeholder.png
-  AssetGenImage get imagePlaceholder =>
+  AssetGenImage get imagePlaceholderPng =>
       const AssetGenImage('assets/images/image_placeholder.png');
 
+  /// File path: assets/images/image_placeholder.webp
+  AssetGenImage get imagePlaceholderWebp =>
+      const AssetGenImage('assets/images/image_placeholder.webp');
+
   /// File path: assets/images/like_emoji.png
-  AssetGenImage get likeEmoji =>
+  AssetGenImage get likeEmojiPng =>
       const AssetGenImage('assets/images/like_emoji.png');
 
+  /// File path: assets/images/like_emoji.webp
+  AssetGenImage get likeEmojiWebp =>
+      const AssetGenImage('assets/images/like_emoji.webp');
+
   /// File path: assets/images/location_map.png
-  AssetGenImage get locationMap =>
+  AssetGenImage get locationMapPng =>
       const AssetGenImage('assets/images/location_map.png');
 
+  /// File path: assets/images/location_map.webp
+  AssetGenImage get locationMapWebp =>
+      const AssetGenImage('assets/images/location_map.webp');
+
   /// File path: assets/images/match_map.png
-  AssetGenImage get matchMap =>
+  AssetGenImage get matchMapPng =>
       const AssetGenImage('assets/images/match_map.png');
 
+  /// File path: assets/images/match_map.webp
+  AssetGenImage get matchMapWebp =>
+      const AssetGenImage('assets/images/match_map.webp');
+
   /// File path: assets/images/no_chat_icon.png
-  AssetGenImage get noChatIcon =>
+  AssetGenImage get noChatIconPng =>
       const AssetGenImage('assets/images/no_chat_icon.png');
 
+  /// File path: assets/images/no_chat_icon.webp
+  AssetGenImage get noChatIconWebp =>
+      const AssetGenImage('assets/images/no_chat_icon.webp');
+
   /// File path: assets/images/no_comment_icon.png
-  AssetGenImage get noCommentIcon =>
+  AssetGenImage get noCommentIconPng =>
       const AssetGenImage('assets/images/no_comment_icon.png');
 
+  /// File path: assets/images/no_comment_icon.webp
+  AssetGenImage get noCommentIconWebp =>
+      const AssetGenImage('assets/images/no_comment_icon.webp');
+
   /// File path: assets/images/no_communities_icon.png
-  AssetGenImage get noCommunitiesIcon =>
+  AssetGenImage get noCommunitiesIconPng =>
       const AssetGenImage('assets/images/no_communities_icon.png');
 
+  /// File path: assets/images/no_communities_icon.webp
+  AssetGenImage get noCommunitiesIconWebp =>
+      const AssetGenImage('assets/images/no_communities_icon.webp');
+
   /// File path: assets/images/no_match_leaf_image.png
-  AssetGenImage get noMatchLeafImage =>
+  AssetGenImage get noMatchLeafImagePng =>
       const AssetGenImage('assets/images/no_match_leaf_image.png');
 
+  /// File path: assets/images/no_match_leaf_image.webp
+  AssetGenImage get noMatchLeafImageWebp =>
+      const AssetGenImage('assets/images/no_match_leaf_image.webp');
+
   /// File path: assets/images/no_match_state_image.png
-  AssetGenImage get noMatchStateImage =>
+  AssetGenImage get noMatchStateImagePng =>
       const AssetGenImage('assets/images/no_match_state_image.png');
 
+  /// File path: assets/images/no_match_state_image.webp
+  AssetGenImage get noMatchStateImageWebp =>
+      const AssetGenImage('assets/images/no_match_state_image.webp');
+
   /// File path: assets/images/no_search_img.png
-  AssetGenImage get noSearchImg =>
+  AssetGenImage get noSearchImgPng =>
       const AssetGenImage('assets/images/no_search_img.png');
 
+  /// File path: assets/images/no_search_img.webp
+  AssetGenImage get noSearchImgWebp =>
+      const AssetGenImage('assets/images/no_search_img.webp');
+
   /// File path: assets/images/no_wave_icon.png
-  AssetGenImage get noWaveIcon =>
+  AssetGenImage get noWaveIconPng =>
       const AssetGenImage('assets/images/no_wave_icon.png');
 
+  /// File path: assets/images/no_wave_icon.webp
+  AssetGenImage get noWaveIconWebp =>
+      const AssetGenImage('assets/images/no_wave_icon.webp');
+
+  /// File path: assets/images/notication_placeholder.png
+  AssetGenImage get noticationPlaceholderPng =>
+      const AssetGenImage('assets/images/notication_placeholder.png');
+
+  /// File path: assets/images/notication_placeholder.webp
+  AssetGenImage get noticationPlaceholderWebp =>
+      const AssetGenImage('assets/images/notication_placeholder.webp');
+
   /// File path: assets/images/onboard_screen_heart.png
-  AssetGenImage get onboardScreenHeart =>
+  AssetGenImage get onboardScreenHeartPng =>
       const AssetGenImage('assets/images/onboard_screen_heart.png');
 
+  /// File path: assets/images/onboard_screen_heart.webp
+  AssetGenImage get onboardScreenHeartWebp =>
+      const AssetGenImage('assets/images/onboard_screen_heart.webp');
+
   /// File path: assets/images/onboarding_1.png
-  AssetGenImage get onboarding1 =>
+  AssetGenImage get onboarding1Png =>
       const AssetGenImage('assets/images/onboarding_1.png');
 
+  /// File path: assets/images/onboarding_1.webp
+  AssetGenImage get onboarding1Webp =>
+      const AssetGenImage('assets/images/onboarding_1.webp');
+
   /// File path: assets/images/onboarding_2.png
-  AssetGenImage get onboarding2 =>
+  AssetGenImage get onboarding2Png =>
       const AssetGenImage('assets/images/onboarding_2.png');
 
+  /// File path: assets/images/onboarding_2.webp
+  AssetGenImage get onboarding2Webp =>
+      const AssetGenImage('assets/images/onboarding_2.webp');
+
   /// File path: assets/images/onboarding_3.png
-  AssetGenImage get onboarding3 =>
+  AssetGenImage get onboarding3Png =>
       const AssetGenImage('assets/images/onboarding_3.png');
 
+  /// File path: assets/images/onboarding_3.webp
+  AssetGenImage get onboarding3Webp =>
+      const AssetGenImage('assets/images/onboarding_3.webp');
+
   /// File path: assets/images/onboarding_bg.png
-  AssetGenImage get onboardingBg =>
+  AssetGenImage get onboardingBgPng =>
       const AssetGenImage('assets/images/onboarding_bg.png');
 
+  /// File path: assets/images/onboarding_bg.webp
+  AssetGenImage get onboardingBgWebp =>
+      const AssetGenImage('assets/images/onboarding_bg.webp');
+
   /// File path: assets/images/onboarding_image.png
-  AssetGenImage get onboardingImage =>
+  AssetGenImage get onboardingImagePng =>
       const AssetGenImage('assets/images/onboarding_image.png');
 
+  /// File path: assets/images/onboarding_image.webp
+  AssetGenImage get onboardingImageWebp =>
+      const AssetGenImage('assets/images/onboarding_image.webp');
+
   /// File path: assets/images/pay_success.png
-  AssetGenImage get paySuccess =>
+  AssetGenImage get paySuccessPng =>
       const AssetGenImage('assets/images/pay_success.png');
 
+  /// File path: assets/images/pay_success.webp
+  AssetGenImage get paySuccessWebp =>
+      const AssetGenImage('assets/images/pay_success.webp');
+
+  /// File path: assets/images/post_placeholder.png
+  AssetGenImage get postPlaceholderPng =>
+      const AssetGenImage('assets/images/post_placeholder.png');
+
+  /// File path: assets/images/post_placeholder.webp
+  AssetGenImage get postPlaceholderWebp =>
+      const AssetGenImage('assets/images/post_placeholder.webp');
+
   /// File path: assets/images/promo_code_image.png
-  AssetGenImage get promoCodeImage =>
+  AssetGenImage get promoCodeImagePng =>
       const AssetGenImage('assets/images/promo_code_image.png');
 
+  /// File path: assets/images/promo_code_image.webp
+  AssetGenImage get promoCodeImageWebp =>
+      const AssetGenImage('assets/images/promo_code_image.webp');
+
   /// File path: assets/images/sad_emoji.png
-  AssetGenImage get sadEmoji =>
+  AssetGenImage get sadEmojiPng =>
       const AssetGenImage('assets/images/sad_emoji.png');
 
+  /// File path: assets/images/sad_emoji.webp
+  AssetGenImage get sadEmojiWebp =>
+      const AssetGenImage('assets/images/sad_emoji.webp');
+
   /// File path: assets/images/session_mock_user_1.png
-  AssetGenImage get sessionMockUser1 =>
+  AssetGenImage get sessionMockUser1Png =>
       const AssetGenImage('assets/images/session_mock_user_1.png');
 
+  /// File path: assets/images/session_mock_user_1.webp
+  AssetGenImage get sessionMockUser1Webp =>
+      const AssetGenImage('assets/images/session_mock_user_1.webp');
+
   /// File path: assets/images/session_mock_user_2.png
-  AssetGenImage get sessionMockUser2 =>
+  AssetGenImage get sessionMockUser2Png =>
       const AssetGenImage('assets/images/session_mock_user_2.png');
 
+  /// File path: assets/images/session_mock_user_2.webp
+  AssetGenImage get sessionMockUser2Webp =>
+      const AssetGenImage('assets/images/session_mock_user_2.webp');
+
   /// File path: assets/images/session_mock_user_3.png
-  AssetGenImage get sessionMockUser3 =>
+  AssetGenImage get sessionMockUser3Png =>
       const AssetGenImage('assets/images/session_mock_user_3.png');
 
+  /// File path: assets/images/session_mock_user_3.webp
+  AssetGenImage get sessionMockUser3Webp =>
+      const AssetGenImage('assets/images/session_mock_user_3.webp');
+
   /// File path: assets/images/splash_image.png
-  AssetGenImage get splashImage =>
+  AssetGenImage get splashImagePng =>
       const AssetGenImage('assets/images/splash_image.png');
 
+  /// File path: assets/images/splash_image.webp
+  AssetGenImage get splashImageWebp =>
+      const AssetGenImage('assets/images/splash_image.webp');
+
   /// File path: assets/images/splash_whole_screen.png
-  AssetGenImage get splashWholeScreen =>
+  AssetGenImage get splashWholeScreenPng =>
       const AssetGenImage('assets/images/splash_whole_screen.png');
 
+  /// File path: assets/images/splash_whole_screen.webp
+  AssetGenImage get splashWholeScreenWebp =>
+      const AssetGenImage('assets/images/splash_whole_screen.webp');
+
   /// File path: assets/images/stressed.png
-  AssetGenImage get stressed =>
+  AssetGenImage get stressedPng =>
       const AssetGenImage('assets/images/stressed.png');
 
+  /// File path: assets/images/stressed.webp
+  AssetGenImage get stressedWebp =>
+      const AssetGenImage('assets/images/stressed.webp');
+
   /// File path: assets/images/tired.png
-  AssetGenImage get tired => const AssetGenImage('assets/images/tired.png');
+  AssetGenImage get tiredPng => const AssetGenImage('assets/images/tired.png');
+
+  /// File path: assets/images/tired.webp
+  AssetGenImage get tiredWebp =>
+      const AssetGenImage('assets/images/tired.webp');
 
   /// File path: assets/images/user_demo_l.png
-  AssetGenImage get userDemoL =>
+  AssetGenImage get userDemoLPng =>
       const AssetGenImage('assets/images/user_demo_l.png');
 
+  /// File path: assets/images/user_demo_l.webp
+  AssetGenImage get userDemoLWebp =>
+      const AssetGenImage('assets/images/user_demo_l.webp');
+
   /// File path: assets/images/user_demo_sm.png
-  AssetGenImage get userDemoSm =>
+  AssetGenImage get userDemoSmPng =>
       const AssetGenImage('assets/images/user_demo_sm.png');
 
+  /// File path: assets/images/user_demo_sm.webp
+  AssetGenImage get userDemoSmWebp =>
+      const AssetGenImage('assets/images/user_demo_sm.webp');
+
   /// File path: assets/images/user_placeholder.png
-  AssetGenImage get userPlaceholder =>
+  AssetGenImage get userPlaceholderPng =>
       const AssetGenImage('assets/images/user_placeholder.png');
 
+  /// File path: assets/images/user_placeholder.webp
+  AssetGenImage get userPlaceholderWebp =>
+      const AssetGenImage('assets/images/user_placeholder.webp');
+
   /// File path: assets/images/we_mama_hands_logo.png
-  AssetGenImage get weMamaHandsLogo =>
+  AssetGenImage get weMamaHandsLogoPng =>
       const AssetGenImage('assets/images/we_mama_hands_logo.png');
 
+  /// File path: assets/images/we_mama_hands_logo.webp
+  AssetGenImage get weMamaHandsLogoWebp =>
+      const AssetGenImage('assets/images/we_mama_hands_logo.webp');
+
   /// File path: assets/images/we_mama_logo_png.png
-  AssetGenImage get weMamaLogoPng =>
+  AssetGenImage get weMamaLogoPngPng =>
       const AssetGenImage('assets/images/we_mama_logo_png.png');
 
+  /// File path: assets/images/we_mama_logo_png.webp
+  AssetGenImage get weMamaLogoPngWebp =>
+      const AssetGenImage('assets/images/we_mama_logo_png.webp');
+
   /// File path: assets/images/wemama_hands_title_logo.png
-  AssetGenImage get wemamaHandsTitleLogo =>
+  AssetGenImage get wemamaHandsTitleLogoPng =>
       const AssetGenImage('assets/images/wemama_hands_title_logo.png');
 
+  /// File path: assets/images/wemama_hands_title_logo.webp
+  AssetGenImage get wemamaHandsTitleLogoWebp =>
+      const AssetGenImage('assets/images/wemama_hands_title_logo.webp');
+
   /// File path: assets/images/wow_emoji.png
-  AssetGenImage get wowEmoji =>
+  AssetGenImage get wowEmojiPng =>
       const AssetGenImage('assets/images/wow_emoji.png');
+
+  /// File path: assets/images/wow_emoji.webp
+  AssetGenImage get wowEmojiWebp =>
+      const AssetGenImage('assets/images/wow_emoji.webp');
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    allSetImage,
-    angryEmoji,
-    anxious,
-    calm,
-    camera,
-    careEmoji,
-    congrates,
-    emptyList,
-    folderAttach,
-    foundingMumCodeScreen,
-    foundingMumNewImage,
-    gallery,
-    hahaEmoji,
-    heartEmoji,
-    imagePlaceholder,
-    likeEmoji,
-    locationMap,
-    matchMap,
-    noChatIcon,
-    noCommentIcon,
-    noCommunitiesIcon,
-    noMatchLeafImage,
-    noMatchStateImage,
-    noSearchImg,
-    noWaveIcon,
-    onboardScreenHeart,
-    onboarding1,
-    onboarding2,
-    onboarding3,
-    onboardingBg,
-    onboardingImage,
-    paySuccess,
-    promoCodeImage,
-    sadEmoji,
-    sessionMockUser1,
-    sessionMockUser2,
-    sessionMockUser3,
-    splashImage,
-    splashWholeScreen,
-    stressed,
-    tired,
-    userDemoL,
-    userDemoSm,
-    userPlaceholder,
-    weMamaHandsLogo,
-    weMamaLogoPng,
-    wemamaHandsTitleLogo,
-    wowEmoji,
+    allSetImagePng,
+    allSetImageWebp,
+    angryEmojiPng,
+    angryEmojiWebp,
+    anxiousPng,
+    anxiousWebp,
+    calmPng,
+    calmWebp,
+    cameraPng,
+    cameraWebp,
+    careEmojiPng,
+    careEmojiWebp,
+    congratesPng,
+    congratesWebp,
+    emptyListPng,
+    emptyListWebp,
+    folderAttachPng,
+    folderAttachWebp,
+    foundingMumCodeScreenPng,
+    foundingMumCodeScreenWebp,
+    foundingMumNewImagePng,
+    foundingMumNewImageWebp,
+    galleryPng,
+    galleryWebp,
+    hahaEmojiPng,
+    hahaEmojiWebp,
+    heartEmojiPng,
+    heartEmojiWebp,
+    imagePlaceholderPng,
+    imagePlaceholderWebp,
+    likeEmojiPng,
+    likeEmojiWebp,
+    locationMapPng,
+    locationMapWebp,
+    matchMapPng,
+    matchMapWebp,
+    noChatIconPng,
+    noChatIconWebp,
+    noCommentIconPng,
+    noCommentIconWebp,
+    noCommunitiesIconPng,
+    noCommunitiesIconWebp,
+    noMatchLeafImagePng,
+    noMatchLeafImageWebp,
+    noMatchStateImagePng,
+    noMatchStateImageWebp,
+    noSearchImgPng,
+    noSearchImgWebp,
+    noWaveIconPng,
+    noWaveIconWebp,
+    noticationPlaceholderPng,
+    noticationPlaceholderWebp,
+    onboardScreenHeartPng,
+    onboardScreenHeartWebp,
+    onboarding1Png,
+    onboarding1Webp,
+    onboarding2Png,
+    onboarding2Webp,
+    onboarding3Png,
+    onboarding3Webp,
+    onboardingBgPng,
+    onboardingBgWebp,
+    onboardingImagePng,
+    onboardingImageWebp,
+    paySuccessPng,
+    paySuccessWebp,
+    postPlaceholderPng,
+    postPlaceholderWebp,
+    promoCodeImagePng,
+    promoCodeImageWebp,
+    sadEmojiPng,
+    sadEmojiWebp,
+    sessionMockUser1Png,
+    sessionMockUser1Webp,
+    sessionMockUser2Png,
+    sessionMockUser2Webp,
+    sessionMockUser3Png,
+    sessionMockUser3Webp,
+    splashImagePng,
+    splashImageWebp,
+    splashWholeScreenPng,
+    splashWholeScreenWebp,
+    stressedPng,
+    stressedWebp,
+    tiredPng,
+    tiredWebp,
+    userDemoLPng,
+    userDemoLWebp,
+    userDemoSmPng,
+    userDemoSmWebp,
+    userPlaceholderPng,
+    userPlaceholderWebp,
+    weMamaHandsLogoPng,
+    weMamaHandsLogoWebp,
+    weMamaLogoPngPng,
+    weMamaLogoPngWebp,
+    wemamaHandsTitleLogoPng,
+    wemamaHandsTitleLogoWebp,
+    wowEmojiPng,
+    wowEmojiWebp,
   ];
 }
 

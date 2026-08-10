@@ -5,6 +5,7 @@ import 'package:we_mama/core/components/ui/loaders/empty_widget.dart';
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../../../../core/models/ui/common_data_models.dart';
+import '../../../../../gen/assets.gen.dart';
 import '../../core/models/community_item_detail_model.dart';
 import '../../post/widgets/post_item_widget.dart';
 import '../../shared_ui/join_btn.dart';
@@ -151,7 +152,14 @@ class CommunityDetailsScreen extends StatelessWidget {
                   (index) => const PostItemShimmer().mB(itemGap),
                 ),
               ).getcm,
-              empty: () => const EmptyNoSearchWidget(title: "No Posts yet"),
+              empty: () => EmptyNoSearchWidgetScrollable(
+                isScrollable: false,
+                assetPath: Assets.images.postPlaceholderWebp.path,
+                title: "Let’s get the conversation started!",
+                subTitle:
+                    "This community is waiting for its first post.\n"
+                    "Why not start the conversation?",
+              ).get10cm,
 
               data: () => Column(
                 children: List.generate(

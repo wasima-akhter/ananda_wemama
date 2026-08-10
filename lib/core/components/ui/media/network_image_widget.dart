@@ -232,7 +232,7 @@ class _FallbackWidget extends StatelessWidget {
               size: ScreenSize.isSmallWidth ? size * 0.8 : size,
               color: fallbackIconColor,
             )
-          : Assets.images.imagePlaceholder.image(
+          : Assets.images.imagePlaceholderWebp.image(
               width: size,
               height: size,
               fit: BoxFit.contain,

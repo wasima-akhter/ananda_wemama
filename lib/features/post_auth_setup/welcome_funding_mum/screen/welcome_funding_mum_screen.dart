@@ -70,7 +70,7 @@ class WelcomeFundingMumScreen extends StatelessWidget {
           // SafeAssetImage(assetPath: ImagesPath.onboardScreenHeart).get10cm,
           // Gap(itemGap),
           SafeAssetImage(
-            assetPath: Assets.images.foundingMumNewImage.path,
+            assetPath: Assets.images.foundingMumNewImageWebp.path,
             height: S.h * 0.2,
           ),
 

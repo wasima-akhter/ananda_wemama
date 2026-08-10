@@ -74,34 +74,20 @@ class CommonAppBarContent extends StatelessWidget
                 )),
 
       actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 20.w),
-          child: suffix ?? SizedBox(width: 40.w),
-        ),
+        expandTitle == true
+            ? const SizedBox(width: 10)
+            : Padding(
+                padding: EdgeInsets.only(right: 20.w),
+                child: suffix ?? SizedBox(width: 40.w),
+              ),
       ],
 
-      toolbarHeight: 60.h,
+      toolbarHeight: 40.h,
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(60.h);
-}
-
-class AppBarLikeTitle extends StatelessWidget {
-  final String title;
-  const AppBarLikeTitle({super.key, required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TxtStyle.fs18,
-      overflow: TextOverflow.ellipsis,
-      softWrap: true,
-      textAlign: TextAlign.center,
-    );
-  }
+  Size get preferredSize => Size.fromHeight(40.h);
 }
 
 class CommunityTopbarContent extends StatelessWidget {

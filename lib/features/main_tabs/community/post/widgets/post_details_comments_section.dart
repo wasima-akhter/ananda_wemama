@@ -32,7 +32,7 @@ class PostDetailsCommentsSection extends StatelessWidget {
 
         empty: () => EmptyNoSearchWidgetScrollable(
           isScrollable: false,
-          assetPath: Assets.images.noCommentIcon.path,
+          assetPath: Assets.images.noCommentIconWebp.path,
           title: "No comments yet",
           subTitle:
               "Be the first to share some love \nor start the conversation!",

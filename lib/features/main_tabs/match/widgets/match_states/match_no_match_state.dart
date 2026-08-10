@@ -17,8 +17,10 @@ class MatchNoMatchState extends StatelessWidget {
         children: [
           /// Top Image
           SafeAssetImage(
-            assetPath:
-                Assets.images.noMatchStateImage.path, // replace with your asset
+            assetPath: Assets
+                .images
+                .noMatchStateImageWebp
+                .path, // replace with your asset
             width: double.infinity,
             height: S.h * 0.23,
             fit: BoxFit.contain,
@@ -123,7 +125,7 @@ class MatchNoMatchState extends StatelessWidget {
                       flex: 1,
                       child: Center(
                         child: SafeAssetImage(
-                          assetPath: Assets.images.noMatchLeafImage.path,
+                          assetPath: Assets.images.noMatchLeafImageWebp.path,
                           height: 60.h,
                           fit: BoxFit.contain,
                         ),

@@ -206,7 +206,7 @@ class _NoSessionsCard extends StatelessWidget {
           ),
           Gap(12),
           Text(
-            "No Sessions Available",
+            "Your next session is coming soon 🤎",
             style: TxtStyle.outfitSemiB(
               fs: 15,
               w: 600,
@@ -215,7 +215,8 @@ class _NoSessionsCard extends StatelessWidget {
           ),
           Gap(6),
           Text(
-            "You have no ongoing or upcoming sessions at the moment.",
+            "There aren't any sessions available right now.\n"
+            "We'll let you know when a new one is ready for you.",
             textAlign: TextAlign.center,
             style: TxtStyle.outfitSemiB(
               fs: 13,

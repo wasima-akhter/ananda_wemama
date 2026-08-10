@@ -5,6 +5,7 @@ import '../../../../core/components/ui/dialogs/popups.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
 import '../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../../../core/themes/color/colors.dart';
+import '../../../../gen/assets.gen.dart';
 import '../controller/notification_controller.dart';
 import '../helper/notification_ui_helper.dart';
 import '../model/notifications_model.dart';
@@ -94,7 +95,11 @@ class _NotificationScreenState extends State<NotificationScreen>
             empty: () => Column(
               children: [
                 EmptyNoSearchWidgetScrollable(
-                  title: Strings.noNotificationFound,
+                  assetPath: Assets.images.noticationPlaceholderWebp.path,
+                  title: "No notifications yet",
+                  subTitle:
+                      "You're all caught up!\n"
+                      "We'll keep you posted when something comes up.",
                 ),
               ],
             ),

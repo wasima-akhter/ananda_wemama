@@ -35,7 +35,7 @@ class WaveRequestScreen extends StatelessWidget {
             },
             child: EmptyNoSearchWidgetScrollable(
               title: "No waves request yet",
-              assetPath: Assets.images.noWaveIcon.path,
+              assetPath: Assets.images.noWaveIconWebp.path,
               subTitle:
                   "Your new wave requests will appear here.\n"
                   "Connect with more mums to start\n"

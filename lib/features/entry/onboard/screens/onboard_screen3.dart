@@ -32,7 +32,7 @@ class OnboardScreen3 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Gap(itemGap * 7),
-              Image.asset(ImagesPath.weMamaLogoPng, height: S.w * 0.26),
+              Image.asset(ImagesPath.weMamaLogo, height: S.w * 0.26),
               Gap(itemGap * 1.5),
               FittedBox(
                 child: Text(

@@ -1,10 +1,13 @@
 import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
 import 'package:we_mama/core/helpers/string_helper.dart';
+import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
 import 'package:we_mama/features/main_tabs/home/controller/home_controller.dart';
 
 import '../../../app/helper_widgets_export.dart';
 import '../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../../gen/assets.gen.dart';
 import '../../main_tabs/home/model/community_spotlight_model.dart';
 
 class CommunitySpotlight extends StatelessWidget {
@@ -40,6 +43,8 @@ class _CommunitySpotlightDummy extends StatelessWidget {
               FittedBox(
                 child: Text(
                   Strings.communitySpotlight.capEachWord(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TxtStyle.outfitSmTitle,
                 ),
               ),
@@ -452,113 +457,93 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
       boxShadow: boxShadowBottom(),
       contClr: newCardClr,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// TOP ROW (same structure as live)
+          /// TOP ROW
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 Strings.communitySpotlight.capEachWord(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TxtStyle.outfitSmTitle,
               ),
 
-              Opacity(
-                opacity: 0.4,
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: ContainerBordered(
-                    hasBrdr: true,
-                    contClr: c.inputBackground.withOpacity(0.5),
-                    rad: 18,
-                    vp: 6,
-                    hp: 12,
-                    child: Text(
-                      Strings.joinDiscussion.capEachWord(),
-                      style: 12.titleMclrCusFSURB.copyWith(
-                        color: c.strokePrimary.withOpacity(0.5),
-                      ),
-                    ),
+              CusGestureDetector(
+                onTap: () {
+                  MainNavController.to.goToTab(3);
+                },
+                child: ContainerBordered(
+                  hasBrdr: true,
+                  contClr: Colors.transparent,
+                  rad: 18,
+                  vp: 4,
+                  hp: 9,
+                  child: Text(
+                    "Explore Communities",
+                    style: 12.titleMclrCusFSURB.copyWith(color: c.primary),
                   ),
                 ),
               ),
             ],
           ),
 
-          Gap(itemGap),
+          const Gap(12),
 
-          /// AVATAR ROW (disabled look)
-          Row(
-            children: [
-              Opacity(opacity: 1, child: StackOfImages(numOfImage: 3)),
-              Gap(itemGap),
-              Expanded(
-                child: Text(
-                  "No active community discussions yet",
-                  style: normRsmSecURB,
-                ),
-              ),
-            ],
-          ),
-
-          Gap(itemGap),
-
-          /// EMPTY CARD (mimics last post container)
-          ContainerBordered(
-            hp: 10,
-            vp: 12,
-            contClr: c.cardMood.withOpacity(0.5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                /// fake title line
-                Container(
-                  height: 12,
-                  width: double.infinity * 0.6,
-                  decoration: BoxDecoration(
-                    color: c.strokePrimary.withOpacity(0.07),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                ),
-
-                // const Gap(10),
-
-                // /// fake subtitle
-                // Container(
-                //   height: 14,
-                //   width: double.infinity * 0.8,
-                //   decoration: BoxDecoration(
-                //     color:  c.strokePrimary.withOpacity(0.08),
-                //     borderRadius: BorderRadius.circular(6),
-                //   ),
-                // ),
-
-                // const Gap(10),
-
-                // /// footer row mimic
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Container(
-                //       height: 12,
-                //       width: 120,
-                //       decoration: BoxDecoration(
-                //         color:  c.strokePrimary.withOpacity(0.08),
-                //         borderRadius: BorderRadius.circular(6),
-                //       ),
-                //     ),
-                //     Container(
-                //       height: 12,
-                //       width: 80,
-                //       decoration: BoxDecoration(
-                //         color:  c.strokePrimary.withOpacity(0.08),
-                //         borderRadius: BorderRadius.circular(6),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-              ],
+          /// HERO IMAGE
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: SafeAssetImage(
+              assetPath: Assets.images.paySuccessWebp.path,
+              height: 130.h,
+              width: double.infinity,
+              fit: BoxFit.cover,
             ),
           ),
+
+          const Gap(14),
+
+          /// TITLE
+          Text(
+            "Find your village 🤎",
+            style: TxtStyle.outfitSemiB(
+              w: 600,
+              color: c.foregroundSecondary,
+              fs: 14,
+            ),
+          ),
+
+          const Gap(6),
+
+          /// DESCRIPTION
+          Text(
+            "Join one of our supportive communities to "
+            "ask questions, share experiences, and "
+            "connect with mums who truly understand.",
+            style: TxtStyle.outfit(
+              w: 500,
+              color: c.foregroundSecondary,
+              fs: 13,
+            ),
+          ),
+
+          /// CTA
+          // SizedBox(
+          //   width: double.infinity,
+          //   child: ContainerBordered(
+          //     rad: 24,
+          //     vp: 8,
+          //     hp: 16,mv: 7
+          //     contClr: c.primary,
+          //     child: Center(
+          //       child: Text(
+          //         "Explore Communities",
+          //         style: 14.titleMclrCusFSURB.copyWith(color: Colors.white),
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

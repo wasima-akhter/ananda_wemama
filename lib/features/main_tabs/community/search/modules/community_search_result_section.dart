@@ -76,7 +76,7 @@ class _CommunitySearchResultSectionState
 
               empty: () => EmptyNoSearchWidgetScrollable(
                 title: "No communities found",
-                assetPath: Assets.images.noCommunitiesIcon.path,
+                assetPath: Assets.images.noCommunitiesIconWebp.path,
 
                 subTitle:
                     "We couldn't find any communities\n"

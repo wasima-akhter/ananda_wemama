@@ -111,7 +111,7 @@ class _SuggestedCommunityList extends StatelessWidget {
       ),
 
       empty: () => EmptyNoSearchWidgetScrollable(
-        assetPath: Assets.images.noCommunitiesIcon.path,
+        assetPath: Assets.images.noCommunitiesIconWebp.path,
         title: "No suggested communities",
         subTitle:
             "New communities are joining every day.\n"

@@ -66,7 +66,7 @@ class SubscriptionSuccess extends StatelessWidget {
             OnboardLogoHeaderRow(hasBack: false, height: S.h * 0.1).getcm,
             Gap(10),
             SafeAssetImage(
-              assetPath: Assets.images.paySuccess.path,
+              assetPath: Assets.images.paySuccessWebp.path,
               height: S.h * 0.2,
             ).marginSymmetric(horizontal: 20),
 
@@ -194,6 +194,7 @@ class _PremiumBenefitsCard extends StatelessWidget {
           const SizedBox(height: 20),
 
           Row(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(

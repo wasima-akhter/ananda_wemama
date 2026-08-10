@@ -39,7 +39,7 @@ class FoundingMumCodeScreen extends StatelessWidget {
           ).getcm,
           Gap(10.h),
           SafeAssetImage(
-            assetPath: Assets.images.foundingMumCodeScreen.path,
+            assetPath: Assets.images.foundingMumCodeScreenWebp.path,
             radius: 0,
             fit: BoxFit.fitWidth,
           ),
