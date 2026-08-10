@@ -233,7 +233,7 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                       height: S.h * 0.4,
                       child: EmptyNoSearchWidgetScrollable(
                         title: "No messages yet",
-                        assetPath: Assets.images.noCommentIconWebp.path,
+                        assetPath: Assets.images.noCommentIcon.path,
                         subTitle:
                             "Be the first to say hello! \nStart the conversation and connect with other mums.",
                       ),

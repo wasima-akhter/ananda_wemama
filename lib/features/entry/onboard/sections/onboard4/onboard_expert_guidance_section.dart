@@ -11,7 +11,7 @@ class OnboardExpertGuidanceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final sessions = [
       ExpertSessionModelMock(
-        image: Assets.images.sessionMockUser1Webp.path,
+        image: Assets.images.sessionMockUser1.path,
         title: "Postpartum Recovery: What nobody told you",
         doctor: "Dr. Roma Akachukwu",
         specialty: "Women's Health Specialist",
@@ -19,7 +19,7 @@ class OnboardExpertGuidanceSection extends StatelessWidget {
         time: "04:00 PM",
       ),
       ExpertSessionModelMock(
-        image: Assets.images.sessionMockUser2Webp.path,
+        image: Assets.images.sessionMockUser2.path,
         title: "Why Won’t My Baby Sleep?",
         doctor: "Dr. Oluwunmi Okeyale",
         specialty: "Sleep Consultant",
@@ -27,7 +27,7 @@ class OnboardExpertGuidanceSection extends StatelessWidget {
         time: "06:00 PM",
       ),
       ExpertSessionModelMock(
-        image: Assets.images.sessionMockUser3Webp.path,
+        image: Assets.images.sessionMockUser3.path,
         title: "Mental Wellbeing",
         doctor: "Dr. Serena Oriarewo",
         specialty: "Mental Health Specialist",

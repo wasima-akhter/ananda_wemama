@@ -436,7 +436,7 @@ class _BottomIllustration extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SafeAssetImage(
-            assetPath: Assets.images.promoCodeImageWebp.path,
+            assetPath: Assets.images.promoCodeImage.path,
             height: 120,
           ),
 

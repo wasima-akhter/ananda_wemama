@@ -154,7 +154,7 @@ class CommunityDetailsScreen extends StatelessWidget {
               ).getcm,
               empty: () => EmptyNoSearchWidgetScrollable(
                 isScrollable: false,
-                assetPath: Assets.images.postPlaceholderWebp.path,
+                assetPath: Assets.images.postPlaceholder.path,
                 title: "Let’s get the conversation started!",
                 subTitle:
                     "This community is waiting for its first post.\n"

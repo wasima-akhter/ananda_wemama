@@ -495,7 +495,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(14),
             child: SafeAssetImage(
-              assetPath: Assets.images.paySuccessWebp.path,
+              assetPath: Assets.images.spotlightPlaceholder.path,
               height: 130.h,
               width: double.infinity,
               fit: BoxFit.cover,

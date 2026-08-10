@@ -141,7 +141,7 @@ class _CommunityScreenState extends State<CommunityScreen>
         loading: () => const CommunityShimmerList(),
         empty: () => EmptyNoSearchWidgetScrollable(
           title: "No Communities yet",
-          assetPath: Assets.images.noCommunitiesIconWebp.path,
+          assetPath: Assets.images.noCommunitiesIcon.path,
           subTitle:
               "Discover communities that match\n"
               "your interests and connect with\n"
@@ -200,7 +200,7 @@ class _CommunityScreenState extends State<CommunityScreen>
         loading: () => const CommunityShimmerList(),
         empty: () => EmptyNoSearchWidgetScrollable(
           title: "No communities created yet",
-          assetPath: Assets.images.noCommunitiesIconWebp.path,
+          assetPath: Assets.images.noCommunitiesIcon.path,
           subTitle:
               "Start your own community and create\n"
               "a safe space for mums to connect\n"

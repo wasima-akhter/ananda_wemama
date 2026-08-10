@@ -95,7 +95,7 @@ class _NotificationScreenState extends State<NotificationScreen>
             empty: () => Column(
               children: [
                 EmptyNoSearchWidgetScrollable(
-                  assetPath: Assets.images.noticationPlaceholderWebp.path,
+                  assetPath: Assets.images.noticationPlaceholder.path,
                   title: "No notifications yet",
                   subTitle:
                       "You're all caught up!\n"

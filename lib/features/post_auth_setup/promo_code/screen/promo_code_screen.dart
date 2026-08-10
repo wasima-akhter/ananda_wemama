@@ -40,7 +40,7 @@ class PromoCodeScreen extends StatelessWidget {
           ).getcm,
           Gap(10.h),
           SafeAssetImage(
-            assetPath: Assets.images.promoCodeImageWebp.path,
+            assetPath: Assets.images.promoCodeImage.path,
             radius: 0,
             fit: BoxFit.fitWidth,
           ),

@@ -28,7 +28,7 @@ class SubscriptionPending extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SafeAssetImage(assetPath: Assets.images.promoCodeImageWebp.path),
+          SafeAssetImage(assetPath: Assets.images.promoCodeImage.path),
 
           Gap(itemGap * 2),
 

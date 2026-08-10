@@ -79,7 +79,7 @@ class MatchIdleState extends StatelessWidget {
           ),
 
           Gap(itemGap),
-          SafeAssetImage(assetPath: Assets.images.matchMapWebp.path),
+          SafeAssetImage(assetPath: Assets.images.matchMap.path),
           Gap(itemGap),
 
           // No point upselling someone who's already premium.
