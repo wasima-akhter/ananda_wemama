@@ -158,7 +158,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
                             Get.toNamed(
                               RoutePaths.communityDetail,
                               arguments: {
-                                "btnState": MyCommunityBtnState.join,
+                                "btnState": MyCommunityBtnState.visit,
                                 "communityItemId": commId,
                               },
                             );

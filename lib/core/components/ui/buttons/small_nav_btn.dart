@@ -16,7 +16,7 @@ class SmallNavBtn extends StatelessWidget {
           ContainerBordered(
             contClr: c.buttonPrimary,
             rad: 30,
-            // hp: 40,
+            hp: 8,
             vp: 8,
             child: Text(
               text,
