@@ -1,7 +1,6 @@
-import 'package:we_mama/core/helpers/date_helper.dart';
-
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
+import '../../../../core/helpers/session_time_helper.dart';
 import '../../../../core/services/deep_link/session_navigator.dart';
 import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
@@ -58,12 +57,31 @@ class LiveOngoingSessionCard extends StatelessWidget {
         .capEachWord();
     final sessionTitle = (data?.title ?? "Session").capEachWord();
     final description = (data?.description ?? "").cap;
-    final time = DateHelper().formatUTCtimestamp(data?.time.toString()).time;
+    // final time = DateHelper()
+    //     .formatUTCtimestamp(data?.dateTime.toString())
+    //     .time;
 
-    final date = DateHelper().formatUTCtimestamp(data?.date.toString()).date;
+    // final date = DateHelper()
+    //     .formatUTCtimestamp(data?.dateTime.toString())
+    //     .date;
 
     final imgUrl = data?.expert?.image ?? '';
     final channelName = data?.channelName ?? '';
+
+    //
+
+    final hostTimeZone = data?.timezone ?? '';
+    final time = SessionTimeHelper.time(
+      dateTime: data?.dateTime?.toIso8601String(),
+      hostTimezone: hostTimeZone,
+    );
+
+    final date = SessionTimeHelper.date(
+      dateTime: data?.dateTime?.toIso8601String(),
+      hostTimezone: hostTimeZone,
+    );
+
+    debugPrint('hostTimeZone: $hostTimeZone');
 
     return SizedBox(
       // width: S.w - 40.w,
@@ -156,14 +174,46 @@ class LiveOngoingSessionCard extends StatelessWidget {
               ],
             ),
 
-            Gap(itemGap * 1.5),
+            Gap(itemGap),
 
-            /// Title
-            Text(
-              sessionTitle,
-              style: TxtStyle.urbanistSmTitle600,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            // /// Title
+            // Text(
+            //   sessionTitle,
+            //   style: TxtStyle.urbanistSmTitle600,
+            //   maxLines: 1,
+            //   overflow: TextOverflow.ellipsis,
+            // ),
+
+            // Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  width: 4,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: c.secondary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+
+                const SizedBox(width: 8),
+
+                Expanded(
+                  child: Text(
+                    // "ahsugdhasgdagsd asgd asdyh gasudg asudgas dguyas dgyagdaasdu yuasdg uyasg duyagsduyagsdgasd" ??
+                    sessionTitle.capEachWord(),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TxtStyle.outfitSemiB(
+                      fs: 15,
+                      w: 600,
+                      color: c.foregroundPrimary,
+                    ),
+                  ),
+                ),
+              ],
             ),
 
             /// Description

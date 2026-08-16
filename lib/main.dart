@@ -2,6 +2,8 @@
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:we_mama/app/helper_widgets_export.dart';
 
 import 'app/app.dart';
@@ -34,6 +36,12 @@ void main() async {
     ),
   );
   debugPrint('✅ [main] orientation + status bar configured');
+
+  // ── Timezone database ─────────────────────────────────────────────────────
+  tzdata.initializeTimeZones();
+  debugPrint('🌍 [main] timezone database initialized');
+
+  debugPrint('🚀 [main] Flutter binding initialized');
 
   // ── 1. Firebase ──────────────────────────────────────────────────────────────
   debugPrint('🔧 [main] initializing Firebase...');
@@ -84,6 +92,18 @@ void main() async {
   debugPrint('✅ [main] ThemeController registered');
   Get.put(LocationService(), permanent: true);
   debugPrint('✅ [main] LocationService registered');
+
+  // ── 5.1 Device timezone ─────────────────────────────────────────────────────
+  debugPrint('🌍 [main] detecting device timezone...');
+
+  try {
+    final timezoneInfo = await FlutterTimezone.getLocalTimezone();
+
+    debugPrint('🌍 [main] device timezone: $timezoneInfo');
+  } catch (e, st) {
+    debugPrint('❌ [main] timezone detection FAILED: $e');
+    debugPrint('$st');
+  }
 
   // ── 6. FirebaseTokenService — MUST be before PushNotificationService ─────────
   debugPrint('🔧 [main] registering FirebaseTokenService...');

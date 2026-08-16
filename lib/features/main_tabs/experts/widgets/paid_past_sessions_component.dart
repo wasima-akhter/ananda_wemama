@@ -88,6 +88,7 @@ class PaidPastSessionsComponent extends StatelessWidget {
                   btnTxt: Strings.watchAll,
                   isSmall: true,
                   isLoading: false,
+                  btnColor: c.primary,
 
                   rad: 30,
                   padding: EdgeInsets.symmetric(

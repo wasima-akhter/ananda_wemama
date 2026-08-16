@@ -1,8 +1,10 @@
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:we_mama/core/components/ui/dialogs/popups.dart';
 import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 
 import '../../../../app/helper_widgets_export.dart';
-import '../../../../core/helpers/date_helper.dart';
+import '../../../../core/helpers/session_time_helper.dart';
 import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
 
@@ -40,14 +42,44 @@ class UpcomingExpertSessionCard extends StatelessWidget {
         .capEachWord();
     final sessionTitle = (data?.title ?? "Session").capEachWord();
     final description = (data?.description ?? "").cap;
-    final time = DateHelper().formatUTCtimestamp(data?.time.toString()).time;
-    final date = DateHelper().formatUTCtimestamp(data?.date.toString()).date;
 
+    final hostTimeZone = data?.timezone ?? '';
     final imgUrl = data?.expert?.image ?? '';
     final channelName = data?.channelName ?? '';
 
     final expertId_ = data?.expert?.id ?? '';
     final sessionId_ = data?.id ?? '';
+
+    final sessionDateTime = data?.dateTime?.toIso8601String();
+
+    ///
+    //     final time = DateHelper()
+    //     .formatUTCtimestamp(data?.dateTime.toString())
+    //     .time;
+    // final date = DateHelper()
+    //     .formatUTCtimestamp(data?.dateTime.toString())
+    //     .date;
+
+    final time = SessionTimeHelper.time(
+      dateTime: data?.dateTime?.toIso8601String(),
+      hostTimezone: hostTimeZone,
+    );
+
+    final date = SessionTimeHelper.date(
+      dateTime: data?.dateTime?.toIso8601String(),
+      hostTimezone: hostTimeZone,
+    );
+
+    debugPrint('hostTimeZone: $hostTimeZone');
+    tzdata.initializeTimeZones();
+
+    final deviceTimezone = tz.local.name;
+
+    debugPrint('🌍 Device timezone: $deviceTimezone');
+    debugPrint('🕐 Device local time: ${tz.TZDateTime.now(tz.local)}');
+    debugPrint('🌐 Device UTC time: ${DateTime.now().toUtc()}');
+    debugPrint('converted time: $time');
+    debugPrint('converted date: $date');
 
     return ContainerBordered(
       contClr: newCardClr,
@@ -123,9 +155,40 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
           Gap(itemGap),
 
-          Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle),
+          // Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 5),
+                width: 4,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: c.secondary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              Expanded(
+                child: Text(
+                  // "ahsugdhasgdagsd asgd asdyh gasudg asudgas dguyas dgyagdaasdu yuasdg uyasg duyagsduyagsdgasd" ??
+                  sessionTitle.capEachWord(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TxtStyle.outfitSemiB(
+                    fs: 15,
+                    w: 600,
+                    color: c.foregroundPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
 
           Text(
+            // "ahsugdhasgdagsd asgd asdyh gasudg asudgas dguyas dgyagdaasdu yuasdg uyasg duyagsduyagsdgasd" ??
             description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
