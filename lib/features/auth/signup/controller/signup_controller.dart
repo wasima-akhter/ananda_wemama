@@ -2,6 +2,7 @@ import '../../../../app/controller_export.dart';
 import '../../../../core/constants/icon_and_image_paths.dart';
 import '../../../../core/services/auth/signin_service.dart';
 import '../../../../core/services/auth/signup_service.dart';
+import '../../../../core/services/push_notification/push_notification_service.dart';
 
 class SignupController extends GetxController {
   // ─────────────────────────────
@@ -137,11 +138,28 @@ class SignupController extends GetxController {
         provider: 'google',
       );
 
-      if (result.type == SocialLoginApiResultType.success) {
-        storage.setLoggedIn(true);
-        storage.setSeenOnboarding(true);
-        Get.offAllNamed(RoutePaths.setupProfile);
-        // got to set up profile
+      switch (result.type) {
+        case SocialLoginApiResultType.success:
+          storage.setLoggedIn(true);
+          storage.setSeenOnboarding(true);
+
+          await _handlePostAuthSuccess(isGoogle: true);
+          return;
+
+        case SocialLoginApiResultType.profileIncomplete:
+          storage.setLoggedIn(true);
+          storage.setSeenOnboarding(true);
+
+          if (Get.isRegistered<PushNotificationService>()) {
+            await PushNotificationService.to.uploadTokenAfterLogin();
+          }
+
+          Get.offAllNamed(RoutePaths.setupProfile);
+          return;
+
+        case SocialLoginApiResultType.failed:
+        case SocialLoginApiResultType.cancelled:
+          return;
       }
     } finally {
       googleLoading.value = false;
@@ -161,14 +179,51 @@ class SignupController extends GetxController {
         provider: 'apple',
       );
 
-      if (result.type == SocialLoginApiResultType.success) {
-        storage.setLoggedIn(true);
-        storage.setSeenOnboarding(true);
-        Get.offAllNamed(RoutePaths.setupProfile);
+      switch (result.type) {
+        case SocialLoginApiResultType.success:
+          storage.setLoggedIn(true);
+          storage.setSeenOnboarding(true);
+
+          await _handlePostAuthSuccess(isGoogle: false);
+          return;
+
+        case SocialLoginApiResultType.profileIncomplete:
+          storage.setLoggedIn(true);
+          storage.setSeenOnboarding(true);
+
+          if (Get.isRegistered<PushNotificationService>()) {
+            await PushNotificationService.to.uploadTokenAfterLogin();
+          }
+
+          Get.offAllNamed(RoutePaths.setupProfile);
+          return;
+
+        case SocialLoginApiResultType.failed:
+        case SocialLoginApiResultType.cancelled:
+          return;
       }
     } finally {
       appleLoading.value = false;
     }
+  }
+
+  Future<void> _handlePostAuthSuccess({required bool isGoogle}) async {
+    if (Get.isRegistered<PushNotificationService>()) {
+      log("Uploading FCM token after social signup/login");
+
+      await PushNotificationService.to.uploadTokenAfterLogin();
+
+      log("FCM token uploaded");
+    }
+
+    Snack.showSuccess(
+      "Signup successful! Please sign in with ${isGoogle ? 'Google' : 'Apple'} from the Sign In screen.",
+    );
+
+    await Future.delayed(
+      Duration(seconds: 1),
+      () => Get.toNamed(RoutePaths.signin),
+    );
   }
 
   // ─────────────────────────────
