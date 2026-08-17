@@ -276,7 +276,10 @@ Private Key	AuthKey_XXXXXX.p8
       case SocialLoginApiResultType.success:
         storage.setLoggedIn(true);
         storage.setSeenOnboarding(true);
-        clearFields();
+
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        await _handleLoginSuccess();
         Get.offAllNamed(RoutePaths.mainNav);
 
       case SocialLoginApiResultType.profileIncomplete:
