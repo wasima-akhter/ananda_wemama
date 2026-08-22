@@ -48,9 +48,11 @@ class SubscriptionInfoScreen extends StatelessWidget {
             ///
             ///
             ///
+            ///
+            Gap(10.h),
             if (info == null)
               _NoActiveSubscriptionCard(
-                onSubscribe: () => Get.toNamed(RoutePaths.promoCodeScreen),
+                onSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
               )
             else ...[
               CurrentSubscriptionCard(
@@ -126,15 +128,15 @@ class SubscriptionInfoScreen extends StatelessWidget {
                 //     onChanged: scpc.toggleCommunityUpdates,
                 //   ),
                 // ),
-                Gap(16),
-                Obx(
-                  () => PreferenceTile(
-                    title: "Invisible Mode",
-                    subtitle: "Hide your profile from matching queue",
-                    value: scpc.invisibleMode.value,
-                    onChanged: scpc.toggleInvisibleMode,
-                  ),
-                ),
+                // Gap(16),
+                // Obx(
+                //   () => PreferenceTile(
+                //     title: "Invisible Mode",
+                //     subtitle: "Hide your profile from matching queue",
+                //     value: scpc.invisibleMode.value,
+                //     onChanged: scpc.toggleInvisibleMode,
+                //   ),
+                // ),
               ],
             ),
           ],

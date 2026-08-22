@@ -42,20 +42,35 @@ class SelectListBottomSheet extends StatelessWidget {
             Gap(itemGap * 3),
 
             /// 🔹 Title
-            Text(title, style: TxtStyle.outfit(fs: 18, w: 600, color: c.foregroundSecondary)),
+            Text(
+              title,
+              style: TxtStyle.outfit(
+                fs: 18,
+                w: 600,
+                color: c.foregroundSecondary,
+              ),
+            ),
 
             /// 🔹 Optional Search
             if (enableSearch) ...[
               Gap(itemGap),
 
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(color: c.inputBackground, borderRadius: 16.brdrRad),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: c.inputBackground,
+                  borderRadius: 12.brdrRad,
+                ),
                 child: TextField(
                   controller: searchCtrl,
                   onChanged: (value) {
                     filteredItems.value = items
-                        .where((e) => e.toLowerCase().contains(value.toLowerCase()))
+                        .where(
+                          (e) => e.toLowerCase().contains(value.toLowerCase()),
+                        )
                         .toList();
                   },
                   decoration: const InputDecoration(
@@ -71,21 +86,23 @@ class SelectListBottomSheet extends StatelessWidget {
             /// 🔹 List
             Flexible(
               child: Obx(() {
-
-                if(filteredItems.isEmpty) {
+                if (filteredItems.isEmpty) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       ContainerBordered(
-                        vp: 22, hp: 22,
-                        contClr:inputBgClr,
+                        vp: 22,
+                        hp: 22,
+                        contClr: inputBgClr,
                         alignment: Alignment.centerLeft,
-                        child: Text("None is available.",
-                           style: TxtStyle.outfitSemiB(
-                                  fs: 14,
-                                  color:  c.textPrimary,
-                                ),
-                        )),
+                        child: Text(
+                          "None is available.",
+                          style: TxtStyle.outfitSemiB(
+                            fs: 14,
+                            color: c.textPrimary,
+                          ),
+                        ),
+                      ),
                     ],
                   );
                 }
@@ -93,7 +110,7 @@ class SelectListBottomSheet extends StatelessWidget {
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   itemCount: filteredItems.length,
-                  separatorBuilder: (_, __) => Gap(itemGap * 0.9),
+                  separatorBuilder: (_, _) => Gap(itemGap * 0.9),
                   itemBuilder: (context, index) {
                     final item = filteredItems[index];
                     final isSelected = selectedValue.value == item;
@@ -106,10 +123,13 @@ class SelectListBottomSheet extends StatelessWidget {
                       },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                         decoration: BoxDecoration(
                           color: isSelected ? c.primary : c.cardPrimary,
-                          borderRadius: 35.brdrRad,
+                          borderRadius: 12.brdrRad,
                         ),
                         child: Row(
                           children: [
@@ -118,7 +138,9 @@ class SelectListBottomSheet extends StatelessWidget {
                                 item,
                                 style: TxtStyle.outfitSemiB(
                                   fs: 14,
-                                  color: isSelected ? white : c.foregroundSecondary,
+                                  color: isSelected
+                                      ? white
+                                      : c.foregroundSecondary,
                                 ),
                               ),
                             ),

@@ -3,6 +3,7 @@ import 'package:we_mama/features/main_tabs/experts/screen/experts_screen.dart';
 import 'package:we_mama/features/main_tabs/match/screen/match_screen.dart';
 
 import '../../../app/helper_widgets_export.dart';
+import '../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../core/network/helpers/location/location_observer.dart';
 import '../../../core/services/socket/socket_service.dart';
 import '../../../core/state_screens/not_found/not_found_page.dart';
@@ -64,6 +65,128 @@ class MainNavController extends GetxController {
     debugPrint('🔧 [MainNavController] onInit');
   }
 
+  // new logic
+  bool _matchLocationCheckDone = false;
+  bool? _lastMatchLocationStatus;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 🔹 MATCH LOCATION POPUP CONTROL
+  // ─────────────────────────────────────────────────────────────────────────
+
+  /// Called whenever the user enters the Match tab.
+  ///
+  /// Rules:
+  /// FIRST VISIT:
+  ///   ON  -> popup
+  ///   OFF -> popup
+  ///
+  /// LATER VISITS:
+  ///   same status  -> no popup
+  ///   changed      -> popup
+  ///
+  /// The MainNavController is the single owner of Match-entry popup logic.
+  ///
+
+  Future<void> checkMatchLocationOnEnter() async {
+    final result = await AppLocationManager.to.ensureFreshLocation(
+      showDialogs: true,
+      forceRefresh: false,
+    );
+
+    await checkMatchLocationStatus(
+      isActive: result == LocationFlowResult.success,
+      showPopupIfChanged: true,
+    );
+  }
+
+  Future<bool> checkMatchLocationStatus({
+    required bool isActive,
+    bool showPopupIfChanged = true,
+  }) async {
+    // FIRST CHECK
+    if (!_matchLocationCheckDone) {
+      _matchLocationCheckDone = true;
+      _lastMatchLocationStatus = isActive;
+
+      if (showPopupIfChanged) {
+        MatchScreen.showLocationStatusOverlay(isActive: isActive);
+      }
+
+      log(
+        "📍 Match location FIRST CHECK → "
+        "active: $isActive, "
+        "popup: $showPopupIfChanged",
+      );
+
+      return true;
+    }
+
+    // LATER CHECK
+    final changed = _lastMatchLocationStatus != isActive;
+
+    if (changed) {
+      _lastMatchLocationStatus = isActive;
+
+      if (showPopupIfChanged) {
+        MatchScreen.showLocationStatusOverlay(isActive: isActive);
+      }
+
+      log(
+        "📍 Match location CHANGED → "
+        "active: $isActive → POPUP",
+      );
+
+      return true;
+    }
+
+    log(
+      "📍 Match location UNCHANGED → "
+      "active: $isActive → NO POPUP",
+    );
+
+    return false;
+  }
+
+  //
+  void _onOsLocationEnabled() {
+    log("📍 OS: Location turned ON");
+
+    if (!_homePermissionFlowDone) return;
+
+    _updateLocationInBackground();
+
+    if (currentIndex.value == 2) {
+      checkMatchLocationStatus(isActive: true, showPopupIfChanged: true);
+      return;
+    }
+
+    if (currentIndex.value == 0) {
+      MatchScreen.showLocationStatusOverlay(isActive: true);
+    } else {
+      _locationStateChangedWhileAway = true;
+      _locationTurnedOnWhileAway = true;
+    }
+  }
+
+  void _onOsLocationDisabled() {
+    log("📍 OS: Location turned OFF");
+
+    if (!_homePermissionFlowDone) return;
+
+    if (currentIndex.value == 2) {
+      checkMatchLocationStatus(isActive: false, showPopupIfChanged: true);
+      return;
+    }
+
+    if (currentIndex.value == 0) {
+      MatchScreen.showLocationStatusOverlay(isActive: false);
+    } else {
+      _locationStateChangedWhileAway = true;
+      _locationTurnedOnWhileAway = false;
+    }
+  }
+
+  // end of new logic
   // ─────────────────────────────
   // 🔹 Called by HomeScreen.initState → postFrameCallback
   // ─────────────────────────────
@@ -73,7 +196,7 @@ class MainNavController extends GetxController {
     );
     if (_homePermissionFlowDone) return;
     _homePermissionFlowDone = true;
-    HomeScreen.triggerPermissionFlow();
+    MatchScreen.triggerPermissionFlow();
   }
 
   // ─────────────────────────────
@@ -89,6 +212,8 @@ class MainNavController extends GetxController {
     );
   }
 
+  /*
+// old code
   void _onOsLocationEnabled() {
     log("📍 OS: Location turned ON");
 
@@ -99,7 +224,7 @@ class MainNavController extends GetxController {
     _updateLocationInBackground();
 
     if (currentIndex.value == 0) {
-      HomeScreen.showLocationStatusOverlay(isActive: true);
+      MatchScreen.showLocationStatusOverlay(isActive: true);
     } else {
       _locationStateChangedWhileAway = true;
       _locationTurnedOnWhileAway = true;
@@ -113,13 +238,13 @@ class MainNavController extends GetxController {
     if (!_homePermissionFlowDone) return;
 
     if (currentIndex.value == 0) {
-      HomeScreen.showLocationStatusOverlay(isActive: false);
+      MatchScreen.showLocationStatusOverlay(isActive: false);
     } else {
       _locationStateChangedWhileAway = true;
       _locationTurnedOnWhileAway = false;
     }
   }
-
+*/
   Future<void> _updateLocationInBackground() async {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
@@ -145,8 +270,18 @@ class MainNavController extends GetxController {
     }
   }
 
+  // void _onTabChanged(int index) {
+  //   if (index == 0) _handleReturnToHome();
+  // }
+  // new logic
   void _onTabChanged(int index) {
-    if (index == 0) _handleReturnToHome();
+    if (index == 2) {
+      checkMatchLocationOnEnter();
+    }
+
+    if (index == 0) {
+      _handleReturnToHome();
+    }
   }
 
   void _handleReturnToHome() {
@@ -156,7 +291,7 @@ class MainNavController extends GetxController {
     if (_locationStateChangedWhileAway) {
       _locationStateChangedWhileAway = false;
       Future.delayed(const Duration(milliseconds: 400), () {
-        HomeScreen.showLocationStatusOverlay(
+        MatchScreen.showLocationStatusOverlay(
           isActive: _locationTurnedOnWhileAway,
         );
       });

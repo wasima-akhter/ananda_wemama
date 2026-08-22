@@ -134,7 +134,7 @@ class NewWavesUserDetailsPopup extends StatelessWidget {
                                         onTap: () {
                                           Get.back();
                                           Get.toNamed(
-                                            RoutePaths.promoCodeScreen,
+                                            RoutePaths.subscriptionUpgrade,
                                           );
                                         },
                                         child: ContainerBordered(

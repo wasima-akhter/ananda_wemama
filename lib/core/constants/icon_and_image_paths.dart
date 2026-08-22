@@ -144,11 +144,8 @@ class IconsPath {
 class ImagesPath {
   const ImagesPath._();
   // Splash / Onboarding
-  static String get splashImageWLogo => Assets.images.splashWholeScreen.path;
 
   static String get weMamaLogo => Assets.images.weMamaLogoPng.path;
-
-  static String get weMamaHandsLogo => Assets.images.weMamaHandsLogo.path;
 
   static String get wemamaHandsTitleLogo =>
       Assets.images.wemamaHandsTitleLogo.path;
@@ -226,9 +223,6 @@ class ImagesPath {
   static String get sadEmoji => Assets.images.sadEmoji.path;
 
   static String get angryEmoji => Assets.images.angryEmoji.path;
-
-  // Payment / Promo
-  static String get paySuccess => Assets.images.paySuccess.path;
 
   static String get promoCodeImage => Assets.images.promoCodeImage.path;
 

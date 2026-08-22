@@ -1,4 +1,6 @@
 import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/loaders/shimmer_widget.dart';
@@ -27,17 +29,35 @@ class GentleReminderCard extends StatelessWidget {
           alignment: Alignment.centerLeft,
 
           boxShadow: boxShadowBottom(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                Strings.todaysReminder.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 14, w: 500),
+              SizedBox(
+                // color: Colors.amber,
+                width: 40.w,
+                child: SafeAssetImage(
+                  shape: AssetImageShape.circle,
+                  assetPath: Assets.images.reminderLove.path,
+                ),
               ),
-              Gap(4),
-              Text(
-                msg.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 13, color: c.strokePrimary),
+              Gap(15.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      Strings.todaysReminder.capEachWord(),
+                      style: TxtStyle.outfitSemiB(fs: 14, w: 500),
+                    ),
+                    Gap(4),
+                    Text(
+                      msg.capEachWord(),
+                      style: TxtStyle.outfitSemiB(
+                        fs: 13,
+                        color: c.strokePrimary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 // lib/features/main_tabs/community/modules/post_item_widget.dart
 
+import 'package:we_mama/core/helpers/date_helper.dart';
 import 'package:we_mama/core/models/ui/common_data_models.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
@@ -102,88 +103,99 @@ class _PostHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cc = CommunityDetailController.to;
+
+    final timeAgo = DateHelper().formatTimeAgo(postItem.createdAt.toString());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(child: UserShortDetailWidget(postItem: postItem)),
 
         // ✅ Obx wraps only the reactive trailing section
-        Obx(() {
-          final isPinned = cc.pinFlag(postId).value;
-          final isLocked =
-              (postItem.isCommentLocked ?? false) ||
-              cc.commentLockFlag(postId).value;
+        Row(
+          children: [
+            Text(
+              timeAgo.date,
+              style: TxtStyle.outfitSemiB(fs: 11, color: c.textPrimary),
+            ),
+            Gap(4.w),
+            Obx(() {
+              final isPinned = cc.pinFlag(postId).value;
+              final isLocked =
+                  (postItem.isCommentLocked ?? false) ||
+                  cc.commentLockFlag(postId).value;
 
-          return Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Pin indicator
-              if (isPinned)
-                SvgIcon(iconPath: IconsPath.pin, height: 22)
-              else
-                const SizedBox.shrink(),
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Pin indicator
+                  if (isPinned)
+                    SvgIcon(iconPath: IconsPath.pin, height: 22)
+                  else
+                    const SizedBox.shrink(),
 
-              // Visitor dropdown
-              if (btnState == MyCommunityBtnState.visit
-              // & currentProfileId() == postCreatorId
-              )
-                CusFlexibleDropdown(
-                  items: [
-                    CusDropdownItem(
-                      title: Strings.reportContent.capEachWord(),
-                      onTap: () => cc.onTapReportContent(postId: postId),
-                    ),
-                  ],
-                  child: SvgIconColored(
-                    iconPath: IconsPath.moreVertical,
-                    height: 20,
-                  ),
-                ),
-
-              // Manager dropdown
-              if (btnState == MyCommunityBtnState.manage)
-                CusFlexibleDropdown(
-                  items: [
-                    CusDropdownItem(
-                      title: isPinned
-                          ? Strings.unpinPost.capEachWord()
-                          : Strings.pinPost.capEachWord(),
-                      // onTap: () => cc.togglePin(postId),
-                      onTap: () => cc.togglePinApi(postId),
-                    ),
-                    CusDropdownItem(
-                      title: isLocked
-                          ? Strings.unlockComment.capEachWord()
-                          : Strings.lockComment.capEachWord(),
-                      onTap: () async {
-                        showLockCommentialog(isLocked: isLocked);
-                        await Future.delayed(const Duration(seconds: 1));
-                        Get.back();
-                        Get.back();
-                        // cc.toggleCommentLock(postId);
-                        await cc.toggleLockApi(postId);
-                      },
-                    ),
-                    CusDropdownItem(
-                      title: Strings.deletePost.capEachWord(),
-                      onTap: () async => deletePostConfirmDialog(
-                        onConfirm: () async {
-                          Get.back();
-                          Get.back();
-                          cc.deletePostApi(postId);
-                        },
-                        isLoading: cc.deleteLoadingFlag(postId),
+                  // Visitor dropdown
+                  if (btnState == MyCommunityBtnState.visit
+                  // & currentProfileId() == postCreatorId
+                  )
+                    CusFlexibleDropdown(
+                      items: [
+                        CusDropdownItem(
+                          title: Strings.reportContent.capEachWord(),
+                          onTap: () => cc.onTapReportContent(postId: postId),
+                        ),
+                      ],
+                      child: SvgIconColored(
+                        iconPath: IconsPath.moreVertical,
+                        height: 20,
                       ),
                     ),
-                  ],
-                  child: SvgIconColored(
-                    iconPath: IconsPath.moreVertical,
-                    height: 20,
-                  ),
-                ),
-            ],
-          );
-        }),
+
+                  // Manager dropdown
+                  if (btnState == MyCommunityBtnState.manage)
+                    CusFlexibleDropdown(
+                      items: [
+                        CusDropdownItem(
+                          title: isPinned
+                              ? Strings.unpinPost.capEachWord()
+                              : Strings.pinPost.capEachWord(),
+                          // onTap: () => cc.togglePin(postId),
+                          onTap: () => cc.togglePinApi(postId),
+                        ),
+                        CusDropdownItem(
+                          title: isLocked
+                              ? Strings.unlockComment.capEachWord()
+                              : Strings.lockComment.capEachWord(),
+                          onTap: () async {
+                            showLockCommentialog(isLocked: isLocked);
+                            await Future.delayed(const Duration(seconds: 1));
+                            Get.back();
+                            Get.back();
+                            // cc.toggleCommentLock(postId);
+                            await cc.toggleLockApi(postId);
+                          },
+                        ),
+                        CusDropdownItem(
+                          title: Strings.deletePost.capEachWord(),
+                          onTap: () async => deletePostConfirmDialog(
+                            onConfirm: () async {
+                              Get.back();
+                              Get.back();
+                              cc.deletePostApi(postId);
+                            },
+                            isLoading: cc.deleteLoadingFlag(postId),
+                          ),
+                        ),
+                      ],
+                      child: SvgIconColored(
+                        iconPath: IconsPath.moreVertical,
+                        height: 20,
+                      ),
+                    ),
+                ],
+              );
+            }),
+          ],
+        ),
       ],
     );
   }

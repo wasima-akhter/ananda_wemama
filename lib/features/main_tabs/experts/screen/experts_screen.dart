@@ -114,7 +114,7 @@ class ExpertsScreen extends StatelessWidget {
                           LiveOngoingSessionCard(data: ongoingList[index]),
                     ),
                     lockedBuilder: (_) => LiveSessionLockedCard(
-                      onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
+                      onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
                     ),
                   ),
 
@@ -155,7 +155,7 @@ class ExpertsScreen extends StatelessWidget {
             waitForReady: false,
             child: PaidPastSessionsComponent(),
             lockedBuilder: (_) => PastSessionsLibraryCard(
-              onTapSubscribe: () => Get.toNamed(RoutePaths.promoCodeScreen),
+              onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
             ),
           ),
         ],

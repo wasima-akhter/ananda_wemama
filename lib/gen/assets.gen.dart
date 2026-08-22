@@ -748,6 +748,14 @@ class $AssetsImagesGen {
   AssetGenImage get imagePlaceholder =>
       const AssetGenImage('assets/images/image_placeholder.webp');
 
+  /// File path: assets/images/launch_image.png
+  AssetGenImage get launchImagePng =>
+      const AssetGenImage('assets/images/launch_image.png');
+
+  /// File path: assets/images/launch_image.webp
+  AssetGenImage get launchImageWebp =>
+      const AssetGenImage('assets/images/launch_image.webp');
+
   /// File path: assets/images/like_emoji.webp
   AssetGenImage get likeEmoji =>
       const AssetGenImage('assets/images/like_emoji.webp');
@@ -816,9 +824,9 @@ class $AssetsImagesGen {
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.webp');
 
-  /// File path: assets/images/pay_success.webp
-  AssetGenImage get paySuccess =>
-      const AssetGenImage('assets/images/pay_success.webp');
+  /// File path: assets/images/payment_success.webp
+  AssetGenImage get paymentSuccess =>
+      const AssetGenImage('assets/images/payment_success.webp');
 
   /// File path: assets/images/post_placeholder.webp
   AssetGenImage get postPlaceholder =>
@@ -827,6 +835,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/promo_code_image.webp
   AssetGenImage get promoCodeImage =>
       const AssetGenImage('assets/images/promo_code_image.webp');
+
+  /// File path: assets/images/reminder_love.webp
+  AssetGenImage get reminderLove =>
+      const AssetGenImage('assets/images/reminder_love.webp');
 
   /// File path: assets/images/sad_emoji.webp
   AssetGenImage get sadEmoji =>
@@ -848,10 +860,6 @@ class $AssetsImagesGen {
   AssetGenImage get splashImage =>
       const AssetGenImage('assets/images/splash_image.webp');
 
-  /// File path: assets/images/splash_whole_screen.webp
-  AssetGenImage get splashWholeScreen =>
-      const AssetGenImage('assets/images/splash_whole_screen.webp');
-
   /// File path: assets/images/spotlight_placeholder.webp
   AssetGenImage get spotlightPlaceholder =>
       const AssetGenImage('assets/images/spotlight_placeholder.webp');
@@ -862,6 +870,30 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/tired.webp
   AssetGenImage get tired => const AssetGenImage('assets/images/tired.webp');
+
+  /// File path: assets/images/upgrade_access.webp
+  AssetGenImage get upgradeAccess =>
+      const AssetGenImage('assets/images/upgrade_access.webp');
+
+  /// File path: assets/images/upgrade_care.webp
+  AssetGenImage get upgradeCare =>
+      const AssetGenImage('assets/images/upgrade_care.webp');
+
+  /// File path: assets/images/upgrade_connection.webp
+  AssetGenImage get upgradeConnection =>
+      const AssetGenImage('assets/images/upgrade_connection.webp');
+
+  /// File path: assets/images/upgrade_crown.webp
+  AssetGenImage get upgradeCrown =>
+      const AssetGenImage('assets/images/upgrade_crown.webp');
+
+  /// File path: assets/images/upgrade_heart_string.webp
+  AssetGenImage get upgradeHeartString =>
+      const AssetGenImage('assets/images/upgrade_heart_string.webp');
+
+  /// File path: assets/images/upgrade_lady_image.webp
+  AssetGenImage get upgradeLadyImage =>
+      const AssetGenImage('assets/images/upgrade_lady_image.webp');
 
   /// File path: assets/images/user_demo_l.webp
   AssetGenImage get userDemoL =>
@@ -875,9 +907,17 @@ class $AssetsImagesGen {
   AssetGenImage get userPlaceholder =>
       const AssetGenImage('assets/images/user_placeholder.webp');
 
+  /// File path: assets/images/we_mama_hands_logo.png
+  AssetGenImage get weMamaHandsLogoPng =>
+      const AssetGenImage('assets/images/we_mama_hands_logo.png');
+
   /// File path: assets/images/we_mama_hands_logo.webp
-  AssetGenImage get weMamaHandsLogo =>
+  AssetGenImage get weMamaHandsLogoWebp =>
       const AssetGenImage('assets/images/we_mama_hands_logo.webp');
+
+  /// File path: assets/images/we_mama_hands_logo_ios.png
+  AssetGenImage get weMamaHandsLogoIos =>
+      const AssetGenImage('assets/images/we_mama_hands_logo_ios.png');
 
   /// File path: assets/images/we_mama_logo_png.webp
   AssetGenImage get weMamaLogoPng =>
@@ -908,6 +948,8 @@ class $AssetsImagesGen {
     hahaEmoji,
     heartEmoji,
     imagePlaceholder,
+    launchImagePng,
+    launchImageWebp,
     likeEmoji,
     locationMap,
     matchMap,
@@ -925,22 +967,30 @@ class $AssetsImagesGen {
     onboarding3,
     onboardingBg,
     onboardingImage,
-    paySuccess,
+    paymentSuccess,
     postPlaceholder,
     promoCodeImage,
+    reminderLove,
     sadEmoji,
     sessionMockUser1,
     sessionMockUser2,
     sessionMockUser3,
     splashImage,
-    splashWholeScreen,
     spotlightPlaceholder,
     stressed,
     tired,
+    upgradeAccess,
+    upgradeCare,
+    upgradeConnection,
+    upgradeCrown,
+    upgradeHeartString,
+    upgradeLadyImage,
     userDemoL,
     userDemoSm,
     userPlaceholder,
-    weMamaHandsLogo,
+    weMamaHandsLogoPng,
+    weMamaHandsLogoWebp,
+    weMamaHandsLogoIos,
     weMamaLogoPng,
     wemamaHandsTitleLogo,
     wowEmoji,

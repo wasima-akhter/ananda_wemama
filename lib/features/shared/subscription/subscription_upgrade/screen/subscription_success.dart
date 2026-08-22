@@ -1,4 +1,3 @@
-// subscription_confirm_screen.dart
 import 'package:google_fonts/google_fonts.dart';
 import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 import 'package:we_mama/features/auth/core/auth_button_templates.dart';
@@ -13,64 +12,28 @@ class SubscriptionSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScreenTemplate(
+      enableRefresh: false,
       floatingActionButton: Container(
         padding: 20.pa,
-        color: c.buttonText,
+        // color: c.buttonText,
         child: AuthButton(
           isLoading: false,
           btnText: "Explore premium",
-          onTap: () => Get.offAllNamed(RoutePaths.finishSettingProfile),
+          onTap: () => Get.offAllNamed(RoutePaths.mainNav),
         ),
       ),
       child: SafeArea(
-        /*
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //
-            SafeAssetImage(
-              assetPath: Assets.images.paySuccess.path,
-            ).marginAll(15),
-
-            Gap(itemGap),
-            Text(
-              "Payment Successful",
-              style: TxtStyle.outfitSemiB(fs: 16, color: c.primary),
-            ),
-            Gap(itemGap),
-            Text(
-              "Welcome to \nWeMama Premium",
-              textAlign: TextAlign.center,
-              style: TxtStyle.dmSerifDisplayRegular(
-                color: c.primary,
-                fs: ScreenSize.isSmallWidth ? 32 : 35,
-              ),
-            ),
-            Gap(itemGap),
-            Text(
-              "You have now access to all premium features.",
-              style: TxtStyle.outfitSemiB(fs: 14, w: 600, color: c.primary),
-            ),
-            Gap(itemGap * 2),
-            if (kDebugMode)
-              TextButton(
-                onPressed: () => Get.toNamed(RoutePaths.mainNav),
-                child: Text("to home"),
-              ),
-          ],
-        ).getcm,
-     */
         child: Column(
           children: [
-            Gap(10),
+            Gap(ScreenSize.isSmallHeight ? 6.h : 8.h),
             OnboardLogoHeaderRow(hasBack: false, height: S.h * 0.1).getcm,
             Gap(10),
             SafeAssetImage(
-              assetPath: Assets.images.paySuccess.path,
+              assetPath: Assets.images.paymentSuccess.path,
               height: S.h * 0.2,
             ).marginSymmetric(horizontal: 20),
 
-            const Gap(10),
+            Gap(ScreenSize.isSmallHeight ? 8.h : 10.h),
 
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -98,7 +61,7 @@ class SubscriptionSuccess extends StatelessWidget {
               ),
             ),
 
-            const Gap(12),
+            Gap(ScreenSize.isSmallHeight ? 8.h : 10.h),
 
             Text(
               "Welcome to\nWeMama Premium!",
@@ -109,7 +72,7 @@ class SubscriptionSuccess extends StatelessWidget {
               ),
             ),
 
-            const Gap(10),
+            Gap(ScreenSize.isSmallHeight ? 8.h : 10.h),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -124,11 +87,11 @@ class SubscriptionSuccess extends StatelessWidget {
               ),
             ),
 
-            const Gap(28),
+            Gap(ScreenSize.isSmallHeight ? 12.h : 28.h),
 
             _PremiumBenefitsCard(),
 
-            const Gap(40),
+            Gap(40),
           ],
         ),
       ),
@@ -142,8 +105,10 @@ class _PremiumBenefitsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      padding: const EdgeInsets.symmetric(vertical: 15),
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(
+        vertical: ScreenSize.isSmallHeight ? 10.h : 15.h,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -191,7 +156,7 @@ class _PremiumBenefitsCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          Gap(ScreenSize.isSmallHeight ? 4.h : 20.h),
 
           Row(
             mainAxisSize: MainAxisSize.min,

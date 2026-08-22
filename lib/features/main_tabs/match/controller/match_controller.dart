@@ -9,9 +9,11 @@ import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../../core/services/profile/profile_info_service.dart';
 import '../../../../core/services/socket/socket_service.dart';
+import '../../../main_nav/controller/main_nav_controller.dart';
 import '../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../../home/sub_feature/profile/model/profile_model.dart';
 import '../model/match_model.dart';
+import '../screen/match_screen.dart';
 import '../services/match_service.dart';
 
 enum MatchState { idle, searching, found, noMatch, locationUnavailable }
@@ -70,6 +72,90 @@ class MatchController extends GetxController {
     _premiumWorker?.dispose();
     super.onClose();
   }
+
+  // Homescreen logic
+  /*
+  Future<void> runLocationPermissionFlow() async {
+    log("📍 MatchController: starting location permission flow");
+
+    final result = await AppLocationManager.to.ensureFreshLocation();
+
+    final active = result == LocationFlowResult.success;
+
+    checkLocationPopup(isActive: active);
+  }
+*/
+
+  // new logic
+  bool? _lastKnownLocationActive;
+  bool _isRunningLocationFlow = false;
+
+  Future<void> runLocationPermissionFlow() async {
+    if (_isRunningLocationFlow) return;
+
+    _isRunningLocationFlow = true;
+
+    try {
+      log("📍 MatchController: checking location status");
+
+      final result = await AppLocationManager.to.ensureFreshLocation();
+
+      final isActive = result == LocationFlowResult.success;
+
+      // ─────────────────────────────────────────────
+      // FIRST CHECK
+      // ─────────────────────────────────────────────
+      if (_lastKnownLocationActive == null) {
+        _lastKnownLocationActive = isActive;
+
+        // First check ALWAYS shows the popup.
+        log(
+          "📍 First location check: "
+          "$isActive → show popup",
+        );
+
+        checkLocationPopup(isActive: isActive);
+        return;
+      }
+
+      // ─────────────────────────────────────────────
+      // LATER CHECKS
+      // ─────────────────────────────────────────────
+      if (_lastKnownLocationActive != isActive) {
+        log(
+          "📍 Location status changed: "
+          "$_lastKnownLocationActive → $isActive",
+        );
+
+        _lastKnownLocationActive = isActive;
+
+        checkLocationPopup(isActive: isActive);
+        return;
+      }
+
+      // No change → no popup.
+      log(
+        "📍 Location status unchanged: "
+        "$isActive → no popup",
+      );
+    } finally {
+      _isRunningLocationFlow = false;
+    }
+  }
+
+  void checkLocationPopup({required bool isActive}) {
+    // if (!storage.hasLoggedInBefore) {
+    //   storage.setHasLoggedInBefore();
+    //   return;
+    // }
+
+    MatchScreen.showLocationStatusOverlay(isActive: isActive);
+  }
+
+  //
+  final bool _searchLocationStatusInitialized = false;
+  bool? _lastSearchLocationStatus;
+  // end of new logic
 
   // ═══════════════════════════════════════════════════════════════════════
   // DAILY LIMIT — persisted via AppStorage
@@ -234,7 +320,18 @@ class MatchController extends GetxController {
         showDialogs: true,
         forceRefresh: true,
       );
+      // new logic
 
+      final isLocationActive = locationResult == LocationFlowResult.success;
+
+      await MainNavController.to.checkMatchLocationStatus(
+        isActive: isLocationActive,
+        showPopupIfChanged: true,
+      );
+
+      //end of new logic
+
+      //
       if (locationResult != LocationFlowResult.success) {
         matchState.value = MatchState.locationUnavailable;
         return;
@@ -279,7 +376,7 @@ class MatchController extends GetxController {
 
   void navToSubUpgrade() {
     if (Get.isDialogOpen ?? false) Get.back();
-    Get.toNamed(RoutePaths.promoCodeScreen);
+    Get.toNamed(RoutePaths.subscriptionUpgrade);
   }
 
   /////
@@ -301,7 +398,7 @@ class MatchController extends GetxController {
 
       await Future.delayed(const Duration(milliseconds: 300));
 
-      await Get.toNamed(RoutePaths.promoCodeScreen);
+      await Get.toNamed(RoutePaths.subscriptionUpgrade);
 
       await fetchWaveLimit();
     } finally {
@@ -470,7 +567,7 @@ class MatchController extends GetxController {
 
   Future<void> onTapUpgradeNow() async {
     if (Get.isDialogOpen ?? false) Get.back();
-    final result = await Get.toNamed(RoutePaths.promoCodeScreen);
+    final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
     log("result: $result");
   }
 }

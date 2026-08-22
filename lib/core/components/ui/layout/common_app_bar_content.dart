@@ -74,7 +74,7 @@ class CommonAppBarContent extends StatelessWidget
                 )),
 
       actions: [
-        expandTitle == true
+        expandTitle == true && suffix == null
             ? const SizedBox(width: 10)
             : Padding(
                 padding: EdgeInsets.only(right: 20.w),

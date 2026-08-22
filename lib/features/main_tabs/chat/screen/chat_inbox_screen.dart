@@ -130,7 +130,11 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
                 },
               ),
             ],
-            child: SvgIconColored(iconPath: IconsPath.moreVertical),
+            child: CircleAvatar(
+              radius: 12.r,
+              backgroundColor: bgClrNew,
+              child: SvgIconColored(iconPath: IconsPath.moreVertical),
+            ),
           );
         }),
       ),

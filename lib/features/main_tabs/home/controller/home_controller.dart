@@ -1,11 +1,9 @@
 import '../../../../app/controller_export.dart';
-import '../../../../core/network/helpers/location/location_manager_global/app_location_manager.dart';
 import '../../../../core/services/push_notification/utils/notification_permission_dialog.dart';
 import '../../../shared/mood/mood_check_in/mood_check_in_controller.dart';
 import '../../experts/controller/session_action_controller.dart';
 import '../../experts/controller/session_controller.dart';
 import '../model/community_spotlight_model.dart';
-import '../screen/home_screen.dart';
 import '../service/home_service.dart';
 
 String getGreetingMessage() {
@@ -68,23 +66,23 @@ class HomeController extends GetxController {
 
   void closeAllPopups() {}
 
-  Future<void> runLocationPermissionFlow() async {
-    final result = await AppLocationManager.to.ensureFreshLocation();
+  // Future<void> runLocationPermissionFlow() async {
+  //   final result = await AppLocationManager.to.ensureFreshLocation();
 
-    final active = result == LocationFlowResult.success;
+  //   final active = result == LocationFlowResult.success;
 
-    // HomeScreen.showLocationStatusOverlay(isActive: active);
-    checkLocationPopup(isActive: active);
-  }
+  //   // HomeScreen.showLocationStatusOverlay(isActive: active);
+  //   checkLocationPopup(isActive: active);
+  // }
 
-  void checkLocationPopup({required bool isActive}) {
-    if (!storage.hasLoggedInBefore) {
-      storage.setHasLoggedInBefore();
-      return;
-    }
+  // void checkLocationPopup({required bool isActive}) {
+  //   if (!storage.hasLoggedInBefore) {
+  //     storage.setHasLoggedInBefore();
+  //     return;
+  //   }
 
-    HomeScreen.showLocationStatusOverlay(isActive: isActive);
-  }
+  //   HomeScreen.showLocationStatusOverlay(isActive: isActive);
+  // }
   // ─────────────────────────────────────────────────────────────────────────
   // 🔹 Nearby suppliers
   // ─────────────────────────────────────────────────────────────────────────

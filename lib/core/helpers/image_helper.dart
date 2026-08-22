@@ -6,6 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../app/helper_widgets_export.dart' hide MultipartFile;
 import '../components/app_ui/popup_widgets/file_size_excedeed_popup.dart';
@@ -15,10 +16,10 @@ import '../components/ui/sheets/file_picker_bottom_sheet.dart';
 import '../components/ui/sheets/image_picker_bottom_sheet.dart';
 import 'image/image_compressor.dart';
 
-Image get mamaLogoWithoutTxtImage =>
-    Image.asset(ImagesPath.weMamaHandsLogo, height: S.w * 0.2);
-Image get mamaLogoWithoutTxtImageSmall =>
-    Image.asset(ImagesPath.weMamaHandsLogo, height: S.w * 0.11);
+Image get mamaLogoWithoutTxtImageSmall => Image.asset(
+  Assets.images.weMamaHandsLogoWebp.path,
+  height: ScreenSize.isSmallWidth ? S.w * 0.2 : S.w * 0.11,
+);
 
 ImageErrorBuilder defaultErrorBuilder({double? height, double? width}) =>
     ImageErrorBuilder(height: height, width: width);

@@ -16,7 +16,7 @@ class SessionNavigator {
     required String hostName,
   }) async {
     if (!PremiumAccessService.to.isPremiumUserNow) {
-      Get.toNamed(RoutePaths.promoCodeScreen);
+      Get.toNamed(RoutePaths.subscriptionUpgrade);
       return;
     }
 
@@ -40,7 +40,7 @@ class SessionNavigator {
     if (!PremiumAccessService.to.isPremiumUserNow) {
       log("🔒 [SessionNavigator] User is not premium → promoCodeScreen");
 
-      Get.offAllNamed(RoutePaths.promoCodeScreen);
+      Get.offAllNamed(RoutePaths.subscriptionUpgrade);
       return;
     }
 

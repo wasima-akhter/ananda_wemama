@@ -159,9 +159,15 @@ dev_dependencies:
   flutter_native_splash: ^2.4.7
   device_preview: ^1.2.0 # Device preview for UI testing
 
+# flutter_native_splash:
+#   color: "#ffffff"
+#   image: assets/images/we_mama_logo_png.png
+
+#   android: true
+#   ios: true
+
 flutter_native_splash:
-  color: "#ffffff"
-  image: assets/images/we_mama_logo_png.png
+  background_image: assets/images/launch_image.png
 
   android: true
   ios: true

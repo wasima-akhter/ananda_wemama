@@ -29,40 +29,47 @@ class UserShortDetailWidget extends StatelessWidget {
                 solidPlaceholderCircle: true,
               ),
         Gap(itemGap * 1.5),
-        CusGestureDetector(
-          onTap: isAnonymous
-              ? null
-              : () {
-                  showProfileDetailsPopup(
-                    userId: '',
-                    //creator.id ?? ''
-                  );
-                },
-          child: Container(
-            padding: EdgeInsets.only(right: 5),
+        Flexible(
+          child: CusGestureDetector(
+            onTap: isAnonymous
+                ? null
+                : () {
+                    showProfileDetailsPopup(
+                      userId: '',
+                      //creator.id ?? ''
+                    );
+                  },
+            child: Container(
+              padding: EdgeInsets.only(right: 5),
 
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                TextFit(
-                  isAnonymous ? Strings.anonymous : creatorName.capEachWord(),
-                  style: TxtStyle.outfitSemiB(fs: 13, w: 500),
-                ),
-                isAnonymous
-                    ? const SizedBox.shrink()
-                    : creatorAddress.isNotEmpty
-                    ? Row(
-                        children: [
-                          SvgIcon(iconPath: IconsPath.locationBold, height: 16),
-                          TextFit(
-                            creatorAddress,
-                            style: TxtStyle.outfitxSmNor500,
-                          ),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
-              ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    isAnonymous ? Strings.anonymous : creatorName.capEachWord(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TxtStyle.outfitSemiB(fs: 13, w: 500),
+                  ),
+                  isAnonymous
+                      ? const SizedBox.shrink()
+                      : creatorAddress.isNotEmpty
+                      ? Row(
+                          children: [
+                            SvgIcon(
+                              iconPath: IconsPath.locationBold,
+                              height: 16,
+                            ),
+                            TextFit(
+                              creatorAddress,
+                              style: TxtStyle.outfitxSmNor500,
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
             ),
           ),
         ),
