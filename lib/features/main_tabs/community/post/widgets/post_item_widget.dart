@@ -9,6 +9,7 @@ import '../../../../../core/components/ui/dropdowns/cus_flexible_dropdown.dart';
 import '../../../../../core/components/ui/loaders/shimmer_widget.dart';
 import '../../core/models/community_item_detail_model.dart';
 import '../../detail/controller/community_detail_controller.dart';
+import '../controller/post_action_controller.dart';
 import 'user_short_detail_widget.dart';
 
 class PostItemWidget extends StatelessWidget {
@@ -26,7 +27,6 @@ class PostItemWidget extends StatelessWidget {
     required this.btnState,
     required this.postId,
     this.showActions = true,
-
     required this.postItem,
     required this.userName,
     required this.postCreatorId,
@@ -35,22 +35,22 @@ class PostItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cc = CommunityDetailController.to;
-    return Obx(() {
-      final isDeleted = cc.deleteLockFlag(postId).value;
-      final isDeleting = cc.flagsOf(postId)?.isdeleteLoading.value ?? false;
+    final pac = PostActionController.to;
 
-      // 🔥 CASE 1: deleting → show shimmer
+    return Obx(() {
+      final isDeleted = pac.deleteLockFlag(postId).value;
+      final isDeleting = pac.flagsOf(postId)?.isdeleteLoading.value ?? false;
+
+      // Deleting → show shimmer
       if (isDeleting) {
         return const PostItemShimmer();
       }
 
-      // 🔥 CASE 2: deleted → remove from UI
+      // Deleted → remove from UI
       if (isDeleted) {
         return const SizedBox.shrink();
       }
 
-      // ✅ NORMAL UI
       return ContainerBordered(
         vp: 12,
         hp: 12,
@@ -66,9 +66,7 @@ class PostItemWidget extends StatelessWidget {
               postItem: postItem,
             ),
             Gap(itemGap * 1.5),
-
             _PostContent(postItem: postItem),
-
             if (showActions) ...[
               Gap(itemGap * 2),
               _PostActions(
@@ -86,7 +84,10 @@ class PostItemWidget extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────
+// ─────────────────────────────────────────────
+// POST HEADER
+// ─────────────────────────────────────────────
+
 class _PostHeader extends StatelessWidget {
   final String postId;
   final String postCreatorId;
@@ -102,15 +103,15 @@ class _PostHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cc = CommunityDetailController.to;
+    final pac = PostActionController.to;
 
     final timeAgo = DateHelper().formatTimeAgo(postItem.createdAt.toString());
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(child: UserShortDetailWidget(postItem: postItem)),
 
-        // ✅ Obx wraps only the reactive trailing section
         Row(
           children: [
             Text(
@@ -118,30 +119,27 @@ class _PostHeader extends StatelessWidget {
               style: TxtStyle.outfitSemiB(fs: 11, color: c.textPrimary),
             ),
             Gap(4.w),
+
             Obx(() {
-              final isPinned = cc.pinFlag(postId).value;
+              final isPinned = pac.pinFlag(postId).value;
+
               final isLocked =
                   (postItem.isCommentLocked ?? false) ||
-                  cc.commentLockFlag(postId).value;
+                  pac.commentLockFlag(postId).value;
 
               return Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Pin indicator
-                  if (isPinned)
-                    SvgIcon(iconPath: IconsPath.pin, height: 22)
-                  else
-                    const SizedBox.shrink(),
+                  if (isPinned) SvgIcon(iconPath: IconsPath.pin, height: 22),
 
                   // Visitor dropdown
-                  if (btnState == MyCommunityBtnState.visit
-                  // & currentProfileId() == postCreatorId
-                  )
+                  if (btnState == MyCommunityBtnState.visit)
                     CusFlexibleDropdown(
                       items: [
                         CusDropdownItem(
                           title: Strings.reportContent.capEachWord(),
-                          onTap: () => cc.onTapReportContent(postId: postId),
+                          onTap: () => pac.onTapReportContent(postId: postId),
                         ),
                       ],
                       child: SvgIconColored(
@@ -158,32 +156,38 @@ class _PostHeader extends StatelessWidget {
                           title: isPinned
                               ? Strings.unpinPost.capEachWord()
                               : Strings.pinPost.capEachWord(),
-                          // onTap: () => cc.togglePin(postId),
-                          onTap: () => cc.togglePinApi(postId),
+                          onTap: () => pac.togglePinApi(postId: postId),
                         ),
+
                         CusDropdownItem(
                           title: isLocked
                               ? Strings.unlockComment.capEachWord()
                               : Strings.lockComment.capEachWord(),
                           onTap: () async {
                             showLockCommentialog(isLocked: isLocked);
+
                             await Future.delayed(const Duration(seconds: 1));
+
                             Get.back();
                             Get.back();
-                            // cc.toggleCommentLock(postId);
-                            await cc.toggleLockApi(postId);
+
+                            await pac.toggleLockApi(postId: postId);
                           },
                         ),
+
                         CusDropdownItem(
                           title: Strings.deletePost.capEachWord(),
-                          onTap: () async => deletePostConfirmDialog(
-                            onConfirm: () async {
-                              Get.back();
-                              Get.back();
-                              cc.deletePostApi(postId);
-                            },
-                            isLoading: cc.deleteLoadingFlag(postId),
-                          ),
+                          onTap: () async {
+                            await deletePostConfirmDialog(
+                              onConfirm: () async {
+                                Get.back();
+                                Get.back();
+
+                                pac.deletePostApi(postId: postId);
+                              },
+                              isLoading: pac.deleteLoadingFlag(postId),
+                            );
+                          },
                         ),
                       ],
                       child: SvgIconColored(
@@ -201,9 +205,13 @@ class _PostHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────
+// ─────────────────────────────────────────────
+// POST CONTENT
+// ─────────────────────────────────────────────
+
 class _PostContent extends StatelessWidget {
   final AllPost postItem;
+
   const _PostContent({required this.postItem});
 
   @override
@@ -215,7 +223,10 @@ class _PostContent extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────
+// ─────────────────────────────────────────────
+// POST ACTIONS
+// ─────────────────────────────────────────────
+
 class _PostActions extends StatelessWidget {
   final Community communityData;
   final AllPost postItem;
@@ -233,30 +244,34 @@ class _PostActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final pac = PostActionController.to;
     final cc = CommunityDetailController.to;
+
     return Obx(() {
-      // ✅ _ensureFlags guarantees a valid RxBool — Obx always has a subscription
-      final isLiked = cc.likeFlag(postId).value;
+      final isLiked = pac.likeFlag(postId).value;
 
       final isLocked =
           (postItem.isCommentLocked ?? false) ||
-          cc.commentLockFlag(postId).value;
-      final canSeeLockedComment =
-          ((btnState == MyCommunityBtnState.manage) &&
-              (communityData.creator ?? '') == currentProfileId())
-          ? true
-          : false;
+          pac.commentLockFlag(postId).value;
 
-      //
+      final canSeeLockedComment =
+          btnState == MyCommunityBtnState.manage &&
+          (communityData.creator ?? '') == currentProfileId();
+
       final post = cc.communityItemDetail.value.allPost?.firstWhere(
         (e) => e.id == postId,
+        orElse: () => postItem,
       );
 
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           CusGestureDetector(
-            onTap: () => cc.toggleLikeApi(postId, userName),
+            onTap: () => pac.toggleLikeApi(
+              postId: postId,
+              likerName: userName,
+              communityId: communityData.id,
+            ),
             child: Row(
               children: [
                 SvgIcon(
@@ -273,15 +288,17 @@ class _PostActions extends StatelessWidget {
               ],
             ),
           ),
+
           Gap(itemGap * 2),
+
           CusGestureDetector(
             onTap: () => isLocked && !canSeeLockedComment
                 ? null
                 : Get.toNamed(
                     RoutePaths.postDetails,
                     arguments: PostDetailArgModel(
-                      communityData: communityData,
-                      postItem: postItem,
+                      communityId: communityData.id ?? '',
+                      postId: postItem.id ?? '',
                     ),
                   ),
             child: Row(
@@ -305,7 +322,10 @@ class _PostActions extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────
+// ─────────────────────────────────────────────
+// POST SHIMMER
+// ─────────────────────────────────────────────
+
 class PostItemShimmer extends StatelessWidget {
   const PostItemShimmer({super.key});
 

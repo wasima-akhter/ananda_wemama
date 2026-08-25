@@ -1,6 +1,7 @@
 import '../../../../../app/service_export.dart';
 import '../models/all_comments_of_post_model.dart';
 import '../models/community_item_detail_model.dart';
+import '../models/single_post_data.dart';
 
 class CommunityDetailService extends GetxService {
   Future<CommunityItemDetailModel?> fetchCommunityDetail({
@@ -17,14 +18,15 @@ class CommunityDetailService extends GetxService {
     final response = await ApiExecutor().execute<CommunityItemDetailModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
         final parsedData = CommunityItemDetailModel.fromJson(data);
-
+        log("parserdata: $parsedData");
         return parsedData;
       },
     );
 
-    log("response data: ${response.data}");
+    log(
+      "fetchCommunityDetail response data: ${response.data?.allPost?.first.creator?.id}",
+    );
     return response.data;
   }
 
@@ -184,5 +186,28 @@ class CommunityDetailService extends GetxService {
 
     final response = await ApiExecutor().execute(apiCall: apiCall);
     return response.isSuccess;
+  }
+
+  Future<SinglePostModel?> fetchSinglePost({required String postId}) async {
+    apiCall() {
+      return ApiClient().get(
+        Endpoints.getSinglePost(postId: postId).getUrl,
+        headers: HeaderHelpers.getAuthHeader(),
+      );
+    }
+
+    final response = await ApiExecutor().execute<SinglePostModel?>(
+      apiCall: apiCall,
+      parser: (data) {
+        log("single post parser data: $data");
+
+        final parsedData = SinglePostModel.fromJson(data);
+
+        return parsedData;
+      },
+    );
+
+    log("single post response data: ${response.data}");
+    return response.data;
   }
 }

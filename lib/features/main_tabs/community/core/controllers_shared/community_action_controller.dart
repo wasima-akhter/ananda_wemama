@@ -4,6 +4,11 @@ import '../services/community_detail_service.dart';
 
 class CommunityActionController extends GetxController {
   static CommunityActionController get to => Get.find();
+
+  // =========================
+  // JOIN COMMUNITY
+  // =========================
+
   final isJoinLoading = false.obs;
 
   Future<bool> joinCommunity(String communityId) async {
@@ -12,11 +17,9 @@ class CommunityActionController extends GetxController {
     isJoinLoading.value = true;
 
     try {
-      final success = await CommunityDetailService().joinCommunity(
+      return await CommunityDetailService().joinCommunity(
         communityItemId: communityId,
       );
-
-      return success;
     } finally {
       isJoinLoading.value = false;
     }
@@ -26,34 +29,44 @@ class CommunityActionController extends GetxController {
   // USER PROFILE
   // =========================
 
-  final isGetUserProfileLoading = false.obs;
-  final userProfileData = Rxn();
+  final RxBool isGetUserProfileLoading = false.obs;
+  final Rxn userProfileData = Rxn();
 
-  final isSeeMore = false.obs;
+  final RxBool isSeeMore = false.obs;
+
+  /// Clears the currently displayed profile.
+  void clearUserProfile() {
+    userProfileData.value = null;
+    isSeeMore.value = false;
+    isGetUserProfileLoading.value = false;
+  }
 
   Future<void> getUserProfile({required String userId}) async {
-    if (isGetUserProfileLoading.value) return;
+    // Always clear old profile first.
+    clearUserProfile();
 
-    // Clear previous user's data
-    userProfileData.value = null;
+    final id = userId.trim();
 
-    // Reset See More state
-    isSeeMore.value = false;
+    // Invalid/empty ID → keep placeholder state.
+    if (id.isEmpty) {
+      log('[CommunityActionController] User ID is empty.');
+      return;
+    }
 
     isGetUserProfileLoading.value = true;
 
     try {
-      final data = await WaveService().fetchUserProfile(userId: userId);
+      final data = await WaveService().fetchUserProfile(userId: id);
 
       if (data != null) {
         userProfileData.value = data;
 
-        log('Profile fetched: $data');
+        log('[CommunityActionController] Profile fetched: $data');
       } else {
-        log('Profile data is null');
+        log('[CommunityActionController] Profile data is null.');
       }
     } catch (e) {
-      log('Error fetching profile: $e');
+      log('[CommunityActionController] Error fetching profile: $e');
     } finally {
       isGetUserProfileLoading.value = false;
     }

@@ -78,6 +78,26 @@ class ReportController extends GetxController {
     String? userId,
     String? postId,
   }) async {
+    // ------------------------------------------------------------
+    // VALIDATION
+    // ------------------------------------------------------------
+
+    final reason = selectedReason.value.trim();
+    final note = noteCtrl.text.trim();
+
+    if (reason.isEmpty) {
+      Snack.showWarning('Please select a report reason.');
+      return;
+    }
+
+    if (note.isEmpty) {
+      Snack.showWarning('Please enter a note.');
+      return;
+    }
+
+    // ------------------------------------------------------------
+    // PREVENT DUPLICATE REQUEST
+    // ------------------------------------------------------------
     if (isLoading_.value) return; // Prevent duplicate calls
     isLoading_.value = true;
 

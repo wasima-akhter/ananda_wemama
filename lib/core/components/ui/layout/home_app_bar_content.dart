@@ -24,7 +24,10 @@ class HomeAppBarContent extends StatelessWidget implements PreferredSizeWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          mamaLogoWithoutTxtImageSmall,
+          Container(
+            //color: Colors.amber,
+            child: mamaLogoWithoutTxtImageSmall,
+          ),
 
           Row(
             children: [

@@ -127,7 +127,8 @@ class AppPalette {
   static const error = Colors.redAccent;
 
   static const snackSuccess = Color(0xFF4F7A4A);
-  static const snackWarning = Color(0xFF9A6A2A);
+  // static const snackWarning = Color(0xFF9A6A2A);
+  static const snackWarning = Color.fromARGB(255, 196, 125, 58);
   static const snackError = Color(0xFFAD3A3A);
 
   static const snackPurple = Color(0xFF6B4F8A);

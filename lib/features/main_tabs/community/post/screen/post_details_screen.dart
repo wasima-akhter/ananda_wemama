@@ -3,6 +3,8 @@ import 'package:we_mama/core/components/ui/helpers/shapes/custom_divider.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/components/ui/loaders/empty_widget.dart';
+import '../../../../../gen/assets.gen.dart';
 import '../../core/models/all_comments_of_post_model.dart';
 import '../controller/post_details_controller.dart';
 import '../widgets/post_details_comments_section.dart';
@@ -39,25 +41,48 @@ class PostDetailsScreen extends StatelessWidget {
 
       floatingActionButton: PostDetailsFloatingCommentInput(),
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Gap(10.h),
-          PostDetailsPostSection(),
-          Gap(itemGap),
+      child: Obx(() {
+        if (!pcc.hasValidPostId.value) {
+          return _InvalidPostPlaceholder();
+        }
 
-          CustomDivider(
-            isFullWidth: true,
-            clr: c.inputBorder.withValues(alpha: 0.8),
-            h: 0.5,
-          ),
-          Gap(itemGap),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Gap(10.h),
 
-          Flexible(child: PostDetailsCommentsSection()),
-        ],
-      ).getcm,
+            PostDetailsPostSection(),
+
+            Gap(itemGap),
+
+            CustomDivider(
+              isFullWidth: true,
+              clr: c.inputBorder.withValues(alpha: 0.8),
+              h: 0.5,
+            ),
+
+            Gap(itemGap),
+
+            Flexible(child: PostDetailsCommentsSection()),
+          ],
+        ).getcm;
+      }),
     );
+  }
+}
+
+class _InvalidPostPlaceholder extends StatelessWidget {
+  const _InvalidPostPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return EmptyNoSearchWidgetScrollable(
+      isScrollable: false,
+      assetPath: Assets.images.noCommentIcon.path,
+      title: "Post unavailable",
+      subTitle: "The post you're looking for is unavailable.",
+    ).getcm;
   }
 }
 
@@ -115,7 +140,7 @@ class CommentItemInPostDetail extends StatelessWidget {
                       CusGestureDetector(
                         onTap: () {
                           showProfileDetailsPopup(
-                            userId: '' ?? item.creator?.name ?? '',
+                            userId: item.creator?.id ?? '',
                           );
                         },
                         child: Container(
@@ -213,9 +238,7 @@ class CommentItemInPostDetail extends StatelessWidget {
                 children: [
                   CusGestureDetector(
                     onTap: () {
-                      showProfileDetailsPopup(
-                        userId: '' ?? item.creator?.name ?? '',
-                      );
+                      showProfileDetailsPopup(userId: item.creator?.id ?? '');
                     },
                     child: Container(
                       padding: EdgeInsets.only(right: 5),

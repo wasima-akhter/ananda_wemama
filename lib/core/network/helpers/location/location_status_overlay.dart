@@ -114,7 +114,7 @@ class _OverlayCardState extends State<_OverlayCard>
                           ],
                         ),
                       ),
-                      GestureDetector(
+                      CusGestureDetector(
                         onTap: () => Get.back(),
                         child: Icon(
                           Icons.close_rounded,

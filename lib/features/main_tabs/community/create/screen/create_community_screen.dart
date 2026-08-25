@@ -50,7 +50,7 @@ class CreateCommunityScreen extends StatelessWidget {
             hintText: Strings.communityName,
           ),
         ],
-      ).getcm,
+      ).getcm.mT(10),
     );
   }
 }

@@ -1,4 +1,3 @@
-import '../../../features/main_tabs/community/core/models/community_item_detail_model.dart';
 import '../../enums/ui_enums.dart';
 
 class IdentityCardDataModel {
@@ -36,26 +35,10 @@ class CreateCommunityArgModel {
 }
 
 class PostDetailArgModel {
-  final Community communityData;
-  final AllPost postItem;
-  final bool isIdOnly; // true = only ids populated, needs hydration
+  final String communityId;
+  final String postId;
 
-  const PostDetailArgModel({
-    required this.communityData,
-    required this.postItem,
-    this.isIdOnly = false,
-  });
-
-  factory PostDetailArgModel.idsOnly({
-    required String communityId,
-    required String postId,
-  }) {
-    return PostDetailArgModel(
-      communityData: Community(id: communityId),
-      postItem: AllPost(id: postId),
-      isIdOnly: true,
-    );
-  }
+  const PostDetailArgModel({required this.communityId, required this.postId});
 }
 
 class CommonTitleIconpathModel {

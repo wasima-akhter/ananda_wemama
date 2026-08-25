@@ -251,6 +251,7 @@ class NoSessionPlaceholder extends StatelessWidget {
                   "New sessions are coming soon ✴︎",
                   style: TxtStyle.urbanistSemiB(
                     w: 600,
+                    fs: 16,
                     color: c.foregroundPrimary,
                   ),
                 ),
@@ -264,7 +265,7 @@ class NoSessionPlaceholder extends StatelessWidget {
             "We're preparing expert guidance to support "
             "your motherhood journey.",
             style: TxtStyle.urbanist(
-              fs: 11,
+              fs: 13,
               w: 500,
               color: c.foregroundSecondary,
             ),
@@ -280,7 +281,7 @@ class NoSessionPlaceholder extends StatelessWidget {
             ),
             child: Text(
               "Stay tuned for what's next ♡",
-              style: TxtStyle.urbanistSemiB(fs: 11, w: 600, color: c.primary),
+              style: TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary),
             ),
           ),
         ],

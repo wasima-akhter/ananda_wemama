@@ -45,7 +45,7 @@ class _CommunitySpotlightDummy extends StatelessWidget {
                   Strings.communitySpotlight.capEachWord(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TxtStyle.outfitSmTitle,
+                  style: TxtStyle.outfitSemiB(fs: 16),
                 ),
               ),
               Gap(itemGap),
@@ -146,7 +146,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
                       Strings.communitySpotlight.capEachWord(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.outfitSmTitle,
+                      style: TxtStyle.outfitSemiB(fs: 16),
                     ),
                     Gap(itemGap),
                     Opacity(
@@ -330,7 +330,7 @@ class CommunitySpotlightInsideCard extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: TxtStyle.urbanistSemiB(
-                fs: 12,
+                fs: 13,
                 w: 600,
                 color: c.foregroundPrimary,
               ),
@@ -467,7 +467,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 Strings.communitySpotlight.capEachWord(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TxtStyle.outfitSmTitle,
+                style: TxtStyle.outfitSemiB(fs: 16),
               ),
 
               CusGestureDetector(

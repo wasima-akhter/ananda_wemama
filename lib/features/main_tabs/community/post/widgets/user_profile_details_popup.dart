@@ -23,12 +23,18 @@ class _ProfileDetailsPopupState extends State<ProfileDetailsPopup> {
   void initState() {
     super.initState();
 
-    // Fetch profile when popup opens
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.userId.isNotEmpty
-          ? controller.getUserProfile(userId: widget.userId)
-          : null;
-    });
+    debugPrint('userId: in prodile popup: ${widget.userId}');
+
+    // Always clear previous profile when opening popup.
+    controller.clearUserProfile();
+
+    if (widget.userId.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+
+        controller.getUserProfile(userId: widget.userId);
+      });
+    }
   }
 
   @override
@@ -36,7 +42,6 @@ class _ProfileDetailsPopupState extends State<ProfileDetailsPopup> {
     return Obx(() {
       final isLoading = controller.isGetUserProfileLoading.value;
       final userValue = controller.userProfileData.value;
-      final isSeeMore = controller.isSeeMore.value;
 
       // =========================
       // LOADING
@@ -118,8 +123,8 @@ class _ProfileDetailsPopupState extends State<ProfileDetailsPopup> {
                     onTapSeeMore: controller.isSeeMore.toggle,
                     isSeeMore: controller.isSeeMore,
                   ),
-
-                  _buildCloseButton(),
+                  //
+                  // _buildCloseButton(),
                 ],
               ),
             ],

@@ -134,6 +134,10 @@ class Endpoints {
   static String postAddComment = "post/add-comment";
   static String joinCommunity({required String communityId}) =>
       "community/join-community?communityId=$communityId";
+
+  static String getSinglePost({required String postId}) =>
+      "post/get-single-post/$postId";
+
   static String getAllCommentsOfAPost({required String postId}) =>
       "post/get-all-comment/$postId";
   static String deletePost({required String postId}) =>

@@ -5,10 +5,10 @@ import '../../../../../core/utils/extension/string_extension.dart';
 import '../../core/services/community_detail_service.dart';
 import '../../detail/controller/community_detail_controller.dart';
 
-class PostInCommunityController extends GetxController {
+class CreatePostController extends GetxController {
   final String communityItemId;
 
-  PostInCommunityController(this.communityItemId);
+  CreatePostController(this.communityItemId);
 
   final contentCtrl = TextEditingController();
   final contentFocus = FocusNode();

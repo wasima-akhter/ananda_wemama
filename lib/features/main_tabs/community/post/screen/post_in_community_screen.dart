@@ -4,7 +4,7 @@ import 'package:we_mama/core/components/ui/inputs/cus_des_type_text_form_field.d
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/inputs/custom_toggle_btn.dart';
 import '../../core/models/community_item_detail_model.dart';
-import '../controller/post_in_community_controller.dart';
+import '../controller/create_post_controller.dart';
 import '../widgets/user_short_detail_widget.dart';
 
 class PostInCommunityScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class PostInCommunityScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pcc = Get.find<PostInCommunityController>();
+    final pcc = Get.find<CreatePostController>();
     final refreshKey = GlobalKey<RefreshIndicatorState>();
 
     return AppScreenTemplate(

@@ -1,3 +1,5 @@
+import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
+
 import '../../../../app/helper_widgets_export.dart';
 import '../buttons/back_arrow_in_circle.dart';
 
@@ -114,7 +116,14 @@ class CommunityTopbarContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
 
         children: [
-          BackArrowInCircle(onTap: onTapBack ?? () => GNav.pop()),
+          BackArrowInCircle(
+            onTap:
+                onTapBack ??
+                () {
+                  Get.offAllNamed(RoutePaths.mainNav);
+                  MainNavController.to.goToTab(3);
+                },
+          ),
 
           suffix ?? const SizedBox(width: 40),
         ],

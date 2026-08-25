@@ -46,7 +46,7 @@ class _MoodLibraryChipCardState extends State<MoodLibraryChipCard> {
           2.verticalSpace,
           Text(
             Strings.howAreYourFeeling.capEachWord(),
-            style: TxtStyle.outfitSemiB(fs: 15),
+            style: TxtStyle.outfitSemiB(fs: 16),
           ),
           itemGap.verticalSpace,
 

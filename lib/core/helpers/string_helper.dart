@@ -18,9 +18,9 @@ TextStyle get normSmBPri =>
 
 ////////////////Urbanist
 TextStyle get titleBPriURB =>
-    TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.strokePrimary);
+    TxtStyle.urbanistSemiB(fs: 14, w: 600, color: c.strokePrimary);
 TextStyle get titleSmBPriURB =>
-    TxtStyle.urbanistSemiB(fs: 12, w: 600, color: c.primary);
+    TxtStyle.urbanistSemiB(fs: 13, w: 600, color: c.primary);
 
 TextStyle get normRPriURB =>
     TxtStyle.urbanist(fs: 14, w: 400, color: c.primary);

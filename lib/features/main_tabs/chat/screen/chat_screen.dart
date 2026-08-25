@@ -65,7 +65,7 @@ class ChatScreen extends StatelessWidget {
         Row(
           children: [
             ContainerBordered(
-              vp: 6,
+              vp: 0,
               hp: 12,
               rad: 30,
               contClr: c.secondary.withOpacity(0.3),
@@ -86,9 +86,13 @@ class ChatScreen extends StatelessWidget {
                       cc.showSearchedTag.value = false;
                       cc.clearAll();
                     },
-                    child: SvgIconColored(
-                      iconPath: IconsPath.closeCircle,
-                      iconColor: c.primary,
+                    child: Container(
+                      // color: Colors.amber,
+                      padding: 9.pv,
+                      child: SvgIconColored(
+                        iconPath: IconsPath.closeCircle,
+                        iconColor: c.primary,
+                      ),
                     ),
                   ),
                 ],
@@ -117,7 +121,7 @@ class ChatScreen extends StatelessWidget {
                   subTitle:
                       "We couldn't find anyone matching your search.\n"
                       "Try searching with a different name.",
-                ).get10cm,
+                ).getcm,
               );
             }
 
@@ -171,7 +175,7 @@ class ChatScreen extends StatelessWidget {
                 "Start by finding a match and sending a wave 👋\n"
                 "When your wave is accepted, you can start chatting.\n\n"
                 "You can also accept incoming wave requests to begin a conversation.",
-          ).get10cm,
+          ).getcm,
         );
       }
       for (var e in list) {

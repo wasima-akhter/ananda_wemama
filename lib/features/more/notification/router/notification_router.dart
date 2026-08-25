@@ -59,7 +59,7 @@ class NotificationRouter {
 
         Get.toNamed(
           RoutePaths.postDetails,
-          arguments: PostDetailArgModel.idsOnly(
+          arguments: PostDetailArgModel(
             communityId: communityId,
             postId: postId,
           ),

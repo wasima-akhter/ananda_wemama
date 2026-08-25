@@ -16,8 +16,10 @@ import '../components/ui/sheets/file_picker_bottom_sheet.dart';
 import '../components/ui/sheets/image_picker_bottom_sheet.dart';
 import 'image/image_compressor.dart';
 
-Image get mamaLogoWithoutTxtImageSmall => Image.asset(
-  Assets.images.weMamaHandsLogoWebp.path,
+SafeAssetImage get mamaLogoWithoutTxtImageSmall => SafeAssetImage(
+  assetPath: Assets.images.weMamaHandsLogoIos.path,
+  height: double.infinity,
+
   // height: ScreenSize.isSmallWidth ? S.w * 0.2 : S.w * 0.22,
 );
 

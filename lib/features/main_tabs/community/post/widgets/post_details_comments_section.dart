@@ -12,6 +12,9 @@ class PostDetailsCommentsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pcc = PostDetailsController.to;
+    if (!pcc.hasValidPostId.value) {
+      return const SizedBox.shrink();
+    }
     return Obx(() {
       return UIStateHandler(
         state: pcc.commentState,

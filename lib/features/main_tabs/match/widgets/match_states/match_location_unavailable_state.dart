@@ -18,8 +18,9 @@ class MatchLocationUnavailableState extends StatelessWidget {
           Text(
             "Location Access Needed",
             textAlign: TextAlign.center,
-            style: TxtStyle.outfitSmTitleSec,
+            style: TxtStyle.outfitSmTitle.copyWith(color: c.primary),
           ),
+          Gap(6.h),
 
           Text(
             "Please enable location service and allow location permission to find nearby WeMamas.",

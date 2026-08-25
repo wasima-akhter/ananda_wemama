@@ -96,7 +96,7 @@ class EmptyNoSearchWidgetScrollable extends StatelessWidget {
           Gap(itemGap * 2),
           Text(
             title.capEachWord(),
-            style: TxtStyle.inter(w: 600, color: c.foregroundPrimary),
+            style: TxtStyle.inter(fs: 15, w: 600, color: c.foregroundPrimary),
           ),
 
           Gap(itemGap * 2),

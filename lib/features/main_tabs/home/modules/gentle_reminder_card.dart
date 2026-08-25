@@ -46,7 +46,7 @@ class GentleReminderCard extends StatelessWidget {
                   children: [
                     Text(
                       Strings.todaysReminder.capEachWord(),
-                      style: TxtStyle.outfitSemiB(fs: 14, w: 500),
+                      style: TxtStyle.outfitSemiB(fs: 16, w: 500),
                     ),
                     Gap(4),
                     Text(

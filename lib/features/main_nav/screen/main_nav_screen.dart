@@ -25,25 +25,27 @@ class MainNavScreen extends StatelessWidget {
             log("📄 Displaying page at index: $currentIndex");
             return mnc.pages[currentIndex];
           }),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              boxShadow: boxShadowTopOnly,
-              color: c.inputBackground,
-            ),
-            height: 60.h,
-
-            // ((S.h * 0.06) + S.bottomInset).h,
-            padding: EdgeInsets.only(
-              left: 15.w,
-              right: 15.w,
-              //  bottom:  S.bottomInset> 25 ? S.bottomInset : 10
-            ),
-
-            child: CustomBottomNavBar(
-              length: mnc.pages.length,
-              roleId: roleId,
-              mnc: mnc,
-            ),
+          bottomNavigationBar: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: c.inputBackground,
+                  boxShadow: boxShadowTopOnly,
+                  // borderRadius: BorderRadius.only(
+                  //   topLeft: Radius.circular(35.r),
+                  //   topRight: Radius.circular(35.r),
+                  // ),
+                ),
+                padding: EdgeInsets.only(
+                  left: 15.w,
+                  right: 15.w,
+                  top: 15.h,
+                  bottom: S.bottomInset + 12.h,
+                ),
+                child: CustomBottomNavBar(),
+              ),
+            ],
           ),
         ),
       ),

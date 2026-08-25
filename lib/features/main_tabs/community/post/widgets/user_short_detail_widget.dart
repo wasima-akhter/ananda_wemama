@@ -34,10 +34,8 @@ class UserShortDetailWidget extends StatelessWidget {
             onTap: isAnonymous
                 ? null
                 : () {
-                    showProfileDetailsPopup(
-                      userId: '',
-                      //creator.id ?? ''
-                    );
+                    debugPrint(' creator?.id: in : ${creator?.id}');
+                    showProfileDetailsPopup(userId: creator?.id ?? '');
                   },
             child: Container(
               padding: EdgeInsets.only(right: 5),

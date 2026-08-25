@@ -1,3 +1,5 @@
+import 'community_item_detail_model.dart';
+
 class CommentOfPostResponseModel {
   CommentOfPostResponseModel({this.post, this.comments});
 
@@ -65,17 +67,6 @@ class ReplyModelOfPost {
       content: json["content"],
       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
     );
-  }
-}
-
-class Creator {
-  Creator({this.name, this.profileImage});
-
-  final String? name;
-  final String? profileImage;
-
-  factory Creator.fromJson(Map<String, dynamic> json) {
-    return Creator(name: json["name"], profileImage: json["profileImage"]);
   }
 }
 

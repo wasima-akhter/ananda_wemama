@@ -12,7 +12,7 @@ class CommunitySearchChip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ContainerBordered(
-          vp: 6,
+          vp: 0,
           hp: 12,
           rad: 30,
           contClr: c.secondary.withOpacity(0.3),
@@ -43,9 +43,12 @@ class _CommunitySearchChipContent extends StatelessWidget {
             csc.showSearchedTag.value = false;
             csc.clearAll();
           },
-          child: SvgIconColored(
-            iconPath: IconsPath.closeCircle,
-            iconColor: c.primary,
+          child: Container(
+            padding: 9.pv,
+            child: SvgIconColored(
+              iconPath: IconsPath.closeCircle,
+              iconColor: c.primary,
+            ),
           ),
         ),
       ],

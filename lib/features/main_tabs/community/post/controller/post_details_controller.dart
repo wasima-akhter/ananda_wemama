@@ -4,99 +4,340 @@ import '../../../../../app/controller_export.dart';
 import '../../../../../core/enums/ui_enums.dart';
 import '../../../../../core/models/ui/common_data_models.dart';
 import '../../core/models/all_comments_of_post_model.dart';
-import '../../core/models/community_item_detail_model.dart' hide Creator;
+import '../../core/models/community_item_detail_model.dart';
+import '../../core/models/single_post_data.dart';
 import '../../core/services/community_detail_service.dart';
 import '../../detail/controller/community_detail_controller.dart';
 
 class PostDetailsController extends GetxController {
   static PostDetailsController get to => Get.find();
-  var postAnonymously = false.obs; // 👈 toggle state
+
+  // ---------------------------------------------------------------------------
+  // Controllers
+  // ---------------------------------------------------------------------------
 
   final commentCtrl = TextEditingController();
   final commentFocus = FocusNode();
+  final scrollController = ScrollController();
 
-  final scrollController = ScrollController(); // ← add
+  // ---------------------------------------------------------------------------
+  // Arguments
+  // ---------------------------------------------------------------------------
 
   final postDetailArg = Rxn<PostDetailArgModel>();
 
-  final isResolvingPost = false.obs;
-  final resolveFailed = false.obs;
+  String get communityId => postDetailArg.value?.communityId ?? '';
+
+  String get postId => postDetailArg.value?.postId ?? '';
+
+  // ---------------------------------------------------------------------------
+  // Post
+  // ---------------------------------------------------------------------------
+
+  final isGetSinglePostLoading = false.obs;
+  final singlePost = Rxn<SinglePostModel>();
+
+  // ---------------------------------------------------------------------------
+  // Comments
+  // ---------------------------------------------------------------------------
+
+  final isGetCommentsLoading = false.obs;
+  final comments = <CommentModelOfPost>[].obs;
+
+  UIState get commentState =>
+      getUIStateList(isLoading: isGetCommentsLoading.value, list: comments);
+
+  // ---------------------------------------------------------------------------
+  // Comment input / reply
+  // ---------------------------------------------------------------------------
+
+  final isAddCommentLoading = false.obs;
+
+  final replyingToCommentId = RxnString();
+  final replyingToUserName = ''.obs;
+
+  // ---------------------------------------------------------------------------
+  // Post creation / media
+  // ---------------------------------------------------------------------------
+
+  final postAnonymously = false.obs;
+  final fileImage = Rxn<XFile>();
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle
+  // ---------------------------------------------------------------------------
 
   @override
   void onInit() async {
+    super.onInit();
+
     final args = Get.arguments as PostDetailArgModel;
 
-    if (args.isIdOnly) {
-      await _resolveFromIds(
-        communityId: args.communityData.id ?? '',
-        postId: args.postItem.id ?? '',
-      );
-    } else {
-      postDetailArg.value =
-          args; // came fully populated from CommunityDetailsScreen
-    }
+    postDetailArg.value = args;
 
-    log('postId_: ${postDetailArg.value?.postItem.id}');
-    await getCommentsList();
-    super.onInit();
-  }
+    hasValidPostId.value = args.postId.trim().isNotEmpty;
 
-  Future<void> _resolveFromIds({
-    required String communityId,
-    required String postId,
-  }) async {
-    if (communityId.isEmpty || postId.isEmpty) {
-      resolveFailed.value = true;
+    log(
+      '[PostDetailsController] '
+      'communityId: ${args.communityId}, '
+      'postId: "${args.postId}", '
+      'hasValidPostId: ${hasValidPostId.value}',
+    );
+
+    if (!hasValidPostId.value) {
       return;
     }
 
-    isResolvingPost.value = true;
-    try {
-      final community = await CommunityDetailService().fetchCommunityDetail(
-        communityItemId: communityId,
-      );
-
-      final post = community?.allPost?.firstWhereOrNull(
-        (p) => p.id == postId,
-      ); // package:collection
-
-      if (community == null || post == null) {
-        log('⚠️ post $postId not found in community $communityId');
-        resolveFailed.value = true;
-        return;
-      }
-
-      postDetailArg.value = PostDetailArgModel(
-        communityData: Community(
-          id: community.community?.id,
-          name: community.community?.name,
-        ),
-        postItem: post,
-      );
-
-      // Prime CommunityDetailController's cache too, so like/pin flags &
-      // btnState are correct if the user backs out into the full community screen.
-      if (Get.isRegistered<CommunityDetailController>()) {
-        final cc = CommunityDetailController.to;
-        if (cc.communityItemId == communityId) {
-          cc.communityItemDetail.value = community;
-        }
-      }
-    } catch (e) {
-      log('Error resolving post from ids: $e');
-      resolveFailed.value = true;
-    } finally {
-      isResolvingPost.value = false;
-    }
+    await _loadInitialData();
   }
+
+  final RxBool hasValidPostId = false.obs;
 
   @override
   void onClose() {
     commentCtrl.dispose();
     commentFocus.dispose();
-    scrollController.dispose(); // ← dispose
+    scrollController.dispose();
+
     super.onClose();
   }
+
+  // ---------------------------------------------------------------------------
+  // Initial data
+  // ---------------------------------------------------------------------------
+
+  Future<void> _loadInitialData() async {
+    await getSinglePost();
+    await getCommentsList();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Single post
+  // ---------------------------------------------------------------------------
+
+  Future<void> getSinglePost() async {
+    if (isGetSinglePostLoading.value || postId.isEmpty) return;
+
+    isGetSinglePostLoading.value = true;
+
+    try {
+      final post = await CommunityDetailService().fetchSinglePost(
+        postId: postId,
+      );
+
+      if (post != null) {
+        singlePost.value = post;
+
+        log(
+          '[PostDetailsController] '
+          'Single post fetched: ${post.id}',
+        );
+      }
+    } catch (e) {
+      log('Error fetching single post: $e');
+    } finally {
+      isGetSinglePostLoading.value = false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Comments
+  // ---------------------------------------------------------------------------
+
+  Future<void> getCommentsList() async {
+    if (!hasValidPostId.value) {
+      log('[PostDetailsController] Skipping comments: postId is empty');
+      return;
+    }
+
+    if (isGetCommentsLoading.value || postId.isEmpty) return;
+
+    isGetCommentsLoading.value = true;
+
+    try {
+      final data = await CommunityDetailService().fetchCommentsOfAPost(
+        postId: postId,
+      );
+
+      if (data != null) {
+        comments.assignAll(data.comments ?? []);
+      }
+    } catch (e) {
+      log('Error fetching comments: $e');
+    } finally {
+      isGetCommentsLoading.value = false;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Add comment / reply
+  // ---------------------------------------------------------------------------
+
+  Future<void> onTapAddComment() async {
+    if (isAddCommentLoading.value) return;
+
+    final text = commentCtrl.text.trim();
+
+    if (text.isEmpty || communityId.isEmpty || postId.isEmpty) {
+      return;
+    }
+
+    isAddCommentLoading.value = true;
+    unFocusAll();
+
+    try {
+      final isReply = replyingToCommentId.value != null;
+
+      final success = await CommunityDetailService().addComment(
+        communityItemId: communityId,
+        postItemId: postId,
+        parentCommentId: replyingToCommentId.value?.isEmpty == true
+            ? null
+            : replyingToCommentId.value,
+        content: text,
+        commentorName: currentProfileName(),
+      );
+
+      if (!success) return;
+
+      if (isReply) {
+        _addReplyLocally(text);
+      } else {
+        _addCommentLocally(text);
+
+        // Keep existing behavior:
+        // refresh from server to get the real comment ID.
+        await getCommentsList();
+      }
+
+      _increasePostCommentCount();
+
+      comments.refresh();
+
+      clearReplyState();
+    } catch (e) {
+      log('Error adding comment: $e');
+    } finally {
+      isAddCommentLoading.value = false;
+      clearAll();
+    }
+  }
+
+  void _addCommentLocally(String text) {
+    final now = DateTime.now();
+
+    comments.insert(
+      0,
+      CommentModelOfPost(
+        id: now.millisecondsSinceEpoch.toString(),
+        content: text,
+        createdAt: now,
+        creator: Creator(
+          name: currentProfileName(),
+          profileImage: currentUserImage(),
+        ),
+        replies: [],
+      ),
+    );
+  }
+
+  void _addReplyLocally(String text) {
+    final parentIndex = comments.indexWhere(
+      (comment) => comment.id == replyingToCommentId.value,
+    );
+
+    if (parentIndex == -1) return;
+
+    final parent = comments[parentIndex];
+
+    final replies = List<ReplyModelOfPost>.from(parent.replies ?? []);
+
+    replies.add(
+      ReplyModelOfPost(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        content: text,
+        createdAt: DateTime.now(),
+        creator: Creator(
+          id: '',
+          name: currentProfileName(),
+          profileImage: currentUserImage(),
+        ),
+      ),
+    );
+
+    comments[parentIndex] = CommentModelOfPost(
+      id: parent.id,
+      creator: parent.creator,
+      content: parent.content,
+      createdAt: parent.createdAt,
+      replies: replies,
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Comment count
+  // ---------------------------------------------------------------------------
+
+  void _increasePostCommentCount() {
+    final post = singlePost.value;
+
+    if (post != null) {
+      post.totalComment = (post.totalComment ?? 0) + 1;
+      singlePost.refresh();
+    }
+
+    _syncCommunityPostCommentCount(increase: true);
+  }
+
+  void _syncCommunityPostCommentCount({required bool increase}) {
+    if (!Get.isRegistered<CommunityDetailController>()) {
+      return;
+    }
+
+    final communityCtrl = CommunityDetailController.to;
+
+    if (communityCtrl.communityItemId != communityId) {
+      return;
+    }
+
+    final posts = communityCtrl.communityItemDetail.value.allPost;
+
+    if (posts == null) return;
+
+    final index = posts.indexWhere((post) => post.id == postId);
+
+    if (index == -1) return;
+
+    final post = posts[index];
+
+    post.totalComment = (post.totalComment ?? 0) + (increase ? 1 : -1);
+
+    if ((post.totalComment ?? 0) < 0) {
+      post.totalComment = 0;
+    }
+
+    communityCtrl.communityItemDetail.refresh();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reply state
+  // ---------------------------------------------------------------------------
+
+  void startReply(CommentModelOfPost comment) {
+    replyingToCommentId.value = comment.id;
+    replyingToUserName.value = comment.creator?.name ?? '';
+
+    commentFocus.requestFocus();
+  }
+
+  void clearReplyState() {
+    replyingToCommentId.value = null;
+    replyingToUserName.value = '';
+  }
+
+  // ---------------------------------------------------------------------------
+  // Input
+  // ---------------------------------------------------------------------------
 
   void clearAll() {
     commentCtrl.clear();
@@ -107,186 +348,32 @@ class PostDetailsController extends GetxController {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
-  // API loading state
-  var isLoading_ = false.obs;
-  bool get isLoading => isLoading_.value;
-
-  void onTapReply() {}
+  // ---------------------------------------------------------------------------
+  // Anonymous post
+  // ---------------------------------------------------------------------------
 
   void toggleAnonymous(bool value) {
     postAnonymously.value = value;
   }
 
-  var fileImage = Rxn<XFile>();
+  // ---------------------------------------------------------------------------
+  // Image
+  // ---------------------------------------------------------------------------
 
   Future<void> pickSingleImage(ImageSource source) async {
     final picker = ImagePicker();
 
-    final XFile? selectedImage = await picker.pickImage(
+    final selectedImage = await picker.pickImage(
       imageQuality: 60,
       source: source,
       preferredCameraDevice: CameraDevice.front,
     );
 
-    if (selectedImage != null) {
-      fileImage.value = selectedImage;
+    if (selectedImage == null) return;
 
-      log("file.name: ${selectedImage.name}");
-      log("file.path: ${selectedImage.path}");
-    }
-  }
+    fileImage.value = selectedImage;
 
-  /// Fetch the latest  data from API
-  final isGetCommentsLoading = false.obs;
-  final comments = <CommentModelOfPost>[].obs;
-
-  ///
-  Future<void> getCommentsList() async {
-    if (isGetCommentsLoading.value) return; // Prevent duplicate calls
-    isGetCommentsLoading.value = true;
-
-    try {
-      final data = await CommunityDetailService().fetchCommentsOfAPost(
-        postId: postDetailArg.value?.postItem.id ?? '',
-      );
-
-      if (data != null) {
-        comments.value = data.comments ?? [];
-      }
-    } catch (e) {
-      log("Error fetching comments: $e");
-    } finally {
-      isGetCommentsLoading.value = false;
-    }
-  }
-
-  UIState get commentState =>
-      getUIStateList(isLoading: isGetCommentsLoading.value, list: comments);
-
-  final replyingToCommentId = RxnString();
-  final replyingToUserName = ''.obs;
-
-  //
-  final isAddCommentLoading = false.obs;
-
-  Future<void> onTapAddComment() async {
-    if (isAddCommentLoading.value) return;
-
-    final text = commentCtrl.text.trim();
-    if (text.isEmpty) return;
-
-    isAddCommentLoading.value = true;
-    unFocusAll();
-
-    try {
-      final isReply = replyingToCommentId.value != null;
-
-      final success = await CommunityDetailService().addComment(
-        communityItemId: postDetailArg.value?.communityData.id ?? '',
-        postItemId: postDetailArg.value?.postItem.id ?? '',
-        parentCommentId: (replyingToCommentId.value ?? '').isEmpty
-            ? null
-            : replyingToCommentId.value,
-        content: text,
-        commentorName: currentProfileName(),
-      );
-
-      if (success == true) {
-        final now = DateTime.now();
-
-        if (isReply) {
-          // ✅ ADD CHILD COMMENT
-          final parentIndex = comments.indexWhere(
-            (e) => e.id == replyingToCommentId.value,
-          );
-
-          if (parentIndex != -1) {
-            final parent = comments[parentIndex];
-
-            final updatedReplies = List<ReplyModelOfPost>.from(
-              parent.replies ?? [],
-            );
-
-            updatedReplies.add(
-              ReplyModelOfPost(
-                id: now.millisecondsSinceEpoch.toString(), // temp id
-                content: text,
-                createdAt: now,
-                creator: Creator(
-                  name: currentProfileName(),
-                  profileImage: currentUserImage(), // if available
-                ),
-              ),
-            );
-
-            comments[parentIndex] = CommentModelOfPost(
-              id: parent.id,
-              creator: parent.creator,
-              content: parent.content,
-              createdAt: parent.createdAt,
-              replies: updatedReplies,
-            );
-
-            updateParentCommentCount(increase: true);
-          }
-        } else {
-          // ✅ ADD PARENT COMMENT
-          comments.insert(
-            0,
-            CommentModelOfPost(
-              id: now.millisecondsSinceEpoch.toString(),
-              content: text,
-              createdAt: now,
-              creator: Creator(
-                name: currentProfileName(),
-                profileImage: currentUserImage(),
-              ),
-              replies: [],
-            ),
-          );
-
-          updateParentCommentCount(increase: true);
-
-          // ✅ Refresh from server to get real IDs
-          await getCommentsList();
-        }
-
-        // 🔥 IMPORTANT: force UI update
-        comments.refresh();
-
-        // reset reply state
-        replyingToCommentId.value = null;
-        replyingToUserName.value = '';
-      }
-    } catch (e) {
-      log("Error adding comment: $e");
-    } finally {
-      isAddCommentLoading.value = false;
-      clearAll();
-    }
-  }
-
-  void updateParentCommentCount({required bool increase}) {
-    final communityCtrl = CommunityDetailController.to;
-
-    final postId = postDetailArg.value?.postItem.id;
-
-    if (postId == null) return;
-
-    final index = communityCtrl.communityItemDetail.value.allPost?.indexWhere(
-      (e) => e.id == postId,
-    );
-
-    if (index == null || index == -1) return;
-
-    final post = communityCtrl.communityItemDetail.value.allPost![index];
-
-    post.totalComment = (post.totalComment ?? 0) + (increase ? 1 : -1);
-
-    if ((post.totalComment ?? 0) < 0) {
-      post.totalComment = 0;
-    }
-
-    communityCtrl.communityItemDetail.refresh();
+    log('file.name: ${selectedImage.name}');
+    log('file.path: ${selectedImage.path}');
   }
 }

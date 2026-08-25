@@ -26,8 +26,9 @@ import '../../features/main_tabs/community/detail/controller/community_detail_co
 import '../../features/main_tabs/community/feed/controller/community_controller.dart';
 import '../../features/main_tabs/community/manage/controller/manage_community_controller.dart';
 import '../../features/main_tabs/community/members/controller/member_management_controller.dart';
+import '../../features/main_tabs/community/post/controller/create_post_controller.dart';
+import '../../features/main_tabs/community/post/controller/post_action_controller.dart';
 import '../../features/main_tabs/community/post/controller/post_details_controller.dart';
-import '../../features/main_tabs/community/post/controller/post_in_community_controller.dart';
 import '../../features/main_tabs/community/search/controller/community_search_controller.dart';
 import '../../features/main_tabs/experts/controller/experts_controller.dart';
 import '../../features/main_tabs/experts/controller/past_sessions_controller.dart';
@@ -327,6 +328,7 @@ class CommunityDetailBinding extends Bindings {
     }
 
     Get.put(CommunityDetailController(btnState, communityItemId));
+    Get.put(PostActionController());
   }
 }
 
@@ -339,53 +341,67 @@ class PostInCommunityBinding extends Bindings {
 
     final communityItemId = args;
 
-    if (Get.isRegistered<PostInCommunityController>()) {
-      Get.delete<PostInCommunityController>(force: true);
+    if (Get.isRegistered<CreatePostController>()) {
+      Get.delete<CreatePostController>(force: true);
     }
 
-    Get.put(PostInCommunityController(communityItemId));
+    Get.put(CreatePostController(communityItemId));
   }
 }
 
 class PostDetailsBinding extends Bindings {
   @override
   void dependencies() {
-    // ✅ Get.put instead of Get.lazyPut — instantiates immediately
-    // while arguments are still available in binding context
-
     final args = Get.arguments;
 
     if (args is PostDetailArgModel) {
-      final communityId = args.communityData.id;
+      final communityId = args.communityId;
+      final postId = args.postId;
 
-      if (communityId != null && communityId.isNotEmpty) {
+      log(
+        '[PostDetailsBinding] communityId: $communityId, '
+        'postId: $postId',
+      );
+
+      if (communityId.isNotEmpty) {
         if (!Get.isRegistered<CommunityDetailController>()) {
-          // Direct deep-link (notification) — no CommunityDetailScreen visited yet.
           log(
-            '[PostDetailsBinding] putting fresh CommunityDetailController for $communityId',
+            '[PostDetailsBinding] Creating CommunityDetailController '
+            'for $communityId',
           );
+
           Get.put(
             CommunityDetailController(MyCommunityBtnState.join, communityId),
           );
         } else {
-          // Already registered — but is it for the SAME community?
           final existing = Get.find<CommunityDetailController>();
+
           if (existing.communityItemId != communityId) {
             log(
-              '[PostDetailsBinding] stale controller for ${existing.communityItemId}, replacing with $communityId',
+              '[PostDetailsBinding] Replacing stale CommunityDetailController '
+              'for ${existing.communityItemId} with $communityId',
             );
+
             Get.delete<CommunityDetailController>(force: true);
+
             Get.put(
               CommunityDetailController(MyCommunityBtnState.join, communityId),
             );
           }
-          // else: same community, already loaded via CommunityDetailsScreen — reuse as-is.
         }
       } else {
-        log(
-          '⚠️ [PostDetailsBinding] missing communityId in PostDetailArgModel — cannot init CommunityDetailController',
-        );
+        log('⚠️ [PostDetailsBinding] Missing communityId');
       }
+
+      if (postId.isEmpty) {
+        log('⚠️ [PostDetailsBinding] Missing postId');
+      }
+    } else {
+      log('⚠️ [PostDetailsBinding] Invalid or missing PostDetailArgModel');
+    }
+
+    if (!Get.isRegistered<PostActionController>()) {
+      Get.put(PostActionController());
     }
 
     if (Get.isRegistered<PostDetailsController>()) {

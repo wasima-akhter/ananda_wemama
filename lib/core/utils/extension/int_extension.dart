@@ -126,7 +126,7 @@ extension PaddingExtensions on Widget {
 
   /// Common reusable padding
   Widget get getcp => Padding(
-    padding: EdgeInsets.only(top: 10.h, left: 25.w, right: 25.w, bottom: 10.h),
+    padding: EdgeInsets.only(top: 10.h, left: 20.w, right: 20.w, bottom: 10.h),
     child: this,
   );
 }
@@ -175,7 +175,7 @@ extension MarginExtensions on Widget {
   );
 
   Widget get getcm => Container(
-    margin: EdgeInsets.only(top: 0, left: 20.w, right: 20.w, bottom: 0),
+    margin: EdgeInsets.only(top: 0, left: 16.w, right: 16.w, bottom: 0),
     child: this,
   );
 

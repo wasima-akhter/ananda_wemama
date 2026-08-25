@@ -1,6 +1,9 @@
+import 'package:we_mama/gen/assets.gen.dart';
+
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../core/components/ui/loaders/empty_widget.dart';
 import '../../core/models/community_item_detail_model.dart';
+import '../../core/models/single_post_data.dart';
 import '../../detail/controller/community_detail_controller.dart';
 import '../controller/post_details_controller.dart';
 import 'post_item_widget.dart';
@@ -12,22 +15,31 @@ class PostDetailsPostSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final pcc = PostDetailsController.to;
     final cc = CommunityDetailController.to;
+    if (!pcc.hasValidPostId.value) {
+      return const SizedBox.shrink();
+    }
+
     return Obx(() {
-      if (pcc.isResolvingPost.value) {
-        return const LoadingPrimary();
+      // Show post skeleton while fetching single post
+      if (pcc.isGetSinglePostLoading.value) {
+        return const PostItemShimmer();
       }
 
-      if (pcc.resolveFailed.value) {
+      final postItem = pcc.singlePost.value;
+
+      if (postItem == null) {
         return EmptyNoSearchWidgetScrollable(
           title: "This post couldn't be found",
           subTitle: "It may have been deleted or removed.",
+
+          assetPath: Assets.images.noCommentIcon.path,
         );
       }
 
-      final communityData =
-          pcc.postDetailArg.value?.communityData ?? Community();
-
-      final postItem = pcc.postDetailArg.value?.postItem ?? AllPost();
+      final communityData = Community(
+        id: postItem.community?.id ?? pcc.postDetailArg.value?.communityId,
+        name: postItem.community?.name,
+      );
 
       return Container(
         decoration: BoxDecoration(
@@ -44,14 +56,38 @@ class PostDetailsPostSection extends StatelessWidget {
         ),
         child: PostItemWidget(
           communityData: communityData,
-          postItem: postItem,
+          postItem: postItem.toAllPost(),
           btnState: cc.btnState.value,
-          postId: postItem.id.toString(),
+          postId: postItem.id ?? '',
           userName: postItem.creator?.name ?? '',
-          postCreatorId: communityData.id ?? '',
+          postCreatorId: postItem.creator?.id ?? '',
           showActions: false,
         ),
       );
     });
+  }
+}
+
+extension SinglePostModelMapper on SinglePostModel {
+  AllPost toAllPost() {
+    return AllPost(
+      id: id,
+      content: content,
+      totalLike: totalLike,
+      totalComment: totalComment,
+      isAnonymous: isAnonymous,
+      isPinned: isPinned,
+      isCommentLocked: isCommentLocked,
+      isLiked: isLiked,
+      creator: creator == null
+          ? null
+          : Creator(
+              id: creator?.id ?? '',
+              name: creator?.name,
+              profileImage: creator?.profileImage,
+              city: creator?.city,
+            ),
+      createdAt: createdAt,
+    );
   }
 }

@@ -8,6 +8,11 @@ class PostDetailsFloatingCommentInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pcc = PostDetailsController.to;
+
+    if (!pcc.hasValidPostId.value) {
+      return const SizedBox.shrink();
+    }
+
     return Obx(() {
       final replyingTo = pcc.replyingToUserName.value;
 

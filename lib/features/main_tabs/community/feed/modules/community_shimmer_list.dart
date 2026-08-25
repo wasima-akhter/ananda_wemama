@@ -11,7 +11,7 @@ class CommunityShimmerList extends StatelessWidget {
         SliverPadding(
           padding: EdgeInsets.only(bottom: itemGap * 2),
           sliver: SliverList.separated(
-            itemCount: 10,
+            itemCount: 5,
             itemBuilder: (_, _) => CommunityItemShimmer(),
             separatorBuilder: (_, _) => Gap(itemGap * 0.6),
           ),
