@@ -48,7 +48,7 @@ class PastSessionsScreen extends StatelessWidget {
                           ((crossAxisCount - 1) * itemGap)) /
                       crossAxisCount;
 
-                  final desiredHeight = 190.0.h;
+                  final desiredHeight = 210.0.h;
                   final childAspectRatio = itemWidth / desiredHeight;
 
                   return GridView.builder(

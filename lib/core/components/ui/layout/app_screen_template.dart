@@ -98,7 +98,7 @@ class AppScreenTemplate extends StatelessWidget {
                       ],
                       if (floatingActionButton != null) Gap(height),
                     ],
-                  );
+                  ).mT(10);
                 },
               );
             }

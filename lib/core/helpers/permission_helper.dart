@@ -8,11 +8,7 @@ import '../components/ui/dialogs/popups.dart';
 import '../components/ui/dialogs/small_popup_dialog.dart';
 
 Future<bool> requestPermissions() async {
-  final permissions = <Permission>[
-    Permission.camera,
-    Permission.microphone,
-    Permission.bluetoothConnect,
-  ];
+  final permissions = <Permission>[Permission.camera, Permission.microphone];
 
   if (Platform.isAndroid) {
     final sdk = (await DeviceInfoPlugin().androidInfo).version.sdkInt;
@@ -30,7 +26,13 @@ Future<bool> requestPermissions() async {
   }
 
   final result = await permissions.request();
-  final allGranted = result.values.every((s) => s.isGranted);
+
+  for (final entry in result.entries) {
+    debugPrint('PERMISSION: ${entry.key} => ${entry.value}');
+  }
+  final allGranted = result.entries.every(
+    (entry) => isPermissionAccepted(entry.key, entry.value),
+  );
 
   if (!allGranted) {
     await showAnimatedDialog(
@@ -41,6 +43,19 @@ Future<bool> requestPermissions() async {
   }
 
   return allGranted;
+}
+
+bool isPermissionAccepted(Permission permission, PermissionStatus status) {
+  if (status.isGranted) {
+    return true;
+  }
+
+  // Limited access is relevant for Photos.
+  if (permission == Permission.photos && status.isLimited) {
+    return true;
+  }
+
+  return false;
 }
 
 class PermissionDeniedPopup extends StatelessWidget {
@@ -66,7 +81,9 @@ class PermissionDeniedPopup extends StatelessWidget {
           Gap(4),
 
           Text(
-            "Please allow camera, microphone and storage permissions.",
+            Platform.isIOS
+                ? "Please enable microphone access from Settings > Privacy & Security > Microphone."
+                : "Please allow microphone permission from Settings.",
             textAlign: TextAlign.center,
             style: TxtStyle.inter(fs: 12, color: c.primary),
           ),

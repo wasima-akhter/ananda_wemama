@@ -18,7 +18,7 @@ import 'image/image_compressor.dart';
 
 Image get mamaLogoWithoutTxtImageSmall => Image.asset(
   Assets.images.weMamaHandsLogoWebp.path,
-  height: ScreenSize.isSmallWidth ? S.w * 0.2 : S.w * 0.11,
+  // height: ScreenSize.isSmallWidth ? S.w * 0.2 : S.w * 0.22,
 );
 
 ImageErrorBuilder defaultErrorBuilder({double? height, double? width}) =>

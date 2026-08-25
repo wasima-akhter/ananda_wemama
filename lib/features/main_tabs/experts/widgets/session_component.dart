@@ -63,7 +63,7 @@ class SessionComponent extends StatelessWidget {
 
                       Text(
                         session.title.capEachWord(),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TxtStyle.outfitSemiB(
                           fs: 14,

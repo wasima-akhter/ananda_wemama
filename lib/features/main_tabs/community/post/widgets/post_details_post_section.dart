@@ -29,15 +29,29 @@ class PostDetailsPostSection extends StatelessWidget {
 
       final postItem = pcc.postDetailArg.value?.postItem ?? AllPost();
 
-      return PostItemWidget(
-        communityData: communityData,
-        postItem: postItem,
-        btnState: cc.btnState.value,
-        postId: postItem.id.toString(),
-        userName: postItem.creator?.name ?? '',
-        postCreatorId: communityData.id ?? '',
-        showActions: false,
-      ).mB(itemGap);
+      return Container(
+        decoration: BoxDecoration(
+          color: c.scaffoldBackground,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              spreadRadius: 1,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: PostItemWidget(
+          communityData: communityData,
+          postItem: postItem,
+          btnState: cc.btnState.value,
+          postId: postItem.id.toString(),
+          userName: postItem.creator?.name ?? '',
+          postCreatorId: communityData.id ?? '',
+          showActions: false,
+        ),
+      );
     });
   }
 }

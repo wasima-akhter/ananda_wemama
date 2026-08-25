@@ -979,11 +979,11 @@ class Responsive {
 
   /// Ongoing / Live Session Card
   static double get ongoingSessionCardHeight {
-    if (isSmallMobile) return 180.h;
+    if (isSmallMobile) return 190.h;
 
-    if (isTallHeight) return 190.h;
+    if (isTallHeight) return 200.h;
 
-    return 200.h;
+    return 210.h;
   }
 
   /// -------- COMMON SPACING --------

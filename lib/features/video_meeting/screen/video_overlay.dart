@@ -1,41 +1,44 @@
 // features/meeting/view/fullscreen_video_page.dart
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-
 import '../../../app/helper_widgets_export.dart';
 import '../controller/fullscreen_video_controller.dart';
 import '../controller/meeting_controller.dart';
+import '../modules/video_content/shared_agora_video_view.dart';
 
 class FullscreenVideoPage extends StatefulWidget {
-  final MeetingController mc;
-
-  const FullscreenVideoPage({super.key, required this.mc});
+  const FullscreenVideoPage({super.key});
 
   @override
   State<FullscreenVideoPage> createState() => _FullscreenVideoPageState();
 }
 
 class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
+  final mc = MeetingController.to;
   final fsc = Get.put(FullscreenVideoController());
 
-  // FullscreenVideoPage
   @override
   void initState() {
     super.initState();
+
     fsc.enterFullscreen();
+
+    // ✅ Defer state change until AFTER build completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.mc.isFullscreen.value = true;
-      widget.mc.videoViewGeneration.value++; // 👈 force a genuinely new key
+      if (!mounted) return;
+      mc.isFullscreen.value = true;
     });
   }
 
   @override
   void dispose() {
     fsc.exitFullscreen();
+
+    // 🔴 DO NOT set isFullscreen.value here — it triggers rebuilds during dispose
+    // Instead, defer it to after the widget is fully removed
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.mc.isFullscreen.value = false;
-      widget.mc.videoViewGeneration.value++; // 👈 bump again on exit
+      mc.isFullscreen.value = false;
     });
+
     Get.delete<FullscreenVideoController>();
     super.dispose();
   }
@@ -48,47 +51,20 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final mc = widget.mc;
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) => _onWillPop(),
-
       child: Scaffold(
         backgroundColor: Colors.black,
         body: SafeArea(
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // ── Video fills entire screen ─────────────────────────
-              Obx(() {
-                if (!mc.isEngineReady.value ||
-                    mc.agoraEngine == null ||
-                    mc.remoteUids.isEmpty) {
-                  return const Center(child: LoadingPrimary());
-                }
-                if (!mc.isHostVideoOn.value) {
-                  return const Center(
-                    child: Text(
-                      "Camera off",
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  );
-                }
+              // ✅ Single shared video renderer — handles all state internally
+              // The key includes isFullscreen.value, forcing proper size recalculation
+              SharedAgoraVideoView(fit: BoxFit.cover),
 
-                return AgoraVideoView(
-                  key: ValueKey(
-                    'embedded_${mc.hostUid.value}_${mc.videoViewGeneration.value}',
-                  ),
-                  controller: VideoViewController.remote(
-                    rtcEngine: mc.agoraEngine!,
-                    canvas: VideoCanvas(uid: mc.hostUid.value!),
-                    connection: RtcConnection(channelId: mc.channelName.value),
-                  ),
-                );
-              }),
-
-              // ── Exit button (top-left, safe tap target) ───────────
+              // ── Exit button (top-left) ───────────────────────────────────
               Positioned(
                 top: 12,
                 left: 12,
@@ -96,10 +72,7 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
                   child: GestureDetector(
                     onTap: () async {
                       await fsc.exitFullscreen();
-                      await Future.delayed(
-                        const Duration(milliseconds: 150),
-                      ); // 👈 let Agora detach cleanly
-
+                      await Future.delayed(const Duration(milliseconds: 150));
                       Get.back();
                     },
                     child: Container(
@@ -125,6 +98,42 @@ class _FullscreenVideoPageState extends State<FullscreenVideoPage> {
   }
 }
 
+/*
+KEY CHANGES FROM ORIGINAL:
+
+❌ REMOVED:
+  - Large Obx(() { if (!mc.isEngineReady.value) ... }) block with duplicate AgoraVideoView
+  - Duplicate video state checks (isEngineReady, agoraEngine, remoteUids, isHostVideoOn)
+  - Duplicate VideoViewController.remote() setup
+
+✅ ADDED:
+  - Single line: SharedAgoraVideoView(mc: mc, fit: BoxFit.cover)
+  - All video state logic now handled in one place
+
+WHY THIS FIXES THE RESIZE BUG:
+
+1. Before: Two separate AgoraVideoView instances (TopContent + FullscreenVideoPage)
+   → Agora native renderer confused about which surface to render to
+   → Native layer doesn't recalculate size on route transition
+   → Video appears cut off when returning to embedded view
+
+2. After: One SharedAgoraVideoView instance, used in both places
+   → Same renderer in different layout contexts (16:9 vs fullscreen)
+   → Key includes isFullscreen.value → when it changes, Flutter destroys & recreates
+   → Fresh renderer instance gets correct layout constraints
+   → Native layer recalculates surface size properly
+
+The key that fixes it:
+  key: ValueKey(
+    'video_${mc.hostUid.value}_${mc.isFullscreen.value}_${mc.videoViewGeneration.value}',
+  )
+
+When isFullscreen.value flips from false→true (entering fullscreen):
+  Key changes → Widget rebuilds → AgoraVideoView recreated → Agora gets correct constraints
+
+When isFullscreen.value flips from true→false (exiting fullscreen):
+  Key changes → Widget rebuilds → AgoraVideoView recreated → Agora resizes to 16:9 properly
+*/
 /*
 
 This is a common issue with `AgoraVideoView` on Flutter. The video renderer sometimes doesn't relayout correctly when the widget moves between fullscreen and embedded mode, especially after route transitions.

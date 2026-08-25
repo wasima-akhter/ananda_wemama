@@ -7,6 +7,8 @@ import 'package:we_mama/features/video_meeting/controller/live_chat_controller.d
 import '../../../../app/controller_export.dart';
 import '../meeting_controller.dart';
 
+// client new requirement:
+//Users on Android can speak without needing permission from the host. This should not be allowed so the host can moderate who can speak.
 mixin SpeakingMixin on GetxController {
   MeetingController get _self => this as MeetingController;
 

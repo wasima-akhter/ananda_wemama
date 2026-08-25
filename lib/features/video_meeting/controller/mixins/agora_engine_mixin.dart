@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:we_mama/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:we_mama/core/helpers/permission_helper.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../app/controller_export.dart';
 import '../../../../core/components/ui/dialogs/popups.dart';
@@ -258,6 +258,20 @@ mixin AgoraEngineMixin on GetxController {
           onUserJoined: (connection, uid, elapsed) async {
             try {
               log('🎥 Host joined: uid=$uid');
+
+              if (hostUid.value == null) {
+                hostUid.value = uid;
+
+                await _self.agoraEngine?.setupRemoteVideo(
+                  VideoCanvas(
+                    uid: uid,
+                    renderMode: RenderModeType.renderModeFit,
+                    setupMode:
+                        VideoViewSetupMode.videoViewSetupReplace, // ✅ FIXED
+                  ),
+                );
+                log('✅ Remote video renderer set up for uid=$uid');
+              }
 
               // Cancel any pending grace timer (host reconnected in time)
               if (_hostOfflineGraceTimer != null) {

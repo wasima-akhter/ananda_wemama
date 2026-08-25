@@ -43,10 +43,15 @@ class PostDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          Gap(10.h),
           PostDetailsPostSection(),
+          Gap(itemGap),
 
-          // Gap(itemGap * 3),
-          CustomDivider(isFullWidth: true, clr: c.primary, h: 0.5),
+          CustomDivider(
+            isFullWidth: true,
+            clr: c.inputBorder.withValues(alpha: 0.8),
+            h: 0.5,
+          ),
           Gap(itemGap),
 
           Flexible(child: PostDetailsCommentsSection()),
@@ -204,6 +209,7 @@ class CommentItemInPostDetail extends StatelessWidget {
               // Row 1: Name + Time
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CusGestureDetector(
                     onTap: () {

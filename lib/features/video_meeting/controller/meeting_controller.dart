@@ -20,6 +20,28 @@ class MeetingController extends GetxController
   final MeetingCtrlAgModel agrModel;
   MeetingController(this.agrModel);
 
+  static MeetingController get to => Get.find();
+
+  final isFullscreen = false.obs;
+
+  void enterFullscreen() {
+    if (isFullscreen.value) return;
+
+    isFullscreen.value = true;
+  }
+
+  void exitFullscreen() {
+    if (!isFullscreen.value) return;
+
+    isFullscreen.value = false;
+  }
+
+  void toggleFullscreen() {
+    isFullscreen.value = !isFullscreen.value;
+  }
+
+  /////////
+
   /// 🔹 Chat input
   final inputMsgCtrl = TextEditingController();
   final inputMsgFocus = FocusNode();
@@ -50,7 +72,6 @@ class MeetingController extends GetxController
 
   RxBool isJoined = false.obs;
 
-  RxBool isFullscreen = false.obs;
   //
   RxInt videoViewGeneration = 0.obs;
   final embeddedVideoAreaKey =

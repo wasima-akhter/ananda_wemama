@@ -1,4 +1,3 @@
-
 import 'package:agora_rtm/agora_rtm.dart';
 
 import '../../../app/controller_export.dart';
@@ -18,6 +17,7 @@ class LiveChatController extends GetxController
         RtmReactionMixin,
         RtmRaiseHandMixin,
         RtmHostControlsMixin {
+  static LiveChatController get to => Get.find();
   RtmClient? rtmClient;
 
   late MeetingController mc;
@@ -39,7 +39,7 @@ class LiveChatController extends GetxController
 
   @override
   void onInit() {
-    mc = Get.find<MeetingController>();
+    mc = MeetingController.to;
 
     // Wait until MeetingController finishes fetching tokens + joining RTC
     ever(mc.isEngineReady, (ready) {
