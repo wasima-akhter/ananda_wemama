@@ -8,14 +8,19 @@ import '../../../../app/controller_export.dart';
 import '../meeting_controller.dart';
 
 // client new requirement:
-//Users on Android can speak without needing permission from the host. This should not be allowed so the host can moderate who can speak.
+// ✅ Host from web can mute + unmute the app user
+// ✅ App user can ONLY mute themselves, CANNOT unmute
+// ❌ Unmute is ONLY via host REMOTE_UNMUTE message
 mixin SpeakingMixin on GetxController {
   MeetingController get _self => this as MeetingController;
 
   /// ---------------- Speaking (Audience → Broadcaster) ---------------- ///
   var isSpeaking = false.obs;
 
+  /// User can only mute (stop speaking), NOT unmute
+  /// Host can unmute via REMOTE_UNMUTE in muteLocalAudio()
   Future<void> toggleSpeak(LiveChatController cc) async {
+    // ✅ Only allow user to STOP speaking (mute) if currently speaking
     if (isSpeaking.value) {
       log('🔇 [SPEAK] Stepping down from broadcaster → audience');
 
@@ -40,35 +45,15 @@ mixin SpeakingMixin on GetxController {
 
       log('🔇 [SPEAK] isSpeaking = false ✅');
     } else {
-      log('🎙️ [SPEAK] Promoting to broadcaster → host');
-
-      await _self.agoraEngine?.setClientRole(
-        role: ClientRoleType.clientRoleBroadcaster,
+      // ❌ BLOCKED: User cannot unmute themselves
+      // Host must unmute via REMOTE_UNMUTE message
+      log('❌ [SPEAK] Unmute blocked - only host can unmute');
+      Get.snackbar(
+        'Not Allowed',
+        'Only the host can unmute you',
+        snackPosition: SnackPosition.TOP,
       );
-      log('🎙️ [SPEAK] setClientRole → BROADCASTER done');
-
-      await _self.agoraEngine?.updateChannelMediaOptions(
-        const ChannelMediaOptions(
-          publishMicrophoneTrack: true,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ),
-      );
-      log('🎙️ [SPEAK] updateChannelMediaOptions → mic PUBLISHED');
-
-      // ✅ Confirm engine state
-      log('🎙️ [SPEAK] agoraEngine is null: ${_self.agoraEngine == null}');
-      log('🎙️ [SPEAK] channel: ${_self.channelName.value}');
-      log('🎙️ [SPEAK] uid: ${_self.uid.value}');
-      log(
-        '🎙️ [SPEAK] token: ${_self.rtcToken.value.substring(0, 10)}...',
-      ); // partial for safety
-
-      isSpeaking.value = true;
-
-      // ← notify web: mic is now ON
-      await _publishMuteState(isMuted: false, cc: cc);
-
-      log('🎙️ [SPEAK] isSpeaking = true ✅ — web should now hear app user');
+      return;
     }
   }
 
@@ -108,8 +93,8 @@ mixin SpeakingMixin on GetxController {
     }
   }
 
-  //
-  /// Called by LiveChatController when host sends REMOTE_MUTE targeting this user
+  /// Called by LiveChatController when host sends REMOTE_MUTE or REMOTE_UNMUTE
+  /// ✅ User CAN be unmuted by host (even if they muted themselves)
   Future<void> muteLocalAudio(
     bool mute, {
     required LiveChatController cc,
@@ -118,30 +103,37 @@ mixin SpeakingMixin on GetxController {
 
     _self.isLocalAudioMuted.value = mute;
 
-    if (isSpeaking.value) {
-      await _self.agoraEngine?.updateChannelMediaOptions(
-        ChannelMediaOptions(
-          publishMicrophoneTrack: !mute,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ),
-      );
-      if (mute) {
-        await _self.agoraEngine?.setClientRole(
-          role: ClientRoleType.clientRoleAudience,
-        );
+    if (mute) {
+      // ❌ HOST MUTING USER
+      if (isSpeaking.value) {
         await _self.agoraEngine?.updateChannelMediaOptions(
-          const ChannelMediaOptions(
+          ChannelMediaOptions(
             publishMicrophoneTrack: false,
             clientRoleType: ClientRoleType.clientRoleAudience,
           ),
         );
+        await _self.agoraEngine?.setClientRole(
+          role: ClientRoleType.clientRoleAudience,
+        );
         isSpeaking.value = false;
       }
+    } else {
+      // ✅ HOST UNMUTING USER — SET isSpeaking = true
+      await _self.agoraEngine?.setClientRole(
+        role: ClientRoleType.clientRoleBroadcaster,
+      );
+      await _self.agoraEngine?.updateChannelMediaOptions(
+        const ChannelMediaOptions(
+          publishMicrophoneTrack: true,
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        ),
+      );
+      isSpeaking.value = true;
     }
 
     // ← sync mute state to web via RTM presence
     await _publishMuteState(isMuted: mute, cc: cc);
 
-    log('🔇 muteLocalAudio($mute) applied');
+    log('🔇 muteLocalAudio($mute) applied by host');
   }
 }

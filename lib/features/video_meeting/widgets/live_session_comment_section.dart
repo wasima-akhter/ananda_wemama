@@ -1,6 +1,7 @@
 import '../../../app/helper_widgets_export.dart';
 import '../../../core/components/ui/helpers/shapes/custom_divider.dart';
 import '../../../core/components/ui/loaders/empty_widget.dart';
+import '../../../gen/assets.gen.dart';
 import '../controller/live_chat_controller.dart';
 import '../modules/meet_comment_item.dart';
 
@@ -19,12 +20,16 @@ class LiveSessionCommentSection extends StatelessWidget {
             children: [
               CustomDivider(isFullWidth: true),
               Gap(itemGap),
-              EmptyNoSearchWidget(
-                title: Strings.noCommentsYet,
+
+              EmptyNoSearchWidgetScrollable(
                 isSmaller: true,
+                title: "No Comments Yet",
+                assetPath: Assets.images.noCommentIcon.path,
+                subTitle:
+                    "Be the first to share your thoughts! \nLeave a comment and join the conversation.",
               ),
             ],
-          ),
+          ).getcm,
         );
       }
 

@@ -27,7 +27,6 @@ class LiveBottomActions extends StatelessWidget {
                   // ← NO leaveMeeting() here
                   showLiveExitPopup(
                     LiveExitReason.voluntary,
-
                     onTapCancel: (cancelLeave) async {
                       if (cancelLeave) {
                         Get.back();
@@ -50,18 +49,38 @@ class LiveBottomActions extends StatelessWidget {
                 ),
               ),
             ),
+            // ✅ MUTE/SPEAK Button
+            // User can MUTE (when speaking)
+            // User CANNOT UNMUTE (when muted) — host must unmute
             Expanded(
               child: Obx(
                 () => CusGestureDetector(
-                  onTap: () => mc.toggleSpeak(cc),
+                  onTap: mc.isSpeaking.value
+                      ? () =>
+                            mc.toggleSpeak(cc) // ✅ Allow mute
+                      : () {
+                          // ❌ Block unmute — show feedback
+                          Get.snackbar(
+                            'Not Allowed',
+                            'Only the host can unmute you',
+                            snackPosition: SnackPosition.TOP,
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                            duration: const Duration(seconds: 2),
+                          );
+                        },
                   child: BottomAction(
                     color: mc.isSpeaking.value ? white : c.primary,
                     iconPath: mc.isSpeaking.value
                         ? IconsPath
                               .unmutedAudio // show "stop speaking" icon
-                        : IconsPath.mutedAudio, // show "speak" icon
+                        : IconsPath
+                              .mutedAudio, // show "muted" icon (disabled state)
                     text: mc.isSpeaking.value ? "Speaking" : "Muted",
                     backgroundColor: mc.isSpeaking.value ? c.primary : null,
+                    opacity: mc.isSpeaking.value
+                        ? 1.0
+                        : 0.5, // ← dim when muted to show it's disabled
                   ),
                 ),
               ),
@@ -86,7 +105,6 @@ class LiveBottomActions extends StatelessWidget {
                               .handRaise // put filled icon
                         : IconsPath.handRaise,
                     text: cc.isHandRaised ? "Raised Hand" : "Raise Hand",
-
                     backgroundColor: cc.isHandRaised ? c.primary : null,
                   ),
                 ),
