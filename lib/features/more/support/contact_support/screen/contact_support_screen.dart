@@ -16,7 +16,7 @@ class ContactSupportScreen extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: bgClr,
+        backgroundColor: bgClrNew,
         appBar: CommonAppBarContent(
           title: Strings.contactSupport.capEachWord(),
         ),
@@ -26,16 +26,19 @@ class ContactSupportScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Gap(20.h),
                 CusNameTypeTextFormField(
                   controller: csc.nameCtrl,
                   focusNode: csc.nameFocus,
                   hintText: Strings.enterYourName,
                   validator: (v) => validateName(v),
+                  rad: 12,
                   brdrW: 0.6,
                 ),
                 Gap(itemGap * 2),
 
                 CusNameTypeTextFormField(
+                  rad: 12,
                   controller: csc.emailCtrl,
                   focusNode: csc.emailFocus,
                   hintText: Strings.enterEmailAddress,
@@ -59,7 +62,7 @@ class ContactSupportScreen extends StatelessWidget {
                   return CustomBtnWTxt(
                     onTap: () => csc.onTapSubmit(formKey: formKey),
                     btnTxt: Strings.submit,
-                    rad: 30,
+                    rad: 12,
                     isLoading: csc.isLoading,
                   );
                 }),

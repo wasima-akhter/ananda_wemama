@@ -16,7 +16,7 @@ class ChangePasswordScreen extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: bgClr,
+        backgroundColor: bgClrNew,
         appBar: CommonAppBarContent(title: Strings.changePassword),
         body: Center(
           child: Column(
@@ -101,7 +101,7 @@ class ChangePasswordScreen extends StatelessWidget {
               Obx(
                 () => CustomBtnWTxt(
                   isSmall: true,
-
+                  rad: 12,
                   isLoading: cpc.isLoading,
                   onTap: () async {
                     // later you’ll call API here
@@ -111,7 +111,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 ),
               ),
             ],
-          ).getcm,
+          ).getcm.mT(20),
         ),
       ),
     );

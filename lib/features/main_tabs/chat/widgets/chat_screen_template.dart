@@ -19,8 +19,9 @@ class ChatScreenTemplate extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: backgroundColor ?? bgClr,
-        resizeToAvoidBottomInset: true, // 👈 scaffold shrinks body when keyboard opens
+        backgroundColor: backgroundColor ?? bgClrNew,
+        resizeToAvoidBottomInset:
+            true, // 👈 scaffold shrinks body when keyboard opens
         appBar: appBar,
         body: Column(
           children: [

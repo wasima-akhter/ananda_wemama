@@ -140,10 +140,10 @@ class _OpenMoodLibrary extends StatelessWidget {
             children: [
               Text(
                 Strings.openMoodLibrary,
-                style: TxtStyle.outfitSemiB(fs: 11, w: 500, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: c.primary),
               ),
               Gap(itemGap),
-              const Icon(Icons.arrow_forward_ios, size: 14),
+              Icon(Icons.arrow_forward_ios, size: 13.h),
             ],
           ),
         ),
@@ -197,7 +197,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   TextSpan(
                     text: streakText,
                     style: TxtStyle.outfitSemiB(
-                      fs: 11,
+                      fs: 12,
                       w: 600,
                       color: c.strokePrimary,
                     ),
@@ -206,7 +206,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   if (messageText.isNotEmpty)
                     TextSpan(
                       text: messageText,
-                      style: TxtStyle.outfit(fs: 11, color: c.secondary),
+                      style: TxtStyle.outfit(fs: 12, color: c.secondary),
                     ),
                 ],
               ),

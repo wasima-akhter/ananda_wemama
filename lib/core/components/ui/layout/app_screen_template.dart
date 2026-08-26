@@ -108,7 +108,7 @@ class AppScreenTemplate extends StatelessWidget {
               slivers: [
                 SliverPadding(
                   padding: padding ?? EdgeInsets.zero,
-                  sliver: SliverToBoxAdapter(child: child),
+                  sliver: SliverToBoxAdapter(child: child.mT(10)),
                 ),
                 if (bottomWidget != null)
                   SliverFillRemaining(
