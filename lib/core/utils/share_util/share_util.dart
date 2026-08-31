@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:we_mama/core/helpers/date_helper.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:we_mama/core/helpers/date_helper.dart';
 
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
 
@@ -31,13 +31,13 @@ class ShareService {
           ? session.description
           : 'Join us for an engaging live session with expert insights and discussion.';
 
-      final dateFormatted = session.date != null
-          ? DateHelper().formatUTCtimestamp(session.date.toString()).date
-          : 'TBA';
+      final dateFormatted = session.dateTime != null
+          ? DateHelper().formatUTCtimestamp(session.dateTime.toString()).date
+          : '--';
 
-      final timeFormatted = session.time.isNotEmpty
-          ? DateHelper().formatUTCtimestamp(session.time).time
-          : 'TBA';
+      final timeFormatted = session.dateTime != null
+          ? DateHelper().formatUTCtimestamp(session.dateTime.toString()).time
+          : '--';
 
       debugPrint('Title: $title');
       debugPrint('Host: $hostName');

@@ -406,22 +406,47 @@ mixin AgoraEngineMixin on GetxController {
             }
           },
 
+          // onRemoteVideoStateChanged:
+          //     (connection, remoteUid, state, reason, elapsed) {
+          //       if (remoteUid != hostUid.value) return;
+          //       try {
+          //         log('🎥 Video state: uid=$remoteUid, state=$state');
+          //         if (state == RemoteVideoState.remoteVideoStateStopped) {
+          //           _self.isHostVideoOn.value = false;
+          //         } else if (state ==
+          //             RemoteVideoState.remoteVideoStateDecoding) {
+          //           _self.isHostVideoOn.value = true;
+          //         }
+          //       } catch (e) {
+          //         log('❌ onRemoteVideoStateChanged error: $e');
+          //       }
+          //     },
           onRemoteVideoStateChanged:
               (connection, remoteUid, state, reason, elapsed) {
                 if (remoteUid != hostUid.value) return;
-                try {
-                  log('🎥 Video state: uid=$remoteUid, state=$state');
-                  if (state == RemoteVideoState.remoteVideoStateStopped) {
-                    _self.isHostVideoOn.value = false;
-                  } else if (state ==
-                      RemoteVideoState.remoteVideoStateDecoding) {
+
+                log(
+                  '🎥 Remote video: '
+                  'uid=$remoteUid | '
+                  'state=$state | '
+                  'reason=$reason',
+                );
+
+                switch (state) {
+                  case RemoteVideoState.remoteVideoStateDecoding:
                     _self.isHostVideoOn.value = true;
-                  }
-                } catch (e) {
-                  log('❌ onRemoteVideoStateChanged error: $e');
+                    break;
+
+                  case RemoteVideoState.remoteVideoStateStopped:
+                  case RemoteVideoState.remoteVideoStateFailed:
+                  case RemoteVideoState.remoteVideoStateFrozen:
+                    _self.isHostVideoOn.value = false;
+                    break;
+
+                  default:
+                    break;
                 }
               },
-
           // onRemoteAudioStateChanged:
           //     (connection, remoteUid, state, reason, elapsed) {
           //       try {

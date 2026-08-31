@@ -45,8 +45,40 @@ class SharedAgoraVideoView extends StatelessWidget {
           ),
         );
       }
+
+      // ------------------------------------------------------------
+      // HOST HAS NOT JOINED
+      // ------------------------------------------------------------
+      if (mc.hostUid.value == null) {
+        return _buildPlaceholder(
+          child: Text(
+            "Live starting soon...",
+            style: TxtStyle.inter(fs: 14, color: Colors.white70),
+          ),
+        );
+      }
+
+      // ------------------------------------------------------------
+      // HOST JOINED BUT VIDEO IS OFF
+      // ------------------------------------------------------------
       if (!mc.isHostVideoOn.value) {
-        return _buildPlaceholder(child: Text("camera off"));
+        return _buildPlaceholder(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.videocam_off_outlined,
+                color: Colors.white54,
+                size: 40,
+              ),
+              const Gap(10),
+              Text(
+                "Camera is off",
+                style: TxtStyle.inter(fs: 15, color: Colors.white70),
+              ),
+            ],
+          ),
+        );
       }
 
       // 🔴 REMOVED: if (!mc.hasReceivedFirstHostFrame.value) check
@@ -61,26 +93,62 @@ class SharedAgoraVideoView extends StatelessWidget {
       // The video renderer will display once frames start arriving.
       // Don't wait for the onFirstRemoteVideoFrame callback on iOS.
 
-      return AgoraVideoView(
-        key: ValueKey(
-          'video_${mc.hostUid.value}_${mc.isFullscreen.value}_${mc.videoViewGeneration.value}',
-        ),
-        controller: VideoViewController.remote(
-          rtcEngine: mc.agoraEngine!,
-          canvas: VideoCanvas(
-            uid: mc.hostUid.value!,
-            renderMode: RenderModeType.renderModeFit,
+      // return AgoraVideoView(
+      //   key: ValueKey(
+      //     'video_${mc.hostUid.value}_${mc.isFullscreen.value}_${mc.videoViewGeneration.value}',
+      //   ),
+      //   controller: VideoViewController.remote(
+      //     rtcEngine: mc.agoraEngine!,
+      //     canvas: VideoCanvas(
+      //       uid: mc.hostUid.value!,
+      //       renderMode: RenderModeType.renderModeFit,
+      //     ),
+      //     connection: RtcConnection(channelId: mc.channelName.value),
+      //   ),
+      // );
+
+      return Stack(
+        fit: StackFit.expand,
+        children: [
+          // Always keep a safe black background
+          Container(
+            color: Colors.black,
+            child: Center(
+              child: Text(
+                "Live video unavailable",
+                style: TxtStyle.inter(fs: 14, color: Colors.white54),
+              ),
+            ),
           ),
-          connection: RtcConnection(channelId: mc.channelName.value),
-        ),
+
+          // Agora video layer
+          AgoraVideoView(
+            key: ValueKey(
+              'video_${mc.hostUid.value}_${mc.isFullscreen.value}_${mc.videoViewGeneration.value}',
+            ),
+            controller: VideoViewController.remote(
+              rtcEngine: mc.agoraEngine!,
+              canvas: VideoCanvas(
+                uid: mc.hostUid.value!,
+                renderMode: RenderModeType.renderModeFit,
+                sourceType: VideoSourceType.videoSourceRemote,
+                setupMode: VideoViewSetupMode.videoViewSetupAdd,
+              ),
+              connection: RtcConnection(channelId: mc.channelName.value),
+            ),
+          ),
+        ],
       );
     });
   }
 
   Widget _buildPlaceholder({required Widget child}) {
     return Container(
+      width: double.infinity,
+      height: double.infinity,
       color: Colors.black,
-      child: Center(child: child),
+      alignment: Alignment.center,
+      child: child,
     );
   }
 }
