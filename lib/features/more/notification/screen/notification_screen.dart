@@ -156,7 +156,7 @@ class _NotificationScreenState extends State<NotificationScreen>
               ],
             ),
           );
-        }).get10cm,
+        }).get10cm.mT(10),
       ),
     );
   }

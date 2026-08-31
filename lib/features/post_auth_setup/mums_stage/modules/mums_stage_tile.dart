@@ -21,7 +21,9 @@ class MumsStageTile extends GetView<MumsStageController> {
         alignment: Alignment.centerLeft,
         mv: ScreenSize.isSmallWidth ? 3 : 5,
         rad: 12,
-        contClr: isSelected ? Color(0xFF942200) : inputBgClr,
+        contClr: isSelected
+            ? Color(0xFF942200).withValues(alpha: 0.9)
+            : inputBgClr,
         hasBrdr: true,
         brdrClr: isSelected ? c.strokePrimary : newBorderClr,
         brdrW: 1,
@@ -43,7 +45,7 @@ class MumsStageTile extends GetView<MumsStageController> {
                       text: item.title,
                       style: TxtStyle.interSemiB(
                         //  fs: 14,
-                        w: isSelected ? 500 : 600,
+                        w: isSelected ? 600 : 600,
                         ls: 0.1,
                         color: isSelected
                             ? c.scaffoldBackground
