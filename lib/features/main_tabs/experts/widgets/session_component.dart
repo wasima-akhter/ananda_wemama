@@ -75,9 +75,7 @@ class SessionComponent extends StatelessWidget {
                       const Gap(6),
 
                       Text(
-                        DateHelper()
-                            .formatUTCtimestamp(session.date.toString())
-                            .date,
+                        "${DateHelper().formatUTCtimestamp(session.dateTime.toString()).date}\n${DateHelper().formatUTCtimestamp(session.dateTime.toString()).time}",
                         style: TxtStyle.outfit(fs: 11, color: c.secondary),
                       ),
                     ],
