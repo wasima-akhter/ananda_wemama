@@ -109,8 +109,11 @@ class PromoCodeController extends GetxController {
   Future<void> onTapContinuePromoScreen() async {
     final code = referralCodeCtrl.text.trim();
 
+    // User did not enter/apply any code or offer.
+    // Show the normal subscription choose-plan page.
     if (code.isEmpty) {
       currentOffer.value = OfferType.none;
+      appliedCode.value = '';
 
       if (PremiumAccessService.to.isPremiumUserNow) {
         await showAlreadyPremiumDialog();
@@ -121,6 +124,7 @@ class PromoCodeController extends GetxController {
 
       return;
     }
+
     _continueToSubPlanScreen(code);
   }
 

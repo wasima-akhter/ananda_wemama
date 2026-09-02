@@ -8,29 +8,34 @@ class EmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContainerBordered(
-      contClr: c.bottomSheetBackground.withOpacity(0.2),
-      vp: 20.h,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Gap(itemGap * 2),
-          Text(
-            title.capEachWord(),
-            style: TxtStyle.inter(w: 600, color: c.secondary),
-          ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ContainerBordered(
+          contClr: c.bottomSheetBackground.withOpacity(0.2),
+          vp: 20.h,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Gap(itemGap * 2),
+              Text(
+                title.capEachWord(),
+                style: TxtStyle.inter(w: 600, color: c.secondary),
+              ),
 
-          Gap(itemGap * 2),
+              Gap(itemGap * 2),
 
-          Image.asset(
-            ImagesPath.noSearchImg,
-            fit: BoxFit.contain,
-            height: isSmaller == true ? S.w * 0.25 : S.w * 0.36,
+              Image.asset(
+                ImagesPath.noSearchImg,
+                fit: BoxFit.contain,
+                height: isSmaller == true ? S.w * 0.25 : S.w * 0.36,
+              ),
+              Gap(itemGap * 7),
+            ],
           ),
-          Gap(itemGap * 7),
-        ],
-      ),
-    ).mT(12);
+        ).mT(12),
+      ],
+    );
   }
 }
 

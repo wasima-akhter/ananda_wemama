@@ -38,323 +38,6 @@ class NoLiveSessionCard extends StatelessWidget {
   }
 }
 
-/*
-class LiveOngoingSessionCard extends StatelessWidget {
-  const LiveOngoingSessionCard({
-    super.key,
-    this.data,
-    this.isFromOngoingScreen,
-  });
-
-  final Session? data;
-  final bool? isFromOngoingScreen;
-
-  @override
-  Widget build(BuildContext context) {
-    if (data == null) {
-      return NoLiveSessionCard();
-    }
-
-    final doctorName = (data?.expert?.name ?? "Unknown").capEachWord();
-    final specialty = (data?.expert?.profession?.title ?? "Specialist")
-        .capEachWord();
-    final sessionTitle = (data?.title ?? "Session").capEachWord();
-    final description = (data?.description ?? "").cap;
-    // final time = DateHelper()
-    //     .formatUTCtimestamp(data?.dateTime.toString())
-    //     .time;
-
-    // final date = DateHelper()
-    //     .formatUTCtimestamp(data?.dateTime.toString())
-    //     .date;
-
-    final imgUrl = data?.expert?.image ?? '';
-    final channelName = data?.channelName ?? '';
-
-    //
-
-    final hostTimeZone = data?.timezone ?? '';
-    final time = SessionTimeHelper.time(
-      dateTime: data?.dateTime?.toIso8601String(),
-      hostTimezone: hostTimeZone,
-    );
-
-    final date = SessionTimeHelper.date(
-      dateTime: data?.dateTime?.toIso8601String(),
-      hostTimezone: hostTimeZone,
-    );
-
-    debugPrint('hostTimeZone: $hostTimeZone');
-
-    final canJoinLive = _canJoinLive();
-
-    //
-
-    return SizedBox(
-      // width: S.w - 40.w,
-      child: ContainerBordered(
-        contClr: newCardClr,
-        rad: 20,
-        hp: 16,
-        vp: 16,
-        boxShadow: boxShadowBottom(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// Top Row
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    circledNetworkImageBgComponent(
-                      imagePath: imgUrl,
-                      brdrClr: c.error,
-                      radius: 22,
-                      isUser: true,
-                      name: doctorName,
-                    ),
-                    Positioned(
-                      bottom: -(10.h),
-                      left: 2,
-                      right: 2,
-                      child: ContainerBordered(
-                        alignment: Alignment.center,
-                        contClr: c.error,
-                        rad: 6,
-                        hp: 4,
-                        vp: 2,
-                        child: Text(
-                          Strings.live.toUpperCase(),
-                          style: TxtStyle.interSemiB(
-                            fs: 8,
-                            w: 600,
-                            color: white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                Gap(itemGap),
-
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        doctorName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TxtStyle.urbanistSmTitle,
-                      ),
-                      Text(
-                        specialty,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TxtStyle.outfitSemiB(
-                          fs: 12,
-                          w: 500,
-                          color: c.strokePrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      time,
-                      style: TxtStyle.outfitSemiB(
-                        fs: 11,
-                        w: 500,
-                        color: c.primary,
-                      ),
-                    ),
-                    Text(date, style: TxtStyle.outfit(fs: 11)),
-                  ],
-                ),
-              ],
-            ),
-
-            Gap(itemGap),
-
-            // /// Title
-            // Text(
-            //   sessionTitle,
-            //   style: TxtStyle.urbanistSmTitle600,
-            //   maxLines: 1,
-            //   overflow: TextOverflow.ellipsis,
-            // ),
-
-            // Text(sessionTitle.capEachWord(), style: TxtStyle.urbanistSmTitle),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  width: 4,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: c.secondary,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-
-                const SizedBox(width: 8),
-
-                Expanded(
-                  child: Text(
-                    // "ahsugdhasgdagsd asgd asdyh gasudg asudgas dguyas dgyagdaasdu yuasdg uyasg duyagsduyagsdgasd" ??
-                    sessionTitle.capEachWord(),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TxtStyle.outfitSemiB(
-                      fs: 15,
-                      w: 600,
-                      color: c.foregroundPrimary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            /// Description
-            Text(
-              description,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
-            ),
-
-            /// push the button to the bottom
-            isFromOngoingScreen == true ? Gap(itemGap) : const Spacer(),
-
-            /// Buttons (always bottom)
-            /// Buttons (always bottom)
-            Row(
-              children: [
-                Expanded(
-                  child: CusGestureDetector(
-                    onTap: () => ShareService.shareSession(data!),
-                    child: ContainerBordered(
-                      hasBrdr: true,
-                      brdrClr: c.primary,
-                      rad: 30,
-                      contClr: ctransp,
-                      vp: 0,
-                      h: actionBtnHeight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgIcon(iconPath: IconsPath.share, height: 21),
-                          Gap(itemGap),
-                          Text(
-                            Strings.share.cap,
-                            style: TxtStyle.outfitSemiB(
-                              fs: 13,
-                              w: 600,
-                              color: c.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                Gap(itemGap),
-
-                Expanded(
-                  child: CusGestureDetector(
-                    onTap: () async {
-                      if (!canJoinLive) {
-                        _showJoinUnavailableMessage(context);
-                        return;
-                      }
-                      if (channelName.isEmpty) return;
-
-                      await SessionNavigator.openMeeting(
-                        channelName: channelName,
-                        sessionTitle: sessionTitle,
-                        hostName: doctorName,
-                      );
-                    },
-                    child: ContainerBordered(
-                      contClr: !canJoinLive
-                          ? c.buttonPrimary.withValues(alpha: 0.6)
-                          : c.buttonPrimary,
-                      rad: 30,
-                      vp: 0,
-                      h: actionBtnHeight,
-                      child: Text(
-                        Strings.joinLive.capEachWord(),
-                        textAlign: TextAlign.center,
-                        style: TxtStyle.outfitSemiB(
-                          fs: 13,
-                          w: 600,
-                          color: c.textOnPrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  bool _canJoinLive() {
-    final dateTime = data?.dateTime;
-    final hostTimeZone = data?.timezone;
-
-    if (dateTime == null) {
-      debugPrint('🔴 [JOIN CHECK] Session dateTime is NULL');
-      return false;
-    }
-
-    if (hostTimeZone == null || hostTimeZone.isEmpty) {
-      debugPrint('🔴 [JOIN CHECK] Host timezone is NULL/EMPTY');
-      return false;
-    }
-
-    // Both are absolute instants, so compare in UTC.
-    final sessionUtc = dateTime.toUtc();
-    final joinTimeUtc = sessionUtc;
-    final nowUtc = DateTime.now().toUtc();
-
-    final canJoin = !nowUtc.isBefore(joinTimeUtc);
-
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    debugPrint('🕐 [JOIN CHECK]');
-    debugPrint('📅 Session UTC       : $sessionUtc');
-    debugPrint('🔓 Join allowed UTC  : $joinTimeUtc');
-    debugPrint('📱 Current UTC       : $nowUtc');
-    debugPrint('🌍 Host timezone     : $hostTimeZone');
-    debugPrint('⏱️ Until session     : ${sessionUtc.difference(nowUtc)}');
-    debugPrint('⏳ Can join?         : $canJoin');
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-
-    return canJoin;
-  }
-
-  void _showJoinUnavailableMessage(BuildContext context) {
-    Snack.showWarning(
-      title: "Can't Join Now",
-      "You can join this live session at the scheduled start time. "
-      "The host may join earlier to prepare the session.",
-    );
-  }
-}
-*/
-
 class LiveOngoingSessionCard extends StatefulWidget {
   const LiveOngoingSessionCard({
     super.key,
@@ -630,24 +313,34 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                 Gap(itemGap),
 
                 /// Join Live
+                /// Join Live
                 Expanded(
                   child: CusGestureDetector(
                     onTap: () async {
-                      if (!canJoinLive) {
-                        _showJoinUnavailableMessage(context);
-                        return;
-                      }
-
                       if (channelName.isEmpty) {
                         debugPrint('🔴 [JOIN LIVE] Channel name is empty');
                         return;
                       }
 
-                      await SessionNavigator.openMeeting(
-                        channelName: channelName,
-                        sessionTitle: sessionTitle,
-                        hostName: doctorName,
+                      // ✅ Show loading while checking
+                      Get.dialog(
+                        const Center(child: LoadingPrimary()),
+                        barrierDismissible: false,
                       );
+
+                      try {
+                        await SessionNavigator.openMeeting(
+                          channelName: channelName,
+                          sessionTitle: sessionTitle,
+                          hostName: doctorName,
+                        );
+                      } catch (e) {
+                        // ✅ Make sure dialog is closed on error
+                        if (Get.isDialogOpen ?? false) {
+                          Get.back();
+                        }
+                        debugPrint('🔴 Error joining: $e');
+                      }
                     },
                     child: ContainerBordered(
                       contClr: canJoinLive
@@ -668,6 +361,7 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                     ),
                   ),
                 ),
+                // End of Join Live button
               ],
             ),
           ],

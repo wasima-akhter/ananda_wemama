@@ -8,19 +8,8 @@ class PremiumAccessService extends GetxService {
 
   final PurchaseService _purchaseService = PurchaseService.to;
 
-  // Fake-premium is a QA/dev aid only. It is intentionally scoped to
-  // Android — debug AND release — so testers can flip between free/premium
-  // UX without a real subscription. iOS NEVER gets this override, in any
-  // build type: premium status there must always come from the real store
-  // entitlement so it can't silently drift from what the App Store says.
+  static final bool _kFakePremiumEnabled = GetPlatform.isAndroid;
 
-  static final bool _kFakePremiumEnabled =
-      GetPlatform.isAndroid; // static final bool _kFakePremiumEnabled = false;
-
-  //<--- to enable the real one for android. ios is already real enabled
-
-  // Defaults to "use real access" — NOT forced-premium. Devs must
-  // explicitly opt into the fake state via debugSetFakePremium().
   final RxBool _fakePremiumOverride = false.obs;
 
   bool get isFakePremiumActive =>
@@ -34,8 +23,7 @@ class PremiumAccessService extends GetxService {
   }
 
   final RxBool isReady = false.obs;
-  final RxBool isPremiumUser =
-      false.obs; // <- the single reactive source UI binds to
+  final RxBool isPremiumUser = false.obs;
 
   Worker? _readyWorker;
   Worker? _entitlementWorker;
@@ -45,29 +33,115 @@ class PremiumAccessService extends GetxService {
   void onInit() {
     super.onInit();
 
-    if (_purchaseService.customerInfo.value != null) isReady.value = true;
-    _recompute();
+    debugPrint('═══════════════════════════════════════');
+    debugPrint('🎯 [PremiumAccessService] onInit() START');
+    debugPrint('═══════════════════════════════════════');
 
+    // ✅ Check initial customer info
+    if (_purchaseService.customerInfo.value != null) {
+      isReady.value = true;
+      debugPrint('✅ [PremiumAccessService] customerInfo already available');
+    } else {
+      debugPrint('⏳ [PremiumAccessService] customerInfo NOT available yet');
+    }
+
+    _recompute();
+    _printCurrentState('After initial _recompute()');
+
+    // ✅ Listen for customerInfo changes
     _readyWorker = ever(_purchaseService.customerInfo, (info) {
-      if (info != null) isReady.value = true;
+      debugPrint('🔄 [PremiumAccessService] customerInfo CHANGED');
+      debugPrint('   info != null: ${info != null}');
+      if (info != null) {
+        isReady.value = true;
+        debugPrint('✅ [PremiumAccessService] isReady set to TRUE');
+      }
       _recompute();
+      _printCurrentState('After customerInfo change');
     });
 
-    _entitlementWorker = ever(_purchaseService.isActive, (_) => _recompute());
-    _fakeWorker = ever(_fakePremiumOverride, (_) => _recompute());
+    // ✅ Listen for entitlement changes
+    _entitlementWorker = ever(_purchaseService.isActive, (isActive) {
+      debugPrint('🔄 [PremiumAccessService] isActive CHANGED to: $isActive');
+      _recompute();
+      _printCurrentState('After isActive change');
+    });
+
+    // ✅ Listen for fake premium changes
+    _fakeWorker = ever(_fakePremiumOverride, (fake) {
+      debugPrint(
+        '🔄 [PremiumAccessService] _fakePremiumOverride CHANGED to: $fake',
+      );
+      _recompute();
+      _printCurrentState('After fake premium change');
+    });
+
+    debugPrint('═══════════════════════════════════════');
+    debugPrint('🎯 [PremiumAccessService] onInit() DONE');
+    debugPrint('═══════════════════════════════════════\n');
   }
 
   void _recompute() {
-    // iOS: real entitlement only, always — never fake, never backend.
-    // Android: real entitlement by default, fake toggle can override it
-    // for QA purposes.
-    isPremiumUser.value = GetPlatform.isIOS
-        ? _purchaseService.isActive.value
-        : (isFakePremiumActive || _purchaseService.isActive.value);
+    final bool wasActive = isPremiumUser.value;
+
+    if (GetPlatform.isIOS) {
+      isPremiumUser.value = _purchaseService.isActive.value;
+      debugPrint('📱 [PremiumAccessService._recompute] iOS path');
+      debugPrint(
+        '   purchaseService.isActive: ${_purchaseService.isActive.value}',
+      );
+      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
+
+      // ✅ Debug mode force premium
+      if (kDebugMode) {
+        debugPrint('🧪 [PremiumAccessService] DEBUG MODE DETECTED');
+        isPremiumUser.value = true;
+        debugPrint(
+          '⚠️  [PremiumAccessService] isPremiumUser FORCED to TRUE (debug mode)',
+        );
+        _printCurrentState('After DEBUG MODE force');
+      }
+    } else {
+      // Android
+      isPremiumUser.value =
+          isFakePremiumActive || _purchaseService.isActive.value;
+      debugPrint('🤖 [PremiumAccessService._recompute] Android path');
+      debugPrint('   isFakePremiumActive: $isFakePremiumActive');
+      debugPrint(
+        '   purchaseService.isActive: ${_purchaseService.isActive.value}',
+      );
+      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
+    }
+
+    if (wasActive != isPremiumUser.value) {
+      debugPrint('⚠️  [PremiumAccessService._recompute] STATUS CHANGED!');
+      debugPrint('   Before: $wasActive → After: ${isPremiumUser.value}');
+    }
+  }
+
+  /// Print current state for debugging
+  void _printCurrentState(String context) {
+    debugPrint('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    debugPrint('📊 [PremiumAccessService] STATE: $context');
+    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    debugPrint('  isReady.value: ${isReady.value}');
+    debugPrint('  isPremiumUser.value: ${isPremiumUser.value}');
+    debugPrint('  isPremiumUserNow: $isPremiumUserNow');
+    debugPrint(
+      '  customerInfo available: ${_purchaseService.customerInfo.value != null}',
+    );
+    debugPrint(
+      '  purchaseService.isActive: ${_purchaseService.isActive.value}',
+    );
+    debugPrint('  isFakePremiumActive: $isFakePremiumActive');
+    debugPrint('  Platform: ${GetPlatform.isAndroid ? "Android" : "iOS"}');
+    debugPrint('  kDebugMode: $kDebugMode');
+    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
   }
 
   @override
   void onClose() {
+    debugPrint('🔴 [PremiumAccessService] onClose() - disposing workers');
     _readyWorker?.dispose();
     _entitlementWorker?.dispose();
     _fakeWorker?.dispose();
@@ -77,8 +151,16 @@ class PremiumAccessService extends GetxService {
   bool get isPremiumUserNow => isPremiumUser.value;
 
   Future<bool> refreshPremiumStatus() async {
+    debugPrint('\n🔄 [PremiumAccessService.refreshPremiumStatus] START');
     await _purchaseService.refreshCustomerInfo();
     _recompute();
+    _printCurrentState('After refreshPremiumStatus()');
+    debugPrint('🔄 [PremiumAccessService.refreshPremiumStatus] END\n');
     return isPremiumUserNow;
+  }
+
+  /// Call this in your SessionNavigator to debug
+  void debugPrintFullState() {
+    _printCurrentState('MANUAL DEBUG CHECK');
   }
 }

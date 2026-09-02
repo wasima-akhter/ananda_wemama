@@ -61,6 +61,9 @@ class _SessionVideoDialogState extends State<SessionVideoDialog> {
 
   Future<void> _start() async {
     final url = _mp4Url ?? _hlsUrl;
+    debugPrint('url is : $url');
+    debugPrint('_mp4Url is : $_mp4Url');
+    debugPrint('_hlsUrl is : $_hlsUrl');
     if (url == null) {
       setState(() => _state = _VideoState.empty);
       return;
@@ -333,7 +336,7 @@ class _LoadingState extends StatelessWidget {
         else
           Container(color: Colors.grey.shade900),
 
-        Container(color: Colors.black.withOpacity(0.35)),
+        Container(color: Colors.black.withValues(alpha: 0.35)),
 
         const Center(child: CircularProgressIndicator(color: Colors.white)),
       ],

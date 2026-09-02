@@ -22,14 +22,14 @@ class _MoodLibraryScreenState extends State<MoodLibraryScreen> {
     super.initState();
     // ✅ trigger load when screen opens normally
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final mlc = Get.find<MoodLibraryController>();
+      final mlc = MoodLibraryController.to;
       mlc.ensureLoaded(mlc.selectedMood.value);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final mlc = Get.find<MoodLibraryController>();
+    final mlc = MoodLibraryController.to;
 
     return AppScreenTemplate(
       appBar: CommonAppBarContent(
@@ -161,7 +161,7 @@ class MoodTabSelector extends StatelessWidget {
                   mood.name.capEachWord(),
                   textAlign: TextAlign.center,
                   style: TxtStyle.interSemiB(
-                    fs: 12,
+                    fs: 13,
                     w: isSelected ? 600 : 500,
                     color: isSelected ? c.textOnPrimary : c.primary,
                   ),

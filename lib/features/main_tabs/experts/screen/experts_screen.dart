@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:we_mama/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
@@ -37,6 +38,28 @@ class ExpertsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: itemGap,
         children: [
+          if (kDebugMode) ...[
+            Obx(() {
+              final ongoingList = exc.limitList(sc.ongoingList.value);
+
+              if (ongoingList.isEmpty) {
+                return const Text("no live session for now");
+              }
+              return CardHorizontalList(
+                aspectRatio: 1.8,
+                height: Responsive.ongoingSessionCardHeight,
+                title: Strings.ongoingExpertSession,
+                exc: exc,
+                onViewAll: () => exc.onTapViewAll(true),
+                itemCount: ongoingList.length,
+                itemBuilder: (index) =>
+                    LiveOngoingSessionCard(data: ongoingList[index]),
+              );
+            }),
+            Gap(20.h),
+            PaidPastSessionsComponent(),
+          ],
+
           /// 🔴 ONGOING + 🟡 UPCOMING (combined reactive block)
           Obx(() {
             final isOngoingLoading = sc.isOngoingLoading.value;

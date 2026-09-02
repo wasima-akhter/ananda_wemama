@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
@@ -10,14 +9,78 @@ import '../../../routes/route_paths.dart';
 class SessionNavigator {
   const SessionNavigator._();
 
-  static Future<void> openMeeting({
+  /// Returns true if successfully opened meeting, false otherwise
+  /// Returns true if successfully opened meeting, false otherwise
+  /// Returns true if successfully opened meeting, false otherwise
+  static Future<bool> openMeeting({
     required String channelName,
     required String sessionTitle,
     required String hostName,
   }) async {
-    if (!PremiumAccessService.to.isPremiumUserNow) {
+    final premiumService = PremiumAccessService.to;
+
+    debugPrint('\n╔════════════════════════════════════════╗');
+    debugPrint('║ [SessionNavigator.openMeeting] START    ║');
+    debugPrint('╚════════════════════════════════════════╝');
+
+    // ✅ Print current state
+    premiumService.debugPrintFullState();
+
+    // ✅ Wait for service to be ready
+    if (!premiumService.isReady.value) {
+      debugPrint(
+        '⏳ [SessionNavigator.openMeeting] Service NOT ready, waiting...',
+      );
+
+      int attempts = 0;
+      while (!premiumService.isReady.value && attempts < 50) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+
+      debugPrint('⏳ [SessionNavigator.openMeeting] Waited $attempts attempts');
+
+      if (!premiumService.isReady.value) {
+        debugPrint(
+          '🔴 [SessionNavigator.openMeeting] Service initialization TIMEOUT',
+        );
+        premiumService.debugPrintFullState();
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        return false;
+      }
+
+      debugPrint('✅ [SessionNavigator.openMeeting] Service now READY');
+      premiumService.debugPrintFullState();
+    } else {
+      debugPrint('✅ [SessionNavigator.openMeeting] Service already READY');
+    }
+
+    // ✅ Check if premium
+    debugPrint('\n🔐 [SessionNavigator.openMeeting] Premium check:');
+    debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+    debugPrint('   isPremiumUser.value: ${premiumService.isPremiumUser.value}');
+
+    if (!premiumService.isPremiumUserNow) {
+      debugPrint('🔒 [SessionNavigator.openMeeting] ❌ User is NOT premium');
+      premiumService.debugPrintFullState();
+
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
       Get.toNamed(RoutePaths.subscriptionUpgrade);
-      return;
+      return false;
+    }
+
+    debugPrint(
+      '✅ [SessionNavigator.openMeeting] ✅ User IS premium - opening meeting!',
+    );
+    premiumService.debugPrintFullState();
+
+    if (Get.isDialogOpen ?? false) {
+      Get.back();
     }
 
     Get.toNamed(
@@ -28,25 +91,68 @@ class SessionNavigator {
         hostName: hostName,
       ),
     );
+
+    debugPrint('╔════════════════════════════════════════╗');
+    debugPrint('║ [SessionNavigator.openMeeting] SUCCESS  ║');
+    debugPrint('╚════════════════════════════════════════╝\n');
+
+    return true;
   }
 
-  static Future<void> open(Session session) async {
-    log(
-      "🎯 [SessionNavigator] open() → "
+  /// Returns true if successfully opened session, false otherwise
+  /// Returns true if successfully opened session, false otherwise
+  static Future<bool> open(Session session) async {
+    debugPrint(
+      "🎯 [SessionNavigator.open] → "
       "id=${session.id}, status=${session.status}",
     );
 
-    // Premium gate
-    if (!PremiumAccessService.to.isPremiumUserNow) {
-      log("🔒 [SessionNavigator] User is not premium → promoCodeScreen");
+    final premiumService = PremiumAccessService.to;
 
-      Get.offAllNamed(RoutePaths.subscriptionUpgrade);
-      return;
+    // ✅ Wait for service to be ready
+    if (!premiumService.isReady.value) {
+      debugPrint(
+        '⏳ [SessionNavigator.open] Waiting for PremiumAccessService...',
+      );
+
+      int attempts = 0;
+      while (!premiumService.isReady.value && attempts < 50) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+
+      if (!premiumService.isReady.value) {
+        debugPrint('🔴 [SessionNavigator.open] Service initialization timeout');
+        // ✅ Close dialog
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+        return false;
+      }
+    }
+
+    // ✅ Premium gate
+    if (!premiumService.isPremiumUserNow) {
+      debugPrint("🔒 [SessionNavigator.open] User is not premium");
+
+      // ✅ Close dialog BEFORE navigating
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      Get.toNamed(RoutePaths.subscriptionUpgrade);
+      return false;
     }
 
     switch (session.status) {
       case 'Ongoing':
-        log('🔗 [DeepLinkService] → Ongoing → navigating to meetingScreen');
+        debugPrint('🔗 [SessionNavigator.open] → Ongoing → meetingScreen');
+
+        // ✅ Close dialog before opening meeting
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
         Get.offAllNamed(
           RoutePaths.meetingScreen,
           arguments: MeetingCtrlAgModel(
@@ -55,23 +161,32 @@ class SessionNavigator {
             hostName: session.expert?.name ?? '',
           ),
         );
-        break;
+        return true;
 
       case 'Upcoming':
-        log(
-          '🔗 [DeepLinkService] → Upcoming → navigating to mainNav then tab 4',
-        );
+        debugPrint('🔗 [SessionNavigator.open] → Upcoming → upcomingSessions');
+
+        // ✅ Close dialog
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
         await Get.offAllNamed(RoutePaths.upcomingSessions);
         await Future.microtask(() => null);
-        log('🔗 [DeepLinkService] → calling upcomingSessions screen');
-        // MainNavController.to.goToTab(4);
-        break;
+        return true;
 
       default:
-        log(
-          "🔗 [DeepLinkService] → unhandled status '${session.status}' → mainNav",
+        debugPrint(
+          "🔗 [SessionNavigator.open] → unhandled status '${session.status}'",
         );
+
+        // ✅ Close dialog
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
         Get.offAllNamed(RoutePaths.mainNav);
+        return false;
     }
   }
 }

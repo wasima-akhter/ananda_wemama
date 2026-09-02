@@ -79,6 +79,10 @@ mixin AgoraEngineMixin on GetxController {
 
   /// -------------------- Agora Setup -------------------- ///
 
+  Timer? _videoOffDebounceTimer;
+
+  Timer? _videoFrozenDebounceTimer;
+
   final hostUid = RxnInt(); // ✅ nullable int
   Future<void> initAgora() async {
     log('🔵 [4] initAgora() started');
@@ -421,32 +425,227 @@ mixin AgoraEngineMixin on GetxController {
           //         log('❌ onRemoteVideoStateChanged error: $e');
           //       }
           //     },
-          onRemoteVideoStateChanged:
-              (connection, remoteUid, state, reason, elapsed) {
-                if (remoteUid != hostUid.value) return;
+          onRemoteVideoStateChanged: (connection, remoteUid, state, reason, elapsed) {
+            if (remoteUid != hostUid.value) return;
 
-                log(
-                  '🎥 Remote video: '
+            debugPrint(
+              '🎥 REMOTE VIDEO | '
+              'uid=$remoteUid | '
+              'state=$state | '
+              'reason=$reason | '
+              'elapsed=${elapsed}ms',
+            );
+
+            switch (state) {
+              case RemoteVideoState.remoteVideoStateStarting:
+                debugPrint(
+                  '🟡 REMOTE VIDEO STARTING | '
                   'uid=$remoteUid | '
-                  'state=$state | '
-                  'reason=$reason',
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms | '
+                  '→ VideoStatus.loading',
                 );
 
-                switch (state) {
-                  case RemoteVideoState.remoteVideoStateDecoding:
-                    _self.isHostVideoOn.value = true;
-                    break;
+                _videoOffDebounceTimer?.cancel();
+                debugPrint('🟡 REMOTE VIDEO | Off debounce timer cancelled');
 
-                  case RemoteVideoState.remoteVideoStateStopped:
-                  case RemoteVideoState.remoteVideoStateFailed:
-                  case RemoteVideoState.remoteVideoStateFrozen:
-                    _self.isHostVideoOn.value = false;
-                    break;
+                _videoFrozenDebounceTimer?.cancel();
+                debugPrint('🟡 REMOTE VIDEO | Frozen debounce timer cancelled');
 
-                  default:
-                    break;
+                _self.isHostVideoOn.value = VideoStatus.loading;
+
+                debugPrint(
+                  '🟡 REMOTE VIDEO | isHostVideoOn=${_self.isHostVideoOn.value}',
+                );
+                break;
+
+              case RemoteVideoState.remoteVideoStateDecoding:
+                debugPrint(
+                  '🟢 REMOTE VIDEO DECODING | '
+                  'uid=$remoteUid | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms | '
+                  '→ VideoStatus.on',
+                );
+
+                _videoOffDebounceTimer?.cancel();
+                debugPrint('🟢 REMOTE VIDEO | Off debounce timer cancelled');
+
+                _videoFrozenDebounceTimer?.cancel();
+                debugPrint('🟢 REMOTE VIDEO | Frozen debounce timer cancelled');
+
+                _self.isHostVideoOn.value = VideoStatus.on;
+
+                debugPrint(
+                  '🟢 REMOTE VIDEO | isHostVideoOn=${_self.isHostVideoOn.value}',
+                );
+                break;
+
+              /*
+              case RemoteVideoState.remoteVideoStateFrozen:
+                debugPrint(
+                  '🟠 REMOTE VIDEO FROZEN | '
+                  'uid=$remoteUid | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms | '
+                  'Starting 2000ms debounce',
+                );
+
+                _videoFrozenDebounceTimer?.cancel();
+                debugPrint('🟠 REMOTE VIDEO | Previous frozen timer cancelled');
+
+                _videoFrozenDebounceTimer = Timer(
+                  const Duration(milliseconds: 2000),
+                  () {
+                    debugPrint(
+                      '🟠 REMOTE VIDEO FROZEN TIMEOUT | '
+                      'uid=$remoteUid | '
+                      'Frozen for 2000ms',
+                    );
+
+                    if (_self.isHostVideoOn.value != VideoStatus.off) {
+                      _self.isHostVideoOn.value = VideoStatus.frozen;
+
+                      debugPrint(
+                        '🟠 REMOTE VIDEO | '
+                        'isHostVideoOn=${_self.isHostVideoOn.value}',
+                      );
+                    } else {
+                      debugPrint(
+                        '🟠 REMOTE VIDEO | '
+                        'Already OFF, keeping VideoStatus.off',
+                      );
+                    }
+                  },
+                );
+
+                debugPrint('🟠 REMOTE VIDEO | Frozen debounce timer started');
+                break;
+*/
+              case RemoteVideoState.remoteVideoStateFrozen:
+                // ✅ Ignore frozen from network congestion
+                if (reason ==
+                    RemoteVideoStateReason
+                        .remoteVideoStateReasonNetworkCongestion) {
+                  debugPrint(
+                    '⚠️ Network congestion detected (${elapsed}ms) - '
+                    'keeping last frame visible, not showing frozen UI',
+                  );
+                  // DO NOT change isHostVideoOn - keep showing last frame
+                  break;
                 }
-              },
+
+                debugPrint(
+                  '🟠 REMOTE VIDEO FROZEN | '
+                  'uid=$remoteUid | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms',
+                );
+
+                _videoFrozenDebounceTimer?.cancel();
+
+                _videoFrozenDebounceTimer = Timer(
+                  const Duration(milliseconds: 2000),
+                  () {
+                    if (_self.isHostVideoOn.value != VideoStatus.off) {
+                      _self.isHostVideoOn.value = VideoStatus.frozen;
+
+                      debugPrint(
+                        '🟠 REMOTE VIDEO | '
+                        'Frozen for 2s | '
+                        'isHostVideoOn=${_self.isHostVideoOn.value}',
+                      );
+                    }
+                  },
+                );
+                break;
+
+              //
+              case RemoteVideoState.remoteVideoStateStopped:
+                debugPrint(
+                  '🔴 REMOTE VIDEO STOPPED | '
+                  'uid=$remoteUid | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms | '
+                  'Starting 3000ms off debounce',
+                );
+
+                _videoOffDebounceTimer?.cancel();
+                debugPrint('🔴 REMOTE VIDEO | Previous off timer cancelled');
+
+                _videoFrozenDebounceTimer?.cancel();
+                debugPrint('🔴 REMOTE VIDEO | Frozen timer cancelled');
+
+                _videoOffDebounceTimer = Timer(
+                  const Duration(milliseconds: 3000),
+                  () {
+                    debugPrint(
+                      '🔴 REMOTE VIDEO STOPPED TIMEOUT | '
+                      'uid=$remoteUid | '
+                      '3000ms elapsed | '
+                      '→ VideoStatus.off',
+                    );
+
+                    _self.isHostVideoOn.value = VideoStatus.off;
+
+                    debugPrint(
+                      '🔴 REMOTE VIDEO | '
+                      'isHostVideoOn=${_self.isHostVideoOn.value}',
+                    );
+                  },
+                );
+
+                debugPrint('🔴 REMOTE VIDEO | Off debounce timer started');
+                break;
+
+              case RemoteVideoState.remoteVideoStateFailed:
+                debugPrint(
+                  '❌ REMOTE VIDEO FAILED | '
+                  'uid=$remoteUid | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms | '
+                  'Starting 3000ms off debounce',
+                );
+
+                _videoOffDebounceTimer?.cancel();
+                debugPrint('❌ REMOTE VIDEO | Previous off timer cancelled');
+
+                _videoFrozenDebounceTimer?.cancel();
+                debugPrint('❌ REMOTE VIDEO | Frozen timer cancelled');
+
+                _videoOffDebounceTimer = Timer(
+                  const Duration(milliseconds: 3000),
+                  () {
+                    debugPrint(
+                      '❌ REMOTE VIDEO FAILED TIMEOUT | '
+                      'uid=$remoteUid | '
+                      '3000ms elapsed | '
+                      '→ VideoStatus.off',
+                    );
+
+                    _self.isHostVideoOn.value = VideoStatus.off;
+
+                    debugPrint(
+                      '❌ REMOTE VIDEO | '
+                      'isHostVideoOn=${_self.isHostVideoOn.value}',
+                    );
+                  },
+                );
+
+                debugPrint('❌ REMOTE VIDEO | Off debounce timer started');
+                break;
+
+              default:
+                debugPrint(
+                  '⚪ REMOTE VIDEO UNKNOWN STATE | '
+                  'uid=$remoteUid | '
+                  'state=$state | '
+                  'reason=$reason | '
+                  'elapsed=${elapsed}ms',
+                );
+                break;
+            }
+          },
           // onRemoteAudioStateChanged:
           //     (connection, remoteUid, state, reason, elapsed) {
           //       try {
@@ -541,7 +740,9 @@ mixin AgoraEngineMixin on GetxController {
   void handleUnexpectedDisconnect() {
     _self.remoteUids.clear();
     _self.isHostAudioOn.value = false;
-    _self.isHostVideoOn.value = false;
+    _self.isHostVideoOn.value = VideoStatus.loading;
+    _videoOffDebounceTimer?.cancel();
+    _videoOffDebounceTimer?.cancel();
     _self.hasLiveStarted.value = false;
     _self.stopSessionTimer();
     showLiveExitPopup(
@@ -560,7 +761,9 @@ mixin AgoraEngineMixin on GetxController {
   Future<void> _releaseEngineOnly() async {
     _self.remoteUids.clear();
     _self.isHostAudioOn.value = false;
-    _self.isHostVideoOn.value = false;
+    _self.isHostVideoOn.value = VideoStatus.off;
+    _videoOffDebounceTimer?.cancel();
+    _videoOffDebounceTimer?.cancel();
     _self.isSpeaking.value = false;
     _self.isEngineReady.value = false;
 

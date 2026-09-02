@@ -27,25 +27,26 @@ class MoodInsightsBookmarkButton extends StatelessWidget {
     final mic = MoodInsightsController.to;
     final bc = BookmarkController.to;
 
-    final item = mic.item.value!;
+    return Obx(() {
+      final item = mic.item.value!;
+      return GestureDetector(
+        onTap: () => toggle(item),
 
-    return GestureDetector(
-      onTap: () => toggle(item),
+        child: ContainerBordered(
+          contClr: c.primary,
+          rad: 18,
+          vp: 8,
+          hp: 12,
 
-      child: ContainerBordered(
-        contClr: c.primary,
-        rad: 18,
-        vp: 8,
-        hp: 12,
+          child: SvgIconColored(
+            iconPath: bc.isBookmarked(item.id)
+                ? IconsPath.bookmarkFilled
+                : IconsPath.bookmarkOutlined,
 
-        child: SvgIconColored(
-          iconPath: bc.isBookmarked(item.id)
-              ? IconsPath.bookmarkFilled
-              : IconsPath.bookmarkOutlined,
-
-          iconColor: white,
+            iconColor: white,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

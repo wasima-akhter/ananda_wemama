@@ -61,7 +61,50 @@ class SharedAgoraVideoView extends StatelessWidget {
       // ------------------------------------------------------------
       // HOST JOINED BUT VIDEO IS OFF
       // ------------------------------------------------------------
-      if (!mc.isHostVideoOn.value) {
+
+      if (mc.isHostVideoOn.value == VideoStatus.loading) {
+        return _buildPlaceholder(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: Icon(
+                  Icons.camera_alt_rounded,
+                  color: Colors.grey.shade300,
+                ),
+              ),
+              const Gap(10),
+              Text(
+                "Connecting video...",
+                style: TxtStyle.inter(fs: 15, color: Colors.white70),
+              ),
+            ],
+          ),
+        );
+      } else if (mc.isHostVideoOn.value == VideoStatus.frozen) {
+        return _buildPlaceholder(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                width: 40,
+                height: 40,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white54,
+                ),
+              ),
+              const Gap(10),
+              Text(
+                "Buffering...",
+                style: TxtStyle.inter(fs: 15, color: Colors.white70),
+              ),
+            ],
+          ),
+        );
+      } else if (mc.isHostVideoOn.value == VideoStatus.off) {
         return _buildPlaceholder(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -113,10 +156,24 @@ class SharedAgoraVideoView extends StatelessWidget {
           // Always keep a safe black background
           Container(
             color: Colors.black,
-            child: Center(
-              child: Text(
-                "Live video unavailable",
-                style: TxtStyle.inter(fs: 14, color: Colors.white54),
+            child: _buildPlaceholder(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      color: Colors.white54,
+                    ),
+                  ),
+                  const Gap(10),
+                  Text(
+                    "Loading...",
+                    style: TxtStyle.inter(fs: 15, color: Colors.white70),
+                  ),
+                ],
               ),
             ),
           ),

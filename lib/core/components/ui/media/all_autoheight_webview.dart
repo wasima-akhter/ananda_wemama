@@ -851,12 +851,14 @@ a {
 }
 
 String moodIllustrationHtml(String imageUrl) {
-  final url = kDebugMode
-      // && imageUrl.isEmpty
+  final url = !kDebugMode
       ? "https://media.istockphoto.com/id/520700958/photo/beautiful-flowers-background.jpg?s=612x612&w=0&k=20&c=A7WF8MScj3YNBTA-qFQEKm-Xphzmi_mfaOqjq27--j4="
+      : imageUrl.startsWith('http')
+      ? imageUrl
       : '$baseUrl/$imageUrl';
 
   debugPrint('image url --> $url');
+
   return """
   <div id="mood-image-container"
     style="
@@ -865,12 +867,18 @@ String moodIllustrationHtml(String imageUrl) {
       margin-bottom:16px;
       overflow:hidden;
       border-radius:20px;
+      background:#F5F6FA;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
     "
   >
     <img
       src="$url"
       onerror="
-        document.getElementById('mood-image-container').style.display='none';
+        this.style.display='none';
+        document.getElementById('mood-image-placeholder').style.display='flex';
       "
       style="
         width:100%;
@@ -878,6 +886,53 @@ String moodIllustrationHtml(String imageUrl) {
         object-fit:cover;
       "
     />
+
+    <div
+      id="mood-image-placeholder"
+      style="
+        display:none;
+        width:100%;
+        height:100%;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        background:#F9EFE6;
+        color:#A6827F;
+        font-family:Arial,sans-serif;
+      "
+    >
+      <div
+        style="
+          width:52px;
+          height:52px;
+          border-radius:16px;
+          background:#F6E6DC;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        "
+      >
+        <span
+          style="
+            font-size:28px;
+            color:#A6827F;
+          "
+        >
+          🖼
+        </span>
+      </div>
+
+      <div
+        style="
+          font-size:13px;
+          font-weight:500;
+          margin-top:10px;
+          color:#A6827F;
+        "
+      >
+        Image unavailable
+      </div>
+    </div>
   </div>
   """;
 }

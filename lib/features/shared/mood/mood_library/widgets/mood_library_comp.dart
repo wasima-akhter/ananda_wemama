@@ -53,25 +53,30 @@ class MoodTypeReadingItem extends StatelessWidget {
           ),
           16.verticalSpace,
           Center(
-            child: CusGestureDetector(
-              onTap: onTapRead,
-              child: SizedBox(
-                width: double.infinity,
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  // hp: 40,
-                  vp: 8,
-                  child: Text(
-                    Strings.read.cap,
-                    style: TxtStyle.inter(
-                      fs: 12,
-                      w: 600,
-                      color: c.textOnPrimary,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CusGestureDetector(
+                  onTap: onTapRead,
+                  child: SizedBox(
+                    // width: double.infinity,
+                    child: ContainerBordered(
+                      contClr: c.buttonPrimary,
+                      rad: 30,
+                      hp: 40,
+                      vp: 8,
+                      child: Text(
+                        Strings.read.cap,
+                        style: TxtStyle.inter(
+                          fs: 13,
+                          w: 600,
+                          color: c.textOnPrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
         ],

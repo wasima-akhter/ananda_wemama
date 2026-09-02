@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:agora_rtm/agora_rtm.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:we_mama/core/components/app_ui/popup_widgets/live_end_msg_popup.dart';
 import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
-import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../../app/controller_export.dart';
 import '../live_chat_controller.dart';
@@ -72,7 +72,7 @@ mixin LeaveSessionMixin on GetxController {
     // ✅ Reset all visual state immediately so UI doesn't show stale data
     _self.remoteUids.clear();
     _self.isHostAudioOn.value = false;
-    _self.isHostVideoOn.value = false;
+    _self.isHostVideoOn.value = VideoStatus.loading;
     hasLiveStarted.value = false;
     hasLiveEnded.value = false;
     _self.isSpeaking.value = false;

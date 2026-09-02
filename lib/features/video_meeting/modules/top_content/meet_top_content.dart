@@ -86,6 +86,42 @@ class TopContent extends StatelessWidget {
                   child: SharedAgoraVideoView(fit: BoxFit.cover),
                 ),
 
+                //
+                // ✅ Reaction + View counts
+                Positioned(
+                  right: 12,
+                  top: 12,
+                  child: Row(
+                    children: [
+                      Obx(
+                        () => _buildFloatingIcon(
+                          text: "${cc.reactionCount.value}",
+                          icon: Icons.thumb_up_sharp,
+                        ),
+                      ),
+                      Gap(itemGap),
+                      Obx(
+                        () => _buildFloatingIcon(
+                          text: "${cc.viewCount.value}",
+                          icon: Icons.visibility,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ✅ Live duration
+                Positioned(
+                  left: 12,
+                  top: 12,
+                  child: Obx(
+                    () => _buildFloatingIcon(
+                      text: mc.formattedDuration,
+                      icon: Icons.circle,
+                    ),
+                  ),
+                ),
+
                 // Rest of overlays remain exactly the same...
                 Positioned(
                   right: 12,

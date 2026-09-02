@@ -9,6 +9,8 @@ import 'mixins/session_info_mixin.dart';
 import 'mixins/session_timer_mixin.dart';
 import 'mixins/speaking_mixin.dart';
 
+enum VideoStatus { loading, on, off, frozen }
+
 class MeetingController extends GetxController
     with
         SessionInfoMixin,
@@ -67,7 +69,10 @@ class MeetingController extends GetxController
   var isLocalAudioMuted = false.obs;
   var isLocalVideoMuted = false.obs;
 
-  RxBool isHostVideoOn = true.obs;
+  // RxBool isHostVideoOn = true.obs;
+
+  final isHostVideoOn = Rx<VideoStatus>(VideoStatus.loading);
+
   RxBool isHostAudioOn = true.obs;
 
   RxBool isJoined = false.obs;

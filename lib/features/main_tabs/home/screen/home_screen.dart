@@ -49,9 +49,64 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     log("🏠 HomeScreen initState");
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       log("🏠 HomeScreen postFrameCallback — notifying MainNavController");
       MainNavController.to.notifyHomeFirstBuild();
+
+      final premiumService = PremiumAccessService.to;
+
+      debugPrint('\n╔════════════════════════════════════════╗');
+      debugPrint('║ [SessionNavigator.openMeeting] START    ║');
+      debugPrint('╚════════════════════════════════════════╝');
+
+      // ✅ Print current state
+      premiumService.debugPrintFullState();
+
+      // ✅ Wait for service to be ready
+      if (!premiumService.isReady.value) {
+        debugPrint(
+          '⏳ [SessionNavigator.openMeeting] Service NOT ready, waiting...',
+        );
+
+        int attempts = 0;
+        while (!premiumService.isReady.value && attempts < 50) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          attempts++;
+        }
+
+        debugPrint(
+          '⏳ [SessionNavigator.openMeeting] Waited $attempts attempts',
+        );
+
+        if (!premiumService.isReady.value) {
+          debugPrint(
+            '🔴 [SessionNavigator.openMeeting] Service initialization TIMEOUT',
+          );
+          premiumService.debugPrintFullState();
+        }
+
+        debugPrint('✅ [SessionNavigator.openMeeting] Service now READY');
+        premiumService.debugPrintFullState();
+      } else {
+        debugPrint('✅ [SessionNavigator.openMeeting] Service already READY');
+      }
+
+      // ✅ Check if premium
+      debugPrint('\n🔐 [SessionNavigator.openMeeting] Premium check:');
+      debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+      debugPrint(
+        '   isPremiumUser.value: ${premiumService.isPremiumUser.value}',
+      );
+
+      if (!premiumService.isPremiumUserNow) {
+        debugPrint('🔒 [SessionNavigator.openMeeting] ❌ User is NOT premium');
+        premiumService.debugPrintFullState();
+      }
+
+      debugPrint(
+        '✅ [SessionNavigator.openMeeting] ✅ User IS premium - opening meeting!',
+      );
+      premiumService.debugPrintFullState();
     });
   }
 
@@ -127,6 +182,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
           GentleReminderCard(),
           CommunitySpotlight(),
+
+          //
+          if (kDebugMode) ...[
+            Obx(() {
+              final sessions = hc.spotLightData.value?.liveSession ?? [];
+              final liveSession = sessions.firstWhereOrNull(
+                (e) => (e.status ?? '').toLowerCase() == "ongoing",
+              );
+
+              if (liveSession != null) {
+                return SizedBox(
+                  height: 230.h,
+                  child: LiveOngoingSessionCard(data: liveSession),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
+          ],
+
+          //
+          //
           // if none, show: no live session available right now
           Obx(() {
             final sessions = hc.spotLightData.value?.liveSession ?? [];
@@ -199,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
 
                     lockedBuilder: (_) => LiveSessionLockedCard(
-                      onTap: () => Get.toNamed(RoutePaths.promoCodeScreen),
+                      onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
                     ),
                   );
                 }
