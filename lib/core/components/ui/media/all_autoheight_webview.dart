@@ -127,7 +127,7 @@ class AllAutoheightWebview extends StatelessWidget {
     padding: $_paddingCss !important;
     background: ${_toCssColor(backgroundColor)} !important;
     font-family: 'Outfit', sans-serif !important;
-    font-size: ${(fontSize ?? 13).sp}px !important;
+    font-size: ${(fontSize ?? 14).sp}px !important;
     color: ${_toCssColor(textColor ?? c.foregroundSecondary)} !important;
     word-wrap: break-word;
      overflow: hidden !important;
@@ -733,7 +733,7 @@ html, body {
   padding: $_paddingCss;
   background: ${_toCssColor(widget.backgroundColor)};
   font-family: 'Outfit', sans-serif;
-  font-size: ${(widget.fontSize ?? 13).sp}px;
+  font-size: ${(widget.fontSize ?? 14).sp}px;
   color: ${_toCssColor(widget.textColor ?? c.primary)};
   height: 100%;
   overflow: hidden;

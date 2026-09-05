@@ -1,3 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+
 import '../../../app/service_export.dart';
 import '../../../features/main_tabs/chat/controller/chat_controller.dart';
 import '../../../features/main_tabs/chat/controller/chat_inbox_controller.dart';
@@ -12,13 +15,14 @@ import '../../local/app_storage.dart';
 import '../socket/socket_service.dart';
 
 class SignoutService {
-  Future<bool> signoutFromBackend() async {
-    //
+  final FirebaseMessaging _fcm = FirebaseMessaging.instance;
 
+  Future<bool> signoutFromBackend({required String fcmToken}) async {
     apiCall() {
       return ApiClient().post(
         Endpoints.logout.getUrl,
         headers: HeaderHelpers.getAuthHeader(),
+        data: {"fcmToken": fcmToken},
       );
     }
 
@@ -27,10 +31,43 @@ class SignoutService {
     return response.isSuccess;
   }
 
-  Future<void> signOut() async {
-    final res = await signoutFromBackend();
+  Future<String?> getCurrentFcmToken() async {
+    try {
+      final token = await _fcm.getToken();
 
-    if (!res) return;
+      debugPrint('🔑 [SignoutService] current FCM token: $token');
+
+      return token;
+    } catch (e, st) {
+      debugPrint('❌ [SignoutService] failed to get FCM token: $e');
+      debugPrint('$st');
+
+      return null;
+    }
+  }
+
+  Future<void> signOut() async {
+    final fcmToken = await getCurrentFcmToken();
+
+    if (fcmToken == null || fcmToken.isEmpty) {
+      debugPrint(
+        '⚠️ [SignoutService] FCM token unavailable. '
+        'Logout cancelled to avoid logging out without removing the device token.',
+      );
+      return;
+    }
+
+    final res = await signoutFromBackend(fcmToken: fcmToken);
+
+    if (!res) {
+      debugPrint('❌ [SignoutService] backend logout failed');
+      return;
+    }
+
+    debugPrint(
+      '✅ [SignoutService] backend logout successful for current device',
+    );
+
     // Disconnect socket FIRST
     if (Get.isRegistered<SocketService>()) {
       Get.find<SocketService>().disconnectSocket();
@@ -50,29 +87,6 @@ class SignoutService {
     }
 
     // Delete user-scoped controllers
-    // final controllersToDelete = [
-    //   ChatController,
-    //   ChatInboxController,
-    //   NotificationController,
-    //   ProfileController,
-    //   MatchController,
-    //   WaveRequestController,
-    //   HomeController,
-    //   ExpertsController,
-    //   CommunityController,
-    // ];
-
-    // for (final controller in controllersToDelete) {
-    //   if (Get.isRegistered(tag: controller.toString())) {
-    //     Get.delete(tag: controller.toString(), force: true);
-    //   }
-    // }
-
-    // Delete user-scoped controllers.
-    // NOTE: GetX generics must be written per-type — this replaces the old
-    // `tag: controller.toString()` loop, which never matched anything
-    // because these controllers are registered by type, not by tag.
-
     Get.delete<ChatInboxController>(force: true);
     Get.delete<NotificationController>(force: true);
     Get.delete<ProfileController>(force: true);

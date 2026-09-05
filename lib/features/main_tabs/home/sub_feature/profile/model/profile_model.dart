@@ -34,6 +34,8 @@ class ProfileDataModel {
     this.matchLimitDate,
     this.matchSeenUsers = const [],
     this.totalMatching,
+    // FCM
+    this.fcmTokens = const [],
   });
 
   final String? id;
@@ -74,6 +76,10 @@ class ProfileDataModel {
   final DateTime? updatedAt;
 
   final int? v;
+
+  //
+
+  final List<String> fcmTokens;
   //new ones
   final WaveLimitModel? waveLimit;
 
@@ -173,6 +179,13 @@ class ProfileDataModel {
           : null,
 
       v: json["__v"],
+
+      //
+      fcmTokens: json["fcmTokens"] == null
+          ? []
+          : List<String>.from(json["fcmTokens"].map((x) => x.toString())),
+
+      //
       waveLimit: json["waveLimit"] == null
           ? null
           : WaveLimitModel.fromJson(json["waveLimit"]),

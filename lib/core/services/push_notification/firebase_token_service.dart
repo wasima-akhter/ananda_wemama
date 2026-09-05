@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/service_export.dart';
@@ -7,32 +8,34 @@ class FirebaseTokenService extends GetxService {
 
   final RxBool isLoading = false.obs;
 
-  // firebase_token_service.dart
-
   Future<bool> updateToken({required String firebaseToken}) async {
     debugPrint('🔧 [FirebaseTokenService] uploading token: $firebaseToken');
+
     isLoading.value = true;
 
     try {
       final response = await ApiExecutor().execute(
         apiCall: () => ApiClient().post(
           Endpoints.uploadFcmToken.getUrl,
-          // reqName: 'firebase-token-update',
+          headers: HeaderHelpers.getAuthHeader(),
           data: {"fcmToken": firebaseToken},
         ),
         parser: (data) => data,
       );
 
-      final success = response != null;
+      final success = response.isSuccess ?? false;
+
       debugPrint(
         success
             ? '✅ [FirebaseTokenService] token uploaded successfully'
-            : '⚠️ [FirebaseTokenService] upload returned null response',
+            : '⚠️ [FirebaseTokenService] token upload failed',
       );
+
       return success;
     } catch (e, st) {
       debugPrint('❌ [FirebaseTokenService] token upload FAILED: $e');
       debugPrint('$st');
+
       return false;
     } finally {
       isLoading.value = false;
