@@ -44,6 +44,84 @@ class MatchController extends GetxController {
     return fetchedMatches[_currentMatchIndex];
   }
 
+  Future<bool> _ensurePremiumAccess() async {
+    final premiumService = PremiumAccessService.to;
+
+    debugPrint('\n╔════════════════════════════════════════╗');
+    debugPrint('║ [MatchController] PREMIUM CHECK START  ║');
+    debugPrint('╚════════════════════════════════════════╝');
+
+    // Print current premium state
+    premiumService.debugPrintFullState();
+
+    // ─────────────────────────────────────────────
+    // WAIT FOR PREMIUM SERVICE TO BE READY
+    // ─────────────────────────────────────────────
+    if (!premiumService.isReady.value) {
+      debugPrint('⏳ [MatchController] Premium service NOT ready, waiting...');
+
+      int attempts = 0;
+
+      while (!premiumService.isReady.value && attempts < 50) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+
+      debugPrint('⏳ [MatchController] Waited $attempts attempts');
+
+      if (!premiumService.isReady.value) {
+        debugPrint(
+          '🔴 [MatchController] Premium service initialization TIMEOUT',
+        );
+
+        premiumService.debugPrintFullState();
+
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
+        return false;
+      }
+
+      debugPrint('✅ [MatchController] Premium service is now READY');
+
+      premiumService.debugPrintFullState();
+    } else {
+      debugPrint('✅ [MatchController] Premium service already READY');
+    }
+
+    // ─────────────────────────────────────────────
+    // PREMIUM CHECK
+    // ─────────────────────────────────────────────
+    debugPrint('\n🔐 [MatchController] Premium check:');
+    debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+    debugPrint('   isPremiumUser.value: ${premiumService.isPremiumUser.value}');
+
+    if (!premiumService.isPremiumUserNow) {
+      debugPrint('🔒 [MatchController] ❌ User is NOT premium');
+
+      premiumService.debugPrintFullState();
+
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      Get.toNamed(RoutePaths.subscriptionUpgrade);
+
+      return false;
+    }
+
+    debugPrint('✅ [MatchController] ✅ User IS premium');
+
+    premiumService.debugPrintFullState();
+
+    debugPrint('╔════════════════════════════════════════╗');
+    debugPrint('║ [MatchController] PREMIUM CHECK PASSED ║');
+    debugPrint('╚════════════════════════════════════════╝\n');
+
+    return true;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -251,10 +329,35 @@ class MatchController extends GetxController {
 
   int get remainingWaves => profile.value?.waveLimit?.remaining ?? 0;
 
-  bool get isWaveLimitReached =>
-      !isPaidUser.value &&
-      !(profile.value?.waveLimit?.isUnlimited ?? false) &&
-      remainingWaves <= 0;
+  bool get isWaveLimitReached {
+    final premium = PremiumAccessService.to;
+
+    // Premium status is not known yet.
+    // Never treat the user as a free user during initialization.
+    if (!premium.isReady.value) {
+      return false;
+    }
+
+    // Premium users never hit the free wave limit.
+    if (premium.isPremiumUserNow) {
+      return false;
+    }
+
+    return !(profile.value?.waveLimit?.isUnlimited ?? false) &&
+        remainingWaves <= 0;
+  }
+
+  bool get hasPremiumAccess {
+    final premium = PremiumAccessService.to;
+
+    if (!premium.isReady.value) {
+      return false;
+    }
+
+    return premium.isPremiumUserNow;
+  }
+
+  bool get premiumStatusReady => PremiumAccessService.to.isReady.value;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SEARCH
@@ -294,7 +397,18 @@ class MatchController extends GetxController {
 
     if (isSearchLoading.value) return;
 
-    // Fetch latest wave limit before every search
+    // ─────────────────────────────────────────────
+    // PREMIUM ACCESS CHECK
+    // ─────────────────────────────────────────────
+    final hasPremiumAccess = await _ensurePremiumAccess();
+
+    if (!hasPremiumAccess) {
+      return;
+    }
+
+    // ─────────────────────────────────────────────
+    // FETCH LATEST WAVE LIMIT
+    // ─────────────────────────────────────────────
     await fetchWaveLimit();
 
     if (isWaveLimitReached) {
@@ -306,21 +420,12 @@ class MatchController extends GetxController {
     isSearchLoading.value = true;
 
     try {
-      // ───────── LIMIT CHECK ─────────
-      // FIXED: was `!isPaidUser` / bare `searchesToday` — both are Rx now.
-      // if (!isPaidUser.value && searchesToday.value >= freeDailyLimit) {
-      //   subUpgradeNeeded.value = true;
-      //   await handleDailyLimitReached();
-      //   return;
-      // }               // <-------   BACKEND VALIDATION OF PREMIUM USER
-
       matchState.value = MatchState.searching;
 
       final locationResult = await AppLocationManager.to.ensureFreshLocation(
         showDialogs: true,
         forceRefresh: true,
       );
-      // new logic
 
       final isLocationActive = locationResult == LocationFlowResult.success;
 
@@ -329,17 +434,10 @@ class MatchController extends GetxController {
         showPopupIfChanged: true,
       );
 
-      //end of new logic
-
-      //
       if (locationResult != LocationFlowResult.success) {
         matchState.value = MatchState.locationUnavailable;
         return;
       }
-
-      // FIXED: was `searchesToday++` on a plain int — now goes through the
-      // persisted/day-guarded increment helper.
-      // if (!isPaidUser.value) _incrementSearchCount();           // <-------   BACKEND VALIDATION OF PREMIUM USER
 
       await Future.delayed(const Duration(milliseconds: 300));
 
@@ -348,7 +446,7 @@ class MatchController extends GetxController {
       final data = await MatchService().fetchMatches(
         latitude: alm.latitude.value.toString(),
         longitude: alm.longitude.value.toString(),
-      ); // 403 --> status code --> means free limit for free user is finished --> idle state + navigate to promoCodeScreen
+      );
 
       if (currentSearchId != _searchId) return;
 
@@ -358,6 +456,7 @@ class MatchController extends GetxController {
       }
 
       fetchedMatches.assignAll(data.whereType<MatchResponseModel>());
+
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
     } on MatchLimitExceededException {
@@ -366,6 +465,7 @@ class MatchController extends GetxController {
       await handleDailyLimitReached();
     } catch (e) {
       log("❌ startSearching error: $e");
+
       if (currentSearchId == _searchId) {
         matchState.value = MatchState.noMatch;
       }

@@ -2,6 +2,7 @@ import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_imag
 
 import '../../../../../app/helper_widgets_export.dart';
 import '../../../../../gen/assets.gen.dart';
+import '../../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../../controller/match_controller.dart';
 import '../../modules/upgrade_now_module.dart';
 
@@ -13,7 +14,9 @@ class MatchIdleState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final isPremium = mc.isPaidUser.value;
+      final premium = PremiumAccessService.to;
+      final premiumReady = premium.isReady.value;
+      final isPremium = premiumReady && premium.isPremiumUserNow;
       final limitReached = mc.isWaveLimitReached;
       final remaining = mc.remainingWaves;
 
@@ -36,7 +39,7 @@ class MatchIdleState extends StatelessWidget {
 
                 // Free users see remaining count; premium users get no
                 // limit copy at all.
-                if (!isPremium)
+                if (premiumReady && !isPremium)
                   Text(
                     limitReached
                         ? "You've used all ${mc.dailyWaveLimit} free waves today."
@@ -48,7 +51,7 @@ class MatchIdleState extends StatelessWidget {
                   ),
                 Gap(itemGap * 2),
 
-                GestureDetector(
+                CusGestureDetector(
                   onTap: !isPremium && limitReached
                       ? null
                       : mc.startSearching, // internal limit check still fires
@@ -83,7 +86,7 @@ class MatchIdleState extends StatelessWidget {
           Gap(itemGap),
 
           // No point upselling someone who's already premium.
-          if (!isPremium)
+          if (premiumReady && !isPremium)
             UpgradeNowModule(
               onTapUgradeNow: mc.onTapUpgradeNow,
               remainingCount: mc.remainingWaves,
