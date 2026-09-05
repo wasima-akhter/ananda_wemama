@@ -33,7 +33,7 @@ class MoodCheckInCard extends StatelessWidget {
             children: [
               Text(
                 Strings.howAreYourFeeling.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 16),
+                style: TxtStyle.outfitSemiB(fs: 17),
               ),
               itemGap.verticalSpace,
 

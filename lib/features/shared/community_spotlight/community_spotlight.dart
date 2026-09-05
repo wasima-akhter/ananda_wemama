@@ -53,8 +53,8 @@ class _CommunitySpotlightDummy extends StatelessWidget {
                 hasBrdr: true,
                 contClr: c.inputBackground,
                 rad: 18,
-                vp: 6,
-                hp: 12,
+                vp: 5,
+                hp: 8,
                 child: Text(
                   Strings.joinDiscussion.capEachWord(),
                   style: 12.titleMclrCusFSURB,
@@ -167,8 +167,8 @@ class _CommunitySpotlightLive extends StatelessWidget {
                             hasBrdr: true,
                             contClr: c.inputBackground,
                             rad: 18,
-                            vp: 6,
-                            hp: 12,
+                            vp: 5,
+                            hp: 8,
                             child: Text(
                               Strings.joinDiscussion.capEachWord(),
                               maxLines: 1,
@@ -467,7 +467,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 Strings.communitySpotlight.capEachWord(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TxtStyle.outfitSemiB(fs: 16),
+                style: TxtStyle.outfitSemiB(fs: 17),
               ),
 
               CusGestureDetector(
@@ -479,10 +479,10 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                   contClr: Colors.transparent,
                   rad: 18,
                   vp: 4,
-                  hp: ScreenSizeX.isTablet ? 4 : 9,
+                  hp: ScreenSizeX.isTablet ? 4 : 5,
                   child: Text(
                     "Explore Communities",
-                    style: (ScreenSizeX.isTablet ? 10 : 12).titleMclrCusFSURB
+                    style: (ScreenSizeX.isTablet ? 10 : 11).titleMclrCusFSURB
                         .copyWith(color: c.primary),
                   ),
                 ),

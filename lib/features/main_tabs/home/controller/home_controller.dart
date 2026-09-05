@@ -6,20 +6,6 @@ import '../../experts/controller/session_controller.dart';
 import '../model/community_spotlight_model.dart';
 import '../service/home_service.dart';
 
-String getGreetingMessage() {
-  final hour = DateTime.now().hour;
-
-  if (hour >= 5 && hour < 12) {
-    return "Good Morning";
-  } else if (hour >= 12 && hour < 17) {
-    return "Good Afternoon";
-  } else if (hour >= 17 && hour < 21) {
-    return "Good Evening";
-  } else {
-    return "Good Night";
-  }
-}
-
 class HomeController extends GetxController {
   final mcc = findCont<MoodCheckInController>();
   static HomeController get to => findCont<HomeController>();

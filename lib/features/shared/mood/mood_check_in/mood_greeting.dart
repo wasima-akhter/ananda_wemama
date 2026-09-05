@@ -15,7 +15,7 @@ class MoodGreeting extends StatelessWidget {
               ProfileController.to.userProfileData.value?.name ?? '';
           return Text(
             "${MoodCheckInController.to.getGreetingMessage()}, ${userName.isNotEmpty ? getFirstWord(userName).cap : "Ada"}",
-            style: TxtStyle.outfitSemiB(fs: 17, w: 600),
+            style: TxtStyle.outfitSemiB(fs: 18, w: 600),
           );
         }),
 
