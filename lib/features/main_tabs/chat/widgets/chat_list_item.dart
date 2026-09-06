@@ -16,7 +16,9 @@ class ChatListItem extends StatelessWidget {
     log(' passed chatModel.lastMessage: ${chatModel.lastMessage}');
     return CusGestureDetector(
       onTap: () {
-        Get.delete<ChatInboxController>(force: true);
+        if (Get.isRegistered<ChatInboxController>()) {
+          Get.delete<ChatInboxController>(force: true);
+        }
         Get.toNamed(
           RoutePaths.chatInbox,
           arguments: ChatInboxArgPassModel(

@@ -77,6 +77,9 @@ class ChatInboxController extends GetxController {
     isBlockedRx.value = args.isBlocked;
     // emitGetMessages();
 
+    // Join this conversation
+    joinConversation();
+
     // Auto-send hello after messages load
 
     messagesPaginator = Paginator<Message>(
@@ -130,6 +133,18 @@ class ChatInboxController extends GetxController {
     }
   }
 
+  void joinConversation() {
+    if (!socket.isConnected) {
+      log("⚠️ Cannot join conversation: socket disconnected");
+      return;
+    }
+
+    log("➡️ Joining conversation: $chatId");
+
+    socket.emit(SocketEvents.joinConversation, {"conversationId": chatId});
+  }
+
+  //
   final socket = Get.find<SocketService>();
   void _scheduleReconnect({bool immediate = false}) {
     if (socket.isConnected) return;
@@ -169,6 +184,11 @@ class ChatInboxController extends GetxController {
 
   @override
   void onClose() {
+    // Leave current conversation
+    if (socket.isConnected) {
+      socket.emit(SocketEvents.leaveConversation, {"conversationId": chatId});
+    }
+
     msgInputController.dispose();
     msgInputFocus.dispose();
     scrollController.dispose();

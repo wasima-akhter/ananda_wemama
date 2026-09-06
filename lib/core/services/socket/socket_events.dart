@@ -32,4 +32,7 @@ class SocketEvents {
 
   // 🔔 Notifications
   static const newNotification = "new_notification"; // receiver listens
+
+  static const joinConversation = "join_conversation";
+  static const leaveConversation = "leave_conversation";
 }
