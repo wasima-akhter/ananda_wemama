@@ -1,4 +1,5 @@
 import '../../../../app/controller_export.dart';
+import '../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../model/expert_session_list_model.dart';
 import '../services/experts_service.dart';
 
@@ -13,6 +14,22 @@ class SessionActionController extends GetxController {
     required String sessionId,
     required String question,
   }) async {
+    // ✅ PREMIUM CHECK BEFORE ALLOWING ACTION
+    final premium = PremiumAccessService.to;
+
+    if (!premium.isReady.value) {
+      debugPrint('⏳ Premium service not ready');
+      Snack.showWarning('Checking subscription status...');
+      return false;
+    }
+
+    if (!premium.isPremiumUserNow) {
+      debugPrint('🔒 User not premium — blocking question');
+      Get.toNamed(RoutePaths.subscriptionUpgrade);
+      return false;
+    }
+
+    // ✅ User is premium — proceed with question
     if (isSendQuesLoading.value) return false;
 
     isSendQuesLoading.value = true;
@@ -57,6 +74,20 @@ class SessionActionController extends GetxController {
   }
 
   Future<void> toggleReminder({required String sessionId}) async {
+    // ✅ PREMIUM CHECK BEFORE ALLOWING REMINDER ACTION
+    final premium = PremiumAccessService.to;
+
+    if (!premium.isReady.value) {
+      Snack.showWarning('Checking subscription status...');
+      return;
+    }
+
+    if (!premium.isPremiumUserNow) {
+      Get.toNamed(RoutePaths.subscriptionUpgrade);
+      return;
+    }
+
+    // ✅ User is premium — proceed with reminder toggle
     if (isReminderLoading(sessionId)) return; // per-session guard now
 
     reminderLoading[sessionId] = true;

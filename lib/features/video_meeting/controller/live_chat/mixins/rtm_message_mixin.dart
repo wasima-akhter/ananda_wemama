@@ -500,18 +500,18 @@ mixin RtmMessageMixin on GetxController {
     }
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<bool> sendMessage(String text) async {
     final trimmed = text.trim();
 
     if (trimmed.isEmpty) {
       log('⚠️ [RTM] Empty message — skipping');
-      return;
+      return false;
     }
 
     if (!_self.isRtmReady.value || _self.rtmClient == null) {
       log('❌ [RTM] Not ready — cannot send');
       "Chat not connected yet".showToast();
-      return;
+      return false;
     }
 
     try {
@@ -536,7 +536,7 @@ mixin RtmMessageMixin on GetxController {
           '❌ [RTM] Publish failed — code: ${status.errorCode}, reason: ${status.reason}',
         );
         "Failed to send".showToast();
-        return;
+        return false;
       }
 
       log('✅ [RTM] Published: ${result.toString()}');
@@ -556,9 +556,13 @@ mixin RtmMessageMixin on GetxController {
       _self.mc.inputMsgCtrl.clear();
       FocusManager.instance.primaryFocus?.unfocus(); // ← dismiss keyboard
       _self.scrollToBottom();
+
+      return true;
     } catch (e) {
       log('❌ [RTM] sendMessage error: $e');
       "Failed to send".showToast();
+
+      return false;
     }
   }
 }

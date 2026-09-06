@@ -26,7 +26,21 @@ class MsgInputRow extends StatelessWidget {
       suffix: CusCircleIconButton(
         radius: 15,
         backgroundColor: c.primary,
-        onTap: () => cc.sendMessage(mc.inputMsgCtrl.text),
+        onTap: () async {
+          final text = mc.inputMsgCtrl.text.trim();
+
+          if (text.isEmpty) return;
+
+          final success = await cc.sendMessage(text);
+
+          // Keyboard should close regardless of send result.
+          mc.inputMsgFocus.unfocus();
+
+          // Only clear text when successfully sent.
+          if (success) {
+            mc.inputMsgCtrl.clear();
+          }
+        },
         child: SvgIcon(iconPath: IconsPath.sendLargeWhite, height: 20),
       ).mAll(4),
     ).mHV(10, 0);

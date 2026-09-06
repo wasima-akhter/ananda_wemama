@@ -66,7 +66,7 @@ void main() async {
   debugPrint('✅ [main] AppStorage ready');
 
   //
-  // ── 3.5 PurchaseService ───────────────────────────────────────────────────
+  // ── 3.5 PurchaseService ───────────────────────────────────────────────
   debugPrint('🔧 [main] initializing PurchaseService...');
   try {
     await Get.putAsync<PurchaseService>(
@@ -78,7 +78,24 @@ void main() async {
     debugPrint('❌ [main] PurchaseService init FAILED: $e');
     debugPrint('$st');
   }
+
+  // ── 3.6 PremiumAccessService ───────────────────────────────────────────
+  debugPrint('🔧 [main] initializing PremiumAccessService...');
   Get.put(PremiumAccessService(), permanent: true);
+  debugPrint('✅ [main] PremiumAccessService registered');
+
+  // ── 3.7 ✅ REFRESH PREMIUM STATUS (iOS critical!) ─────────────────────
+  debugPrint('🔧 [main] refreshing premium status...');
+  try {
+    final premiumService = PremiumAccessService.to;
+    await premiumService.refreshPremiumStatus();
+    debugPrint(
+      '✅ [main] Premium status refreshed: ${premiumService.isPremiumUserNow}',
+    );
+  } catch (e, st) {
+    debugPrint('❌ [main] Premium refresh FAILED: $e');
+    debugPrint('$st');
+  }
 
   // ── 4. Deep link ─────────────────────────────────────────────────────────────
   debugPrint('🔧 [main] capturing initial deep link...');

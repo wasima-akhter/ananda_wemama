@@ -134,13 +134,44 @@ class MatchController extends GetxController {
 
     _restoreSearchCount();
 
-    fetchWaveLimit();
+    // ✅ Await the profile fetch
+    _initializeProfile();
 
     cancelSearch();
     resetState();
+  }
 
-    print("storage.getMatchSearchCount : ${storage.getMatchSearchCount}");
-    print("freeDailyLimit : $freeDailyLimit");
+  Future<void> _initializeProfile() async {
+    debugPrint('⏳ [MatchController] Initializing profile...');
+    await fetchWaveLimit();
+    debugPrint('✅ [MatchController] Profile initialized');
+  }
+
+  // ✅ Update the wave limit check
+  bool get isWaveLimitReached {
+    final premium = PremiumAccessService.to;
+
+    if (!premium.isReady.value) {
+      debugPrint('⚠️  Premium not ready in isWaveLimitReached');
+      return false;
+    }
+
+    debugPrint('🔍 isWaveLimitReached check:');
+    debugPrint('   isPremiumUserNow: ${premium.isPremiumUserNow}');
+    debugPrint('   isUnlimited: ${profile.value?.waveLimit?.isUnlimited}');
+    debugPrint('   remainingWaves: $remainingWaves');
+
+    if (premium.isPremiumUserNow) {
+      debugPrint('   → PREMIUM: no limit');
+      return false;
+    }
+
+    final isLimited =
+        !(profile.value?.waveLimit?.isUnlimited ?? false) &&
+        remainingWaves <= 0;
+
+    debugPrint('   → FREE: limited=$isLimited');
+    return isLimited;
   }
 
   @override
@@ -327,25 +358,22 @@ class MatchController extends GetxController {
 
   int get dailyWaveLimit => profile.value?.waveLimit?.limit ?? 3;
 
-  int get remainingWaves => profile.value?.waveLimit?.remaining ?? 0;
-
-  bool get isWaveLimitReached {
+  int get remainingWaves {
+    // Premium users should never show a wave count
     final premium = PremiumAccessService.to;
-
-    // Premium status is not known yet.
-    // Never treat the user as a free user during initialization.
-    if (!premium.isReady.value) {
-      return false;
+    if (premium.isReady.value && premium.isPremiumUserNow) {
+      return -1; // or some sentinel value meaning "unlimited"
     }
 
-    // Premium users never hit the free wave limit.
-    if (premium.isPremiumUserNow) {
-      return false;
-    }
-
-    return !(profile.value?.waveLimit?.isUnlimited ?? false) &&
-        remainingWaves <= 0;
+    // Free users show actual count from backend
+    return profile.value?.waveLimit?.remaining ?? 0;
   }
+
+  bool get isUnlimited =>
+      profile.value?.waveLimit?.isUnlimited ??
+      false ||
+          (PremiumAccessService.to.isReady.value &&
+              PremiumAccessService.to.isPremiumUserNow);
 
   bool get hasPremiumAccess {
     final premium = PremiumAccessService.to;

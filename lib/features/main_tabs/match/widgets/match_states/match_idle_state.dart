@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
@@ -16,10 +17,30 @@ class MatchIdleState extends StatelessWidget {
     return Obx(() {
       final premium = PremiumAccessService.to;
       final premiumReady = premium.isReady.value;
+      final profileReady = mc.profile.value != null;
       final isPremium = premiumReady && premium.isPremiumUserNow;
+
+      // ✅ Show loading until both are ready
+      if (!premiumReady || !profileReady) {
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Loading premium status...'),
+              if (kDebugMode) ...[
+                SizedBox(height: 16),
+                Text('DEBUG: premium.isReady=${premium.isReady.value}'),
+                Text('DEBUG: profile.ready=$profileReady'),
+              ],
+            ],
+          ),
+        );
+      }
+
       final limitReached = mc.isWaveLimitReached;
       final remaining = mc.remainingWaves;
-
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [

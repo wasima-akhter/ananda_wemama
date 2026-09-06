@@ -7,6 +7,7 @@ import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/session_time_helper.dart';
 import '../../../../core/utils/share_util/share_util.dart';
 import '../../../main_tabs/experts/model/expert_session_list_model.dart';
+import '../../subscription/subscription_access/premium_access_service.dart';
 
 class UpcomingExpertSessionCard extends StatelessWidget {
   final void Function({required String expertId, required String sessionId})
@@ -80,6 +81,10 @@ class UpcomingExpertSessionCard extends StatelessWidget {
     debugPrint('🌐 Device UTC time: ${DateTime.now().toUtc()}');
     debugPrint('converted time: $time');
     debugPrint('converted date: $date');
+
+    //
+    final premium = PremiumAccessService.to;
+    final isPremium = premium.isReady.value && premium.isPremiumUserNow;
 
     return ContainerBordered(
       contClr: newCardClr,
@@ -217,24 +222,44 @@ class UpcomingExpertSessionCard extends StatelessWidget {
 
               Gap(itemGap),
 
-              // if (isFromUpcomgScreen != null)
-              CusGestureDetector(
-                onTap: () => showAskYourQuesDialog(
-                  onTap: () =>
-                      onTapQues(expertId: expertId_, sessionId: sessionId_),
-                  isSendQuesLoading: isSendQuesLoading,
-                  writeQuesCtrl: writeQuesCtrl,
-                  writeQuesFocusNode: writeQuesFocusNode,
+              if (isPremium) // ← Only show if premium
+                CusGestureDetector(
+                  onTap: () => showAskYourQuesDialog(
+                    onTap: () =>
+                        onTapQues(expertId: expertId_, sessionId: sessionId_),
+                    isSendQuesLoading: isSendQuesLoading,
+                    writeQuesCtrl: writeQuesCtrl,
+                    writeQuesFocusNode: writeQuesFocusNode,
+                  ),
+                  child: ContainerBordered(
+                    contClr: c.buttonPrimary,
+                    rad: 30,
+                    vp: 0,
+                    h: actionBtnHeight,
+                    w: actionBtnHeight,
+                    child: SvgIcon(
+                      iconPath: IconsPath.chatDotSquare,
+                      height: 21,
+                    ),
+                  ),
+                )
+              else
+                // ❌ Not premium → show upgrade prompt
+                CusGestureDetector(
+                  onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+                  child: ContainerBordered(
+                    contClr: const Color(0xFFC7A99C), // disabled state
+                    rad: 30,
+                    vp: 0,
+                    h: actionBtnHeight,
+                    w: actionBtnHeight,
+                    child: SvgIconColored(
+                      iconColor: const Color(0xFFF7EFEC),
+                      iconPath: IconsPath.chatDotSquare,
+                      height: 21,
+                    ),
+                  ),
                 ),
-                child: ContainerBordered(
-                  contClr: c.buttonPrimary,
-                  rad: 30,
-                  vp: 0,
-                  h: actionBtnHeight,
-                  w: actionBtnHeight,
-                  child: SvgIcon(iconPath: IconsPath.chatDotSquare, height: 21),
-                ),
-              ),
             ],
           ),
         ],
@@ -261,16 +286,19 @@ class UpcomingExpertSessionCard extends StatelessWidget {
   }
 
   Widget makeReminderButton() {
-    return CusGestureDetector(
-      onTap: onTapRemindMe,
+    return Obx(() {
+      final premium = PremiumAccessService.to;
+      final isPremium = premium.isReady.value && premium.isPremiumUserNow;
+      final active = isReminderActive(); // 👈 call it, don't just reference
+      final loading = isRemindMeLoading();
 
-      child: Obx(() {
-        final active = isReminderActive(); // 👈 call it, don't just reference
-        final loading = isRemindMeLoading();
-
-        return ContainerBordered(
+      return CusGestureDetector(
+        onTap: isPremium
+            ? onTapRemindMe
+            : () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+        child: ContainerBordered(
           // contClr: active ? c.strokePrimary : c.buttonPrimary,
-          contClr: c.buttonPrimary,
+          contClr: !isPremium ? const Color(0xFFC7A99C) : c.buttonPrimary,
 
           rad: 30,
           vp: 0,
@@ -305,9 +333,9 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget makeShareButton() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
+import '../../../features/main_tabs/match/controller/match_controller.dart';
 import '../../../features/shared/subscription/subscription_access/premium_access_service.dart';
 import '../../../features/video_meeting/controller/arg_model/meeting_ctrl_ag_model.dart';
 import '../../../routes/route_paths.dart';
@@ -23,65 +24,55 @@ class SessionNavigator {
     debugPrint('║ [SessionNavigator.openMeeting] START    ║');
     debugPrint('╚════════════════════════════════════════╝');
 
-    // ✅ Print current state
     premiumService.debugPrintFullState();
 
-    // ✅ Wait for service to be ready
+    // ✅ Wait for ready
     if (!premiumService.isReady.value) {
-      debugPrint(
-        '⏳ [SessionNavigator.openMeeting] Service NOT ready, waiting...',
-      );
-
       int attempts = 0;
       while (!premiumService.isReady.value && attempts < 50) {
         await Future.delayed(const Duration(milliseconds: 100));
         attempts++;
       }
 
-      debugPrint('⏳ [SessionNavigator.openMeeting] Waited $attempts attempts');
-
       if (!premiumService.isReady.value) {
-        debugPrint(
-          '🔴 [SessionNavigator.openMeeting] Service initialization TIMEOUT',
-        );
-        premiumService.debugPrintFullState();
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
+        debugPrint('🔴 Service init TIMEOUT');
+        if (Get.isDialogOpen ?? false) Get.back();
         return false;
       }
-
-      debugPrint('✅ [SessionNavigator.openMeeting] Service now READY');
-      premiumService.debugPrintFullState();
-    } else {
-      debugPrint('✅ [SessionNavigator.openMeeting] Service already READY');
     }
 
-    // ✅ Check if premium
-    debugPrint('\n🔐 [SessionNavigator.openMeeting] Premium check:');
-    debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
-    debugPrint('   isPremiumUser.value: ${premiumService.isPremiumUser.value}');
-
-    if (!premiumService.isPremiumUserNow) {
-      debugPrint('🔒 [SessionNavigator.openMeeting] ❌ User is NOT premium');
-      premiumService.debugPrintFullState();
-
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
-
-      Get.toNamed(RoutePaths.subscriptionUpgrade);
-      return false;
+    // ✅ CHECK 1: Quick check
+    if (premiumService.isPremiumUserNow) {
+      debugPrint('✅ CHECK 1 PASSED: opening meeting');
+      _openMeetingScreen(channelName, sessionTitle, hostName);
+      return true;
     }
 
-    debugPrint(
-      '✅ [SessionNavigator.openMeeting] ✅ User IS premium - opening meeting!',
+    // ✅ CHECK 2: Manual verification (iOS retry logic)
+    debugPrint('\n🔄 CHECK 1 FAILED: attempting verification...');
+    final verified = await premiumService.verifyPremiumStatusWithRetry(
+      maxAttempts: 3,
     );
-    premiumService.debugPrintFullState();
 
-    if (Get.isDialogOpen ?? false) {
-      Get.back();
+    if (verified) {
+      debugPrint('✅ CHECK 2 PASSED: opening meeting');
+      _openMeetingScreen(channelName, sessionTitle, hostName);
+      return true;
     }
+
+    // ❌ Not premium
+    debugPrint('❌ BOTH CHECKS FAILED: redirecting to upgrade');
+    if (Get.isDialogOpen ?? false) Get.back();
+    Get.toNamed(RoutePaths.subscriptionUpgrade);
+    return false;
+  }
+
+  static void _openMeetingScreen(
+    String channelName,
+    String sessionTitle,
+    String hostName,
+  ) {
+    if (Get.isDialogOpen ?? false) Get.back();
 
     Get.toNamed(
       RoutePaths.meetingScreen,
@@ -93,28 +84,17 @@ class SessionNavigator {
     );
 
     debugPrint('╔════════════════════════════════════════╗');
-    debugPrint('║ [SessionNavigator.openMeeting] SUCCESS  ║');
+    debugPrint('║ [SessionNavigator] MEETING OPENED ✅    ║');
     debugPrint('╚════════════════════════════════════════╝\n');
-
-    return true;
   }
 
-  /// Returns true if successfully opened session, false otherwise
-  /// Returns true if successfully opened session, false otherwise
-  static Future<bool> open(Session session) async {
-    debugPrint(
-      "🎯 [SessionNavigator.open] → "
-      "id=${session.id}, status=${session.status}",
-    );
+  // Same for open() method:
+  ///// Returns true if successfully opened session, false otherwise
 
+  static Future<bool> open(Session session) async {
     final premiumService = PremiumAccessService.to;
 
-    // ✅ Wait for service to be ready
     if (!premiumService.isReady.value) {
-      debugPrint(
-        '⏳ [SessionNavigator.open] Waiting for PremiumAccessService...',
-      );
-
       int attempts = 0;
       while (!premiumService.isReady.value && attempts < 50) {
         await Future.delayed(const Duration(milliseconds: 100));
@@ -122,37 +102,30 @@ class SessionNavigator {
       }
 
       if (!premiumService.isReady.value) {
-        debugPrint('🔴 [SessionNavigator.open] Service initialization timeout');
-        // ✅ Close dialog
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
+        if (Get.isDialogOpen ?? false) Get.back();
         return false;
       }
     }
 
-    // ✅ Premium gate
-    if (!premiumService.isPremiumUserNow) {
-      debugPrint("🔒 [SessionNavigator.open] User is not premium");
+    // ✅ First check
+    bool isPremium = premiumService.isPremiumUserNow;
 
-      // ✅ Close dialog BEFORE navigating
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
+    // ✅ Fallback check if first failed (iOS)
+    if (!isPremium) {
+      isPremium = await premiumService.verifyPremiumStatusManually();
+    }
 
+    if (!isPremium) {
+      if (Get.isDialogOpen ?? false) Get.back();
       Get.toNamed(RoutePaths.subscriptionUpgrade);
       return false;
     }
 
+    // Proceed with session join
+    if (Get.isDialogOpen ?? false) Get.back();
+
     switch (session.status) {
       case 'Ongoing':
-        debugPrint('🔗 [SessionNavigator.open] → Ongoing → meetingScreen');
-
-        // ✅ Close dialog before opening meeting
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
-
         Get.offAllNamed(
           RoutePaths.meetingScreen,
           arguments: MeetingCtrlAgModel(
@@ -164,29 +137,71 @@ class SessionNavigator {
         return true;
 
       case 'Upcoming':
-        debugPrint('🔗 [SessionNavigator.open] → Upcoming → upcomingSessions');
-
-        // ✅ Close dialog
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
-
         await Get.offAllNamed(RoutePaths.upcomingSessions);
-        await Future.microtask(() => null);
         return true;
 
       default:
-        debugPrint(
-          "🔗 [SessionNavigator.open] → unhandled status '${session.status}'",
-        );
-
-        // ✅ Close dialog
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
-
         Get.offAllNamed(RoutePaths.mainNav);
         return false;
     }
   }
+
+  //
+  // Manually test premium status
+  static Future<void> debugTestPremiumStatus() async {
+    final premium = PremiumAccessService.to;
+
+    debugPrint('\n🧪 PREMIUM STATUS DEBUG TEST');
+    premium.debugPrintFullState();
+
+    debugPrint('\n🔄 Manually verifying...');
+    final verified = await premium.verifyPremiumStatusManually();
+
+    debugPrint('\n✅ Verification result: $verified');
+    premium.debugPrintFullState();
+  }
+}
+
+//----------------------------------------------------//
+//-------------------  TESTING PLAN -----------------//
+//---------------------------------------------------//
+
+// Add a debug button to test both scenarios
+
+// TEST 1: Premium Status
+Future<void> debugTestPremiumIOS() async {
+  final p = PremiumAccessService.to;
+
+  debugPrint('\n═══ TESTING PREMIUM STATUS ═══');
+  p.debugPrintFullState();
+
+  debugPrint('\nRefreshing...');
+  await p.refreshPremiumStatus();
+  p.debugPrintFullState();
+
+  debugPrint('\nVerifying with retry...');
+  final verified = await p.verifyPremiumStatusWithRetry();
+  debugPrint('Result: $verified\n');
+}
+
+// TEST 2: Wave Count
+void debugTestWaveCount() {
+  final mc = MatchController.to;
+
+  debugPrint('\n═══ TESTING WAVE COUNT ═══');
+  debugPrint('Premium ready: ${PremiumAccessService.to.isReady.value}');
+  debugPrint('Is premium: ${PremiumAccessService.to.isPremiumUserNow}');
+  debugPrint('Profile ready: ${mc.profile.value != null}');
+  debugPrint('Remaining waves: ${mc.remainingWaves}');
+  debugPrint('Is waveLimit reached: ${mc.isWaveLimitReached}\n');
+}
+
+// TEST 3: Session Join
+Future<void> debugTestSessionJoin() async {
+  final result = await SessionNavigator.openMeeting(
+    channelName: 'test',
+    sessionTitle: 'Test Session',
+    hostName: 'Test Host',
+  );
+  debugPrint('Session join result: $result');
 }

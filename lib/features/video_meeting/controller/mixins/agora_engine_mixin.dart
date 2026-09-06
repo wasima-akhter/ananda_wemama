@@ -27,9 +27,13 @@ mixin AgoraEngineMixin on GetxController {
 
   final RxBool hasReceivedFirstHostFrame = false.obs;
 
+  final RxBool hasVideoInitError = false.obs;
+
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
     log('🔵 [1] hostMeeting() started');
+
+    hasVideoInitError.value = false;
 
     /// Step 1: Fetch token & session data
     await _self.getSessionsInfo();
@@ -48,15 +52,18 @@ mixin AgoraEngineMixin on GetxController {
     /// 🔴 Safety checks (must have valid data)
     if (fetchedRtmToken == null || fetchedRtmToken.isEmpty) {
       log('❌ Token is null or empty!');
+      hasVideoInitError.value = true;
       return;
     }
 
     if (fetchedChannel == null || fetchedChannel.isEmpty) {
       log('❌ ChannelName is null or empty!');
+      hasVideoInitError.value = true;
       return;
     }
     if (fetchedRtcToken == null || fetchedRtcToken.isEmpty) {
       log('❌ fetchedRtcToken is null or empty!');
+      hasVideoInitError.value = true;
       return;
     }
 

@@ -77,14 +77,19 @@ class TopContent extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 // ✅ Use the shared video view
-                CusGestureDetector(
-                  onTap: () => Get.to(
-                    () => FullscreenVideoPage(),
-                    fullscreenDialog: true,
-                    transition: Transition.fadeIn,
-                  ),
-                  child: SharedAgoraVideoView(fit: BoxFit.cover),
-                ),
+                Obx(() {
+                  if (mc.hasVideoInitError.value) {
+                    return _buildVideoErrorPlaceholder();
+                  }
+                  return CusGestureDetector(
+                    onTap: () => Get.to(
+                      () => FullscreenVideoPage(),
+                      fullscreenDialog: true,
+                      transition: Transition.fadeIn,
+                    ),
+                    child: SharedAgoraVideoView(fit: BoxFit.cover),
+                  );
+                }),
 
                 //
                 // ✅ Reaction + View counts
@@ -126,12 +131,19 @@ class TopContent extends StatelessWidget {
                 Positioned(
                   right: 12,
                   bottom: 12,
-                  child: GestureDetector(
-                    onTap: () => Get.to(
-                      () => FullscreenVideoPage(),
-                      transition: Transition.fadeIn,
-                    ),
-                    child: _buildFloatingIcon(text: "", icon: Icons.fullscreen),
+                  child: Obx(
+                    () => mc.hasVideoInitError.value
+                        ? const SizedBox.shrink()
+                        : GestureDetector(
+                            onTap: () => Get.to(
+                              () => FullscreenVideoPage(),
+                              transition: Transition.fadeIn,
+                            ),
+                            child: _buildFloatingIcon(
+                              text: "",
+                              icon: Icons.fullscreen,
+                            ),
+                          ),
                   ),
                 ),
                 // ... other overlays unchanged
@@ -184,6 +196,53 @@ class TopContent extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+
+  //
+  Widget _buildVideoErrorPlaceholder() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: c.bottomSheetBackground,
+        borderRadius: BorderRadius.circular(20.r),
+      ),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 52.w,
+                height: 52.w,
+                decoration: BoxDecoration(
+                  color: c.primary.withValues(alpha: 0.10),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.videocam_off_outlined,
+                  size: 26.w,
+                  color: c.primary,
+                ),
+              ),
+              Gap(12.h),
+              Text(
+                'Unable to start the live session',
+                textAlign: TextAlign.center,
+                style: TxtStyle.outfit(fs: 15, w: 600),
+              ),
+              Gap(6.h),
+              Text(
+                'Please try again in a moment.',
+                textAlign: TextAlign.center,
+                style: TxtStyle.outfit(fs: 12, color: c.secondary),
+              ),
+            ],
+          ),
         ),
       ),
     );

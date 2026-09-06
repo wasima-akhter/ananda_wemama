@@ -6,6 +6,7 @@ import 'package:we_mama/features/shared/mood/ongoing_sessions/upcoming_expert_se
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
+import '../../../../core/services/deep_link/session_navigator.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../../../shared/mood/mood_check_in/mood_chip_card.dart';
 import '../../../shared/mood/mood_check_in/mood_greeting.dart';
@@ -148,6 +149,35 @@ class _HomeScreenState extends State<HomeScreen> {
             TextButton(
               onPressed: () => Get.toNamed(RoutePaths.onboardScreen),
               child: Text("Sub onboardScreen page"),
+            ),
+          ],
+
+          if (kDebugMode) ...[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: debugTestPremiumIOS,
+                  icon: const Icon(Icons.workspace_premium),
+                  label: const Text('TEST: Premium Status'),
+                ),
+
+                const SizedBox(height: 10),
+
+                ElevatedButton.icon(
+                  onPressed: debugTestWaveCount,
+                  icon: const Icon(Icons.waves),
+                  label: const Text('TEST: Wave Count'),
+                ),
+
+                const SizedBox(height: 10),
+
+                ElevatedButton.icon(
+                  onPressed: debugTestSessionJoin,
+                  icon: const Icon(Icons.video_call),
+                  label: const Text('TEST: Session Join'),
+                ),
+              ],
             ),
           ],
 

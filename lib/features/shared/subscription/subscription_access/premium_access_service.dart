@@ -81,42 +81,29 @@ class PremiumAccessService extends GetxService {
     debugPrint('═══════════════════════════════════════\n');
   }
 
-  void _recompute() {
-    final bool wasActive = isPremiumUser.value;
+  /// Manually verify premium status by checking multiple sources
+  Future<bool> verifyPremiumStatusManually() async {
+    debugPrint('\n🔍 [verifyPremiumStatusManually] START');
 
-    if (GetPlatform.isIOS) {
-      isPremiumUser.value = _purchaseService.isActive.value;
-      debugPrint('📱 [PremiumAccessService._recompute] iOS path');
-      debugPrint(
-        '   purchaseService.isActive: ${_purchaseService.isActive.value}',
-      );
-      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
+    // Force refresh from backend
+    await _purchaseService.refreshCustomerInfo();
 
-      // ✅ Debug mode force premium
-      if (kDebugMode) {
-        debugPrint('🧪 [PremiumAccessService] DEBUG MODE DETECTED');
-        isPremiumUser.value = true;
-        debugPrint(
-          '⚠️  [PremiumAccessService] isPremiumUser FORCED to TRUE (debug mode)',
-        );
-        _printCurrentState('After DEBUG MODE force');
-      }
-    } else {
-      // Android
-      isPremiumUser.value =
-          isFakePremiumActive || _purchaseService.isActive.value;
-      debugPrint('🤖 [PremiumAccessService._recompute] Android path');
-      debugPrint('   isFakePremiumActive: $isFakePremiumActive');
-      debugPrint(
-        '   purchaseService.isActive: ${_purchaseService.isActive.value}',
-      );
-      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
-    }
+    final customerInfo = _purchaseService.customerInfo.value;
+    final isActiveViaService = _purchaseService.isActive.value;
+    final hasEntitlements =
+        customerInfo?.activeSubscriptions.isNotEmpty ?? false;
 
-    if (wasActive != isPremiumUser.value) {
-      debugPrint('⚠️  [PremiumAccessService._recompute] STATUS CHANGED!');
-      debugPrint('   Before: $wasActive → After: ${isPremiumUser.value}');
-    }
+    debugPrint('   After refresh:');
+    debugPrint('   - purchaseService.isActive: $isActiveViaService');
+    debugPrint(
+      '   - activeSubscriptions: ${customerInfo?.activeSubscriptions}',
+    );
+    debugPrint('   - hasEntitlements: $hasEntitlements');
+
+    final finalStatus = isActiveViaService || hasEntitlements;
+    debugPrint('   → FINAL VERIFIED STATUS: $finalStatus\n');
+
+    return finalStatus;
   }
 
   /// Print current state for debugging
@@ -152,15 +139,120 @@ class PremiumAccessService extends GetxService {
 
   Future<bool> refreshPremiumStatus() async {
     debugPrint('\n🔄 [PremiumAccessService.refreshPremiumStatus] START');
+
+    // Force purchase service to refresh
     await _purchaseService.refreshCustomerInfo();
+
+    // Wait a moment for data to settle
+    await Future.delayed(const Duration(milliseconds: 500));
+
     _recompute();
     _printCurrentState('After refreshPremiumStatus()');
-    debugPrint('🔄 [PremiumAccessService.refreshPremiumStatus] END\n');
+
+    debugPrint('🔄 [PremiumAccessService.refreshPremiumStatus] END');
+    debugPrint('   Final status: isPremiumUserNow = $isPremiumUserNow\n');
+
     return isPremiumUserNow;
+  }
+
+  void _recompute() {
+    final bool wasActive = isPremiumUser.value;
+
+    if (GetPlatform.isIOS) {
+      debugPrint('📱 [iOS Premium Recompute]');
+
+      final serviceActive = _purchaseService.isActive.value;
+      final customerInfo = _purchaseService.customerInfo.value;
+      final hasEntitlements =
+          customerInfo?.activeSubscriptions.isNotEmpty ?? false;
+
+      debugPrint('   purchaseService.isActive: $serviceActive');
+      debugPrint('   hasActiveSubscriptions: $hasEntitlements');
+
+      // ✅ PRIMARY: Use purchaseService.isActive
+      // ✅ FALLBACK: Check activeSubscriptions directly
+      isPremiumUser.value = serviceActive || hasEntitlements;
+
+      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
+
+      // Force enable in debug for testing
+      if (kDebugMode) {
+        isPremiumUser.value = true;
+        debugPrint('🧪 DEBUG: Force enabled premium');
+      }
+    } else {
+      // Android path
+      isPremiumUser.value =
+          isFakePremiumActive || _purchaseService.isActive.value;
+      debugPrint('🤖 [Android Premium Recompute]');
+      debugPrint('   → isPremiumUser: ${isPremiumUser.value}');
+    }
+
+    if (wasActive != isPremiumUser.value) {
+      debugPrint('⚠️  STATUS CHANGED: $wasActive → ${isPremiumUser.value}');
+    }
+  }
+
+  /// Verify premium with max retries and detailed logging
+  Future<bool> verifyPremiumStatusWithRetry({int maxAttempts = 3}) async {
+    debugPrint('\n🔍 [verifyPremiumStatusWithRetry] START (iOS fallback)');
+
+    for (int i = 0; i < maxAttempts; i++) {
+      debugPrint('   Attempt ${i + 1}/$maxAttempts');
+
+      await _purchaseService.refreshCustomerInfo();
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      final customerInfo = _purchaseService.customerInfo.value;
+      final isActive = _purchaseService.isActive.value;
+      final hasEntitlements =
+          customerInfo?.activeSubscriptions.isNotEmpty ?? false;
+
+      debugPrint('     - isActive: $isActive');
+      debugPrint('     - hasEntitlements: $hasEntitlements');
+
+      if (isActive || hasEntitlements) {
+        debugPrint('✅ [verifyPremiumStatusWithRetry] CONFIRMED PREMIUM\n');
+        return true;
+      }
+    }
+
+    debugPrint('❌ [verifyPremiumStatusWithRetry] NOT PREMIUM (all attempts)\n');
+    return false;
   }
 
   /// Call this in your SessionNavigator to debug
   void debugPrintFullState() {
     _printCurrentState('MANUAL DEBUG CHECK');
   }
+
+  // For UI
+  /// Get premium status with iOS fallback verification
+  /// Used by UI widgets that need reliable premium status
+  Future<bool> getPremiumStatusWithFallback() async {
+    // ✅ PRIMARY: If already determined to be premium, return true
+    if (isPremiumUser.value) {
+      debugPrint('✅ [getPremiumStatusWithFallback] Already premium');
+      return true;
+    }
+
+    // ❌ PRIMARY failed, but we're ready — might be false negative on iOS
+    if (!isReady.value) {
+      debugPrint('⏳ [getPremiumStatusWithFallback] Not ready yet');
+      return false;
+    }
+
+    // ✅ FALLBACK: Verify manually for iOS
+    if (GetPlatform.isIOS) {
+      debugPrint(
+        '🔍 [getPremiumStatusWithFallback] iOS fallback verification...',
+      );
+      return await verifyPremiumStatusWithRetry(maxAttempts: 2);
+    }
+
+    // Already checked and false — return false
+    return false;
+  }
+
+  //
 }
