@@ -4,10 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../../app/controller_export.dart';
-import '../../../../../features/main_tabs/home/dialogs/permanent_denied_dialog.dart';
-import '../../../../../features/main_tabs/home/dialogs/rationale_dialog.dart';
-import '../../../../../features/main_tabs/home/dialogs/turnon_service_dialog.dart';
-import '../../../../components/ui/dialogs/popups.dart';
 import '../../../../services/location/location_service.dart';
 import '../../location_helpers.dart';
 
@@ -233,6 +229,8 @@ class AppLocationManager extends GetxService {
   // PUBLIC API
   // ─────────────────────────────────────────────
 
+  /// Ensures fresh location with dialog handling
+  /// Shows dialogs if service/permission issues occur
   Future<LocationFlowResult> ensureFreshLocation({
     bool showDialogs = true,
     bool forceRefresh = true,
@@ -244,65 +242,84 @@ class AppLocationManager extends GetxService {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
+      // ❌ SERVICE DISABLED → Show dialog
       if (!serviceEnabled) {
         isLocationActive.value = false;
 
-        if (isIOS) {
-          locationFlowResult.value = LocationFlowResult.serviceDisabled;
+        if (showDialogs) {
+          final userTappedTurnOn = await _showTurnOnServiceDialog();
+
+          if (userTappedTurnOn) {
+            // Wait for user to return from settings
+            await Future.delayed(const Duration(seconds: 1));
+
+            // Retry check
+            serviceEnabled = await Geolocator.isLocationServiceEnabled();
+            if (!serviceEnabled) {
+              return LocationFlowResult.serviceDisabled;
+            }
+            // ✅ Service is now ON — fall through to permission check
+          } else {
+            return LocationFlowResult.serviceDisabled;
+          }
+        } else {
           return LocationFlowResult.serviceDisabled;
         }
-
-        locationFlowResult.value = LocationFlowResult.serviceDisabled;
-
-        return LocationFlowResult.serviceDisabled;
       }
 
+      // At this point, service is enabled
       var permission = await Geolocator.checkPermission();
 
-      final granted =
-          permission == LocationPermission.always ||
-          permission == LocationPermission.whileInUse;
+      // ❌ PERMISSION DENIED → Show dialog
+      if (permission == LocationPermission.denied) {
+        if (showDialogs) {
+          final userAgreed = await _showRationaleDialog();
+          if (!userAgreed) {
+            return LocationFlowResult.permissionDenied;
+          }
 
-      if (!granted) {
-        isLocationActive.value = false;
-
-        if (permission == LocationPermission.deniedForever) {
-          locationFlowResult.value = LocationFlowResult.permissionDeniedForever;
-
-          return LocationFlowResult.permissionDeniedForever;
+          permission = await Geolocator.checkPermission();
+        } else {
+          return LocationFlowResult.permissionDenied;
         }
-
-        locationFlowResult.value = LocationFlowResult.permissionDenied;
-
-        return LocationFlowResult.permissionDenied;
       }
 
-      final location = await LocationHelper.getCurrentLocation();
+      // ❌ PERMISSION PERMANENTLY DENIED
+      if (permission == LocationPermission.deniedForever) {
+        if (showDialogs) {
+          await _showPermanentDeniedDialog();
+        }
+        return LocationFlowResult.permissionDeniedForever;
+      }
+
+      // ✅ Now try to get actual location
+      final location = await LocationHelper.getCurrentLocation(
+        showSnackbar: false, // ← No dialogs from helper
+      );
 
       if (location == null) {
         isLocationActive.value = false;
-        locationFlowResult.value = LocationFlowResult.failed;
-
         return LocationFlowResult.failed;
       }
 
       latitude.value = location.latitude;
       longitude.value = location.longitude;
+      address.value = location.address;
+      city.value = location.city ?? '';
 
       isLocationActive.value = true;
       locationFlowResult.value = LocationFlowResult.success;
 
       return LocationFlowResult.success;
     } catch (e) {
+      log("❌ ensureFreshLocation error: $e");
       isLocationActive.value = false;
-      locationFlowResult.value = LocationFlowResult.failed;
-
       return LocationFlowResult.failed;
     } finally {
       isLoading.value = false;
     }
   }
-  // ─────────────────────────────────────────────
+
   // BACKEND
   // ─────────────────────────────────────────────
 
@@ -335,50 +352,93 @@ class AppLocationManager extends GetxService {
   // DIALOGS
   // ─────────────────────────────────────────────
 
+  // ✅ Dialog methods (move these from LocationHelper)
   Future<bool> _showTurnOnServiceDialog() async {
-    bool tapped = false;
+    bool tappedTurnOn = false;
 
-    await showAnimatedDialog(
-      context: Get.context!,
+    await Get.dialog(
+      AlertDialog(
+        title: Text(
+          Strings.enableLocation.capEachWord(),
+          style: TxtStyle.fs18.copyWith(color: c.textPrimary),
+        ),
+        content: Text(
+          Strings.locationServicesOffMessage.capEachWord(),
+          style: TxtStyle.norTxt,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(Strings.cancel.capEachWord()),
+          ),
+          TextButton(
+            onPressed: () async {
+              tappedTurnOn = true;
+              Get.back();
+              await Geolocator.openLocationSettings();
+            },
+            child: Text(Strings.turnOn.capEachWord()),
+          ),
+        ],
+      ),
       barrierDismissible: false,
-      child: TurnOnServiceDialog(onTurnOn: () => tapped = true),
     );
 
-    return tapped;
+    return tappedTurnOn;
   }
 
   Future<bool> _showRationaleDialog() async {
     bool agreed = false;
 
-    await showAnimatedDialog(
-      context: Get.context!,
-      barrierDismissible: false,
-      child: RationaleDialog(
-        onAllowLocation: () async {
-          agreed = true;
-
-          Get.back();
-
-          await Future.delayed(const Duration(milliseconds: 300));
-
-          final permission = await Geolocator.requestPermission();
-
-          log("📍 Permission after rationale: $permission");
-
-          if (permission == LocationPermission.deniedForever) {
-            await Geolocator.openAppSettings();
-          }
-        },
+    await Get.dialog(
+      AlertDialog(
+        title: Text(Strings.permissionIsRequired.capEachWord()),
+        content: Text('We need location access to show you nearby matches.'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(Strings.cancel.capEachWord()),
+          ),
+          TextButton(
+            onPressed: () async {
+              Get.back();
+              final permission = await Geolocator.requestPermission();
+              agreed =
+                  permission == LocationPermission.always ||
+                  permission == LocationPermission.whileInUse;
+            },
+            child: Text("Allow".capEachWord()),
+          ),
+        ],
       ),
+      barrierDismissible: false,
     );
 
     return agreed;
   }
 
   Future<void> _showPermanentDeniedDialog() async {
-    await showAnimatedDialog(
-      context: Get.context!,
-      child: PermanentDeniedDialog(),
+    await Get.dialog(
+      AlertDialog(
+        title: Text("Permission Required".capEachWord()),
+        content: Text(
+          'Location permission is permanently denied. Please enable it in app settings.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(Strings.cancel.capEachWord()),
+          ),
+          TextButton(
+            onPressed: () {
+              Geolocator.openAppSettings();
+              Get.back();
+            },
+            child: Text(Strings.openSettings.capEachWord()),
+          ),
+        ],
+      ),
+      barrierDismissible: false,
     );
-  }
+  } // ─────────────────────────────────────────────
 }

@@ -5,128 +5,41 @@ import '../../../app/helper_widgets_export.dart';
 import '../../models/ui/my_location_result_model.dart';
 
 class LocationHelper {
-  /// Get current location with permission handling and user feedback
+  /// Get current location — NO DIALOGS
+  /// Returns null if service disabled or permission denied
   static Future<LocationData?> getCurrentLocation({
     bool showSnackbar = true,
   }) async {
     try {
       log('📍 Starting location fetch...');
 
-      // 1️⃣ Check if GPS/location services are enabled
+      // 1️⃣ Check service
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       log('Service enabled: $serviceEnabled');
 
       if (!serviceEnabled) {
-        if (showSnackbar) {
-          Get.dialog(
-            AlertDialog(
-              title: Text(
-                Strings.enableLocation.capEachWord(),
-                style: TxtStyle.fs18.copyWith(color: c.textPrimary),
-              ),
-              content: Text(
-                Strings.locationServicesOffMessage.capEachWord(),
-                style: TxtStyle.norTxt,
-              ),
-              actions: [
-                CustomBtnWTxt(
-                  btnTxt: Strings.cancel.capEachWord(),
-                  isLoading: false,
-                  btnColor: bgClr,
-                  txtClr: c.textPrimary,
-                  onTap: () => Get.back(),
-                  rad: 8,
-                ),
-                Gap(itemGap * 2),
-                CustomBtnWTxt(
-                  btnTxt: Strings.turnOn.capEachWord(),
-                  isLoading: false,
-                  btnColor: c.secondary,
-                  txtClr: Colors.white,
-                  onTap: () async {
-                    Get.back();
-                    await Geolocator.openLocationSettings();
-                    // retry takking the current location
-                    // 🔁 Retry getting current location after returning from settings
-                    await Future.delayed(const Duration(seconds: 1));
-                    final accuracyStatus =
-                        await Geolocator.getLocationAccuracy();
-                    log("Accuracy status: $accuracyStatus");
-                    await getCurrentLocation(showSnackbar: showSnackbar);
-                  },
-                  rad: 8,
-                ),
-              ],
-            ),
-            barrierDismissible: false,
-          );
-        }
+        log('❌ Service disabled');
         return null;
       }
-      ////////////////-------------------
 
-      // 2️⃣ Check and request permission
+      // 2️⃣ Check permission
       LocationPermission permission = await Geolocator.checkPermission();
       log('Current permission: $permission');
 
       if (permission == LocationPermission.denied) {
-        log('Requesting permission...');
         permission = await Geolocator.requestPermission();
-        log('Permission after request: $permission');
-
-        if (permission == LocationPermission.denied) {
-          if (showSnackbar) {
-            // Permission denied snackbar
-            Snack.showError(
-              Strings.locationPermissionIsRequired.capEachWord(),
-              title: Strings.permissionDenied.capEachWord(),
-            );
-          }
-          return null;
-        }
       }
 
-      if (permission == LocationPermission.deniedForever) {
-        if (showSnackbar) {
-          Get.dialog(
-            AlertDialog(
-              title: Text(Strings.permissionIsRequired.capEachWord()),
-              content: Text(
-                Strings.locationPermissionDeniedForeverPlzEnable.capEachWord(),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Get.back(),
-                  child: Text(Strings.cancel),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Geolocator.openAppSettings();
-                    Get.back();
-                  },
-                  child: Text(Strings.openSettings.capEachWord()),
-                ),
-              ],
-            ),
-          );
-        }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        log('❌ Permission denied');
         return null;
       }
 
-      // 3️⃣ Get current position
-      // Position position = await Geolocator.getCurrentPosition(
-      //   locationSettings: const LocationSettings(
-      //     accuracy: LocationAccuracy.bestForNavigation,
-      //     distanceFilter: 10,
-      //   ),
-      // );
-      // to avoid the device not getting loc error
-      ////////////////-------------- Handled the position location
-
+      // 3️⃣ Get position with retries
       Position? position;
 
       try {
-        // 🥇 First attempt (balanced)
         position = await Geolocator.getCurrentPosition(
           locationSettings: const LocationSettings(
             accuracy: LocationAccuracy.high,
@@ -136,12 +49,9 @@ class LocationHelper {
         );
       } catch (e) {
         log("⚠️ First attempt failed: $e");
-
-        // ⏳ Give device time to stabilize GPS
         await Future.delayed(const Duration(seconds: 2));
 
         try {
-          // 🥈 Second attempt (less strict)
           position = await Geolocator.getCurrentPosition(
             locationSettings: const LocationSettings(
               accuracy: LocationAccuracy.medium,
@@ -151,8 +61,6 @@ class LocationHelper {
           );
         } catch (e) {
           log("❌ Retry failed: $e");
-
-          // 🥉 Final fallback
           position = await Geolocator.getLastKnownPosition();
         }
       }
@@ -160,54 +68,56 @@ class LocationHelper {
       if (position == null) {
         throw Exception("Location unavailable after retries");
       }
-      ////////////////-------------- Handled the position location
 
       log('✅ Got position: ${position.latitude}, ${position.longitude}');
 
-      // 4️⃣ Reverse geocode to get human-readable address
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      String address = '';
+      // 4️⃣ GRACEFUL reverse geocoding — don't fail if it errors
+      String address = 'Lat: ${position.latitude}, Lng: ${position.longitude}';
       String? city;
 
-      if (placemarks.isNotEmpty) {
-        final place = placemarks.first;
+      try {
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(
+              position.latitude,
+              position.longitude,
+            ).timeout(
+              const Duration(seconds: 5), // ← Add timeout
+              onTimeout: () {
+                log('⏱️ Geocoding timeout');
+                return [];
+              },
+            );
 
-        city = place.locality;
+        if (placemarks.isNotEmpty) {
+          final place = placemarks.first;
+          city = place.locality;
 
-        address = [
-          place.street,
-          place.subLocality,
-          place.locality,
-          place.administrativeArea,
-          place.country,
-        ].where((e) => e != null && e.isNotEmpty).join(', ');
+          address = [
+            place.street,
+            place.subLocality,
+            place.locality,
+            place.administrativeArea,
+            place.country,
+          ].where((e) => e != null && e.isNotEmpty).join(', ');
 
-        log('📍 Address: $address');
-        if (city != null) log('📍 City: $city');
+          log('📍 Address: $address');
+          if (city != null) log('📍 City: $city');
+        }
+      } catch (e) {
+        // ✅ Geocoding failed, but we still have position — continue anyway
+        log('⚠️ Geocoding failed: $e — using fallback address');
+        // address stays as lat/lng fallback
       }
 
-      // 5️⃣ Return clean result
+      // 5️⃣ Return result (with or without address)
       return LocationData(
         latitude: position.latitude,
         longitude: position.longitude,
-        address: address.isNotEmpty
-            ? address
-            : 'Lat: ${position.latitude}, Lng: ${position.longitude}',
+        address: address,
         city: city,
       );
     } catch (e) {
       log("❌ Error getting location: $e");
-      if (showSnackbar) {
-        // Failed to get location snackbar
-        Snack.showError(
-          'Failed to get location: ${e.toString()}',
-          title: Strings.error.capEachWord(),
-        );
-      }
       return null;
     }
   }

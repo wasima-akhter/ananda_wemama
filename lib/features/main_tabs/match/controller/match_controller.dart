@@ -44,84 +44,6 @@ class MatchController extends GetxController {
     return fetchedMatches[_currentMatchIndex];
   }
 
-  Future<bool> _ensurePremiumAccess() async {
-    final premiumService = PremiumAccessService.to;
-
-    debugPrint('\n╔════════════════════════════════════════╗');
-    debugPrint('║ [MatchController] PREMIUM CHECK START  ║');
-    debugPrint('╚════════════════════════════════════════╝');
-
-    // Print current premium state
-    premiumService.debugPrintFullState();
-
-    // ─────────────────────────────────────────────
-    // WAIT FOR PREMIUM SERVICE TO BE READY
-    // ─────────────────────────────────────────────
-    if (!premiumService.isReady.value) {
-      debugPrint('⏳ [MatchController] Premium service NOT ready, waiting...');
-
-      int attempts = 0;
-
-      while (!premiumService.isReady.value && attempts < 50) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        attempts++;
-      }
-
-      debugPrint('⏳ [MatchController] Waited $attempts attempts');
-
-      if (!premiumService.isReady.value) {
-        debugPrint(
-          '🔴 [MatchController] Premium service initialization TIMEOUT',
-        );
-
-        premiumService.debugPrintFullState();
-
-        if (Get.isDialogOpen ?? false) {
-          Get.back();
-        }
-
-        return false;
-      }
-
-      debugPrint('✅ [MatchController] Premium service is now READY');
-
-      premiumService.debugPrintFullState();
-    } else {
-      debugPrint('✅ [MatchController] Premium service already READY');
-    }
-
-    // ─────────────────────────────────────────────
-    // PREMIUM CHECK
-    // ─────────────────────────────────────────────
-    debugPrint('\n🔐 [MatchController] Premium check:');
-    debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
-    debugPrint('   isPremiumUser.value: ${premiumService.isPremiumUser.value}');
-
-    if (!premiumService.isPremiumUserNow) {
-      debugPrint('🔒 [MatchController] ❌ User is NOT premium');
-
-      premiumService.debugPrintFullState();
-
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
-
-      Get.toNamed(RoutePaths.subscriptionUpgrade);
-
-      return false;
-    }
-
-    debugPrint('✅ [MatchController] ✅ User IS premium');
-
-    premiumService.debugPrintFullState();
-
-    debugPrint('╔════════════════════════════════════════╗');
-    debugPrint('║ [MatchController] PREMIUM CHECK PASSED ║');
-    debugPrint('╚════════════════════════════════════════╝\n');
-
-    return true;
-  }
-
   @override
   void onInit() {
     super.onInit();
@@ -420,17 +342,69 @@ class MatchController extends GetxController {
     Snack.showError("Location unavailable");
   }
 
+  /// Ensures premium service is ready.
+  /// Does NOT block free users — only ensures the service is initialized.
+  Future<bool> _ensurePremiumServiceReady() async {
+    final premiumService = PremiumAccessService.to;
+
+    debugPrint('\n╔════════════════════════════════════════╗');
+    debugPrint('║ [MatchController] SERVICE INIT START   ║');
+    debugPrint('╚════════════════════════════════════════╝');
+
+    premiumService.debugPrintFullState();
+
+    // ─────────────────────────────────────────────
+    // WAIT FOR PREMIUM SERVICE TO BE READY
+    // ─────────────────────────────────────────────
+    if (!premiumService.isReady.value) {
+      debugPrint('⏳ [MatchController] Premium service NOT ready, waiting...');
+
+      int attempts = 0;
+      while (!premiumService.isReady.value && attempts < 50) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+
+      debugPrint('⏳ [MatchController] Waited $attempts attempts');
+
+      if (!premiumService.isReady.value) {
+        debugPrint('🔴 [MatchController] Service initialization TIMEOUT');
+        premiumService.debugPrintFullState();
+
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+
+        return false;
+      }
+
+      debugPrint('✅ [MatchController] Premium service is now READY');
+      premiumService.debugPrintFullState();
+    } else {
+      debugPrint('✅ [MatchController] Premium service already READY');
+    }
+
+    debugPrint('╔════════════════════════════════════════╗');
+    debugPrint('║ [MatchController] SERVICE INIT DONE    ║');
+    debugPrint('╚════════════════════════════════════════╝\n');
+
+    return true;
+  }
+
   Future<void> startSearching() async {
     final int currentSearchId = ++_searchId;
 
     if (isSearchLoading.value) return;
 
     // ─────────────────────────────────────────────
-    // PREMIUM ACCESS CHECK
+    // ENSURE PREMIUM SERVICE IS READY
+    // (Does NOT block free users)
     // ─────────────────────────────────────────────
-    final hasPremiumAccess = await _ensurePremiumAccess();
+    final serviceReady = await _ensurePremiumServiceReady();
 
-    if (!hasPremiumAccess) {
+    if (!serviceReady) {
+      debugPrint('❌ Premium service failed to initialize');
+      Snack.showError('Failed to initialize. Please try again.');
       return;
     }
 
@@ -439,11 +413,27 @@ class MatchController extends GetxController {
     // ─────────────────────────────────────────────
     await fetchWaveLimit();
 
-    if (isWaveLimitReached) {
+    // ✅ Check premium status
+    final premium = PremiumAccessService.to;
+    final isPremium = premium.isPremiumUserNow;
+
+    debugPrint('\n🔍 [MatchController.startSearching] Premium check:');
+    debugPrint('   isPremium: $isPremium');
+    debugPrint('   isWaveLimitReached: $isWaveLimitReached');
+    debugPrint('   remainingWaves: $remainingWaves');
+
+    // ❌ FREE user with no waves → block
+    if (!isPremium && isWaveLimitReached) {
+      debugPrint('🔒 FREE user hit daily limit');
       subUpgradeNeeded.value = true;
       await handleDailyLimitReached();
       return;
     }
+
+    // ✅ PREMIUM or FREE with waves remaining → proceed
+    debugPrint(
+      '✅ User can search: ${isPremium ? "PREMIUM" : "FREE ($remainingWaves waves)"}',
+    );
 
     isSearchLoading.value = true;
 
@@ -483,10 +473,22 @@ class MatchController extends GetxController {
         return;
       }
 
+      // ✅ ASSIGN MATCHES AND UPDATE UI
       fetchedMatches.assignAll(data.whereType<MatchResponseModel>());
 
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
+
+      debugPrint('📊 Matches loaded: ${fetchedMatches.length}');
+      debugPrint('📊 Current match: ${currentMatch?.name}');
+
+      // ✅ Increment search count for FREE users only
+      if (!isPremium) {
+        _incrementSearchCount();
+        debugPrint(
+          '📊 Search count incremented: $searchesToday / $freeDailyLimit',
+        );
+      }
     } on MatchLimitExceededException {
       // Backend final validation
       subUpgradeNeeded.value = true;
@@ -502,6 +504,8 @@ class MatchController extends GetxController {
     }
   }
 
+  // ✅ Remove the old _ensurePremiumAccess() method entirely
+  // or keep it for backward compatibility but don't use it
   void navToSubUpgrade() {
     if (Get.isDialogOpen ?? false) Get.back();
     Get.toNamed(RoutePaths.subscriptionUpgrade);
