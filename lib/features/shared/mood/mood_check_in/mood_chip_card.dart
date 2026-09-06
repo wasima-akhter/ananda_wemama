@@ -33,13 +33,13 @@ class MoodCheckInCard extends StatelessWidget {
             children: [
               Text(
                 Strings.howAreYourFeeling.capEachWord(),
-                style: TxtStyle.outfitSemiB(fs: 17),
+                style: TxtStyle.outfitSemiB(fs: 18),
               ),
               itemGap.verticalSpace,
 
               _SelectMoodANdIllustration(mcc: mcc),
 
-              itemGap.verticalSpace,
+              (itemGap * 2).verticalSpace,
 
               _CheckInStreakRow(),
 
@@ -140,7 +140,7 @@ class _OpenMoodLibrary extends StatelessWidget {
             children: [
               Text(
                 Strings.openMoodLibrary,
-                style: TxtStyle.outfitSemiB(fs: 12, w: 500, color: c.primary),
+                style: TxtStyle.outfitSemiB(fs: 13, w: 500, color: c.primary),
               ),
               Gap(itemGap),
               Icon(Icons.arrow_forward_ios, size: 13.h),
@@ -197,7 +197,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   TextSpan(
                     text: streakText,
                     style: TxtStyle.outfitSemiB(
-                      fs: 12,
+                      fs: 13,
                       w: 600,
                       color: c.strokePrimary,
                     ),
@@ -206,7 +206,7 @@ class _CheckInStreakRow extends StatelessWidget {
                   if (messageText.isNotEmpty)
                     TextSpan(
                       text: messageText,
-                      style: TxtStyle.outfit(fs: 12, color: c.secondary),
+                      style: TxtStyle.outfit(fs: 13, color: c.secondary),
                     ),
                 ],
               ),

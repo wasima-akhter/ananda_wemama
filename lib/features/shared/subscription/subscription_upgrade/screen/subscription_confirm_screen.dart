@@ -101,7 +101,7 @@ class SubscriptionConfirmScreen extends StatelessWidget {
               _SecurepPaymentMessage(),
 
               const Gap(8),
-              _BottomIllustration(),
+              // _BottomIllustration(),
             ],
 
             Gap(itemGap * 2),

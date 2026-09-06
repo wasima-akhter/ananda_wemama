@@ -6,6 +6,7 @@ import 'package:we_mama/features/shared/mood/ongoing_sessions/upcoming_expert_se
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/components/ui/feedback/ui_state/ui_state_card.dart';
+import '../../../../core/helpers/string_helper.dart';
 import '../../../../core/services/deep_link/session_navigator.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../../../shared/mood/mood_check_in/mood_chip_card.dart';
@@ -223,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               if (liveSession != null) {
                 return SizedBox(
-                  height: 230.h,
+                  height: Responsive.ongoingSessionCardHeight + (20.h),
                   child: LiveOngoingSessionCard(data: liveSession),
                 );
               } else {
@@ -299,9 +300,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
 
                 if (liveSession != null) {
+                  final isOverflowing = willTextOverflow(
+                    text: liveSession.description,
+                    style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
+                  );
                   return PremiumGate(
                     child: SizedBox(
-                      height: S.h * 0.25,
+                      height:
+                          Responsive.ongoingSessionCardHeight +
+                          (isOverflowing ? 40.h : 30.h),
                       child: LiveOngoingSessionCard(data: liveSession),
                     ),
 

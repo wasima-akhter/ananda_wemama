@@ -24,9 +24,6 @@ class CommunityDetailService extends GetxService {
       },
     );
 
-    log(
-      "fetchCommunityDetail response data: ${response.data?.allPost?.first.creator?.id}",
-    );
     return response.data;
   }
 

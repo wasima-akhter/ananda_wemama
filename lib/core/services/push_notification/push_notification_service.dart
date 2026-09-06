@@ -232,17 +232,47 @@ class PushNotificationService extends GetxService {
   }
 
   void _registerFcmListeners() {
+    // debugPrint('🔧 [PushNotificationService] registering FCM listeners...');
+
+    // // Foreground messages
+    // FirebaseMessaging.onMessage.listen(_onForegroundMessage);
+
+    // // Background tap (app was in background, user tapped notification)
+    // FirebaseMessaging.onMessageOpenedApp.listen(_onBackgroundTap);
+
+    // // ⚠️  DO NOT call FirebaseMessaging.onBackgroundMessage() here.
+    // //     It is registered once in main() via the top-level handler below,
+    // //     before runApp(). Calling it twice causes undefined behavior.
+
+    // debugPrint('✅ [PushNotificationService] FCM listeners registered');
+
     debugPrint('🔧 [PushNotificationService] registering FCM listeners...');
 
-    // Foreground messages
-    FirebaseMessaging.onMessage.listen(_onForegroundMessage);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      debugPrint('🚨 FCM PUSH RECEIVED — FOREGROUND');
+      debugPrint('📨 Message ID: ${message.messageId}');
+      debugPrint('📨 From: ${message.from}');
+      debugPrint('📨 Data: ${message.data}');
+      debugPrint('📨 Notification: ${message.notification}');
+      debugPrint('📨 Title: ${message.notification?.title}');
+      debugPrint('📨 Body: ${message.notification?.body}');
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    // Background tap (app was in background, user tapped notification)
-    FirebaseMessaging.onMessageOpenedApp.listen(_onBackgroundTap);
+      _onForegroundMessage(message);
+    });
 
-    // ⚠️  DO NOT call FirebaseMessaging.onBackgroundMessage() here.
-    //     It is registered once in main() via the top-level handler below,
-    //     before runApp(). Calling it twice causes undefined behavior.
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      debugPrint('🚨 FCM PUSH TAPPED — BACKGROUND');
+      debugPrint('📨 Message ID: ${message.messageId}');
+      debugPrint('📨 From: ${message.from}');
+      debugPrint('📨 Data: ${message.data}');
+      debugPrint('📨 Notification: ${message.notification}');
+      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+      _onBackgroundTap(message);
+    });
 
     debugPrint('✅ [PushNotificationService] FCM listeners registered');
   }
@@ -368,6 +398,9 @@ class PushNotificationService extends GetxService {
     );
 
     try {
+      final apnsToken = await _fcm.getAPNSToken();
+
+      debugPrint('🍎 APNs token: $apnsToken');
       final token = await _fcm.getToken();
 
       if (token == null) {

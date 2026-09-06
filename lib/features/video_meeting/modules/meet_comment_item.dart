@@ -32,7 +32,7 @@ class MeetCommentItem extends StatelessWidget {
                           ? message.senderName
                           : "Unknown User",
                       style: TxtStyle.outfit(
-                        fs: 13,
+                        fs: 14,
                         w: 600,
                         color: message.isMe ? c.primary : c.textPrimary,
                       ),
@@ -62,7 +62,7 @@ class MeetCommentItem extends StatelessWidget {
                 ),
                 child: Text(
                   message.text.isNotEmpty ? message.text : "No message",
-                  style: TxtStyle.outfit(fs: 13, color: c.textPrimary),
+                  style: TxtStyle.outfit(fs: 14, color: c.textPrimary),
                 ),
               ),
             ],

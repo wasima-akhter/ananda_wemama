@@ -202,14 +202,18 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                         doctorName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TxtStyle.urbanistSmTitle,
+                        style: TxtStyle.urbanistSemiB(
+                          fs: 17,
+                          w: 600,
+                          color: c.foregroundSecondary,
+                        ),
                       ),
                       Text(
                         specialty,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TxtStyle.outfitSemiB(
-                          fs: 12,
+                          fs: 13,
                           w: 500,
                           color: c.strokePrimary,
                         ),
@@ -235,7 +239,7 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
               ],
             ),
 
-            Gap(itemGap),
+            Gap(12.h),
 
             /// Session title
             Row(
@@ -257,7 +261,7 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TxtStyle.outfitSemiB(
-                      fs: 15,
+                      fs: 16,
                       w: 600,
                       color: c.foregroundPrimary,
                     ),
@@ -269,9 +273,9 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
             /// Description
             Text(
               description,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
+              style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
             ),
 
             /// Push buttons to bottom

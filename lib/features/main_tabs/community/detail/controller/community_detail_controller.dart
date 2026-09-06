@@ -341,11 +341,14 @@ class CommunityDetailController extends GetxController {
   // ------------------------------------------------------------
   // GET COMMUNITY DETAIL
   // ------------------------------------------------------------
-
+  final state = UIState.loading.obs;
+  final errorMessage = ''.obs;
   Future<void> getCommunityDetail({String? communityIdForRefresh}) async {
     if (isLoading_.value) return;
 
     isLoading_.value = true;
+    state.value = UIState.loading;
+    errorMessage.value = '';
 
     try {
       final data = await CommunityDetailService().fetchCommunityDetail(
@@ -355,22 +358,26 @@ class CommunityDetailController extends GetxController {
       if (data != null) {
         communityItemDetail.value = data;
 
-        // Initialize post action state from API data.
         PostActionController.to.initializeFromPosts(data.allPost ?? []);
 
         for (final post in data.allPost ?? []) {
           log('post id: ${post.id}');
         }
+
+        state.value = UIState.data;
+      } else {
+        state.value = UIState.empty;
       }
-    } catch (e) {
-      log('Error fetching Community Detail: $e');
+    } catch (e, s) {
+      log('Error fetching Community Detail: $e', stackTrace: s);
+
+      errorMessage.value = 'Failed to load community details.';
+      state.value = UIState.error;
     } finally {
       isLoading_.value = false;
-
       unFocusAll();
     }
   }
-
   // ------------------------------------------------------------
   // REFRESH
   // ------------------------------------------------------------

@@ -45,7 +45,7 @@ class _CommunitySpotlightDummy extends StatelessWidget {
                   Strings.communitySpotlight.capEachWord(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TxtStyle.outfitSemiB(fs: 16),
+                  style: TxtStyle.outfitSemiB(fs: 18),
                 ),
               ),
               Gap(itemGap * 1.5),
@@ -142,11 +142,13 @@ class _CommunitySpotlightLive extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      Strings.communitySpotlight.capEachWord(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.outfitSemiB(fs: 16),
+                    Flexible(
+                      child: Text(
+                        Strings.communitySpotlight.capEachWord(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TxtStyle.outfitSemiB(fs: 18),
+                      ),
                     ),
                     Gap(itemGap * 1.5),
                     Opacity(
@@ -463,11 +465,13 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                Strings.communitySpotlight.capEachWord(),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TxtStyle.outfitSemiB(fs: 17),
+              Flexible(
+                child: Text(
+                  Strings.communitySpotlight.capEachWord(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TxtStyle.outfitSemiB(fs: 18),
+                ),
               ),
               Gap(itemGap * 1.5),
               CusGestureDetector(
@@ -510,7 +514,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
             style: TxtStyle.outfitSemiB(
               w: 600,
               color: c.foregroundSecondary,
-              fs: 14,
+              fs: 15,
             ),
           ),
 
@@ -524,7 +528,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
             style: TxtStyle.outfit(
               w: 500,
               color: c.foregroundSecondary,
-              fs: 13,
+              fs: 14,
             ),
           ),
 

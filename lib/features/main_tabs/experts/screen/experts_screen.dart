@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:we_mama/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/helpers/string_helper.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
 import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
@@ -45,9 +46,18 @@ class ExpertsScreen extends StatelessWidget {
               if (ongoingList.isEmpty) {
                 return const Text("no live session for now");
               }
+
+              final isOverflowing = ongoingList.any(
+                (element) => willTextOverflow(
+                  text: element.description,
+                  style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
+                ),
+              );
               return CardHorizontalList(
                 aspectRatio: 1.8,
-                height: Responsive.ongoingSessionCardHeight,
+                height:
+                    Responsive.ongoingSessionCardHeight +
+                    (isOverflowing ? 40.h : 30.h),
                 title: Strings.ongoingExpertSession,
                 exc: exc,
                 onViewAll: () => exc.onTapViewAll(true),
@@ -116,7 +126,12 @@ class ExpertsScreen extends StatelessWidget {
             if (ongoingEmpty && upcomingEmpty) {
               return _NoSessionsCard();
             }
-
+            final isOverflowing = ongoingList.any(
+              (element) => willTextOverflow(
+                text: element.description,
+                style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
+              ),
+            );
             // At least one has data — show only the non-empty sections
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -128,7 +143,9 @@ class ExpertsScreen extends StatelessWidget {
                     waitForReady: false,
                     child: CardHorizontalList(
                       aspectRatio: 1.8,
-                      height: Responsive.ongoingSessionCardHeight,
+                      height:
+                          Responsive.ongoingSessionCardHeight +
+                          (isOverflowing ? 40.h : 30.h),
                       title: Strings.ongoingExpertSession,
                       exc: exc,
                       onViewAll: () => exc.onTapViewAll(true),
@@ -194,7 +211,7 @@ Widget makeCardHeader(String title, {required void Function() onTap}) {
       Text(
         title.capEachWord(),
         style: TxtStyle.outfitSemiB(
-          fs: 13,
+          fs: 15,
           w: 600,
           color: c.foregroundSecondary,
         ),

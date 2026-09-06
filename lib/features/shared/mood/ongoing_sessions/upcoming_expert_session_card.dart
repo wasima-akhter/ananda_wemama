@@ -118,14 +118,18 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                       doctorName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TxtStyle.urbanistSmTitle,
+                      style: TxtStyle.urbanistSemiB(
+                        fs: 17,
+                        w: 600,
+                        color: c.foregroundSecondary,
+                      ),
                     ),
                     Text(
                       specialty,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TxtStyle.outfitSemiB(
-                        fs: 12,
+                        fs: 13,
                         w: 500,
                         color: c.strokePrimary,
                       ),
@@ -183,7 +187,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TxtStyle.outfitSemiB(
-                    fs: 15,
+                    fs: 16,
                     w: 600,
                     color: c.foregroundPrimary,
                   ),
@@ -197,7 +201,7 @@ class UpcomingExpertSessionCard extends StatelessWidget {
             description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TxtStyle.outfit(fs: 13, color: c.strokePrimary),
+            style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
           ),
           // isFromUpcomgScreen == true ? Gap(itemGap * 2) : Spacer(),
           isFromUpcomgScreen == true

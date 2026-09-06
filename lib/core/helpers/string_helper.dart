@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:we_mama/core/components/ui/buttons/gesture_detector_cus.dart';
-import 'package:we_mama/core/utils/extension/context_extension.dart';
+import '../../app/helper_widgets_export.dart';
 
 TextStyle get titleBPri =>
     TxtStyle.interSemiB(fs: 14, w: 600, color: c.primary);
@@ -209,4 +207,22 @@ Widget linkText(String text, {void Function()? onTap}) {
       ],
     ),
   );
+}
+
+//
+
+bool willTextOverflow({
+  required String text,
+  required TextStyle style,
+  double? maxWidth,
+  int maxLines = 1,
+}) {
+  final textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    maxLines: maxLines,
+    textDirection: TextDirection.ltr,
+  )..layout(maxWidth: maxWidth ?? 1.sw - 30.w);
+
+  return textPainter.didExceedMaxLines ||
+      textPainter.width > (maxWidth ?? 1.sw - 30.w);
 }
