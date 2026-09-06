@@ -1,5 +1,5 @@
 import 'package:we_mama/app/helper_widgets_export.dart';
-import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 
 class EmptyWidget extends StatelessWidget {
   final String title;

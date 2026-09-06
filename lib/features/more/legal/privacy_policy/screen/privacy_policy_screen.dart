@@ -1,5 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
+import '../../../../../core/components/ui/webview/hybrid_webview_widget.dart';
 import '../../../../../core/helpers/string_helper.dart';
 import '../controller/privacy_policy_controller.dart';
 

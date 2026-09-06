@@ -1,7 +1,7 @@
 import 'package:we_mama/app/helper_widgets_export.dart';
 import 'package:we_mama/gen/assets.gen.dart';
 
-import '../../../../../core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import '../../../../../core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 
 /*
 class SubscriptionUpgradeScreen extends StatelessWidget {

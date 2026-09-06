@@ -1,5 +1,5 @@
 import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
 import 'package:we_mama/core/helpers/string_helper.dart';
 import 'package:we_mama/features/main_nav/controller/main_nav_controller.dart';
@@ -48,7 +48,7 @@ class _CommunitySpotlightDummy extends StatelessWidget {
                   style: TxtStyle.outfitSemiB(fs: 16),
                 ),
               ),
-              Gap(itemGap),
+              Gap(itemGap * 1.5),
               ContainerBordered(
                 hasBrdr: true,
                 contClr: c.inputBackground,
@@ -148,7 +148,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TxtStyle.outfitSemiB(fs: 16),
                     ),
-                    Gap(itemGap),
+                    Gap(itemGap * 1.5),
                     Opacity(
                       opacity: commId.trim().isEmpty ? 0.5 : 1,
                       child: IgnorePointer(
@@ -469,7 +469,7 @@ class _CommunitySpotlightEmpty extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: TxtStyle.outfitSemiB(fs: 17),
               ),
-
+              Gap(itemGap * 1.5),
               CusGestureDetector(
                 onTap: () {
                   MainNavController.to.goToTab(3);

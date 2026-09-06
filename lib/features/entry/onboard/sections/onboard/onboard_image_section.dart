@@ -1,5 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import '../../../../../core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 
 class OnboardImageSection extends StatelessWidget {
   const OnboardImageSection({super.key});

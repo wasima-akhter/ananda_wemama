@@ -1,5 +1,6 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
+import '../../../../../core/components/ui/webview/all_autoheight_webview.dart';
+import '../../../../../core/components/ui/webview/simple_webview_widget.dart';
 import '../../mood_insights/controller/mood_insights_controller.dart';
 import '../controller/mood_library_controller.dart';
 

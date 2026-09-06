@@ -2,7 +2,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 import 'package:we_mama/features/auth/core/auth_button_templates.dart';
 import 'package:we_mama/features/entry/onboard/modules/core/onboard_logo_header_row.dart';
 

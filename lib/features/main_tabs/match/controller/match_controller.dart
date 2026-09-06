@@ -127,11 +127,23 @@ class MatchController extends GetxController {
     _isRunningLocationFlow = true;
 
     try {
-      log("📍 MatchController: checking location status");
+      log(
+        "📍 MatchController: checking location status (service + permission)",
+      );
 
-      final result = await AppLocationManager.to.ensureFreshLocation();
+      // ✅ ONLY check service and permission — don't fetch coordinates
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
-      final isActive = result == LocationFlowResult.success;
+      LocationPermission permission = await Geolocator.checkPermission();
+      final hasPermission =
+          permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse;
+
+      final isActive = serviceEnabled && hasPermission;
+
+      log("📍 Service enabled: $serviceEnabled");
+      log("📍 Has permission: $hasPermission");
+      log("📍 Overall active: $isActive");
 
       // ─────────────────────────────────────────────
       // FIRST CHECK
@@ -139,7 +151,6 @@ class MatchController extends GetxController {
       if (_lastKnownLocationActive == null) {
         _lastKnownLocationActive = isActive;
 
-        // First check ALWAYS shows the popup.
         log(
           "📍 First location check: "
           "$isActive → show popup",
@@ -164,7 +175,6 @@ class MatchController extends GetxController {
         return;
       }
 
-      // No change → no popup.
       log(
         "📍 Location status unchanged: "
         "$isActive → no popup",

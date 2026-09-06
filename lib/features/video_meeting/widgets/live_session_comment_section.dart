@@ -59,6 +59,7 @@ class LiveSessionCommentSection extends StatelessWidget {
           return false;
         },
         child: ListView.separated(
+          physics: AlwaysScrollableScrollPhysics(),
           controller: cc.chatScrollCtrl,
           padding: EdgeInsets.only(top: itemGap * 1.5),
           itemCount: cc.messages.length,

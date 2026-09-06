@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: HomeAppBarContent(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        spacing: itemGap * 1.2,
+        spacing: itemGap * 1.5,
         children: [
           if (kDebugMode || !kDebugMode) ...[
             TextButton(

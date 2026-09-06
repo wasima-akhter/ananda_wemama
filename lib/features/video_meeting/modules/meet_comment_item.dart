@@ -53,7 +53,7 @@ class MeetCommentItem extends StatelessWidget {
 
               /// 📝 Message
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
                   color: message.isMe
                       ? c.primary.withOpacity(.1)
@@ -62,7 +62,7 @@ class MeetCommentItem extends StatelessWidget {
                 ),
                 child: Text(
                   message.text.isNotEmpty ? message.text : "No message",
-                  style: TxtStyle.outfit(fs: 12, color: c.textPrimary),
+                  style: TxtStyle.outfit(fs: 13, color: c.textPrimary),
                 ),
               ),
             ],

@@ -4,6 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../../app/controller_export.dart';
+import '../../../../../features/main_tabs/home/dialogs/permanent_denied_dialog.dart';
+import '../../../../../features/main_tabs/home/dialogs/rationale_dialog.dart';
+import '../../../../../features/main_tabs/home/dialogs/turnon_service_dialog.dart';
+import '../../../../components/ui/dialogs/popups.dart';
 import '../../../../services/location/location_service.dart';
 import '../../location_helpers.dart';
 
@@ -352,36 +356,19 @@ class AppLocationManager extends GetxService {
   // DIALOGS
   // ─────────────────────────────────────────────
 
-  // ✅ Dialog methods (move these from LocationHelper)
+  // Then replace the dialog methods:
+
   Future<bool> _showTurnOnServiceDialog() async {
     bool tappedTurnOn = false;
 
-    await Get.dialog(
-      AlertDialog(
-        title: Text(
-          Strings.enableLocation.capEachWord(),
-          style: TxtStyle.fs18.copyWith(color: c.textPrimary),
-        ),
-        content: Text(
-          Strings.locationServicesOffMessage.capEachWord(),
-          style: TxtStyle.norTxt,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(Strings.cancel.capEachWord()),
-          ),
-          TextButton(
-            onPressed: () async {
-              tappedTurnOn = true;
-              Get.back();
-              await Geolocator.openLocationSettings();
-            },
-            child: Text(Strings.turnOn.capEachWord()),
-          ),
-        ],
-      ),
+    await showAnimatedDialog(
+      context: Get.context!,
       barrierDismissible: false,
+      child: TurnOnServiceDialog(
+        onTurnOn: () {
+          tappedTurnOn = true;
+        },
+      ),
     );
 
     return tappedTurnOn;
@@ -390,55 +377,28 @@ class AppLocationManager extends GetxService {
   Future<bool> _showRationaleDialog() async {
     bool agreed = false;
 
-    await Get.dialog(
-      AlertDialog(
-        title: Text(Strings.permissionIsRequired.capEachWord()),
-        content: Text('We need location access to show you nearby matches.'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(Strings.cancel.capEachWord()),
-          ),
-          TextButton(
-            onPressed: () async {
-              Get.back();
-              final permission = await Geolocator.requestPermission();
-              agreed =
-                  permission == LocationPermission.always ||
-                  permission == LocationPermission.whileInUse;
-            },
-            child: Text("Allow".capEachWord()),
-          ),
-        ],
-      ),
+    await showAnimatedDialog(
+      context: Get.context!,
       barrierDismissible: false,
+      child: RationaleDialog(
+        onAllowLocation: () async {
+          Get.back();
+
+          final permission = await Geolocator.requestPermission();
+          agreed =
+              permission == LocationPermission.always ||
+              permission == LocationPermission.whileInUse;
+        },
+      ),
     );
 
     return agreed;
   }
 
   Future<void> _showPermanentDeniedDialog() async {
-    await Get.dialog(
-      AlertDialog(
-        title: Text("Permission Required".capEachWord()),
-        content: Text(
-          'Location permission is permanently denied. Please enable it in app settings.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Text(Strings.cancel.capEachWord()),
-          ),
-          TextButton(
-            onPressed: () {
-              Geolocator.openAppSettings();
-              Get.back();
-            },
-            child: Text(Strings.openSettings.capEachWord()),
-          ),
-        ],
-      ),
-      barrierDismissible: false,
+    await showAnimatedDialog(
+      context: Get.context!,
+      child: PermanentDeniedDialog(),
     );
-  } // ─────────────────────────────────────────────
+  }
 }

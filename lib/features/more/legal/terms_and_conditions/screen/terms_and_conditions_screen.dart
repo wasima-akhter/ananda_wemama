@@ -1,5 +1,5 @@
 import '../../../../../app/helper_widgets_export.dart';
-import '../../../../../core/components/ui/media/all_autoheight_webview.dart';
+import '../../../../../core/components/ui/webview/hybrid_webview_widget.dart';
 import '../controller/terms_and_conditions_controller.dart';
 
 class TermsAndConditionsScreen extends StatefulWidget {

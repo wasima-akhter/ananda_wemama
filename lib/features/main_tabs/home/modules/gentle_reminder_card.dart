@@ -1,5 +1,5 @@
 import 'package:we_mama/core/components/ui/feedback/ui_state/ui_state_card.dart';
-import 'package:we_mama/core/components/ui/media/safe_asset_image.dart/safe_image_asset.dart';
+import 'package:we_mama/core/components/ui/media/safe_asset_image/safe_image_asset.dart';
 import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';

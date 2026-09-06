@@ -128,6 +128,7 @@ class PromoCodeController extends GetxController {
     _continueToSubPlanScreen(code);
   }
 
+  /*
   Future<void> _continueToSubPlanScreen(String code) async {
     if (isLoading_.value) return;
 
@@ -211,6 +212,213 @@ class PromoCodeController extends GetxController {
       unfocusAll();
     }
   }
+*/
+
+  Future<void> _continueToSubPlanScreen(String code) async {
+    if (isLoading_.value) return;
+
+    isLoading_.value = true;
+
+    try {
+      final result = await validateCode(code);
+
+      if (!result.success) {
+        Get.snackbar(
+          "Invalid Code",
+          result.message ?? "Please enter a valid code",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+        return;
+      }
+
+      switch (result.type) {
+        case OfferType.referral:
+          debugPrint("🟢 Referral API validation");
+
+          final success = await applyReferralCode(code);
+
+          if (!success) {
+            Get.snackbar(
+              "Error",
+              "Referral code could not be applied",
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            return;
+          }
+
+          break;
+
+        case OfferType.promo:
+          debugPrint("🟢 Promo validation placeholder");
+          break;
+
+        case OfferType.foundingMum:
+          debugPrint("🟢 Founding Mum validation placeholder");
+          break;
+
+        case OfferType.none:
+          break;
+      }
+
+      currentOffer.value = result.type;
+      appliedCode.value = code;
+
+      debugPrint("🟢 OFFER SAVED=${currentOffer.value.name}");
+
+      // ✅ NEW: Refresh premium status after successful code/offer
+      await _verifyAndNavigateAfterPurchase();
+    } catch (e, stack) {
+      debugPrint("❌ Apply code error=$e");
+      debugPrintStack(stackTrace: stack);
+    } finally {
+      isLoading_.value = false;
+      unfocusAll();
+    }
+  }
+
+  /// Verifies subscription succeeded, then navigates appropriately
+  Future<void> _verifyAndNavigateAfterPurchase() async {
+    debugPrint('\n╔════════════════════════════════════════╗');
+    debugPrint('║ [PromoCodeController] VERIFY PURCHASE  ║');
+    debugPrint('╚════════════════════════════════════════╝');
+
+    final premiumService = PremiumAccessService.to;
+
+    try {
+      // ─────────────────────────────────────────────
+      // WAIT FOR PREMIUM SERVICE TO BE READY
+      // ─────────────────────────────────────────────
+      if (!premiumService.isReady.value) {
+        debugPrint('⏳ Premium service NOT ready, waiting...');
+
+        int attempts = 0;
+        while (!premiumService.isReady.value && attempts < 50) {
+          await Future.delayed(const Duration(milliseconds: 100));
+          attempts++;
+        }
+
+        if (!premiumService.isReady.value) {
+          debugPrint('🔴 Premium service initialization TIMEOUT');
+          Get.snackbar(
+            "Error",
+            "Could not verify subscription status",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return;
+        }
+      }
+
+      debugPrint('✅ Premium service is READY');
+
+      // ─────────────────────────────────────────────
+      // REFRESH PREMIUM STATUS
+      // ─────────────────────────────────────────────
+      debugPrint('🔄 Refreshing premium status from backend...');
+      await premiumService.refreshPremiumStatus();
+
+      premiumService.debugPrintFullState();
+
+      // ─────────────────────────────────────────────
+      // VERIFY SUBSCRIPTION SUCCEEDED
+      // ─────────────────────────────────────────────
+      debugPrint('\n🔐 Verifying subscription status:');
+      debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+
+      if (!premiumService.isPremiumUserNow) {
+        debugPrint(
+          '❌ Subscription verification failed — user still not premium',
+        );
+
+        // ✅ FALLBACK: Try iOS verification
+        if (GetPlatform.isIOS) {
+          debugPrint('🔍 iOS: Attempting fallback verification...');
+          final verified = await premiumService.getPremiumStatusWithFallback();
+
+          if (!verified) {
+            debugPrint('❌ Fallback verification also failed');
+            Get.snackbar(
+              "Error",
+              "Subscription could not be verified. Please try again.",
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            return;
+          }
+
+          debugPrint('✅ iOS fallback verification succeeded');
+        } else {
+          Get.snackbar(
+            "Error",
+            "Subscription could not be verified. Please try again.",
+            snackPosition: SnackPosition.BOTTOM,
+          );
+          return;
+        }
+      }
+
+      // ✅ SUBSCRIPTION VERIFIED SUCCESSFUL
+      debugPrint('✅ Subscription verified successfully!');
+      debugPrint('🎉 User is now PREMIUM');
+
+      debugPrint('╔════════════════════════════════════════╗');
+      debugPrint('║ [PromoCodeController] PURCHASE OK ✅   ║');
+      debugPrint('╚════════════════════════════════════════╝\n');
+
+      // ─────────────────────────────────────────────
+      // NAVIGATE AWAY FROM SUBSCRIPTION FLOW
+      // ─────────────────────────────────────────────
+      Get.snackbar(
+        "Success",
+        "Welcome to premium! 🎉",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+
+      // Wait a moment for snackbar to show
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      // Navigate back to home or previous screen
+      Get.offAllNamed(RoutePaths.mainNav);
+    } catch (e) {
+      debugPrint('❌ Verification error: $e');
+      Get.snackbar(
+        "Error",
+        "An error occurred: $e",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+  }
+
+  //
+
+  Future<void> onPlanSelected(String planId) async {
+    debugPrint("🟢 Plan selected: $planId");
+
+    isLoading_.value = true;
+
+    try {
+      // Call your purchase API
+      // final success = await SubscriptionService().purc(planId);
+
+      // if (!success) {
+      //   Get.snackbar(
+      //     "Error",
+      //     "Purchase failed. Please try again.",
+      //     snackPosition: SnackPosition.BOTTOM,
+      //   );
+      //   return;
+      // }
+
+      // ✅ NEW: Verify purchase succeeded
+      await _verifyAndNavigateAfterPurchase();
+    } catch (e) {
+      debugPrint("❌ Purchase error: $e");
+    } finally {
+      isLoading_.value = false;
+    }
+  }
+
+  //
 
   @override
   void onClose() {
