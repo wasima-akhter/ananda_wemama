@@ -5,8 +5,8 @@ import 'package:we_mama/features/auth/signin/model/signin_model.dart';
 import '../../../../app/controller_export.dart';
 import '../../../../core/config/app_info.dart';
 import '../../../../core/services/auth/signin_service.dart';
+import '../../../../core/services/auth/verification_gate.dart';
 import '../../../../core/services/auth/verify_otp_service.dart';
-import '../../../../core/services/deep_link/app_link_service.dart';
 import '../../../../core/services/push_notification/push_notification_service.dart';
 
 class SigninController extends GetxController {
@@ -131,19 +131,21 @@ class SigninController extends GetxController {
       print("3. after uploadTokenAfterLogin");
     }
 
-    final deepLinkService = Get.find<DeepLinkService>();
+    await VerificationGate.routeAfterAuth(); // ← replaces deepLink/mainNav block
 
-    print("4. pendingLiveId=${deepLinkService.pendingLiveId}");
+    // final deepLinkService = Get.find<DeepLinkService>();
 
-    if (deepLinkService.pendingLiveId != null) {
-      print("5. before handlePostLoginRedirect");
-      await deepLinkService.handlePostLoginRedirect();
-      print("6. after handlePostLoginRedirect");
-    } else {
-      print("7. navigating");
-      Get.offAllNamed(RoutePaths.mainNav);
-      print("8. navigation called");
-    }
+    // print("4. pendingLiveId=${deepLinkService.pendingLiveId}");
+
+    // if (deepLinkService.pendingLiveId != null) {
+    //   print("5. before handlePostLoginRedirect");
+    //   await deepLinkService.handlePostLoginRedirect();
+    //   print("6. after handlePostLoginRedirect");
+    // } else {
+    //   print("7. navigating");
+    //   Get.offAllNamed(RoutePaths.mainNav);
+    //   print("8. navigation called");
+    // }
   }
 
   /// ================= HELPERS =================
@@ -280,7 +282,7 @@ Private Key	AuthKey_XXXXXX.p8
         FocusManager.instance.primaryFocus?.unfocus();
 
         await _handleLoginSuccess();
-        Get.offAllNamed(RoutePaths.mainNav);
+      // Get.offAllNamed(RoutePaths.mainNav);
 
       case SocialLoginApiResultType.profileIncomplete:
         Get.offAllNamed(RoutePaths.setupProfile);

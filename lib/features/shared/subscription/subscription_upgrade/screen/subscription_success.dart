@@ -3,6 +3,7 @@ import 'package:we_mama/core/components/ui/media/safe_asset_image/safe_image_ass
 import 'package:we_mama/features/auth/core/auth_button_templates.dart';
 
 import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/services/auth/verification_gate.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../../../../entry/onboard/modules/core/onboard_logo_header_row.dart';
 
@@ -19,7 +20,9 @@ class SubscriptionSuccess extends StatelessWidget {
         child: AuthButton(
           isLoading: false,
           btnText: "Explore premium",
-          onTap: () => Get.offAllNamed(RoutePaths.mainNav),
+
+          onTap: () => VerificationGate.routeAfterAuth(),
+          //  onTap: () =>  Get.offAllNamed(RoutePaths.mainNav),
         ),
       ),
       child: SafeArea(

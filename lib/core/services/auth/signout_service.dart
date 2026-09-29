@@ -12,6 +12,7 @@ import '../../../features/more/notification/controller/notification_controller.d
 import '../../../features/shared/wave_request/controller/wave_request_controller.dart';
 import '../../local/app_storage.dart';
 import '../socket/socket_service.dart';
+import 'verification_gate.dart';
 
 class SignoutService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -92,6 +93,9 @@ class SignoutService {
     Get.delete<HomeController>(force: true);
     Get.delete<ExpertsController>(force: true);
     Get.delete<CommunityController>(force: true);
+
+    //
+    VerificationGate.verified = false;
 
     // Clear storage
     AppStorage.to.logout();

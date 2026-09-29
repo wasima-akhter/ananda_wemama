@@ -1,5 +1,6 @@
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/models/ui/common_data_models.dart';
+import '../../../../core/services/auth/verification_gate.dart';
 import '../../../../core/services/push_notification/notification_payload.dart';
 import '../../../main_nav/controller/main_nav_controller.dart';
 import '../model/notifications_model.dart';
@@ -26,7 +27,7 @@ class NotificationRouter {
 
   // ── Single switch — the ONLY place routing logic lives ───────────────────
 
-  static void _route(_NotificationRouteData d) {
+  static Future<void> _route(_NotificationRouteData d) async {
     print(
       '🧭 [NotificationRouter] type=${d.type} | '
       'ref=${d.referenceId} | meta=${d.metadata}',
@@ -37,6 +38,8 @@ class NotificationRouter {
       WidgetsBinding.instance.addPostFrameCallback((_) => _route(d));
       return;
     }
+
+    if (!await VerificationGate.ensureVerified()) return; // ← add
 
     switch (d.type) {
       // ─── Like / Comment ───────────────────────────────────────────

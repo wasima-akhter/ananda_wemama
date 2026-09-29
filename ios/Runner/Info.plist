@@ -38,7 +38,7 @@
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NSCameraUsageDescription</key>
-		<string>Need camera for photo</string>
+		<string>Need camera for photo and to verify your identity.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>Your location is used to provide nearby services even when the app is running in the background.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
@@ -48,7 +48,7 @@
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>Need access to save recording</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>App needs access to photos to select images</string>
+		<string>App needs access to photos to select images and We need photo library access to upload your ID.</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>UIBackgroundModes</key>

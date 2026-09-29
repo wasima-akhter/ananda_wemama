@@ -120,9 +120,6 @@ class RoutePaths {
   static const orders = '/orders';
   static const reviewAndRating = '/reviewAndRating';
 
-  // ─────────────────────────────
-  // 🔹 Maps / Location
-  // ─────────────────────────────
-  static const stationLocation = '/stationLocation';
-  static const googleMap = '/googleMap';
+  // verification
+  static const verification = '/verification';
 }

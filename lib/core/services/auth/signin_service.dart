@@ -25,6 +25,81 @@ class SocialLoginResult {
 // Service
 // ─────────────────────────────────────────────
 
+class SigninService {
+  Future<LoginResult> signIn({
+    required String email,
+    required String password,
+  }) async {
+    final result = await ApiExecutor().execute<SigninModelData>(
+      apiCall: () => ApiClient().post(
+        headers: HeaderHelpers.jsonHeader(),
+        Endpoints.login.getUrl,
+        data: {"email": email, "password": password},
+      ),
+      customHandler: (body) => AuthResponseHandler.parse(body),
+      showErrorMessage: true,
+      showSuccessMessage: true,
+    );
+
+    switch (result.type) {
+      case ApiResultType.emailNotVerified:
+        return LoginResult(
+          type: LoginApiResultType.emailNotVerified,
+          message: result.message,
+        );
+
+      case ApiResultType.profileIncomplete:
+        storage.setToken(result.data?.accessToken ?? "");
+
+        return LoginResult(
+          type: LoginApiResultType.profileIncomplete,
+          message: result.message,
+        );
+
+      case ApiResultType.success:
+        await AuthSessionService().initialize(result.data!);
+
+        return LoginResult(type: LoginApiResultType.success);
+
+      case ApiResultType.failed:
+        return LoginResult(
+          type: LoginApiResultType.failed,
+          message: result.message,
+        );
+    }
+  }
+
+  Future<void> _completeLoginSession() async {
+    try {
+      final socket = Get.find<SocketService>();
+
+      socket.disconnectSocket();
+
+      await socket.connectSocket();
+    } catch (e) {
+      print("Socket error: $e");
+    }
+
+    if (Get.isRegistered<ProfileController>()) {
+      await Get.find<ProfileController>().fetchMyProfile();
+    }
+  }
+
+  void _saveUserDataAfterLogin({required SigninModelData model}) {
+    final user = model.user;
+    storage.setUserInfo(email: user?.email ?? '');
+    storage.setToken(model.accessToken ?? '');
+
+    print("access token when setup: ${model.accessToken}");
+
+    print("Logged in as: ${user?.email}");
+    print("Access token: ${model.accessToken}");
+  }
+}
+
+// ─────────────────────────────────────────────
+// Social Service
+// ─────────────────────────────────────────────
 class SocialLoginService {
   // ── Google ──────────────────────────────────
 
@@ -119,78 +194,6 @@ class SocialLoginService {
     storage.setToken(model.accessToken ?? '');
 
     print("Logged in as: ${user?.email}");
-  }
-}
-
-class SigninService {
-  Future<LoginResult> signIn({
-    required String email,
-    required String password,
-  }) async {
-    final result = await ApiExecutor().execute<SigninModelData>(
-      apiCall: () => ApiClient().post(
-        headers: HeaderHelpers.jsonHeader(),
-        Endpoints.login.getUrl,
-        data: {"email": email, "password": password},
-      ),
-      customHandler: (body) => AuthResponseHandler.parse(body),
-      showErrorMessage: true,
-      showSuccessMessage: true,
-    );
-
-    switch (result.type) {
-      case ApiResultType.emailNotVerified:
-        return LoginResult(
-          type: LoginApiResultType.emailNotVerified,
-          message: result.message,
-        );
-
-      case ApiResultType.profileIncomplete:
-        storage.setToken(result.data?.accessToken ?? "");
-
-        return LoginResult(
-          type: LoginApiResultType.profileIncomplete,
-          message: result.message,
-        );
-
-      case ApiResultType.success:
-        await AuthSessionService().initialize(result.data!);
-
-        return LoginResult(type: LoginApiResultType.success);
-
-      case ApiResultType.failed:
-        return LoginResult(
-          type: LoginApiResultType.failed,
-          message: result.message,
-        );
-    }
-  }
-
-  Future<void> _completeLoginSession() async {
-    try {
-      final socket = Get.find<SocketService>();
-
-      socket.disconnectSocket();
-
-      await socket.connectSocket();
-    } catch (e) {
-      print("Socket error: $e");
-    }
-
-    if (Get.isRegistered<ProfileController>()) {
-      await Get.find<ProfileController>().fetchMyProfile();
-    }
-  }
-
-  void _saveUserDataAfterLogin({required SigninModelData model}) {
-    final user = model.user;
-    storage.setUserInfo(email: user?.email ?? '');
-    storage.setToken(model.accessToken ?? '');
-
-    print("access token when setup: ${model.accessToken}");
-
-    print("Logged in as: ${user?.email}");
-    print("Access token: ${model.accessToken}");
   }
 }
 

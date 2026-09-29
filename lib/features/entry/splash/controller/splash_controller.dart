@@ -1,6 +1,7 @@
 import '../../../../app/controller_export.dart';
 import '../../../../core/local/app_storage.dart';
 import '../../../../core/network/network_manager.dart';
+import '../../../../core/services/auth/verification_gate.dart';
 import '../../../../core/services/deep_link/app_link_service.dart';
 import '../../../../core/services/push_notification/push_notification_service.dart';
 import '../../../shared/subscription/subscription_upgrade/service/purchase_service.dart';
@@ -59,7 +60,7 @@ class SplashController extends GetxController {
     } catch (e) {
       print("🔗 [SPLASH] STEP 4 → ❌ DeepLinkService NOT found in GetX: $e");
       print("🔗 [SPLASH] STEP 4 → Falling through to normal nav flow.");
-      _navigateNormally(seenOnboarding, loggedIn);
+      await _navigateNormally(seenOnboarding, loggedIn);
       return;
     }
 
@@ -83,12 +84,19 @@ class SplashController extends GetxController {
           RoutePaths.signin,
           arguments: {'redirectLiveId': pendingLiveId},
         );
-      } else {
-        print(
-          "🔗 [SPLASH] STEP 5 → Logged in. Navigating to session: $pendingLiveId",
-        );
-        await deepLinkService.navigateToSession(pendingLiveId);
       }
+
+      // else {
+      //   print(
+      //     "🔗 [SPLASH] STEP 5 → Logged in. Navigating to session: $pendingLiveId",
+      //   );
+      //   await deepLinkService.navigateToSession(pendingLiveId);
+      // }
+
+      print("🔗 [SPLASH] STEP 5 → Logged in. Gate, then open session.");
+      // keep pendingLiveId: goHome() opens it once verified
+      deepLinkService.pendingLiveId = pendingLiveId;
+      await VerificationGate.routeAfterAuth();
 
       // ✅ markAppReady() called ONCE — after navigation is fully done
       print("✅ [SPLASH] STEP 5 → Navigation done. Calling markAppReady().");
@@ -105,7 +113,7 @@ class SplashController extends GetxController {
     print(
       "🧭 [SPLASH] STEP 6 → No deep link. Entering normal navigation flow...",
     );
-    _navigateNormally(seenOnboarding, loggedIn);
+    await _navigateNormally(seenOnboarding, loggedIn);
 
     if (loggedIn) {
       await _maybeUploadFcmToken(); // ✅ added — already-logged-in path
@@ -122,7 +130,7 @@ class SplashController extends GetxController {
     print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   }
 
-  void _navigateNormally(bool seenOnboarding, bool loggedIn) {
+  Future<void> _navigateNormally(bool seenOnboarding, bool loggedIn) async {
     print(
       "🧭 [SPLASH] _navigateNormally() → seenOnboarding=$seenOnboarding | loggedIn=$loggedIn",
     );
@@ -134,9 +142,14 @@ class SplashController extends GetxController {
       print("🧭 [SPLASH] _navigateNormally() → Navigating to signin");
       Get.offAllNamed(RoutePaths.signin);
     } else {
-      print("🧭 [SPLASH] _navigateNormally() → Navigating to mainNav");
-      Get.offAllNamed(RoutePaths.mainNav);
+      print("🧭 [SPLASH] _navigateNormally() → gate → mainNav");
+      await VerificationGate.routeAfterAuth();
     }
+
+    // else {
+    //   print("🧭 [SPLASH] _navigateNormally() → Navigating to mainNav");
+    //   Get.offAllNamed(RoutePaths.mainNav);
+    // }
 
     print(
       "🧭 [SPLASH] _navigateNormally() → Current route after nav: ${Get.currentRoute}",

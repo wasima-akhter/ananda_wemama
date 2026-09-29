@@ -177,4 +177,7 @@ class Endpoints {
       "referral/apply-referral-code?referralCode=$code";
 
   static String confirmPurchase = "confirm-purchase";
+
+  static String verificationSession = "verification/session";
+  static String verificationStatus = "verification/status";
 }

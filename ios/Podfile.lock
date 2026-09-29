@@ -282,6 +282,10 @@ PODS:
     - Flutter
   - permission_handler_apple (9.3.0):
     - Flutter
+  - persona_flutter (4.0.1):
+    - Flutter
+    - PersonaInquirySDK2 (= 2.41.1)
+  - PersonaInquirySDK2 (2.41.1)
   - PromisesObjC (2.4.1)
   - PromisesSwift (2.4.1):
     - PromisesObjC (= 2.4.1)
@@ -354,6 +358,7 @@ DEPENDENCIES:
   - open_file_ios (from `.symlinks/plugins/open_file_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - persona_flutter (from `.symlinks/plugins/persona_flutter/ios`)
   - purchases_flutter (from `.symlinks/plugins/purchases_flutter/ios`)
   - RecaptchaInterop
   - SDWebImage
@@ -395,6 +400,7 @@ SPEC REPOS:
     - libwebp
     - Mantle
     - nanopb
+    - PersonaInquirySDK2
     - PromisesObjC
     - PromisesSwift
     - PurchasesHybridCommon
@@ -461,6 +467,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
+  persona_flutter:
+    :path: ".symlinks/plugins/persona_flutter/ios"
   purchases_flutter:
     :path: ".symlinks/plugins/purchases_flutter/ios"
   share_plus:
@@ -535,6 +543,8 @@ SPEC CHECKSUMS:
   open_file_ios: 46184d802ee7959203f6392abcfa0dd49fdb5be0
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  persona_flutter: 6df050d4b6776284b0568415cb52d55924361af2
+  PersonaInquirySDK2: 202826b52cbc0b42d1dc7873bbcf545713cc8534
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   PromisesSwift: 217dea0fd5d2ad65222a109c48698add13cc1c5b
   purchases_flutter: 1bfc08dbcd8f55c6e79dfc055a76fe2081a2b729

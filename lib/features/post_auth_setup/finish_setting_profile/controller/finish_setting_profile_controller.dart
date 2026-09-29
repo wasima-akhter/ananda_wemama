@@ -1,6 +1,7 @@
 import 'package:we_mama/gen/assets.gen.dart';
 
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/services/auth/verification_gate.dart';
 
 class FinishSettingProfileController extends GetxController {
   static FinishSettingProfileController get to =>
@@ -35,9 +36,10 @@ class FinishSettingProfileController extends GetxController {
   }
   // Get.toNamed(RoutePaths.welcomeFundingMum);
 
-  void onTapContinue() {
+  Future<void> onTapContinue() async {
     // Get.toNamed(RoutePaths.welcomeFundingMum);
-    Get.offAllNamed(RoutePaths.mainNav);
+    // Get.offAllNamed(RoutePaths.mainNav);
+    await VerificationGate.routeAfterAuth();
   }
 }
 

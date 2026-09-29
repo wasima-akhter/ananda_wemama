@@ -60,6 +60,8 @@ import '../features/shared/subscription/subscription_upgrade/model/subscription_
 import '../features/shared/subscription/subscription_upgrade/screen/subscription_confirm_screen.dart';
 import '../features/shared/subscription/subscription_upgrade/screen/subscription_success.dart';
 import '../features/shared/wave_request/screen/wave_request_screen.dart';
+import '../features/verification/controller/verification_controller.dart';
+import '../features/verification/view/verification_screen.dart';
 import '../features/video_meeting/screen/meeting_screen.dart';
 import 'route_paths.dart';
 
@@ -414,6 +416,16 @@ class RoutePageList {
       name: RoutePaths.billingHistory,
       page: () => const BillingHistory(),
       // binding: SubscriptionInfoBinding(),
+    ),
+
+    // Verifications
+    // app_pages.dart (or wherever your GetPages live)
+    GetPage(
+      name: RoutePaths.verification,
+      page: () => const VerificationScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut<VerificationController>(() => VerificationController());
+      }),
     ),
   ];
 }

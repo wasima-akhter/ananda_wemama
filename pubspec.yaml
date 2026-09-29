@@ -138,6 +138,11 @@ dependencies:
 
   purchases_flutter: ^10.4.1
 
+  # ----------------------------
+  # Personal verification
+  # ----------------------------
+  persona_flutter: ^4.0.1
+
   # -----------------------------
   # ⚡ Device Power & Background Control
   # -----------------------------

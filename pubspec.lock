@@ -1637,6 +1637,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+  persona_flutter:
+    dependency: "direct main"
+    description:
+      name: persona_flutter
+      sha256: e1f9912cc5fb6cc7468cae1f95ce0efd0d348b0201893b26433e86d7ec33fd7b
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   petitparser:
     dependency: transitive
     description:

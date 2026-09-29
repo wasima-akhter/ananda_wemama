@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
 import '../../../routes/route_paths.dart';
 import '../../network/helpers/network_helpers.dart';
+import '../auth/verification_gate.dart';
 import '../session/session_service.dart';
 import 'session_navigator.dart';
 
@@ -131,6 +132,8 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
     print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     print('🔗 [DeepLinkService] _handleUri() START → $uri');
 
+    //
+    if (uri.host == 'verification') return;
     final liveId = _extractLiveId(uri);
     print('🔗 [DeepLinkService] _handleUri() → extracted liveId: $liveId');
 
@@ -178,6 +181,12 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
       return;
     }
 
+    //
+    if (!await VerificationGate.ensureVerified()) {
+      pendingLiveId = liveId; // opened after approval via goHome()
+      return;
+    }
+    //
     print(
       '🔗 [DeepLinkService] _openLive() → user IS logged in — navigating to session',
     );
