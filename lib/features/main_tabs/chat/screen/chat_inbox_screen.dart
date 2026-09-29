@@ -57,7 +57,7 @@ class _ChatInboxScreenState extends State<ChatInboxScreen> {
     _isFetchingMore = true;
 
     try {
-      debugPrint('cic.loadMoreMessages() called  ');
+      print('cic.loadMoreMessages() called  ');
       await cic.loadMoreMessages();
     } finally {
       _isFetchingMore = false;

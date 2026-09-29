@@ -58,7 +58,7 @@ class CommunityService extends GetxService {
     final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -67,7 +67,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
 
     return PaginatedResult(
       data: response.data ?? [],
@@ -117,7 +117,7 @@ class CommunityService extends GetxService {
     final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -126,7 +126,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return PaginatedResult(
       data: response.data ?? [],
       meta: response.meta, // ✅ comes straight from BaseResponse
@@ -153,7 +153,7 @@ class CommunityService extends GetxService {
     final response = await ApiExecutor().execute<List<CommunityItemModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
         if (data is List) {
           return data.map((e) => CommunityItemModel.fromJson(e)).toList();
         }
@@ -162,7 +162,7 @@ class CommunityService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return PaginatedResult(
       data: response.data ?? [],
       meta: response.meta, // ✅ comes straight from BaseResponse

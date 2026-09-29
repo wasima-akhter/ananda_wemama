@@ -19,6 +19,7 @@ class TopContent extends StatelessWidget {
       children: [
         Gap(50.h),
 
+        // Text(mc.initAgora())
         Row(
           children: [
             Gap(50.w),

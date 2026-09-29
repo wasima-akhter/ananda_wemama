@@ -124,7 +124,7 @@ Future<void> showDailyLimitDialog() {
   );
 }
 
-Future<void> showLockCommentialog({required bool isLocked}) {
+Future<void> showLockCommentiaprint({required bool isLocked}) {
   return showAnimatedDialog(
     context: Get.context!,
     child: LockCommentPopup(isLocked: isLocked),
@@ -264,7 +264,7 @@ Future<void> showLiveExitPopup(
   // 👇 NEW: if fullscreen video page is currently active, exit it first
   // so the popup never renders in landscape/fullscreen mode.
   if (Get.isRegistered<FullscreenVideoController>()) {
-    log('🔵 Fullscreen active — exiting before showing popup');
+    print('🔵 Fullscreen active — exiting before showing popup');
     if (Get.key.currentState?.canPop() ?? false) {
       Get.back(); // pops FullscreenVideoPage, triggers its dispose()
     }

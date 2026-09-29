@@ -117,8 +117,8 @@ class _OpenMoodLibrary extends StatelessWidget {
 
             final items = mlc.moodReadingItems[selectedMood] ?? [];
 
-            log('🧪 selectedMood: $selectedMood');
-            log('🧪 items count: ${items.length}');
+            print('🧪 selectedMood: $selectedMood');
+            print('🧪 items count: ${items.length}');
 
             if (items.isNotEmpty) {
               Get.toNamed(

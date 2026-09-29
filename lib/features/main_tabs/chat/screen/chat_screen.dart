@@ -179,7 +179,7 @@ class ChatScreen extends StatelessWidget {
         );
       }
       for (var e in list) {
-        log("chatList id and name : ${e.id} , ${e.lastMessage}");
+        print("chatList id and name : ${e.id} , ${e.lastMessage}");
       }
       // ✅ RefreshIndicator lives here — direct parent of ListView, no Column in between
       return CusRefreshIndicator(
@@ -194,7 +194,7 @@ class ChatScreen extends StatelessWidget {
 
             final e = list[index - 1];
 
-            log(' is blocked in chatscreen: ${e.isBlocked}');
+            print(' is blocked in chatscreen: ${e.isBlocked}');
 
             final timeAgo = DateHelper().formatTimeAgo(e.time?.toString());
 

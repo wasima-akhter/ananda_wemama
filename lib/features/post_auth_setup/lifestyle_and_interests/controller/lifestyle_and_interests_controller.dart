@@ -138,10 +138,10 @@ class LifestyleAndInterestsController extends GetxController {
   }
 
   void onTapContinue() {
-    debugPrint("Selected count: ${selectedItems.length}");
+    print("Selected count: ${selectedItems.length}");
 
     if (selectedItems.length < 3) {
-      debugPrint("Showing warning");
+      print("Showing warning");
       Snack.showWarning('Select at least 3 interests');
       return;
     }

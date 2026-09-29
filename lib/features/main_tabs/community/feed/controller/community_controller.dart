@@ -66,7 +66,7 @@ class CommunityController extends GetxController {
     );
 
     if ((getToken ?? '').isEmpty) {
-      log("CommunityController: no token, skipping initial fetch");
+      print("CommunityController: no token, skipping initial fetch");
       return;
     }
   }

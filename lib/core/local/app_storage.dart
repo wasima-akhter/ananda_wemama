@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -299,7 +298,7 @@ class AppStorage extends GetxService {
       }
     } catch (e) {
       // FlutterNewBadger can throw on unsupported platforms/launchers — ignore safely
-      debugPrint('⚠️ [AppStorage] badge sync failed: $e');
+      print('⚠️ [AppStorage] badge sync failed: $e');
     }
   }
 

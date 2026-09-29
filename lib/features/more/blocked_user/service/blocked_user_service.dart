@@ -18,7 +18,7 @@ class BlockedUserService extends GetxService {
     final response = await ApiExecutor().execute<List<BlockedUserDataModel>>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
 
         if (data == null) return [];
 
@@ -28,7 +28,7 @@ class BlockedUserService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return response.data ?? [];
   }
 

@@ -62,7 +62,7 @@ class CommunitySearchController extends GetxController
     WidgetsBinding.instance.addObserver(this);
 
     if ((getToken ?? '').isEmpty) {
-      log("CommunitySearchController: no token, skipping fetch");
+      print("CommunitySearchController: no token, skipping fetch");
       return;
     }
 

@@ -1,5 +1,4 @@
 // main.dart
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -22,7 +21,7 @@ import 'features/shared/subscription/subscription_upgrade/service/purchase_servi
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugPrint('🚀 [main] Flutter binding initialized');
+  print('🚀 [main] Flutter binding initialized');
 
   // ── Orientation + status bar ─────────────────────────────────────────────────
   await SystemChrome.setPreferredOrientations([
@@ -35,22 +34,22 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ),
   );
-  debugPrint('✅ [main] orientation + status bar configured');
+  print('✅ [main] orientation + status bar configured');
 
   // ── Timezone database ─────────────────────────────────────────────────────
   tzdata.initializeTimeZones();
-  debugPrint('🌍 [main] timezone database initialized');
+  print('🌍 [main] timezone database initialized');
 
-  debugPrint('🚀 [main] Flutter binding initialized');
+  print('🚀 [main] Flutter binding initialized');
 
   // ── 1. Firebase ──────────────────────────────────────────────────────────────
-  debugPrint('🔧 [main] initializing Firebase...');
+  print('🔧 [main] initializing Firebase...');
   try {
     await FirebaseInitializer.init();
-    debugPrint('✅ [main] Firebase initialized');
+    print('✅ [main] Firebase initialized');
   } catch (e, st) {
-    debugPrint('❌ [main] Firebase initialization FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] Firebase initialization FAILED: $e');
+    print('$st');
     // Firebase is critical — rethrow so the error is visible in crash tools
     rethrow;
   }
@@ -58,108 +57,108 @@ void main() async {
   // ── 2. FCM background handler ────────────────────────────────────────────────
   // Must be registered right after Firebase.initializeApp() and before runApp()
   FirebaseMessaging.onBackgroundMessage(onFcmBackgroundMessage);
-  debugPrint('✅ [main] FCM background handler registered');
+  print('✅ [main] FCM background handler registered');
 
   // ── 3. Storage ───────────────────────────────────────────────────────────────
-  debugPrint('🔧 [main] initializing AppStorage...');
+  print('🔧 [main] initializing AppStorage...');
   await Get.putAsync<AppStorage>(() async => AppStorage.init());
-  debugPrint('✅ [main] AppStorage ready');
+  print('✅ [main] AppStorage ready');
 
   //
   // ── 3.5 PurchaseService ───────────────────────────────────────────────
-  debugPrint('🔧 [main] initializing PurchaseService...');
+  print('🔧 [main] initializing PurchaseService...');
   try {
     await Get.putAsync<PurchaseService>(
       () async => await PurchaseService().init(),
       permanent: true,
     );
-    debugPrint('✅ [main] PurchaseService ready');
+    print('✅ [main] PurchaseService ready');
   } catch (e, st) {
-    debugPrint('❌ [main] PurchaseService init FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] PurchaseService init FAILED: $e');
+    print('$st');
   }
 
   // ── 3.6 PremiumAccessService ───────────────────────────────────────────
-  debugPrint('🔧 [main] initializing PremiumAccessService...');
+  print('🔧 [main] initializing PremiumAccessService...');
   Get.put(PremiumAccessService(), permanent: true);
-  debugPrint('✅ [main] PremiumAccessService registered');
+  print('✅ [main] PremiumAccessService registered');
 
   // ── 3.7 ✅ REFRESH PREMIUM STATUS (iOS critical!) ─────────────────────
-  debugPrint('🔧 [main] refreshing premium status...');
+  print('🔧 [main] refreshing premium status...');
   try {
     final premiumService = PremiumAccessService.to;
     await premiumService.refreshPremiumStatus();
-    debugPrint(
+    print(
       '✅ [main] Premium status refreshed: ${premiumService.isPremiumUserNow}',
     );
   } catch (e, st) {
-    debugPrint('❌ [main] Premium refresh FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] Premium refresh FAILED: $e');
+    print('$st');
   }
 
   // ── 4. Deep link ─────────────────────────────────────────────────────────────
-  debugPrint('🔧 [main] capturing initial deep link...');
+  print('🔧 [main] capturing initial deep link...');
   final deepLinkService = DeepLinkService();
   await deepLinkService.captureInitialLink();
   Get.put(deepLinkService, permanent: true);
-  debugPrint('✅ [main] DeepLinkService ready');
+  print('✅ [main] DeepLinkService ready');
 
   // ── 5. UI + location services ────────────────────────────────────────────────
   Get.put(ThemeController(), permanent: true);
-  debugPrint('✅ [main] ThemeController registered');
+  print('✅ [main] ThemeController registered');
   Get.put(LocationService(), permanent: true);
-  debugPrint('✅ [main] LocationService registered');
+  print('✅ [main] LocationService registered');
 
   // ── 5.1 Device timezone ─────────────────────────────────────────────────────
-  debugPrint('🌍 [main] detecting device timezone...');
+  print('🌍 [main] detecting device timezone...');
 
   try {
     final timezoneInfo = await FlutterTimezone.getLocalTimezone();
 
-    debugPrint('🌍 [main] device timezone: $timezoneInfo');
+    print('🌍 [main] device timezone: $timezoneInfo');
   } catch (e, st) {
-    debugPrint('❌ [main] timezone detection FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] timezone detection FAILED: $e');
+    print('$st');
   }
 
   // ── 6. FirebaseTokenService — MUST be before PushNotificationService ─────────
-  debugPrint('🔧 [main] registering FirebaseTokenService...');
+  print('🔧 [main] registering FirebaseTokenService...');
   Get.put(FirebaseTokenService(), permanent: true);
-  debugPrint('✅ [main] FirebaseTokenService registered');
+  print('✅ [main] FirebaseTokenService registered');
 
   // ── 7. PushNotificationService ───────────────────────────────────────────────
-  debugPrint('🔧 [main] initializing PushNotificationService...');
+  print('🔧 [main] initializing PushNotificationService...');
   try {
     await Get.putAsync<PushNotificationService>(
       () async => PushNotificationService().init(),
       permanent: true,
     );
-    debugPrint('✅ [main] PushNotificationService ready');
+    print('✅ [main] PushNotificationService ready');
   } catch (e, st) {
     // Non-fatal: app can still run without push notifications
-    debugPrint('❌ [main] PushNotificationService init FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] PushNotificationService init FAILED: $e');
+    print('$st');
   }
   // ── 7.2  NotificationCount Controller ───────────────────────────────────────────────
-  debugPrint('🔧 [main] initializing NotificationCount Controller...');
+  print('🔧 [main] initializing NotificationCount Controller...');
   try {
     Get.put(NotificationCountController(), permanent: true);
-    debugPrint('✅ [main] NotificationCount Controller ready');
+    print('✅ [main] NotificationCount Controller ready');
   } catch (e, st) {
     // Non-fatal: app can still run without push notifications
-    debugPrint('❌ [main] NotificationCount Controller init FAILED: $e');
-    debugPrint('$st');
+    print('❌ [main] NotificationCount Controller init FAILED: $e');
+    print('$st');
   }
 
   // ── 8. Network monitor + auto-retry ─────────────────────────────────────────
-  debugPrint('🔧 [main] checking initial network state...');
+  print('🔧 [main] checking initial network state...');
   var hasNet_ = await NetworkManager().checkConnection();
-  debugPrint('✅ [main] initial network state: $hasNet_');
+  print('✅ [main] initial network state: $hasNet_');
 
   NetworkManager().networkStream().listen((isConnected) {
     if (isConnected == hasNet_) return;
     hasNet_ = isConnected;
-    debugPrint('🌐 [main] network changed → connected: $isConnected');
+    print('🌐 [main] network changed → connected: $isConnected');
 
     if (!isConnected) {
       if (Get.currentRoute != RoutePaths.offlineScreen) {
@@ -175,7 +174,7 @@ void main() async {
       }
 
       // ✅ Network restored — silently retry any failed push setup steps
-      debugPrint('🔄 [main] network restored → retrying failed push steps...');
+      print('🔄 [main] network restored → retrying failed push steps...');
       final pushService = Get.find<PushNotificationService>();
       pushService.retryFailedSteps();
     }
@@ -183,12 +182,13 @@ void main() async {
 
   // main.dart — step 8 (after PushNotificationService)
 
-  debugPrint('🔧 [main] registering NotificationController...');
+  print('🔧 [main] registering NotificationController...');
   Get.put(PushNotificationController(), permanent: true);
-  debugPrint('✅ [main] NotificationController registered');
+  print('✅ [main] NotificationController registered');
 
   // ── 9. Run app ───────────────────────────────────────────────────────────────
-  debugPrint('🚀 [main] calling runApp...');
+  print('🚀 [main] calling runApp...');
+  print('🔥🔥🔥 APP STARTED 🔥🔥🔥');
   runApp(
     ScreenUtilInit(
       designSize: const Size(360, 800),
@@ -197,5 +197,5 @@ void main() async {
       builder: (context, child) => App(hasInternet: hasNet_),
     ),
   );
-  debugPrint('✅ [main] runApp called');
+  print('✅ [main] runApp called');
 }

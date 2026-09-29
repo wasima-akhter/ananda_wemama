@@ -49,7 +49,7 @@ class CommunityActionController extends GetxController {
 
     // Invalid/empty ID → keep placeholder state.
     if (id.isEmpty) {
-      log('[CommunityActionController] User ID is empty.');
+      print('[CommunityActionController] User ID is empty.');
       return;
     }
 
@@ -61,12 +61,12 @@ class CommunityActionController extends GetxController {
       if (data != null) {
         userProfileData.value = data;
 
-        log('[CommunityActionController] Profile fetched: $data');
+        print('[CommunityActionController] Profile fetched: $data');
       } else {
-        log('[CommunityActionController] Profile data is null.');
+        print('[CommunityActionController] Profile data is null.');
       }
     } catch (e) {
-      log('[CommunityActionController] Error fetching profile: $e');
+      print('[CommunityActionController] Error fetching profile: $e');
     } finally {
       isGetUserProfileLoading.value = false;
     }

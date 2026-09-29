@@ -177,9 +177,7 @@ class FinishSettingProfileScreen extends StatelessWidget {
          */
             child: LayoutBuilder(
               builder: (context, constraints) {
-                debugPrint(
-                  ' Get.height is Get.width : ${Get.width < Get.height} ',
-                );
+                print(' Get.height is Get.width : ${Get.width < Get.height} ');
                 // 👇 single source of truth — everything derives from this
                 final imageHeight =
                     (ScreenSizeShortestLogic.s *

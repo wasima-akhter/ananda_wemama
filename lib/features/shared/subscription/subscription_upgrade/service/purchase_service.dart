@@ -50,7 +50,7 @@ class PurchaseService {
       await Purchases.logIn(appUserId);
       await refreshCustomerInfo();
     } catch (e) {
-      log('RC login error: $e');
+      print('RC login error: $e');
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -59,7 +59,7 @@ class PurchaseService {
     try {
       await Purchases.logOut();
     } catch (e) {
-      log('RC logout error: $e');
+      print('RC logout error: $e');
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -69,7 +69,7 @@ class PurchaseService {
       final info = await Purchases.getCustomerInfo();
       _onCustomerInfoUpdated(info);
     } catch (e) {
-      log('getCustomerInfo error: $e');
+      print('getCustomerInfo error: $e');
       Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -78,7 +78,7 @@ class PurchaseService {
     try {
       return await Purchases.getOfferings();
     } on PlatformException catch (e) {
-      log('getOfferings error: $e');
+      print('getOfferings error: $e');
       Get.snackbar(
         'Error',
         e.message ?? e.toString(),
@@ -274,16 +274,16 @@ class PurchaseService {
       );
     }
 
-    debugPrint('🟢 Android purchasing option=${option.id}');
+    print('🟢 Android purchasing option=${option.id}');
 
     final result = await Purchases.purchase(
       PurchaseParams.subscriptionOption(option),
     );
 
-    debugPrint('🟢 Purchasing option=${option.id}');
+    print('🟢 Purchasing option=${option.id}');
 
     for (final phase in option.pricingPhases) {
-      debugPrint(
+      print(
         'Phase: ${phase.price.formatted}, '
         'Period=${phase.billingPeriod}, '
         'Cycles=${phase.billingCycleCount}',
@@ -382,51 +382,53 @@ class SubscriptionDisplayInfo {
 
 extension PurchaseServiceInfo on PurchaseService {
   Future<SubscriptionDisplayInfo?> getDisplayInfo() async {
-    log('getDisplayInfo: started');
+    print('getDisplayInfo: started');
 
     final info = customerInfo.value;
 
-    log('getDisplayInfo: customerInfo = $info');
+    print('getDisplayInfo: customerInfo = $info');
 
     if (info == null) {
-      log('getDisplayInfo: customerInfo is null, returning null');
+      print('getDisplayInfo: customerInfo is null, returning null');
       return null;
     }
 
-    log('getDisplayInfo: all entitlements = ${info.entitlements.all}');
+    print('getDisplayInfo: all entitlements = ${info.entitlements.all}');
 
     final entitlement = info.entitlements.all[PurchaseService.entitlementId];
 
-    log('getDisplayInfo: entitlementId = ${PurchaseService.entitlementId}');
+    print('getDisplayInfo: entitlementId = ${PurchaseService.entitlementId}');
 
-    log('getDisplayInfo: entitlement = $entitlement');
+    print('getDisplayInfo: entitlement = $entitlement');
 
     if (entitlement == null) {
-      log('getDisplayInfo: entitlement is null, returning null');
+      print('getDisplayInfo: entitlement is null, returning null');
       return null;
     }
 
-    log('getDisplayInfo: entitlement.isActive = ${entitlement.isActive}');
+    print('getDisplayInfo: entitlement.isActive = ${entitlement.isActive}');
 
     if (!entitlement.isActive) {
-      log('getDisplayInfo: entitlement inactive, returning null');
+      print('getDisplayInfo: entitlement inactive, returning null');
       return null;
     }
 
-    log('getDisplayInfo: productIdentifier = ${entitlement.productIdentifier}');
+    print(
+      'getDisplayInfo: productIdentifier = ${entitlement.productIdentifier}',
+    );
 
     String? priceString;
 
     try {
-      log('getDisplayInfo: fetching offerings...');
+      print('getDisplayInfo: fetching offerings...');
 
       final offerings = await Purchases.getOfferings();
 
-      log('getDisplayInfo: offerings = $offerings');
+      print('getDisplayInfo: offerings = $offerings');
 
-      log('getDisplayInfo: current offering = ${offerings.current}');
+      print('getDisplayInfo: current offering = ${offerings.current}');
 
-      log(
+      print(
         'getDisplayInfo: available packages = ${offerings.current?.availablePackages}',
       );
 
@@ -434,17 +436,17 @@ extension PurchaseServiceInfo on PurchaseService {
         (p) => p.storeProduct.identifier == entitlement.productIdentifier,
       );
 
-      log('getDisplayInfo: matched package = $pkg');
+      print('getDisplayInfo: matched package = $pkg');
 
-      log('getDisplayInfo: matched storeProduct = ${pkg?.storeProduct}');
+      print('getDisplayInfo: matched storeProduct = ${pkg?.storeProduct}');
 
       priceString = pkg?.storeProduct.priceString;
 
-      log('getDisplayInfo: priceString = $priceString');
+      print('getDisplayInfo: priceString = $priceString');
     } catch (e, stack) {
-      log('getDisplayInfo: Could not resolve price: $e');
-      log('getDisplayInfo: stack = $stack');
-      debugPrint('Could not resolve price: $e');
+      print('getDisplayInfo: Could not resolve price: $e');
+      print('getDisplayInfo: stack = $stack');
+      print('Could not resolve price: $e');
     }
 
     return SubscriptionDisplayInfo(

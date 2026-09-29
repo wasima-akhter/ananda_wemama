@@ -72,8 +72,8 @@ class ChatInboxController extends GetxController {
   void onInit() async {
     super.onInit();
 
-    log("chatId: $chatId");
-    log("isBlocked: $isBlocked");
+    print("chatId: $chatId");
+    print("isBlocked: $isBlocked");
     isBlockedRx.value = args.isBlocked;
     // emitGetMessages();
 
@@ -103,13 +103,13 @@ class ChatInboxController extends GetxController {
     );
 
     await getMessages();
-    debugPrint('getMessages -->scrollToLast called ');
+    print('getMessages -->scrollToLast called ');
     scrollToLast();
 
     //
 
     _socketConnectedSub = socket.onConnected.listen((_) {
-      log("🔌 ChatInbox socket connected");
+      print("🔌 ChatInbox socket connected");
 
       _reconnectAttempt = 0;
       _reconnectTimer?.cancel();
@@ -119,7 +119,7 @@ class ChatInboxController extends GetxController {
     });
 
     _socketDisconnectedSub = socket.onDisconnected.listen((_) {
-      log("🔌 ChatInbox socket disconnected");
+      print("🔌 ChatInbox socket disconnected");
       _scheduleReconnect();
     });
 
@@ -135,11 +135,11 @@ class ChatInboxController extends GetxController {
 
   void joinConversation() {
     if (!socket.isConnected) {
-      log("⚠️ Cannot join conversation: socket disconnected");
+      print("⚠️ Cannot join conversation: socket disconnected");
       return;
     }
 
-    log("➡️ Joining conversation: $chatId");
+    print("➡️ Joining conversation: $chatId");
 
     socket.emit(SocketEvents.joinConversation, {"conversationId": chatId});
   }
@@ -163,14 +163,14 @@ class ChatInboxController extends GetxController {
     _reconnectTimer = Timer(delay, () async {
       if (socket.isConnected) return;
 
-      log("🔁 ChatInbox reconnect attempt ${_reconnectAttempt + 1}");
+      print("🔁 ChatInbox reconnect attempt ${_reconnectAttempt + 1}");
       _reconnectAttempt++;
 
       try {
         socket.disconnectSocket();
         await socket.connectSocket();
       } catch (e) {
-        log("❌ reconnect failed: $e");
+        print("❌ reconnect failed: $e");
       }
 
       if (!socket.isConnected) {
@@ -208,7 +208,7 @@ class ChatInboxController extends GetxController {
     // if (item.messages.isNotEmpty == true) {
     //   final incomingChatId = item.messages.first.conversationId ?? '';
     //   if (incomingChatId.isNotEmpty && incomingChatId != chatId) {
-    //     log(
+    //     print(
     //       "⚠️ Ignoring messages for different chat: $incomingChatId (mine: $chatId)",
     //     );
     //     return;
@@ -274,7 +274,7 @@ class ChatInboxController extends GetxController {
     required List<Map<String, dynamic>> attachments,
   }) async {
     if (!socket.isConnected) {
-      log("❌ Send failed: socket not connected");
+      print("❌ Send failed: socket not connected");
 
       _scheduleReconnect(immediate: true);
 
@@ -292,7 +292,7 @@ class ChatInboxController extends GetxController {
 
       return true;
     } catch (e) {
-      log("❌ Send error: $e");
+      print("❌ Send error: $e");
       sendFailed_.value = true;
       return false;
     }
@@ -309,7 +309,7 @@ class ChatInboxController extends GetxController {
   }
 
   void scrollToNewest() {
-    debugPrint('scrollToNewest called ');
+    print('scrollToNewest called ');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
         scrollController.animateTo(
@@ -324,7 +324,7 @@ class ChatInboxController extends GetxController {
   final autoScrolling = false.obs;
 
   Future<void> scrollToLast() async {
-    debugPrint('scrollToLast called ');
+    print('scrollToLast called ');
     // autoScrolling.value = true;
 
     // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -617,7 +617,7 @@ class ChatInboxController extends GetxController {
         },
       );
 
-      debugPrint("Downloaded to temp: $tempPath");
+      print("Downloaded to temp: $tempPath");
 
       final lower = fileName.toLowerCase();
 
@@ -640,7 +640,7 @@ class ChatInboxController extends GetxController {
         await OpenFile.open(savePath);
       }
     } catch (e) {
-      debugPrint("Download error: $e");
+      print("Download error: $e");
       Snack.showError("Download failed");
     } finally {
       downloadProgress.value = 0;
@@ -727,7 +727,7 @@ class ChatInboxController extends GetxController {
       clearAttachments();
       unFocusAll();
     } catch (e) {
-      log("sendFileMessage error: $e");
+      print("sendFileMessage error: $e");
 
       "Something went wrong while sending the file.".showToast();
     } finally {
@@ -763,10 +763,10 @@ class ChatInboxController extends GetxController {
 
       if (data != null) {
         chatUserProfileData.value = data;
-        log("data fetching profile: ${(data)}");
+        print("data fetching profile: ${(data)}");
       }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isgetUserProfileLoading_.value = false;
     }

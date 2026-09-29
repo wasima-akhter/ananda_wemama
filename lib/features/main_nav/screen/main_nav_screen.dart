@@ -9,7 +9,7 @@ class MainNavScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     MainNavController mnc = Get.find<MainNavController>();
 
-    log("🏗️ MainNavigationPage build called");
+    print("🏗️ MainNavigationPage build called");
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) =>
@@ -22,7 +22,7 @@ class MainNavScreen extends StatelessWidget {
           backgroundColor: bgClr,
           body: Obx(() {
             final currentIndex = mnc.currentIndex.value;
-            log("📄 Displaying page at index: $currentIndex");
+            print("📄 Displaying page at index: $currentIndex");
             return mnc.pages[currentIndex];
           }),
           bottomNavigationBar: Column(

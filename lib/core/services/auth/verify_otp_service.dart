@@ -24,7 +24,7 @@ class VerifyOtpService extends GetxService {
     // You can access user like:
     if (response.isSuccess) {
       await _saveUserDataAfterVerify(response: response);
-      log("response.data?.user.email : ${response.data?.user?.email}");
+      print("response.data?.user.email : ${response.data?.user?.email}");
     }
     return response.isSuccess;
   }
@@ -35,10 +35,10 @@ class VerifyOtpService extends GetxService {
     if (response.data != null) {
       final token = response.data?.accessToken ?? '';
       storage.setToken(token);
-      log("✅ Token saved: '$token'");
+      print("✅ Token saved: '$token'");
 
       storage.setUserId(response.data?.user?.profileId ?? ''); // NEW
-      log(
+      print(
         "Logged in as: ${response.data?.user?.email}, id: ${response.data?.user?.profileId}",
       );
 
@@ -56,12 +56,12 @@ class VerifyOtpService extends GetxService {
 
       // ✅ Upload FCM token now that Bearer token is available
       if (Get.isRegistered<PushNotificationService>()) {
-        log(
+        print(
           "🔧 [VerifyOtpService] triggering FCM token upload after verify...",
         );
         PushNotificationService.to.uploadTokenAfterLogin();
       } else {
-        log(
+        print(
           "⚠️ [VerifyOtpService] PushNotificationService not registered — skipping FCM upload",
         );
       }

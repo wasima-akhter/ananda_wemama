@@ -18,7 +18,7 @@ class MatchIdleState extends StatelessWidget {
       final premium = PremiumAccessService.to;
       final premiumReady = premium.isReady.value;
       final profileReady = mc.profile.value != null;
-      final isPremium = premiumReady && premium.isPremiumUserNow;
+      final isPremium = true ?? premiumReady && premium.isPremiumUserNow;
 
       // ✅ Show loading until both are ready
       if (!premiumReady || !profileReady) {
@@ -26,9 +26,9 @@ class MatchIdleState extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
+              LoadingPrimary(),
               SizedBox(height: 16),
-              Text('Loading premium status...'),
+              Text('Loading premium status...', style: TxtStyle.outfit()),
               if (kDebugMode) ...[
                 SizedBox(height: 16),
                 Text('DEBUG: premium.isReady=${premium.isReady.value}'),

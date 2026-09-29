@@ -122,7 +122,7 @@ class _CommunitySpotlightLive extends StatelessWidget {
       final commId = spotlightData?.id ?? '';
       final communityname = spotlightData?.name ?? '';
 
-      debugPrint('lastPostData: $lastPostData');
+      print('lastPostData: $lastPostData');
 
       return UIStateHandler(
         loading: () => const CommunitySpotlightShimmer(),

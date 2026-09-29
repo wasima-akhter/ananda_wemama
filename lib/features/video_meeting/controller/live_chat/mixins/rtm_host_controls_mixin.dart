@@ -38,10 +38,10 @@ mixin RtmHostControlsMixin on GetxController {
         throw Exception('RTM publish failed: ${status.errorCode}');
       }
 
-      log('✅ [RTM] Mute command sent to $targetUid');
+      print('✅ [RTM] Mute command sent to $targetUid');
       "Mute command sent".showToast();
     } catch (e) {
-      log('❌ [RTM] muteParticipant failed: $e');
+      print('❌ [RTM] muteParticipant failed: $e');
       // Revert optimistic update on error
       if (index != -1) {
         _self.participants[index] = _self.participants[index].copyWith(
@@ -81,10 +81,10 @@ mixin RtmHostControlsMixin on GetxController {
         throw Exception('RTM publish failed: ${status.errorCode}');
       }
 
-      log('✅ [RTM] Unmute command sent to $targetUid');
+      print('✅ [RTM] Unmute command sent to $targetUid');
       "Unmute command sent".showToast();
     } catch (e) {
-      log('❌ [RTM] unmuteParticipant failed: $e');
+      print('❌ [RTM] unmuteParticipant failed: $e');
       // Revert optimistic update on error
       if (index != -1) {
         _self.participants[index] = _self.participants[index].copyWith(
@@ -121,10 +121,10 @@ mixin RtmHostControlsMixin on GetxController {
       _self.raisedHands.removeWhere((h) => h.uid == targetUid);
       _self.viewCount.value = _self.participants.length;
 
-      log('✅ [RTM] Kick command sent to $targetUid');
+      print('✅ [RTM] Kick command sent to $targetUid');
       "Participant removed".showToast();
     } catch (e) {
-      log('❌ [RTM] kickParticipant failed: $e');
+      print('❌ [RTM] kickParticipant failed: $e');
       "Failed to remove participant".showToast();
     }
   }
@@ -151,9 +151,9 @@ mixin RtmHostControlsMixin on GetxController {
       }
 
       _self.raisedHands.removeWhere((h) => h.uid == targetUid);
-      log('✅ [RTM] Hand lowered for $targetUid');
+      print('✅ [RTM] Hand lowered for $targetUid');
     } catch (e) {
-      log('❌ [RTM] lowerParticipantHand failed: $e');
+      print('❌ [RTM] lowerParticipantHand failed: $e');
     }
   }
 }

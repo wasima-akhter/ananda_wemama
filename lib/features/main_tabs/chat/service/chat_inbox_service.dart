@@ -47,12 +47,12 @@ class ChatInboxService extends GetxService {
     Map<String, String>? fields,
   }) async {
     /// LOG FILES
-    log("📤 [CHAT FILE UPLOAD] Total Files: ${chatFiles.length}");
+    print("📤 [CHAT FILE UPLOAD] Total Files: ${chatFiles.length}");
 
     for (int i = 0; i < chatFiles.length; i++) {
       final file = chatFiles[i];
 
-      log("""
+      print("""
 📎 FILE ${i + 1}
 Name: ${file.name}
 Path: ${file.path}
@@ -63,14 +63,14 @@ Length(bytes): ${await file.length()}
     }
 
     /// LOG FIELDS
-    log("📝 Fields: $fields");
+    print("📝 Fields: $fields");
 
     final response = await ApiExecutor().execute<dynamic>(
       apiCall: () => ApiClient().postWithFile(
         Endpoints.sendChatFile.getUrl,
         // reqName: Strings.uploadChatFile,
         files: chatFiles.map((f) {
-          log("✅ Sending File => field: chat-files | file: ${f.name}");
+          print("✅ Sending File => field: chat-files | file: ${f.name}");
 
           return MapEntry('chat-files', f);
         }).toList(),
@@ -80,8 +80,8 @@ Length(bytes): ${await file.length()}
       parser: (data) => data,
     );
 
-    log("📥 Upload Response: ${response.data}");
-    log("📥 Upload Success: ${response.isSuccess}");
+    print("📥 Upload Response: ${response.data}");
+    print("📥 Upload Success: ${response.isSuccess}");
 
     return (!response.isSuccess) ? null : response.data;
   }

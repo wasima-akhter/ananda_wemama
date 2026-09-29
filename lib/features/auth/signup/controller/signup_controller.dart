@@ -110,10 +110,10 @@ class SignupController extends GetxController {
       }
 
       clearAll();
-      log("Signup logic placeholder executed");
+      print("Signup logic placeholder executed");
     } catch (e, s) {
-      log("Signup error: $e");
-      log(s.toString());
+      print("Signup error: $e");
+      print(s.toString());
     } finally {
       isLoading_.value = false;
     }
@@ -209,11 +209,11 @@ class SignupController extends GetxController {
 
   Future<void> _handlePostAuthSuccess({required bool isGoogle}) async {
     if (Get.isRegistered<PushNotificationService>()) {
-      log("Uploading FCM token after social signup/login");
+      print("Uploading FCM token after social signup/login");
 
       await PushNotificationService.to.uploadTokenAfterLogin();
 
-      log("FCM token uploaded");
+      print("FCM token uploaded");
     }
 
     Snack.showSuccess(

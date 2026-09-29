@@ -1,6 +1,5 @@
 // core/utils/paginator.dart
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../network/base/dio_client.dart';
@@ -47,7 +46,7 @@ class Paginator<T> {
   Future<void> loadMore() async {
     // ✅ guard — never hit the API again once hasMore is false
     if (isLoadingMore.value || isLoading.value || !hasMore.value) {
-      debugPrint(
+      print(
         '🛑 [Paginator] skipping loadMore — hasMore=${hasMore.value}, isLoadingMore=${isLoadingMore.value}',
       );
       return;

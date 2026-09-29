@@ -15,7 +15,7 @@ class PushNotificationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    debugPrint('🔧 [NotificationController] onInit — registering tap listener');
+    print('🔧 [NotificationController] onInit — registering tap listener');
     _listenToTaps();
     _consumeColdStartPayload();
   }
@@ -28,36 +28,34 @@ class PushNotificationController extends GetxController {
   // REMOVE: _route(), _handleOther() — all routing logic deleted from here
 
   void _listenToTaps() {
-    debugPrint(
-      '🎧 [NotificationController] Listening for notification taps...',
-    );
+    print('🎧 [NotificationController] Listening for notification taps...');
 
     PushNotificationService.notificationTapStream.stream.listen(
       (jsonString) {
-        debugPrint('👆 [NotificationController] Tap received');
-        debugPrint('📦 Raw payload: $jsonString');
+        print('👆 [NotificationController] Tap received');
+        print('📦 Raw payload: $jsonString');
 
         try {
           final payload = NotificationPayload.fromJsonString(jsonString);
 
-          debugPrint('✅ Payload parsed');
-          debugPrint('➡️ type: ${payload.type}');
-          debugPrint('➡️ referenceId: ${payload.referenceId}');
-          debugPrint('➡️ referenceModel: ${payload.referenceModel}');
-          debugPrint('➡️ metadata: ${payload.metadata}');
+          print('✅ Payload parsed');
+          print('➡️ type: ${payload.type}');
+          print('➡️ referenceId: ${payload.referenceId}');
+          print('➡️ referenceModel: ${payload.referenceModel}');
+          print('➡️ metadata: ${payload.metadata}');
 
           _guardAndRoute(payload);
         } catch (e, s) {
-          debugPrint('❌ Failed to parse payload');
-          debugPrint(e.toString());
-          debugPrint(s.toString());
+          print('❌ Failed to parse payload');
+          print(e.toString());
+          print(s.toString());
         }
       },
       onError: (e) {
-        debugPrint('❌ notificationTapStream ERROR: $e');
+        print('❌ notificationTapStream ERROR: $e');
       },
       onDone: () {
-        debugPrint('⚠️ notificationTapStream CLOSED');
+        print('⚠️ notificationTapStream CLOSED');
       },
     );
   }
@@ -66,14 +64,14 @@ class PushNotificationController extends GetxController {
   // lastPayload is written before this controller exists, so consume it once.
 
   void _consumeColdStartPayload() {
-    debugPrint('🚀 Checking cold start payload');
+    print('🚀 Checking cold start payload');
 
     final raw = PushNotificationService.lastPayload;
 
-    debugPrint('📦 Cold payload: $raw');
+    print('📦 Cold payload: $raw');
 
     if (raw == null || raw.isEmpty) {
-      debugPrint('ℹ️ No cold start payload');
+      print('ℹ️ No cold start payload');
       return;
     }
 
@@ -91,31 +89,31 @@ class PushNotificationController extends GetxController {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint('🚀 Routing cold start notification');
+      print('🚀 Routing cold start notification');
       _guardAndRoute(payload);
     });
   }
 
   /// Login guard lives here — routing logic lives in NotificationRouter
   void _guardAndRoute(NotificationPayload payload) {
-    debugPrint('🛡️ _guardAndRoute called');
+    print('🛡️ _guardAndRoute called');
 
     final loggedIn = AppStorage.to.getLoggedIn;
 
-    debugPrint('👤 Logged in: $loggedIn');
-    debugPrint('📦 Payload type: ${payload.type}');
-    debugPrint('📦 Payload: ${payload.toJsonString()}');
+    print('👤 Logged in: $loggedIn');
+    print('📦 Payload type: ${payload.type}');
+    print('📦 Payload: ${payload.toJsonString()}');
 
     if (!loggedIn) {
-      debugPrint('🔒 User not logged in');
+      print('🔒 User not logged in');
       PushNotificationService.lastPayload = payload.toJsonString();
       Get.offAllNamed(RoutePaths.signin);
       return;
     }
 
-    debugPrint('➡️ Calling NotificationRouter');
+    print('➡️ Calling NotificationRouter');
     NotificationRouter.routeFromPayload(payload);
-    debugPrint('✅ NotificationRouter finished');
+    print('✅ NotificationRouter finished');
   }
 
   // ── Central router ────────────────────────────────────────────────────────
@@ -124,9 +122,7 @@ class PushNotificationController extends GetxController {
   // Call it from a debug button anywhere in your UI
 
   void sendTestNotification(String scenario) {
-    debugPrint(
-      '🧪 [NotificationController] sending test — scenario: $scenario',
-    );
+    print('🧪 [NotificationController] sending test — scenario: $scenario');
 
     final testPayload = NotificationPayload(
       toId: 'test-user-id',
@@ -147,7 +143,7 @@ class PushNotificationController extends GetxController {
       payload: testPayload,
     );
 
-    debugPrint('🧪 [NotificationController] test notification shown');
+    print('🧪 [NotificationController] test notification shown');
   }
 
   /*

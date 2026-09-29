@@ -18,7 +18,7 @@ class MatchService extends GetxService {
     final response = await ApiExecutor().execute<MatchResponseModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parser data: $data");
+        print("parser data: $data");
 
         if (data is Map<String, dynamic>) {
           return MatchResponseModel.fromJson(data);
@@ -28,7 +28,7 @@ class MatchService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
 
     // Backend says free limit reached
     if (response.statusCode == 403) {

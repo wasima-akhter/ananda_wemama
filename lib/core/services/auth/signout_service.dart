@@ -1,5 +1,4 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 
 import '../../../app/service_export.dart';
 import '../../../features/main_tabs/chat/controller/chat_controller.dart';
@@ -35,12 +34,12 @@ class SignoutService {
     try {
       final token = await _fcm.getToken();
 
-      debugPrint('🔑 [SignoutService] current FCM token: $token');
+      print('🔑 [SignoutService] current FCM token: $token');
 
       return token;
     } catch (e, st) {
-      debugPrint('❌ [SignoutService] failed to get FCM token: $e');
-      debugPrint('$st');
+      print('❌ [SignoutService] failed to get FCM token: $e');
+      print('$st');
 
       return null;
     }
@@ -50,7 +49,7 @@ class SignoutService {
     final fcmToken = await getCurrentFcmToken();
 
     if (fcmToken == null || fcmToken.isEmpty) {
-      debugPrint(
+      print(
         '⚠️ [SignoutService] FCM token unavailable. '
         'Logout cancelled to avoid logging out without removing the device token.',
       );
@@ -60,13 +59,11 @@ class SignoutService {
     final res = await signoutFromBackend(fcmToken: fcmToken);
 
     if (!res) {
-      debugPrint('❌ [SignoutService] backend logout failed');
+      print('❌ [SignoutService] backend logout failed');
       return;
     }
 
-    debugPrint(
-      '✅ [SignoutService] backend logout successful for current device',
-    );
+    print('✅ [SignoutService] backend logout successful for current device');
 
     // Disconnect socket FIRST
     if (Get.isRegistered<SocketService>()) {

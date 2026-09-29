@@ -61,7 +61,7 @@ class NotificationController extends GetxController {
         "Notification marked as seen".showToast();
       }
     } catch (e) {
-      log("Error updateIsSeen: $e");
+      print("Error updateIsSeen: $e");
     } finally {
       isupdateIsSeenLoading_.value = false;
     }

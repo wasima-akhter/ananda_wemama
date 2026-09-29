@@ -2,7 +2,6 @@ import 'package:permission_handler/permission_handler.dart' as AppSettings;
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../services/push_notification/push_notification_service.dart';
-import '../../ui/dialogs/small_popup_dialog.dart';
 
 class EnableNotificationsPopup extends StatelessWidget {
   const EnableNotificationsPopup({super.key});

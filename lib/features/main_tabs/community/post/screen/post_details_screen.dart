@@ -35,7 +35,7 @@ class PostDetailsScreen extends StatelessWidget {
 
     return AppScreenTemplate(
       refreshKey: refreshKey,
-      onRefresh: () async => log("refreshed"),
+      onRefresh: () async => print("refreshed"),
       // isScrollable: false,
       appBar: CommonAppBarContent(title: Strings.post),
 
@@ -100,7 +100,7 @@ class CommentItemInPostDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final childCommentList = item.replies ?? [];
 
-    log(
+    print(
       'childCommentList: ${childCommentList.isNotEmpty ? childCommentList[0].id : ''}',
     );
 

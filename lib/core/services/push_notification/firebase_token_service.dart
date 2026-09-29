@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import '../../../app/service_export.dart';
 
 class FirebaseTokenService extends GetxService {
@@ -9,7 +6,7 @@ class FirebaseTokenService extends GetxService {
   final RxBool isLoading = false.obs;
 
   Future<bool> updateToken({required String firebaseToken}) async {
-    debugPrint('🔧 [FirebaseTokenService] uploading token: $firebaseToken');
+    print('🔧 [FirebaseTokenService] uploading token: $firebaseToken');
 
     isLoading.value = true;
 
@@ -25,7 +22,7 @@ class FirebaseTokenService extends GetxService {
 
       final success = response.isSuccess ?? false;
 
-      debugPrint(
+      print(
         success
             ? '✅ [FirebaseTokenService] token uploaded successfully'
             : '⚠️ [FirebaseTokenService] token upload failed',
@@ -33,8 +30,8 @@ class FirebaseTokenService extends GetxService {
 
       return success;
     } catch (e, st) {
-      debugPrint('❌ [FirebaseTokenService] token upload FAILED: $e');
-      debugPrint('$st');
+      print('❌ [FirebaseTokenService] token upload FAILED: $e');
+      print('$st');
 
       return false;
     } finally {

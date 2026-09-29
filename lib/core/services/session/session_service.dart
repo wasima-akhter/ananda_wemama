@@ -16,14 +16,14 @@ class SessionService {
     final response = await ApiExecutor().execute<Session?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
         final parsedData = Session.fromJson(data);
 
         return parsedData;
       },
     );
 
-    log("response data: ${response?.data}");
+    print("response data: ${response?.data}");
     return response?.data;
   }
 

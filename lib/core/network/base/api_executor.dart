@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:dio/dio.dart';
 
@@ -19,15 +19,15 @@ class ApiExecutor {
       final response = await apiCall();
 
       if (response == null) {
-        const msg = "No server response";
+        const msg = "Unable to connect to the server. Please try again later.";
         if (showErrorMessage) Snack.showError(msg);
         return Result(type: ApiResultType.failed, message: msg);
       }
-
       final body = response.data;
 
       if (body is! Map<String, dynamic>) {
-        const msg = "Invalid server response";
+        const msg =
+            "We received an unexpected response from the server. Please try again later.";
         if (showErrorMessage) Snack.showError(msg);
         return Result(type: ApiResultType.failed, message: msg);
       }
@@ -67,9 +67,25 @@ class ApiExecutor {
         statusCode: response.statusCode,
         message: errorMessage,
       );
+      // } catch (e) {
+      //   final msg = e.toString();
+      //   print(msg);
+      //   return Result(type: ApiResultType.failed, message: msg);
+      // }
     } catch (e) {
+      print('❌ [EXECUTOR] Exception caught: $e');
+      print('❌ [EXECUTOR] Exception type: ${e.runtimeType}');
+      print('❌ [EXECUTOR] Exception caught: $e');
+      print('❌ [EXECUTOR] Exception type: ${e.runtimeType}');
+
+      if (e is TimeoutException) {
+        print('❌ [EXECUTOR] TIMEOUT - backend unreachable');
+        if (showErrorMessage)
+          Snack.showError('Request timed out. Please try again.');
+      }
+
       final msg = e.toString();
-      log(msg);
+      print(msg);
       return Result(type: ApiResultType.failed, message: msg);
     }
   }

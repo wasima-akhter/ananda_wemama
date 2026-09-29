@@ -97,6 +97,16 @@ post_install do |installer|
         'PERMISSION_MICROPHONE=1',
       ]
 
+      # 🔴 NEW FIX: For Release builds, disable aggressive optimizations that break Agora
+      if config.name == 'Release'
+        config.build_settings['SWIFT_OPTIMIZATION_LEVEL'] = '-Onone'  # ✅ Disable optimizations
+        config.build_settings['GCC_OPTIMIZATION_LEVEL'] = '0'         # ✅ Disable C optimization
+        config.build_settings['STRIP_INSTALLED_PRODUCTS'] = 'NO'      # ✅ Don't strip binaries
+        config.build_settings['COPY_PHASE_STRIP'] = 'NO'              # ✅ Don't strip on copy
+        config.build_settings['DEAD_CODE_STRIPPING'] = 'NO'           # ✅ Keep all symbols
+        puts "🔴 Applied iOS Release optimizations fix for Agora"
+      end
+
       if broken_interface_pods.include?(target.name)
         # ✅ FIX 3: Disable library-for-distribution + interface verification
         # for pods whose .swiftinterface has the module-name == type-name bug.
@@ -112,6 +122,8 @@ post_install do |installer|
   installer.aggregate_targets.each do |aggregate_target|
     aggregate_target.xcconfigs.each do |config_name, config_file|
       config_file.attributes['OTHER_LDFLAGS'] ||= '$(inherited)'
+      # 🔴 NEW: Ensure Agora symbols are visible
+      config_file.attributes['OTHER_LDFLAGS'] += ' -undefined dynamic_lookup'
     end
   end
 end

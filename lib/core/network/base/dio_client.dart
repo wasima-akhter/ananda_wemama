@@ -35,21 +35,21 @@ class DioClient {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           if (kDebugMode) {
-            log("➡️ ${options.method} ${options.path}");
+            print("➡️ ${options.method} ${options.path}");
 
-            log("Headers: ${options.headers}");
+            print("Headers: ${options.headers}");
 
-            log("Data: ${options.data}");
+            print("Data: ${options.data}");
 
             if (options.data is FormData) {
               final form = options.data as FormData;
 
               for (final field in form.fields) {
-                log("FIELD ${field.key}: ${field.value}");
+                print("FIELD ${field.key}: ${field.value}");
               }
 
               for (final file in form.files) {
-                log("FILE ${file.key}: ${file.value.filename}");
+                print("FILE ${file.key}: ${file.value.filename}");
               }
             }
           }

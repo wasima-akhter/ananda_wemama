@@ -28,7 +28,7 @@ Future<bool> requestPermissions() async {
   final result = await permissions.request();
 
   for (final entry in result.entries) {
-    debugPrint('PERMISSION: ${entry.key} => ${entry.value}');
+    print('PERMISSION: ${entry.key} => ${entry.value}');
   }
   final allGranted = result.entries.every(
     (entry) => isPermissionAccepted(entry.key, entry.value),

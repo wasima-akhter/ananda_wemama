@@ -7,6 +7,7 @@ export 'package:get/get.dart';
 export 'package:we_mama/core/components/ui/buttons/custom_btn_w_txt.dart';
 export 'package:we_mama/core/components/ui/buttons/gesture_detector_cus.dart';
 export 'package:we_mama/core/components/ui/buttons/small_nav_btn.dart';
+export 'package:we_mama/core/components/ui/dialogs/small_popup_dialog.dart';
 export 'package:we_mama/core/components/ui/helpers/shapes/container_bordered.dart';
 export 'package:we_mama/core/components/ui/helpers/texts/txt_overflow.dart';
 export 'package:we_mama/core/components/ui/inputs/cus_check_box.dart';

@@ -90,7 +90,7 @@ class ChangePasswordController extends GetxController {
     final isValid = validateForm(formKey);
 
     if (!isValid || isLoading_.value) return;
-    log("validated both email and password");
+    print("validated both email and password");
     unfocusAll();
     isLoading_.value = true;
 

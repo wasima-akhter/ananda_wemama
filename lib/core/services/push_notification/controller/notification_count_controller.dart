@@ -1,6 +1,5 @@
 // notification_count_controller.dart
 
-import 'package:flutter/material.dart';
 import 'package:flutter_new_badger/flutter_new_badger.dart';
 import 'package:get/get.dart';
 
@@ -23,9 +22,7 @@ class NotificationCountController extends GetxController {
 
   // in NotificationCountController
   void refreshFromStorage() {
-    debugPrint(
-      '🔄 [NotificationCountController] refreshing from storage on resume',
-    );
+    print('🔄 [NotificationCountController] refreshing from storage on resume');
     _restore();
   }
 
@@ -33,7 +30,7 @@ class NotificationCountController extends GetxController {
     unreadCount.value = storage.getUnreadNotifCount;
     newCount.value = storage.getNewNotifCount;
     _syncBadge();
-    debugPrint(
+    print(
       '🔢 [NotificationCountController] restored — unread: ${unreadCount.value}, new: ${newCount.value}',
     );
   }
@@ -41,7 +38,7 @@ class NotificationCountController extends GetxController {
   /// Called whenever a push arrives in ANY app state (foreground/background/terminated)
   /// Pass counts straight from NotificationPayload.
   void onPushReceived({required int unread, required int newN}) {
-    debugPrint(
+    print(
       '🔢 [NotificationCountController] onPushReceived — unread: $unread, new: $newN',
     );
 
@@ -54,7 +51,7 @@ class NotificationCountController extends GetxController {
 
   /// Called from API response when fetching notification list / count endpoint
   void syncFromApi({required int unread, required int newN}) {
-    debugPrint(
+    print(
       '🔢 [NotificationCountController] syncFromApi — unread: $unread, new: $newN',
     );
     unreadCount.value = unread;
@@ -65,9 +62,7 @@ class NotificationCountController extends GetxController {
 
   /// Call when user opens the notification screen — clears bell dot only
   void onNotificationScreenOpened() {
-    debugPrint(
-      '🔢 [NotificationCountController] screen opened — clearing newCount',
-    );
+    print('🔢 [NotificationCountController] screen opened — clearing newCount');
     newCount.value = 0;
     _persist();
     // unreadCount + app badge stay until items are actually marked read
@@ -75,7 +70,7 @@ class NotificationCountController extends GetxController {
 
   /// Call after marking all/some as read via API
   void onMarkedRead({required int remainingUnread}) {
-    debugPrint(
+    print(
       '🔢 [NotificationCountController] marked read — remaining unread: $remainingUnread',
     );
     unreadCount.value = remainingUnread;
@@ -97,11 +92,11 @@ class NotificationCountController extends GetxController {
       } else {
         FlutterNewBadger.removeBadge();
       }
-      debugPrint(
+      print(
         '📱 [NotificationCountController] app badge synced → ${unreadCount.value}',
       );
     } catch (e) {
-      debugPrint('⚠️ [NotificationCountController] badge sync failed: $e');
+      print('⚠️ [NotificationCountController] badge sync failed: $e');
     }
   }
 }

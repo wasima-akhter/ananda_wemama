@@ -54,8 +54,8 @@ class ManageCommunityController extends GetxController {
     if (selectedImage != null) {
       fileImage.value = selectedImage;
 
-      log("file.name: ${selectedImage.name}");
-      log("file.path: ${selectedImage.path}");
+      print("file.name: ${selectedImage.name}");
+      print("file.path: ${selectedImage.path}");
     }
   }
 
@@ -75,16 +75,16 @@ class ManageCommunityController extends GetxController {
       );
 
       if (response == true) {
-        log('onTapEdit success : $response');
+        print('onTapEdit success : $response');
 
         await CommunityDetailController.to.getCommunityDetail(
           communityIdForRefresh: communityId.value,
         );
       } else {
-        log('onTapEdit failed : $response');
+        print('onTapEdit failed : $response');
       }
     } catch (e) {
-      log("Error onTapEdit community: $e");
+      print("Error onTapEdit community: $e");
     } finally {
       isLoading_.value = false;
 

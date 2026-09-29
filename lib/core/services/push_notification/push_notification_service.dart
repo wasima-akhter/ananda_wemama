@@ -44,7 +44,7 @@ class PushNotificationService extends GetxService {
   /// Full init — call once from main() AFTER Firebase + FirebaseTokenService
   /// are both registered in GetX.
   Future<PushNotificationService> init() async {
-    debugPrint('🔧 [PushNotificationService] init started');
+    print('🔧 [PushNotificationService] init started');
 
     await _initLocalPlugin();
     //
@@ -56,7 +56,7 @@ class PushNotificationService extends GetxService {
     await _handleTerminatedLaunch();
     // await _uploadFcmToken(); // safe here — FirebaseTokenService is already in GetX
 
-    debugPrint('✅ [PushNotificationService] init complete');
+    print('✅ [PushNotificationService] init complete');
     return this;
   }
 
@@ -69,56 +69,48 @@ class PushNotificationService extends GetxService {
   // ── Setup steps ───────────────────────────────────────────────────────────────
 
   Future<void> _requestPermissions() async {
-    debugPrint('🔧 [PushNotificationService] requesting permissions...');
+    print('🔧 [PushNotificationService] requesting permissions...');
     if (Platform.isAndroid) {
       final granted = await _localNotifications
           .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin
           >()
           ?.requestNotificationsPermission();
-      debugPrint(
-        '✅ [PushNotificationService] Android permission granted: $granted',
-      );
+      print('✅ [PushNotificationService] Android permission granted: $granted');
     } else if (Platform.isIOS) {
       final granted = await _localNotifications
           .resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin
           >()
           ?.requestPermissions(alert: true, badge: true, sound: true);
-      debugPrint(
-        '✅ [PushNotificationService] iOS permission granted: $granted',
-      );
+      print('✅ [PushNotificationService] iOS permission granted: $granted');
     }
   }
 
   Future<bool> requestPermissionIfNeeded() async {
-    debugPrint(
-      '🔧 [PushNotificationService] checking current permission status...',
-    );
+    print('🔧 [PushNotificationService] checking current permission status...');
 
     // Check current status first — never ask if already granted/denied
     final settings = await _fcm.getNotificationSettings();
-    debugPrint(
+    print(
       'ℹ️ [PushNotificationService] current status: ${settings.authorizationStatus}',
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
-      debugPrint(
-        '✅ [PushNotificationService] already authorized — skipping prompt',
-      );
+      print('✅ [PushNotificationService] already authorized — skipping prompt');
       return true;
     }
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      debugPrint(
+      print(
         '⚠️ [PushNotificationService] previously denied — cannot prompt again',
       );
       return false;
     }
 
     // Status is .notDetermined — safe to ask
-    debugPrint('🔧 [PushNotificationService] requesting system permission...');
+    print('🔧 [PushNotificationService] requesting system permission...');
 
     bool granted = false;
 
@@ -131,9 +123,7 @@ class PushNotificationService extends GetxService {
               ?.requestNotificationsPermission() ??
           false;
 
-      debugPrint(
-        '✅ [PushNotificationService] Android permission granted: $granted',
-      );
+      print('✅ [PushNotificationService] Android permission granted: $granted');
     } else if (Platform.isIOS) {
       granted =
           await _localNotifications
@@ -143,14 +133,12 @@ class PushNotificationService extends GetxService {
               ?.requestPermissions(alert: true, badge: true, sound: true) ??
           false;
 
-      debugPrint(
-        '✅ [PushNotificationService] iOS permission granted: $granted',
-      );
+      print('✅ [PushNotificationService] iOS permission granted: $granted');
     }
 
     await refreshNotificationPermissionStatus();
 
-    debugPrint(
+    print(
       granted
           ? '✅ [PushNotificationService] permission GRANTED'
           : '⚠️ [PushNotificationService] permission DENIED by user',
@@ -161,7 +149,7 @@ class PushNotificationService extends GetxService {
   bool _pluginInitialized = false; // add this field
 
   Future<void> _initLocalPlugin() async {
-    debugPrint('🔧 initializing local plugin...');
+    print('🔧 initializing local plugin...');
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       iOS: DarwinInitializationSettings(),
@@ -174,18 +162,18 @@ class PushNotificationService extends GetxService {
     );
     _pluginInitialized =
         true; // ✅ mark so createAndroidChannelOnly skips re-init
-    debugPrint('✅ local plugin initialized WITH callbacks');
+    print('✅ local plugin initialized WITH callbacks');
   }
 
   /// Public so the background isolate top-level function can call it on a
   /// fresh, un-registered instance without touching GetX.
   Future<void> createAndroidChannelOnly() async {
     if (_channelInitialized) {
-      debugPrint('ℹ️ Android channel already created, skipping');
+      print('ℹ️ Android channel already created, skipping');
       return;
     }
 
-    debugPrint('🔧 creating Android channel...');
+    print('🔧 creating Android channel...');
 
     // ✅ Only re-run full initialize() if we're in a fresh, unregistered
     // instance (background isolate). Detect via a simple flag instead of
@@ -213,26 +201,24 @@ class PushNotificationService extends GetxService {
         ?.createNotificationChannel(channel);
 
     _channelInitialized = true;
-    debugPrint('✅ Android channel created');
+    print('✅ Android channel created');
   }
 
   // Private — full init path only (also sets iOS foreground options)
   Future<void> _createAndroidChannel() async {
     await createAndroidChannelOnly();
 
-    debugPrint(
-      '🔧 [PushNotificationService] setting iOS foreground options...',
-    );
+    print('🔧 [PushNotificationService] setting iOS foreground options...');
     await _fcm.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
-    debugPrint('✅ [PushNotificationService] iOS foreground options set');
+    print('✅ [PushNotificationService] iOS foreground options set');
   }
 
   void _registerFcmListeners() {
-    // debugPrint('🔧 [PushNotificationService] registering FCM listeners...');
+    // print('🔧 [PushNotificationService] registering FCM listeners...');
 
     // // Foreground messages
     // FirebaseMessaging.onMessage.listen(_onForegroundMessage);
@@ -244,48 +230,48 @@ class PushNotificationService extends GetxService {
     // //     It is registered once in main() via the top-level handler below,
     // //     before runApp(). Calling it twice causes undefined behavior.
 
-    // debugPrint('✅ [PushNotificationService] FCM listeners registered');
+    // print('✅ [PushNotificationService] FCM listeners registered');
 
-    debugPrint('🔧 [PushNotificationService] registering FCM listeners...');
+    print('🔧 [PushNotificationService] registering FCM listeners...');
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      debugPrint('🚨 FCM PUSH RECEIVED — FOREGROUND');
-      debugPrint('📨 Message ID: ${message.messageId}');
-      debugPrint('📨 From: ${message.from}');
-      debugPrint('📨 Data: ${message.data}');
-      debugPrint('📨 Notification: ${message.notification}');
-      debugPrint('📨 Title: ${message.notification?.title}');
-      debugPrint('📨 Body: ${message.notification?.body}');
-      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      print('🚨 FCM PUSH RECEIVED — FOREGROUND');
+      print('📨 Message ID: ${message.messageId}');
+      print('📨 From: ${message.from}');
+      print('📨 Data: ${message.data}');
+      print('📨 Notification: ${message.notification}');
+      print('📨 Title: ${message.notification?.title}');
+      print('📨 Body: ${message.notification?.body}');
+      print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
       _onForegroundMessage(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-      debugPrint('🚨 FCM PUSH TAPPED — BACKGROUND');
-      debugPrint('📨 Message ID: ${message.messageId}');
-      debugPrint('📨 From: ${message.from}');
-      debugPrint('📨 Data: ${message.data}');
-      debugPrint('📨 Notification: ${message.notification}');
-      debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      print('🚨 FCM PUSH TAPPED — BACKGROUND');
+      print('📨 Message ID: ${message.messageId}');
+      print('📨 From: ${message.from}');
+      print('📨 Data: ${message.data}');
+      print('📨 Notification: ${message.notification}');
+      print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
       _onBackgroundTap(message);
     });
 
-    debugPrint('✅ [PushNotificationService] FCM listeners registered');
+    print('✅ [PushNotificationService] FCM listeners registered');
   }
 
   Future<void> _subscribeToTopic() async {
-    debugPrint('🔧 [PushNotificationService] subscribing to topic "Client"...');
+    print('🔧 [PushNotificationService] subscribing to topic "Client"...');
     await _fcm.subscribeToTopic('Client');
-    debugPrint('✅ [PushNotificationService] subscribed to topic "Client"');
+    print('✅ [PushNotificationService] subscribed to topic "Client"');
   }
 
   /*
   Future<void> _handleTerminatedLaunch() async {
-    debugPrint(
+    print(
       '🔧 [PushNotificationService] checking terminated-launch notification...',
     );
     final details = await _localNotifications.getNotificationAppLaunchDetails();
@@ -295,33 +281,29 @@ class PushNotificationService extends GetxService {
         lastPayload = payload;
         notificationTapStream.add(payload); // ✅ was: 'notification_tap'
 
-        debugPrint(
+        print(
           '📩 [PushNotificationService] launched from terminated state — payload: $payload',
         );
       } else {
-        debugPrint(
+        print(
           'ℹ️ [PushNotificationService] launched from terminated notification but payload was null',
         );
       }
     } else {
-      debugPrint(
+      print(
         'ℹ️ [PushNotificationService] app was NOT launched from a notification',
       );
     }
   }
 */
   Future<void> _handleTerminatedLaunch() async {
-    debugPrint(
-      '🔧 [PushNotificationService] checking terminated notification...',
-    );
+    print('🔧 [PushNotificationService] checking terminated notification...');
 
     // 1️⃣ Firebase Messaging terminated tap
     final initialMessage = await _fcm.getInitialMessage();
 
     if (initialMessage != null) {
-      debugPrint(
-        '📩 [PushNotificationService] Firebase terminated launch detected',
-      );
+      print('📩 [PushNotificationService] Firebase terminated launch detected');
 
       final payload = NotificationPayload.fromMap(initialMessage.data);
 
@@ -342,7 +324,7 @@ class PushNotificationService extends GetxService {
         lastPayload = payload;
         notificationTapStream.add(payload);
 
-        debugPrint(
+        print(
           '📩 [PushNotificationService] local notification launch payload: $payload',
         );
       }
@@ -353,7 +335,7 @@ class PushNotificationService extends GetxService {
   /// Phase 2 — call after successful login (or on app resume if already logged in).
   /// Safe to call multiple times — guarded by _tokenUploaded flag.
   Future<void> uploadTokenAfterLogin() async {
-    debugPrint('🔧 [PushNotificationService] uploadTokenAfterLogin() called');
+    print('🔧 [PushNotificationService] uploadTokenAfterLogin() called');
     await _uploadFcmToken();
     _listenForTokenRefresh(); // start refresh listener only after we care about the token
   }
@@ -364,47 +346,43 @@ class PushNotificationService extends GetxService {
     if (_refreshListenerRegistered) return;
     _refreshListenerRegistered = true;
 
-    debugPrint(
-      '🔧 [PushNotificationService] registering token refresh listener...',
-    );
+    print('🔧 [PushNotificationService] registering token refresh listener...');
     _fcm.onTokenRefresh.listen((newToken) async {
-      debugPrint('🔄 [PushNotificationService] FCM token refreshed: $newToken');
+      print('🔄 [PushNotificationService] FCM token refreshed: $newToken');
       _tokenUploaded = false; // force re-upload with new token
       await _uploadFcmToken(isRetry: true);
     });
-    debugPrint('✅ [PushNotificationService] token refresh listener registered');
+    print('✅ [PushNotificationService] token refresh listener registered');
   }
 
   // Replace _uploadFcmToken() with this:
 
   Future<void> _uploadFcmToken({bool isRetry = false}) async {
     if (_tokenUploaded) {
-      debugPrint(
-        'ℹ️ [PushNotificationService] token already uploaded — skipping',
-      );
+      print('ℹ️ [PushNotificationService] token already uploaded — skipping');
       // return;
     }
 
     if (_tokenUploadAttempts >= _maxTokenUploadAttempts) {
-      debugPrint(
+      print(
         '⚠️ [PushNotificationService] max token upload attempts ($_maxTokenUploadAttempts) reached — giving up',
       );
       return;
     }
 
     _tokenUploadAttempts++;
-    debugPrint(
+    print(
       '🔧 [PushNotificationService] fetching FCM token... (attempt $_tokenUploadAttempts/$_maxTokenUploadAttempts${isRetry ? ' — RETRY' : ''})',
     );
 
     try {
       final apnsToken = await _fcm.getAPNSToken();
 
-      debugPrint('🍎 APNs token: $apnsToken');
+      print('🍎 APNs token: $apnsToken');
       final token = await _fcm.getToken();
 
       if (token == null) {
-        debugPrint(
+        print(
           '⚠️ [PushNotificationService] FCM token is null — will retry on next opportunity',
         );
         return; // don't increment retry — token being null is usually transient
@@ -414,8 +392,8 @@ class PushNotificationService extends GetxService {
         return;
       }
 
-      debugPrint('🔑 [PushNotificationService] FCM token: $token');
-      debugPrint('🔧 [PushNotificationService] uploading FCM token...');
+      print('🔑 [PushNotificationService] FCM token: $token');
+      print('🔧 [PushNotificationService] uploading FCM token...');
 
       final success = await Get.find<FirebaseTokenService>().updateToken(
         firebaseToken: token,
@@ -424,17 +402,15 @@ class PushNotificationService extends GetxService {
       if (success == true) {
         _tokenUploaded = true;
         _tokenUploadAttempts = 0; // reset for any future forced refresh
-        debugPrint(
-          '✅ [PushNotificationService] FCM token uploaded successfully',
-        );
+        print('✅ [PushNotificationService] FCM token uploaded successfully');
       } else {
-        debugPrint(
+        print(
           '⚠️ [PushNotificationService] FCM token upload returned false — will retry on next opportunity',
         );
       }
     } catch (e, st) {
-      debugPrint('❌ [PushNotificationService] FCM token upload FAILED: $e');
-      debugPrint('$st');
+      print('❌ [PushNotificationService] FCM token upload FAILED: $e');
+      print('$st');
       // Will be retried on foreground resume or network reconnect
     }
   }
@@ -445,10 +421,10 @@ class PushNotificationService extends GetxService {
   /// Safe to call multiple times — each step is guarded by its own flag.
   /// Retries only the auth-dependent steps. Safe to call multiple times.
   Future<void> retryFailedSteps() async {
-    debugPrint('🔄 [PushNotificationService] retryFailedSteps() called');
+    print('🔄 [PushNotificationService] retryFailedSteps() called');
 
     if (_tokenUploaded) {
-      debugPrint(
+      print(
         'ℹ️ [PushNotificationService] token already uploaded — nothing to retry',
       );
       return;
@@ -461,13 +437,13 @@ class PushNotificationService extends GetxService {
   // In push_notification_service.dart — updated call sites and showLocalNotification
 
   Future<void> _onForegroundMessage(RemoteMessage message) async {
-    debugPrint(
+    print(
       '🔔 [PushNotificationService] foreground message — id: ${message.messageId}',
     );
-    debugPrint('🔔 [PushNotificationService] raw data: ${message.data}');
+    print('🔔 [PushNotificationService] raw data: ${message.data}');
 
     if (message.data.isEmpty) {
-      debugPrint('ℹ️ [PushNotificationService] no data payload — ignoring');
+      print('ℹ️ [PushNotificationService] no data payload — ignoring');
       if (kDebugMode) {
         PushNotificationController.to.sendTestNotification(
           'FOREGROUND : ${message.toString()}',
@@ -478,7 +454,7 @@ class PushNotificationService extends GetxService {
     }
 
     final payload = NotificationPayload.fromMap(message.data);
-    debugPrint('🔔 [PushNotificationService] parsed payload: $payload');
+    print('🔔 [PushNotificationService] parsed payload: $payload');
 
     //
     // ✅ Update counts — GetX available here
@@ -496,9 +472,7 @@ class PushNotificationService extends GetxService {
         : (message.notification?.body ?? '');
 
     if (title.isEmpty && body.isEmpty) {
-      debugPrint(
-        'ℹ️ [PushNotificationService] empty title+body — skipping display',
-      );
+      print('ℹ️ [PushNotificationService] empty title+body — skipping display');
       return;
     }
 
@@ -522,7 +496,7 @@ class PushNotificationService extends GetxService {
     String channelId = 'high_importance_channel',
     String channelName = 'High Importance Notifications',
   }) {
-    debugPrint(
+    print(
       '🔔 [PushNotificationService] showing notification — '
       'id: $id | title: "$title" | type: ${payload?.type ?? "unknown"}',
     );
@@ -553,17 +527,17 @@ class PushNotificationService extends GetxService {
   // Tap handlers — now deserialize back to NotificationPayload
 
   void _onLocalNotificationTap(NotificationResponse response) {
-    debugPrint(
+    print(
       '👆 [PushNotificationService] local notification tapped — raw payload: ${response.payload}',
     );
 
     if (response.payload == null || response.payload!.isEmpty) {
-      debugPrint('⚠️ [PushNotificationService] tap had no payload — ignoring');
+      print('⚠️ [PushNotificationService] tap had no payload — ignoring');
       return;
     }
 
     final payload = NotificationPayload.fromJsonString(response.payload!);
-    debugPrint('👆 [PushNotificationService] parsed tap payload: $payload');
+    print('👆 [PushNotificationService] parsed tap payload: $payload');
 
     //
     // ✅ update counts from the tapped payload — covers the BGIsolate-shown
@@ -579,13 +553,13 @@ class PushNotificationService extends GetxService {
   }
 
   void _onBackgroundTap(RemoteMessage message) {
-    debugPrint(
+    print(
       '📲 [PushNotificationService] background tap — id: ${message.messageId}',
     );
-    debugPrint('📲 [PushNotificationService] raw data: ${message.data}');
+    print('📲 [PushNotificationService] raw data: ${message.data}');
 
     final payload = NotificationPayload.fromMap(message.data);
-    debugPrint('📲 [PushNotificationService] parsed tap payload: $payload');
+    print('📲 [PushNotificationService] parsed tap payload: $payload');
 
     // ✅ GetX still alive — update via controller (single source of truth)
     NotificationCountController.to.onPushReceived(
@@ -621,7 +595,7 @@ class PushNotificationService extends GetxService {
   }
 
   Future<void> refreshNotificationPermissionStatus() async {
-    debugPrint(
+    print(
       'Service hash: ${identityHashCode(this)} '
       'status=${notificationStatus.value}',
     );
@@ -630,7 +604,7 @@ class PushNotificationService extends GetxService {
 
     _updateNotificationState(settings.authorizationStatus);
 
-    debugPrint(
+    print(
       '🔔 [PushNotificationService] notification status: '
       '${notificationStatus.value} | enabled: ${notificationPermissionEnabled.value}',
     );
@@ -657,7 +631,7 @@ class PushNotificationService extends GetxService {
 
     _updateNotificationState(settings.authorizationStatus);
 
-    debugPrint(
+    print(
       '🔔 [PushNotificationService] getNotificationStatus -> '
       '${notificationStatus.value} | enabled: ${notificationPermissionEnabled.value}',
     );
@@ -666,19 +640,19 @@ class PushNotificationService extends GetxService {
   }
 
   Future<void> onNotificationPermissionEnabled() async {
-    debugPrint('🔄 [PushNotificationService] notification permission enabled');
+    print('🔄 [PushNotificationService] notification permission enabled');
 
     await refreshNotificationPermissionStatus();
 
     if (!isNotificationEnabled) {
-      debugPrint('⚠️ [PushNotificationService] permission still not enabled');
+      print('⚠️ [PushNotificationService] permission still not enabled');
       return;
     }
 
     // Upload token if user is logged in.
     await uploadTokenAfterLogin();
 
-    debugPrint('✅ [PushNotificationService] notification setup refreshed');
+    print('✅ [PushNotificationService] notification setup refreshed');
   }
 }
 
@@ -689,20 +663,18 @@ class PushNotificationService extends GetxService {
 
 @pragma('vm:entry-point')
 Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
-  debugPrint(
-    '📦 [BGIsolate] FCM background message — id: ${message.messageId}',
-  );
-  debugPrint('📦 [BGIsolate] raw data: ${message.data}');
+  print('📦 [BGIsolate] FCM background message — id: ${message.messageId}');
+  print('📦 [BGIsolate] raw data: ${message.data}');
 
   await FirebaseInitializer.init();
-  debugPrint('✅ [BGIsolate] Firebase ready');
+  print('✅ [BGIsolate] Firebase ready');
 
   final service = PushNotificationService();
   await service.createAndroidChannelOnly();
 
   // ✅ Parse into typed payload — same as foreground path
   final payload = NotificationPayload.fromMap(message.data);
-  debugPrint('📦 [BGIsolate] parsed payload: $payload');
+  print('📦 [BGIsolate] parsed payload: $payload');
 
   // ✅ GetX is NOT available in this isolate — use bare GetStorage directly,
   //    writing to the SAME keys AppStorage uses, so they sync on next app open.
@@ -717,7 +689,7 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
     newCount: payload.newCount,
   );
 
-  debugPrint(
+  print(
     '💾 [BGIsolate] persisted counts via AppStorage — unread: ${payload.unreadCount}, new: ${payload.newCount}',
   );
 
@@ -728,9 +700,9 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
     } else {
       await FlutterNewBadger.removeBadge();
     }
-    debugPrint('📱 [BGIsolate] app badge synced → ${payload.unreadCount}');
+    print('📱 [BGIsolate] app badge synced → ${payload.unreadCount}');
   } catch (e) {
-    debugPrint('⚠️ [BGIsolate] badge sync failed: $e');
+    print('⚠️ [BGIsolate] badge sync failed: $e');
   }
 
   service.showLocalNotification(
@@ -740,13 +712,13 @@ Future<void> onFcmBackgroundMessage(RemoteMessage message) async {
     payload: payload, // ✅ typed now
   );
 
-  debugPrint('✅ [BGIsolate] notification shown');
+  print('✅ [BGIsolate] notification shown');
 }
 
 /// Local notification background tap — must be top-level.
 @pragma('vm:entry-point')
 void onBackgroundLocalNotificationTap(NotificationResponse response) {
-  debugPrint(
+  print(
     '👆 [BGIsolate] background local notification tapped — payload: ${response.payload}',
   );
   PushNotificationService.lastPayload = response.payload;

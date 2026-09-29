@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:we_mama/core/helpers/date_helper.dart';
@@ -13,14 +12,14 @@ class ShareUtil {
 
 class ShareService {
   static Future<void> shareSession(Session session) async {
-    debugPrint('=== ShareService.shareSession() started ===');
+    print('=== ShareService.shareSession() started ===');
 
     try {
       final link = session.deepLinkUrl ?? '';
-      debugPrint('Deep link: "$link"');
+      print('Deep link: "$link"');
 
       if (link.isEmpty) {
-        debugPrint('❌ Share aborted: deepLinkUrl is empty');
+        print('❌ Share aborted: deepLinkUrl is empty');
         return;
       }
 
@@ -39,11 +38,11 @@ class ShareService {
           ? DateHelper().formatUTCtimestamp(session.dateTime.toString()).time
           : '--';
 
-      debugPrint('Title: $title');
-      debugPrint('Host: $hostName');
-      debugPrint('Profession: $profession');
-      debugPrint('Date: $dateFormatted');
-      debugPrint('Time: $timeFormatted');
+      print('Title: $title');
+      print('Host: $hostName');
+      print('Profession: $profession');
+      print('Date: $dateFormatted');
+      print('Time: $timeFormatted');
 
       // ─── Plain text (WhatsApp, SMS, Telegram, etc.) ───────────────────
       final plainText =
@@ -231,7 +230,7 @@ Best regards, $hostName
 </html>
 ''';
 
-      debugPrint('🚀 Invoking SharePlus.instance.share()...');
+      print('🚀 Invoking SharePlus.instance.share()...');
 
       final result = await SharePlus.instance.share(
         ShareParams(
@@ -244,29 +243,29 @@ Best regards, $hostName
         ),
       );
 
-      debugPrint('✅ Share dialog completed');
-      debugPrint('Share result status: ${result.status}');
-      debugPrint('Raw share result: $result');
+      print('✅ Share dialog completed');
+      print('Share result status: ${result.status}');
+      print('Raw share result: $result');
 
       if (result.status == ShareResultStatus.success) {
-        debugPrint('✅ User completed sharing');
+        print('✅ User completed sharing');
       } else if (result.status == ShareResultStatus.dismissed) {
-        debugPrint('⚠️ User dismissed the share sheet');
+        print('⚠️ User dismissed the share sheet');
       } else {
-        debugPrint('ℹ️ Share result: ${result.status}');
+        print('ℹ️ Share result: ${result.status}');
       }
     } catch (e, stackTrace) {
-      debugPrint('❌ Error while sharing session');
-      debugPrint('Error: $e');
-      debugPrint('StackTrace: $stackTrace');
+      print('❌ Error while sharing session');
+      print('Error: $e');
+      print('StackTrace: $stackTrace');
     }
 
-    debugPrint('=== ShareService.shareSession() finished ===');
+    print('=== ShareService.shareSession() finished ===');
   }
 
   // ─── HTML email via mailto: (true rich email) ──────────────────────────────
   static Future<void> shareViaEmail(Session session) async {
-    debugPrint('=== ShareService.shareViaEmail() started ===');
+    print('=== ShareService.shareViaEmail() started ===');
 
     final title = session.title.isNotEmpty ? session.title : 'Live Session';
     final hostName = session.expert?.name ?? 'Expert';
@@ -282,15 +281,15 @@ Join here: $link
 
     final mailtoUri = Uri.parse('mailto:?subject=$subject&body=$body');
 
-    debugPrint('mailto URI: $mailtoUri');
+    print('mailto URI: $mailtoUri');
 
     if (await canLaunchUrl(mailtoUri)) {
       await launchUrl(mailtoUri);
-      debugPrint('✅ Email client opened');
+      print('✅ Email client opened');
     } else {
-      debugPrint('❌ No email client available');
+      print('❌ No email client available');
     }
 
-    debugPrint('=== ShareService.shareViaEmail() finished ===');
+    print('=== ShareService.shareViaEmail() finished ===');
   }
 }

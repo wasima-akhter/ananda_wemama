@@ -247,7 +247,7 @@ String moodIllustrationHtml(String imageUrl) {
       ? imageUrl
       : '$baseUrl/$imageUrl';
 
-  debugPrint('image url --> $url');
+  print('image url --> $url');
 
   return """
   <div id="mood-image-container"

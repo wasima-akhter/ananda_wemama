@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 
 class ApiErrorParser {
@@ -57,8 +55,8 @@ class ApiErrorParser {
         }
       }
     } catch (e, stack) {
-      log("❌ ApiErrorParser.extractMessage error: $e");
-      log("$stack");
+      print("❌ ApiErrorParser.extractMessage error: $e");
+      print("$stack");
     }
 
     return _fallbackMessage;
@@ -74,7 +72,7 @@ class ApiErrorParser {
         return stack.trim().isEmpty ? null : stack;
       }
     } catch (e) {
-      log("❌ ApiErrorParser.extractStack error: $e");
+      print("❌ ApiErrorParser.extractStack error: $e");
     }
 
     return null;

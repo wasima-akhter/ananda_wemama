@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +32,7 @@ class _AppState extends State<App> {
 
     _lifecycleListener = AppLifecycleListener(
       onResume: () {
-        debugPrint('📱 [App] app resumed');
+        print('📱 [App] app resumed');
 
         // ✅ refresh notification counts from storage on every resume
         NotificationCountController.to.refreshFromStorage();
@@ -44,14 +42,10 @@ class _AppState extends State<App> {
           final loggedIn = storage.getLoggedIn;
 
           if (loggedIn) {
-            debugPrint(
-              '🔄 [App] user logged in — retrying failed push steps...',
-            );
+            print('🔄 [App] user logged in — retrying failed push steps...');
             push.retryFailedSteps();
           } else {
-            debugPrint(
-              'ℹ️ [App] user not logged in — skipping FCM token retry',
-            );
+            print('ℹ️ [App] user not logged in — skipping FCM token retry');
           }
         }
       },
@@ -108,7 +102,7 @@ class _AppState extends State<App> {
               // ✅ Log every navigation for debugging
               routingCallback: (routing) {
                 if (routing != null) {
-                  log(
+                  print(
                     '🧭 [ROUTING] current=${routing.current} | prev=${routing.previous} | isBack=${routing.isBack}',
                   );
                 }
@@ -152,21 +146,21 @@ class _SafeUnknownRouteScreenState extends State<_SafeUnknownRouteScreen> {
   @override
   void initState() {
     super.initState();
-    log('⚠️ [UNKNOWN ROUTE] /notFound triggered — auto-recovering...');
+    print('⚠️ [UNKNOWN ROUTE] /notFound triggered — auto-recovering...');
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final canPop = Get.key.currentState?.canPop() ?? false;
-      log(
+      print(
         '⚠️ [UNKNOWN ROUTE] canPop=$canPop | currentRoute=${Get.currentRoute}',
       );
 
       if (canPop) {
         // Something valid is under this — just pop back to it
-        log('⚠️ [UNKNOWN ROUTE] Popping back to previous route.');
+        print('⚠️ [UNKNOWN ROUTE] Popping back to previous route.');
         Get.back();
       } else {
         // Nothing under it — send to signin as safe default
-        log('⚠️ [UNKNOWN ROUTE] No previous route. Redirecting to signin.');
+        print('⚠️ [UNKNOWN ROUTE] No previous route. Redirecting to signin.');
         Get.offAllNamed(RoutePaths.signin);
       }
     });

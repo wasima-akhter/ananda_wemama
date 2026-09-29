@@ -1,7 +1,6 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-import '../../../app/helper_widgets_export.dart';
 import '../../models/ui/my_location_result_model.dart';
 
 class LocationHelper {
@@ -11,20 +10,20 @@ class LocationHelper {
     bool showSnackbar = true,
   }) async {
     try {
-      log('📍 Starting location fetch...');
+      print('📍 Starting location fetch...');
 
       // 1️⃣ Check service
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      log('Service enabled: $serviceEnabled');
+      print('Service enabled: $serviceEnabled');
 
       if (!serviceEnabled) {
-        log('❌ Service disabled');
+        print('❌ Service disabled');
         return null;
       }
 
       // 2️⃣ Check permission
       LocationPermission permission = await Geolocator.checkPermission();
-      log('Current permission: $permission');
+      print('Current permission: $permission');
 
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -32,7 +31,7 @@ class LocationHelper {
 
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        log('❌ Permission denied');
+        print('❌ Permission denied');
         return null;
       }
 
@@ -48,7 +47,7 @@ class LocationHelper {
           timeLimit: const Duration(seconds: 8),
         );
       } catch (e) {
-        log("⚠️ First attempt failed: $e");
+        print("⚠️ First attempt failed: $e");
         await Future.delayed(const Duration(seconds: 2));
 
         try {
@@ -60,7 +59,7 @@ class LocationHelper {
             timeLimit: const Duration(seconds: 10),
           );
         } catch (e) {
-          log("❌ Retry failed: $e");
+          print("❌ Retry failed: $e");
           position = await Geolocator.getLastKnownPosition();
         }
       }
@@ -69,7 +68,7 @@ class LocationHelper {
         throw Exception("Location unavailable after retries");
       }
 
-      log('✅ Got position: ${position.latitude}, ${position.longitude}');
+      print('✅ Got position: ${position.latitude}, ${position.longitude}');
 
       // 4️⃣ GRACEFUL reverse geocoding — don't fail if it errors
       String address = 'Lat: ${position.latitude}, Lng: ${position.longitude}';
@@ -83,7 +82,7 @@ class LocationHelper {
             ).timeout(
               const Duration(seconds: 5), // ← Add timeout
               onTimeout: () {
-                log('⏱️ Geocoding timeout');
+                print('⏱️ Geocoding timeout');
                 return [];
               },
             );
@@ -100,12 +99,12 @@ class LocationHelper {
             place.country,
           ].where((e) => e != null && e.isNotEmpty).join(', ');
 
-          log('📍 Address: $address');
-          if (city != null) log('📍 City: $city');
+          print('📍 Address: $address');
+          if (city != null) print('📍 City: $city');
         }
       } catch (e) {
         // ✅ Geocoding failed, but we still have position — continue anyway
-        log('⚠️ Geocoding failed: $e — using fallback address');
+        print('⚠️ Geocoding failed: $e — using fallback address');
         // address stays as lat/lng fallback
       }
 
@@ -117,7 +116,7 @@ class LocationHelper {
         city: city,
       );
     } catch (e) {
-      log("❌ Error getting location: $e");
+      print("❌ Error getting location: $e");
       return null;
     }
   }

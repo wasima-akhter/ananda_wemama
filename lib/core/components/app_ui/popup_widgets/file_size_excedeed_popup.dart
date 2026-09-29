@@ -1,5 +1,4 @@
 import '../../../../app/helper_widgets_export.dart';
-import '../../ui/dialogs/small_popup_dialog.dart';
 
 class FileSizeExceededPopup extends StatelessWidget {
   const FileSizeExceededPopup({super.key});

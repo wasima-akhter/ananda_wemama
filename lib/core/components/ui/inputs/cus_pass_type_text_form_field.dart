@@ -106,7 +106,7 @@ class CusPassTypeTextFormField extends StatelessWidget {
           minHeight: (prefixSize ?? 48).h,
         ),
       ),
-      onChanged: (value) => log(value),
+      onChanged: (value) => print(value),
       validator: validator,
     );
   }

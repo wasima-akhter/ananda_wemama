@@ -71,20 +71,20 @@ class UpcomingExpertSessionCard extends StatelessWidget {
       hostTimezone: hostTimeZone,
     );
 
-    debugPrint('hostTimeZone: $hostTimeZone');
+    print('hostTimeZone: $hostTimeZone');
     tzdata.initializeTimeZones();
 
     final deviceTimezone = tz.local.name;
 
-    debugPrint('🌍 Device timezone: $deviceTimezone');
-    debugPrint('🕐 Device local time: ${tz.TZDateTime.now(tz.local)}');
-    debugPrint('🌐 Device UTC time: ${DateTime.now().toUtc()}');
-    debugPrint('converted time: $time');
-    debugPrint('converted date: $date');
+    print('🌍 Device timezone: $deviceTimezone');
+    print('🕐 Device local time: ${tz.TZDateTime.now(tz.local)}');
+    print('🌐 Device UTC time: ${DateTime.now().toUtc()}');
+    print('converted time: $time');
+    print('converted date: $date');
 
     //
     final premium = PremiumAccessService.to;
-    final isPremium = premium.isReady.value && premium.isPremiumUserNow;
+    final isPremium = true ?? premium.isReady.value && premium.isPremiumUserNow;
 
     return ContainerBordered(
       contClr: newCardClr,
@@ -290,9 +290,12 @@ class UpcomingExpertSessionCard extends StatelessWidget {
   }
 
   Widget makeReminderButton() {
+    final ispre = true.obs;
     return Obx(() {
       final premium = PremiumAccessService.to;
-      final isPremium = premium.isReady.value && premium.isPremiumUserNow;
+
+      final isPremium =
+          ispre.value ?? premium.isReady.value && premium.isPremiumUserNow;
       final active = isReminderActive(); // 👈 call it, don't just reference
       final loading = isRemindMeLoading();
 

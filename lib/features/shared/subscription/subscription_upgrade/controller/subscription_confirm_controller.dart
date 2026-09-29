@@ -61,15 +61,15 @@ class SubscriptionConfirmController extends GetxController {
 
     offerEligibility = OfferEligibility.fromSubscription(eligibility);
 
-    debugPrint('🟢 SubscriptionConfirmController INIT');
+    print('🟢 SubscriptionConfirmController INIT');
 
-    debugPrint('🟢 Current offer = ${currentOffer.name}');
+    print('🟢 Current offer = ${currentOffer.name}');
 
     _resolveOption();
 
     if (GetPlatform.isIOS) {
       _entitlementWorker = ever<bool>(_purchaseService.isActive, (active) {
-        debugPrint('🟢 Entitlement update active=$active');
+        print('🟢 Entitlement update active=$active');
 
         if (active && isWaitingForRedemption.value) {
           isWaitingForRedemption.value = false;
@@ -80,10 +80,10 @@ class SubscriptionConfirmController extends GetxController {
 
       _lifecycleListener = AppLifecycleListener(
         onResume: () async {
-          debugPrint("🟢 APP RESUME");
+          print("🟢 APP RESUME");
 
           if (isWaitingForRedemption.value) {
-            debugPrint("🟢 Refreshing CustomerInfo after redeem");
+            print("🟢 Refreshing CustomerInfo after redeem");
 
             await _purchaseService.refreshCustomerInfo();
           }
@@ -111,7 +111,7 @@ class SubscriptionConfirmController extends GetxController {
     try {
       final offerings = await _purchaseService.getOfferings();
 
-      debugPrint('🟢 Offerings=${offerings?.current?.identifier}');
+      print('🟢 Offerings=${offerings?.current?.identifier}');
 
       printOfferings(offerings);
 
@@ -140,7 +140,7 @@ class SubscriptionConfirmController extends GetxController {
           }
 
           if (selectedOption.value == null) {
-            debugPrint('⚠️ No promo option found');
+            print('⚠️ No promo option found');
           }
           break;
 
@@ -174,38 +174,36 @@ class SubscriptionConfirmController extends GetxController {
           break;
       }
 
-      debugPrint('🟢 Selected option=${selectedOption.value?.id}');
+      print('🟢 Selected option=${selectedOption.value?.id}');
 
-      debugPrint(_package!.storeProduct.toString());
-      debugPrint("Identifier = ${_package!.storeProduct.identifier}");
+      print(_package!.storeProduct.toString());
+      print("Identifier = ${_package!.storeProduct.identifier}");
 
-      debugPrint("Price = ${_package!.storeProduct.priceString}");
+      print("Price = ${_package!.storeProduct.priceString}");
 
-      debugPrint("Intro = ${_package!.storeProduct.introductoryPrice}");
+      print("Intro = ${_package!.storeProduct.introductoryPrice}");
 
-      debugPrint("Discounts = ${_package!.storeProduct.discounts}");
+      print("Discounts = ${_package!.storeProduct.discounts}");
 
-      debugPrint("========== IOS DISCOUNTS ==========");
+      print("========== IOS DISCOUNTS ==========");
 
-      debugPrint(
-        "Discount count = ${_package!.storeProduct.discounts?.length}",
-      );
+      print("Discount count = ${_package!.storeProduct.discounts?.length}");
 
       for (final d in _package!.storeProduct.discounts ?? []) {
-        debugPrint("---------------------------");
-        debugPrint("Identifier : ${d.identifier}");
-        debugPrint("Price      : ${d.priceString}");
+        print("---------------------------");
+        print("Identifier : ${d.identifier}");
+        print("Price      : ${d.priceString}");
       }
 
-      debugPrint("==================================");
+      print("==================================");
 
-      debugPrint('OfferType = $currentOffer');
-      debugPrint('Eligible = $_isEligibleForOffer');
-      debugPrint('Selected = ${selectedOption.value?.id}');
-      debugPrint('Phases = ${selectedOption.value?.pricingPhases.length}');
+      print('OfferType = $currentOffer');
+      print('Eligible = $_isEligibleForOffer');
+      print('Selected = ${selectedOption.value?.id}');
+      print('Phases = ${selectedOption.value?.pricingPhases.length}');
 
       for (final phase in selectedOption.value?.pricingPhases ?? []) {
-        debugPrint(
+        print(
           'Price=${phase.price.formatted}, '
           'Cycles=${phase.billingCycleCount}, '
           'Mode=${phase.recurrenceMode}',
@@ -241,18 +239,18 @@ class SubscriptionConfirmController extends GetxController {
               break;
           }
 
-          debugPrint('🟢 iOS discount=${iosPromoDiscount.value}');
+          print('🟢 iOS discount=${iosPromoDiscount.value}');
         }
         // iosPromoDiscount.value = _package!.storeProduct.discounts?.firstOrNull;
 
-        debugPrint(
+        print(
           "_package!.storeProduct.discounts: ${_package!.storeProduct.discounts.toString()}",
         );
 
-        debugPrint('🟢 iOS discount=${iosPromoDiscount.value}');
+        print('🟢 iOS discount=${iosPromoDiscount.value}');
       }
     } catch (e, stack) {
-      debugPrint('❌ Resolve option error=$e');
+      print('❌ Resolve option error=$e');
 
       debugPrintStack(stackTrace: stack);
 
@@ -268,18 +266,18 @@ class SubscriptionConfirmController extends GetxController {
 
   Future<void> onConfirmPayment() async {
     if (_isSubmitting) {
-      debugPrint('🟡 Payment already running');
+      print('🟡 Payment already running');
 
       return;
     }
 
     _isSubmitting = true;
 
-    debugPrint('🟢 CONFIRM PAYMENT');
+    print('🟢 CONFIRM PAYMENT');
 
-    debugPrint('🟢 OFFER=${currentOffer.name}');
+    print('🟢 OFFER=${currentOffer.name}');
 
-    debugPrint('🟢 PLATFORM=${GetPlatform.isIOS ? "IOS" : "ANDROID"}');
+    print('🟢 PLATFORM=${GetPlatform.isIOS ? "IOS" : "ANDROID"}');
 
     if (isPurchaseBlocked) {
       _isSubmitting = false;
@@ -317,7 +315,7 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> purchaseNormal() async {
-    debugPrint('🟢 FLOW=Normal purchase');
+    print('🟢 FLOW=Normal purchase');
 
     errorMessage.value = '';
 
@@ -329,11 +327,11 @@ class SubscriptionConfirmController extends GetxController {
         selectedOption.value,
       );
 
-      debugPrint('🟢 Normal result=${outcome.result}');
+      print('🟢 Normal result=${outcome.result}');
 
       await _handleOutcome(outcome);
     } catch (e, stack) {
-      debugPrint('❌ Normal purchase error=$e');
+      print('❌ Normal purchase error=$e');
 
       debugPrintStack(stackTrace: stack);
 
@@ -346,7 +344,7 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> purchaseReferral() async {
-    debugPrint('🟢 FLOW=Referral');
+    print('🟢 FLOW=Referral');
 
     if (!offerEligibility.referralAvailable) {
       _showErrorSnackbar('Referral offer unavailable.');
@@ -368,7 +366,7 @@ class SubscriptionConfirmController extends GetxController {
         return;
       }
 
-      debugPrint('🤖 Referral Android offer purchase');
+      print('🤖 Referral Android offer purchase');
 
       final outcome = await _purchaseService.purchaseWithAndroidOffer(
         _package!,
@@ -377,7 +375,7 @@ class SubscriptionConfirmController extends GetxController {
 
       await _handleOutcome(outcome);
     } catch (e, stack) {
-      debugPrint('❌ Referral purchase error=$e');
+      print('❌ Referral purchase error=$e');
       debugPrintStack(stackTrace: stack);
 
       errorMessage.value = 'Unable to apply referral offer.';
@@ -389,7 +387,7 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> purchasePromo() async {
-    debugPrint('🟢 FLOW=Promo');
+    print('🟢 FLOW=Promo');
 
     if (!offerEligibility.promoAvailable) {
       _showErrorSnackbar('Promo offer unavailable.');
@@ -405,7 +403,7 @@ class SubscriptionConfirmController extends GetxController {
       PurchaseOutcome outcome;
 
       if (GetPlatform.isIOS && iosPromoDiscount.value != null) {
-        debugPrint('🟢 iOS signed promotional offer');
+        print('🟢 iOS signed promotional offer');
 
         final promoOffer = await Purchases.getPromotionalOffer(
           _package!.storeProduct,
@@ -417,7 +415,7 @@ class SubscriptionConfirmController extends GetxController {
           promoOffer,
         );
       } else {
-        debugPrint('🤖 Android promo offer purchase');
+        print('🤖 Android promo offer purchase');
 
         outcome = await _purchaseService.purchaseWithAndroidOffer(
           _package!,
@@ -427,7 +425,7 @@ class SubscriptionConfirmController extends GetxController {
 
       await _handleOutcome(outcome);
     } catch (e, stack) {
-      debugPrint('❌ Promo error=$e');
+      print('❌ Promo error=$e');
 
       debugPrintStack(stackTrace: stack);
 
@@ -440,7 +438,7 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> purchaseFundingMum() async {
-    debugPrint('🟢 FLOW=Funding Mum');
+    print('🟢 FLOW=Funding Mum');
 
     if (!offerEligibility.foundingMumAvailable) {
       _showErrorSnackbar('Funding Mum offer unavailable.');
@@ -454,7 +452,7 @@ class SubscriptionConfirmController extends GetxController {
       late PurchaseOutcome outcome;
 
       if (GetPlatform.isIOS) {
-        debugPrint('🍎 Funding Mum iOS promotional offer');
+        print('🍎 Funding Mum iOS promotional offer');
 
         final discount = await _getFundingMumDiscount();
 
@@ -473,13 +471,13 @@ class SubscriptionConfirmController extends GetxController {
 
         final status = eligibility[_package!.storeProduct.identifier]?.status;
 
-        debugPrint("🍎 Apple eligibility=$status");
+        print("🍎 Apple eligibility=$status");
         outcome = await _purchaseService.purchaseWithDiscount(
           _package!,
           promoOffer,
         );
       } else {
-        debugPrint('🤖 Funding Mum Android offer');
+        print('🤖 Funding Mum Android offer');
 
         outcome = await _purchaseService.purchaseWithAndroidOffer(
           _package!,
@@ -489,9 +487,9 @@ class SubscriptionConfirmController extends GetxController {
 
       await _handleOutcome(outcome);
     } on PlatformException catch (e) {
-      debugPrint('Payment exception code=${e.code}');
-      debugPrint('Payment exception details=${e.details}');
-      debugPrint('Payment exception message=${e.message}');
+      print('Payment exception code=${e.code}');
+      print('Payment exception details=${e.details}');
+      print('Payment exception message=${e.message}');
 
       final isIneligible =
           e.code.toString() == '18' ||
@@ -519,7 +517,7 @@ class SubscriptionConfirmController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e, stack) {
-      debugPrint('❌ Funding Mum error=$e');
+      print('❌ Funding Mum error=$e');
 
       debugPrintStack(stackTrace: stack);
 
@@ -537,7 +535,7 @@ class SubscriptionConfirmController extends GetxController {
     final discounts = _package?.storeProduct.discounts ?? [];
 
     for (final d in discounts) {
-      debugPrint("Discount id=${d.identifier}, price=${d.priceString}");
+      print("Discount id=${d.identifier}, price=${d.priceString}");
     }
 
     return discounts.firstWhereOrNull(
@@ -546,7 +544,7 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> _redeemIosOfferCode() async {
-    debugPrint('🟢 Opening iOS redeem code flow');
+    print('🟢 Opening iOS redeem code flow');
 
     isProcessing.value = true;
 
@@ -572,11 +570,11 @@ class SubscriptionConfirmController extends GetxController {
 
       isWaitingForRedemption.value = true;
 
-      debugPrint('🟢 Launching redeem URL=$url');
+      print('🟢 Launching redeem URL=$url');
 
       await launchUrl(url, mode: LaunchMode.externalApplication);
     } catch (e, stack) {
-      debugPrint('❌ Redeem error=$e');
+      print('❌ Redeem error=$e');
 
       debugPrintStack(stackTrace: stack);
 
@@ -621,30 +619,30 @@ class SubscriptionConfirmController extends GetxController {
   }
 
   Future<void> _handleOutcome(PurchaseOutcome outcome) async {
-    debugPrint('🟢 Handling outcome=${outcome.result}');
+    print('🟢 Handling outcome=${outcome.result}');
 
     switch (outcome.result) {
       case PurchaseResult.success:
-        debugPrint('🟢 Purchase success offer=${currentOffer.name}');
+        print('🟢 Purchase success offer=${currentOffer.name}');
 
         switch (currentOffer) {
           case OfferType.referral:
-            debugPrint('🟢 Referral completed');
+            print('🟢 Referral completed');
 
             break;
 
           case OfferType.promo:
-            debugPrint('🟢 Promo completed');
+            print('🟢 Promo completed');
 
             break;
 
           case OfferType.foundingMum:
-            debugPrint('🟢 Funding Mum completed');
+            print('🟢 Funding Mum completed');
 
             break;
 
           case OfferType.none:
-            debugPrint('🟢 Normal subscription completed');
+            print('🟢 Normal subscription completed');
 
             break;
         }
@@ -654,14 +652,14 @@ class SubscriptionConfirmController extends GetxController {
         break;
 
       case PurchaseResult.pending:
-        debugPrint('🟡 Purchase pending');
+        print('🟡 Purchase pending');
 
         Get.offAllNamed(RoutePaths.subscriptionPending, arguments: eligibility);
 
         break;
 
       case PurchaseResult.userCancelled:
-        debugPrint('🟡 User cancelled');
+        print('🟡 User cancelled');
 
         break;
 
@@ -839,40 +837,40 @@ class SubscriptionConfirmController extends GetxController {
 
 void printOfferings(Offerings? offerings) {
   if (offerings == null) {
-    debugPrint("❌ Offerings: null");
+    print("❌ Offerings: null");
     return;
   }
 
-  debugPrint("========== REVENUECAT OFFERINGS ==========");
+  print("========== REVENUECAT OFFERINGS ==========");
 
-  debugPrint("Current Offering: ${offerings.current?.identifier}");
+  print("Current Offering: ${offerings.current?.identifier}");
 
   for (final entry in offerings.all.entries) {
     final offering = entry.value;
 
-    debugPrint("------------------------------------------");
-    debugPrint("Offering ID: ${offering.identifier}");
-    debugPrint("Packages:");
+    print("------------------------------------------");
+    print("Offering ID: ${offering.identifier}");
+    print("Packages:");
 
     for (final package in offering.availablePackages) {
-      debugPrint("  Package Identifier: ${package.identifier}");
-      debugPrint("  Package Type: ${package.packageType}");
+      print("  Package Identifier: ${package.identifier}");
+      print("  Package Type: ${package.packageType}");
 
-      debugPrint("  Product ID: ${package.storeProduct.identifier}");
-      debugPrint("  Product Title: ${package.storeProduct.title}");
-      debugPrint("  Price: ${package.storeProduct.priceString}");
+      print("  Product ID: ${package.storeProduct.identifier}");
+      print("  Product Title: ${package.storeProduct.title}");
+      print("  Price: ${package.storeProduct.priceString}");
 
       final options = package.storeProduct.subscriptionOptions ?? [];
 
       if (options.isNotEmpty) {
-        debugPrint("  Subscription Options:");
+        print("  Subscription Options:");
 
         for (final option in options) {
-          debugPrint("    Option ID: ${option.id}");
-          debugPrint("    Pricing Phases:");
+          print("    Option ID: ${option.id}");
+          print("    Pricing Phases:");
 
           for (final phase in option.pricingPhases) {
-            debugPrint(
+            print(
               "      ${phase.price.formatted} "
               "${phase.billingPeriod?.unit} "
               "cycles=${phase.billingCycleCount}",
@@ -881,11 +879,11 @@ void printOfferings(Offerings? offerings) {
         }
       }
 
-      debugPrint("");
+      print("");
     }
   }
 
-  debugPrint("==========================================");
+  print("==========================================");
 }
 
 class PriceRowData {
@@ -975,7 +973,7 @@ class SubscriptionConfirmController extends GetxController {
       // No callback here — the listeners in onInit() pick up success
       // once the App Store finishes the redemption and the user returns.
     } catch (e, stack) {
-      debugPrint('❌ Offer code redemption error: $e');
+      print('❌ Offer code redemption error: $e');
       debugPrintStack(stackTrace: stack);
       _showErrorSnackbar('Unable to open redemption. Please try again.');
     } finally {
@@ -1004,13 +1002,13 @@ class SubscriptionConfirmController extends GetxController {
     try {
       final offerings = await _purchaseService.getOfferings();
 
-      debugPrint('🔍 offerings.current: ${offerings?.current?.identifier}');
-      debugPrint('🔍 all offerings: ${offerings?.all.keys}');
-      debugPrint(
+      print('🔍 offerings.current: ${offerings?.current?.identifier}');
+      print('🔍 all offerings: ${offerings?.all.keys}');
+      print(
         '🔍 available packages: ${offerings?.current?.availablePackages.map((p) => p.storeProduct.identifier)}',
       );
 
-      debugPrint(
+      print(
         '🔍 oofferings?.current?.availablePackages.toString(): ${offerings?.current?.availablePackages.toString()}',
       );
 
@@ -1020,7 +1018,7 @@ class SubscriptionConfirmController extends GetxController {
       );
 
       _package = offerings?.current?.monthly;
-      debugPrint('🔍 _package: ${_package?.storeProduct.identifier}');
+      print('🔍 _package: ${_package?.storeProduct.identifier}');
       _package = offerings?.current?.monthly;
       if (_package == null) {
         errorMessage.value = 'Subscription plan is currently unavailable.';
@@ -1041,7 +1039,7 @@ class SubscriptionConfirmController extends GetxController {
         _showErrorSnackbar(errorMessage.value);
       }
 
-      debugPrint("_isEligibleForOffer: $_isEligibleForOffer");
+      print("_isEligibleForOffer: $_isEligibleForOffer");
 
       // ── NEW: iOS promotional offer lookup ──────────────────────────
       // No hardcoded identifier — RevenueCat/Apple only require one when
@@ -1122,7 +1120,7 @@ class SubscriptionConfirmController extends GetxController {
       (selectedOption.value == null && GetPlatform.isAndroid);
   /*
   Future<void> onConfirmPayment() async {
-    debugPrint('🟢 onConfirmPayment TAPPED');
+    print('🟢 onConfirmPayment TAPPED');
     if (isPurchaseBlocked) {
       _showErrorSnackbar(
         '__package == null ||  (selectedOption.value == null && GetPlatform.isAndroid), isPurchaseBlocked Subscription plan is unavailable.',
@@ -1140,7 +1138,7 @@ class SubscriptionConfirmController extends GetxController {
     isProcessing.value = true;
 
     try {
-      debugPrint('🟢 calling _purchaseService.purchasePackage...');
+      print('🟢 calling _purchaseService.purchasePackage...');
       // final outcome = await _purchaseService.purchasePackage(
       //   _package!,
       //   selectedOption.value,
@@ -1149,7 +1147,7 @@ class SubscriptionConfirmController extends GetxController {
       final PurchaseOutcome outcome;
       // ── NEW: route eligible iOS users through the signed promo offer ──
       if (GetPlatform.isIOS && iosPromoDiscount.value != null) {
-        debugPrint('🟢 purchasing with iOS promotional offer');
+        print('🟢 purchasing with iOS promotional offer');
         final promoOffer = await Purchases.getPromotionalOffer(
           _package!.storeProduct,
           iosPromoDiscount.value!,
@@ -1159,14 +1157,14 @@ class SubscriptionConfirmController extends GetxController {
           promoOffer,
         );
       } else {
-        debugPrint('🟢 calling _purchaseService.purchasePackage...');
+        print('🟢 calling _purchaseService.purchasePackage...');
         outcome = await _purchaseService.purchasePackage(
           _package!,
           selectedOption.value,
         );
       }
 
-      debugPrint('🟢 purchasePackage returned: ${outcome.result}');
+      print('🟢 purchasePackage returned: ${outcome.result}');
 
       if (outcome.result == PurchaseResult.error) {
         _showErrorSnackbar(
@@ -1192,7 +1190,7 @@ class SubscriptionConfirmController extends GetxController {
     if (_isSubmitting) return;
     _isSubmitting = true;
 
-    debugPrint('🟢 onConfirmPayment TAPPED');
+    print('🟢 onConfirmPayment TAPPED');
     if (isPurchaseBlocked) {
       _isSubmitting = false;
       _showErrorSnackbar('Subscription plan is unavailable.');
@@ -1221,7 +1219,7 @@ class SubscriptionConfirmController extends GetxController {
         );
       }
 
-      debugPrint('🟢 purchasePackage returned: ${outcome.result}');
+      print('🟢 purchasePackage returned: ${outcome.result}');
       if (outcome.result == PurchaseResult.error) {
         _showErrorSnackbar(
           outcome.errorMessage ??
@@ -1233,7 +1231,7 @@ class SubscriptionConfirmController extends GetxController {
       final code = PurchasesErrorHelper.getErrorCode(e);
       if (code == PurchasesErrorCode.ineligibleError) {
         // Not eligible for the promo per Apple's own rules — fall back to full price
-        debugPrint(
+        print(
           'ℹ️ Not eligible for promo offer, falling back to full price',
         );
         // outcome = await _purchaseService.purchasePackage(
@@ -1245,7 +1243,7 @@ class SubscriptionConfirmController extends GetxController {
       }
     } catch (e, stack) {
       // ── was silently swallowing the real error — fixed ──
-      debugPrint('❌ Purchase error: $e');
+      print('❌ Purchase error: $e');
       debugPrintStack(stackTrace: stack);
       errorMessage.value = 'Payment failed. Please try again.';
       _showErrorSnackbar(errorMessage.value);

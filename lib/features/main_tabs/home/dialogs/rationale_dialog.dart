@@ -24,27 +24,50 @@ class RationaleDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.locationPermissionRationale, style: TxtStyle.inter(fs: 13, w: 400)),
+          Text(
+            Strings.locationPermissionRationale,
+            style: TxtStyle.inter(fs: 13, w: 400),
+          ),
           Gap(16.w),
-          _buildBullet(Icons.people_alt_rounded, c.primary, Strings.locationBenefitMatching),
+          _buildBullet(
+            Icons.people_alt_rounded,
+            c.primary,
+            Strings.locationBenefitMatching,
+          ),
           Gap(4.w),
-          _buildBullet(Icons.visibility_rounded, c.primary, Strings.locationBenefitVisibility),
+          _buildBullet(
+            Icons.visibility_rounded,
+            c.primary,
+            Strings.locationBenefitVisibility,
+          ),
           Gap(4.w),
-          _buildBullet(Icons.lock_rounded, c.primary, Strings.locationBenefitPrivacy),
+          _buildBullet(
+            Icons.lock_rounded,
+            c.primary,
+            Strings.locationBenefitPrivacy,
+          ),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text(Strings.notNow.capEachWord(), style: TextStyle(color: c.textSecondary)),
+          child: Text(
+            Strings.notNow.capEachWord(),
+            style: TextStyle(color: c.textSecondary),
+          ),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: c.secondary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           onPressed: onAllowLocation,
-          child: Text(Strings.allowLocation.capEachWord(), style: TextStyle(color: Colors.white)),
+          child: Text(
+            Strings.allowLocation.capEachWord(),
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );
@@ -63,7 +86,9 @@ class RationaleDialog extends StatelessWidget {
           child: Icon(icon, color: color, size: 14),
         ),
         Gap(8.w),
-        Expanded(child: Text(text, style: TxtStyle.norTxt.copyWith(fontSize: 13))),
+        Expanded(
+          child: Text(text, style: TxtStyle.norTxt.copyWith(fontSize: 13)),
+        ),
       ],
     );
   }

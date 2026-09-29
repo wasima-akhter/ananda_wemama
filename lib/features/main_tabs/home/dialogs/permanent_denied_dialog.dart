@@ -10,16 +10,24 @@ class PermanentDeniedDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(Strings.permissionIsRequired.capEachWord()),
-      content: Text(Strings.locationPermissionDeniedForeverPlzEnable.capEachWord()),
+      content: Text(
+        Strings.locationPermissionDeniedForeverPlzEnable.capEachWord(),
+      ),
       actions: [
-        TextButton(onPressed: () => Get.back(), child: Text(Strings.cancel.capEachWord())),
+        TextButton(
+          onPressed: () => Get.back(),
+          child: Text(Strings.cancel.capEachWord()),
+        ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: c.secondary),
           onPressed: () {
             Geolocator.openAppSettings();
             Get.back();
           },
-          child: Text(Strings.openSettings.capEachWord(), style: TextStyle(color: Colors.white)),
+          child: Text(
+            Strings.openSettings.capEachWord(),
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

@@ -59,7 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    debugPrint('🔍 [Lifecycle] state changed → $state');
+    print('🔍 [Lifecycle] state changed → $state');
     if (state == AppLifecycleState.resumed && mounted) {
       nc.getNotifications();
     }

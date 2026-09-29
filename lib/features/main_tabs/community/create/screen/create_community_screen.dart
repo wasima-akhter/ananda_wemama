@@ -15,7 +15,7 @@ class CreateCommunityScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: refreshKey,
       onRefresh: () async {
-        log("communities refreshed");
+        print("communities refreshed");
       },
       appBar: CommonAppBarContent(title: Strings.createCommunity),
 

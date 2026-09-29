@@ -183,7 +183,7 @@ class ApiClient {
     bool showResponse = false,
   }) {
     return _safeRequest(() async {
-      log("🌐 GET URL: $url");
+      print("🌐 GET URL: $url");
 
       final response = await _dio.get(
         url,
@@ -214,7 +214,7 @@ class ApiClient {
     bool showResponse = false,
   }) {
     return _safeRequest(() async {
-      log("🌐 POST URL: $url");
+      print("🌐 POST URL: $url");
 
       final response = await _dio.post(
         url,
@@ -243,7 +243,7 @@ class ApiClient {
     Map<String, dynamic>? headers,
   }) {
     return _safeRequest(() async {
-      log("🌐 PATCH URL: $url");
+      print("🌐 PATCH URL: $url");
       // For FormData, don't set Content-Type - let Dio handle it automatically
       final options = Options(
         method: 'PATCH',
@@ -260,7 +260,7 @@ class ApiClient {
         final response = await _dio.request(url, data: data, options: options);
         return ApiResponseHandler.handle(response, reqName);
       } catch (e) {
-        log("PATCH request error: $e");
+        print("PATCH request error: $e");
         return null;
       }
     });
@@ -277,10 +277,10 @@ class ApiClient {
     bool showResponse = false,
   }) {
     return _safeRequest(() async {
-      log("🌐 PATCHWith file URL: $url");
+      print("🌐 PATCHWith file URL: $url");
       final token = getToken;
       if (token == null || token.isEmpty) {
-        log("❌ patchWithFile aborted: no token");
+        print("❌ patchWithFile aborted: no token");
         return null;
       }
 
@@ -350,15 +350,15 @@ class ApiClient {
       }
 
       // ─── REQUEST DEBUG LOG ─────────────────────────────
-      log("━━━━━━━━ PATCH WITH FILE ━━━━━━━━");
-      log("URL: $url");
-      log("REQ_NAME: $reqName");
-      log(
+      print("━━━━━━━━ PATCH WITH FILE ━━━━━━━━");
+      print("URL: $url");
+      print("REQ_NAME: $reqName");
+      print(
         "TOKEN: ${token.substring(0, token.length > 8 ? 8 : token.length)}...",
       );
-      log("FIELDS: ${data.fields}");
-      log("FILES: ${data.files.map((e) => e.key).toList()}");
-      log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      print("FIELDS: ${data.fields}");
+      print("FILES: ${data.files.map((e) => e.key).toList()}");
+      print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
       final options = Options(
         method: 'PATCH',
@@ -380,24 +380,24 @@ class ApiClient {
         return ApiResponseHandler.handle(response, reqName);
       } on DioException catch (e, stackTrace) {
         // ─── DIO ERROR DEEP LOG ─────────────────────────────
-        log("━━━━━━━━ DIO EXCEPTION ━━━━━━━━");
-        log("TYPE: ${e.type}");
-        log("MESSAGE: ${e.message}");
-        log("ERROR: ${e.error}");
-        log("STATUS CODE: ${e.response?.statusCode}");
-        log("RESPONSE DATA: ${e.response?.data}");
-        log("REQUEST PATH: ${e.requestOptions.path}");
-        log("REQUEST METHOD: ${e.requestOptions.method}");
-        log("REQUEST HEADERS: ${e.requestOptions.headers}");
-        log("STACKTRACE: $stackTrace");
-        log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        print("━━━━━━━━ DIO EXCEPTION ━━━━━━━━");
+        print("TYPE: ${e.type}");
+        print("MESSAGE: ${e.message}");
+        print("ERROR: ${e.error}");
+        print("STATUS CODE: ${e.response?.statusCode}");
+        print("RESPONSE DATA: ${e.response?.data}");
+        print("REQUEST PATH: ${e.requestOptions.path}");
+        print("REQUEST METHOD: ${e.requestOptions.method}");
+        print("REQUEST HEADERS: ${e.requestOptions.headers}");
+        print("STACKTRACE: $stackTrace");
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
         // 🔥 EXTRA: backend stack (MOST IMPORTANT FOR YOU)
         if (e.response?.data is Map) {
           final data = e.response?.data;
-          log("🔥 BACKEND MESSAGE: ${data['message']}");
-          log("🔥 BACKEND STACK:\n${data['stack']}");
-          log("🔥 ERROR DETAILS: ${data['errorDetails']}");
+          print("🔥 BACKEND MESSAGE: ${data['message']}");
+          print("🔥 BACKEND STACK:\n${data['stack']}");
+          print("🔥 ERROR DETAILS: ${data['errorDetails']}");
         }
 
         return ApiResponseHandler.handle(
@@ -410,10 +410,10 @@ class ApiClient {
         );
       } catch (e, stackTrace) {
         // ─── NON-DIO ERROR ─────────────────────────────
-        log("━━━━━━━━ UNKNOWN EXCEPTION ━━━━━━━━");
-        log("ERROR: $e");
-        log("STACKTRACE: $stackTrace");
-        log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        print("━━━━━━━━ UNKNOWN EXCEPTION ━━━━━━━━");
+        print("ERROR: $e");
+        print("STACKTRACE: $stackTrace");
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
         return null;
       }
@@ -430,7 +430,7 @@ class ApiClient {
     Map<String, dynamic>? headers,
   }) {
     return _safeRequest(() async {
-      log("🌐 POST with file URL: $url");
+      print("🌐 POST with file URL: $url");
 
       final data = dio.FormData();
 
@@ -480,7 +480,7 @@ class ApiClient {
         final response = await _dio.request(url, data: data, options: options);
         return ApiResponseHandler.handle(response, reqName);
       } catch (e) {
-        log("POST request error: $e");
+        print("POST request error: $e");
         return null;
       }
     });
@@ -494,7 +494,7 @@ class ApiClient {
     Map<String, String>? headers,
   }) {
     return _safeRequest(() async {
-      log("🌐 PUT file URL: $url");
+      print("🌐 PUT file URL: $url");
       final response = await _dio.put(
         url,
         data: data,
@@ -513,7 +513,7 @@ class ApiClient {
     Map<String, String>? headers,
   }) {
     return _safeRequest(() async {
-      log("🌐 DELETE file URL: $url");
+      print("🌐 DELETE file URL: $url");
       final response = await _dio.delete(
         url,
         data: data,

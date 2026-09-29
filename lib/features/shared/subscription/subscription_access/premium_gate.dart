@@ -46,7 +46,7 @@ class _PremiumGateState extends State<PremiumGate> {
         await access.getPremiumStatusWithFallback().timeout(
           const Duration(seconds: 3),
           onTimeout: () {
-            debugPrint('⚠️  [PremiumGate] iOS verification timeout');
+            print('⚠️  [PremiumGate] iOS verification timeout');
             return false;
           },
         );
@@ -63,25 +63,25 @@ class _PremiumGateState extends State<PremiumGate> {
     return Obx(() {
       // ✅ State 1: Waiting for premium service to be ready
       if (widget.waitForReady && !access.isReady.value) {
-        debugPrint('⏳ [PremiumGate] Service not ready');
+        print('⏳ [PremiumGate] Service not ready');
         return const SizedBox.shrink();
       }
 
       // ✅ State 2: Verifying premium status on iOS (fallback)
       if (_verifyingStatus.value) {
-        debugPrint('🔄 [PremiumGate] Verifying iOS status...');
+        print('🔄 [PremiumGate] Verifying iOS status...');
         // Optionally show a loading indicator or just hide
         return const SizedBox.shrink();
       }
 
       // ✅ State 3: Premium user → show child
       if (access.isPremiumUser.value) {
-        debugPrint('✅ [PremiumGate] User is premium → showing child');
+        print('✅ [PremiumGate] User is premium → showing child');
         return widget.child;
       }
 
       // ❌ State 4: Not premium → show locked UI or hide
-      debugPrint('🔒 [PremiumGate] User not premium → showing locked');
+      print('🔒 [PremiumGate] User not premium → showing locked');
       return widget.lockedBuilder?.call(context) ?? const SizedBox.shrink();
     });
   }

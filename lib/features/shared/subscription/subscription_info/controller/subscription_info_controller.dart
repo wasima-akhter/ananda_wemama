@@ -68,7 +68,7 @@ class SubscriptionInfoController extends GetxController
     final current = PushNotificationService.to.notificationStatus.value;
 
     if (_lastNotificationStatus != current) {
-      debugPrint(
+      print(
         '🔔 Notification permission changed: '
         '$_lastNotificationStatus -> $current',
       );
@@ -153,7 +153,7 @@ class SubscriptionInfoController extends GetxController
         activeProduct.value = null;
       }
     } catch (e, s) {
-      debugPrint('Load subscription info error: $e');
+      print('Load subscription info error: $e');
       debugPrintStack(stackTrace: s);
 
       Snack.showError('Failed to load subscription information.');
@@ -175,7 +175,7 @@ class SubscriptionInfoController extends GetxController
 
       activeProduct.value = product;
     } catch (e, s) {
-      debugPrint('Load RevenueCat product error: $e');
+      print('Load RevenueCat product error: $e');
       debugPrintStack(stackTrace: s);
     }
   }
@@ -184,7 +184,7 @@ class SubscriptionInfoController extends GetxController
     try {
       await _purchaseService.openManageSubscription();
     } catch (e, s) {
-      debugPrint('Open manage billing error: $e');
+      print('Open manage billing error: $e');
       debugPrintStack(stackTrace: s);
 
       Snack.showError('Unable to open subscription settings.');
@@ -228,7 +228,7 @@ class SubscriptionInfoController extends GetxController
         await _purchaseService.openManageSubscription();
       }
     } catch (e, s) {
-      debugPrint('Cancel subscription error: $e');
+      print('Cancel subscription error: $e');
       debugPrintStack(stackTrace: s);
 
       Snack.showError(
@@ -252,7 +252,7 @@ class SubscriptionInfoController extends GetxController
         Snack.showError(outcome.errorMessage ?? 'No active purchases found');
       }
     } catch (e, s) {
-      debugPrint('Restore purchases error: $e');
+      print('Restore purchases error: $e');
       debugPrintStack(stackTrace: s);
 
       Snack.showError('Something went wrong while restoring purchases');

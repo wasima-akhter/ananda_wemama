@@ -63,11 +63,11 @@ class CommunityDetailController extends GetxController {
   void onInit() {
     btnState = initialBtnState.obs;
 
-    log("initialBtnState: ${btnState.value.name}");
+    print("initialBtnState: ${btnState.value.name}");
 
     isAlreadyMember_ = (initialBtnState != MyCommunityBtnState.join).obs;
 
-    log('communityItemId: $communityItemId');
+    print('communityItemId: $communityItemId');
 
     getCommunityDetail();
 
@@ -119,11 +119,11 @@ class CommunityDetailController extends GetxController {
         PostActionController.to.initializeFromPosts(data.allPost ?? []);
 
         for (final post in data.allPost ?? []) {
-          log('post id: ${post.id}');
+          print('post id: ${post.id}');
         }
       }
     } catch (e) {
-      log("Error fetching Community Detail: $e");
+      print("Error fetching Community Detail: $e");
     } finally {
       isLoading_.value = false;
 
@@ -159,7 +159,7 @@ class CommunityDetailController extends GetxController {
 
       return false;
     } catch (e) {
-      log('Community Join error: $e');
+      print('Community Join error: $e');
 
       return false;
     } finally {
@@ -306,11 +306,11 @@ class CommunityDetailController extends GetxController {
   void onInit() {
     btnState = initialBtnState.obs;
 
-    log('initialBtnState: ${btnState.value.name}');
+    print('initialBtnState: ${btnState.value.name}');
 
     isAlreadyMember_ = (initialBtnState != MyCommunityBtnState.join).obs;
 
-    log('communityItemId: $communityItemId');
+    print('communityItemId: $communityItemId');
 
     getCommunityDetail();
 
@@ -361,7 +361,7 @@ class CommunityDetailController extends GetxController {
         PostActionController.to.initializeFromPosts(data.allPost ?? []);
 
         for (final post in data.allPost ?? []) {
-          log('post id: ${post.id}');
+          print('post id: ${post.id}');
         }
 
         state.value = UIState.data;
@@ -369,7 +369,7 @@ class CommunityDetailController extends GetxController {
         state.value = UIState.empty;
       }
     } catch (e, s) {
-      log('Error fetching Community Detail: $e', stackTrace: s);
+      print('Error fetching Community Detail: $e, stackTrace: $s');
 
       errorMessage.value = 'Failed to load community details.';
       state.value = UIState.error;
@@ -482,7 +482,7 @@ class CommunityDetailController extends GetxController {
 
       return false;
     } catch (e) {
-      log('Community Join error: $e');
+      print('Community Join error: $e');
 
       return false;
     } finally {

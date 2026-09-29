@@ -45,7 +45,7 @@ class OnboardController extends GetxController {
   /// 👉 Final navigation (safe & smooth)
   // void finishOnboarding() {
   //   storage.setSeenOnboarding(true); // make true later
-  //   log("Seen onboarding saved: ${storage.getSeenOnboarding}");
+  //   print("Seen onboarding saved: ${storage.getSeenOnboarding}");
 
   //   // Unfocus anything just in case
   //   FocusManager.instance.primaryFocus?.unfocus();

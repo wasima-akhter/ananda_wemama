@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 class ApiLogger {
   ApiLogger._();
@@ -10,7 +9,7 @@ class ApiLogger {
     required int statusCode,
     dynamic body,
   }) {
-    log("""
+    print("""
 ━━━━━━━━━━━━ API RESPONSE ━━━━━━━━━━━━
 
 METHOD:
@@ -35,7 +34,7 @@ ${_pretty(body)}
     dynamic body,
     dynamic headers,
   }) {
-    log("""
+    print("""
 ━━━━━━━━━━━━ API REQUEST ━━━━━━━━━━━━
 
 METHOD:

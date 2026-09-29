@@ -23,7 +23,7 @@ class _ProfileDetailsPopupState extends State<ProfileDetailsPopup> {
   void initState() {
     super.initState();
 
-    debugPrint('userId: in prodile popup: ${widget.userId}');
+    print('userId: in prodile popup: ${widget.userId}');
 
     // Always clear previous profile when opening popup.
     controller.clearUserProfile();

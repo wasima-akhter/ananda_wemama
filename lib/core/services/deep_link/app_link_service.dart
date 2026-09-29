@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:app_links/app_links.dart';
 import 'package:get/get.dart';
@@ -20,19 +19,19 @@ class DeepLinkService extends GetxService {
   // ── Cold start ────────────────────────────────────────────────────────────
 
   Future<void> captureInitialLink() async {
-    log('🔧 [DeepLinkService] captureInitialLink() START');
+    print('🔧 [DeepLinkService] captureInitialLink() START');
     try {
       final initialUri = await _appLinks.getInitialLink();
-      log('🔗 [DeepLinkService] raw initial URI: $initialUri');
+      print('🔗 [DeepLinkService] raw initial URI: $initialUri');
 
       if (initialUri == null) {
-        log('ℹ️ [DeepLinkService] no initial link — skipping');
+        print('ℹ️ [DeepLinkService] no initial link — skipping');
         return;
       }
 
       // ✅ Notification intents arrive here on cold-start tap — ignore them
       if (_isNotificationIntent(initialUri)) {
-        log(
+        print(
           'ℹ️ [DeepLinkService] initial URI is a notification intent — '
           'ignoring (handled by PushNotificationController)',
         );
@@ -41,42 +40,42 @@ class DeepLinkService extends GetxService {
 
       // Store only — zero navigation here
       pendingLiveId = _extractLiveId(initialUri);
-      log(
+      print(
         '🔗 [DeepLinkService] captureInitialLink() → pendingLiveId: $pendingLiveId',
       );
     } catch (e, st) {
-      log('❌ [DeepLinkService] captureInitialLink() error: $e');
-      log('❌ [DeepLinkService] $st');
+      print('❌ [DeepLinkService] captureInitialLink() error: $e');
+      print('❌ [DeepLinkService] $st');
     }
-    log('🔧 [DeepLinkService] captureInitialLink() END');
+    print('🔧 [DeepLinkService] captureInitialLink() END');
   }
 
   // ── App ready (called by SplashController after navigation settles) ───────
 
   void markAppReady() {
     if (_appReady) {
-      log(
+      print(
         'ℹ️ [DeepLinkService] markAppReady() called but already ready — skipping',
       );
       return;
     }
     _appReady = true;
-    log('✅ [DeepLinkService] markAppReady() → stream starting now');
+    print('✅ [DeepLinkService] markAppReady() → stream starting now');
     _startListening();
   }
 
   void _startListening() {
-    log(
+    print(
       '🔧 [DeepLinkService] _startListening() — subscribing to uriLinkStream',
     );
     _subscription = _appLinks.uriLinkStream.listen(
       (uri) {
-        log('🔗 [DeepLinkService] stream event → raw URI: $uri');
+        print('🔗 [DeepLinkService] stream event → raw URI: $uri');
 
         // ✅ Notification taps (background/foreground) fire SELECT_NOTIFICATION
         // intent which app_links picks up — ignore them here
         if (_isNotificationIntent(uri)) {
-          log(
+          print(
             'ℹ️ [DeepLinkService] stream URI is a notification intent — '
             'ignoring (handled by PushNotificationController)',
           );
@@ -86,11 +85,11 @@ class DeepLinkService extends GetxService {
         _handleUri(uri);
       },
       onError: (e, st) {
-        log('❌ [DeepLinkService] stream error: $e');
-        log('❌ [DeepLinkService] $st');
+        print('❌ [DeepLinkService] stream error: $e');
+        print('❌ [DeepLinkService] $st');
       },
     );
-    log('✅ [DeepLinkService] uriLinkStream subscribed');
+    print('✅ [DeepLinkService] uriLinkStream subscribed');
   }
 
   // ── Guard ─────────────────────────────────────────────────────────────────
@@ -118,7 +117,7 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
             uri.scheme != 'https' &&
             uri.scheme != 'http');
 
-    log(
+    print(
       '🔍 [DeepLinkService] _isNotificationIntent($uri) → $isNotification '
       '| scheme: ${uri.scheme}',
     );
@@ -129,95 +128,99 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
   // ── Handler ───────────────────────────────────────────────────────────────
 
   void _handleUri(Uri uri) {
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    log('🔗 [DeepLinkService] _handleUri() START → $uri');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🔗 [DeepLinkService] _handleUri() START → $uri');
 
     final liveId = _extractLiveId(uri);
-    log('🔗 [DeepLinkService] _handleUri() → extracted liveId: $liveId');
+    print('🔗 [DeepLinkService] _handleUri() → extracted liveId: $liveId');
 
     if (liveId == null) {
-      log('⚠️ [DeepLinkService] _handleUri() → no liveId extracted — ignoring');
+      print(
+        '⚠️ [DeepLinkService] _handleUri() → no liveId extracted — ignoring',
+      );
       return;
     }
 
     _openLive(liveId);
-    log('🔗 [DeepLinkService] _handleUri() END');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🔗 [DeepLinkService] _handleUri() END');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   }
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
   Future<void> _openLive(String liveId) async {
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    log("🔗 [DeepLinkService] _openLive() START → liveId='$liveId'");
-    log(
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print("🔗 [DeepLinkService] _openLive() START → liveId='$liveId'");
+    print(
       "🔗 [DeepLinkService] _openLive() → currentRoute='${Get.currentRoute}'",
     );
-    log("🔗 [DeepLinkService] _openLive() → loggedIn='${storage.getLoggedIn}'");
+    print(
+      "🔗 [DeepLinkService] _openLive() → loggedIn='${storage.getLoggedIn}'",
+    );
 
     if (!storage.getLoggedIn) {
       pendingLiveId = liveId;
-      log(
+      print(
         '🔗 [DeepLinkService] _openLive() → user NOT logged in — pendingLiveId stored',
       );
 
       if (Get.currentRoute == RoutePaths.signin) {
-        log(
+        print(
           '🔗 [DeepLinkService] _openLive() → already on signin — skipping navigation',
         );
         return;
       }
 
-      log(
+      print(
         '🔗 [DeepLinkService] _openLive() → navigating to signin with redirectLiveId',
       );
       Get.offAllNamed(RoutePaths.signin, arguments: {'redirectLiveId': liveId});
       return;
     }
 
-    log(
+    print(
       '🔗 [DeepLinkService] _openLive() → user IS logged in — navigating to session',
     );
     await navigateToSession(liveId);
 
-    log("🔗 [DeepLinkService] _openLive() END");
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print("🔗 [DeepLinkService] _openLive() END");
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   }
 
   // ── URI parsing ───────────────────────────────────────────────────────────
 
   String? _extractLiveId(Uri uri) {
-    log('🔍 [DeepLinkService] _extractLiveId() START');
-    log('├─ URI:            $uri');
-    log('├─ Scheme:         ${uri.scheme}');
-    log('├─ Host:           ${uri.host}');
-    log('├─ Path:           ${uri.path}');
-    log('├─ Path Segments:  ${uri.pathSegments}');
-    log('├─ Query Params:   ${uri.queryParameters}');
+    print('🔍 [DeepLinkService] _extractLiveId() START');
+    print('├─ URI:            $uri');
+    print('├─ Scheme:         ${uri.scheme}');
+    print('├─ Host:           ${uri.host}');
+    print('├─ Path:           ${uri.path}');
+    print('├─ Path Segments:  ${uri.pathSegments}');
+    print('├─ Query Params:   ${uri.queryParameters}');
 
     if (uri.scheme == 'wemama') {
       final liveId = uri.pathSegments.isNotEmpty
           ? uri.pathSegments.first
           : null;
-      log('📱 [DeepLinkService] custom scheme (wemama) → liveId: $liveId');
+      print('📱 [DeepLinkService] custom scheme (wemama) → liveId: $liveId');
       return liveId;
     }
 
     if (uri.scheme == 'https' || uri.scheme == 'http') {
       final index = uri.pathSegments.indexOf('session');
-      log('🌐 [DeepLinkService] https scheme → session index: $index');
+      print('🌐 [DeepLinkService] https scheme → session index: $index');
 
       if (index != -1 && uri.pathSegments.length > index + 1) {
         final liveId = uri.pathSegments[index + 1];
-        log('🎯 [DeepLinkService] extracted liveId: $liveId');
+        print('🎯 [DeepLinkService] extracted liveId: $liveId');
         return liveId;
       }
 
-      log('⚠️ [DeepLinkService] no liveId found after "session" segment');
+      print('⚠️ [DeepLinkService] no liveId found after "session" segment');
       return null;
     }
 
-    log(
+    print(
       '⚠️ [DeepLinkService] unsupported scheme: ${uri.scheme} — returning null',
     );
     return null;
@@ -226,54 +229,54 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
   // ── Post-login redirect ───────────────────────────────────────────────────
 
   Future<void> handlePostLoginRedirect() async {
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    log('🔄 [DeepLinkService] handlePostLoginRedirect() START');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🔄 [DeepLinkService] handlePostLoginRedirect() START');
 
     if (pendingLiveId == null) {
-      log('ℹ️ [DeepLinkService] no pendingLiveId — skipping redirect');
+      print('ℹ️ [DeepLinkService] no pendingLiveId — skipping redirect');
       return;
     }
 
     final liveId = pendingLiveId!;
-    log('🎯 [DeepLinkService] pendingLiveId: $liveId');
+    print('🎯 [DeepLinkService] pendingLiveId: $liveId');
 
     pendingLiveId = null;
-    log('🧹 [DeepLinkService] pendingLiveId cleared');
+    print('🧹 [DeepLinkService] pendingLiveId cleared');
 
     try {
-      log('🚀 [DeepLinkService] navigating to session: $liveId');
+      print('🚀 [DeepLinkService] navigating to session: $liveId');
       await navigateToSession(liveId);
-      log('✅ [DeepLinkService] navigated to session: $liveId');
+      print('✅ [DeepLinkService] navigated to session: $liveId');
     } catch (e, st) {
-      log('❌ [DeepLinkService] handlePostLoginRedirect() error: $e');
-      log('❌ [DeepLinkService] $st');
+      print('❌ [DeepLinkService] handlePostLoginRedirect() error: $e');
+      print('❌ [DeepLinkService] $st');
     }
 
-    log('🔄 [DeepLinkService] handlePostLoginRedirect() END');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🔄 [DeepLinkService] handlePostLoginRedirect() END');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   }
 
   // ── Session navigation ────────────────────────────────────────────────────
 
   Future<void> navigateToSession(String liveId) async {
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    log("🔗 [DeepLinkService] navigateToSession() START → liveId='$liveId'");
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print("🔗 [DeepLinkService] navigateToSession() START → liveId='$liveId'");
 
     try {
-      log(
+      print(
         "🔗 [DeepLinkService] → calling SessionService().getSessionById('$liveId')...",
       );
       final Session? session = await SessionService().getSessionById(
         sessionId: liveId,
       );
 
-      log(
+      print(
         "🔗 [DeepLinkService] → API returned. session = "
         "${session == null ? '[NULL]' : 'id=${session.id} status=${session.status}'}",
       );
 
       if (session == null || session.id.isEmpty) {
-        log(
+        print(
           '🔗 [DeepLinkService] → session null or empty — navigating to mainNav',
         );
         Get.offAllNamed(RoutePaths.mainNav);
@@ -281,22 +284,22 @@ Background tap  →  _startListening()     →  _isNotificationIntent() → retu
       }
       await SessionNavigator.open(session);
 
-      log("🔗 [DeepLinkService] → session.status = '${session.status}'");
+      print("🔗 [DeepLinkService] → session.status = '${session.status}'");
     } catch (e, st) {
-      log('❌ [DeepLinkService] navigateToSession() ERROR: $e');
-      log('❌ [DeepLinkService] STACK: $st');
+      print('❌ [DeepLinkService] navigateToSession() ERROR: $e');
+      print('❌ [DeepLinkService] STACK: $st');
       Get.offAllNamed(RoutePaths.mainNav);
     }
 
-    log('🔗 [DeepLinkService] navigateToSession() END');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🔗 [DeepLinkService] navigateToSession() END');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   }
 
   // ── Cleanup ───────────────────────────────────────────────────────────────
 
   @override
   void onClose() {
-    log('🔧 [DeepLinkService] onClose() — cancelling stream subscription');
+    print('🔧 [DeepLinkService] onClose() — cancelling stream subscription');
     _subscription?.cancel();
     super.onClose();
   }

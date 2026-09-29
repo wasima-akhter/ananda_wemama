@@ -36,7 +36,7 @@ class SignupService extends GetxService {
     ); // You can access user like:
     if (response.isSuccess) {
       // _saveUserDataAfterSignUp(response: response);
-      log("response.data?.user.name : ${response.data?.email}");
+      print("response.data?.user.name : ${response.data?.email}");
 
       if (Get.isRegistered<ProfileController>()) {
         final profileController = Get.find<ProfileController>();
@@ -51,7 +51,7 @@ class SignupService extends GetxService {
     required String authToken,
     required String provider,
   }) async {
-    log("Social signup → provider: $provider");
+    print("Social signup → provider: $provider");
 
     final response = await ApiClient().post(
       Endpoints.socialRegister.getUrl,
@@ -71,7 +71,7 @@ class SignupService extends GetxService {
 
     final data = SigninModelData.fromJson(body["data"] ?? {});
 
-    log("Social signup statusCode: ${data.statusCode}");
+    print("Social signup statusCode: ${data.statusCode}");
 
     // ==========================
     // EMAIL NOT VERIFIED
@@ -117,7 +117,7 @@ class SignupService extends GetxService {
 
     storage.setUserInfo(email: data.user?.email ?? '');
 
-    log("Social signup success: ${data.user?.email}");
+    print("Social signup success: ${data.user?.email}");
 
     return const SocialLoginResult(type: SocialLoginApiResultType.success);
   }

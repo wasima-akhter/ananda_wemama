@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 
 /// Normalized result from any socket event payload.
@@ -49,15 +47,15 @@ class SocketResponseHandler {
     final response = _parse(data);
 
     if (response.isSuccess) {
-      _log(eventName, '✅ success → ${response.message}');
+      _print(eventName, '✅ success → ${response.message}');
 
-      log('📥 Socket Response: $response');
+      print('📥 Socket Response: $response');
 
       return response;
     }
 
     // ── failure path ──────────────────────────────────────────────────────────
-    _log(eventName, '❌ failure → ${response.message}');
+    _print(eventName, '❌ failure → ${response.message}');
     _showErrorSnackbar(response.message, eventName: eventName);
 
     return response;
@@ -127,9 +125,9 @@ class SocketResponseHandler {
     );
   }
 
-  static void _log(String? eventName, String msg) {
+  static void _print(String? eventName, String msg) {
     final tag = eventName != null ? '[$eventName]' : '[Socket]';
-    log('🔌 $tag $msg');
+    print('🔌 $tag $msg');
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

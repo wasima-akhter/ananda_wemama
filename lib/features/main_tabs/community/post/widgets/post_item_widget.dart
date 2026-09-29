@@ -164,7 +164,7 @@ class _PostHeader extends StatelessWidget {
                               ? Strings.unlockComment.capEachWord()
                               : Strings.lockComment.capEachWord(),
                           onTap: () async {
-                            showLockCommentialog(isLocked: isLocked);
+                            showLockCommentiaprint(isLocked: isLocked);
 
                             await Future.delayed(const Duration(seconds: 1));
 

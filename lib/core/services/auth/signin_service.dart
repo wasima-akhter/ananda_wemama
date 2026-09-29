@@ -45,7 +45,7 @@ class SocialLoginService {
       final auth = await account.authentication;
       return auth.idToken;
     } catch (e) {
-      log('Google Sign-In error: $e');
+      print('Google Sign-In error: $e');
       return null;
     }
   }
@@ -63,7 +63,7 @@ class SocialLoginService {
       );
       return credential.identityToken;
     } catch (e) {
-      log('Apple Sign-In error: $e');
+      print('Apple Sign-In error: $e');
       return null;
     }
   }
@@ -118,7 +118,7 @@ class SocialLoginService {
 
     storage.setToken(model.accessToken ?? '');
 
-    log("Logged in as: ${user?.email}");
+    print("Logged in as: ${user?.email}");
   }
 }
 
@@ -174,7 +174,7 @@ class SigninService {
 
       await socket.connectSocket();
     } catch (e) {
-      log("Socket error: $e");
+      print("Socket error: $e");
     }
 
     if (Get.isRegistered<ProfileController>()) {
@@ -187,10 +187,10 @@ class SigninService {
     storage.setUserInfo(email: user?.email ?? '');
     storage.setToken(model.accessToken ?? '');
 
-    log("access token when setup: ${model.accessToken}");
+    print("access token when setup: ${model.accessToken}");
 
-    log("Logged in as: ${user?.email}");
-    log("Access token: ${model.accessToken}");
+    print("Logged in as: ${user?.email}");
+    print("Access token: ${model.accessToken}");
   }
 }
 

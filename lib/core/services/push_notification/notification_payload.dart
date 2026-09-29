@@ -2,8 +2,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class NotificationPayload {
   final String? toId;
   final String? toModel;
@@ -72,7 +70,7 @@ class NotificationPayload {
       final map = jsonDecode(jsonString) as Map<String, dynamic>;
       return NotificationPayload.fromMap(map);
     } catch (e) {
-      debugPrint('⚠️ [NotificationPayload] failed to parse JSON string: $e');
+      print('⚠️ [NotificationPayload] failed to parse JSON string: $e');
       return const NotificationPayload(title: '', description: '', type: '');
     }
   }

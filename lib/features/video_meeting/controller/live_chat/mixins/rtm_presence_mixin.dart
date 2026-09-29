@@ -11,7 +11,7 @@ mixin RtmPresenceMixin on GetxController {
   RxList<ParticipantModel> participants = <ParticipantModel>[].obs;
 
   void onPresence(PresenceEvent event) {
-    log('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
+    print('👤 [RTM] Presence: ${event.type} — ${event.publisher}');
 
     switch (event.type) {
       case RtmPresenceEventType.snapshot:
@@ -66,7 +66,7 @@ mixin RtmPresenceMixin on GetxController {
         viewCount.value = participants
             .where((p) => p.uid != _self.mc.uid.value.toString())
             .length;
-        log('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
+        print('✅ [RTM] Joiner added: $uid, total: ${viewCount.value}');
         return;
 
       case RtmPresenceEventType.remoteLeaveChannel:
@@ -79,7 +79,7 @@ mixin RtmPresenceMixin on GetxController {
         viewCount.value = participants
             .where((p) => p.uid != _self.mc.uid.value.toString())
             .length;
-        log('✅ [RTM] Joiner removed: ${event.publisher}');
+        print('✅ [RTM] Joiner removed: ${event.publisher}');
         return;
 
       case RtmPresenceEventType.remoteStateChanged:
@@ -97,14 +97,14 @@ mixin RtmPresenceMixin on GetxController {
             isMuted: stateMap['isMuted'] == 'true',
           );
 
-          log('✅ [RTM] State changed for $uid: $stateMap');
+          print('✅ [RTM] State changed for $uid: $stateMap');
         }
 
         return;
 
       default:
         // Optional: handle unknown events
-        log('⚠️ [RTM] Unhandled presence event: ${event.type}');
+        print('⚠️ [RTM] Unhandled presence event: ${event.type}');
         return;
     }
   }

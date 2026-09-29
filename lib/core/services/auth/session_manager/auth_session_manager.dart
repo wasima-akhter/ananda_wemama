@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 
 import '../../../../features/auth/signin/model/signin_model.dart';
@@ -16,7 +14,7 @@ class AuthSessionManager {
       socket.disconnectSocket();
       await socket.connectSocket();
     } catch (e) {
-      log("Socket error: $e");
+      print("Socket error: $e");
     }
 
     if (Get.isRegistered<ProfileController>()) {
@@ -32,7 +30,7 @@ class AuthSessionService {
     storage.setUserInfo(email: model.user?.email ?? "");
 
     storage.setUserId(model.user?.profileId ?? ''); // NEW
-    log("Logged in as: ${model.user?.email}, id: ${model.user?.profileId}");
+    print("Logged in as: ${model.user?.email}, id: ${model.user?.profileId}");
 
     final profileId = model.user?.profileId ?? '';
 
@@ -41,7 +39,7 @@ class AuthSessionService {
     if (profileId.isNotEmpty) {
       await PurchaseService.to.loginRevenueCatUser(profileId);
     } else {
-      log("⚠️ No profileId — skipping RevenueCat login");
+      print("⚠️ No profileId — skipping RevenueCat login");
     }
 
     try {
@@ -51,7 +49,7 @@ class AuthSessionService {
 
       await socket.connectSocket();
     } catch (e) {
-      log("Socket: $e");
+      print("Socket: $e");
     }
 
     if (Get.isRegistered<ProfileController>()) {

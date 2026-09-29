@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:we_mama/core/config/app_info.dart';
 import 'package:we_mama/core/services/socket/socket_listener_registry.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../app/service_export.dart';
 import 'socket_events.dart';
@@ -72,7 +72,7 @@ class SocketService extends GetxService {
       );
 
       _socket!.onConnect((_) {
-        log("✅ Socket Connected: ${_socket!.id}");
+        print("✅ Socket Connected: ${_socket!.id}");
         if (!(_connectCompleter?.isCompleted ?? true)) {
           _connectCompleter?.complete();
         }
@@ -82,7 +82,7 @@ class SocketService extends GetxService {
       });
 
       _socket!.onConnectError((err) {
-        log("❌ Socket error: $err");
+        print("❌ Socket error: $err");
         if (!(_connectCompleter?.isCompleted ?? true)) {
           _connectCompleter?.completeError(err);
         }
@@ -91,7 +91,7 @@ class SocketService extends GetxService {
       // ✅ NEW — fires whenever the transport drops, for any reason:
       // network loss, server restart, app backgrounded, etc.
       _socket!.onDisconnect((reason) {
-        log("🔌 Socket Disconnected: $reason");
+        print("🔌 Socket Disconnected: $reason");
 
         if (_intentionalDisconnect) {
           _intentionalDisconnect = false; // reset for next time
@@ -107,7 +107,7 @@ class SocketService extends GetxService {
 
       return _connectCompleter!.future;
     } catch (e) {
-      log("Socket connect crashed: $e");
+      print("Socket connect crashed: $e");
       if (!(_connectCompleter?.isCompleted ?? true)) {
         _connectCompleter?.complete();
       }
@@ -161,13 +161,13 @@ class SocketService extends GetxService {
   // ═══════════════════════════════════════════════════════════════════════════
 
   void emit(String event, dynamic data) {
-    log("token now: $getToken");
+    print("token now: $getToken");
     if (!isConnected) {
-      log("⚠️ Emit skipped — socket not connected → $event");
+      print("⚠️ Emit skipped — socket not connected → $event");
       return;
     }
     _socket!.emit(event, data);
-    log("📤 Emit: $event → $data");
+    print("📤 Emit: $event → $data");
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -179,9 +179,9 @@ class SocketService extends GetxService {
     _socket!.on(event, (data) {
       try {
         callback(_parse(data));
-        log("📥 Listen: [$event] $data");
+        print("📥 Listen: [$event] $data");
       } catch (e, stack) {
-        log("❌ Callback error [$event]: $e\n$stack");
+        print("❌ Callback error [$event]: $e\n$stack");
       }
     });
   }
@@ -190,7 +190,7 @@ class SocketService extends GetxService {
   /// Only safe to call after connectSocket().
   void on(String event, Function(Map<String, dynamic>) callback) {
     if (_socket == null) {
-      log("⚠️ on('$event') — socket not ready, call connectSocket() first");
+      print("⚠️ on('$event') — socket not ready, call connectSocket() first");
       return;
     }
     _on(event, callback);
@@ -202,7 +202,7 @@ class SocketService extends GetxService {
 
   void off(String event) {
     _socket?.off(event);
-    log("🧹 Removed listener: $event");
+    print("🧹 Removed listener: $event");
   }
 
   @override
@@ -228,7 +228,7 @@ class SocketService extends GetxService {
     _socket?.disconnect();
     _socket?.destroy();
     _socket = null; // ✅ critical — forces full rebuild on next connect
-    log("🔴 Socket manually disconnected");
+    print("🔴 Socket manually disconnected");
   }
   // ═══════════════════════════════════════════════════════════════════════════
   // PARSER
@@ -263,8 +263,8 @@ class SocketService extends GetxService {
       _retryCount = 0;
       _retryTimer?.cancel();
       _retryTimer = null;
-      log("🔁 Retry state reset — socket healthy");
-      log("✅ Socket Connected: ${_socket!.id}");
+      print("🔁 Retry state reset — socket healthy");
+      print("✅ Socket Connected: ${_socket!.id}");
 
       if (!(_connectCompleter?.isCompleted ?? true)) {
         _connectCompleter?.complete();
@@ -280,14 +280,14 @@ class SocketService extends GetxService {
     });
 
     _socket!.onDisconnect((reason) {
-      log("🔌 Disconnected — reason: $reason");
-      log("🔌 Socket disconnected — scheduling retry...");
+      print("🔌 Disconnected — reason: $reason");
+      print("🔌 Socket disconnected — scheduling retry...");
 
       _scheduleRetry();
     });
 
     _socket!.onConnectError((_) {
-      log("❌ Connect error — scheduling retry...");
+      print("❌ Connect error — scheduling retry...");
       _scheduleRetry();
     });
   }
@@ -296,7 +296,7 @@ class SocketService extends GetxService {
     _retryTimer?.cancel();
 
     if (_retryCount >= _maxRetries) {
-      log("🚫 Max retries ($_maxRetries) reached. Giving up.");
+      print("🚫 Max retries ($_maxRetries) reached. Giving up.");
 
       // ✅ NEW
       if (Get.isRegistered<SocketStatusController>()) {
@@ -316,11 +316,11 @@ class SocketService extends GetxService {
       SocketStatusController.to.setReconnecting(_retryCount);
     }
 
-    log("⏳ Retry #$_retryCount in ${delay.inSeconds}s...");
+    print("⏳ Retry #$_retryCount in ${delay.inSeconds}s...");
 
     _retryTimer = Timer(delay, () async {
       if (!isConnected) {
-        log("🔄 Attempting reconnect #$_retryCount...");
+        print("🔄 Attempting reconnect #$_retryCount...");
         try {
           // ✅ Reuse existing socket if still alive
           // if (_socket != null) {
@@ -329,14 +329,14 @@ class SocketService extends GetxService {
           if (_socket != null) {
             _socket!.io.options?['auth'] = {'token': getToken};
 
-            log("🔐 Reconnect token: $getToken");
+            print("🔐 Reconnect token: $getToken");
 
             _socket!.connect();
           } else {
             await connectSocket(); // full rebuild only if socket was destroyed
           }
         } catch (e) {
-          log("❌ Reconnect #$_retryCount failed: $e");
+          print("❌ Reconnect #$_retryCount failed: $e");
         }
       }
     });
@@ -364,7 +364,7 @@ class SocketService extends GetxService {
     }
     _isEnsuringConnection = true;
 
-    log("🔄 Not connected — attempting reconnect before emit...");
+    print("🔄 Not connected — attempting reconnect before emit...");
 
     final completer = Completer<bool>();
     final sub = onConnected.listen((_) {

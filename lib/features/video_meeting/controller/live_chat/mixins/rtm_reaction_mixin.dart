@@ -9,11 +9,12 @@ mixin RtmReactionMixin on GetxController {
   LiveChatController get _self => this as LiveChatController;
 
   RxInt reactionCount = 0.obs;
-  final hearts = <({int id, String emoji})>[].obs; // each int is a unique animation id
+  final hearts =
+      <({int id, String emoji})>[].obs; // each int is a unique animation id
 
   Future<void> sendReaction(String emoji) async {
     Get.back();
-    log('sent emoji : $emoji');
+    print('sent emoji : $emoji');
     if (!_self.isRtmReady.value || _self.rtmClient == null) return;
 
     final payload = jsonEncode({
@@ -30,7 +31,7 @@ mixin RtmReactionMixin on GetxController {
     );
 
     if (status.error) {
-      log('❌ [RTM] Reaction failed: ${status.errorCode}');
+      print('❌ [RTM] Reaction failed: ${status.errorCode}');
       return;
     }
 

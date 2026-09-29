@@ -12,7 +12,7 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    log(' token :$getToken ');
+    print(' token :$getToken ');
 
     getCommunitySpotLight();
     getGentleRemindData();
@@ -87,12 +87,12 @@ class HomeController extends GetxController {
 
       if (data != null) {
         spotLightData.value = data;
-        log(
+        print(
           ' spotlightData : ${spotLightData.value?.communitySpotlight?.name}',
         );
       }
     } catch (e) {
-      log("Error fetch Community SpotLight : $e");
+      print("Error fetch Community SpotLight : $e");
     } finally {
       isSpotLightLoading_.value = false;
     }
@@ -114,10 +114,10 @@ class HomeController extends GetxController {
 
       if (data != null) {
         gentleRemindData.value = data;
-        log(' GentleRemindData : ${gentleRemindData.value?.message}');
+        print(' GentleRemindData : ${gentleRemindData.value?.message}');
       }
     } catch (e) {
-      log("Error fetch Gentle Reminder Data : $e");
+      print("Error fetch Gentle Reminder Data : $e");
     } finally {
       isGentleRemindLoading_.value = false;
     }

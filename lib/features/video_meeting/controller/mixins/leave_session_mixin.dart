@@ -21,7 +21,7 @@ mixin LeaveSessionMixin on GetxController {
 
   /// Called by LiveChatController when host sends REMOTE_KICK targeting this user
   Future<void> leaveSession() async {
-    log('🔴 leaveSession() — kicked by host');
+    print('🔴 leaveSession() — kicked by host');
     await leaveMeeting();
 
     // Navigate away after cleanup
@@ -35,7 +35,7 @@ mixin LeaveSessionMixin on GetxController {
 
   /// Leave channel manually
   Future<void> leaveMeeting() async {
-    log('🔵 leaveMeeting() called');
+    print('🔵 leaveMeeting() called');
 
     _self.isSessionExiting = true;
 
@@ -56,14 +56,14 @@ mixin LeaveSessionMixin on GetxController {
           }),
           channelType: RtmChannelType.message,
         );
-        log('📡 [RTM] HOST_ENDED_LIVE published');
+        print('📡 [RTM] HOST_ENDED_LIVE published');
       } else {
-        log(
+        print(
           '⚠️ [RTM] Chat controller not ready — skipping HOST_ENDED_LIVE publish',
         );
       }
     } catch (e) {
-      log('❌ [RTM] Failed to publish HOST_ENDED_LIVE: $e');
+      print('❌ [RTM] Failed to publish HOST_ENDED_LIVE: $e');
     }
 
     //
@@ -79,27 +79,27 @@ mixin LeaveSessionMixin on GetxController {
     _self.isEngineReady.value = false;
 
     await WakelockPlus.disable(); // 🔥 allow sleep again
-    log('🌙 Wakelock disabled');
+    print('🌙 Wakelock disabled');
 
     if (_self.agoraEngine != null) {
       try {
         await _self.agoraEngine!.leaveChannel();
-        log('✅ Left channel');
+        print('✅ Left channel');
       } catch (e) {
-        log('❌ leaveChannel error: $e');
+        print('❌ leaveChannel error: $e');
       }
 
       try {
         await _self.agoraEngine!.release(sync: true);
-        log('✅ Engine released');
+        print('✅ Engine released');
       } catch (e) {
-        log('❌ release error: $e');
+        print('❌ release error: $e');
       }
 
       _self.agoraEngine = null;
     }
 
     _self.isJoined.value = false;
-    log('✅ leaveMeeting complete');
+    print('✅ leaveMeeting complete');
   }
 }

@@ -64,36 +64,38 @@ class MatchController extends GetxController {
   }
 
   Future<void> _initializeProfile() async {
-    debugPrint('⏳ [MatchController] Initializing profile...');
+    print('⏳ [MatchController] Initializing profile...');
     await fetchWaveLimit();
-    debugPrint('✅ [MatchController] Profile initialized');
+    print('✅ [MatchController] Profile initialized');
   }
 
   // ✅ Update the wave limit check
   bool get isWaveLimitReached {
-    final premium = PremiumAccessService.to;
+    // final premium = PremiumAccessService.to;
 
-    if (!premium.isReady.value) {
-      debugPrint('⚠️  Premium not ready in isWaveLimitReached');
-      return false;
-    }
+    // if (!premium.isReady.value) {
+    //   print('⚠️  Premium not ready in isWaveLimitReached');
+    //   return false;
+    // }
 
-    debugPrint('🔍 isWaveLimitReached check:');
-    debugPrint('   isPremiumUserNow: ${premium.isPremiumUserNow}');
-    debugPrint('   isUnlimited: ${profile.value?.waveLimit?.isUnlimited}');
-    debugPrint('   remainingWaves: $remainingWaves');
+    // print('🔍 isWaveLimitReached check:');
+    // print('   isPremiumUserNow: ${premium.isPremiumUserNow}');
+    // print('   isUnlimited: ${profile.value?.waveLimit?.isUnlimited}');
+    // print('   remainingWaves: $remainingWaves');
 
-    if (premium.isPremiumUserNow) {
-      debugPrint('   → PREMIUM: no limit');
-      return false;
-    }
+    // if (premium.isPremiumUserNow) {
+    //   print('   → PREMIUM: no limit');
+    //   return false;
+    // }
 
-    final isLimited =
-        !(profile.value?.waveLimit?.isUnlimited ?? false) &&
-        remainingWaves <= 0;
+    // final isLimited =
+    //     !(profile.value?.waveLimit?.isUnlimited ?? false) &&
+    //     remainingWaves <= 0;
 
-    debugPrint('   → FREE: limited=$isLimited');
-    return isLimited;
+    // print('   → FREE: limited=$isLimited');
+    // return isLimited;
+
+    return false;
   }
 
   @override
@@ -107,7 +109,7 @@ class MatchController extends GetxController {
   // Homescreen logic
   /*
   Future<void> runLocationPermissionFlow() async {
-    log("📍 MatchController: starting location permission flow");
+    print("📍 MatchController: starting location permission flow");
 
     final result = await AppLocationManager.to.ensureFreshLocation();
 
@@ -127,7 +129,7 @@ class MatchController extends GetxController {
     _isRunningLocationFlow = true;
 
     try {
-      log(
+      print(
         "📍 MatchController: checking location status (service + permission)",
       );
 
@@ -141,9 +143,9 @@ class MatchController extends GetxController {
 
       final isActive = serviceEnabled && hasPermission;
 
-      log("📍 Service enabled: $serviceEnabled");
-      log("📍 Has permission: $hasPermission");
-      log("📍 Overall active: $isActive");
+      print("📍 Service enabled: $serviceEnabled");
+      print("📍 Has permission: $hasPermission");
+      print("📍 Overall active: $isActive");
 
       // ─────────────────────────────────────────────
       // FIRST CHECK
@@ -151,7 +153,7 @@ class MatchController extends GetxController {
       if (_lastKnownLocationActive == null) {
         _lastKnownLocationActive = isActive;
 
-        log(
+        print(
           "📍 First location check: "
           "$isActive → show popup",
         );
@@ -164,7 +166,7 @@ class MatchController extends GetxController {
       // LATER CHECKS
       // ─────────────────────────────────────────────
       if (_lastKnownLocationActive != isActive) {
-        log(
+        print(
           "📍 Location status changed: "
           "$_lastKnownLocationActive → $isActive",
         );
@@ -175,7 +177,7 @@ class MatchController extends GetxController {
         return;
       }
 
-      log(
+      print(
         "📍 Location status unchanged: "
         "$isActive → no popup",
       );
@@ -302,6 +304,7 @@ class MatchController extends GetxController {
   }
 
   bool get isUnlimited =>
+      true ??
       profile.value?.waveLimit?.isUnlimited ??
       false ||
           (PremiumAccessService.to.isReady.value &&
@@ -357,17 +360,17 @@ class MatchController extends GetxController {
   Future<bool> _ensurePremiumServiceReady() async {
     final premiumService = PremiumAccessService.to;
 
-    debugPrint('\n╔════════════════════════════════════════╗');
-    debugPrint('║ [MatchController] SERVICE INIT START   ║');
-    debugPrint('╚════════════════════════════════════════╝');
+    print('\n╔════════════════════════════════════════╗');
+    print('║ [MatchController] SERVICE INIT START   ║');
+    print('╚════════════════════════════════════════╝');
 
-    premiumService.debugPrintFullState();
+    premiumService.printFullState();
 
     // ─────────────────────────────────────────────
     // WAIT FOR PREMIUM SERVICE TO BE READY
     // ─────────────────────────────────────────────
     if (!premiumService.isReady.value) {
-      debugPrint('⏳ [MatchController] Premium service NOT ready, waiting...');
+      print('⏳ [MatchController] Premium service NOT ready, waiting...');
 
       int attempts = 0;
       while (!premiumService.isReady.value && attempts < 50) {
@@ -375,11 +378,11 @@ class MatchController extends GetxController {
         attempts++;
       }
 
-      debugPrint('⏳ [MatchController] Waited $attempts attempts');
+      print('⏳ [MatchController] Waited $attempts attempts');
 
       if (!premiumService.isReady.value) {
-        debugPrint('🔴 [MatchController] Service initialization TIMEOUT');
-        premiumService.debugPrintFullState();
+        print('🔴 [MatchController] Service initialization TIMEOUT');
+        premiumService.printFullState();
 
         if (Get.isDialogOpen ?? false) {
           Get.back();
@@ -388,15 +391,15 @@ class MatchController extends GetxController {
         return false;
       }
 
-      debugPrint('✅ [MatchController] Premium service is now READY');
-      premiumService.debugPrintFullState();
+      print('✅ [MatchController] Premium service is now READY');
+      premiumService.printFullState();
     } else {
-      debugPrint('✅ [MatchController] Premium service already READY');
+      print('✅ [MatchController] Premium service already READY');
     }
 
-    debugPrint('╔════════════════════════════════════════╗');
-    debugPrint('║ [MatchController] SERVICE INIT DONE    ║');
-    debugPrint('╚════════════════════════════════════════╝\n');
+    print('╔════════════════════════════════════════╗');
+    print('║ [MatchController] SERVICE INIT DONE    ║');
+    print('╚════════════════════════════════════════╝\n');
 
     return true;
   }
@@ -413,7 +416,7 @@ class MatchController extends GetxController {
     final serviceReady = await _ensurePremiumServiceReady();
 
     if (!serviceReady) {
-      debugPrint('❌ Premium service failed to initialize');
+      print('❌ Premium service failed to initialize');
       Snack.showError('Failed to initialize. Please try again.');
       return;
     }
@@ -427,21 +430,21 @@ class MatchController extends GetxController {
     final premium = PremiumAccessService.to;
     final isPremium = premium.isPremiumUserNow;
 
-    debugPrint('\n🔍 [MatchController.startSearching] Premium check:');
-    debugPrint('   isPremium: $isPremium');
-    debugPrint('   isWaveLimitReached: $isWaveLimitReached');
-    debugPrint('   remainingWaves: $remainingWaves');
+    print('\n🔍 [MatchController.startSearching] Premium check:');
+    print('   isPremium: $isPremium');
+    print('   isWaveLimitReached: $isWaveLimitReached');
+    print('   remainingWaves: $remainingWaves');
 
     // ❌ FREE user with no waves → block
     if (!isPremium && isWaveLimitReached) {
-      debugPrint('🔒 FREE user hit daily limit');
+      print('🔒 FREE user hit daily limit');
       subUpgradeNeeded.value = true;
       await handleDailyLimitReached();
       return;
     }
 
     // ✅ PREMIUM or FREE with waves remaining → proceed
-    debugPrint(
+    print(
       '✅ User can search: ${isPremium ? "PREMIUM" : "FREE ($remainingWaves waves)"}',
     );
 
@@ -489,22 +492,20 @@ class MatchController extends GetxController {
       _currentMatchIndex = 0;
       matchState.value = MatchState.found;
 
-      debugPrint('📊 Matches loaded: ${fetchedMatches.length}');
-      debugPrint('📊 Current match: ${currentMatch?.name}');
+      print('📊 Matches loaded: ${fetchedMatches.length}');
+      print('📊 Current match: ${currentMatch?.name}');
 
       // ✅ Increment search count for FREE users only
       if (!isPremium) {
         _incrementSearchCount();
-        debugPrint(
-          '📊 Search count incremented: $searchesToday / $freeDailyLimit',
-        );
+        print('📊 Search count incremented: $searchesToday / $freeDailyLimit');
       }
     } on MatchLimitExceededException {
       // Backend final validation
       subUpgradeNeeded.value = true;
       await handleDailyLimitReached();
     } catch (e) {
-      log("❌ startSearching error: $e");
+      print("❌ startSearching error: $e");
 
       if (currentSearchId == _searchId) {
         matchState.value = MatchState.noMatch;
@@ -694,13 +695,13 @@ class MatchController extends GetxController {
       ); // brief transition
       matchState.value = MatchState.found;
 
-      log(
+      print(
         "➡️ Next local match: $_currentMatchIndex / ${fetchedMatches.length - 1} "
         "(${fetchedMatches[_currentMatchIndex].name})",
       );
     } else {
       // List exhausted — fetch fresh batch from API
-      log("🔄 Match list exhausted — fetching new batch from API");
+      print("🔄 Match list exhausted — fetching new batch from API");
       _currentMatchIndex = 0;
       fetchedMatches.clear();
       await startSearching();
@@ -710,7 +711,7 @@ class MatchController extends GetxController {
   Future<void> onTapUpgradeNow() async {
     if (Get.isDialogOpen ?? false) Get.back();
     final result = await Get.toNamed(RoutePaths.subscriptionUpgrade);
-    log("result: $result");
+    print("result: $result");
   }
 }
 

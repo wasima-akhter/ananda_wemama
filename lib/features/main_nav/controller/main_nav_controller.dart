@@ -51,7 +51,7 @@ class MainNavController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    log("🧭 MainNavController onInit");
+    print("🧭 MainNavController onInit");
     _initLocationObserver();
     _initializeAppData();
 
@@ -62,7 +62,7 @@ class MainNavController extends GetxController {
     });
 
     //
-    debugPrint('🔧 [MainNavController] onInit');
+    print('🔧 [MainNavController] onInit');
   }
 
   // new logic
@@ -112,7 +112,7 @@ class MainNavController extends GetxController {
         MatchScreen.showLocationStatusOverlay(isActive: isActive);
       }
 
-      log(
+      print(
         "📍 Match location FIRST CHECK → "
         "active: $isActive, "
         "popup: $showPopupIfChanged",
@@ -131,7 +131,7 @@ class MainNavController extends GetxController {
         MatchScreen.showLocationStatusOverlay(isActive: isActive);
       }
 
-      log(
+      print(
         "📍 Match location CHANGED → "
         "active: $isActive → POPUP",
       );
@@ -139,7 +139,7 @@ class MainNavController extends GetxController {
       return true;
     }
 
-    log(
+    print(
       "📍 Match location UNCHANGED → "
       "active: $isActive → NO POPUP",
     );
@@ -149,7 +149,7 @@ class MainNavController extends GetxController {
 
   //
   void _onOsLocationEnabled() {
-    log("📍 OS: Location turned ON");
+    print("📍 OS: Location turned ON");
 
     if (!_homePermissionFlowDone) return;
 
@@ -169,7 +169,7 @@ class MainNavController extends GetxController {
   }
 
   void _onOsLocationDisabled() {
-    log("📍 OS: Location turned OFF");
+    print("📍 OS: Location turned OFF");
 
     if (!_homePermissionFlowDone) return;
 
@@ -191,7 +191,7 @@ class MainNavController extends GetxController {
   // 🔹 Called by HomeScreen.initState → postFrameCallback
   // ─────────────────────────────
   void notifyHomeFirstBuild() {
-    log(
+    print(
       "🧭 notifyHomeFirstBuild — _homePermissionFlowDone: $_homePermissionFlowDone",
     );
     if (_homePermissionFlowDone) return;
@@ -215,7 +215,7 @@ class MainNavController extends GetxController {
   /*
 // old code
   void _onOsLocationEnabled() {
-    log("📍 OS: Location turned ON");
+    print("📍 OS: Location turned ON");
 
     // ✅ Only react if permission flow is already done —
     // otherwise the flow itself handles the first overlay
@@ -232,7 +232,7 @@ class MainNavController extends GetxController {
   }
 
   void _onOsLocationDisabled() {
-    log("📍 OS: Location turned OFF");
+    print("📍 OS: Location turned OFF");
 
     // ✅ Same guard — ignore if permission flow hasn't completed yet
     if (!_homePermissionFlowDone) return;
@@ -249,7 +249,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
     } catch (e) {
-      log("Background location update failed: $e");
+      print("Background location update failed: $e");
     }
   }
 
@@ -309,7 +309,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<ProfileController>().fetchMyProfile();
     } catch (e) {
-      log("Error loading profile: $e");
+      print("Error loading profile: $e");
     }
   }
 
@@ -321,9 +321,9 @@ class MainNavController extends GetxController {
         // Force-create ChatController if not already created
         final chatCtrl = Get.put(ChatController());
         chatCtrl.getChatList();
-        log("💬 Chat list pre-fetched from MainNav");
+        print("💬 Chat list pre-fetched from MainNav");
       } else {
-        log("⚠️ Socket not connected — skipping chat prefetch");
+        print("⚠️ Socket not connected — skipping chat prefetch");
       }
     }
   }
@@ -332,7 +332,7 @@ class MainNavController extends GetxController {
     try {
       await Get.find<StationLocationController>().getAndSaveInBackendCurrLoc();
     } catch (e) {
-      log("Error fetching location: $e");
+      print("Error fetching location: $e");
     }
   }
 

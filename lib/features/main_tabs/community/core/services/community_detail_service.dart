@@ -19,7 +19,7 @@ class CommunityDetailService extends GetxService {
       apiCall: apiCall,
       parser: (data) {
         final parsedData = CommunityItemDetailModel.fromJson(data);
-        log("parserdata: $parsedData");
+        print("parserdata: $parsedData");
         return parsedData;
       },
     );
@@ -41,14 +41,14 @@ class CommunityDetailService extends GetxService {
     final response = await ApiExecutor().execute<CommentOfPostResponseModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
         final parsedData = CommentOfPostResponseModel.fromJson(data);
 
         return parsedData;
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return response.data;
   }
 
@@ -196,7 +196,7 @@ class CommunityDetailService extends GetxService {
     final response = await ApiExecutor().execute<SinglePostModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("single post parser data: $data");
+        print("single post parser data: $data");
 
         final parsedData = SinglePostModel.fromJson(data);
 
@@ -204,7 +204,7 @@ class CommunityDetailService extends GetxService {
       },
     );
 
-    log("single post response data: ${response.data}");
+    print("single post response data: ${response.data}");
     return response.data;
   }
 }

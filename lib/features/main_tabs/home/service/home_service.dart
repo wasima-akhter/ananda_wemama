@@ -16,9 +16,9 @@ class HomeService extends GetxService {
     final response = await ApiExecutor().execute<CommunitySpotlightModel?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
 
-        log(
+        print(
           ' CommunitySpotlightData.fromJson(data) : ${CommunitySpotlightModel.fromJson(data).communitySpotlight?.createdAt}',
         );
 
@@ -26,7 +26,7 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return response.data;
   }
 
@@ -43,9 +43,9 @@ class HomeService extends GetxService {
     final response = await ApiExecutor().execute<GentleRemindData?>(
       apiCall: apiCall,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
 
-        log(
+        print(
           ' CommunitySpotlightData.fromJson(data) : ${GentleRemindData.fromJson(data).message}',
         );
 
@@ -53,7 +53,7 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return response.data;
   }
 
@@ -70,9 +70,9 @@ class HomeService extends GetxService {
       apiCall: apiCall,
       showSuccessMessage: true,
       parser: (data) {
-        log("parserdata: $data");
+        print("parserdata: $data");
 
-        log(
+        print(
           ' CheckInResponse.fromJson(data) : ${CheckInResponse.fromJson(data).message}',
         );
 
@@ -80,9 +80,9 @@ class HomeService extends GetxService {
       },
     );
 
-    log("response toString: ${response.toString()}");
+    print("response toString: ${response.toString()}");
 
-    log("response data: ${response.data}");
+    print("response data: ${response.data}");
     return response.data;
   }
 }

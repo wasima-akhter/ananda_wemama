@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class ProfileDataModel {
   ProfileDataModel({
     this.id,
@@ -97,7 +95,7 @@ class ProfileDataModel {
     ProfileDobModel? dobObj;
 
     final rawDob = json["DOB"];
-    log(
+    print(
       "rawDob runtimeType: ${rawDob.runtimeType}, value: $rawDob",
     ); // ← add this
     if (rawDob is Map<String, dynamic>) {
@@ -306,8 +304,8 @@ class ProfileDobModel {
   final bool? isPublic;
 
   factory ProfileDobModel.fromJson(Map<String, dynamic> json) {
-    log("----ProfileDobModel raw json: $json");
-    log(
+    print("----ProfileDobModel raw json: $json");
+    print(
       "----isPublic raw value: ${json["isPublic"]} | type: ${json["isPublic"].runtimeType}",
     );
     return ProfileDobModel(

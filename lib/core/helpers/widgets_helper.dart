@@ -319,16 +319,16 @@ String getChildAge(
 FakeUserDetailsModel? mapToUserModel(ProfileDataModel? data) {
   if (data == null) return null;
 
-  log("Mapping data.profileImage: ${data.profileImage} ");
-  log("Mapping data.dobObject?.isPublic: ${data.dobObject?.isPublic} ");
+  print("Mapping data.profileImage: ${data.profileImage} ");
+  print("Mapping data.dobObject?.isPublic: ${data.dobObject?.isPublic} ");
 
-  log("----dobObject isPublic: ${data.dobObject?.isPublic}");
-  log("----dobObject date: ${data.dobObject?.date}");
-  log("----dob flat: ${data.dob}");
-  log("----data hashCode: ${data.hashCode}"); // ← is this the same object?
+  print("----dobObject isPublic: ${data.dobObject?.isPublic}");
+  print("----dobObject date: ${data.dobObject?.date}");
+  print("----dob flat: ${data.dob}");
+  print("----data hashCode: ${data.hashCode}"); // ← is this the same object?
 
   final age = (data.dobObject?.isPublic ?? false) ? calculateAge(data.dob) : 0;
-  log(
+  print(
     "final age: $age | isPublic: ${data.dobObject?.isPublic} | dob: ${data.dob}",
   );
 

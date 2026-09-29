@@ -34,13 +34,13 @@ class SubscriptionInfoScreen extends StatelessWidget {
             //   nextBillingDate: '31 Dec 2026',
             //   willRenew: true,
             //   onManageBilling: () {
-            //     debugPrint('Manage Billing tapped');
+            //     print('Manage Billing tapped');
             //   },
             //   onCancel: () {
-            //     debugPrint('Cancel Subscription tapped');
+            //     print('Cancel Subscription tapped');
             //   },
             //   onViewReceipt: () {
-            //     debugPrint('View Receipt tapped');
+            //     print('View Receipt tapped');
             //   },
             // ),
             // Gap(30),

@@ -209,7 +209,7 @@ Future<List<String>> getTwoLineAddress({
 
   String line2 = placeholder;
 
-  log("getTwoLineAddress called with lat=$latitude, lng=$longitude");
+  print("getTwoLineAddress called with lat=$latitude, lng=$longitude");
 
   // Only attempt reverse geocoding if lat/lng are valid numbers
   if (latitude != null &&
@@ -222,7 +222,7 @@ Future<List<String>> getTwoLineAddress({
 
       if (lat != null && lng != null) {
         final placemarks = await placemarkFromCoordinates(lat, lng);
-        log("placemarks with ${placemarks.toString()}");
+        print("placemarks with ${placemarks.toString()}");
 
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
@@ -254,7 +254,7 @@ Future<String> getOneLineAddress({
   required String longitude,
   String placeholder = "N/A",
 }) async {
-  log("getOneLineAddress called with lat=$latitude, lng=$longitude");
+  print("getOneLineAddress called with lat=$latitude, lng=$longitude");
 
   try {
     final lat = double.tryParse(latitude);
@@ -281,7 +281,7 @@ Future<String> getOneLineAddress({
       }
     }
   } catch (e) {
-    log("Reverse geocoding error: $e");
+    print("Reverse geocoding error: $e");
   }
 
   return placeholder;
@@ -311,7 +311,7 @@ Future<void> downloadFile(
   void Function(double progress)? onProgress,
 ) async {
   try {
-    debugPrint("⬇️ Original URL: $url");
+    print("⬇️ Original URL: $url");
 
     final headResponse = await Dio().head(url);
     final contentType = headResponse.headers.value('content-type') ?? '';
@@ -343,7 +343,7 @@ Future<void> downloadFile(
           final progress = received / total;
           onProgress?.call(progress);
 
-          debugPrint("📥 Progress: ${(progress * 100).toStringAsFixed(0)}%");
+          print("📥 Progress: ${(progress * 100).toStringAsFixed(0)}%");
         }
       },
     );
@@ -367,7 +367,7 @@ Future<void> downloadFile(
     final tempFile = File(tempPath);
     if (await tempFile.exists()) await tempFile.delete();
   } catch (e) {
-    debugPrint("❌ Download error: $e");
+    print("❌ Download error: $e");
     "Download failed".showToast();
   }
 }
@@ -394,11 +394,11 @@ Future<void> _saveToDownloads({
 
     final savedFile = await File(tempPath).copy(savePath);
 
-    debugPrint("✅ File saved at: ${savedFile.path}");
+    print("✅ File saved at: ${savedFile.path}");
 
     Snack.showSuccess("File saved successfully");
   } catch (e) {
-    debugPrint("❌ Save error: $e");
+    print("❌ Save error: $e");
     "Failed to save file".showToast();
   }
 }

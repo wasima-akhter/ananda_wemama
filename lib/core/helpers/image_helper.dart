@@ -270,13 +270,13 @@ class MultipartHelper {
   static Future<dio.MultipartFile?> compressedImage(File file) async {
     final compressed = await ImageCompressor.compressUntilUnder1MB(file);
     if (compressed == null) {
-      log("Image compression failed");
+      print("Image compression failed");
       return null;
     }
     final bytes = await compressed.readAsBytes();
-    log("Compressed path: ${compressed.path}");
-    log("Compressed exists: ${await compressed.exists()}");
-    log("Compressed size: ${await compressed.length()}");
+    print("Compressed path: ${compressed.path}");
+    print("Compressed exists: ${await compressed.exists()}");
+    print("Compressed size: ${await compressed.length()}");
     final filename = compressed.path.split('/').last;
     return dio.MultipartFile.fromBytes(bytes, filename: filename);
   }
@@ -290,12 +290,12 @@ class MultipartHelper {
       final target = compressed ?? file;
       final bytes = await target.readAsBytes();
       final filename = target.path.split('/').last;
-      log("🖼️ Image compressed: ${bytes.length} bytes — $filename");
+      print("🖼️ Image compressed: ${bytes.length} bytes — $filename");
       return dio.MultipartFile.fromBytes(bytes, filename: filename);
     } else {
       final bytes = await file.readAsBytes();
       final filename = xfile.name;
-      log("📎 File (raw): ${bytes.length} bytes — $filename");
+      print("📎 File (raw): ${bytes.length} bytes — $filename");
       return dio.MultipartFile.fromBytes(bytes, filename: filename);
     }
   }
@@ -305,14 +305,14 @@ class MultipartHelper {
     final compressed = await ImageCompressor.compressUntilUnder1MB(file);
 
     if (compressed == null) {
-      log("Image compression failed");
+      print("Image compression failed");
       return null;
     }
 
-    log("Compressed path: ${compressed.path}");
-    log("Compressed exists: ${await compressed.exists()}");
+    print("Compressed path: ${compressed.path}");
+    print("Compressed exists: ${await compressed.exists()}");
 
-    log("Compressed size: ${await compressed.length()}");
+    print("Compressed size: ${await compressed.length()}");
 
     return compressed;
   }

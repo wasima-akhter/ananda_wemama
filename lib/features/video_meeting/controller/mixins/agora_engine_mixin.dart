@@ -31,18 +31,22 @@ mixin AgoraEngineMixin on GetxController {
 
   /// -------------------- Start Flow -------------------- ///
   Future<void> hostMeeting() async {
-    log('🔵 [1] hostMeeting() started');
-
+    print('🔴 ===== HOSTMEETING CALLED ====='); // Move to the VERY FIRST line
+    print(
+      '🔴 ===== print HOSTMEETING CALLED =====',
+    ); // Move to the VERY FIRST line
+    print('🔵 [1] hostMeeting() started');
+    print('🔵 [1] hostMeeting() started');
     hasVideoInitError.value = false;
 
     /// Step 1: Fetch token & session data
     await _self.getSessionsInfo();
 
-    log('🔵 [2] sessionInfo after fetch:');
-    log('   channelName: ${_self.sessionInfo.value.channelName}');
-    log('   rtmToken: ${_self.sessionInfo.value.rtmToken}');
-    log('   rtc_Token: ${_self.sessionInfo.value.rtcToken}');
-    log('   uid: ${_self.sessionInfo.value.uid}');
+    print('🔵 [2] sessionInfo after fetch:');
+    print('   channelName: ${_self.sessionInfo.value.channelName}');
+    print('   rtmToken: ${_self.sessionInfo.value.rtmToken}');
+    print('   rtc_Token: ${_self.sessionInfo.value.rtcToken}');
+    print('   uid: ${_self.sessionInfo.value.uid}');
 
     final fetchedRtmToken = _self.sessionInfo.value.rtmToken;
     final fetchedRtcToken = _self.sessionInfo.value.rtcToken;
@@ -51,18 +55,18 @@ mixin AgoraEngineMixin on GetxController {
 
     /// 🔴 Safety checks (must have valid data)
     if (fetchedRtmToken == null || fetchedRtmToken.isEmpty) {
-      log('❌ Token is null or empty!');
+      print('❌ Token is null or empty!');
       hasVideoInitError.value = true;
       return;
     }
 
     if (fetchedChannel == null || fetchedChannel.isEmpty) {
-      log('❌ ChannelName is null or empty!');
+      print('❌ ChannelName is null or empty!');
       hasVideoInitError.value = true;
       return;
     }
     if (fetchedRtcToken == null || fetchedRtcToken.isEmpty) {
-      log('❌ fetchedRtcToken is null or empty!');
+      print('❌ fetchedRtcToken is null or empty!');
       hasVideoInitError.value = true;
       return;
     }
@@ -74,11 +78,11 @@ mixin AgoraEngineMixin on GetxController {
     _self.uid.value = fetchedUid ?? 0;
     _self.appId.value = AgoraConfig.appId;
 
-    log('🔵 [3] appId: ${_self.appId.value}');
-    log('🔵 [3] rtm token: ${_self.rtmToken.value}');
-    log('🔵 [3] rtcToken: ${_self.rtcToken.value}');
-    log('🔵 [3] channel: ${_self.channelName.value}');
-    log('🔵 [3] uid: ${_self.uid.value}');
+    print('🔵 [3] appId: ${_self.appId.value}');
+    print('🔵 [3] rtm token: ${_self.rtmToken.value}');
+    print('🔵 [3] rtcToken: ${_self.rtcToken.value}');
+    print('🔵 [3] channel: ${_self.channelName.value}');
+    print('🔵 [3] uid: ${_self.uid.value}');
 
     /// Step 3: Initialize Agora
     await initAgora();
@@ -90,34 +94,37 @@ mixin AgoraEngineMixin on GetxController {
 
   Timer? _videoFrozenDebounceTimer;
 
+  Timer? _watchdogTimer;
+
   final hostUid = RxnInt(); // ✅ nullable int
   Future<void> initAgora() async {
-    log('🔵 [4] initAgora() started');
+    print('🔵 [4] initAgora() started');
 
     final granted = await requestPermissions();
 
     if (granted) {
       // your codes here
 
-      log('🔵 [5] Permissions granted');
+      print('🔵 [5] Permissions granted');
 
       final engine = createAgoraRtcEngine();
 
       // ✅ Release any stale native engine
       try {
         await engine.release(sync: true);
-        log('✅ Pre-release done');
+        print('✅ Pre-release done');
       } catch (e) {
-        log('⚠️ Pre-release skipped: $e');
+        print('⚠️ Pre-release skipped: $e');
       }
 
-      await Future.delayed(const Duration(milliseconds: 300));
+      // 🔴 FIX: Add a longer delay in Release builds
+      await Future.delayed(const Duration(milliseconds: 500));
 
       try {
         await engine.initialize(RtcEngineContext(appId: _self.appId.value));
-        log('🔵 [6] Engine initialized');
+        print('🔵 [6] Engine initialized');
       } catch (e) {
-        log('❌ Engine init FAILED: $e');
+        print('❌ Engine init FAILED: $e');
         return;
       }
 
@@ -125,9 +132,9 @@ mixin AgoraEngineMixin on GetxController {
         await engine.setChannelProfile(
           ChannelProfileType.channelProfileLiveBroadcasting,
         );
-        log('✅ setChannelProfile done');
+        print('✅ setChannelProfile done');
       } catch (e) {
-        log('❌ setChannelProfile FAILED: $e');
+        print('❌ setChannelProfile FAILED: $e');
         return;
       }
 
@@ -139,9 +146,9 @@ mixin AgoraEngineMixin on GetxController {
                 AudienceLatencyLevelType.audienceLatencyLevelLowLatency,
           ),
         );
-        log('✅ setClientRole AUDIENCE done');
+        print('✅ setClientRole AUDIENCE done');
       } catch (e) {
-        log('❌ setClientRole FAILED: $e');
+        print('❌ setClientRole FAILED: $e');
         return;
       }
 
@@ -153,21 +160,22 @@ mixin AgoraEngineMixin on GetxController {
           profile: AudioProfileType.audioProfileDefault,
           scenario: AudioScenarioType.audioScenarioGameStreaming,
         );
-        log('✅ Audio/Video enabled');
+        print('✅ Audio/Video enabled');
       } catch (e) {
-        log('❌ Audio/Video setup FAILED: $e');
+        print('❌ Audio/Video setup FAILED: $e');
         return;
       }
 
       // ✅ CRITICAL: assign engine BEFORE registering handlers and joining
       // so that onUserJoined, onJoinChannelSuccess etc. can use agoraEngine
       _self.agoraEngine = engine;
-
+      // 🔴 FIX: Add delay BEFORE registering event handlers
+      await Future.delayed(const Duration(milliseconds: 300));
       engine.registerEventHandler(
         RtcEngineEventHandler(
           // Agora engine error (add inside onError handler)
           onError: (err, msg) {
-            log('❌ Agora Error: $err - $msg');
+            print('❌ Agora Error: $err - $msg');
             // Only show popup for fatal errors, not minor ones
             final fatalCodes = [
               17,
@@ -184,7 +192,7 @@ mixin AgoraEngineMixin on GetxController {
           },
           onJoinChannelSuccess: (connection, elapsed) async {
             try {
-              log(
+              print(
                 '✅ Joined: ${connection.channelId}, uid: ${connection.localUid}',
               );
               _self.isJoined.value = true;
@@ -195,10 +203,10 @@ mixin AgoraEngineMixin on GetxController {
               await _self.agoraEngine?.muteAllRemoteAudioStreams(false);
 
               await WakelockPlus.enable(); // 🔥 keep screen ON
-              log('🌙 Wakelock enabled');
-              log('✅ Speaker on, volume boosted');
+              print('🌙 Wakelock enabled');
+              print('✅ Speaker on, volume boosted');
             } catch (e) {
-              log('❌ onJoinChannelSuccess handler error: $e');
+              print('❌ onJoinChannelSuccess handler error: $e');
             }
           },
 
@@ -218,11 +226,11 @@ mixin AgoraEngineMixin on GetxController {
           /*
           onUserJoined: (connection, uid, elapsed) async {
             try {
-              log('🎥 Host joined: uid=$uid');
+             print('🎥 Host joined: uid=$uid');
 
               if (hostUid.value == null) {
                 hostUid.value = uid;
-                log('🎯 Assigned HOST uid=$uid');
+               print('🎯 Assigned HOST uid=$uid');
               }
 
               if (!_self.remoteUids.contains(uid)) {
@@ -240,14 +248,14 @@ mixin AgoraEngineMixin on GetxController {
                 _self.startSessionTimer();
               }
             } catch (e) {
-              log('❌ onUserJoined handler error: $e');
+             print('❌ onUserJoined handler error: $e');
             }
           },
          */
           /*
           onUserOffline: (connection, uid, reason) async {
             try {
-              log('⚠️ Host left: uid=$uid, reason=$reason');
+             print('⚠️ Host left: uid=$uid, reason=$reason');
               _self.remoteUids.remove(uid);
               if (uid == hostUid.value) {
                 _self.isSessionExiting = true;
@@ -262,13 +270,22 @@ mixin AgoraEngineMixin on GetxController {
                 showLiveExitPopup(LiveExitReason.ended);
               }
             } catch (e) {
-              log('❌ onUserOffline handler error: $e');
+             print('❌ onUserOffline handler error: $e');
             }
           },
 */
           onUserJoined: (connection, uid, elapsed) async {
             try {
-              log('🎥 Host joined: uid=$uid');
+              print('🎥 Host joined: uid=$uid');
+
+              // 🔴 FIX: Use dart:developer log instead of print for Release builds
+              print('🎥 ===== CRITICAL: onUserJoined fired: uid=$uid =====');
+              print('🎥 hostUid before: ${hostUid.value}');
+
+              if (hostUid.value == null) {
+                hostUid.value = uid;
+                print('🎥 ✅ Set hostUid to: $uid');
+              }
 
               if (hostUid.value == null) {
                 hostUid.value = uid;
@@ -281,12 +298,12 @@ mixin AgoraEngineMixin on GetxController {
                         VideoViewSetupMode.videoViewSetupReplace, // ✅ FIXED
                   ),
                 );
-                log('✅ Remote video renderer set up for uid=$uid');
+                print('✅ Remote video renderer set up for uid=$uid');
               }
 
               // Cancel any pending grace timer (host reconnected in time)
               if (_hostOfflineGraceTimer != null) {
-                log(
+                print(
                   '🟢 Host rejoined before grace period expired — cancelling end flow',
                 );
                 _hostOfflineGraceTimer?.cancel();
@@ -297,7 +314,7 @@ mixin AgoraEngineMixin on GetxController {
               // "ended" (grace period had fully expired and popup shown),
               // but the host has now genuinely rejoined the same live.
               if (_hasEndedDueToTimeout || _isEndedPopupShowing) {
-                log(
+                print(
                   '🟢 Host rejoined AFTER grace period expired — reopening session, dismissing end popup',
                 );
                 // 👇 close THIS specific dialog via its own captured context
@@ -319,7 +336,7 @@ mixin AgoraEngineMixin on GetxController {
 
               if (hostUid.value == null) {
                 hostUid.value = uid;
-                log('🎯 Assigned HOST uid=$uid');
+                print('🎯 Assigned HOST uid=$uid');
               }
 
               if (!_self.remoteUids.contains(uid)) {
@@ -335,23 +352,23 @@ mixin AgoraEngineMixin on GetxController {
                 _self.startSessionTimer();
               }
             } catch (e) {
-              log('❌ onUserJoined handler error: $e');
+              print('❌ onUserJoined handler error: $e');
             }
           },
 
           onUserOffline: (connection, uid, reason) async {
             try {
-              log('⚠️ Host left: uid=$uid, reason=$reason');
+              print('⚠️ Host left: uid=$uid, reason=$reason');
               _self.remoteUids.remove(uid);
 
               if (uid == hostUid.value) {
-                log(
+                print(
                   '🟡 Host disconnected — waiting ${_hostOfflineGraceDuration.inSeconds}s to confirm real end',
                 );
 
                 _hostOfflineGraceTimer?.cancel();
                 _hostOfflineGraceTimer = Timer(_hostOfflineGraceDuration, () async {
-                  log(
+                  print(
                     '🟡 Host still offline after grace period — showing reconnecting popup, keeping engine joined so it can catch the host\'s rejoin',
                   );
 
@@ -362,7 +379,8 @@ mixin AgoraEngineMixin on GetxController {
                   // (a real HOST_ENDED_LIVE) should tear the engine down.
                   _self.stopSessionTimer();
 
-                  await Future.delayed(const Duration(milliseconds: 300));
+                  // 🔴 FIX: Add a longer delay in Release builds
+                  await Future.delayed(const Duration(milliseconds: 500));
 
                   _isEndedPopupShowing = true;
                   _hasEndedDueToTimeout = true;
@@ -386,7 +404,7 @@ mixin AgoraEngineMixin on GetxController {
                 });
               }
             } catch (e) {
-              log('❌ onUserOffline handler error: $e');
+              print('❌ onUserOffline handler error: $e');
             }
           },
 
@@ -397,17 +415,17 @@ mixin AgoraEngineMixin on GetxController {
             }
           },
           onTokenPrivilegeWillExpire: (connection, token) {
-            log('⚠️ Token expiring soon — refresh needed');
+            print('⚠️ Token expiring soon — refresh needed');
             // TODO: call backend to refresh token, then renewToken()
           },
 
           onConnectionStateChanged: (connection, state, reason) {
-            log('🔵 Connection: $state, reason: $reason');
+            print('🔵 Connection: $state, reason: $reason');
 
             // ✅ Handle unexpected disconnects
             // 🚨 KEY FIX
             if (_self.isSessionExiting) {
-              log('🟡 Ignoring connection change (intentional exit)');
+              print('🟡 Ignoring connection change (intentional exit)');
               return;
             }
 
@@ -421,7 +439,7 @@ mixin AgoraEngineMixin on GetxController {
           //     (connection, remoteUid, state, reason, elapsed) {
           //       if (remoteUid != hostUid.value) return;
           //       try {
-          //         log('🎥 Video state: uid=$remoteUid, state=$state');
+          //        print('🎥 Video state: uid=$remoteUid, state=$state');
           //         if (state == RemoteVideoState.remoteVideoStateStopped) {
           //           _self.isHostVideoOn.value = false;
           //         } else if (state ==
@@ -429,13 +447,13 @@ mixin AgoraEngineMixin on GetxController {
           //           _self.isHostVideoOn.value = true;
           //         }
           //       } catch (e) {
-          //         log('❌ onRemoteVideoStateChanged error: $e');
+          //        print('❌ onRemoteVideoStateChanged error: $e');
           //       }
           //     },
           onRemoteVideoStateChanged: (connection, remoteUid, state, reason, elapsed) {
             if (remoteUid != hostUid.value) return;
 
-            debugPrint(
+            print(
               '🎥 REMOTE VIDEO | '
               'uid=$remoteUid | '
               'state=$state | '
@@ -445,7 +463,7 @@ mixin AgoraEngineMixin on GetxController {
 
             switch (state) {
               case RemoteVideoState.remoteVideoStateStarting:
-                debugPrint(
+                print(
                   '🟡 REMOTE VIDEO STARTING | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -454,20 +472,20 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _videoOffDebounceTimer?.cancel();
-                debugPrint('🟡 REMOTE VIDEO | Off debounce timer cancelled');
+                print('🟡 REMOTE VIDEO | Off debounce timer cancelled');
 
                 _videoFrozenDebounceTimer?.cancel();
-                debugPrint('🟡 REMOTE VIDEO | Frozen debounce timer cancelled');
+                print('🟡 REMOTE VIDEO | Frozen debounce timer cancelled');
 
                 _self.isHostVideoOn.value = VideoStatus.loading;
 
-                debugPrint(
+                print(
                   '🟡 REMOTE VIDEO | isHostVideoOn=${_self.isHostVideoOn.value}',
                 );
                 break;
 
               case RemoteVideoState.remoteVideoStateDecoding:
-                debugPrint(
+                print(
                   '🟢 REMOTE VIDEO DECODING | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -476,21 +494,21 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _videoOffDebounceTimer?.cancel();
-                debugPrint('🟢 REMOTE VIDEO | Off debounce timer cancelled');
+                print('🟢 REMOTE VIDEO | Off debounce timer cancelled');
 
                 _videoFrozenDebounceTimer?.cancel();
-                debugPrint('🟢 REMOTE VIDEO | Frozen debounce timer cancelled');
+                print('🟢 REMOTE VIDEO | Frozen debounce timer cancelled');
 
                 _self.isHostVideoOn.value = VideoStatus.on;
 
-                debugPrint(
+                print(
                   '🟢 REMOTE VIDEO | isHostVideoOn=${_self.isHostVideoOn.value}',
                 );
                 break;
 
               /*
               case RemoteVideoState.remoteVideoStateFrozen:
-                debugPrint(
+                print(
                   '🟠 REMOTE VIDEO FROZEN | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -499,12 +517,12 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _videoFrozenDebounceTimer?.cancel();
-                debugPrint('🟠 REMOTE VIDEO | Previous frozen timer cancelled');
+                print('🟠 REMOTE VIDEO | Previous frozen timer cancelled');
 
                 _videoFrozenDebounceTimer = Timer(
                   const Duration(milliseconds: 2000),
                   () {
-                    debugPrint(
+                    print(
                       '🟠 REMOTE VIDEO FROZEN TIMEOUT | '
                       'uid=$remoteUid | '
                       'Frozen for 2000ms',
@@ -513,12 +531,12 @@ mixin AgoraEngineMixin on GetxController {
                     if (_self.isHostVideoOn.value != VideoStatus.off) {
                       _self.isHostVideoOn.value = VideoStatus.frozen;
 
-                      debugPrint(
+                      print(
                         '🟠 REMOTE VIDEO | '
                         'isHostVideoOn=${_self.isHostVideoOn.value}',
                       );
                     } else {
-                      debugPrint(
+                      print(
                         '🟠 REMOTE VIDEO | '
                         'Already OFF, keeping VideoStatus.off',
                       );
@@ -526,7 +544,7 @@ mixin AgoraEngineMixin on GetxController {
                   },
                 );
 
-                debugPrint('🟠 REMOTE VIDEO | Frozen debounce timer started');
+                print('🟠 REMOTE VIDEO | Frozen debounce timer started');
                 break;
 */
               case RemoteVideoState.remoteVideoStateFrozen:
@@ -534,7 +552,7 @@ mixin AgoraEngineMixin on GetxController {
                 if (reason ==
                     RemoteVideoStateReason
                         .remoteVideoStateReasonNetworkCongestion) {
-                  debugPrint(
+                  print(
                     '⚠️ Network congestion detected (${elapsed}ms) - '
                     'keeping last frame visible, not showing frozen UI',
                   );
@@ -542,7 +560,7 @@ mixin AgoraEngineMixin on GetxController {
                   break;
                 }
 
-                debugPrint(
+                print(
                   '🟠 REMOTE VIDEO FROZEN | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -557,7 +575,7 @@ mixin AgoraEngineMixin on GetxController {
                     if (_self.isHostVideoOn.value != VideoStatus.off) {
                       _self.isHostVideoOn.value = VideoStatus.frozen;
 
-                      debugPrint(
+                      print(
                         '🟠 REMOTE VIDEO | '
                         'Frozen for 2s | '
                         'isHostVideoOn=${_self.isHostVideoOn.value}',
@@ -569,7 +587,7 @@ mixin AgoraEngineMixin on GetxController {
 
               //
               case RemoteVideoState.remoteVideoStateStopped:
-                debugPrint(
+                print(
                   '🔴 REMOTE VIDEO STOPPED | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -578,15 +596,15 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _videoOffDebounceTimer?.cancel();
-                debugPrint('🔴 REMOTE VIDEO | Previous off timer cancelled');
+                print('🔴 REMOTE VIDEO | Previous off timer cancelled');
 
                 _videoFrozenDebounceTimer?.cancel();
-                debugPrint('🔴 REMOTE VIDEO | Frozen timer cancelled');
+                print('🔴 REMOTE VIDEO | Frozen timer cancelled');
 
                 _videoOffDebounceTimer = Timer(
                   const Duration(milliseconds: 3000),
                   () {
-                    debugPrint(
+                    print(
                       '🔴 REMOTE VIDEO STOPPED TIMEOUT | '
                       'uid=$remoteUid | '
                       '3000ms elapsed | '
@@ -595,18 +613,18 @@ mixin AgoraEngineMixin on GetxController {
 
                     _self.isHostVideoOn.value = VideoStatus.off;
 
-                    debugPrint(
+                    print(
                       '🔴 REMOTE VIDEO | '
                       'isHostVideoOn=${_self.isHostVideoOn.value}',
                     );
                   },
                 );
 
-                debugPrint('🔴 REMOTE VIDEO | Off debounce timer started');
+                print('🔴 REMOTE VIDEO | Off debounce timer started');
                 break;
 
               case RemoteVideoState.remoteVideoStateFailed:
-                debugPrint(
+                print(
                   '❌ REMOTE VIDEO FAILED | '
                   'uid=$remoteUid | '
                   'reason=$reason | '
@@ -615,15 +633,15 @@ mixin AgoraEngineMixin on GetxController {
                 );
 
                 _videoOffDebounceTimer?.cancel();
-                debugPrint('❌ REMOTE VIDEO | Previous off timer cancelled');
+                print('❌ REMOTE VIDEO | Previous off timer cancelled');
 
                 _videoFrozenDebounceTimer?.cancel();
-                debugPrint('❌ REMOTE VIDEO | Frozen timer cancelled');
+                print('❌ REMOTE VIDEO | Frozen timer cancelled');
 
                 _videoOffDebounceTimer = Timer(
                   const Duration(milliseconds: 3000),
                   () {
-                    debugPrint(
+                    print(
                       '❌ REMOTE VIDEO FAILED TIMEOUT | '
                       'uid=$remoteUid | '
                       '3000ms elapsed | '
@@ -632,18 +650,18 @@ mixin AgoraEngineMixin on GetxController {
 
                     _self.isHostVideoOn.value = VideoStatus.off;
 
-                    debugPrint(
+                    print(
                       '❌ REMOTE VIDEO | '
                       'isHostVideoOn=${_self.isHostVideoOn.value}',
                     );
                   },
                 );
 
-                debugPrint('❌ REMOTE VIDEO | Off debounce timer started');
+                print('❌ REMOTE VIDEO | Off debounce timer started');
                 break;
 
               default:
-                debugPrint(
+                print(
                   '⚪ REMOTE VIDEO UNKNOWN STATE | '
                   'uid=$remoteUid | '
                   'state=$state | '
@@ -656,7 +674,7 @@ mixin AgoraEngineMixin on GetxController {
           // onRemoteAudioStateChanged:
           //     (connection, remoteUid, state, reason, elapsed) {
           //       try {
-          //         log('🔊 Audio state: uid=$remoteUid, state=$state');
+          //        print('🔊 Audio state: uid=$remoteUid, state=$state');
 
           //         if (state == RemoteAudioState.remoteAudioStateStopped ||
           //             state == RemoteAudioState.remoteAudioStateFailed) {
@@ -668,16 +686,16 @@ mixin AgoraEngineMixin on GetxController {
           //           // ✅ Re-apply speaker AFTER audio track is active
           //           // This defeats Android's audio re-routing after track starts
           //           _self.agoraEngine?.setEnableSpeakerphone(true).then((_) {
-          //             log('🔊 Speaker re-applied after decode started');
+          //            print('🔊 Speaker re-applied after decode started');
           //           });
           //         }
           //       } catch (e) {
-          //         log('❌ onRemoteAudioStateChanged error: $e');
+          //        print('❌ onRemoteAudioStateChanged error: $e');
           //       }
           //     },
           onRemoteAudioStateChanged:
               (connection, uid, state, reason, elapsed) async {
-                log('🔊 Audio state: uid=$uid, state=$state, reason=$reason');
+                print('🔊 Audio state: uid=$uid, state=$state, reason=$reason');
 
                 // Audio stopped or failed — force a re-subscribe cycle
                 if (state == RemoteAudioState.remoteAudioStateStopped ||
@@ -689,35 +707,38 @@ mixin AgoraEngineMixin on GetxController {
                       uid: uid,
                       mute: true,
                     );
-                    await Future.delayed(const Duration(milliseconds: 300));
+                    await Future.delayed(const Duration(milliseconds: 500));
                     await _self.agoraEngine?.muteRemoteAudioStream(
                       uid: uid,
                       mute: false,
                     );
-                    log('🔄 Re-subscribed audio for uid=$uid');
+                    print('🔄 Re-subscribed audio for uid=$uid');
                   } catch (e) {
-                    log('❌ Re-subscribe error: $e');
+                    print('❌ Re-subscribe error: $e');
                   }
                 }
               },
           onClientRoleChanged: (connection, oldRole, newRole, newRoleOptions) {
-            log('🔄 Role: $oldRole → $newRole');
+            print('🔄 Role: $oldRole → $newRole');
           },
 
           onRemoteAudioStats: (connection, stats) {
-            log(
+            print(
               '📊 [AUDIO STATS] uid=${stats.uid} | bitrate=${stats.receivedBitrate} | quality=${stats.quality}',
             );
           },
 
           onAudioSubscribeStateChanged:
               (channel, uid, oldState, newState, elapsed) {
-                log('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
+                print('🔊 [AUDIO SUB] uid=$uid | $oldState → $newState');
               },
         ),
       );
 
-      log('🔵 Joining channel...');
+      print('🔵 Joining channel...');
+
+      // 🔴 FIX: Add another delay BEFORE joining channel
+      await Future.delayed(const Duration(milliseconds: 300));
 
       await engine.joinChannel(
         token: _self.rtcToken.value,
@@ -736,7 +757,22 @@ mixin AgoraEngineMixin on GetxController {
 
       // ✅ No audio calls here — moved to onJoinChannelSuccess
       _self.isEngineReady.value = true;
-      log('🔵 Engine ready');
+      print('🔵 Engine ready');
+
+      // 🔴 NEW: Add watchdog that forces checks
+      _watchdogTimer = Timer.periodic(const Duration(seconds: 3), (_) {
+        if (!_self.isEngineReady.value) return;
+
+        print(
+          '🔍 [WATCHDOG] hostUid: ${hostUid.value}, remoteUids: ${_self.remoteUids.length}',
+        );
+
+        // If still no host after 10 seconds, something is wrong
+        if (hostUid.value == null && _self.remoteUids.isEmpty) {
+          print('⚠️ [WATCHDOG] No users detected after long delay');
+          // Optionally restart
+        }
+      });
     } else {
       // optional extra handling
     }
@@ -775,20 +811,20 @@ mixin AgoraEngineMixin on GetxController {
     _self.isEngineReady.value = false;
 
     await WakelockPlus.disable();
-    log('🌙 Wakelock disabled (engine-only release)');
+    print('🌙 Wakelock disabled (engine-only release)');
 
     if (_self.agoraEngine != null) {
       try {
         await _self.agoraEngine!.leaveChannel();
-        log('✅ Left channel (engine-only release)');
+        print('✅ Left channel (engine-only release)');
       } catch (e) {
-        log('❌ leaveChannel error: $e');
+        print('❌ leaveChannel error: $e');
       }
       try {
         await _self.agoraEngine!.release(sync: true);
-        log('✅ Engine released (engine-only release)');
+        print('✅ Engine released (engine-only release)');
       } catch (e) {
-        log('❌ release error: $e');
+        print('❌ release error: $e');
       }
       _self.agoraEngine = null;
     }
@@ -802,7 +838,7 @@ mixin AgoraEngineMixin on GetxController {
     if (_hasConfirmedHostEnded) return;
     if (_hasEndedDueToTimeout) return; // already handled
 
-    log('🔴 [RTM] Host confirmed end — skipping grace timer');
+    print('🔴 [RTM] Host confirmed end — skipping grace timer');
     _hostOfflineGraceTimer?.cancel();
     _hostOfflineGraceTimer = null;
 
@@ -825,7 +861,8 @@ mixin AgoraEngineMixin on GetxController {
     // to keep holding the channel/wakelock while the popup is up.
     await _releaseEngineOnly();
 
-    await Future.delayed(const Duration(milliseconds: 300));
+    // 🔴 FIX: Add a longer delay in Release builds
+    await Future.delayed(const Duration(milliseconds: 500));
 
     _isEndedPopupShowing = true;
     _hasEndedDueToTimeout = true;
@@ -847,5 +884,7 @@ mixin AgoraEngineMixin on GetxController {
     _isEndedPopupShowing = false;
     _hasEndedDueToTimeout = false;
     _endedPopupContext = null;
+
+    _watchdogTimer?.cancel();
   }
 }

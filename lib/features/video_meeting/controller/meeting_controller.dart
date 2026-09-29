@@ -85,7 +85,7 @@ class MeetingController extends GetxController
   @override
   void onInit() {
     /// Initial channel from navigation
-    log('channelname arg: ${agrModel.channelname}');
+    print('channelname arg: ${agrModel.channelname}');
 
     channelName.value = agrModel.channelname;
 
@@ -100,15 +100,24 @@ class MeetingController extends GetxController
 
   @override
   void onReady() {
+    print('🔴 ===== ONREADY CALLED ====='); // Add this at the TOP
+    print('🔴 ===== ONREADY CALLED ====='); // Add this at the TOP
     super.onReady();
 
-    /// -->  Entry point of live flow
-    hostMeeting();
+    print('🔴 About to call hostMeeting()'); // Add this
+    try {
+      hostMeeting();
+    } catch (e) {
+      print('❌ hostMeeting() threw exception: $e');
+    }
+    print(
+      '🔴 hostMeeting() call completed',
+    ); // This will be async so may fire before hostMeeting actually completes
   }
 
   @override
   void onClose() async {
-    log('🔵 onClose called');
+    print('🔵 onClose called');
     await leaveMeeting(); // reuse the same logic
     disposeAgoraEngineMixin();
     inputMsgCtrl.dispose();

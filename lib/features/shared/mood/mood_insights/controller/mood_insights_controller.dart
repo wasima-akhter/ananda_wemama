@@ -31,7 +31,7 @@ class MoodInsightsController extends GetxController {
       final items = mlc.moodReadingItems[passedMoodType] ?? [];
       item.value = items.firstWhereOrNull((e) => e.id == itemId);
     } catch (e) {
-      log("Error loading mood insight: $e");
+      print("Error loading mood insight: $e");
       item.value = null;
     } finally {
       isLoading.value = false;

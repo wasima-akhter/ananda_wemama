@@ -1,5 +1,3 @@
-import 'dart:developer' show log;
-
 import 'package:get/get.dart';
 import 'package:we_mama/core/models/ui/common_data_models.dart';
 import 'package:we_mama/features/more/about/controller/about_controller.dart';
@@ -317,7 +315,7 @@ class CommunityDetailBinding extends Bindings {
     final communityItemId = args?['communityItemId'] as String?;
 
     if (communityItemId == null || communityItemId.isEmpty) {
-      log("❌ [CommunityDetailBinding] Missing communityItemId — args: $args");
+      print("❌ [CommunityDetailBinding] Missing communityItemId — args: $args");
       // Either redirect to a fallback screen or show an error state
       Get.offAllNamed(RoutePaths.mainNav);
       return;
@@ -358,14 +356,14 @@ class PostDetailsBinding extends Bindings {
       final communityId = args.communityId;
       final postId = args.postId;
 
-      log(
+      print(
         '[PostDetailsBinding] communityId: $communityId, '
         'postId: $postId',
       );
 
       if (communityId.isNotEmpty) {
         if (!Get.isRegistered<CommunityDetailController>()) {
-          log(
+          print(
             '[PostDetailsBinding] Creating CommunityDetailController '
             'for $communityId',
           );
@@ -377,7 +375,7 @@ class PostDetailsBinding extends Bindings {
           final existing = Get.find<CommunityDetailController>();
 
           if (existing.communityItemId != communityId) {
-            log(
+            print(
               '[PostDetailsBinding] Replacing stale CommunityDetailController '
               'for ${existing.communityItemId} with $communityId',
             );
@@ -390,14 +388,14 @@ class PostDetailsBinding extends Bindings {
           }
         }
       } else {
-        log('⚠️ [PostDetailsBinding] Missing communityId');
+        print('⚠️ [PostDetailsBinding] Missing communityId');
       }
 
       if (postId.isEmpty) {
-        log('⚠️ [PostDetailsBinding] Missing postId');
+        print('⚠️ [PostDetailsBinding] Missing postId');
       }
     } else {
-      log('⚠️ [PostDetailsBinding] Invalid or missing PostDetailArgModel');
+      print('⚠️ [PostDetailsBinding] Invalid or missing PostDetailArgModel');
     }
 
     if (!Get.isRegistered<PostActionController>()) {
@@ -586,7 +584,7 @@ class MeetingBinding extends Bindings {
   void dependencies() {
     ///////////
     final args = Get.arguments;
-    log("--> args: $args");
+    print("--> args: $args");
 
     if (args == null || args is! MeetingCtrlAgModel) {
       throw Exception(

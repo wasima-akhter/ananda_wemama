@@ -106,7 +106,7 @@ class NetworkImageWidget extends StatelessWidget {
         ? (radius * 0.7).clamp(8.0, 22.0) // 70% of radius, clamped between 8–22
         : (isSmall == true ? 12.w : 22.w);
 
-    log("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
+    print("imageUrl in net widget : ${makeImageUrl(imageUrl: imageUrl ?? '')}");
 
     final validImage =
         imageUrl != null &&

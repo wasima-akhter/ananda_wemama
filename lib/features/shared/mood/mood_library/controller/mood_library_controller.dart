@@ -120,7 +120,7 @@ class MoodLibraryController extends GetxController {
       final data = await service.fetchMoodImageData();
       allMoodImageData.assignAll(data);
     } catch (e) {
-      log("Error fetching mood images: $e");
+      print("Error fetching mood images: $e");
     } finally {
       isMoodsImagesLoading_.value = false;
     }
@@ -147,7 +147,7 @@ class MoodLibraryController extends GetxController {
 
       moodReadingItems.refresh();
     } catch (e) {
-      log("Error fetching mood content: $e");
+      print("Error fetching mood content: $e");
     } finally {
       isContentLoading_.value = false;
     }

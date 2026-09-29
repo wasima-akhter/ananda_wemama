@@ -40,7 +40,7 @@ class PostActionController extends GetxController {
 
   _PostFlags _ensureFlags(String postId) {
     if (!_postFlags.containsKey(postId)) {
-      log('[PostActionController] Creating flags for post: $postId');
+      print('[PostActionController] Creating flags for post: $postId');
     }
 
     return _postFlags.putIfAbsent(
@@ -97,7 +97,7 @@ class PostActionController extends GetxController {
         isCommentDeleted: false,
       );
 
-      log(
+      print(
         '[PostActionController] '
         'POST $id -> '
         'liked: ${post.isLiked}, '
@@ -198,7 +198,7 @@ class PostActionController extends GetxController {
         }
       }
     } catch (e) {
-      log('[PostActionController] Like error: $e');
+      print('[PostActionController] Like error: $e');
 
       flags.isLiked.value = oldLiked;
 
@@ -235,7 +235,7 @@ class PostActionController extends GetxController {
         flags.isPinned.value = oldValue;
       }
     } catch (e) {
-      log('[PostActionController] Pin error: $e');
+      print('[PostActionController] Pin error: $e');
       flags.isPinned.value = oldValue;
     } finally {
       flags.isPinLoading.value = false;
@@ -265,7 +265,7 @@ class PostActionController extends GetxController {
         flags.isCommentLocked.value = oldValue;
       }
     } catch (e) {
-      log('[PostActionController] Lock error: $e');
+      print('[PostActionController] Lock error: $e');
       flags.isCommentLocked.value = oldValue;
     } finally {
       flags.isLockLoading.value = false;
@@ -295,10 +295,10 @@ class PostActionController extends GetxController {
           _postFlags.remove(postId);
         });
       } else {
-        log('[PostActionController] Delete failed: $postId');
+        print('[PostActionController] Delete failed: $postId');
       }
     } catch (e) {
-      log('[PostActionController] Delete error: $e');
+      print('[PostActionController] Delete error: $e');
     } finally {
       flags.isdeleteLoading.value = false;
     }

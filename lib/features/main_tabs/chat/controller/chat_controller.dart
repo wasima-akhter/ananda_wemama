@@ -34,7 +34,7 @@ class ChatController extends GetxController {
 
     _tabWorker = ever(nav.currentIndex, (index) {
       if (index == 1) {
-        log("🔄 Chat tab opened");
+        print("🔄 Chat tab opened");
         if (realChatList.isEmpty) {
           getChatList(forceRefresh: true);
         }
@@ -47,7 +47,7 @@ class ChatController extends GetxController {
 
     // ✅ On connect: refresh data + reset backoff
     _socketConnectedSub = socket.onConnected.listen((_) {
-      log("🔌 Socket connected — fetching chat list");
+      print("🔌 Socket connected — fetching chat list");
       _reconnectAttempt = 0;
       _reconnectTimer?.cancel();
       getChatList(forceRefresh: true);
@@ -55,7 +55,7 @@ class ChatController extends GetxController {
 
     // ✅ On disconnect: actively try to reconnect instead of just waiting
     _socketDisconnectedSub = socket.onDisconnected.listen((_) {
-      log("🔌 Socket disconnected — scheduling reconnect");
+      print("🔌 Socket disconnected — scheduling reconnect");
       _scheduleReconnect();
     });
   }
@@ -103,14 +103,14 @@ class ChatController extends GetxController {
     _reconnectTimer = Timer(delay, () async {
       if (socket.isConnected) return; // already recovered
 
-      log("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
+      print("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
       _reconnectAttempt++;
 
       try {
         socket.disconnectSocket(); // clean slate before retry
         await socket.connectSocket();
       } catch (e) {
-        log("❌ Reconnect attempt failed: $e");
+        print("❌ Reconnect attempt failed: $e");
       }
 
       // If still not connected after this attempt, queue the next one
@@ -162,14 +162,14 @@ class ChatController extends GetxController {
 
   Future<void> getChatList({bool forceRefresh = true}) async {
     if (_isFetchingChatList) {
-      log("⏭️ getChatList already in progress — skipping");
+      print("⏭️ getChatList already in progress — skipping");
       return;
     }
     if (forceRefresh) realChatList.clear();
 
     // ✅ Not connected? Kick off reconnect (not just wait) then give it a window.
     if (!socket.isConnected) {
-      log("⏳ getChatList — socket down, triggering reconnect + waiting...");
+      print("⏳ getChatList — socket down, triggering reconnect + waiting...");
       _scheduleReconnect(immediate: true);
 
       try {
@@ -178,7 +178,7 @@ class ChatController extends GetxController {
           onTimeout: () => throw TimeoutException("Socket never connected"),
         );
       } catch (e) {
-        log("🚫 getChatList aborted — socket not available: $e");
+        print("🚫 getChatList aborted — socket not available: $e");
         // ✅ Don't just give up silently — backoff loop from
         // _scheduleReconnect keeps trying in the background, and will
         // call getChatList again via the onConnected listener once it
@@ -198,10 +198,10 @@ class ChatController extends GetxController {
 
       await _chatListCompleter!.future.timeout(
         const Duration(seconds: 8),
-        onTimeout: () => log("⚠️ getChatList — no response in 8s"),
+        onTimeout: () => print("⚠️ getChatList — no response in 8s"),
       );
     } catch (e) {
-      log("❌ getChatList error: $e");
+      print("❌ getChatList error: $e");
     } finally {
       isLoading_.value = false;
       _isFetchingChatList = false; // ✅ was missing here — this was also a
@@ -241,7 +241,7 @@ class ChatController extends GetxController {
   final searchedChatList = <ChatListItemModel>[].obs;
 
   Future<void> getSearchedChatList() async {
-    log('hit search');
+    print('hit search');
     if (isSearchLoading_.value) return;
 
     if (searchController.text.trim().isEmpty) {
@@ -259,11 +259,11 @@ class ChatController extends GetxController {
       );
 
       if (data.isNotEmpty) {
-        log('get Searched ChatList : $data');
+        print('get Searched ChatList : $data');
         searchedChatList.value = data;
       }
     } catch (e) {
-      log("Error fetching Searched ChatList : $e");
+      print("Error fetching Searched ChatList : $e");
     } finally {
       isSearchLoading_.value = false;
       unFocusAll();

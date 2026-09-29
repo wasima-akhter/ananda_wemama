@@ -111,8 +111,8 @@ class SessionController extends GetxController {
 
       final newItems = data?.sessions ?? [];
 
-      log("ongoing --> ${newItems.length}");
-      log("ongoing --> ${data?.sessions.length}");
+      print("ongoing --> ${newItems.length}");
+      print("ongoing --> ${data?.sessions.length}");
 
       if (!fetchNext) {
         targetList.value = newItems;
@@ -127,7 +127,7 @@ class SessionController extends GetxController {
         page.value++;
       }
     } catch (e) {
-      log("Session fetch error: $e");
+      print("Session fetch error: $e");
     } finally {
       loading.value = false;
       paginating.value = false;

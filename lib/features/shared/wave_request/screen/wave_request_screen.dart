@@ -30,7 +30,7 @@ class WaveRequestScreen extends StatelessWidget {
         if (list.isEmpty) {
           return CusRefreshIndicator(
             onRefresh: () async {
-              log("wave request refreshed");
+              print("wave request refreshed");
               await wrc.getNewWavesList();
             },
             child: EmptyNoSearchWidgetScrollable(
@@ -46,7 +46,7 @@ class WaveRequestScreen extends StatelessWidget {
 
         return CusRefreshIndicator(
           onRefresh: () async {
-            log("wave request refreshed");
+            print("wave request refreshed");
             await wrc.getNewWavesList();
           },
           child: CustomScrollViewWidget(

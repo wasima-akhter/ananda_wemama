@@ -88,7 +88,8 @@ class StationLocationController extends GetxController {
 
     try {
       final location = await LocationHelper.getCurrentLocation();
-      if (location == null) return; // GPS off or denied — overlay handles UI feedback
+      if (location == null)
+        return; // GPS off or denied — overlay handles UI feedback
 
       latitude.value = location.latitude;
       longitude.value = location.longitude;
@@ -97,7 +98,7 @@ class StationLocationController extends GetxController {
 
       await _saveLocationToBackend();
     } catch (e) {
-      log("❌ getAndSaveInBackendCurrLoc error: $e");
+      print("❌ getAndSaveInBackendCurrLoc error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
@@ -119,7 +120,7 @@ class StationLocationController extends GetxController {
 
       await _saveLocationToBackend();
     } catch (e) {
-      log("❌ selectCity error: $e");
+      print("❌ selectCity error: $e");
     } finally {
       isLoadingLocation.value = false;
     }
@@ -141,11 +142,12 @@ class StationLocationController extends GetxController {
       if (!success) throw Exception("API returned failure");
 
       storage.setUserAddress(selectedAddress.value);
-      if (selectedCity.value.isNotEmpty) storage.setUserCity(selectedCity.value);
+      if (selectedCity.value.isNotEmpty)
+        storage.setUserCity(selectedCity.value);
 
-      log("✅ Location saved to backend");
+      print("✅ Location saved to backend");
     } catch (e) {
-      log("❌ _saveLocationToBackend error: $e");
+      print("❌ _saveLocationToBackend error: $e");
       // Silent fail — overlay is the only user-facing feedback for location state
     }
   }

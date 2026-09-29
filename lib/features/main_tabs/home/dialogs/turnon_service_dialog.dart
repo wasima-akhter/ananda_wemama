@@ -27,7 +27,10 @@ class TurnOnServiceDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(Strings.locationNeededForMatchingExplained, style: TxtStyle.norTxt),
+          Text(
+            Strings.locationNeededForMatchingExplained,
+            style: TxtStyle.norTxt,
+          ),
           Gap(12.w),
           Container(
             padding: EdgeInsets.all(10),
@@ -42,7 +45,10 @@ class TurnOnServiceDialog extends StatelessWidget {
                 Expanded(
                   child: Text(
                     Strings.locationUsedForMatchingOnly,
-                    style: TxtStyle.norTxt.copyWith(fontSize: 12, color: c.secondary),
+                    style: TxtStyle.norTxt.copyWith(
+                      fontSize: 12,
+                      color: c.secondary,
+                    ),
                   ),
                 ),
               ],
@@ -53,15 +59,23 @@ class TurnOnServiceDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Get.back(),
-          child: Text(Strings.notNow.capEachWord(), style: TextStyle(color: c.textSecondary)),
+          child: Text(
+            Strings.notNow.capEachWord(),
+            style: TextStyle(color: c.textSecondary),
+          ),
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             backgroundColor: c.secondary,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           icon: Icon(Icons.settings_rounded, size: 16, color: Colors.white),
-          label: Text(Strings.turnOn.capEachWord(), style: TextStyle(color: Colors.white)),
+          label: Text(
+            Strings.turnOn.capEachWord(),
+            style: TextStyle(color: Colors.white),
+          ),
           onPressed: () async {
             onTurnOn();
             Get.back();

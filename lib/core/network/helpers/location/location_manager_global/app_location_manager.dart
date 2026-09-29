@@ -78,7 +78,7 @@ class AppLocationManager extends GetxService {
         permission == LocationPermission.whileInUse;
 
     isLocationActive.value = granted;
-    log("📍 Rechecked on resume — active: $granted");
+    print("📍 Rechecked on resume — active: $granted");
   }
 
   void _listenToLocationService() {
@@ -87,7 +87,7 @@ class AppLocationManager extends GetxService {
     ) async {
       if (status == ServiceStatus.disabled) {
         isLocationActive.value = false;
-        log("📍 Location service turned OFF");
+        print("📍 Location service turned OFF");
       } else if (status == ServiceStatus.enabled) {
         // Re-check permission before marking active
         final permission = await Geolocator.checkPermission();
@@ -95,7 +95,7 @@ class AppLocationManager extends GetxService {
             permission == LocationPermission.always ||
             permission == LocationPermission.whileInUse;
         isLocationActive.value = granted;
-        log("📍 Location service turned ON — active: $granted");
+        print("📍 Location service turned ON — active: $granted");
       }
     });
   }
@@ -123,13 +123,13 @@ class AppLocationManager extends GetxService {
       final opened = await Geolocator.openLocationSettings();
 
       if (opened) {
-        log("📍 Location settings opened");
+        print("📍 Location settings opened");
         return true;
       }
 
       return false;
     } catch (e) {
-      log("❌ disableLocation error: $e");
+      print("❌ disableLocation error: $e");
       return false;
     }
   }
@@ -224,7 +224,7 @@ class AppLocationManager extends GetxService {
 
       return LocationFlowResult.success;
     } catch (e) {
-      log("❌ enableLocationGateway error: $e");
+      print("❌ enableLocationGateway error: $e");
       isLocationActive.value = false;
       return LocationFlowResult.failed;
     }
@@ -316,7 +316,7 @@ class AppLocationManager extends GetxService {
 
       return LocationFlowResult.success;
     } catch (e) {
-      log("❌ ensureFreshLocation error: $e");
+      print("❌ ensureFreshLocation error: $e");
       isLocationActive.value = false;
       return LocationFlowResult.failed;
     } finally {
@@ -346,9 +346,9 @@ class AppLocationManager extends GetxService {
         storage.setUserCity(city.value);
       }
 
-      log("✅ Updated location in backend");
+      print("✅ Updated location in backend");
     } catch (e) {
-      log("❌ _updateBackend error: $e");
+      print("❌ _updateBackend error: $e");
     }
   }
 

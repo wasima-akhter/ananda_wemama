@@ -44,13 +44,13 @@ class UpdateProfileService extends GetxService {
     }
 
     //
-    log("── updateProfileWithChildren ──────────────────────");
-    log("fields: $fields");
-    log("profileImage: ${profileImage?.path ?? 'null'}");
-    log(
+    print("── updateProfileWithChildren ──────────────────────");
+    print("fields: $fields");
+    print("profileImage: ${profileImage?.path ?? 'null'}");
+    print(
       "descriptionImages (${descriptionImages.length}): ${descriptionImages.map((f) => f.path).toList()}",
     );
-    log("───────────────────────────────────────────────────");
+    print("───────────────────────────────────────────────────");
 
     // Sanitize files (copies with clean names)
     final sanitizedProfile = profileImage != null

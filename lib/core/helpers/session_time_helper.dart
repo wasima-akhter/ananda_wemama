@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SessionTimeHelper {
@@ -37,11 +36,11 @@ class SessionTimeHelper {
       // Convert the same instant to the user's device timezone.
       return parsed.toLocal();
     } catch (e, st) {
-      debugPrint(
+      print(
         '❌ SessionTimeHelper.toLocal failed: '
         'dateTime=$dateTime, error=$e',
       );
-      debugPrint('$st');
+      print('$st');
       return null;
     }
   }

@@ -27,7 +27,7 @@ class NotificationService extends GetxService {
       },
     );
 
-    log("notification response data: ${response.data}");
+    print("notification response data: ${response.data}");
 
     return PaginatedResult(data: response.data ?? [], meta: response.meta);
   }

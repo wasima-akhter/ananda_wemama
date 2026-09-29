@@ -1,4 +1,3 @@
-import 'dart:developer' show log;
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -41,48 +40,11 @@ class ImageCompressor {
 
     final result = await File(targetPath).writeAsBytes(compressedBytes);
 
-    log(
+    print(
       'Final compressed size: ${compressedBytes.length} bytes at quality $quality',
     );
     return result;
   }
-  // static Future<File?> compressUntilUnder1MB(File file) async {
-  //   const int targetSizeBytes = 900 * 1024; // 900 KB to be safe
-  //   int quality = 85;
-  //   File? result;
-
-  //   // First try: resize + compress
-  //   Uint8List? compressedBytes = await FlutterImageCompress.compressWithFile(
-  //     file.absolute.path,
-  //     quality: quality,
-  //     minWidth: 1024,
-  //     minHeight: 1024,
-  //   );
-
-  //   if (compressedBytes == null) return null;
-
-  //   // Reduce quality until under target
-  //   while (compressedBytes!.length > targetSizeBytes && quality > 10) {
-  //     quality -= 10;
-  //     compressedBytes = await FlutterImageCompress.compressWithFile(
-  //       file.absolute.path,
-  //       quality: quality,
-  //       minWidth: 800,
-  //       minHeight: 800,
-  //     );
-  //     if (compressedBytes == null) return null;
-  //   }
-
-  //   // Save to cache
-  //   final dir = await getTemporaryDirectory();
-  //   final targetPath = '${dir.path}/compressed_${file.path.split('/').last}';
-  //   result = await File(targetPath).writeAsBytes(compressedBytes);
-
-  //   log(
-  //     'Final compressed size: ${compressedBytes.length} bytes at quality $quality',
-  //   );
-  //   return result;
-  // }
 
   static Future<File?> compressImage(File file, {int quality = 70}) async {
     try {
@@ -107,7 +69,7 @@ class ImageCompressor {
 
       return File(compressedFile.path);
     } catch (e) {
-      log("Compression Error: $e");
+      print("Compression Error: $e");
       return null;
     }
   }
@@ -137,3 +99,58 @@ class ImageCompressor {
     return currentFile;
   }
 }
+
+
+/*
+// IsolationMultitreading
+
+UI / Controller
+      │
+      ├── File.readAsBytes()
+      │
+      ▼
+Uint8List
+      │
+      ▼
+compute()
+      │
+      ▼
+Image processing isolate
+      │
+      ├── decode
+      ├── resize
+      ├── blur
+      └── compress
+      │
+      ▼
+Uint8List
+      │
+      ▼
+Main isolate
+      │
+      └── File.writeAsBytes()
+
+*/
+
+
+/*
+
+------> UI thread
+──────────────────────────────
+decode ███████
+blur   █████████████
+encode ███████
+             ↓
+        UI freezes/janks
+
+
+------> UI Isolate
+──────────────────────────────
+render UI → render UI → render UI → render UI
+
+Worker Isolate
+──────────────────────────────
+decode ███████
+blur   █████████████
+encode ███████
+        */

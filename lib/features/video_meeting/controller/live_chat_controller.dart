@@ -44,7 +44,7 @@ class LiveChatController extends GetxController
     // Wait until MeetingController finishes fetching tokens + joining RTC
     ever(mc.isEngineReady, (ready) {
       if (ready && !isRtmReady.value) {
-        log('🔵 [CHAT] Engine ready → starting RTM');
+        print('🔵 [CHAT] Engine ready → starting RTM');
         initRtm();
       }
     });
@@ -144,9 +144,9 @@ try {
 
   // Or use history API if your Agora SDK version supports it:
   // rtmClient!.getHistory(...)
-  debugPrint('✅ [RTM] History/metadata fetched');
+  print('✅ [RTM] History/metadata fetched');
 } catch (e) {
-  debugPrint('⚠️ [RTM] History fetch skipped: $e');
+  print('⚠️ [RTM] History fetch skipped: $e');
 }
 ```
 

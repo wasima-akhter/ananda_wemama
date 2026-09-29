@@ -10,7 +10,7 @@ class ViewOnMapBtn extends StatelessWidget {
       outlined: true,
       btnTxt: "view On Map",
       onTap: () {
-        log("view on map");
+        print("view on map");
         // Get.toNamed(RoutePaths.googleMap);
       },
       isLoading: false,

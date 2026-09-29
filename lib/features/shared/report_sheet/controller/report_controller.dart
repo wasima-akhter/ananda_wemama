@@ -26,7 +26,7 @@ class ReportController extends GetxController {
   void selectReason(String reason) {
     selectedReason.value = reason;
 
-    log("Selected reason: $reason");
+    print("Selected reason: $reason");
   }
 
   @override
@@ -56,7 +56,7 @@ class ReportController extends GetxController {
 
     if (image != null) {
       pickedImageOrFile.value = image;
-      log("Picked image: ${image.path}");
+      print("Picked image: ${image.path}");
     }
     return;
   }
@@ -113,10 +113,10 @@ class ReportController extends GetxController {
       );
 
       if (data != null) {
-        log('report success: ${data.report}');
+        print('report success: ${data.report}');
       }
     } catch (e) {
-      log("Error reportUserOrContent: $e");
+      print("Error reportUserOrContent: $e");
     } finally {
       isLoading_.value = false;
 

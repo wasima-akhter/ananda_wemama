@@ -13,7 +13,7 @@ class MemberManagementScreen extends StatelessWidget {
     return AppScreenTemplate(
       refreshKey: chatRefreshKey,
       onRefresh: () async {
-        log("  refreshed");
+        print("  refreshed");
       },
       appBar: CommonAppBarContent(title: Strings.members),
       child: Column(

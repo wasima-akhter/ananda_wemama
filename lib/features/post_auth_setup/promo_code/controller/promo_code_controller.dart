@@ -48,11 +48,11 @@ class PromoCodeController extends GetxController {
   }
 
   Future<OfferValidationResult> validateCode(String code) async {
-    debugPrint("🟢 Validating code=$code");
+    print("🟢 Validating code=$code");
 
     switch (code.toLowerCase()) {
       case "ref":
-        debugPrint("🟢 CODE TYPE=Referral");
+        print("🟢 CODE TYPE=Referral");
 
         return const OfferValidationResult(
           success: true,
@@ -60,7 +60,7 @@ class PromoCodeController extends GetxController {
         );
 
       case "promo":
-        debugPrint("🟢 CODE TYPE=Promo");
+        print("🟢 CODE TYPE=Promo");
 
         return const OfferValidationResult(
           success: true,
@@ -68,7 +68,7 @@ class PromoCodeController extends GetxController {
         );
 
       case "mum":
-        debugPrint("🟢 CODE TYPE=Funding Mum");
+        print("🟢 CODE TYPE=Funding Mum");
 
         return const OfferValidationResult(
           success: true,
@@ -76,7 +76,7 @@ class PromoCodeController extends GetxController {
         );
 
       default:
-        debugPrint("🔴 Invalid code");
+        print("🔴 Invalid code");
 
         return const OfferValidationResult(
           success: false,
@@ -87,7 +87,7 @@ class PromoCodeController extends GetxController {
   }
 
   Future<bool> applyReferralCode(String code) async {
-    debugPrint("🟢 Applying referral code API");
+    print("🟢 Applying referral code API");
 
     return await ReferralService().applyReferralCode(referralCode: code);
   }
@@ -149,7 +149,7 @@ class PromoCodeController extends GetxController {
 
       switch (result.type) {
         case OfferType.referral:
-          debugPrint("🟢 Referral API validation");
+          print("🟢 Referral API validation");
 
           final success = await applyReferralCode(code);
 
@@ -166,7 +166,7 @@ class PromoCodeController extends GetxController {
           break;
 
         case OfferType.promo:
-          debugPrint("🟢 Promo validation placeholder");
+          print("🟢 Promo validation placeholder");
 
           /*
              TODO:
@@ -179,7 +179,7 @@ class PromoCodeController extends GetxController {
           break;
 
         case OfferType.foundingMum:
-          debugPrint("🟢 Funding Mum validation placeholder");
+          print("🟢 Funding Mum validation placeholder");
 
           /*
              TODO:
@@ -199,11 +199,11 @@ class PromoCodeController extends GetxController {
 
       appliedCode.value = code;
 
-      debugPrint("🟢 OFFER SAVED=${currentOffer.value.name}");
+      print("🟢 OFFER SAVED=${currentOffer.value.name}");
 
       Get.toNamed(RoutePaths.subChoosePlan);
     } catch (e, stack) {
-      debugPrint("❌ Apply code error=$e");
+      print("❌ Apply code error=$e");
 
       debugPrintStack(stackTrace: stack);
     } finally {
@@ -233,7 +233,7 @@ class PromoCodeController extends GetxController {
 
       switch (result.type) {
         case OfferType.referral:
-          debugPrint("🟢 Referral API validation");
+          print("🟢 Referral API validation");
 
           final success = await applyReferralCode(code);
 
@@ -249,11 +249,11 @@ class PromoCodeController extends GetxController {
           break;
 
         case OfferType.promo:
-          debugPrint("🟢 Promo validation placeholder");
+          print("🟢 Promo validation placeholder");
           break;
 
         case OfferType.foundingMum:
-          debugPrint("🟢 Founding Mum validation placeholder");
+          print("🟢 Founding Mum validation placeholder");
           break;
 
         case OfferType.none:
@@ -263,12 +263,12 @@ class PromoCodeController extends GetxController {
       currentOffer.value = result.type;
       appliedCode.value = code;
 
-      debugPrint("🟢 OFFER SAVED=${currentOffer.value.name}");
+      print("🟢 OFFER SAVED=${currentOffer.value.name}");
 
       // ✅ NEW: Refresh premium status after successful code/offer
       await _verifyAndNavigateAfterPurchase();
     } catch (e, stack) {
-      debugPrint("❌ Apply code error=$e");
+      print("❌ Apply code error=$e");
       debugPrintStack(stackTrace: stack);
     } finally {
       isLoading_.value = false;
@@ -278,9 +278,9 @@ class PromoCodeController extends GetxController {
 
   /// Verifies subscription succeeded, then navigates appropriately
   Future<void> _verifyAndNavigateAfterPurchase() async {
-    debugPrint('\n╔════════════════════════════════════════╗');
-    debugPrint('║ [PromoCodeController] VERIFY PURCHASE  ║');
-    debugPrint('╚════════════════════════════════════════╝');
+    print('\n╔════════════════════════════════════════╗');
+    print('║ [PromoCodeController] VERIFY PURCHASE  ║');
+    print('╚════════════════════════════════════════╝');
 
     final premiumService = PremiumAccessService.to;
 
@@ -289,7 +289,7 @@ class PromoCodeController extends GetxController {
       // WAIT FOR PREMIUM SERVICE TO BE READY
       // ─────────────────────────────────────────────
       if (!premiumService.isReady.value) {
-        debugPrint('⏳ Premium service NOT ready, waiting...');
+        print('⏳ Premium service NOT ready, waiting...');
 
         int attempts = 0;
         while (!premiumService.isReady.value && attempts < 50) {
@@ -298,7 +298,7 @@ class PromoCodeController extends GetxController {
         }
 
         if (!premiumService.isReady.value) {
-          debugPrint('🔴 Premium service initialization TIMEOUT');
+          print('🔴 Premium service initialization TIMEOUT');
           Get.snackbar(
             "Error",
             "Could not verify subscription status",
@@ -308,34 +308,32 @@ class PromoCodeController extends GetxController {
         }
       }
 
-      debugPrint('✅ Premium service is READY');
+      print('✅ Premium service is READY');
 
       // ─────────────────────────────────────────────
       // REFRESH PREMIUM STATUS
       // ─────────────────────────────────────────────
-      debugPrint('🔄 Refreshing premium status from backend...');
+      print('🔄 Refreshing premium status from backend...');
       await premiumService.refreshPremiumStatus();
 
-      premiumService.debugPrintFullState();
+      premiumService.printFullState();
 
       // ─────────────────────────────────────────────
       // VERIFY SUBSCRIPTION SUCCEEDED
       // ─────────────────────────────────────────────
-      debugPrint('\n🔐 Verifying subscription status:');
-      debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+      print('\n🔐 Verifying subscription status:');
+      print('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
 
       if (!premiumService.isPremiumUserNow) {
-        debugPrint(
-          '❌ Subscription verification failed — user still not premium',
-        );
+        print('❌ Subscription verification failed — user still not premium');
 
         // ✅ FALLBACK: Try iOS verification
         if (GetPlatform.isIOS) {
-          debugPrint('🔍 iOS: Attempting fallback verification...');
+          print('🔍 iOS: Attempting fallback verification...');
           final verified = await premiumService.getPremiumStatusWithFallback();
 
           if (!verified) {
-            debugPrint('❌ Fallback verification also failed');
+            print('❌ Fallback verification also failed');
             Get.snackbar(
               "Error",
               "Subscription could not be verified. Please try again.",
@@ -344,7 +342,7 @@ class PromoCodeController extends GetxController {
             return;
           }
 
-          debugPrint('✅ iOS fallback verification succeeded');
+          print('✅ iOS fallback verification succeeded');
         } else {
           Get.snackbar(
             "Error",
@@ -356,12 +354,12 @@ class PromoCodeController extends GetxController {
       }
 
       // ✅ SUBSCRIPTION VERIFIED SUCCESSFUL
-      debugPrint('✅ Subscription verified successfully!');
-      debugPrint('🎉 User is now PREMIUM');
+      print('✅ Subscription verified successfully!');
+      print('🎉 User is now PREMIUM');
 
-      debugPrint('╔════════════════════════════════════════╗');
-      debugPrint('║ [PromoCodeController] PURCHASE OK ✅   ║');
-      debugPrint('╚════════════════════════════════════════╝\n');
+      print('╔════════════════════════════════════════╗');
+      print('║ [PromoCodeController] PURCHASE OK ✅   ║');
+      print('╚════════════════════════════════════════╝\n');
 
       // ─────────────────────────────────────────────
       // NAVIGATE AWAY FROM SUBSCRIPTION FLOW
@@ -380,7 +378,7 @@ class PromoCodeController extends GetxController {
       // Navigate back to home or previous screen
       Get.offAllNamed(RoutePaths.mainNav);
     } catch (e) {
-      debugPrint('❌ Verification error: $e');
+      print('❌ Verification error: $e');
       Get.snackbar(
         "Error",
         "An error occurred: $e",
@@ -392,7 +390,7 @@ class PromoCodeController extends GetxController {
   //
 
   Future<void> onPlanSelected(String planId) async {
-    debugPrint("🟢 Plan selected: $planId");
+    print("🟢 Plan selected: $planId");
 
     isLoading_.value = true;
 
@@ -412,7 +410,7 @@ class PromoCodeController extends GetxController {
       // ✅ NEW: Verify purchase succeeded
       await _verifyAndNavigateAfterPurchase();
     } catch (e) {
-      debugPrint("❌ Purchase error: $e");
+      print("❌ Purchase error: $e");
     } finally {
       isLoading_.value = false;
     }

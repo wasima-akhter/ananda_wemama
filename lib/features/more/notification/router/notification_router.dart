@@ -27,7 +27,7 @@ class NotificationRouter {
   // ── Single switch — the ONLY place routing logic lives ───────────────────
 
   static void _route(_NotificationRouteData d) {
-    debugPrint(
+    print(
       '🧭 [NotificationRouter] type=${d.type} | '
       'ref=${d.referenceId} | meta=${d.metadata}',
     );
@@ -47,13 +47,11 @@ class NotificationRouter {
         final postId = d.metadata['postId']?.toString();
 
         if (communityId == null || communityId.isEmpty) {
-          debugPrint(
-            '⚠️ [NotificationRouter] LIKE/COMMENT — missing communityId',
-          );
+          print('⚠️ [NotificationRouter] LIKE/COMMENT — missing communityId');
           return;
         }
         if (postId == null || postId.isEmpty) {
-          debugPrint('⚠️ [NotificationRouter] LIKE/COMMENT — missing postId');
+          print('⚠️ [NotificationRouter] LIKE/COMMENT — missing postId');
           return;
         }
 
@@ -70,7 +68,7 @@ class NotificationRouter {
         final communityId = d.referenceId;
 
         if (communityId == null || communityId.isEmpty) {
-          debugPrint(
+          print(
             '⚠️ [NotificationRouter] APPROVE_COMMUNITY — missing communityId',
           );
           return;
@@ -90,7 +88,7 @@ class NotificationRouter {
         final conversationId = d.referenceId;
 
         if (conversationId == null || conversationId.isEmpty) {
-          debugPrint(
+          print(
             '⚠️ [NotificationRouter] SENT_MESSAGE — missing conversationId',
           );
           return;
@@ -123,7 +121,7 @@ class NotificationRouter {
 
       // ─── Unhandled ────────────────────────────────────────────────
       default:
-        debugPrint('⚠️ [NotificationRouter] unhandled type: ${d.type}');
+        print('⚠️ [NotificationRouter] unhandled type: ${d.type}');
     }
   }
 }

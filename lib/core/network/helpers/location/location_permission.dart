@@ -1,10 +1,10 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:we_mama/core/components/ui/dialogs/popups.dart';
-import 'package:we_mama/features/main_tabs/home/dialogs/turnon_service_dialog.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../features/main_tabs/home/dialogs/permanent_denied_dialog.dart';
 import '../../../../features/main_tabs/home/dialogs/rationale_dialog.dart';
+import '../../../../features/main_tabs/home/dialogs/turnon_service_dialog.dart';
+import '../../../components/ui/dialogs/popups.dart';
 
 /// Handles the one-time, context-aware permission + service request shown
 /// when the user lands on HomeScreen for the first time in a session.

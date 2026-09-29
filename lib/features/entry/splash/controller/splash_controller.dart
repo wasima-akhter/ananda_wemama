@@ -9,73 +9,73 @@ class SplashController extends GetxController {
   static SplashController get to => Get.find<SplashController>();
 
   Future<void> splashScreenFunctions() async {
-    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    log("🚀 [SPLASH] splashScreenFunctions() START");
-    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    print("🚀 [SPLASH] splashScreenFunctions() START");
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     // ─── STEP 1: Network check ───────────────────────────────────────
-    log("📡 [SPLASH] STEP 1 → Checking network...");
+    print("📡 [SPLASH] STEP 1 → Checking network...");
     final hasNetwork = await NetworkManager().checkConnection();
-    log("📡 [SPLASH] STEP 1 → hasNetwork = $hasNetwork");
+    print("📡 [SPLASH] STEP 1 → hasNetwork = $hasNetwork");
 
     if (!hasNetwork) {
-      log(
+      print(
         "❌ [SPLASH] STEP 1 → No internet. Current route: ${Get.currentRoute}",
       );
       if (Get.currentRoute != RoutePaths.offlineScreen) {
-        log("❌ [SPLASH] STEP 1 → Navigating to offlineScreen");
+        print("❌ [SPLASH] STEP 1 → Navigating to offlineScreen");
         Get.toNamed(RoutePaths.offlineScreen);
       } else {
-        log(
+        print(
           "❌ [SPLASH] STEP 1 → Already on offlineScreen. Skipping navigation.",
         );
       }
-      log("❌ [SPLASH] STEP 1 → Returning early due to no network.");
+      print("❌ [SPLASH] STEP 1 → Returning early due to no network.");
       return;
     }
 
     // ─── STEP 2: Delay ──────────────────────────────────────────────
-    log("⏳ [SPLASH] STEP 2 → Has internet. Starting 2s delay...");
+    print("⏳ [SPLASH] STEP 2 → Has internet. Starting 2s delay...");
     await Future.delayed(const Duration(seconds: 2));
-    log("⏳ [SPLASH] STEP 2 → Delay complete.");
+    print("⏳ [SPLASH] STEP 2 → Delay complete.");
 
     // ─── STEP 3: Read storage state ─────────────────────────────────
-    log("💾 [SPLASH] STEP 3 → Reading storage state...");
+    print("💾 [SPLASH] STEP 3 → Reading storage state...");
     final seenOnboarding = AppStorage.to.getSeenOnboarding;
     final loggedIn = AppStorage.to.getLoggedIn;
     final token = AppStorage.to.getToken;
-    log("💾 [SPLASH] STEP 3 → seenOnboarding : $seenOnboarding");
-    log("💾 [SPLASH] STEP 3 → loggedIn       : $loggedIn");
-    log(
+    print("💾 [SPLASH] STEP 3 → seenOnboarding : $seenOnboarding");
+    print("💾 [SPLASH] STEP 3 → loggedIn       : $loggedIn");
+    print(
       "💾 [SPLASH] STEP 3 → token           : ${token.isEmpty ? '[EMPTY]' : '[PRESENT] ${token.substring(0, token.length.clamp(0, 20))}...'}",
     );
 
     // ─── STEP 4: DeepLinkService lookup ─────────────────────────────
-    log("🔗 [SPLASH] STEP 4 → Looking up DeepLinkService...");
+    print("🔗 [SPLASH] STEP 4 → Looking up DeepLinkService...");
     DeepLinkService deepLinkService;
     try {
       deepLinkService = Get.find<DeepLinkService>();
-      log("🔗 [SPLASH] STEP 4 → DeepLinkService found ✅");
+      print("🔗 [SPLASH] STEP 4 → DeepLinkService found ✅");
     } catch (e) {
-      log("🔗 [SPLASH] STEP 4 → ❌ DeepLinkService NOT found in GetX: $e");
-      log("🔗 [SPLASH] STEP 4 → Falling through to normal nav flow.");
+      print("🔗 [SPLASH] STEP 4 → ❌ DeepLinkService NOT found in GetX: $e");
+      print("🔗 [SPLASH] STEP 4 → Falling through to normal nav flow.");
       _navigateNormally(seenOnboarding, loggedIn);
       return;
     }
 
     final pendingLiveId = deepLinkService.pendingLiveId;
-    log(
+    print(
       "🔗 [SPLASH] STEP 4 → pendingLiveId = ${pendingLiveId ?? '[NULL — no deep link]'}",
     );
 
     // ─── STEP 5: Deep link branch ────────────────────────────────────
     // markAppReady() is called ONCE, at the end of each branch, never before.
     if (pendingLiveId != null) {
-      log("🔗 [SPLASH] STEP 5 → Deep link detected. Handling...");
+      print("🔗 [SPLASH] STEP 5 → Deep link detected. Handling...");
       deepLinkService.pendingLiveId = null;
 
       if (!loggedIn) {
-        log(
+        print(
           "🔗 [SPLASH] STEP 5 → Not logged in. Storing pendingLiveId and going to signin.",
         );
         deepLinkService.pendingLiveId = pendingLiveId;
@@ -84,25 +84,25 @@ class SplashController extends GetxController {
           arguments: {'redirectLiveId': pendingLiveId},
         );
       } else {
-        log(
+        print(
           "🔗 [SPLASH] STEP 5 → Logged in. Navigating to session: $pendingLiveId",
         );
         await deepLinkService.navigateToSession(pendingLiveId);
       }
 
       // ✅ markAppReady() called ONCE — after navigation is fully done
-      log("✅ [SPLASH] STEP 5 → Navigation done. Calling markAppReady().");
+      print("✅ [SPLASH] STEP 5 → Navigation done. Calling markAppReady().");
       deepLinkService.markAppReady();
-      log("✅ [SPLASH] STEP 5 → Stream is now active.");
+      print("✅ [SPLASH] STEP 5 → Stream is now active.");
 
-      log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      log("🏁 [SPLASH] splashScreenFunctions() END (deep link path)");
-      log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      print("🏁 [SPLASH] splashScreenFunctions() END (deep link path)");
+      print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       return;
     }
 
     // ─── STEP 6: Normal navigation flow ─────────────────────────────
-    log(
+    print(
       "🧭 [SPLASH] STEP 6 → No deep link. Entering normal navigation flow...",
     );
     _navigateNormally(seenOnboarding, loggedIn);
@@ -113,32 +113,32 @@ class SplashController extends GetxController {
     }
 
     // ✅ markAppReady() called ONCE — after navigation is fully done
-    log("✅ [SPLASH] STEP 6 → Navigation done. Calling markAppReady().");
+    print("✅ [SPLASH] STEP 6 → Navigation done. Calling markAppReady().");
     deepLinkService.markAppReady();
-    log("✅ [SPLASH] STEP 6 → Stream is now active. Route is stable.");
+    print("✅ [SPLASH] STEP 6 → Stream is now active. Route is stable.");
 
-    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    log("🏁 [SPLASH] splashScreenFunctions() END (normal path)");
-    log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    print("🏁 [SPLASH] splashScreenFunctions() END (normal path)");
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   }
 
   void _navigateNormally(bool seenOnboarding, bool loggedIn) {
-    log(
+    print(
       "🧭 [SPLASH] _navigateNormally() → seenOnboarding=$seenOnboarding | loggedIn=$loggedIn",
     );
 
     if (!seenOnboarding) {
-      log("🧭 [SPLASH] _navigateNormally() → Navigating to onboardScreen");
+      print("🧭 [SPLASH] _navigateNormally() → Navigating to onboardScreen");
       Get.offAllNamed(RoutePaths.onboardScreen);
     } else if (!loggedIn) {
-      log("🧭 [SPLASH] _navigateNormally() → Navigating to signin");
+      print("🧭 [SPLASH] _navigateNormally() → Navigating to signin");
       Get.offAllNamed(RoutePaths.signin);
     } else {
-      log("🧭 [SPLASH] _navigateNormally() → Navigating to mainNav");
+      print("🧭 [SPLASH] _navigateNormally() → Navigating to mainNav");
       Get.offAllNamed(RoutePaths.mainNav);
     }
 
-    log(
+    print(
       "🧭 [SPLASH] _navigateNormally() → Current route after nav: ${Get.currentRoute}",
     );
   }
@@ -146,10 +146,10 @@ class SplashController extends GetxController {
   //
   Future<void> _maybeUploadFcmToken() async {
     if (Get.isRegistered<PushNotificationService>()) {
-      log("🔧 [SPLASH] Uploading FCM token for already-logged-in user...");
+      print("🔧 [SPLASH] Uploading FCM token for already-logged-in user...");
       await PushNotificationService.to.uploadTokenAfterLogin();
     } else {
-      log(
+      print(
         "⚠️ [SPLASH] PushNotificationService not registered — skipping FCM upload",
       );
     }
@@ -159,10 +159,10 @@ class SplashController extends GetxController {
     final userId = AppStorage.to.getUserId;
     if (userId.isEmpty) return;
     if (Get.isRegistered<PurchaseService>()) {
-      log("🔧 [SPLASH] Logging in RevenueCat user: $userId");
+      print("🔧 [SPLASH] Logging in RevenueCat user: $userId");
       await PurchaseService.to.loginRevenueCatUser(userId);
     } else {
-      log("⚠️ [SPLASH] PurchaseService not registered — skipping RC login");
+      print("⚠️ [SPLASH] PurchaseService not registered — skipping RC login");
     }
   }
 }

@@ -1,17 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:we_mama/features/main_tabs/experts/controller/session_action_controller.dart';
 
 import '../../../../app/helper_widgets_export.dart';
 import '../../../../core/helpers/string_helper.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
-import '../../../shared/mood/ongoing_sessions/past_sessions_library_card.dart';
 import '../../../shared/mood/ongoing_sessions/upcoming_expert_session_card.dart';
-import '../../../shared/subscription/subscription_access/premium_gate.dart';
 import '../controller/experts_controller.dart';
 import '../controller/session_controller.dart';
 import '../model/expert_session_list_model.dart';
 import '../widgets/card_session_list.dart';
-import '../widgets/live_session_lock_card.dart';
 import '../widgets/paid_past_sessions_component.dart';
 
 class ExpertsScreen extends StatelessWidget {
@@ -39,36 +35,36 @@ class ExpertsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: itemGap,
         children: [
-          if (kDebugMode) ...[
-            Obx(() {
-              final ongoingList = exc.limitList(sc.ongoingList.value);
+          // if (kDebugMode) ...[
+          //   Obx(() {
+          //     final ongoingList = exc.limitList(sc.ongoingList.value);
 
-              if (ongoingList.isEmpty) {
-                return const Text("no live session for now");
-              }
+          //     if (ongoingList.isEmpty) {
+          //       return const Text("no live session for now");
+          //     }
 
-              final isOverflowing = ongoingList.any(
-                (element) => willTextOverflow(
-                  text: element.description,
-                  style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
-                ),
-              );
-              return CardHorizontalList(
-                aspectRatio: 1.8,
-                height:
-                    Responsive.ongoingSessionCardHeight +
-                    (isOverflowing ? 40.h : 30.h),
-                title: Strings.ongoingExpertSession,
-                exc: exc,
-                onViewAll: () => exc.onTapViewAll(true),
-                itemCount: ongoingList.length,
-                itemBuilder: (index) =>
-                    LiveOngoingSessionCard(data: ongoingList[index]),
-              );
-            }),
-            Gap(20.h),
-            PaidPastSessionsComponent(),
-          ],
+          //     final isOverflowing = ongoingList.any(
+          //       (element) => willTextOverflow(
+          //         text: element.description,
+          //         style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
+          //       ),
+          //     );
+          //     return CardHorizontalList(
+          //       aspectRatio: 1.8,
+          //       height:
+          //           Responsive.ongoingSessionCardHeight +
+          //           (isOverflowing ? 40.h : 30.h),
+          //       title: Strings.ongoingExpertSession,
+          //       exc: exc,
+          //       onViewAll: () => exc.onTapViewAll(true),
+          //       itemCount: ongoingList.length,
+          //       itemBuilder: (index) =>
+          //           LiveOngoingSessionCard(data: ongoingList[index]),
+          //     );
+          //   }),
+          //   Gap(20.h),
+          //   PaidPastSessionsComponent(),
+          // ],
 
           /// 🔴 ONGOING + 🟡 UPCOMING (combined reactive block)
           Obx(() {
@@ -82,14 +78,14 @@ class ExpertsScreen extends StatelessWidget {
             final ongoingEmpty = !isOngoingLoading && ongoingList.isEmpty;
             final upcomingEmpty = !isUpcomingLoading && upcomingList.isEmpty;
 
-            log(
+            print(
               "ongoingEmpty && upcomingEmpty : $ongoingEmpty , $upcomingEmpty",
             );
 
-            log(
+            print(
               "ongoingEmpty ongoingList && upcomingEmpty upcomingList : ${ongoingList.length} , ${upcomingList.length}",
             );
-            log(
+            print(
               "ongoingEmpty ongoingList_api && upcomingEmpty upcomingList_api : ${sc.ongoingList.value.length} , ${sc.upcomingList.value.length}",
             );
 
@@ -139,25 +135,37 @@ class ExpertsScreen extends StatelessWidget {
               spacing: itemGap,
               children: [
                 if (!ongoingEmpty)
-                  PremiumGate(
-                    waitForReady: false,
-                    child: CardHorizontalList(
-                      aspectRatio: 1.8,
-                      height:
-                          Responsive.ongoingSessionCardHeight +
-                          (isOverflowing ? 40.h : 30.h),
-                      title: Strings.ongoingExpertSession,
-                      exc: exc,
-                      onViewAll: () => exc.onTapViewAll(true),
-                      itemCount: ongoingList.length,
-                      itemBuilder: (index) =>
-                          LiveOngoingSessionCard(data: ongoingList[index]),
-                    ),
-                    lockedBuilder: (_) => LiveSessionLockedCard(
-                      onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
-                    ),
+                  CardHorizontalList(
+                    aspectRatio: 1.8,
+                    height:
+                        Responsive.ongoingSessionCardHeight +
+                        (isOverflowing ? 40.h : 30.h),
+                    title: Strings.ongoingExpertSession,
+                    exc: exc,
+                    onViewAll: () => exc.onTapViewAll(true),
+                    itemCount: ongoingList.length,
+                    itemBuilder: (index) =>
+                        LiveOngoingSessionCard(data: ongoingList[index]),
                   ),
 
+                // PremiumGate(
+                //   waitForReady: false,
+                //   child: CardHorizontalList(
+                //     aspectRatio: 1.8,
+                //     height:
+                //         Responsive.ongoingSessionCardHeight +
+                //         (isOverflowing ? 40.h : 30.h),
+                //     title: Strings.ongoingExpertSession,
+                //     exc: exc,
+                //     onViewAll: () => exc.onTapViewAll(true),
+                //     itemCount: ongoingList.length,
+                //     itemBuilder: (index) =>
+                //         LiveOngoingSessionCard(data: ongoingList[index]),
+                //   ),
+                //   lockedBuilder: (_) => LiveSessionLockedCard(
+                //     onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+                //   ),
+                // ),
                 if (!upcomingEmpty)
                   CardHorizontalList(
                     aspectRatio: 1.45,
@@ -190,14 +198,15 @@ class ExpertsScreen extends StatelessWidget {
               ],
             );
           }),
+          PaidPastSessionsComponent(),
 
-          PremiumGate(
-            waitForReady: false,
-            child: PaidPastSessionsComponent(),
-            lockedBuilder: (_) => PastSessionsLibraryCard(
-              onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
-            ),
-          ),
+          // PremiumGate(
+          //   waitForReady: false,
+          //   child: PaidPastSessionsComponent(),
+          //   lockedBuilder: (_) => PastSessionsLibraryCard(
+          //     onTapSubscribe: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+          //   ),
+          // ),
         ],
       ).getcm,
     );

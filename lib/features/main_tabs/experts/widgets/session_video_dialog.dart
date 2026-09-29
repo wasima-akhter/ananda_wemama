@@ -61,9 +61,9 @@ class _SessionVideoDialogState extends State<SessionVideoDialog> {
 
   Future<void> _start() async {
     final url = _mp4Url ?? _hlsUrl;
-    debugPrint('url is : $url');
-    debugPrint('_mp4Url is : $_mp4Url');
-    debugPrint('_hlsUrl is : $_hlsUrl');
+    print('url is : $url');
+    print('_mp4Url is : $_mp4Url');
+    print('_hlsUrl is : $_hlsUrl');
     if (url == null) {
       setState(() => _state = _VideoState.empty);
       return;
@@ -108,8 +108,8 @@ class _SessionVideoDialogState extends State<SessionVideoDialog> {
         _state = _VideoState.ready;
       });
     } catch (e, st) {
-      debugPrint("❌ [SessionVideoDialog] failed to load $url: $e");
-      debugPrint("$st");
+      print("❌ [SessionVideoDialog] failed to load $url: $e");
+      print("$st");
 
       // one-time fallback: mp4 failed → try hls
       if (!_triedFallback && url == _mp4Url && _hlsUrl != null) {
@@ -172,8 +172,8 @@ class _SessionVideoDialogState extends State<SessionVideoDialog> {
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e, st) {
-      debugPrint("❌ [SessionVideoDialog] download failed: $e");
-      debugPrint("$st");
+      print("❌ [SessionVideoDialog] download failed: $e");
+      print("$st");
       if (!mounted) return;
       setState(() => _isDownloading = false);
       Get.snackbar(

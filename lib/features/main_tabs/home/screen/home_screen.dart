@@ -15,7 +15,6 @@ import '../../../shared/mood/mood_library/widgets/mood_library_chip_card.dart';
 import '../../../shared/mood/ongoing_sessions/live_ongoing_expert_session_card.dart';
 import '../../../shared/subscription/subscription_access/premium_access_service.dart';
 import '../../../shared/subscription/subscription_access/premium_gate.dart';
-import '../../experts/widgets/live_session_lock_card.dart';
 import '../controller/home_controller.dart';
 import '../modules/gentle_reminder_card.dart';
 
@@ -23,9 +22,9 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   // static void showLocationStatusOverlay({required bool isActive}) {
-  //   log("🪟 showLocationStatusOverlay called — isActive: $isActive");
-  //   log("🪟 Get.context: ${Get.context}");
-  //   log("🪟 isDialogOpen: ${Get.isDialogOpen}");
+  //   print("🪟 showLocationStatusOverlay called — isActive: $isActive");
+  //   print("🪟 Get.context: ${Get.context}");
+  //   print("🪟 isDialogOpen: ${Get.isDialogOpen}");
 
   //   if (Get.isDialogOpen ?? false) Get.back();
 
@@ -37,7 +36,7 @@ class HomeScreen extends StatefulWidget {
   // }
 
   // static void triggerPermissionFlow() {
-  //   log("🔑 triggerPermissionFlow called");
+  //   print("🔑 triggerPermissionFlow called");
   //   Get.find<HomeController>().runLocationPermissionFlow();
   // }
 
@@ -49,26 +48,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    log("🏠 HomeScreen initState");
+    print("🏠 HomeScreen initState");
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      log("🏠 HomeScreen postFrameCallback — notifying MainNavController");
+      print("🏠 HomeScreen postFrameCallback — notifying MainNavController");
       MainNavController.to.notifyHomeFirstBuild();
 
       final premiumService = PremiumAccessService.to;
 
-      debugPrint('\n╔════════════════════════════════════════╗');
-      debugPrint('║ [SessionNavigator.openMeeting] START    ║');
-      debugPrint('╚════════════════════════════════════════╝');
+      print('\n╔════════════════════════════════════════╗');
+      print('║ [SessionNavigator.openMeeting] START    ║');
+      print('╚════════════════════════════════════════╝');
 
       // ✅ Print current state
-      premiumService.debugPrintFullState();
+      premiumService.printFullState();
 
       // ✅ Wait for service to be ready
       if (!premiumService.isReady.value) {
-        debugPrint(
-          '⏳ [SessionNavigator.openMeeting] Service NOT ready, waiting...',
-        );
+        print('⏳ [SessionNavigator.openMeeting] Service NOT ready, waiting...');
 
         int attempts = 0;
         while (!premiumService.isReady.value && attempts < 50) {
@@ -76,39 +73,35 @@ class _HomeScreenState extends State<HomeScreen> {
           attempts++;
         }
 
-        debugPrint(
-          '⏳ [SessionNavigator.openMeeting] Waited $attempts attempts',
-        );
+        print('⏳ [SessionNavigator.openMeeting] Waited $attempts attempts');
 
         if (!premiumService.isReady.value) {
-          debugPrint(
+          print(
             '🔴 [SessionNavigator.openMeeting] Service initialization TIMEOUT',
           );
-          premiumService.debugPrintFullState();
+          premiumService.printFullState();
         }
 
-        debugPrint('✅ [SessionNavigator.openMeeting] Service now READY');
-        premiumService.debugPrintFullState();
+        print('✅ [SessionNavigator.openMeeting] Service now READY');
+        premiumService.printFullState();
       } else {
-        debugPrint('✅ [SessionNavigator.openMeeting] Service already READY');
+        print('✅ [SessionNavigator.openMeeting] Service already READY');
       }
 
       // ✅ Check if premium
-      debugPrint('\n🔐 [SessionNavigator.openMeeting] Premium check:');
-      debugPrint('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
-      debugPrint(
-        '   isPremiumUser.value: ${premiumService.isPremiumUser.value}',
-      );
+      print('\n🔐 [SessionNavigator.openMeeting] Premium check:');
+      print('   isPremiumUserNow: ${premiumService.isPremiumUserNow}');
+      print('   isPremiumUser.value: ${premiumService.isPremiumUser.value}');
 
       if (!premiumService.isPremiumUserNow) {
-        debugPrint('🔒 [SessionNavigator.openMeeting] ❌ User is NOT premium');
-        premiumService.debugPrintFullState();
+        print('🔒 [SessionNavigator.openMeeting] ❌ User is NOT premium');
+        premiumService.printFullState();
       }
 
-      debugPrint(
+      print(
         '✅ [SessionNavigator.openMeeting] ✅ User IS premium - opening meeting!',
       );
-      premiumService.debugPrintFullState();
+      premiumService.printFullState();
     });
   }
 
@@ -304,18 +297,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     text: liveSession.description,
                     style: TxtStyle.outfit(fs: 14, color: c.strokePrimary),
                   );
-                  return PremiumGate(
-                    child: SizedBox(
-                      height:
-                          Responsive.ongoingSessionCardHeight +
-                          (isOverflowing ? 40.h : 30.h),
-                      child: LiveOngoingSessionCard(data: liveSession),
-                    ),
-
-                    lockedBuilder: (_) => LiveSessionLockedCard(
-                      onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
-                    ),
+                  return SizedBox(
+                    height:
+                        Responsive.ongoingSessionCardHeight +
+                        (isOverflowing ? 40.h : 30.h),
+                    child: LiveOngoingSessionCard(data: liveSession),
                   );
+
+                  // PremiumGate(
+                  //   child: SizedBox(
+                  //     height:
+                  //         Responsive.ongoingSessionCardHeight +
+                  //         (isOverflowing ? 40.h : 30.h),
+                  //     child: LiveOngoingSessionCard(data: liveSession),
+                  //   ),
+
+                  //   lockedBuilder: (_) => LiveSessionLockedCard(
+                  //     onTap: () => Get.toNamed(RoutePaths.subscriptionUpgrade),
+                  //   ),
+                  // );
                 }
 
                 // 3️⃣ No live + no upcoming

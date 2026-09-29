@@ -13,7 +13,7 @@ class MatchScreen extends StatefulWidget {
   const MatchScreen({super.key});
 
   static void showLocationStatusOverlay({required bool isActive}) {
-    log("📍 Match location overlay — active: $isActive");
+    print("📍 Match location overlay — active: $isActive");
 
     if (Get.isDialogOpen ?? false) {
       Get.back();
@@ -27,7 +27,7 @@ class MatchScreen extends StatefulWidget {
   }
 
   static void triggerPermissionFlow() {
-    log("🔑 triggerPermissionFlow called");
+    print("🔑 triggerPermissionFlow called");
     // MatchController.to.runLocationPermissionFlow();
   }
 

@@ -73,7 +73,7 @@ class SigninController extends GetxController {
         email: email,
         password: password,
       );
-      log("result type of login from controller : ${result.type}");
+      print("result type of login from controller : ${result.type}");
       switch (result.type) {
         // ❌ EMAIL NOT VERIFIED
         case LoginApiResultType.emailNotVerified:
@@ -112,8 +112,8 @@ class SigninController extends GetxController {
           return;
       }
     } catch (e, stack) {
-      log('Login Error: $e');
-      log('STACK: $stack');
+      print('Login Error: $e');
+      print('STACK: $stack');
     } finally {
       _isLoading.value = false;
       _stopAuth();
@@ -121,28 +121,28 @@ class SigninController extends GetxController {
   }
 
   Future<void> _handleLoginSuccess() async {
-    log("1. handleLoginSuccess");
+    print("1. handleLoginSuccess");
 
     clearFields();
 
     if (Get.isRegistered<PushNotificationService>()) {
-      log("2. before uploadTokenAfterLogin");
+      print("2. before uploadTokenAfterLogin");
       await PushNotificationService.to.uploadTokenAfterLogin();
-      log("3. after uploadTokenAfterLogin");
+      print("3. after uploadTokenAfterLogin");
     }
 
     final deepLinkService = Get.find<DeepLinkService>();
 
-    log("4. pendingLiveId=${deepLinkService.pendingLiveId}");
+    print("4. pendingLiveId=${deepLinkService.pendingLiveId}");
 
     if (deepLinkService.pendingLiveId != null) {
-      log("5. before handlePostLoginRedirect");
+      print("5. before handlePostLoginRedirect");
       await deepLinkService.handlePostLoginRedirect();
-      log("6. after handlePostLoginRedirect");
+      print("6. after handlePostLoginRedirect");
     } else {
-      log("7. navigating");
+      print("7. navigating");
       Get.offAllNamed(RoutePaths.mainNav);
-      log("8. navigation called");
+      print("8. navigation called");
     }
   }
 
@@ -163,7 +163,7 @@ class SigninController extends GetxController {
   /// ================= LIFECYCLE =================
   @override
   void onInit() {
-    log('Base URL: $baseUrl');
+    print('Base URL: $baseUrl');
 
     if (kDebugMode) {
       // emailCtrler.text = "ananda@yopmail.com";
@@ -218,8 +218,8 @@ class SigninController extends GetxController {
 
       await _handleSocialLogin(authToken: idToken, provider: 'google');
     } catch (e, stack) {
-      log('Google login error: $e');
-      log('STACK: $stack');
+      print('Google login error: $e');
+      print('STACK: $stack');
     } finally {
       googleLoading.value = false;
       _stopAuth();
@@ -243,8 +243,8 @@ class SigninController extends GetxController {
 
       await _handleSocialLogin(authToken: idToken, provider: 'apple');
     } catch (e, stack) {
-      log('Apple login error: $e');
-      log('STACK: $stack');
+      print('Apple login error: $e');
+      print('STACK: $stack');
     } finally {
       appleLoading.value = false;
       _stopAuth();

@@ -37,7 +37,7 @@ class ProfileController extends GetxController {
         userProfileData.value =
             data; // <-- triggers HomeSupplierController's ever()
 
-        log("data fetching profile: ${(data)}");
+        print("data fetching profile: ${(data)}");
 
         // Save to local storage
         storage.setUserInfo(
@@ -57,7 +57,7 @@ class ProfileController extends GetxController {
         }
       }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -81,7 +81,7 @@ class ProfileController extends GetxController {
       isSignOutLoading_.value = false;
       Get.offAllNamed(RoutePaths.signin);
     } catch (e) {
-      log("Logout error: $e");
+      print("Logout error: $e");
       isSignOutLoading_.value = false;
     }
   }
@@ -134,7 +134,7 @@ class ProfileController extends GetxController {
 
       Get.offAllNamed(RoutePaths.signin);
     } catch (e) {
-      log("Delete account error: $e");
+      print("Delete account error: $e");
     } finally {
       isDeleteAccountLoading_.value = false;
     }

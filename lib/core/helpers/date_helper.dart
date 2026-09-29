@@ -18,7 +18,7 @@ class DateHelper {
     // Format to "DD MMM YYYY"
     String formattedDate = DateFormat('dd MMMM yyyy').format(parsedDate);
 
-    log(formattedDate.toString()); // 👉 16 Sep 2025
+    print(formattedDate.toString()); // 👉 16 Sep 2025
 
     return formattedDate;
   }
@@ -71,7 +71,7 @@ class DateHelper {
         fullDate: formattedFullDate,
       );
     } catch (e) {
-      log('❌ formatUTCtimestamp failed for "$timestamp": $e');
+      print('❌ formatUTCtimestamp failed for "$timestamp": $e');
       return DateAndTimeMap(
         date: 'N/A',
         time: 'N/A',
@@ -204,7 +204,7 @@ class DateHelper {
 
       return DateAndTimeMap(date: result, time: '', dateYear: result);
     } catch (e) {
-      log('❌ formatTimeAgo failed for "$timestamp": $e');
+      print('❌ formatTimeAgo failed for "$timestamp": $e');
       return DateAndTimeMap(date: 'N/A', time: '', dateYear: 'N/A');
     }
   }
@@ -281,7 +281,7 @@ class DateHelper {
         display: '$date\n$time',
       );
     } catch (e) {
-      log('❌ formatNotificationTime failed: $e');
+      print('❌ formatNotificationTime failed: $e');
 
       return DateAndTimeMap(
         date: 'N/A',

@@ -1,6 +1,5 @@
-import 'package:we_mama/core/components/ui/dialogs/small_popup_dialog.dart';
-
 import '../../../../app/helper_widgets_export.dart';
+import '../../../../core/components/ui/dialogs/small_popup_dialog.dart';
 
 class NewWavesReqAcceptPopup extends StatelessWidget {
   const NewWavesReqAcceptPopup({super.key});

@@ -42,7 +42,7 @@ class MemberManagementController extends GetxController {
 
       // }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isUnblockLoading.value = false;
 
@@ -68,7 +68,7 @@ class MemberManagementController extends GetxController {
 
       // }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
 

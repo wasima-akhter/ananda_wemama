@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-import '../../../app/helper_widgets_export.dart' hide Response;
-
 class ApiServiceHelper {
   /// Generic request handler
   ///
@@ -34,12 +32,12 @@ class ApiServiceHelper {
 
       // 🔐 LOGIN SPECIAL FLOW
       if (isLogin) {
-        log("🔐 LOGIN FLOW → parsing raw response");
+        print("🔐 LOGIN FLOW → parsing raw response");
 
         final json = _extractJson(res);
 
         if (json == null) {
-          log("❌ LOGIN RESPONSE INVALID JSON: $res");
+          print("❌ LOGIN RESPONSE INVALID JSON: $res");
           return null;
         }
 
@@ -50,7 +48,7 @@ class ApiServiceHelper {
       final json = _extractJson(res);
 
       if (json == null) {
-        log("❌ INVALID API RESPONSE FORMAT");
+        print("❌ INVALID API RESPONSE FORMAT");
         return null;
       }
 
@@ -58,8 +56,8 @@ class ApiServiceHelper {
 
       return response;
     } catch (e, st) {
-      log("❌ API SERVICE ERROR: $e");
-      log(st.toString());
+      print("❌ API SERVICE ERROR: $e");
+      print(st.toString());
 
       if (showErrorToast == null) {
         Strings.somethingWentWrong.showToast();
@@ -71,7 +69,7 @@ class ApiServiceHelper {
 */
   //
   void _prettyPrintResponse(dynamic res, String? reqName) {
-    log("""
+    print("""
 ━━━━━━━━ API RAW RESPONSE ━━━━━━━━
 REQ: ${reqName ?? "-"}
 TYPE: ${res.runtimeType}
@@ -106,7 +104,7 @@ ${const JsonEncoder.withIndent('  ').convert(res is Response ? res.data : res)}
 
       return null;
     } catch (e) {
-      log("❌ JSON extraction failed: $e");
+      print("❌ JSON extraction failed: $e");
       return null;
     }
   }

@@ -22,12 +22,12 @@ mixin SpeakingMixin on GetxController {
   Future<void> toggleSpeak(LiveChatController cc) async {
     // ✅ Only allow user to STOP speaking (mute) if currently speaking
     if (isSpeaking.value) {
-      log('🔇 [SPEAK] Stepping down from broadcaster → audience');
+      print('🔇 [SPEAK] Stepping down from broadcaster → audience');
 
       await _self.agoraEngine?.setClientRole(
         role: ClientRoleType.clientRoleAudience,
       );
-      log('🔇 [SPEAK] setClientRole → AUDIENCE done');
+      print('🔇 [SPEAK] setClientRole → AUDIENCE done');
 
       await _self.agoraEngine?.updateChannelMediaOptions(
         const ChannelMediaOptions(
@@ -36,18 +36,18 @@ mixin SpeakingMixin on GetxController {
         ),
       );
 
-      log('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
+      print('🔇 [SPEAK] updateChannelMediaOptions → mic UNPUBLISHED');
 
       isSpeaking.value = false;
 
       // ← notify web: mic is now OFF
       await _publishMuteState(isMuted: true, cc: cc);
 
-      log('🔇 [SPEAK] isSpeaking = false ✅');
+      print('🔇 [SPEAK] isSpeaking = false ✅');
     } else {
       // ❌ BLOCKED: User cannot unmute themselves
       // Host must unmute via REMOTE_UNMUTE message
-      log('❌ [SPEAK] Unmute blocked - only host can unmute');
+      print('❌ [SPEAK] Unmute blocked - only host can unmute');
       Get.snackbar(
         'Not Allowed',
         'Only the host can unmute you',
@@ -85,11 +85,11 @@ mixin SpeakingMixin on GetxController {
         {'isMuted': isMuted ? 'true' : 'false'},
       );
 
-      log(
+      print(
         '📡 [RTM] Mute state broadcast → uid=${_self.uid.value}, isMuted=$isMuted',
       );
     } catch (e) {
-      log('❌ [RTM] _publishMuteState error: $e');
+      print('❌ [RTM] _publishMuteState error: $e');
     }
   }
 
@@ -134,6 +134,6 @@ mixin SpeakingMixin on GetxController {
     // ← sync mute state to web via RTM presence
     await _publishMuteState(isMuted: mute, cc: cc);
 
-    log('🔇 muteLocalAudio($mute) applied by host');
+    print('🔇 muteLocalAudio($mute) applied by host');
   }
 }

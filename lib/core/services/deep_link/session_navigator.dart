@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../features/main_tabs/experts/model/expert_session_list_model.dart';
@@ -18,53 +17,55 @@ class SessionNavigator {
     required String sessionTitle,
     required String hostName,
   }) async {
-    final premiumService = PremiumAccessService.to;
+    // final premiumService = PremiumAccessService.to;
 
-    debugPrint('\n╔════════════════════════════════════════╗');
-    debugPrint('║ [SessionNavigator.openMeeting] START    ║');
-    debugPrint('╚════════════════════════════════════════╝');
+    print('\n╔════════════════════════════════════════╗');
+    print('║ [SessionNavigator.openMeeting] START    ║');
+    print('╚════════════════════════════════════════╝');
 
-    premiumService.debugPrintFullState();
+    _openMeetingScreen(channelName, sessionTitle, hostName);
+    return true;
+    // premiumService.printFullState();
 
-    // ✅ Wait for ready
-    if (!premiumService.isReady.value) {
-      int attempts = 0;
-      while (!premiumService.isReady.value && attempts < 50) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        attempts++;
-      }
+    // // ✅ Wait for ready
+    // if (!premiumService.isReady.value) {
+    //   int attempts = 0;
+    //   while (!premiumService.isReady.value && attempts < 50) {
+    //     await Future.delayed(const Duration(milliseconds: 100));
+    //     attempts++;
+    //   }
 
-      if (!premiumService.isReady.value) {
-        debugPrint('🔴 Service init TIMEOUT');
-        if (Get.isDialogOpen ?? false) Get.back();
-        return false;
-      }
-    }
+    //   if (!premiumService.isReady.value) {
+    //     print('🔴 Service init TIMEOUT');
+    //     if (Get.isDialogOpen ?? false) Get.back();
+    //     return false;
+    //   }
+    // }
 
-    // ✅ CHECK 1: Quick check
-    if (premiumService.isPremiumUserNow) {
-      debugPrint('✅ CHECK 1 PASSED: opening meeting');
-      _openMeetingScreen(channelName, sessionTitle, hostName);
-      return true;
-    }
+    // // ✅ CHECK 1: Quick check
+    // if (premiumService.isPremiumUserNow) {
+    //   print('✅ CHECK 1 PASSED: opening meeting');
+    //   _openMeetingScreen(channelName, sessionTitle, hostName);
+    //   return true;
+    // }
 
-    // ✅ CHECK 2: Manual verification (iOS retry logic)
-    debugPrint('\n🔄 CHECK 1 FAILED: attempting verification...');
-    final verified = await premiumService.verifyPremiumStatusWithRetry(
-      maxAttempts: 3,
-    );
+    // // ✅ CHECK 2: Manual verification (iOS retry logic)
+    // print('\n🔄 CHECK 1 FAILED: attempting verification...');
+    // final verified = await premiumService.verifyPremiumStatusWithRetry(
+    //   maxAttempts: 3,
+    // );
 
-    if (verified) {
-      debugPrint('✅ CHECK 2 PASSED: opening meeting');
-      _openMeetingScreen(channelName, sessionTitle, hostName);
-      return true;
-    }
+    // if (verified) {
+    //   print('✅ CHECK 2 PASSED: opening meeting');
+    //   _openMeetingScreen(channelName, sessionTitle, hostName);
+    //   return true;
+    // }
 
-    // ❌ Not premium
-    debugPrint('❌ BOTH CHECKS FAILED: redirecting to upgrade');
-    if (Get.isDialogOpen ?? false) Get.back();
-    Get.toNamed(RoutePaths.subscriptionUpgrade);
-    return false;
+    // // ❌ Not premium
+    // print('❌ BOTH CHECKS FAILED: redirecting to upgrade');
+    // if (Get.isDialogOpen ?? false) Get.back();
+    // Get.toNamed(RoutePaths.subscriptionUpgrade);
+    // return false;
   }
 
   static void _openMeetingScreen(
@@ -83,43 +84,43 @@ class SessionNavigator {
       ),
     );
 
-    debugPrint('╔════════════════════════════════════════╗');
-    debugPrint('║ [SessionNavigator] MEETING OPENED ✅    ║');
-    debugPrint('╚════════════════════════════════════════╝\n');
+    print('╔════════════════════════════════════════╗');
+    print('║ [SessionNavigator] MEETING OPENED ✅    ║');
+    print('╚════════════════════════════════════════╝\n');
   }
 
   // Same for open() method:
   ///// Returns true if successfully opened session, false otherwise
 
   static Future<bool> open(Session session) async {
-    final premiumService = PremiumAccessService.to;
+    // final premiumService = PremiumAccessService.to;
 
-    if (!premiumService.isReady.value) {
-      int attempts = 0;
-      while (!premiumService.isReady.value && attempts < 50) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        attempts++;
-      }
+    // if (!premiumService.isReady.value) {
+    //   int attempts = 0;
+    //   while (!premiumService.isReady.value && attempts < 50) {
+    //     await Future.delayed(const Duration(milliseconds: 100));
+    //     attempts++;
+    //   }
 
-      if (!premiumService.isReady.value) {
-        if (Get.isDialogOpen ?? false) Get.back();
-        return false;
-      }
-    }
+    //   if (!premiumService.isReady.value) {
+    //     if (Get.isDialogOpen ?? false) Get.back();
+    //     return false;
+    //   }
+    // }
 
-    // ✅ First check
-    bool isPremium = premiumService.isPremiumUserNow;
+    // // ✅ First check
+    // bool isPremium = premiumService.isPremiumUserNow;
 
-    // ✅ Fallback check if first failed (iOS)
-    if (!isPremium) {
-      isPremium = await premiumService.verifyPremiumStatusManually();
-    }
+    // // ✅ Fallback check if first failed (iOS)
+    // if (!isPremium) {
+    //   isPremium = await premiumService.verifyPremiumStatusManually();
+    // }
 
-    if (!isPremium) {
-      if (Get.isDialogOpen ?? false) Get.back();
-      Get.toNamed(RoutePaths.subscriptionUpgrade);
-      return false;
-    }
+    // if (!isPremium) {
+    //   if (Get.isDialogOpen ?? false) Get.back();
+    //   Get.toNamed(RoutePaths.subscriptionUpgrade);
+    //   return false;
+    // }
 
     // Proceed with session join
     if (Get.isDialogOpen ?? false) Get.back();
@@ -151,14 +152,14 @@ class SessionNavigator {
   static Future<void> debugTestPremiumStatus() async {
     final premium = PremiumAccessService.to;
 
-    debugPrint('\n🧪 PREMIUM STATUS DEBUG TEST');
-    premium.debugPrintFullState();
+    print('\n🧪 PREMIUM STATUS DEBUG TEST');
+    premium.printFullState();
 
-    debugPrint('\n🔄 Manually verifying...');
+    print('\n🔄 Manually verifying...');
     final verified = await premium.verifyPremiumStatusManually();
 
-    debugPrint('\n✅ Verification result: $verified');
-    premium.debugPrintFullState();
+    print('\n✅ Verification result: $verified');
+    premium.printFullState();
   }
 }
 
@@ -172,28 +173,28 @@ class SessionNavigator {
 Future<void> debugTestPremiumIOS() async {
   final p = PremiumAccessService.to;
 
-  debugPrint('\n═══ TESTING PREMIUM STATUS ═══');
-  p.debugPrintFullState();
+  print('\n═══ TESTING PREMIUM STATUS ═══');
+  p.printFullState();
 
-  debugPrint('\nRefreshing...');
+  print('\nRefreshing...');
   await p.refreshPremiumStatus();
-  p.debugPrintFullState();
+  p.printFullState();
 
-  debugPrint('\nVerifying with retry...');
+  print('\nVerifying with retry...');
   final verified = await p.verifyPremiumStatusWithRetry();
-  debugPrint('Result: $verified\n');
+  print('Result: $verified\n');
 }
 
 // TEST 2: Wave Count
 void debugTestWaveCount() {
   final mc = MatchController.to;
 
-  debugPrint('\n═══ TESTING WAVE COUNT ═══');
-  debugPrint('Premium ready: ${PremiumAccessService.to.isReady.value}');
-  debugPrint('Is premium: ${PremiumAccessService.to.isPremiumUserNow}');
-  debugPrint('Profile ready: ${mc.profile.value != null}');
-  debugPrint('Remaining waves: ${mc.remainingWaves}');
-  debugPrint('Is waveLimit reached: ${mc.isWaveLimitReached}\n');
+  print('\n═══ TESTING WAVE COUNT ═══');
+  print('Premium ready: ${PremiumAccessService.to.isReady.value}');
+  print('Is premium: ${PremiumAccessService.to.isPremiumUserNow}');
+  print('Profile ready: ${mc.profile.value != null}');
+  print('Remaining waves: ${mc.remainingWaves}');
+  print('Is waveLimit reached: ${mc.isWaveLimitReached}\n');
 }
 
 // TEST 3: Session Join
@@ -203,5 +204,5 @@ Future<void> debugTestSessionJoin() async {
     sessionTitle: 'Test Session',
     hostName: 'Test Host',
   );
-  debugPrint('Session join result: $result');
+  print('Session join result: $result');
 }

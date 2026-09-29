@@ -77,7 +77,7 @@ class PostDetailsController extends GetxController {
 
     hasValidPostId.value = args.postId.trim().isNotEmpty;
 
-    log(
+    print(
       '[PostDetailsController] '
       'communityId: ${args.communityId}, '
       'postId: "${args.postId}", '
@@ -128,13 +128,13 @@ class PostDetailsController extends GetxController {
       if (post != null) {
         singlePost.value = post;
 
-        log(
+        print(
           '[PostDetailsController] '
           'Single post fetched: ${post.id}',
         );
       }
     } catch (e) {
-      log('Error fetching single post: $e');
+      print('Error fetching single post: $e');
     } finally {
       isGetSinglePostLoading.value = false;
     }
@@ -146,7 +146,7 @@ class PostDetailsController extends GetxController {
 
   Future<void> getCommentsList() async {
     if (!hasValidPostId.value) {
-      log('[PostDetailsController] Skipping comments: postId is empty');
+      print('[PostDetailsController] Skipping comments: postId is empty');
       return;
     }
 
@@ -163,7 +163,7 @@ class PostDetailsController extends GetxController {
         comments.assignAll(data.comments ?? []);
       }
     } catch (e) {
-      log('Error fetching comments: $e');
+      print('Error fetching comments: $e');
     } finally {
       isGetCommentsLoading.value = false;
     }
@@ -216,7 +216,7 @@ class PostDetailsController extends GetxController {
 
       clearReplyState();
     } catch (e) {
-      log('Error adding comment: $e');
+      print('Error adding comment: $e');
     } finally {
       isAddCommentLoading.value = false;
       clearAll();
@@ -373,7 +373,7 @@ class PostDetailsController extends GetxController {
 
     fileImage.value = selectedImage;
 
-    log('file.name: ${selectedImage.name}');
-    log('file.path: ${selectedImage.path}');
+    print('file.name: ${selectedImage.name}');
+    print('file.path: ${selectedImage.path}');
   }
 }

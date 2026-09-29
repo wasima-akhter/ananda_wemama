@@ -25,7 +25,7 @@ class WaveRequestController extends GetxController {
 
     // ✅ On connect: refresh list + reset backoff
     _socketConnectedSub = socket.onConnected.listen((_) {
-      log("🔌 Socket connected — refreshing wave requests");
+      print("🔌 Socket connected — refreshing wave requests");
       _reconnectAttempt = 0;
       _reconnectTimer?.cancel();
       getNewWavesList(forceRefresh: true);
@@ -33,7 +33,7 @@ class WaveRequestController extends GetxController {
 
     // ✅ On disconnect: actively try to reconnect instead of just waiting
     _socketDisconnectedSub = socket.onDisconnected.listen((_) {
-      log("🔌 Socket disconnected — scheduling reconnect");
+      print("🔌 Socket disconnected — scheduling reconnect");
       _scheduleReconnect();
     });
 
@@ -84,14 +84,14 @@ class WaveRequestController extends GetxController {
     _reconnectTimer = Timer(delay, () async {
       if (socket.isConnected) return; // already recovered
 
-      log("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
+      print("🔁 Attempting socket reconnect (try ${_reconnectAttempt + 1})");
       _reconnectAttempt++;
 
       try {
         socket.disconnectSocket();
         await socket.connectSocket();
       } catch (e) {
-        log("❌ Reconnect attempt failed: $e");
+        print("❌ Reconnect attempt failed: $e");
       }
 
       if (!socket.isConnected) {
@@ -254,7 +254,7 @@ class WaveRequestController extends GetxController {
     // ChatController.getChatList's approach instead of emitting into a
     // dead socket.
     if (!socket.isConnected) {
-      log("⏳ getNewWavesList — socket down, scheduling reconnect");
+      print("⏳ getNewWavesList — socket down, scheduling reconnect");
       _scheduleReconnect(immediate: true);
       return;
     }
@@ -263,7 +263,7 @@ class WaveRequestController extends GetxController {
     try {
       getConversationRequestList(currentProfileId());
     } catch (e) {
-      log("Error fetching wave list: $e");
+      print("Error fetching wave list: $e");
     } finally {
       isLoading_.value = false;
     }
@@ -286,10 +286,10 @@ class WaveRequestController extends GetxController {
 
       if (data != null) {
         waveUserProfileData.value = data;
-        log("data fetching profile: ${(data)}");
+        print("data fetching profile: ${(data)}");
       }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isgetUserProfileLoading_.value = false;
     }

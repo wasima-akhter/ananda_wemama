@@ -54,7 +54,7 @@ class LiveOngoingSessionCard extends StatefulWidget {
 
 class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
   Timer? joinTimer;
-
+  Timer? fallbackTimer;
   @override
   void initState() {
     super.initState();
@@ -73,16 +73,18 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
   @override
   void dispose() {
     joinTimer?.cancel();
+    fallbackTimer?.cancel(); // 🔴 NEW: Clean up fallback
     super.dispose();
   }
 
   void _scheduleJoinCheck() {
     joinTimer?.cancel();
+    fallbackTimer?.cancel(); // 🔴 NEW: Cancel previous fallback
 
     final sessionDateTime = widget.data?.dateTime;
 
     if (sessionDateTime == null) {
-      debugPrint('🔴 [JOIN TIMER] Session dateTime is NULL');
+      print('🔴 [JOIN TIMER] Session dateTime is NULL');
       return;
     }
 
@@ -91,25 +93,35 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
 
     // Already joinable.
     if (!nowUtc.isBefore(joinTimeUtc)) {
-      debugPrint('🟢 [JOIN TIMER] Session is already joinable');
+      print('🟢 [JOIN TIMER] Session is already joinable');
       return;
     }
 
     final duration = joinTimeUtc.difference(nowUtc);
 
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    debugPrint('⏰ [JOIN TIMER]');
-    debugPrint('📅 Session UTC : $joinTimeUtc');
-    debugPrint('📱 Current UTC : $nowUtc');
-    debugPrint('⏳ Enable in   : $duration');
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('⏰ [JOIN TIMER]');
+    print('📅 Session UTC : $joinTimeUtc');
+    print('📱 Current UTC : $nowUtc');
+    print('⏳ Enable in   : $duration');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     joinTimer = Timer(duration, () {
       if (!mounted) return;
 
-      debugPrint('🟢 [JOIN TIMER] Session is now joinable');
+      print('🟢 [JOIN TIMER] Session is now joinable');
 
       setState(() {});
+    }); // 🔴 NEW: Fallback timeout (5 seconds max to show "Join" button)
+    // This handles edge cases where the main timer might be delayed
+    fallbackTimer = Timer(const Duration(seconds: 5), () {
+      if (!mounted) return;
+
+      print('⚠️ [FALLBACK TIMER] Forcing join button visibility after 5s');
+
+      setState(() {
+        // Force rebuild to ensure button is visible
+      });
     });
   }
 
@@ -322,7 +334,7 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                   child: CusGestureDetector(
                     onTap: () async {
                       if (channelName.isEmpty) {
-                        debugPrint('🔴 [JOIN LIVE] Channel name is empty');
+                        print('🔴 [JOIN LIVE] Channel name is empty');
                         return;
                       }
 
@@ -343,7 +355,7 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
                         if (Get.isDialogOpen ?? false) {
                           Get.back();
                         }
-                        debugPrint('🔴 Error joining: $e');
+                        print('🔴 Error joining: $e');
                       }
                     },
                     child: ContainerBordered(
@@ -379,12 +391,12 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
     final hostTimeZone = widget.data?.timezone;
 
     if (sessionDateTime == null) {
-      debugPrint('🔴 [JOIN CHECK] Session dateTime is NULL');
+      print('🔴 [JOIN CHECK] Session dateTime is NULL');
       return false;
     }
 
     if (hostTimeZone == null || hostTimeZone.isEmpty) {
-      debugPrint('🔴 [JOIN CHECK] Host timezone is NULL/EMPTY');
+      print('🔴 [JOIN CHECK] Host timezone is NULL/EMPTY');
       return false;
     }
 
@@ -393,14 +405,14 @@ class _LiveOngoingSessionCardState extends State<LiveOngoingSessionCard> {
 
     final canJoin = !nowUtc.isBefore(sessionUtc);
 
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    debugPrint('🕐 [JOIN CHECK]');
-    debugPrint('📅 Session UTC : $sessionUtc');
-    debugPrint('📱 Current UTC : $nowUtc');
-    debugPrint('🌍 Host TZ     : $hostTimeZone');
-    debugPrint('⏱️ Difference  : ${sessionUtc.difference(nowUtc)}');
-    debugPrint('⏳ Can join?   : $canJoin');
-    debugPrint('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    print('🕐 [JOIN CHECK]');
+    print('📅 Session UTC : $sessionUtc');
+    print('📱 Current UTC : $nowUtc');
+    print('🌍 Host TZ     : $hostTimeZone');
+    print('⏱️ Difference  : ${sessionUtc.difference(nowUtc)}');
+    print('⏳ Can join?   : $canJoin');
+    print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     return canJoin;
   }

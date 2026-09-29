@@ -254,7 +254,7 @@ class FoundingMumCodeScreen extends StatelessWidget {
         controller.currentOffer.value = offer;
         controller.appliedCode.value = title;
 
-        debugPrint("🟢 DEBUG OFFER = ${offer.name}");
+        print("🟢 DEBUG OFFER = ${offer.name}");
 
         final eligibility = await SubscriptionService().getDiscountedPrice();
 

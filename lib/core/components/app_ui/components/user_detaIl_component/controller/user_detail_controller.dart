@@ -34,7 +34,8 @@ class UserDetailController extends GetxController {
     UiInfoItem(iconPath: IconsPath.chartFilled, text: 'Trying to conceive'),
     UiInfoItem(
       iconPath: IconsPath.heartHalfFilled,
-      text: 'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
+      text:
+          'Interested in: Food delivery, Grocery delivery viudf vugdfv iodfv hdfiu v',
     ),
   ];
 
@@ -108,7 +109,7 @@ class UserDetailController extends GetxController {
 
       // }
     } catch (e) {
-      log("Error fetching profile: $e");
+      print("Error fetching profile: $e");
     } finally {
       isLoading_.value = false;
 

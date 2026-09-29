@@ -51,7 +51,7 @@ class SocketListenerRegistry {
       final isSender = res.message.toLowerCase().contains('requested');
       final isReceiver = res.message.toLowerCase().contains('received');
 
-      log(
+      print(
         '🧪 newConversationRequest | currentId: ${currentProfileId()} '
         '| isSender: $isSender | isReceiver: $isReceiver | msg: ${res.message}',
       );
@@ -91,7 +91,7 @@ class SocketListenerRegistry {
               .toList() ??
           [];
 
-      log('🧪 fallback participants: $participants');
+      print('🧪 fallback participants: $participants');
 
       if (participants.length >= 2 && participants[1] == currentProfileId()) {
         Get.snackbar(
@@ -117,21 +117,21 @@ class SocketListenerRegistry {
             .map((e) => NewWaveListItemModel.fromJson(e))
             .toList();
 
-        log("conversation_requests: ${list.length} item(s)");
+        print("conversation_requests: ${list.length} item(s)");
         if (rawList.isNotEmpty) {
-          log("first = ${rawList.first}");
+          print("first = ${rawList.first}");
         }
 
         for (final item in list) {
-          log("id = ${item.id}");
+          print("id = ${item.id}");
         }
 
         if (Get.isRegistered<WaveRequestController>()) {
           Get.find<WaveRequestController>().updateWaveList(list);
         }
       } catch (e, s) {
-        debugPrint(e.toString());
-        debugPrint(s.toString());
+        print(e.toString());
+        print(s.toString());
       }
     });
     // ── conversation_accepted ─────────────────────────────────────────────────
@@ -166,7 +166,7 @@ class SocketListenerRegistry {
       final peerName = peer?['name'] as String? ?? '';
       final peerImageUrl = peer?['profileImage'] as String? ?? '';
 
-      log(
+      print(
         '🧪 conversationAccepted | myId: $myId | isAcceptor: $isAcceptor'
         ' | peer: $peerName | msg: ${res.message}',
       );
@@ -203,7 +203,7 @@ class SocketListenerRegistry {
       final isRejector =
           msg.contains('you have rejected') || msg.contains('declined');
 
-      log(
+      print(
         '🧪 conversationRejected | isRejector: $isRejector | msg: ${res.message}',
       );
 
@@ -355,7 +355,7 @@ class SocketListenerRegistry {
   /// Internal — removes a listener before re-registering, prevents stacking.
   void _off(String event) {
     socket.off(event);
-    log("🧹 Removed listener: $event");
+    print("🧹 Removed listener: $event");
   }
 
   /// Internal — always called after _socket is assigned.
@@ -363,9 +363,9 @@ class SocketListenerRegistry {
     socket.on(event, (data) {
       try {
         callback(_parse(data));
-        log("📥 Listen: [$event] $data");
+        print("📥 Listen: [$event] $data");
       } catch (e, stack) {
-        log("❌ Callback error [$event]: $e\n$stack");
+        print("❌ Callback error [$event]: $e\n$stack");
       }
     });
   }
