@@ -72,11 +72,13 @@ class ApiExecutor {
       //   print(msg);
       //   return Result(type: ApiResultType.failed, message: msg);
       // }
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('❌ [EXECUTOR] Exception caught: $e');
       print('❌ [EXECUTOR] Exception type: ${e.runtimeType}');
       print('❌ [EXECUTOR] Exception caught: $e');
       print('❌ [EXECUTOR] Exception type: ${e.runtimeType}');
+
+      print('[EXECUTOR] StackTrace: $stackTrace');
 
       if (e is TimeoutException) {
         print('❌ [EXECUTOR] TIMEOUT - backend unreachable');

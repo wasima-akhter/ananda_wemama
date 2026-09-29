@@ -13,7 +13,9 @@ class ProfileInfoService {
 
     final response = await ApiExecutor().execute<ProfileDataModel>(
       apiCall: apiCall,
-      parser: (data) => ProfileDataModel.fromJson(data),
+      parser: (data) {
+        return ProfileDataModel.fromJson(data);
+      },
     );
 
     if (!response.isSuccess) return null;

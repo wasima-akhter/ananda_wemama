@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:we_mama/core/helpers/parser_helper.dart';
+
 class ProfileDataModel {
   ProfileDataModel({
     this.id,
@@ -34,6 +39,8 @@ class ProfileDataModel {
     this.totalMatching,
     // FCM
     this.fcmTokens = const [],
+
+    this.isIdVerified = false,
   });
 
   final String? id;
@@ -89,13 +96,55 @@ class ProfileDataModel {
 
   final int? totalMatching;
 
+  final bool? isIdVerified;
+
   factory ProfileDataModel.fromJson(Map<String, dynamic> json) {
+    //
+
+    debugPrint('\n');
+    debugPrint('════════════════ PROFILE JSON ════════════════');
+    debugPrint(const JsonEncoder.withIndent('  ').convert(json));
+    debugPrint('══════════════════════════════════════════════');
+    debugPrint('\n');
+
+    _debugField('_id', json['_id']);
+    _debugField('auth', json['auth']);
+    _debugField('agoraUid', json['agoraUid']);
+    _debugField('name', json['name']);
+    _debugField('email', json['email']);
+    _debugField('phone', json['phone']);
+    _debugField('profileImage', json['profileImage']);
+    _debugField('images', json['images']);
+    _debugField('location', json['location']);
+    _debugField('address', json['address']);
+    _debugField('children', json['children']);
+    _debugField('DOB', json['DOB']);
+    _debugField('state', json['state']);
+    _debugField('city', json['city']);
+    _debugField('bio', json['bio']);
+    _debugField('interesteds', json['interesteds']);
+    _debugField('mumStage', json['mumStage']);
+    _debugField('referral', json['referral']);
+    _debugField('subscription', json['subscription']);
+    _debugField('matchCount', json['matchCount']);
+    _debugField('streakCount', json['streakCount']);
+    _debugField('createdAt', json['createdAt']);
+    _debugField('updatedAt', json['updatedAt']);
+    _debugField('__v', json['__v']);
+    _debugField('fcmTokens', json['fcmTokens']);
+    _debugField('waveLimit', json['waveLimit']);
+    _debugField('isDeleted', json['isDeleted']);
+    _debugField('matchLimitDate', json['matchLimitDate']);
+    _debugField('matchSeenUsers', json['matchSeenUsers']);
+    _debugField('totalMatching', json['totalMatching']);
+    _debugField('isIdVerified', json['isIdVerified']);
+    //
     // ── DOB: handle both formats ──────────────────────────────────────────
     DateTime? dobFlat;
     ProfileDobModel? dobObj;
 
     final rawDob = json["DOB"];
-    print(
+    debugPrint(
       "rawDob runtimeType: ${rawDob.runtimeType}, value: $rawDob",
     ); // ← add this
     if (rawDob is Map<String, dynamic>) {
@@ -203,6 +252,8 @@ class ProfileDataModel {
             ),
 
       totalMatching: parseInt(json["totalMatching"]),
+
+      isIdVerified: JsonParser.boolValue(json["isIdVerified"]),
     );
   }
 }
@@ -304,8 +355,8 @@ class ProfileDobModel {
   final bool? isPublic;
 
   factory ProfileDobModel.fromJson(Map<String, dynamic> json) {
-    print("----ProfileDobModel raw json: $json");
-    print(
+    debugPrint("----ProfileDobModel raw json: $json");
+    debugPrint(
       "----isPublic raw value: ${json["isPublic"]} | type: ${json["isPublic"].runtimeType}",
     );
     return ProfileDobModel(
@@ -380,4 +431,12 @@ class ProfileSubscriptionModel {
           : null,
     );
   }
+}
+
+void _debugField(String field, dynamic value) {
+  debugPrint(
+    '🔍 $field → '
+    'value: $value | '
+    'type: ${value.runtimeType}',
+  );
 }
