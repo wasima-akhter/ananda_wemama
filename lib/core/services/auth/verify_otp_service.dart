@@ -49,7 +49,8 @@ class VerifyOtpService extends GetxService {
       );
 
       // ✅ Now call ProfileController to refresh the profile
-      if (Get.isRegistered<ProfileController>()) {
+      if (Get.isRegistered<ProfileController>() &&
+          storage.getToken.isNotEmpty) {
         final profileController = Get.find<ProfileController>();
         profileController.fetchMyProfile();
       }

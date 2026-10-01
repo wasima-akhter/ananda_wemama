@@ -15,6 +15,12 @@ class PostAuthNavigator {
       Get.offAllNamed(RoutePaths.mainNav);
     }
   }
+
+  static void goWelcomeFundingMum() {
+    VerificationGate.verified = true; // ← add
+
+    Get.offAllNamed(RoutePaths.welcomeFundingMum);
+  }
 }
 
 class VerificationGate {
@@ -23,12 +29,14 @@ class VerificationGate {
   static bool get isRequired => true; // TODO: user vs expert
 
   /// For flows that end in the app (login, splash, subscription, finish-profile)
-  static Future<void> routeAfterAuth() async {
+  static Future<void> routeAfterAuth({bool isFromFreePlan = false}) async {
     if (!isRequired || verified) return PostAuthNavigator.goHome();
 
     final res = await VerificationService().getStatus();
     if (res.isSuccess && res.data?.status == VerificationStatus.approved) {
-      return PostAuthNavigator.goHome();
+      return isFromFreePlan
+          ? PostAuthNavigator.goWelcomeFundingMum()
+          : PostAuthNavigator.goHome();
     }
     Get.offAllNamed(RoutePaths.verification);
   }

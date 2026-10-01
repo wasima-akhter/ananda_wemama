@@ -1,5 +1,6 @@
 import '../../../../../app/controller_export.dart';
 import '../../../../../core/components/ui/dialogs/popups.dart';
+import '../../../../../core/services/auth/verification_gate.dart';
 import '../../subscription_access/premium_access_service.dart';
 import '../../subscription_upgrade/mixin/subscription_plan_mixin.dart';
 
@@ -32,7 +33,7 @@ class SubscriptionChoosePlanController extends GetxController
     unfocusAll();
 
     if (selectedPlanIndex.value == 0) {
-      Get.offAllNamed(RoutePaths.welcomeFundingMum);
+      await VerificationGate.routeAfterAuth(isFromFreePlan: true);
     } else {
       await proceedToPaidPlan();
     }
